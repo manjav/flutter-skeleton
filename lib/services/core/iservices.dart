@@ -1,3 +1,4 @@
 abstract class IService {
-  initialize();
+  initialize({List<Object>? args});
+  log(dynamic log);
 }

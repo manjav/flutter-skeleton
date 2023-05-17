@@ -68,11 +68,11 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     // on<ServicesEvent>(update);
   }
 
-  servicesInit() {
-    adsService.printTest();
-    analyticsData.printTest();
-    netConnectionData.printTest();
-    gameApiData.printTest();
+  initialize() {
+    // adsService.printTest();
+    // analyticsData.printTest();
+    // netConnectionData.printTest();
+    // gameApiData.printTest();
   }
 }
 

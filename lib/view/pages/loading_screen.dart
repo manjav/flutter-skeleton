@@ -14,9 +14,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    var a = BlocProvider.of<ServicesBloc>(context);
+    var services = BlocProvider.of<ServicesBloc>(context);
 
-    a.servicesInit();
+    services.initialize();
   }
 
   @override

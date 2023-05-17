@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_skeleton/services/core/iservices.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 import 'package:kochava_tracker/kochava_tracker.dart';
@@ -15,14 +16,13 @@ import 'core/prefs.dart';
 
 // implements IService
 //Should firebase get passed to the Iservice??
-abstract class AnalyticsService {
+abstract class AnalyticsService extends IService {
   // Future<Analytics> initialize();
   // Future<Analytics> sendEvent();
-  init(FirebaseAnalytics firebaseAnalytics);
-  printTest();
+  // init(FirebaseAnalytics firebaseAnalytics);
 }
 
-class Analytics extends AnalyticsService {
+class Analytics implements AnalyticsService {
   static const _testName = "_";
   late FirebaseAnalytics _firebaseAnalytics;
   int variant = 1;
@@ -39,16 +39,14 @@ class Analytics extends AnalyticsService {
     // "adrewarded": [1, 4, 10, 20, 30],
     // "adbannerclick": [1, 5, 10, 20],
   };
-  @override
-  printTest() {
-    print("Analytics print");
-  }
 
-//NOTE this init requires arguments
+// TODO:  this init requires arguments
+
   @override
-  init(FirebaseAnalytics firebaseAnalytics) async {
+  initialize({List<Object>? args}) async {
+    //FirebaseAnalytics firebaseAnalytics
     var os = Platform.operatingSystem;
-    _firebaseAnalytics = firebaseAnalytics;
+    _firebaseAnalytics = args![0] as FirebaseAnalytics;
     AppMetrica.runZoneGuarded(() {
       WidgetsFlutterBinding.ensureInitialized();
       AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
@@ -356,9 +354,14 @@ class Analytics extends AnalyticsService {
         return "Source";
     }
   }
+
+  @override
+  log(log) {
+    debugPrint(log);
+  }
 }
 
-//NOTE this is imported from from LOCALIZATION
+// TODO:  this is imported from from LOCALIZATION
 extension LocalizationExtension on String {
   String l([List<dynamic>? args]) {
     //   final key = this;

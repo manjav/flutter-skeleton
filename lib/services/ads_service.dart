@@ -10,7 +10,6 @@ abstract class IAdsService implements IService {
   isReady();
   showInterstitial(AdId id, String island);
   showRewarded(String source);
-  printTest();
 }
 
 class AdsService implements IAdsService {
@@ -39,12 +38,11 @@ class AdsService implements IAdsService {
   bool showSuicideInterstitial = true;
 
   @override
-  printTest() {
-    print("ads print");
-  }
-
-  @override
-  initialize([AdSDK? sdk]) {
+  initialize({List<Object>? args}) {
+    AdSDK? sdk;
+    if (args != null && args.isNotEmpty) {
+      sdk = args[0] as AdSDK;
+    }
     for (var v in _ads) {
       _myAds[v.id] = v;
     }
@@ -57,7 +55,7 @@ class AdsService implements IAdsService {
     } else if (selectedSDK == AdSDK.unity) {
       UnityAds.init(
         testMode: false,
-        // Note
+        // TODO:
         gameId: "ua_${platform.toLowerCase()}", //.l(),
         onComplete: () {
           // _getInterstitial(AdId.interstitialUnity);
@@ -169,7 +167,7 @@ class AdsService implements IAdsService {
           if (myAd.attempts <= maxFailedLoadAttempts) {
             _getRewarded(id);
           } else if (_initialSDK == AdSDK.google) {
-            initialize(AdSDK.unity); // Alternative AD SDK
+            initialize(args: [AdSDK.unity]); // Alternative AD SDK
           }
         }));
   }
@@ -209,7 +207,7 @@ class AdsService implements IAdsService {
     iAd.show();
     await _waitForClose(id);
     _resetAd(myAd);
-    // NOTE Add Service
+    // TODO: Add Service
     // services.get<Analytics>().funnle("adinterstitial", island);
   }
 
@@ -217,7 +215,7 @@ class AdsService implements IAdsService {
   Future<RewardItem?> showRewarded(String source) async {
     var id = isReady(AdType.rewarded);
     if (id == AdId.none) return null; // Ad is not available.
-    // NOTE Add Service
+    // TODO: Add Service
     // services.get<Sounds>().stop("music");
     var myAd = _myAds[id]!;
     if (myAd.sdk == AdSDK.unity) {
@@ -237,11 +235,11 @@ class AdsService implements IAdsService {
     });
     await _waitForClose(id);
     if (myAd.reward != null) {
-      // NOTE Add Service
+      // TODO: Add Service
       // services.get<Analytics>().funnle("adrewarded", island);
     }
     _resetAd(myAd);
-    // NOTE Add Service
+    // TODO: Add Service
     // services.get<Sounds>().play("african-fun", channel: "music");
     return myAd.reward;
   }
@@ -316,6 +314,11 @@ class AdsService implements IAdsService {
       if (value.type != AdType.banner && value.state == AdState.show) {}
     });
   }
+
+  @override
+  log(log) {
+    debugPrint(log);
+  }
 }
 
 class MyAd {
@@ -340,7 +343,7 @@ class MyAd {
   set reward(RewardItem? value) {
     _reward = value;
     if (_reward != null) {
-      // NOTE
+      // TODO:
       //   Analytics.ad(4, type.code, id.value, sdk.name);
     }
   }

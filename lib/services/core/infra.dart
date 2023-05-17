@@ -100,7 +100,7 @@ class Resources extends StringMap<Resource> {
 
   List<Resource> getMergeOffers(List<String> siblings) {
     var offers = <Resource>[];
-    //NOTE Hamiiid - NA
+    // TODO:  Hamiiid - NA
 
     // for (var resource in rules.resources.values) {
     //   if (resource.links.length == siblings.length) {
@@ -198,7 +198,7 @@ class Island {
   var itemFoundCount = 0;
   var level = 0;
   var initialized = false;
-  // SMIBool? isLock; //NOTE Hamiiid - NA
+  // SMIBool? isLock; // TODO:  Hamiiid - NA
 
   Island(this.index, this.id, this.origins, this.level, this.rarity,
       this.unlockAt, this.bundle, this.unlockBundle, this.key);

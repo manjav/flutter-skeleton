@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Prefs
-//NOTE services has been deleted
+// TODO:  services has been deleted
 // extends BaseService
 {
   static SharedPreferences? _instance;

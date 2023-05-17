@@ -8,6 +8,7 @@ import 'services/analytics_service.dart';
 import 'services/game_apis_service.dart';
 import 'services/network_service.dart';
 import 'view/pages/loading_screen.dart';
+
 // import 'viewModel/bloc/currency_bloc.dart';
 // import 'viewModel/bloc/missions_bloc.dart';
 

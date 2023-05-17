@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 abstract class ILocalization {
-  load();
+  // load();
 }
 
 class Localization implements ILocalization {
@@ -13,14 +13,14 @@ class Localization implements ILocalization {
 
   Localization();
 
-  Future<void> load() async {
-    // dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
-    // _sentences = {};
-    // await _getData('keys.json');
-    // await _getData('locale.json');
-    // isLoaded = true;
-    // // notifyListeners();
-  }
+  // Future<void> load() async {
+  // dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
+  // _sentences = {};
+  // await _getData('keys.json');
+  // await _getData('locale.json');
+  // isLoaded = true;
+  // // notifyListeners();
+  // }
 
   // static _getData(String file) async {
   //   var data = await rootBundle.loadString('texts/$file');
