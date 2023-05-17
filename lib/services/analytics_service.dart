@@ -9,8 +9,6 @@ import 'package:gameanalytics_sdk/gameanalytics.dart';
 import 'package:kochava_tracker/kochava_tracker.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import 'package:nakama/api.dart';
-
 import '../utils/device.dart';
 import 'core/prefs.dart';
 
@@ -128,7 +126,7 @@ class Analytics implements AnalyticsService {
     if (response.statusCode != 200) debugPrint('Failure status code 😱');
   } */
 
-  setAccount(Account account) {
+  setAccount(dynamic account) {
     Smartlook.instance.user.setIdentifier(account.user.id);
     Smartlook.instance.user.setName(account.user.displayName);
     _firebaseAnalytics.setUserProperty(
