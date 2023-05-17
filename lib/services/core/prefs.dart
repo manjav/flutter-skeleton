@@ -1,17 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/core/iservices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Prefs
-// TODO:  services has been deleted
-// extends BaseService
-{
+class Prefs implements IService {
   static SharedPreferences? _instance;
   static var tutorStep = 0;
   static bool get inTutorial => tutorStep < TutorSteps.fine.value;
-  Prefs(
-      // super.services
-      );
 
-  Future<void> init({Function? onInit}) async {
+  @override
+  initialize({List<Object>? args}) async {
     _instance = await SharedPreferences.getInstance();
     if (Pref.visitCount.getInt() <= 0) {
       setBool("settings_sfx", true);
@@ -46,6 +43,11 @@ class Prefs
     var newValue = getInt(key) + value;
     setInt(key, newValue);
     return newValue;
+  }
+
+  @override
+  log(log) {
+    debugPrint(log);
   }
 }
 

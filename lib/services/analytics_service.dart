@@ -4,6 +4,7 @@ import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_skeleton/services/core/iservices.dart';
+import 'package:flutter_skeleton/services/localization_service.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 import 'package:kochava_tracker/kochava_tracker.dart';
@@ -15,7 +16,6 @@ import 'core/prefs.dart';
 // implements IService
 //Should firebase get passed to the Iservice??
 abstract class AnalyticsService extends IService {
-  // Future<Analytics> initialize();
   // Future<Analytics> sendEvent();
   // init(FirebaseAnalytics firebaseAnalytics);
 }
@@ -38,11 +38,8 @@ class Analytics implements AnalyticsService {
     // "adbannerclick": [1, 5, 10, 20],
   };
 
-// TODO:  this init requires arguments
-
   @override
   initialize({List<Object>? args}) async {
-    //FirebaseAnalytics firebaseAnalytics
     var os = Platform.operatingSystem;
     _firebaseAnalytics = args![0] as FirebaseAnalytics;
     AppMetrica.runZoneGuarded(() {
@@ -356,25 +353,5 @@ class Analytics implements AnalyticsService {
   @override
   log(log) {
     debugPrint(log);
-  }
-}
-
-// TODO:  this is imported from from LOCALIZATION
-extension LocalizationExtension on String {
-  String l([List<dynamic>? args]) {
-    //   final key = this;
-    //   if (Localization._sentences == null) {
-    //     debugPrint("[Localization System] sentences = null");
-    //   }
-    //   var result = Localization._sentences![key];
-    //   if (result == null) return key;
-    //   if (args != null) {
-    //     for (var arg in args) {
-    //       result = result!.replaceFirst(RegExp(r'%s'), arg.toString());
-    //     }
-    //   }
-
-    String result = "test";
-    return result;
   }
 }
