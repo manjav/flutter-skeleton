@@ -6,7 +6,7 @@ abstract class GameApisService extends IService {
   disconnect();
 }
 
-class MainAPI implements GameApisService {
+class MainGameApi implements GameApisService {
   @override
   initialize({List<Object>? args}) async {
     // var serverData = {"gold": 12, "nektar": 3};

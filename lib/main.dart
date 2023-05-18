@@ -17,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NetworkService network = Network();
   SoundService sound = Sounds();
-  GameApisService gameApi = MainAPI();
+  GameApisService gameApi = MainGameApi();
   AnalyticsService analytics = Analytics();
   IAdsService ads = AdsService(analytics: analytics, sound: sound);
 
