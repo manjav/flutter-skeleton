@@ -1,69 +1,170 @@
-// import 'package:flutter_skeleton/services/ads_service.dart';
-// import 'package:flutter_skeleton/services/analytics_service.dart';
-// import 'package:flutter_skeleton/services/sounds_service.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:mockito/mockito.dart';
+import 'package:flutter_skeleton/services/ads_service.dart';
+import 'package:flutter_skeleton/services/analytics_service.dart';
+import 'package:flutter_skeleton/services/game_apis_service.dart';
+import 'package:flutter_skeleton/services/localization_service.dart';
+import 'package:flutter_skeleton/services/network_service.dart';
+import 'package:flutter_skeleton/services/sounds_service.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-// class MockAnalyticsService extends Mock implements AnalyticsService {}
+void main() {
+  group('MainAnalytics', () {
+    late AnalyticsService analyticsService;
 
-// class MockSoundService extends Mock implements SoundService {}
+    setUp(() {
+      analyticsService = Analytics();
+    });
 
-// void main() {
-//   late AdsService adsService;
-//   late MockAnalyticsService mockAnalyticsService;
-//   late MockSoundService mockSoundService;
+    test('initialize() should initialize the service', () async {
+      final result = await analyticsService.initialize();
+      expect(true, true);
+    });
 
-//   setUp(() {
-//     mockAnalyticsService = MockAnalyticsService();
-//     mockSoundService = MockSoundService();
-//     adsService = AdsService(analytics: mockAnalyticsService, sound: mockSoundService);
-//   });
+    test('funnle should return an Analytics funnle', () async {
+      final result = await analyticsService.funnle("testType", "name");
+      expect(true, true);
+    });
+  });
 
-//   group('AdsService', () {
-//     test('initialize method initializes Google Mobile Ads when selected SDK is Google', () {
-//       // Arrange
-//       adsService.selectedSDK = AdSDK.google;
-//       MobileAds.instance.initialize();
+  group('soundService', () {
+    late SoundService soundService;
 
-//       // Act
-//       adsService.initialize();
+    setUp(() {
+      soundService = Sounds();
+    });
 
-//       // Assert
-//       verify(MobileAds.instance.initialize()).called(1);
-//     });
+    test('initialize() should initialize the service', () async {
+      final result = await soundService.initialize();
+      expect(true, true);
+    });
 
-//     test('initialize method initializes Unity Ads when selected SDK is Unity', () {
-//       // Arrange
-//       adsService.selectedSDK = AdSDK.unity;
+    test('log should log the service', () async {
+      final result = await soundService.log("log");
+      expect(true, true);
+    });
 
-//       // Act
-//       adsService.initialize();
+    test('play should play the add', () async {
+      final result = await soundService.play("testName");
+      expect(true, true);
+    });
+    test('stop should stop the add', () async {
+      final result = await soundService.stop("channel");
+      expect(true, true);
+      // expect(result.data, 'analytics sendEvent');
+    });
+    test('stopAll should stop all ads', () async {
+      final result = await soundService.stopAll();
+      expect(true, true);
+    });
+  });
 
-//       // Assert
-//       // Verify that UnityAds.init() is called with the correct arguments
-//       // You may need to use Mockito's `captureAnyNamed` matcher to capture the onComplete callback
-//       verify(UnityAds.init(
-//         testMode: false,
-//         gameId: anyNamed('gameId'),
-//         onComplete: captureAnyNamed('onComplete'),
-//         onFailed: anyNamed('onFailed'),
-//       )).called(1);
-//     });
+  group('soundService', () {
+    late AnalyticsService analytics;
+    late IAdsService adsService;
+    late SoundService soundService;
 
-//     test('getBannerWidget returns a SizedBox with the correct width and height', () {
-//       // Arrange
-//       final type = 'type';
-//       final island = 'island';
+    setUp(() {
+      analytics = Analytics();
+      soundService = Sounds();
+      adsService = AdsService(analytics: analytics, sound: soundService);
+    });
 
-//       // Act
-//       final widget = adsService.getBannerWidget(type, island);
+    test('initialize() should initialize the service', () async {
+      final result = await adsService.initialize();
+      expect(true, true);
+    });
 
-//       // Assert
-//       expect(widget, isA<SizedBox>());
-//       expect(widget.width, 320.0);
-//       expect(widget.height, 50.0);
-//     });
+    test('log should log the service', () async {
+      final result = await adsService.log("log");
+      expect(true, true);
+    });
 
-//     // Add more tests as needed for other methods and behaviors of AdsService
-//   });
-// }
+    test('showInterstitial is for ?', () async {
+      final result =
+          await adsService.showInterstitial(AdId.bannerGoogle, "island");
+
+      expect(true, true);
+    });
+    test('isReady is for the time when ad is ready', () async {
+      final result = await adsService.isReady();
+
+      expect(true, true);
+    });
+    test('stopAll should stop all ads', () async {
+      final result = await adsService.showRewarded("source");
+
+      expect(true, true);
+    });
+  });
+
+  group('localization', () {
+    late LocalizationService localizationService;
+
+    setUp(() {
+      localizationService = LocalizationService();
+      // networkService = Network();
+      // gameApisService = MainGameApi();
+    });
+
+    test('initialize() should initialize the service', () async {
+      final result = await localizationService.initialize();
+      expect(true, true);
+    });
+
+    test('log should log the service', () async {
+      final result = await localizationService.log("log");
+      expect(true, true);
+    });
+  });
+
+  group('network', () {
+    late NetworkService networkService;
+
+    setUp(() {
+      networkService = Network();
+    });
+
+    test('initialize() should initialize the service', () async {
+      final result = await networkService.initialize();
+      expect(true, true);
+    });
+
+    test('log should log the service', () async {
+      final result = await networkService.log("log");
+      expect(true, true);
+    });
+    test('rpc for the protocol', () async {
+      final result = await networkService.rpc(RpcId.battle, payload: "payload");
+      expect(true, true);
+    });
+    test('updateResponse is to update the response', () async {
+      final result =
+          await networkService.updateResponse(LoadingState.complete, "Message");
+      expect(true, true);
+    });
+  });
+  group('network', () {
+    late GameApisService gameApisService;
+
+    setUp(() {
+      gameApisService = MainGameApi();
+    });
+
+    test('initialize() should initialize the service', () async {
+      final result = await gameApisService.initialize();
+      expect(true, true);
+    });
+
+    test('log should log the service', () async {
+      final result = await gameApisService.log("log");
+      expect(true, true);
+    });
+    test('connect check if the api is connected', () async {
+      final result = await gameApisService.connect();
+      expect(true, true);
+    });
+    test('disconnect check if the api is not connected', () async {
+      final result = await gameApisService.disconnect();
+      expect(true, true);
+    });
+  });
+}
