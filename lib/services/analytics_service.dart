@@ -18,6 +18,7 @@ import 'core/prefs.dart';
 abstract class AnalyticsService extends IService {
   // Future<Analytics> sendEvent();
   // init(FirebaseAnalytics firebaseAnalytics);
+  funnle(String type, [String? name]);
 }
 
 class Analytics implements AnalyticsService {
@@ -239,6 +240,8 @@ class Analytics implements AnalyticsService {
     GameAnalytics.addProgressionEvent(map);
   }
 
+//NOTE this must be in the abstract class
+  @override
   funnle(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";
     var step = Prefs.increase(name, 1);

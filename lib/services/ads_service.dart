@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
+import 'analytics_service.dart';
 import 'core/iservices.dart';
+import 'sounds_service.dart';
 
 abstract class IAdsService implements IService {
   isReady();
@@ -36,6 +38,10 @@ class AdsService implements IAdsService {
   final AdRequest _request = const AdRequest(nonPersonalizedAds: false);
   AdSDK? selectedSDK;
   bool showSuicideInterstitial = true;
+  final AnalyticsService analytics;
+  final SoundService sound;
+
+  AdsService({required this.analytics, required this.sound});
 
   @override
   initialize({List<Object>? args}) {
@@ -56,10 +62,10 @@ class AdsService implements IAdsService {
       UnityAds.init(
         testMode: false,
         // TODO:
-        gameId: "ua_${platform.toLowerCase()}", //.l(),
+        gameId: "ua_${platform.toLowerCase()}",
         onComplete: () {
-          // _getInterstitial(AdId.interstitialUnity);
-          // _getInterstitial(AdId.interstitialVideoUnity);
+          _getInterstitial(AdId.interstitialUnity);
+          _getInterstitial(AdId.interstitialVideoUnity);
           _getRewarded(AdId.rewardedUnity);
         },
         onFailed: (error, message) =>
@@ -78,7 +84,10 @@ class AdsService implements IAdsService {
           ad.dispose();
         },
         onAdOpened: (ad) {
+          //NOTE replaces with the analytycs abstract class
           // Analytics.funnle("adbannerclick", island);
+          analytics.funnle("adbannerclick", island);
+
           _updateState(myAd, AdState.clicked);
         },
         onAdClosed: (ad) => _updateState(myAd, AdState.closed),
@@ -207,7 +216,8 @@ class AdsService implements IAdsService {
     iAd.show();
     await _waitForClose(id);
     _resetAd(myAd);
-    // TODO: Add Service
+    // NOTE: used abstracty Analytics class
+    analytics.funnle("adinterstitial", island);
     // services.get<Analytics>().funnle("adinterstitial", island);
   }
 
@@ -215,8 +225,11 @@ class AdsService implements IAdsService {
   Future<RewardItem?> showRewarded(String source) async {
     var id = isReady(AdType.rewarded);
     if (id == AdId.none) return null; // Ad is not available.
-    // TODO: Add Service
+
+    // NOTE: Add Service
+    sound.stop("music");
     // services.get<Sounds>().stop("music");
+
     var myAd = _myAds[id]!;
     if (myAd.sdk == AdSDK.unity) {
       return await _showUnityAd(id);
@@ -235,12 +248,16 @@ class AdsService implements IAdsService {
     });
     await _waitForClose(id);
     if (myAd.reward != null) {
-      // TODO: Add Service
+      // NOTE: replaced
+
+      // analytics.funnle("adrewarded", island);
       // services.get<Analytics>().funnle("adrewarded", island);
     }
     _resetAd(myAd);
-    // TODO: Add Service
+    // NOTE: Add Service
+
     // services.get<Sounds>().play("african-fun", channel: "music");
+    sound.play("african-fun", channel: "music");
     return myAd.reward;
   }
 
@@ -343,8 +360,7 @@ class MyAd {
   set reward(RewardItem? value) {
     _reward = value;
     if (_reward != null) {
-      // TODO:
-      //   Analytics.ad(4, type.code, id.value, sdk.name);
+      // Analytics.ad(4, type.code, id.value, sdk.name);
     }
   }
 }
