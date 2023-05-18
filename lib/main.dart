@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/services/sounds_service.dart';
 // import 'package:fc_project/viewModel/bloc/services_bloc.dart';
 
 import 'blocs/services_bloc.dart';
@@ -15,17 +16,10 @@ import 'view/pages/loading_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NetworkService network = Network();
+  SoundService sound = Sounds();
   GameApisService gameApi = MainAPI();
-  IAdsService ads = AdsService();
   AnalyticsService analytics = Analytics();
-
-  // ByteHTTP local = ByteHTTP();
-  // local.getByteData();
-//
-  // NetConnection connectionRes = await connection.connect();
-  // GameApi gameApiRes = await gameApi.connect();
-  // Ads adsRes = await ads.initialize();
-  // Analytics analyticsRes = await analytics.initialize();
+  IAdsService ads = AdsService(analytics: analytics, sound: sound);
 
   runApp(MyApp(
     netConnectionData: network,
@@ -60,15 +54,6 @@ class MyApp extends StatelessWidget {
               analyticsData: analyticsData,
               netConnectionData: netConnectionData),
         ),
-        // BlocProvider(
-        //   create: (context) => ConnectioBloc(connectionData: netConnectionData),
-        // ),
-        // BlocProvider(
-        //   create: (context) => GameApiBloc(gameApiData: gameApiData),
-        // ),
-        // BlocProvider(
-        //   create: (context) => AnalyticsBloc(analyticsData: analyticsData),
-        // ),
       ],
       child: const MaterialApp(home: LoadingScreen()),
     );

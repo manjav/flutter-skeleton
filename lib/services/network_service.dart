@@ -28,9 +28,6 @@ class Network implements NetworkService {
 
   @override
   initialize({List<Object>? args}) async {
-    // TODO: remove comments
-
-    // await _konvert();
     await _loadConfig();
     log("Config loaded.");
     await _connection();
@@ -38,20 +35,6 @@ class Network implements NetworkService {
 
     // Load account
     log("Account data loaded.");
-
-    // Load the resources data
-    // var resources = await rpc<List>(RpcId.resourceData);
-
-    // Load the rules data
-    // rules.wallet.init(json.decode(account.wallet));
-
-    // if (rules.wallet['_explore'] < 1) {
-    //   TutorSteps.welcome.commit(true);
-    // } else if (rules.wallet['_merge'] < 1) {
-    //   TutorSteps.exploreFirst.commit(true);
-    // } else if (rules.wallet['_order'] > 0) {
-    // TutorSteps.fine.commit();
-    // }
 
     updateResponse(LoadingState.connect, "Account ${'user'} connected.");
   }
@@ -81,14 +64,7 @@ class Network implements NetworkService {
   }
 
   // Connect to nakama server
-  _connection() async {
-    // try {
-    //   _session = await _nakamaClient.authenticateDevice(
-    //       deviceId: Device.adId, vars: data);
-    // } catch (e) {
-    //   updateResponse(LoadingState.disconnect, e.toString());
-    // }
-  }
+  _connection() async {}
 
   @override
   Future<Result<T>> rpc<T>(RpcId id, {String? payload}) async {
@@ -123,7 +99,6 @@ class Network implements NetworkService {
   updateResponse(LoadingState state, String message) {
     response.state = state;
     response.message = message;
-    // notifyListeners();
   }
 
   @override
