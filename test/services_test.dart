@@ -1,117 +1,69 @@
-// import 'package:fc_project/services/analytics.dart';
+// import 'package:flutter_skeleton/services/ads_service.dart';
+// import 'package:flutter_skeleton/services/analytics_service.dart';
+// import 'package:flutter_skeleton/services/sounds_service.dart';
 // import 'package:flutter_test/flutter_test.dart';
-// import 'package:fc_project/models/analytics_model.dart';
+// import 'package:mockito/mockito.dart';
 
-// import 'package:fc_project/models/ads_model.dart';
+// class MockAnalyticsService extends Mock implements AnalyticsService {}
 
-// import 'package:fc_project/models/connection_mode.dart';
-// import 'package:fc_project/models/game_api_model.dart';
-// import 'package:fc_project/services/ads_service.dart';
-// import 'package:fc_project/services/connection.dart';
-// import 'package:fc_project/services/game_apis.dart';
+// class MockSoundService extends Mock implements SoundService {}
 
 // void main() {
-//   group('MainAnalytics', () {
-//     late AnalyticsService analyticsService;
+//   late AdsService adsService;
+//   late MockAnalyticsService mockAnalyticsService;
+//   late MockSoundService mockSoundService;
 
-//     setUp(() {
-//       analyticsService = MainAnalytics();
-//     });
-
-//     test('initialize() should return an Analytics instance', () async {
-//       final result = await analyticsService.initialize();
-//       expect(result, isA<Analytics>());
-//       expect(result.data, 'analytics initialize');
-//     });
-
-//     test('sendEvent() should return an Analytics instance', () async {
-//       final result = await analyticsService.sendEvent();
-//       expect(result, isA<Analytics>());
-//       expect(result.data, 'analytics sendEvent');
-//     });
+//   setUp(() {
+//     mockAnalyticsService = MockAnalyticsService();
+//     mockSoundService = MockSoundService();
+//     adsService = AdsService(analytics: mockAnalyticsService, sound: mockSoundService);
 //   });
 
-//   group('GoogleAds', () {
-//     late AdsService adsService;
+//   group('AdsService', () {
+//     test('initialize method initializes Google Mobile Ads when selected SDK is Google', () {
+//       // Arrange
+//       adsService.selectedSDK = AdSDK.google;
+//       MobileAds.instance.initialize();
 
-//     setUp(() {
-//       adsService = GoogleAds();
+//       // Act
+//       adsService.initialize();
+
+//       // Assert
+//       verify(MobileAds.instance.initialize()).called(1);
 //     });
 
-//     test('initialize() should return an Ads instance', () async {
-//       final result = await adsService.initialize();
-//       expect(result, isA<Ads>());
-//       expect(result.data, 'ads Initialized');
+//     test('initialize method initializes Unity Ads when selected SDK is Unity', () {
+//       // Arrange
+//       adsService.selectedSDK = AdSDK.unity;
+
+//       // Act
+//       adsService.initialize();
+
+//       // Assert
+//       // Verify that UnityAds.init() is called with the correct arguments
+//       // You may need to use Mockito's `captureAnyNamed` matcher to capture the onComplete callback
+//       verify(UnityAds.init(
+//         testMode: false,
+//         gameId: anyNamed('gameId'),
+//         onComplete: captureAnyNamed('onComplete'),
+//         onFailed: anyNamed('onFailed'),
+//       )).called(1);
 //     });
 
-//     test('isReady() should return an Ads instance', () async {
-//       final result = await adsService.isReady();
-//       expect(result, isA<Ads>());
-//       expect(result.data, 'ads IsReady');
+//     test('getBannerWidget returns a SizedBox with the correct width and height', () {
+//       // Arrange
+//       final type = 'type';
+//       final island = 'island';
+
+//       // Act
+//       final widget = adsService.getBannerWidget(type, island);
+
+//       // Assert
+//       expect(widget, isA<SizedBox>());
+//       expect(widget.width, 320.0);
+//       expect(widget.height, 50.0);
 //     });
 
-//     test('show() should return an Ads instance', () async {
-//       final result = await adsService.show();
-//       expect(result, isA<Ads>());
-//       expect(result.data, 'ads Show');
-//     });
-//   });
-
-//   group('MainConnection', () {
-//     late ConnectionService connectionService;
-
-//     setUp(() {
-//       connectionService = MainConnection();
-//     });
-
-//     test('initialize() should return a NetConnection instance', () async {
-//       final result = await connectionService.initialize();
-//       expect(result, isA<NetConnection>());
-//       expect(result.message, 'ConnectionService initialize');
-//       expect(result.response, ConnectionType.wifi);
-//     });
-
-//     test('connect() should return a NetConnection instance', () async {
-//       final result = await connectionService.connect();
-//       expect(result, isA<NetConnection>());
-//       expect(result.message, 'ConnectionService connect');
-//       expect(result.response, ConnectionType.wifi);
-//     });
-
-//     test('disconnect() should return a NetConnection instance', () async {
-//       final result = await connectionService.disconnect();
-//       expect(result, isA<NetConnection>());
-//       expect(result.message, 'disconnect');
-//       expect(result.response, ConnectionType.wifi);
-//     });
-//   });
-
-//   group('MainAPI', () {
-//     late GameApis gameApis;
-
-//     setUp(() {
-//       gameApis = MainAPI();
-//     });
-
-//     test('initialize() should return a GameApi instance with the provided data',
-//         () async {
-//       final result = await gameApis.initialize();
-//       expect(result, isA<GameApi>());
-//       expect(result.data, {"gold": 1});
-//     });
-
-//     test('connect() should return a GameApi instance with the server data',
-//         () async {
-//       final result = await gameApis.connect();
-//       expect(result, isA<GameApi>());
-//       expect(result.data, {"gold": 1, "nektar": 1});
-//     });
-
-//     test('disconnect() should return a GameApi instance with the server data',
-//         () async {
-//       final result = await gameApis.disconnect();
-//       expect(result, isA<GameApi>());
-//       expect(result.data, {"gold": 2, "nektar": 2});
-//     });
+//     // Add more tests as needed for other methods and behaviors of AdsService
 //   });
 // }
