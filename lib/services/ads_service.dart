@@ -335,6 +335,8 @@ class AdsService implements IAdsService {
   @override
   log(log) {
     debugPrint(log);
+    sound.log(
+        "*-sound inside ads log"); //TODO-hamiiid: to test using another service methods inside this one.
   }
 }
 

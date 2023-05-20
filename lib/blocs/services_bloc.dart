@@ -6,11 +6,7 @@ import '../services/ads_service.dart';
 import '../services/analytics_service.dart';
 import '../services/game_apis_service.dart';
 
-class ServicesEvent {
-  // final ServicesType type;
-  // final int value;
-  // ServicesEvent({required this.type, required this.value});
-}
+class ServicesEvent {}
 
 //--------------------------------------------------------
 
@@ -47,9 +43,6 @@ class ServicesUpdate extends ServicesState {
 //--------------------------------------------------------
 
 class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
-  // Map<dynamic, dynamic> data;
-  // Services servicesData;
-
   IAdsService adsService;
   GameApisService gameApiData;
   AnalyticsService analyticsData;
@@ -69,10 +62,10 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   }
 
   initialize() {
-    // adsService.printTest();
-    // analyticsData.printTest();
-    // netConnectionData.printTest();
-    // gameApiData.printTest();
+    adsService.log("adsService");
+    analyticsData.log("analyticsService");
+    netConnectionData.log("netConnectionService");
+    gameApiData.log("gameApiService");
   }
 }
 
