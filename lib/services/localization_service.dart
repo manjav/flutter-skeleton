@@ -12,11 +12,12 @@ class LocalizationService implements IService {
   var isRTL = false;
 
   LocalizationService();
-
   @override
   initialize({List<Object>? args}) async {
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
+
+    await rootBundle.loadString('texts/keys.json');
     await _getData('keys.json');
     await _getData('locale.json');
     isLoaded = true;
@@ -28,6 +29,7 @@ class LocalizationService implements IService {
     result.forEach((String key, dynamic value) {
       _sentences![key] = value.toString();
     });
+    print(result);
   }
 
   @override
