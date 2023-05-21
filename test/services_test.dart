@@ -92,10 +92,10 @@ void main() {
   //   });
   // });
   group('localization', () {
-    late LocalizationService localizationService;
+    late ILocalization localizationService;
 
     setUp(() {
-      localizationService = LocalizationService();
+      localizationService = ILocalization();
       // networkService = Network();
       // gameApisService = MainGameApi();
     });
