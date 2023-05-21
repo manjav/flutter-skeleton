@@ -45,33 +45,35 @@ class AdsService implements IAdsService {
 
   @override
   initialize({List<Object>? args}) {
-    AdSDK? sdk;
-    if (args != null && args.isNotEmpty) {
-      sdk = args[0] as AdSDK;
-    }
-    for (var v in _ads) {
-      _myAds[v.id] = v;
-    }
-    selectedSDK = sdk ?? _initialSDK;
-    if (selectedSDK == AdSDK.google) {
-      MobileAds.instance.initialize();
-      // _getInterstitial(AdId.interstitialGoogle);
-      // _getInterstitial(AdId.interstitialVideoGoogle);
-      _getRewarded(AdId.rewardedGoogle);
-    } else if (selectedSDK == AdSDK.unity) {
-      UnityAds.init(
-        testMode: false,
-        // TODO:
-        gameId: "ua_${platform.toLowerCase()}",
-        onComplete: () {
-          _getInterstitial(AdId.interstitialUnity);
-          _getInterstitial(AdId.interstitialVideoUnity);
-          _getRewarded(AdId.rewardedUnity);
-        },
-        onFailed: (error, message) =>
-            debugPrint('UnityAds Initialization Failed: $error $message'),
-      );
-    }
+    Future.delayed(const Duration(milliseconds: 200));
+    debugPrint("ads init");
+    // AdSDK? sdk;
+    // if (args != null && args.isNotEmpty) {
+    //   sdk = args[0] as AdSDK;
+    // }
+    // for (var v in _ads) {
+    //   _myAds[v.id] = v;
+    // }
+    // selectedSDK = sdk ?? _initialSDK;
+    // if (selectedSDK == AdSDK.google) {
+    //   MobileAds.instance.initialize();
+    //   // _getInterstitial(AdId.interstitialGoogle);
+    //   // _getInterstitial(AdId.interstitialVideoGoogle);
+    //   _getRewarded(AdId.rewardedGoogle);
+    // } else if (selectedSDK == AdSDK.unity) {
+    //   UnityAds.init(
+    //     testMode: false,
+    //     // TODO:
+    //     gameId: "ua_${platform.toLowerCase()}",
+    //     onComplete: () {
+    //       _getInterstitial(AdId.interstitialUnity);
+    //       _getInterstitial(AdId.interstitialVideoUnity);
+    //       _getRewarded(AdId.rewardedUnity);
+    //     },
+    //     onFailed: (error, message) =>
+    //         debugPrint('UnityAds Initialization Failed: $error $message'),
+    //   );
+    // }
   }
 
   BannerAd _getGoogleBanner(String type, String island, {AdSize? size}) {

@@ -41,50 +41,52 @@ class Analytics implements AnalyticsService {
 
   @override
   initialize({List<Object>? args}) async {
-    var os = Platform.operatingSystem;
-    _firebaseAnalytics = args![0] as FirebaseAnalytics;
-    AppMetrica.runZoneGuarded(() {
-      WidgetsFlutterBinding.ensureInitialized();
-      AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
-    });
+    await Future.delayed(const Duration(milliseconds: 200));
+    debugPrint("Analytics init");
+    // var os = Platform.operatingSystem;
+    // _firebaseAnalytics = args![0] as FirebaseAnalytics;
+    // AppMetrica.runZoneGuarded(() {
+    //   WidgetsFlutterBinding.ensureInitialized();
+    //   AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
+    // });
 
-    GameAnalytics.setEnabledInfoLog(false);
-    GameAnalytics.setEnabledVerboseLog(false);
-    GameAnalytics.configureAvailableCustomDimensions01(
-        ["installed", "instant"]);
-    GameAnalytics.configureAvailableResourceCurrencies(["coin"]);
-    GameAnalytics.configureAvailableResourceItemTypes(
-        ["game", "confirm", "shop", "start"]);
-    var type = "installed";
-    GameAnalytics.setCustomDimension01(type);
-    AppMetrica.reportEvent("type_$type");
+    // GameAnalytics.setEnabledInfoLog(false);
+    // GameAnalytics.setEnabledVerboseLog(false);
+    // GameAnalytics.configureAvailableCustomDimensions01(
+    //     ["installed", "instant"]);
+    // GameAnalytics.configureAvailableResourceCurrencies(["coin"]);
+    // GameAnalytics.configureAvailableResourceItemTypes(
+    //     ["game", "confirm", "shop", "start"]);
+    // var type = "installed";
+    // GameAnalytics.setCustomDimension01(type);
+    // AppMetrica.reportEvent("type_$type");
 
-    GameAnalytics.configureAutoDetectAppVersion(true);
-    GameAnalytics.initialize("ga_key_$os".l(), "ga_sec_$os".l());
+    // GameAnalytics.configureAutoDetectAppVersion(true);
+    // GameAnalytics.initialize("ga_key_$os".l(), "ga_sec_$os".l());
 
-    _firebaseAnalytics.setUserProperty(name: "buildType", value: type);
-    _firebaseAnalytics.setUserProperty(name: "build_type", value: type);
+    // _firebaseAnalytics.setUserProperty(name: "buildType", value: type);
+    // _firebaseAnalytics.setUserProperty(name: "build_type", value: type);
 
-    if (Platform.isAndroid) {
-      KochavaTracker.instance.registerAndroidAppGuid("kt_key_$os".l());
-    } else if (Platform.isIOS) {
-      KochavaTracker.instance.registerIosAppGuid("kt_key_$os".l());
-    }
-    KochavaTracker.instance.setLogLevel(KochavaTrackerLogLevel.Warn);
-    KochavaTracker.instance.start();
+    // if (Platform.isAndroid) {
+    //   KochavaTracker.instance.registerAndroidAppGuid("kt_key_$os".l());
+    // } else if (Platform.isIOS) {
+    //   KochavaTracker.instance.registerIosAppGuid("kt_key_$os".l());
+    // }
+    // KochavaTracker.instance.setLogLevel(KochavaTrackerLogLevel.Warn);
+    // KochavaTracker.instance.start();
 
-    await updateVariantIDs();
-    await getDeviceId();
-    funnle("open");
+    // await updateVariantIDs();
+    // await getDeviceId();
+    // funnle("open");
 
-    // Smartlook initialize
-    if (Pref.visitCount.getInt() <= 1 && Device.osVersion > 10) {
-      // Smartlook.instance.log.enableLogging();
-      await Smartlook.instance.preferences.setProjectKey("sl_key_$os".l());
-      await Smartlook.instance.start();
-      // Smartlook.instance.registerIntegrationListener(CustomIntegrationListener());
-      // await Smartlook.instance.preferences.setWebViewEnabled(true);
-    }
+    // // Smartlook initialize
+    // if (Pref.visitCount.getInt() <= 1 && Device.osVersion > 10) {
+    //   // Smartlook.instance.log.enableLogging();
+    //   await Smartlook.instance.preferences.setProjectKey("sl_key_$os".l());
+    //   await Smartlook.instance.start();
+    //   // Smartlook.instance.registerIntegrationListener(CustomIntegrationListener());
+    //   // await Smartlook.instance.preferences.setWebViewEnabled(true);
+    // }
   }
 
   updateVariantIDs() async {

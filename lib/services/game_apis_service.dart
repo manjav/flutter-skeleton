@@ -9,14 +9,13 @@ abstract class GameApisService extends IService {
 class MainGameApi implements GameApisService {
   @override
   initialize({List<Object>? args}) async {
-    // var serverData = {"gold": 12, "nektar": 3};
-    return true;
+    await Future.delayed(const Duration(seconds: 2));
+    debugPrint("game api init");
   }
 
   @override
   connect() async {
-    // var serverData = {"gold": 1, "nektar": 1};
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 5));
     return true;
   }
 

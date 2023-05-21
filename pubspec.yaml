@@ -53,6 +53,7 @@ dependencies:
   logger: ^1.3.0
   http: ^0.13.6
   audioplayers: ^4.0.1
+  rive: ^0.11.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,8 @@ flutter:
   assets:
     - texts/keys.json
     - texts/locale.json
+    - anims/loading.riv
+    - anims/coin.riv
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

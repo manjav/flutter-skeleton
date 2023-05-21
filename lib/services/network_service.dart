@@ -28,6 +28,9 @@ class Network implements NetworkService {
 
   @override
   initialize({List<Object>? args}) async {
+    // await Future.delayed(const Duration(milliseconds: 200));
+    // debugPrint("network init");
+
     await _loadConfig();
     log("Config loaded.");
     await _connection();
