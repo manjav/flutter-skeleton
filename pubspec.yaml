@@ -82,6 +82,7 @@ flutter:
     - texts/locale.json
     - anims/loading.riv
     - anims/coin.riv
+    - anims/map.riv
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

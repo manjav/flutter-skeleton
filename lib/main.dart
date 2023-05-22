@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_skeleton/services/localization_service.dart';
 import 'package:flutter_skeleton/services/sounds_service.dart';
+import 'package:flutter_skeleton/view/pages/main_screen.dart';
 // import 'package:fc_project/viewModel/bloc/services_bloc.dart';
 
 import 'blocs/services_bloc.dart';
