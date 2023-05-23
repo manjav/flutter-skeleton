@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
@@ -7,7 +6,7 @@ showOverlay(
   final overlay = Overlay.of(context);
 
   overlayEntry =
-      OverlayEntry(builder: (context) => Center(child: FlutterLogo()));
+      OverlayEntry(builder: (context) => const Center(child: FlutterLogo()));
 
   overlay.insert(overlayEntry);
 

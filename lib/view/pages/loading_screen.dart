@@ -1,6 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services_bloc.dart';
@@ -29,14 +29,30 @@ class _LoadingScreenState extends State<LoadingScreen> {
       child: BlocBuilder<ServicesBloc, ServicesState>(
         builder: (context, state) {
           return Center(
-            child: Column(
+            child: Stack(
               children: [
-                Text("${state.adsService}"),
-                Text("${state.analyticsService}"),
-                Text("${state.gameApiService}"),
-                Text("${((state.localizationService) as ILocalization).dir}"),
-                Text("${state.networkService}"),
-                Text("${state.soundService}"),
+                Center(
+                  child: RiveAnimation.asset('anims/${Asset.prefix}map.riv',
+                      onInit: (Artboard artboard) {
+                    final controller = StateMachineController.fromArtboard(
+                      artboard,
+                      'Map',
+                      onStateChange: (state, animation) {
+                        debugPrint("---$animation");
+                      },
+                    );
+                    controller!.findInput<int>('mine')?.value = 3;
+                    controller.findInput<int>('military')?.value = 3;
+
+                    // _closeInput = controller.findInput<bool>('close') as SMIBool;
+                    artboard.addController(controller);
+                  }, fit: BoxFit.fitWidth),
+                ),
+                CupertinoButton(
+                    child: Text("data"),
+                    onPressed: () {
+                      setState(() {});
+                    })
               ],
             ),
           );
@@ -45,7 +61,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     )));
   }
 
-  showOverlay(BuildContext context) async {
+  showLoadingOverlay(BuildContext context) async {
     // showOverlay(context);
     final overlay = Overlay.of(context);
 
@@ -57,7 +73,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   artboard,
                   'Loading',
                   onStateChange: (state, animation) {
-                    print("---$animation");
+                    debugPrint("---$animation");
                   },
                 );
                 controller!.findInput<bool>('close') as SMIBool;
@@ -71,17 +87,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   loadServices(BuildContext context) async {
-    WidgetsBinding.instance.addPostFrameCallback((_) => showOverlay(context));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => showLoadingOverlay(context));
 
     var services = BlocProvider.of<ServicesBloc>(context);
     await services.initialize();
     // Device.init(MediaQuery.of(context).size); //TODO move this into services bloc
     _closeInput?.value = true;
 
-    await Future.delayed(const Duration(seconds: 2));
-    _overlayEntry.remove();
-
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: builder));
-    return true;
+    await Future.delayed(const Duration(seconds: 1)).then((value) {
+      _overlayEntry.remove();
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => const MainScreen()));
+    });
   }
 }

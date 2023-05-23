@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_skeleton/services/localization_service.dart';
 import 'package:flutter_skeleton/services/sounds_service.dart';
-import 'package:flutter_skeleton/view/pages/main_screen.dart';
 // import 'package:fc_project/viewModel/bloc/services_bloc.dart';
 
 import 'blocs/services_bloc.dart';
@@ -17,33 +17,21 @@ import 'view/pages/loading_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // NetworkService network = Network();
-  // SoundService sound = Sounds();
-  // GameApisService gameApi = MainGameApi();
-  // AnalyticsService analytics = Analytics();
-  // IAdsService ads = AdsService(analytics: analytics, sound: sound);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  //NOTE: would be included later
+  // await Firebase.initializeApp();
 
-  runApp(MyApp(
-      // netConnectionData: network,
-      // gameApiData: gameApi,
-      // adsData: ads,
-      // analyticsData: analytics,
-      ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // final IAdsService adsData;
-  // final GameApisService gameApiData;
-  // final NetworkService netConnectionData;
-  // final AnalyticsService analyticsData;
-
   const MyApp({
     super.key,
-    // required this.adsData,
-    // required this.gameApiData,
-    // required this.analyticsData,
-    // required this.netConnectionData,
   });
+
+  //NOTE: would be included later
+  //   static final analytics = FirebaseAnalytics.instance;
+  // static final _observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
