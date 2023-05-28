@@ -15,16 +15,16 @@ abstract class IAdsService implements IService {
 }
 
 class AdsService implements IAdsService {
-  // final _ads = [
-  //   MyAd(AdSDK.google, AdType.banner),
-  //   MyAd(AdSDK.google, AdType.interstitial),
-  //   MyAd(AdSDK.google, AdType.interstitialVideo),
-  //   MyAd(AdSDK.google, AdType.rewarded),
-  //   MyAd(AdSDK.unity, AdType.banner),
-  //   MyAd(AdSDK.unity, AdType.interstitial),
-  //   MyAd(AdSDK.unity, AdType.interstitialVideo),
-  //   MyAd(AdSDK.unity, AdType.rewarded)
-  // ];
+  final _ads = [
+    MyAd(AdSDK.google, AdType.banner),
+    MyAd(AdSDK.google, AdType.interstitial),
+    MyAd(AdSDK.google, AdType.interstitialVideo),
+    MyAd(AdSDK.google, AdType.rewarded),
+    MyAd(AdSDK.unity, AdType.banner),
+    MyAd(AdSDK.unity, AdType.interstitial),
+    MyAd(AdSDK.unity, AdType.interstitialVideo),
+    MyAd(AdSDK.unity, AdType.rewarded)
+  ];
   final _myAds = <AdId, MyAd>{};
 
   Function(AdType, AdState, MyAd?)? onUpdate;
