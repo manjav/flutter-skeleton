@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
-// import 'package:unity_ads_plugin/unity_ads_plugin.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'analytics_service.dart';
 import 'core/iservices.dart';
@@ -33,9 +33,9 @@ class AdsService implements IAdsService {
   final rewardCoef = 10;
   final costCoef = 10;
   final maxFailedLoadAttempts = 3;
-  // final AdSDK _initialSDK = AdSDK.google;
-  // final Duration _waitingDuration = const Duration(milliseconds: 200);
-  // final AdRequest _request = const AdRequest(nonPersonalizedAds: false);
+  final AdSDK _initialSDK = AdSDK.google;
+  final Duration _waitingDuration = const Duration(milliseconds: 200);
+  final AdRequest _request = const AdRequest(nonPersonalizedAds: false);
   AdSDK? selectedSDK;
   bool showSuicideInterstitial = true;
   final AnalyticsService analytics;
