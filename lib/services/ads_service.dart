@@ -47,153 +47,153 @@ class AdsService implements IAdsService {
   initialize({List<Object>? args}) {
     Future.delayed(const Duration(milliseconds: 200));
     debugPrint("ads init");
-    // AdSDK? sdk;
-    // if (args != null && args.isNotEmpty) {
-    //   sdk = args[0] as AdSDK;
-    // }
-    // for (var v in _ads) {
-    //   _myAds[v.id] = v;
-    // }
-    // selectedSDK = sdk ?? _initialSDK;
-    // if (selectedSDK == AdSDK.google) {
-    //   MobileAds.instance.initialize();
-    //   // _getInterstitial(AdId.interstitialGoogle);
-    //   // _getInterstitial(AdId.interstitialVideoGoogle);
-    //   _getRewarded(AdId.rewardedGoogle);
-    // } else if (selectedSDK == AdSDK.unity) {
-    //   UnityAds.init(
-    //     testMode: false,
-    //     // TODO:
-    //     gameId: "ua_${platform.toLowerCase()}",
-    //     onComplete: () {
-    //       _getInterstitial(AdId.interstitialUnity);
-    //       _getInterstitial(AdId.interstitialVideoUnity);
-    //       _getRewarded(AdId.rewardedUnity);
-    //     },
-    //     onFailed: (error, message) =>
-    //         debugPrint('UnityAds Initialization Failed: $error $message'),
-    //   );
-    // }
+    AdSDK? sdk;
+    if (args != null && args.isNotEmpty) {
+      sdk = args[0] as AdSDK;
+    }
+    for (var v in _ads) {
+      _myAds[v.id] = v;
+    }
+    selectedSDK = sdk ?? _initialSDK;
+    if (selectedSDK == AdSDK.google) {
+      MobileAds.instance.initialize();
+      // _getInterstitial(AdId.interstitialGoogle);
+      // _getInterstitial(AdId.interstitialVideoGoogle);
+      _getRewarded(AdId.rewardedGoogle);
+    } else if (selectedSDK == AdSDK.unity) {
+      UnityAds.init(
+        testMode: false,
+        // TODO:
+        gameId: "ua_${platform.toLowerCase()}",
+        onComplete: () {
+          _getInterstitial(AdId.interstitialUnity);
+          _getInterstitial(AdId.interstitialVideoUnity);
+          _getRewarded(AdId.rewardedUnity);
+        },
+        onFailed: (error, message) =>
+            debugPrint('UnityAds Initialization Failed: $error $message'),
+      );
+    }
   }
 
-  @override
-  showInterstitial(AdId id, String island) {
-    // TODO: implement showInterstitial
-    throw UnimplementedError();
+  // @override
+  // showInterstitial(AdId id, String island) {
+  //   // TODO: implement showInterstitial
+  //   throw UnimplementedError();
+  // }
+
+  // @override
+  // showRewarded(String source) {
+  //   // TODO: implement showRewarded
+  //   throw UnimplementedError();
+  // }
+
+  BannerAd _getGoogleBanner(String type, String island, {AdSize? size}) {
+    var id = AdId.bannerGoogle;
+    var myAd = _myAds[id]!;
+    var listener = BannerAdListener(
+        onAdLoaded: (ad) => _updateState(myAd, AdState.loaded),
+        onAdFailedToLoad: (ad, error) {
+          _updateState(myAd, AdState.failedLoad, error.toString());
+          ad.dispose();
+        },
+        onAdOpened: (ad) {
+          //NOTE replaces with the analytycs abstract class
+          // Analytics.funnle("adbannerclick", island);
+          analytics.funnle("adbannerclick", island);
+
+          _updateState(myAd, AdState.clicked);
+        },
+        onAdClosed: (ad) => _updateState(myAd, AdState.closed),
+        onAdImpression: (ad) => _updateState(myAd, AdState.show));
+    _updateState(myAd, AdState.request);
+    var ad = BannerAd(
+        size: size ?? AdSize.largeBanner,
+        adUnitId: id.value,
+        listener: listener,
+        request: _request)
+      ..load();
+    myAd.data = ad;
+    return ad;
   }
 
-  @override
-  showRewarded(String source) {
-    // TODO: implement showRewarded
-    throw UnimplementedError();
+  Widget getBannerWidget(String type, String island, {AdSize? size}) {
+    var width = 320.0;
+    var height = 50.0;
+    Widget? adWidget;
+    if (selectedSDK == AdSDK.unity) {
+      var unityBanner = UnityBannerAd(placementId: AdId.bannerUnity.value);
+      width = unityBanner.size.width.toDouble();
+      height = unityBanner.size.height.toDouble();
+      adWidget = unityBanner;
+    } else {
+      var banner = _getGoogleBanner(type, island, size: size);
+      width = banner.size.width.toDouble();
+      height = banner.size.height.toDouble();
+      // adWidget = AdWidget(ad: banner);
+    }
+
+    return SizedBox(
+        width: width,
+        height: height,
+        child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+            child: adWidget));
   }
 
-  // BannerAd _getGoogleBanner(String type, String island, {AdSize? size}) {
-  //   var id = AdId.bannerGoogle;
-  //   var myAd = _myAds[id]!;
-  //   var listener = BannerAdListener(
-  //       onAdLoaded: (ad) => _updateState(myAd, AdState.loaded),
-  //       onAdFailedToLoad: (ad, error) {
-  //         _updateState(myAd, AdState.failedLoad, error.toString());
-  //         ad.dispose();
-  //       },
-  //       onAdOpened: (ad) {
-  //         //NOTE replaces with the analytycs abstract class
-  //         // Analytics.funnle("adbannerclick", island);
-  //         analytics.funnle("adbannerclick", island);
+  void _getInterstitial(AdId id) {
+    var myAd = _myAds[id]!;
+    if (myAd.sdk == AdSDK.unity) {
+      _getUnityAd(id);
+      return;
+    }
 
-  //         _updateState(myAd, AdState.clicked);
-  //       },
-  //       onAdClosed: (ad) => _updateState(myAd, AdState.closed),
-  //       onAdImpression: (ad) => _updateState(myAd, AdState.show));
-  //   _updateState(myAd, AdState.request);
-  //   var ad = BannerAd(
-  //       size: size ?? AdSize.largeBanner,
-  //       adUnitId: id.value,
-  //       listener: listener,
-  //       request: _request)
-  //     ..load();
-  //   myAd.data = ad;
-  //   return ad;
-  // }
+    InterstitialAd.load(
+        adUnitId: id.value,
+        request: _request,
+        adLoadCallback:
+            InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
+          _updateState(myAd, AdState.loaded);
+          myAd.data = ad;
+          ad.setImmersiveMode(true);
+        }, onAdFailedToLoad: (LoadAdError error) async {
+          _updateState(myAd, AdState.failedLoad, error.toString());
+          myAd.data = null;
+          myAd.attempts++;
+          await Future.delayed(_waitingDuration);
+          if (myAd.attempts <= maxFailedLoadAttempts) {
+            _getInterstitial(id);
+          }
+        }));
+  }
 
-  // Widget getBannerWidget(String type, String island, {AdSize? size}) {
-  //   var width = 320.0;
-  //   var height = 50.0;
-  //   Widget? adWidget;
-  //   if (selectedSDK == AdSDK.unity) {
-  //     var unityBanner = UnityBannerAd(placementId: AdId.bannerUnity.value);
-  //     width = unityBanner.size.width.toDouble();
-  //     height = unityBanner.size.height.toDouble();
-  //     adWidget = unityBanner;
-  //   } else {
-  //     var banner = _getGoogleBanner(type, island, size: size);
-  //     width = banner.size.width.toDouble();
-  //     height = banner.size.height.toDouble();
-  //     // adWidget = AdWidget(ad: banner);
-  //   }
+  void _getRewarded(AdId id) {
+    var myAd = _myAds[id]!;
 
-  //   return SizedBox(
-  //       width: width,
-  //       height: height,
-  //       child: ClipRRect(
-  //           borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-  //           child: adWidget));
-  // }
+    if (myAd.sdk == AdSDK.unity) {
+      _getUnityAd(id);
+      return;
+    }
 
-  // void _getInterstitial(AdId id) {
-  //   var myAd = _myAds[id]!;
-  //   if (myAd.sdk == AdSDK.unity) {
-  //     _getUnityAd(id);
-  //     return;
-  //   }
-
-  // InterstitialAd.load(
-  //     adUnitId: id.value,
-  //     request: _request,
-  //     adLoadCallback:
-  //         InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
-  //       _updateState(myAd, AdState.loaded);
-  //       myAd.data = ad;
-  //       ad.setImmersiveMode(true);
-  //     }, onAdFailedToLoad: (LoadAdError error) async {
-  //       _updateState(myAd, AdState.failedLoad, error.toString());
-  //       myAd.data = null;
-  //       myAd.attempts++;
-  //       await Future.delayed(_waitingDuration);
-  //       if (myAd.attempts <= maxFailedLoadAttempts) {
-  //         _getInterstitial(id);
-  //       }
-  //     }));
-  // }
-
-  // void _getRewarded(AdId id) {
-  //   var myAd = _myAds[id]!;
-
-  //   if (myAd.sdk == AdSDK.unity) {
-  //     _getUnityAd(id);
-  //     return;
-  //   }
-
-  //   RewardedAd.load(
-  //       adUnitId: id.value,
-  //       request: _request,
-  //       rewardedAdLoadCallback:
-  //           RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
-  //         myAd.data = ad;
-  //         _updateState(myAd, AdState.loaded);
-  //       }, onAdFailedToLoad: (LoadAdError error) async {
-  //         _updateState(myAd, AdState.failedLoad, error.toString());
-  //         myAd.data = null;
-  //         myAd.attempts++;
-  //         await Future.delayed(_waitingDuration);
-  //         if (myAd.attempts <= maxFailedLoadAttempts) {
-  //           _getRewarded(id);
-  //         } else if (_initialSDK == AdSDK.google) {
-  //           initialize(args: [AdSDK.unity]); // Alternative AD SDK
-  //         }
-  //       }));
-  // }
+    RewardedAd.load(
+        adUnitId: id.value,
+        request: _request,
+        rewardedAdLoadCallback:
+            RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+          myAd.data = ad;
+          _updateState(myAd, AdState.loaded);
+        }, onAdFailedToLoad: (LoadAdError error) async {
+          _updateState(myAd, AdState.failedLoad, error.toString());
+          myAd.data = null;
+          myAd.attempts++;
+          await Future.delayed(_waitingDuration);
+          if (myAd.attempts <= maxFailedLoadAttempts) {
+            _getRewarded(id);
+          } else if (_initialSDK == AdSDK.google) {
+            initialize(args: [AdSDK.unity]); // Alternative AD SDK
+          }
+        }));
+  }
 
   @override
   AdId isReady([AdType? type, bool? gapConsidering, AdSDK? sdk]) {
@@ -211,134 +211,134 @@ class AdsService implements IAdsService {
     return AdId.none;
   }
 
-  // @override
-  // showInterstitial(AdId id, String island) async {
-  //   if (id == AdId.none) return; // Ad is not available.
-  //   var myAd = _myAds[id]!;
+  @override
+  showInterstitial(AdId id, String island) async {
+    if (id == AdId.none) return; // Ad is not available.
+    var myAd = _myAds[id]!;
 
-  //   if (myAd.sdk == AdSDK.unity) {
-  //     return await _showUnityAd(id);
-  //   }
+    if (myAd.sdk == AdSDK.unity) {
+      return await _showUnityAd(id);
+    }
 
-  //   var iAd = myAd.data as InterstitialAd;
-  //   iAd.fullScreenContentCallback = FullScreenContentCallback(
-  //       onAdDismissedFullScreenContent: (InterstitialAd ad) =>
-  //           _updateState(myAd, AdState.closed),
-  //       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) =>
-  //           _updateState(myAd, AdState.failedShow, error.toString()),
-  //       onAdImpression: (ad) => _updateState(myAd, AdState.show));
-  //   iAd.show();
-  //   await _waitForClose(id);
-  //   _resetAd(myAd);
-  //   // NOTE: used abstracty Analytics class
-  //   analytics.funnle("adinterstitial", island);
-  //   // services.get<Analytics>().funnle("adinterstitial", island);
-  // }
+    var iAd = myAd.data as InterstitialAd;
+    iAd.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) =>
+            _updateState(myAd, AdState.closed),
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) =>
+            _updateState(myAd, AdState.failedShow, error.toString()),
+        onAdImpression: (ad) => _updateState(myAd, AdState.show));
+    iAd.show();
+    await _waitForClose(id);
+    _resetAd(myAd);
+    // NOTE: used abstracty Analytics class
+    analytics.funnle("adinterstitial", island);
+    // services.get<Analytics>().funnle("adinterstitial", island);
+  }
 
-  // @override
-  // Future<RewardItem?> showRewarded(String source) async {
-  //   var id = isReady(AdType.rewarded);
-  //   if (id == AdId.none) return null; // Ad is not available.
+  @override
+  Future<RewardItem?> showRewarded(String source) async {
+    var id = isReady(AdType.rewarded);
+    if (id == AdId.none) return null; // Ad is not available.
 
-  //   // NOTE: Add Service
-  //   sound.stop("music");
-  //   // services.get<Sounds>().stop("music");
+    // NOTE: Add Service
+    sound.stop("music");
+    // services.get<Sounds>().stop("music");
 
-  //   var myAd = _myAds[id]!;
-  //   if (myAd.sdk == AdSDK.unity) {
-  //     return await _showUnityAd(id);
-  //   }
+    var myAd = _myAds[id]!;
+    if (myAd.sdk == AdSDK.unity) {
+      return await _showUnityAd(id);
+    }
 
-  //   var rAd = myAd.data as RewardedAd;
-  //   rAd.fullScreenContentCallback = FullScreenContentCallback(
-  //       onAdDismissedFullScreenContent: (RewardedAd ad) =>
-  //           _updateState(myAd, AdState.closed),
-  //       onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) =>
-  //           _updateState(myAd, AdState.failedShow, error.toString()),
-  //       onAdImpression: (ad) => _updateState(myAd, AdState.show));
-  //   rAd.setImmersiveMode(true);
-  //   rAd.show(onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
-  //     myAd.reward = rewardItem;
-  //   });
-  //   await _waitForClose(id);
-  //   if (myAd.reward != null) {
-  //     // NOTE: replaced
+    var rAd = myAd.data as RewardedAd;
+    rAd.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (RewardedAd ad) =>
+            _updateState(myAd, AdState.closed),
+        onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) =>
+            _updateState(myAd, AdState.failedShow, error.toString()),
+        onAdImpression: (ad) => _updateState(myAd, AdState.show));
+    rAd.setImmersiveMode(true);
+    rAd.show(onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
+      myAd.reward = rewardItem;
+    });
+    await _waitForClose(id);
+    if (myAd.reward != null) {
+      // NOTE: replaced
 
-  //     // analytics.funnle("adrewarded", island);
-  //     // services.get<Analytics>().funnle("adrewarded", island);
-  //   }
-  //   _resetAd(myAd);
-  //   // NOTE: Add Service
+      // analytics.funnle("adrewarded", island);
+      // services.get<Analytics>().funnle("adrewarded", island);
+    }
+    _resetAd(myAd);
+    // NOTE: Add Service
 
-  //   // services.get<Sounds>().play("african-fun", channel: "music");
-  //   sound.play("african-fun", channel: "music");
-  //   return myAd.reward;
-  // }
+    // services.get<Sounds>().play("african-fun", channel: "music");
+    sound.play("african-fun", channel: "music");
+    return myAd.reward;
+  }
 
-  // void _getUnityAd(AdId id) {
-  //   var myAd = _myAds[id]!;
-  //   UnityAds.load(
-  //       placementId: id.value,
-  //       onComplete: (placementId) {
-  //         myAd.data = {};
-  //         _updateState(myAd, AdState.loaded);
-  //       },
-  //       onFailed: (placementId, error, message) {
-  //         _updateState(myAd, AdState.failedLoad, error.toString());
-  //       });
-  // }
+  void _getUnityAd(AdId id) {
+    var myAd = _myAds[id]!;
+    UnityAds.load(
+        placementId: id.value,
+        onComplete: (placementId) {
+          myAd.data = {};
+          _updateState(myAd, AdState.loaded);
+        },
+        onFailed: (placementId, error, message) {
+          _updateState(myAd, AdState.failedLoad, error.toString());
+        });
+  }
 
-  // Future<RewardItem?> _showUnityAd(AdId id) async {
-  //   var myAd = _myAds[id]!;
-  //   UnityAds.showVideoAd(
-  //     placementId: id.value,
-  //     onStart: (placement) => _updateState(myAd, AdState.show),
-  //     onClick: (placement) => _updateState(myAd, AdState.clicked),
-  //     onSkipped: (placement) => _updateState(myAd, AdState.closed),
-  //     onComplete: (iD) {
-  //       myAd.reward = RewardItem(1, id.value);
-  //       _updateState(myAd, AdState.closed);
-  //     },
-  //     onFailed: (id, e, messaeg) =>
-  //         _updateState(myAd, AdState.failedShow, messaeg),
-  //   );
+  Future<RewardItem?> _showUnityAd(AdId id) async {
+    var myAd = _myAds[id]!;
+    UnityAds.showVideoAd(
+      placementId: id.value,
+      onStart: (placement) => _updateState(myAd, AdState.show),
+      onClick: (placement) => _updateState(myAd, AdState.clicked),
+      onSkipped: (placement) => _updateState(myAd, AdState.closed),
+      onComplete: (iD) {
+        myAd.reward = RewardItem(1, id.value);
+        _updateState(myAd, AdState.closed);
+      },
+      onFailed: (id, e, messaeg) =>
+          _updateState(myAd, AdState.failedShow, messaeg),
+    );
 
-  //   myAd.state = AdState.show;
-  //   await _waitForClose(id);
-  //   _resetAd(myAd);
-  //   return myAd.reward;
-  // }
+    myAd.state = AdState.show;
+    await _waitForClose(id);
+    _resetAd(myAd);
+    return myAd.reward;
+  }
 
-  // void _updateState(MyAd myAd, AdState state, [String? error]) {
-  //   if (myAd.state == state) return;
-  //   myAd.state = state;
-  //   onUpdate?.call(myAd.type, myAd.state, myAd);
-  //   if (myAd.order > 0) {
-  //     // Analytics.ad(myAd.order, myAd.type.code, myAd.id.value, myAd.sdk.name);
-  //   }
-  //   debugPrint("Ads ==> ${myAd.sdk} ${myAd.id} $state ${error ?? ''}");
-  // }
+  void _updateState(MyAd myAd, AdState state, [String? error]) {
+    if (myAd.state == state) return;
+    myAd.state = state;
+    onUpdate?.call(myAd.type, myAd.state, myAd);
+    if (myAd.order > 0) {
+      // Analytics.ad(myAd.order, myAd.type.code, myAd.id.value, myAd.sdk.name);
+    }
+    debugPrint("Ads ==> ${myAd.sdk} ${myAd.id} $state ${error ?? ''}");
+  }
 
-  // _waitForClose(AdId id) async {
-  //   var myAd = _myAds[id]!;
-  //   while (myAd.state == AdState.loaded || myAd.state == AdState.show) {
-  //     debugPrint("Ads ==> _waitForClose ${myAd.state} ${myAd.id}");
-  //     await Future.delayed(_waitingDuration);
-  //   }
-  // }
+  _waitForClose(AdId id) async {
+    var myAd = _myAds[id]!;
+    while (myAd.state == AdState.loaded || myAd.state == AdState.show) {
+      debugPrint("Ads ==> _waitForClose ${myAd.state} ${myAd.id}");
+      await Future.delayed(_waitingDuration);
+    }
+  }
 
-  // _resetAd(MyAd myAd) async {
-  //   if (myAd.sdk == AdSDK.google) {
-  //     myAd.data!.dispose();
-  //   }
-  //   myAd.data = null;
-  //   await Future.delayed(_waitingDuration);
-  //   if (myAd.type == AdType.rewarded) {
-  //     // _getRewarded(myAd.id);
-  //   } else {
-  //     _getInterstitial(myAd.id);
-  //   }
-  // }
+  _resetAd(MyAd myAd) async {
+    if (myAd.sdk == AdSDK.google) {
+      myAd.data!.dispose();
+    }
+    myAd.data = null;
+    await Future.delayed(_waitingDuration);
+    if (myAd.type == AdType.rewarded) {
+      // _getRewarded(myAd.id);
+    } else {
+      _getInterstitial(myAd.id);
+    }
+  }
 
   void resumeApp() {
     _myAds.forEach((key, value) {
@@ -363,7 +363,7 @@ class MyAd {
   int attempts = 0;
   dynamic data;
   AdState state = AdState.closed;
-  // RewardItem? _reward;
+  RewardItem? _reward;
 
   MyAd(this.sdk, this.type);
 
@@ -372,13 +372,13 @@ class MyAd {
     return state.index;
   }
 
-  // RewardItem? get reward => _reward;
-  // set reward(RewardItem? value) {
-  //   _reward = value;
-  //   if (_reward != null) {
-  //     // Analytics.ad(4, type.code, id.value, sdk.name);
-  //   }
-  // }
+  RewardItem? get reward => _reward;
+  set reward(RewardItem? value) {
+    _reward = value;
+    if (_reward != null) {
+      // Analytics.ad(4, type.code, id.value, sdk.name);
+    }
+  }
 }
 
 enum AdSDK { none, google, unity }
