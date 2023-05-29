@@ -47,5 +47,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Request tracking...</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-5018637481206902~2875726229</string>
 </dict>
 </plist>
