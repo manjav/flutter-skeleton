@@ -21,7 +21,6 @@ class MainGameApi implements GameApisService {
 
   @override
   disconnect() async {
-    // var serverData = {"gold": 2, "nektar": 2};
     await Future.delayed(const Duration(seconds: 1));
     return true;
   }

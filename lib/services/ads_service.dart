@@ -221,7 +221,7 @@ class AdsService implements IAdsService {
   @override
   Future<RewardItem?> showRewarded(String source) async {
     var id = isReady(AdType.rewarded);
-    if (id == AdId.none) return null; // Ad is not available.
+    if (id == AdId.none) return null;
 
     sound.stop("music");
 

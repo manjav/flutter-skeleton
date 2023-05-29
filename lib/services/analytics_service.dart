@@ -13,11 +13,9 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../utils/device.dart';
 import 'core/prefs.dart';
 
-// implements IService
-//Should firebase get passed to the Iservice??
 abstract class AnalyticsService extends IService {
-  // Future<Analytics> sendEvent();
-  // init(FirebaseAnalytics firebaseAnalytics);
+  Future<Analytics> sendEvent();
+  init(FirebaseAnalytics firebaseAnalytics);
   funnle(String type, [String? name]);
 }
 
@@ -358,5 +356,17 @@ class Analytics implements AnalyticsService {
   @override
   log(log) {
     debugPrint(log);
+  }
+
+  @override
+  init(FirebaseAnalytics firebaseAnalytics) {
+    // TODO: implement init
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Analytics> sendEvent() {
+    // TODO: implement sendEvent
+    throw UnimplementedError();
   }
 }

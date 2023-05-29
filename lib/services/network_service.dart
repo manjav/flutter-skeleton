@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'core/infra.dart';
 
 abstract class NetworkService extends IService {
-  // Future<NetConnection> initialize();
   Future<Result<T>> rpc<T>(RpcId id, {String? payload});
   updateResponse(LoadingState state, String message);
 }
@@ -28,9 +27,6 @@ class Network implements NetworkService {
 
   @override
   initialize({List<Object>? args}) async {
-    // await Future.delayed(const Duration(milliseconds: 200));
-    // debugPrint("network init");
-
     await _loadConfig();
     log("Config loaded.");
     await _connection();
