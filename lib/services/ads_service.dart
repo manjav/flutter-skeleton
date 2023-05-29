@@ -57,13 +57,12 @@ class AdsService implements IAdsService {
     selectedSDK = sdk ?? _initialSDK;
     if (selectedSDK == AdSDK.google) {
       MobileAds.instance.initialize();
-      // _getInterstitial(AdId.interstitialGoogle);
-      // _getInterstitial(AdId.interstitialVideoGoogle);
+      _getInterstitial(AdId.interstitialGoogle);
+      _getInterstitial(AdId.interstitialVideoGoogle);
       _getRewarded(AdId.rewardedGoogle);
     } else if (selectedSDK == AdSDK.unity) {
       UnityAds.init(
         testMode: false,
-        // TODO:
         gameId: "ua_${platform.toLowerCase()}",
         onComplete: () {
           _getInterstitial(AdId.interstitialUnity);
@@ -76,18 +75,6 @@ class AdsService implements IAdsService {
     }
   }
 
-  // @override
-  // showInterstitial(AdId id, String island) {
-  //   // TODO: implement showInterstitial
-  //   throw UnimplementedError();
-  // }
-
-  // @override
-  // showRewarded(String source) {
-  //   // TODO: implement showRewarded
-  //   throw UnimplementedError();
-  // }
-
   BannerAd _getGoogleBanner(String type, String island, {AdSize? size}) {
     var id = AdId.bannerGoogle;
     var myAd = _myAds[id]!;
@@ -98,8 +85,6 @@ class AdsService implements IAdsService {
           ad.dispose();
         },
         onAdOpened: (ad) {
-          //NOTE replaces with the analytycs abstract class
-          // Analytics.funnle("adbannerclick", island);
           analytics.funnle("adbannerclick", island);
 
           _updateState(myAd, AdState.clicked);
@@ -213,7 +198,7 @@ class AdsService implements IAdsService {
 
   @override
   showInterstitial(AdId id, String island) async {
-    if (id == AdId.none) return; // Ad is not available.
+    if (id == AdId.none) return;
     var myAd = _myAds[id]!;
 
     if (myAd.sdk == AdSDK.unity) {
@@ -230,9 +215,7 @@ class AdsService implements IAdsService {
     iAd.show();
     await _waitForClose(id);
     _resetAd(myAd);
-    // NOTE: used abstracty Analytics class
     analytics.funnle("adinterstitial", island);
-    // services.get<Analytics>().funnle("adinterstitial", island);
   }
 
   @override
@@ -240,9 +223,7 @@ class AdsService implements IAdsService {
     var id = isReady(AdType.rewarded);
     if (id == AdId.none) return null; // Ad is not available.
 
-    // NOTE: Add Service
     sound.stop("music");
-    // services.get<Sounds>().stop("music");
 
     var myAd = _myAds[id]!;
     if (myAd.sdk == AdSDK.unity) {
@@ -261,16 +242,9 @@ class AdsService implements IAdsService {
       myAd.reward = rewardItem;
     });
     await _waitForClose(id);
-    if (myAd.reward != null) {
-      // NOTE: replaced
-
-      // analytics.funnle("adrewarded", island);
-      // services.get<Analytics>().funnle("adrewarded", island);
-    }
+    if (myAd.reward != null) {}
     _resetAd(myAd);
-    // NOTE: Add Service
 
-    // services.get<Sounds>().play("african-fun", channel: "music");
     sound.play("african-fun", channel: "music");
     return myAd.reward;
   }
@@ -313,9 +287,7 @@ class AdsService implements IAdsService {
     if (myAd.state == state) return;
     myAd.state = state;
     onUpdate?.call(myAd.type, myAd.state, myAd);
-    if (myAd.order > 0) {
-      // Analytics.ad(myAd.order, myAd.type.code, myAd.id.value, myAd.sdk.name);
-    }
+    if (myAd.order > 0) {}
     debugPrint("Ads ==> ${myAd.sdk} ${myAd.id} $state ${error ?? ''}");
   }
 
@@ -334,7 +306,7 @@ class AdsService implements IAdsService {
     myAd.data = null;
     await Future.delayed(_waitingDuration);
     if (myAd.type == AdType.rewarded) {
-      // _getRewarded(myAd.id);
+      _getRewarded(myAd.id);
     } else {
       _getInterstitial(myAd.id);
     }
@@ -349,8 +321,7 @@ class AdsService implements IAdsService {
   @override
   log(log) {
     debugPrint(log);
-    sound.log(
-        "*-sound inside ads log"); //TODO-hamiiid: to test using another service methods inside this one.
+    sound.log("*-sound inside ads log");
   }
 }
 
