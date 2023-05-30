@@ -63,12 +63,6 @@ class Loader {
         log("$url loading failed.");
         return onError?.call(d);
       }, cancelOnError: true);
-      // } on SocketException {
-      //   log('No Internet connection 😑');
-      // } on HttpException {
-      //   log("Couldn't find the post 😱");
-      // } on FormatException {
-      //   log("Bad response format 👎");
     } on Exception {
       log("Exception while $url loading.");
       onError?.call("exception");

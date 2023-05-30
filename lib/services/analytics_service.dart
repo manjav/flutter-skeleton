@@ -1,6 +1,6 @@
 import 'dart:io';
 
-// import 'package:appmetrica_plugin/appmetrica_plugin.dart';
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_skeleton/services/core/iservices.dart';
@@ -14,8 +14,6 @@ import '../utils/device.dart';
 import 'core/prefs.dart';
 
 abstract class AnalyticsService extends IService {
-  Future<Analytics> sendEvent();
-  init(FirebaseAnalytics firebaseAnalytics);
   funnle(String type, [String? name]);
 }
 
@@ -32,59 +30,53 @@ class Analytics implements AnalyticsService {
     "mute_music": [1],
     "levelup": [2, 4, 5, 10, 15, 20],
     "total_gameplay": [5, 10, 15, 30, 60],
-    // "adinterstitial": [1],
-    // "adrewarded": [1, 4, 10, 20, 30],
-    // "adbannerclick": [1, 5, 10, 20],
   };
 
   @override
   initialize({List<Object>? args}) async {
     await Future.delayed(const Duration(milliseconds: 200));
     debugPrint("Analytics init");
-    // var os = Platform.operatingSystem;
-    // _firebaseAnalytics = args![0] as FirebaseAnalytics;
-    // AppMetrica.runZoneGuarded(() {
-    //   WidgetsFlutterBinding.ensureInitialized();
-    //   AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
-    // });
+    var os = Platform.operatingSystem;
+    _firebaseAnalytics = args![0] as FirebaseAnalytics;
+    AppMetrica.runZoneGuarded(() {
+      WidgetsFlutterBinding.ensureInitialized();
+      AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
+    });
 
-    // GameAnalytics.setEnabledInfoLog(false);
-    // GameAnalytics.setEnabledVerboseLog(false);
-    // GameAnalytics.configureAvailableCustomDimensions01(
-    //     ["installed", "instant"]);
-    // GameAnalytics.configureAvailableResourceCurrencies(["coin"]);
-    // GameAnalytics.configureAvailableResourceItemTypes(
-    //     ["game", "confirm", "shop", "start"]);
-    // var type = "installed";
-    // GameAnalytics.setCustomDimension01(type);
-    // AppMetrica.reportEvent("type_$type");
+    GameAnalytics.setEnabledInfoLog(false);
+    GameAnalytics.setEnabledVerboseLog(false);
+    GameAnalytics.configureAvailableCustomDimensions01(
+        ["installed", "instant"]);
+    GameAnalytics.configureAvailableResourceCurrencies(["coin"]);
+    GameAnalytics.configureAvailableResourceItemTypes(
+        ["game", "confirm", "shop", "start"]);
+    var type = "installed";
+    GameAnalytics.setCustomDimension01(type);
+    AppMetrica.reportEvent("type_$type");
 
-    // GameAnalytics.configureAutoDetectAppVersion(true);
-    // GameAnalytics.initialize("ga_key_$os".l(), "ga_sec_$os".l());
+    GameAnalytics.configureAutoDetectAppVersion(true);
+    GameAnalytics.initialize("ga_key_$os".l(), "ga_sec_$os".l());
 
-    // _firebaseAnalytics.setUserProperty(name: "buildType", value: type);
-    // _firebaseAnalytics.setUserProperty(name: "build_type", value: type);
+    _firebaseAnalytics.setUserProperty(name: "buildType", value: type);
+    _firebaseAnalytics.setUserProperty(name: "build_type", value: type);
 
-    // if (Platform.isAndroid) {
-    //   KochavaTracker.instance.registerAndroidAppGuid("kt_key_$os".l());
-    // } else if (Platform.isIOS) {
-    //   KochavaTracker.instance.registerIosAppGuid("kt_key_$os".l());
-    // }
-    // KochavaTracker.instance.setLogLevel(KochavaTrackerLogLevel.Warn);
-    // KochavaTracker.instance.start();
+    if (Platform.isAndroid) {
+      KochavaTracker.instance.registerAndroidAppGuid("kt_key_$os".l());
+    } else if (Platform.isIOS) {
+      KochavaTracker.instance.registerIosAppGuid("kt_key_$os".l());
+    }
+    KochavaTracker.instance.setLogLevel(KochavaTrackerLogLevel.Warn);
+    KochavaTracker.instance.start();
 
-    // await updateVariantIDs();
-    // await getDeviceId();
-    // funnle("open");
+    await updateVariantIDs();
+    await getDeviceId();
+    funnle("open");
 
-    // // Smartlook initialize
-    // if (Pref.visitCount.getInt() <= 1 && Device.osVersion > 10) {
-    //   // Smartlook.instance.log.enableLogging();
-    //   await Smartlook.instance.preferences.setProjectKey("sl_key_$os".l());
-    //   await Smartlook.instance.start();
-    //   // Smartlook.instance.registerIntegrationListener(CustomIntegrationListener());
-    //   // await Smartlook.instance.preferences.setWebViewEnabled(true);
-    // }
+    // Smartlook initialize
+    if (Pref.visitCount.getInt() <= 1 && Device.osVersion > 10) {
+      await Smartlook.instance.preferences.setProjectKey("sl_key_$os".l());
+      await Smartlook.instance.start();
+    }
   }
 
   updateVariantIDs() async {
@@ -101,28 +93,10 @@ class Analytics implements AnalyticsService {
         await GameAnalytics.getRemoteConfigsValueAsString(_testName, "0");
     variant = int.parse(variantId ?? "0");
     debugPrint("Analytics testVariantId ==> $variant");
-    // if (variant == 2) {
-    //   Price.ad = 40; //50 //100
-    //   Price.big = 5; //10 //20
-    //   Price.cube = 5; //10 //20
-    //   Price.piggy = 10; //20 //40
-    //   Price.record = 5; //10 //20
-    //   Price.tutorial = 200; //400
-    //   Price.boost = 300; // 200 //100
-    //   Price.revive = 300; //200 //100
-    // }
 
     _firebaseAnalytics.setUserProperty(name: "test_name", value: _testName);
     _firebaseAnalytics.setUserProperty(name: "test_variant", value: variantId);
-    // sendDiagnosticData(version);
   }
-
-  /*  sendDiagnosticData(String version) async {
-    var url =
-        "https://numbers.sarand.net/variant/?test=$_testName&variant=$variant&ads=${Ads.selectedSDK}&v=$version";
-    var response = await http.get(Uri.parse(url));
-    if (response.statusCode != 200) debugPrint('Failure status code 😱');
-  } */
 
   setAccount(dynamic account) {
     Smartlook.instance.user.setIdentifier(account.user.id);
@@ -130,13 +104,13 @@ class Analytics implements AnalyticsService {
     _firebaseAnalytics.setUserProperty(
         name: "account_id", value: account.user.id);
     GameAnalytics.configureUserId(account.user.id);
-    // AppMetrica.setUserProfileID(account.user.id);
+    AppMetrica.setUserProfileID(account.user.id);
   }
 
   Future<String> getDeviceId() async {
     var id = await KochavaTracker.instance.getDeviceId();
     if (id.isEmpty) {
-      // id = await AppMetrica.requestAppMetricaDeviceID();
+      id = await AppMetrica.requestAppMetricaDeviceID();
     }
     if (id.isEmpty) {
       id = Device.id;
@@ -152,7 +126,6 @@ class Analytics implements AnalyticsService {
       String receipt,
       PurchaseVerificationData verificationData) async {
     var signature = verificationData.source;
-    // var localVerificationData = verificationData.localVerificationData;
 
     var data = {
       "currency": currency,
@@ -166,9 +139,7 @@ class Analytics implements AnalyticsService {
     GameAnalytics.addBusinessEvent(data);
 
     if (Platform.isAndroid) {
-      // AppMetrica.reportEventWithMap("purchase", data);
-      // _appsflyerSdk.validateAndLogInAppAndroidPurchase("shop_base64".l(),
-      //     signature, localVerificationData, amount.toString(), currency, null);
+      AppMetrica.reportEventWithMap("purchase", data);
     } else {
       await _firebaseAnalytics.logPurchase(
           currency: currency,
@@ -194,8 +165,8 @@ class Analytics implements AnalyticsService {
       "adSdkName": sdkName,
       "adPlacement": placementID
     });
-    // AppMetrica.reportEventWithMap("ads", map);
-    // AppMetrica.reportEventWithMap("ad_$placementID", map);
+    AppMetrica.reportEventWithMap("ads", map);
+    AppMetrica.reportEventWithMap("ad_$placementID", map);
 
     KochavaTracker.instance.sendEventWithDictionary("ad_$placementID", map);
   }
@@ -261,7 +232,6 @@ class Analytics implements AnalyticsService {
 
   _funnle(String name, [int step = -1]) {
     var args = step > 0 ? {"step": step} : null;
-    // print("Analytics _funnle $name args $args");
     design(name, parameters: args);
   }
 
@@ -275,39 +245,17 @@ class Analytics implements AnalyticsService {
       }
     }
     GameAnalytics.addDesignEvent(data);
-    // AppMetrica.reportEventWithMap(name, data);
+    AppMetrica.reportEventWithMap(name, data);
     KochavaTracker.instance.sendEventWithDictionary(name, data);
   }
 
   Future<void> share(String contentType, String itemId) async {
-    // await _firebaseAnalytics.logShare(
-    //     contentType: contentType, itemId: itemId, method: "");
-
     GameAnalytics.addDesignEvent({"eventId": "share:$contentType:$itemId"});
   }
 
   Future<void> setScreen(String screenName) async {
-    // await _firebaseAnalytics.setCurrentScreen(screenName: screenName);
-
     GameAnalytics.addDesignEvent({"eventId": "screen:$screenName"});
   }
-
-  //  Future<void> setUserProperty(String name, String value) async {
-  //   await _firebaseAnalytics.setUserProperty(name: name, value: value);
-  // }
-
-  //  Future<void> tutorialBegin() async {
-  //   await _firebaseAnalytics.logTutorialBegin();
-  // }
-
-  //  Future<void> tutorialComplete() async {
-  //   await _firebaseAnalytics.logTutorialComplete();
-  // }
-  // Future<void> _testSetAnalyticsCollectionEnabled() async {
-  //   await analytics.setAnalyticsCollectionEnabled(false);
-  //   await analytics.setAnalyticsCollectionEnabled(true);
-  //   setMessage('setAnalyticsCollectionEnabled succeeded');
-  // }
 
   String getAdActionName(int action) {
     switch (action) {
@@ -354,18 +302,6 @@ class Analytics implements AnalyticsService {
 
   @override
   log(log) {
-    debugPrint(log);
-  }
-
-  @override
-  init(FirebaseAnalytics firebaseAnalytics) {
-    // TODO: implement init
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Analytics> sendEvent() {
-    // TODO: implement sendEvent
     throw UnimplementedError();
   }
 }

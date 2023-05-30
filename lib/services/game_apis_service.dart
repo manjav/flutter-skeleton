@@ -8,22 +8,13 @@ abstract class GameApisService extends IService {
 
 class MainGameApi implements GameApisService {
   @override
-  initialize({List<Object>? args}) async {
-    await Future.delayed(const Duration(seconds: 2));
-    debugPrint("game api init");
-  }
+  initialize({List<Object>? args}) async {}
 
   @override
-  connect() async {
-    await Future.delayed(const Duration(seconds: 5));
-    return true;
-  }
+  connect() async {}
 
   @override
-  disconnect() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return true;
-  }
+  disconnect() async {}
 
   @override
   log(log) {

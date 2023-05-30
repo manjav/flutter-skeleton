@@ -397,19 +397,6 @@ enum AdId {
 }
 
 extension AdTypeExt on AdType {
-  /* get code {
-    switch (this) {
-      case AdType.banner:
-        return GAAdType.Banner;
-      case AdType.interstitial:
-        return GAAdType.OfferWall;
-      case AdType.interstitialVideo:
-        return GAAdType.Interstitial;
-      case AdType.rewarded:
-        return GAAdType.RewardedVideo;
-    }
-  } */
-
   AdId getId(AdSDK sdk) {
     if (sdk == AdSDK.google) {
       switch (this) {

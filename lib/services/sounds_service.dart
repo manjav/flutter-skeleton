@@ -17,10 +17,6 @@ class Sounds extends SoundService {
 
   @override
   initialize({List<Object>? args}) {
-    //TODO: inwokes a null error in prefs
-    // play("african-fun", channel: "music");
-    // configs = args![0] as Map<String, String>;
-    // baseURL = args[1] as String;
     debugPrint("Analytics init");
   }
 

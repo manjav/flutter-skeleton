@@ -33,7 +33,6 @@ class ILocalization implements LocalizationService {
     result.forEach((String key, dynamic value) {
       _sentences![key] = value.toString();
     });
-    // print(result);
   }
 
   @override
