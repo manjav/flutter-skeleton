@@ -240,7 +240,6 @@ class Analytics implements AnalyticsService {
     GameAnalytics.addProgressionEvent(map);
   }
 
-//NOTE this must be in the abstract class
   @override
   funnle(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";

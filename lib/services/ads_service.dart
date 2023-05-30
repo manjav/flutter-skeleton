@@ -115,7 +115,7 @@ class AdsService implements IAdsService {
       var banner = _getGoogleBanner(type, island, size: size);
       width = banner.size.width.toDouble();
       height = banner.size.height.toDouble();
-      // adWidget = AdWidget(ad: banner);
+      adWidget = AdWidget(ad: banner);
     }
 
     return SizedBox(
