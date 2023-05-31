@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
-import 'package:flutter_skeleton/services/sounds_service.dart';
-import 'package:flutter_skeleton/services/theme.dart';
-
+import '../services/localization_service.dart';
+import '../services/sounds_service.dart';
+import '../services/theme.dart';
 import '../../services/network_service.dart';
 import '../services/ads_service.dart';
 import '../services/analytics_service.dart';
@@ -93,5 +92,3 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     await themeSevice.initialize();
   }
 }
-
-enum ServicesType { data, wifi, offline }

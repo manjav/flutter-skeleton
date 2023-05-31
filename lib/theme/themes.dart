@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_skeleton/utils/device.dart';
+import '../utils/device.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TColors {

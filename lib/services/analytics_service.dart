@@ -1,15 +1,12 @@
 import 'dart:io';
-
-import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_skeleton/services/core/iservices.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
+import '../services/core/iservices.dart';
+import '../services/localization_service.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 import 'package:kochava_tracker/kochava_tracker.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-
 import '../utils/device.dart';
 import 'core/prefs.dart';
 
@@ -38,10 +35,10 @@ class Analytics implements AnalyticsService {
     debugPrint("Analytics init");
     var os = Platform.operatingSystem;
     _firebaseAnalytics = args![0] as FirebaseAnalytics;
-    AppMetrica.runZoneGuarded(() {
-      WidgetsFlutterBinding.ensureInitialized();
-      AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
-    });
+    // AppMetrica.runZoneGuarded(() {
+    //   WidgetsFlutterBinding.ensureInitialized();
+    //   AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
+    // });
 
     GameAnalytics.setEnabledInfoLog(false);
     GameAnalytics.setEnabledVerboseLog(false);
@@ -52,7 +49,7 @@ class Analytics implements AnalyticsService {
         ["game", "confirm", "shop", "start"]);
     var type = "installed";
     GameAnalytics.setCustomDimension01(type);
-    AppMetrica.reportEvent("type_$type");
+    // AppMetrica.reportEvent("type_$type");
 
     GameAnalytics.configureAutoDetectAppVersion(true);
     GameAnalytics.initialize("ga_key_$os".l(), "ga_sec_$os".l());
@@ -104,13 +101,13 @@ class Analytics implements AnalyticsService {
     _firebaseAnalytics.setUserProperty(
         name: "account_id", value: account.user.id);
     GameAnalytics.configureUserId(account.user.id);
-    AppMetrica.setUserProfileID(account.user.id);
+    // AppMetrica.setUserProfileID(account.user.id);
   }
 
   Future<String> getDeviceId() async {
     var id = await KochavaTracker.instance.getDeviceId();
     if (id.isEmpty) {
-      id = await AppMetrica.requestAppMetricaDeviceID();
+      // id = await AppMetrica.requestAppMetricaDeviceID();
     }
     if (id.isEmpty) {
       id = Device.id;
@@ -139,7 +136,7 @@ class Analytics implements AnalyticsService {
     GameAnalytics.addBusinessEvent(data);
 
     if (Platform.isAndroid) {
-      AppMetrica.reportEventWithMap("purchase", data);
+      // AppMetrica.reportEventWithMap("purchase", data);
     } else {
       await _firebaseAnalytics.logPurchase(
           currency: currency,
@@ -165,8 +162,8 @@ class Analytics implements AnalyticsService {
       "adSdkName": sdkName,
       "adPlacement": placementID
     });
-    AppMetrica.reportEventWithMap("ads", map);
-    AppMetrica.reportEventWithMap("ad_$placementID", map);
+    // AppMetrica.reportEventWithMap("ads", map);
+    // AppMetrica.reportEventWithMap("ad_$placementID", map);
 
     KochavaTracker.instance.sendEventWithDictionary("ad_$placementID", map);
   }
@@ -245,7 +242,7 @@ class Analytics implements AnalyticsService {
       }
     }
     GameAnalytics.addDesignEvent(data);
-    AppMetrica.reportEventWithMap(name, data);
+    // AppMetrica.reportEventWithMap(name, data);
     KochavaTracker.instance.sendEventWithDictionary(name, data);
   }
 

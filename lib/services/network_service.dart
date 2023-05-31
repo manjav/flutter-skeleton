@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/core/iservices.dart';
+import '../services/core/iservices.dart';
 import 'package:http/http.dart' as http;
-
 import 'core/infra.dart';
 
 abstract class NetworkService extends IService {

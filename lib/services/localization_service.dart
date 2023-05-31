@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_skeleton/services/core/iservices.dart';
+import '../services/core/iservices.dart';
 
 abstract class LocalizationService implements IService {}
 
