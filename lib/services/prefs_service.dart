@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/core/iservices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'core/iservices.dart';
 
 class PrefsService implements IService {
   static SharedPreferences? _instance;

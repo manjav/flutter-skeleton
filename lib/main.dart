@@ -3,16 +3,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/services/prefs_service.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
-import 'package:flutter_skeleton/services/sounds_service.dart';
-import 'package:flutter_skeleton/services/theme.dart';
-
+import '../services/localization_service.dart';
+import '../services/sounds_service.dart';
+import '../services/theme.dart';
 import 'blocs/services_bloc.dart';
 import 'services/ads_service.dart';
 import 'services/analytics_service.dart';
 import 'services/game_apis_service.dart';
 import 'services/network_service.dart';
+import 'services/prefs_service.dart';
 import 'view/pages/loading_screen.dart';
 
 void main() async {

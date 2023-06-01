@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_skeleton/utils/device.dart';
+import '../utils/device.dart';
 
 class TColors {
   static const accent = Color(0xFFFF5D54);

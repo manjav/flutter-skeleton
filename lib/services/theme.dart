@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_skeleton/utils/device.dart';
-
+import '../utils/device.dart';
 import 'core/iservices.dart';
 
 abstract class ThemeService extends IService {}
