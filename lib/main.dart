@@ -7,7 +7,6 @@ import 'package:flutter_skeleton/services/prefs_service.dart';
 import 'package:flutter_skeleton/services/localization_service.dart';
 import 'package:flutter_skeleton/services/sounds_service.dart';
 import 'package:flutter_skeleton/services/theme.dart';
-// import 'package:fc_project/viewModel/bloc/services_bloc.dart';
 
 import 'blocs/services_bloc.dart';
 import 'services/ads_service.dart';
