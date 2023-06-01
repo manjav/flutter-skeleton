@@ -96,14 +96,14 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   }
 
   initialize() async {
-    await adsService.initialize();
-    await analyticsService.initialize();
-    await networkService.initialize();
-    await gameApiService.initialize();
     await prefsService.initialize();
     await localizationService.initialize();
-    await soundService.initialize();
     await themeSevice.initialize();
+    await soundService.initialize();
+    await gameApiService.initialize();
+    await networkService.initialize();
+    await analyticsService.initialize();
+    await adsService.initialize();
   }
 }
 
