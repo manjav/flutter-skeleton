@@ -9,7 +9,6 @@ abstract class NetworkService extends IService {
   Future<Result<T>> rpc<T>(RpcId id, {String? payload});
   updateResponse(LoadingState state, String message);
 }
-// ignore_for_file: implementation_imports, depend_on_referenced_packages
 
 class Network implements NetworkService {
   Network();
