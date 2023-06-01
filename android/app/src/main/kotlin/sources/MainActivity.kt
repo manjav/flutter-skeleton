@@ -1,4 +1,4 @@
-package com.example.flutter_skeleton
+package sources
 
 import io.flutter.embedding.android.FlutterActivity
 
