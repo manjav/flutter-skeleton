@@ -18,10 +18,10 @@ abstract class AnalyticsService extends IService {
 
 class Analytics implements AnalyticsService {
   static const _testName = "_";
-  late FirebaseAnalytics _firebaseAnalytics;
+  final FirebaseAnalytics firebaseAnalytics;
   int variant = 1;
 
-  Analytics();
+  Analytics(this.firebaseAnalytics);
 
   final _funnelConfigs = {
     "open": [1],
@@ -36,7 +36,6 @@ class Analytics implements AnalyticsService {
     await Future.delayed(const Duration(milliseconds: 200));
     debugPrint("Analytics init");
     var os = Platform.operatingSystem;
-    _firebaseAnalytics = args![0] as FirebaseAnalytics;
     // AppMetrica.runZoneGuarded(() {
     //   WidgetsFlutterBinding.ensureInitialized();
     //   AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
@@ -56,8 +55,8 @@ class Analytics implements AnalyticsService {
     GameAnalytics.configureAutoDetectAppVersion(true);
     GameAnalytics.initialize("ga_key_$os".l(), "ga_sec_$os".l());
 
-    _firebaseAnalytics.setUserProperty(name: "buildType", value: type);
-    _firebaseAnalytics.setUserProperty(name: "build_type", value: type);
+    firebaseAnalytics.setUserProperty(name: "buildType", value: type);
+    firebaseAnalytics.setUserProperty(name: "build_type", value: type);
 
     if (Platform.isAndroid) {
       KochavaTracker.instance.registerAndroidAppGuid("kt_key_$os".l());
@@ -93,14 +92,14 @@ class Analytics implements AnalyticsService {
     variant = int.parse(variantId ?? "0");
     debugPrint("Analytics testVariantId ==> $variant");
 
-    _firebaseAnalytics.setUserProperty(name: "test_name", value: _testName);
-    _firebaseAnalytics.setUserProperty(name: "test_variant", value: variantId);
+    firebaseAnalytics.setUserProperty(name: "test_name", value: _testName);
+    firebaseAnalytics.setUserProperty(name: "test_variant", value: variantId);
   }
 
   setAccount(dynamic account) {
     Smartlook.instance.user.setIdentifier(account.user.id);
     Smartlook.instance.user.setName(account.user.displayName);
-    _firebaseAnalytics.setUserProperty(
+    firebaseAnalytics.setUserProperty(
         name: "account_id", value: account.user.id);
     GameAnalytics.configureUserId(account.user.id);
     // AppMetrica.setUserProfileID(account.user.id);
@@ -140,7 +139,7 @@ class Analytics implements AnalyticsService {
     if (Platform.isAndroid) {
       // AppMetrica.reportEventWithMap("purchase", data);
     } else {
-      await _firebaseAnalytics.logPurchase(
+      await firebaseAnalytics.logPurchase(
           currency: currency,
           value: amount,
           transactionId: signature,
@@ -156,7 +155,7 @@ class Analytics implements AnalyticsService {
       'adPlacement': placementID,
       'adSdkName': sdkName,
     };
-    _firebaseAnalytics.logEvent(name: "ads", parameters: map);
+    firebaseAnalytics.logEvent(name: "ads", parameters: map);
 
     GameAnalytics.addAdEvent({
       "adAction": action,
@@ -172,7 +171,7 @@ class Analytics implements AnalyticsService {
 
   Future<void> resource(int type, String currency, int amount, String itemType,
       String itemId) async {
-    _firebaseAnalytics
+    firebaseAnalytics
         .logEvent(name: "resource_change", parameters: <String, dynamic>{
       "flowType": getResourceType(type),
       "currency": currency, //"Gems",
@@ -235,7 +234,7 @@ class Analytics implements AnalyticsService {
   }
 
   Future<void> design(String name, {Map<String, dynamic>? parameters}) async {
-    _firebaseAnalytics.logEvent(name: name, parameters: parameters);
+    firebaseAnalytics.logEvent(name: name, parameters: parameters);
 
     var data = {"eventId": name};
     if (parameters != null) {

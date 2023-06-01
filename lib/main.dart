@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,9 +19,7 @@ import 'view/pages/loading_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  //NOTE: would be included later
-  // await Firebase.initializeApp();
-
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -29,16 +29,17 @@ class MyApp extends StatelessWidget {
   });
 
   //NOTE: would be included later
-  //   static final analytics = FirebaseAnalytics.instance;
-  // static final _observer = FirebaseAnalyticsObserver(analytics: analytics);
+  static final _firebaseAnalytics = FirebaseAnalytics.instance;
+  static final _observer =
+      FirebaseAnalyticsObserver(analytics: _firebaseAnalytics);
 
   @override
   Widget build(BuildContext context) {
     NetworkService netConnection = Network();
     SoundService sound = Sounds();
     GameApisService gameApi = MainGameApi();
-    AnalyticsService analytics = Analytics();
-    IAdsService adsData = AdsService(analytics: analytics, sound: sound);
+    AnalyticsService analytics = Analytics(_firebaseAnalytics);
+    AdsService adsData = AdsService(analytics: analytics, sound: sound);
     LocalizationService localization = ILocalization();
     PrefsService prefsService = PrefsService();
     SoundService sounds = Sounds();
@@ -58,7 +59,8 @@ class MyApp extends StatelessWidget {
               themeSevice: theme),
         ),
       ],
-      child: const MaterialApp(home: LoadingScreen()),
+      child: MaterialApp(
+          home: const LoadingScreen(), navigatorObservers: [_observer]),
     );
   }
 }
