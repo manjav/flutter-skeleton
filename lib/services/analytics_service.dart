@@ -10,7 +10,7 @@ import 'package:kochava_tracker/kochava_tracker.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../utils/device.dart';
-import 'core/prefs.dart';
+import 'prefs_service.dart';
 
 abstract class AnalyticsService extends IService {
   funnle(String type, [String? name]);
@@ -213,7 +213,7 @@ class Analytics implements AnalyticsService {
   @override
   funnle(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";
-    var step = Prefs.increase(name, 1);
+    var step = PrefsService.increase(name, 1);
 
     // Unique events
     if (_funnelConfigs.containsKey(type)) {

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_skeleton/utils/loader.dart';
 
 import 'core/iservices.dart';
-import 'core/prefs.dart';
+import 'prefs_service.dart';
 
 abstract class SoundService extends IService {
   play(String name, {String extension, String? channel});
@@ -31,10 +31,10 @@ class Sounds extends SoundService {
   play(String name, {String extension = "mp3", String? channel}) {
     AudioPlayer player;
     if (channel == null) {
-      if (!Prefs.getBool("settings_sfx")) return;
+      if (!PrefsService.getBool("settings_sfx")) return;
       player = _findPlayer();
     } else {
-      if (channel == "music" && !Prefs.getBool("settings_music")) return;
+      if (channel == "music" && !PrefsService.getBool("settings_music")) return;
       if (!_players.containsKey(channel)) {
         _players[channel] = AudioPlayer();
       }

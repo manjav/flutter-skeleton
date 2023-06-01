@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/services/prefs_service.dart';
 import 'package:flutter_skeleton/services/localization_service.dart';
 import 'package:flutter_skeleton/services/sounds_service.dart';
 import 'package:flutter_skeleton/services/theme.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
     AnalyticsService analytics = Analytics();
     IAdsService adsData = AdsService(analytics: analytics, sound: sound);
     LocalizationService localization = ILocalization();
+    PrefsService prefsService = PrefsService();
     SoundService sounds = Sounds();
     ThemeService theme = MyTheme();
 
@@ -49,8 +51,9 @@ class MyApp extends StatelessWidget {
               adsService: adsData,
               gameApiService: gameApi,
               analyticsService: analytics,
-              networkService: netConnection,
               localizationService: localization,
+              networkService: netConnection,
+              prefsService: prefsService,
               soundService: sounds,
               themeSevice: theme),
         ),

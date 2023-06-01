@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/services/prefs_service.dart';
 import 'package:flutter_skeleton/services/localization_service.dart';
 import 'package:flutter_skeleton/services/sounds_service.dart';
 import 'package:flutter_skeleton/services/theme.dart';
@@ -16,41 +17,48 @@ abstract class ServicesState {
   final IAdsService adsService;
   final GameApisService gameApiService;
   final AnalyticsService analyticsService;
-  final NetworkService networkService;
   final LocalizationService localizationService;
+  final NetworkService networkService;
+  final PrefsService prefsService;
   final SoundService soundService;
   final ThemeService themeService;
 
-  ServicesState(
-      {required this.gameApiService,
-      required this.analyticsService,
-      required this.networkService,
-      required this.localizationService,
-      required this.soundService,
-      required this.adsService,
-      required this.themeService});
+  ServicesState({
+    required this.prefsService,
+    required this.gameApiService,
+    required this.adsService,
+    required this.analyticsService,
+    required this.networkService,
+    required this.localizationService,
+    required this.soundService,
+    required this.themeService,
+  });
 }
 
 class ServicesInit extends ServicesState {
-  ServicesInit(
-      {required super.gameApiService,
-      required super.analyticsService,
-      required super.networkService,
-      required super.localizationService,
-      required super.soundService,
-      required super.adsService,
-      required super.themeService});
+  ServicesInit({
+    required super.prefsService,
+    required super.gameApiService,
+    required super.analyticsService,
+    required super.networkService,
+    required super.localizationService,
+    required super.soundService,
+    required super.adsService,
+    required super.themeService,
+  });
 }
 
 class ServicesUpdate extends ServicesState {
-  ServicesUpdate(
-      {required super.gameApiService,
-      required super.analyticsService,
-      required super.networkService,
-      required super.localizationService,
-      required super.soundService,
-      required super.adsService,
-      required super.themeService});
+  ServicesUpdate({
+    required super.prefsService,
+    required super.gameApiService,
+    required super.analyticsService,
+    required super.networkService,
+    required super.localizationService,
+    required super.soundService,
+    required super.adsService,
+    required super.themeService,
+  });
 }
 
 //--------------------------------------------------------
@@ -59,27 +67,31 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   IAdsService adsService;
   GameApisService gameApiService;
   AnalyticsService analyticsService;
-  NetworkService networkService;
   LocalizationService localizationService;
+  NetworkService networkService;
   SoundService soundService;
   ThemeService themeSevice;
+  PrefsService prefsService;
 
-  ServicesBloc(
-      {required this.adsService,
-      required this.gameApiService,
-      required this.analyticsService,
-      required this.networkService,
-      required this.localizationService,
-      required this.soundService,
-      required this.themeSevice})
-      : super(ServicesInit(
-            adsService: adsService,
-            analyticsService: analyticsService,
-            gameApiService: gameApiService,
-            localizationService: localizationService,
-            networkService: networkService,
-            soundService: soundService,
-            themeService: themeSevice)) {
+  ServicesBloc({
+    required this.adsService,
+    required this.gameApiService,
+    required this.analyticsService,
+    required this.localizationService,
+    required this.networkService,
+    required this.prefsService,
+    required this.soundService,
+    required this.themeSevice,
+  }) : super(ServicesInit(
+          adsService: adsService,
+          analyticsService: analyticsService,
+          gameApiService: gameApiService,
+          localizationService: localizationService,
+          networkService: networkService,
+          prefsService: prefsService,
+          soundService: soundService,
+          themeService: themeSevice,
+        )) {
     // on<ServicesEvent>(update);
   }
 
@@ -88,6 +100,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     await analyticsService.initialize();
     await networkService.initialize();
     await gameApiService.initialize();
+    await prefsService.initialize();
     await localizationService.initialize();
     await soundService.initialize();
     await themeSevice.initialize();
