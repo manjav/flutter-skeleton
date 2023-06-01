@@ -14,7 +14,6 @@ import flutter_timezone
 import games_services
 import in_app_purchase_storekit
 import path_provider_foundation
-import rive_common
 import shared_preferences_foundation
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
