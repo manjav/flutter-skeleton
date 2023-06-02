@@ -1,8 +1,10 @@
 import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
-import '../services/localization_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+
+import '../services/localization_service.dart';
 import 'device.dart';
 
 extension IntExt on int {
