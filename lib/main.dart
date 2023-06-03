@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     NetworkService netConnection = Network();
     SoundService sound = Sounds();
-    GameApisService gameApi = MainGameApi();
     AnalyticsService analytics = Analytics(_firebaseAnalytics);
+    GameApisService gameApi = Games(analytics: analytics);
     AdsService adsData = AdsService(analytics: analytics, sound: sound);
     LocalizationService localization = ILocalization();
     PrefsService prefsService = PrefsService();
