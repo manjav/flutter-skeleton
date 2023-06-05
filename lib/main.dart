@@ -8,7 +8,7 @@ import '../services/sounds_service.dart';
 import '../services/theme.dart';
 import 'blocs/services_bloc.dart';
 import 'services/ads_service.dart';
-import 'services/analytics_service.dart';
+import 'services/trackers/trackers_service.dart';
 import 'services/game_apis_service.dart';
 import 'services/network_service.dart';
 import 'services/prefs_service.dart';

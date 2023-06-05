@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
-import '../services/core/iservices.dart';
-import '../services/localization_service.dart';
+import '../core/iservices.dart';
+import '../localization_service.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 import 'package:kochava_tracker/kochava_tracker.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import '../utils/device.dart';
-import 'prefs_service.dart';
+import '../../utils/device.dart';
+import '../prefs_service.dart';
 
 abstract class AnalyticsService extends IService {
   funnle(String type, [String? name]);
