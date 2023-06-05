@@ -4,7 +4,7 @@ import '../services/prefs_service.dart';
 import '../services/sounds_service.dart';
 import '../services/theme.dart';
 import '../services/network_service.dart';
-import '../services/ads_service.dart';
+import '../services/core/ads/ads_service.dart';
 import '../services/analytics_service.dart';
 import '../services/game_apis_service.dart';
 
@@ -13,7 +13,7 @@ class ServicesEvent {}
 //--------------------------------------------------------
 
 abstract class ServicesState {
-  final IAdsService adsService;
+  final AdsService adsService;
   final GameApisService gameApiService;
   final AnalyticsService analyticsService;
   final LocalizationService localizationService;
@@ -63,7 +63,7 @@ class ServicesUpdate extends ServicesState {
 //--------------------------------------------------------
 
 class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
-  IAdsService adsService;
+  AdsService adsService;
   GameApisService gameApiService;
   AnalyticsService analyticsService;
   LocalizationService localizationService;
