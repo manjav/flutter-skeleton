@@ -7,7 +7,7 @@ import '../services/localization_service.dart';
 import '../services/sounds_service.dart';
 import '../services/theme.dart';
 import 'blocs/services_bloc.dart';
-import 'services/ads_service.dart';
+import 'services/core/ads/ads_service.dart';
 import 'services/analytics_service.dart';
 import 'services/game_apis_service.dart';
 import 'services/network_service.dart';
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
     SoundService sound = Sounds();
     GameApisService gameApi = MainGameApi();
     AnalyticsService analytics = Analytics(_firebaseAnalytics);
-    AdsService adsData = AdsService(analytics: analytics, sound: sound);
+    AdsService adsData = AdsService();
     LocalizationService localization = ILocalization();
     PrefsService prefsService = PrefsService();
     SoundService sounds = Sounds();
