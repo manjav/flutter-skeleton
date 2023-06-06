@@ -3,15 +3,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../services/localization_service.dart';
-import '../services/sounds_service.dart';
-import '../services/theme.dart';
+
 import 'blocs/services_bloc.dart';
-import 'services/ads_service.dart';
-import 'services/trackers/trackers_service.dart';
+import 'services/core/ads/ads_service.dart';
 import 'services/game_apis_service.dart';
+import 'services/localization_service.dart';
 import 'services/network_service.dart';
 import 'services/prefs_service.dart';
+import 'services/sounds_service.dart';
+import 'services/theme.dart';
+import 'services/trackers/trackers_service.dart';
 import 'view/pages/loading_screen.dart';
 
 void main() async {
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
     SoundService sound = Sounds();
     TrackersService trackers = TrackersService(_firebaseAnalytics);
     GameApisService gameApi = Games();
-    AdsService adsData = AdsService(analytics: trackers, sound: sound);
+    AdsService adsData = AdsService();
     LocalizationService localization = ILocalization();
     PrefsService prefsService = PrefsService();
     ThemeService theme = MyTheme();

@@ -1,19 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../services/core/ads/ads_service.dart';
+import '../services/game_apis_service.dart';
 import '../services/localization_service.dart';
+import '../services/network_service.dart';
 import '../services/prefs_service.dart';
 import '../services/sounds_service.dart';
 import '../services/theme.dart';
-import '../services/network_service.dart';
-import '../services/ads_service.dart';
 import '../services/trackers/trackers_service.dart';
-import '../services/game_apis_service.dart';
 
 class ServicesEvent {}
 
 //--------------------------------------------------------
 
 abstract class ServicesState {
-  final IAdsService adsService;
+  final AdsService adsService;
   final GameApisService gameApiService;
   final TrackersService analyticsService;
   final LocalizationService localizationService;
@@ -63,7 +64,7 @@ class ServicesUpdate extends ServicesState {
 //--------------------------------------------------------
 
 class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
-  IAdsService adsService;
+  AdsService adsService;
   GameApisService gameApiService;
   TrackersService trackers;
   LocalizationService localizationService;
