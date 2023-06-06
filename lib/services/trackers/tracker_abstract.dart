@@ -48,4 +48,12 @@ abstract class AbstractTracker {
   ad(MyAd ad, AdState state);
   // AppMetrica.reportEventWithMap("ads", map);
   // AppMetrica.reportEventWithMap("ad_$placementID", map);
+
+  resource(ResourceFlowType type, String currency, int amount, String itemType,
+      String itemId);
+
+  design(String name, {Map<String, String>? parameters});
+  // AppMetrica.reportEventWithMap(name, data);
+
+  setScreen(String screenName);
 }

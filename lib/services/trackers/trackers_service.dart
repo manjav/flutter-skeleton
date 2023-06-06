@@ -77,6 +77,25 @@ class TrackersService extends IService {
     for (var sdk in _sdks.values) {
       sdk.ad(ad, state);
     }
+  }
+
+  Future<void> resource(ResourceFlowType type, String currency, int amount,
+      String itemType, String itemId) async {
+    for (var sdk in _sdks.values) {
+      sdk.resource(type, currency, amount, itemType, itemId);
+    }
+  }
+
+  Future<void> design(String name, {Map<String, String>? parameters}) async {
+    for (var sdk in _sdks.values) {
+      sdk.design(name, parameters: parameters);
+    }
+  }
+
+  Future<void> setScreen(String screenName) async {
+    for (var sdk in _sdks.values) {
+      sdk.setScreen(screenName);
+    }
   @override
   log(log) {
     throw UnimplementedError();

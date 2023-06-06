@@ -85,3 +85,25 @@ class GATracker extends AbstractTracker {
         AdType.rewarded => GAAdType.RewardedVideo
       };
 
+  @override
+  design(String name, {Map<String, dynamic>? parameters}) {
+    GameAnalytics.addDesignEvent(parameters);
+  }
+
+  @override
+  resource(ResourceFlowType type, String currency, int amount, String itemType,
+      String itemId) {
+    GameAnalytics.addResourceEvent({
+      "flowType": type.index,
+      "currency": currency, //"Gems",
+      "amount": amount,
+      "itemType": itemType, //"IAP",
+      "itemId": itemId //"Coins400"
+    });
+  }
+
+  @override
+  setScreen(String screenName) {
+    GameAnalytics.addDesignEvent({"eventId": "screen:$screenName"});
+  }
+}

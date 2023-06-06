@@ -45,3 +45,15 @@ class KochavaaTracker extends AbstractTracker {
     KochavaTracker.instance.sendEventWithDictionary("ad_${ad.id}", map);
   }
 
+  @override
+  design(String name, {Map<String, dynamic>? parameters}) {
+    KochavaTracker.instance.sendEventWithDictionary(name, parameters!);
+  }
+
+  @override
+  resource(ResourceFlowType type, String currency, int amount, String itemType,
+      String itemId) {}
+
+  @override
+  setScreen(String screenName) async {}
+}

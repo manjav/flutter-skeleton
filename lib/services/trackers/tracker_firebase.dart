@@ -22,3 +22,50 @@ class FirebaseTracker extends AbstractTracker {
           name: property.key, value: property.value);
     }
   }
+
+  @override
+  purchase(String currency, double amount, String itemId, String itemType,
+      String receipt, String signature) async {
+    if (!Platform.isAndroid) {
+      await _firebaseAnalytics.logPurchase(
+          currency: currency,
+          value: amount,
+          transactionId: signature,
+          coupon: receipt);
+    }
+  }
+
+  @override
+  ad(MyAd ad, AdState state) {
+    var map = <String, Object>{
+      'adAction': state.name,
+      'adType': ad.type.name,
+      'adPlacement': ad.id.name,
+      'adSdkName': ad.sdk.name,
+    };
+    _firebaseAnalytics.logEvent(name: "ads", parameters: map);
+  }
+
+  @override
+  design(String name, {Map<String, dynamic>? parameters}) {
+    _firebaseAnalytics.logEvent(name: name, parameters: parameters);
+  }
+
+  @override
+  resource(ResourceFlowType type, String currency, int amount, String itemType,
+      String itemId) {
+    _firebaseAnalytics
+        .logEvent(name: "resource_change", parameters: <String, dynamic>{
+      "flowType": type.index,
+      "currency": currency, //"Gems",
+      "amount": amount,
+      "itemType": itemType, //"IAP",
+      "itemId": itemId //"Coins400"
+    });
+  }
+
+  @override
+  setScreen(String screenName) async {
+    await _firebaseAnalytics.setCurrentScreen(screenName: screenName);
+  }
+}
