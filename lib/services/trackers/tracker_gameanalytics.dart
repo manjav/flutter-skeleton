@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/services/core/ads/ads_abstract.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
-import '../../services/localization_service.dart';
-import '../prefs_service.dart';
+import '../localization.dart';
+import '../prefs.dart';
 import 'tracker_abstract.dart';
 import 'trackers_service.dart';
 

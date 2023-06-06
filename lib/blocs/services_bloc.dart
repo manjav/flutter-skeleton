@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../services/core/ads/ads_service.dart';
-import '../services/game_apis_service.dart';
-import '../services/localization_service.dart';
-import '../services/network_service.dart';
-import '../services/prefs_service.dart';
-import '../services/sounds_service.dart';
+import '../services/game_service.dart';
+import '../services/localization.dart';
+import '../services/network.dart';
+import '../services/prefs.dart';
+import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers_service.dart';
 
@@ -15,13 +15,13 @@ class ServicesEvent {}
 
 abstract class ServicesState {
   final AdsService adsService;
-  final GameApisService gameApiService;
+  final IGameService gameApiService;
   final TrackersService analyticsService;
-  final LocalizationService localizationService;
-  final NetworkService networkService;
-  final PrefsService prefsService;
-  final SoundService soundService;
-  final ThemeService themeService;
+  final Localization localizationService;
+  final INetwork networkService;
+  final Prefs prefsService;
+  final ISound soundService;
+  final ITheme themeService;
 
   ServicesState({
     required this.prefsService,
@@ -65,43 +65,43 @@ class ServicesUpdate extends ServicesState {
 
 class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   AdsService adsService;
-  GameApisService gameApiService;
+  IGameService gameApiService;
   TrackersService trackers;
-  LocalizationService localizationService;
-  NetworkService networkService;
-  SoundService soundService;
-  ThemeService themeSevice;
-  PrefsService prefsService;
+  Localization localization;
+  INetwork network;
+  ISound sound;
+  ITheme theme;
+  Prefs prefs;
 
   ServicesBloc({
     required this.adsService,
     required this.gameApiService,
     required this.trackers,
-    required this.localizationService,
-    required this.networkService,
-    required this.prefsService,
-    required this.soundService,
-    required this.themeSevice,
+    required this.localization,
+    required this.network,
+    required this.prefs,
+    required this.sound,
+    required this.theme,
   }) : super(ServicesInit(
           adsService: adsService,
           analyticsService: trackers,
           gameApiService: gameApiService,
-          localizationService: localizationService,
-          networkService: networkService,
-          prefsService: prefsService,
-          soundService: soundService,
-          themeService: themeSevice,
+          localizationService: localization,
+          networkService: network,
+          prefsService: prefs,
+          soundService: sound,
+          themeService: theme,
         )) {
     // on<ServicesEvent>(update);
   }
 
   initialize() async {
-    await prefsService.initialize();
-    await localizationService.initialize();
-    await themeSevice.initialize();
-    await soundService.initialize();
+    await prefs.initialize();
+    await localization.initialize();
+    await theme.initialize();
+    await sound.initialize();
     await gameApiService.initialize();
-    await networkService.initialize();
+    await network.initialize();
     await trackers.initialize();
     await adsService.initialize();
   }

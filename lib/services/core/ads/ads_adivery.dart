@@ -4,7 +4,7 @@ import 'package:adivery/adivery.dart';
 import 'package:adivery/adivery_ads.dart';
 import 'package:flutter/material.dart';
 
-import '../../localization_service.dart';
+import '../../localization.dart';
 import 'ads_abstract.dart';
 
 class AdUnity extends AbstractAdSDK {

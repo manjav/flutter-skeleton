@@ -7,7 +7,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../utils/device.dart';
 import '../core/iservices.dart';
-import '../prefs_service.dart';
+import '../prefs.dart';
 import 'tracker_abstract.dart';
 import 'tracker_firebase.dart';
 import 'tracker_gameanalytics.dart';
@@ -129,7 +129,7 @@ class TrackersService extends IService {
 
   funnle(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";
-    var step = PrefsService.increase(name, 1);
+    var step = Prefs.increase(name, 1);
 
     // Unique events
     if (_funnelConfigs.containsKey(type)) {

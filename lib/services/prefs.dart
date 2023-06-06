@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/iservices.dart';
 
-class PrefsService implements IService {
+class Prefs implements IService {
   static SharedPreferences? _instance;
   static var tutorStep = 0;
   static bool get inTutorial => tutorStep < TutorSteps.fine.value;
@@ -70,17 +70,17 @@ extension PrefExt on Pref {
     }
   }
 
-  bool contains() => PrefsService.contains(name);
+  bool contains() => Prefs.contains(name);
 
-  int setInt(int value) => PrefsService.setInt(name, value);
-  int getInt() => PrefsService.getInt(name);
-  int increase(int value) => PrefsService.increase(name, value);
+  int setInt(int value) => Prefs.setInt(name, value);
+  int getInt() => Prefs.getInt(name);
+  int increase(int value) => Prefs.increase(name, value);
 
-  String setString(String value) => PrefsService.setString(name, value);
-  String getString() => PrefsService.getString(name);
+  String setString(String value) => Prefs.setString(name, value);
+  String getString() => Prefs.getString(name);
 
-  bool setBool(bool value) => PrefsService.setBool(name, value);
-  bool getBool() => PrefsService.getBool(name);
+  bool setBool(bool value) => Prefs.setBool(name, value);
+  bool getBool() => Prefs.getBool(name);
 }
 
 enum TutorSteps {
@@ -126,10 +126,10 @@ extension PTutorStapsExt on TutorSteps {
   }
 
   void commit([bool force = false]) {
-    if (!force && value <= PrefsService.tutorStep) return;
+    if (!force && value <= Prefs.tutorStep) return;
     if (value % 10 == 0) {
       Pref.tutorStep.setInt(value);
     }
-    PrefsService.tutorStep = value;
+    Prefs.tutorStep = value;
   }
 }
