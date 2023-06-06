@@ -40,7 +40,6 @@ class MyApp extends StatelessWidget {
     AdsService adsData = AdsService(analytics: analytics, sound: sound);
     LocalizationService localization = ILocalization();
     PrefsService prefsService = PrefsService();
-    SoundService sounds = Sounds();
     ThemeService theme = MyTheme();
 
     return MultiBlocProvider(
@@ -53,7 +52,7 @@ class MyApp extends StatelessWidget {
               localizationService: localization,
               networkService: netConnection,
               prefsService: prefsService,
-              soundService: sounds,
+              soundService: sound,
               themeSevice: theme),
         ),
       ],
