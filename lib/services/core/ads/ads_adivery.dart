@@ -13,7 +13,7 @@ class AdUnity extends AbstractAdSDK {
   @override
   void initialize(AdSDKName sdk, {bool testMode = false}) {
     super.initialize(sdk, testMode: testMode);
-    
+
     AdiveryPlugin.initialize("ads_${sdk}_${platform.toLowerCase()}".l());
     AdiveryPlugin.setLoggingEnabled(testMode);
     AdiveryPlugin.addListener(
@@ -39,7 +39,7 @@ class AdUnity extends AbstractAdSDK {
   Placement getBanner(String origin, {Size? size}) {
     var placement = placements[AdType.banner]!;
     var banner = BannerAd(
-      getId(AdType.banner),
+      placement.id,
       size == null ? BannerAdSize.LARGE_BANNER : BannerAdSize.BANNER,
       onAdLoaded: (ad) {
         placement.nativeAd = ad;
@@ -57,9 +57,9 @@ class AdUnity extends AbstractAdSDK {
   @override
   void request(AdType type) {
     if (type.isIntrestitial) {
-      AdiveryPlugin.prepareInterstitialAd(getId(type));
+      AdiveryPlugin.prepareInterstitialAd(placements[type]!.id);
     } else {
-      AdiveryPlugin.prepareRewardedAd(getId(type));
+      AdiveryPlugin.prepareRewardedAd(placements[type]!.id);
     }
   }
 
@@ -69,7 +69,7 @@ class AdUnity extends AbstractAdSDK {
     if (placement == null) {
       return null;
     }
-    AdiveryPlugin.show(getId(type));
+    AdiveryPlugin.show(placement.id);
     placement.state = AdState.show;
     await waitForClose(type);
     resetAd(placement);

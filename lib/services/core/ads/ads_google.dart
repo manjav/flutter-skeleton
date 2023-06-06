@@ -32,7 +32,7 @@ class AdGoogle extends AbstractAdSDK {
         size: size == null
             ? AdSize.largeBanner
             : AdSize(width: size.width.toInt(), height: size.height.toInt()),
-        adUnitId: getId(AdType.banner),
+        adUnitId: placement.id,
         listener: listener,
         request: _request)
       ..load();
@@ -45,7 +45,7 @@ class AdGoogle extends AbstractAdSDK {
     var placement = placements[type]!;
     if (type.isIntrestitial) {
       InterstitialAd.load(
-          adUnitId: getId(type),
+          adUnitId: placement.id,
           request: _request,
           adLoadCallback:
               InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
@@ -66,7 +66,7 @@ class AdGoogle extends AbstractAdSDK {
       return;
     }
     RewardedAd.load(
-        adUnitId: getId(AdType.rewarded),
+        adUnitId: placement.id,
         request: _request,
         rewardedAdLoadCallback:
             RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {

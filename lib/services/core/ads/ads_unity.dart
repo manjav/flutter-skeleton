@@ -30,7 +30,7 @@ class AdUnity extends AbstractAdSDK {
   Placement getBanner(String origin, {Size? size}) {
     var placement = placements[AdType.banner]!;
     placement.data = origin;
-    placement.nativeAd = UnityBannerAd(placementId: getId(AdType.banner));
+    placement.nativeAd = UnityBannerAd(placementId: placement.id);
     return placement;
   }
 
@@ -38,7 +38,7 @@ class AdUnity extends AbstractAdSDK {
   void request(AdType type) {
     var placement = placements[type]!;
     UnityAds.load(
-        placementId: getId(type),
+        placementId: placement.id,
         onComplete: (placementId) {
           placement.data = {};
           updateState(placement, AdState.loaded);
@@ -55,7 +55,7 @@ class AdUnity extends AbstractAdSDK {
       return null;
     }
     UnityAds.showVideoAd(
-      placementId: getId(type),
+      placementId: placement.id,
       onStart: (placementId) => updateState(placement, AdState.show),
       onClick: (placementId) => updateState(placement, AdState.clicked),
       onSkipped: (placementId) => updateState(placement, AdState.closed),
