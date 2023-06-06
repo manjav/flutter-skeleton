@@ -56,6 +56,27 @@ class TrackersService extends IService {
         'test_variant': variant.toString(),
       });
     }
+  }
+
+  Future<void> purchase(
+      String currency,
+      double amount,
+      String itemId,
+      String itemType,
+      String receipt,
+      PurchaseVerificationData verificationData) async {
+    var signature = verificationData.source;
+    for (var sdk in _sdks.values) {
+      {
+        sdk.purchase(currency, amount, itemId, itemType, receipt, signature);
+      }
+    }
+  }
+
+  Future<void> ad(MyAd ad, AdState state) async {
+    for (var sdk in _sdks.values) {
+      sdk.ad(ad, state);
+    }
   @override
   log(log) {
     throw UnimplementedError();

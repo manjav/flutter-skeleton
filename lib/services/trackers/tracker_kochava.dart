@@ -30,3 +30,18 @@ class KochavaaTracker extends AbstractTracker {
   @override
   setProperties(Map<String, String> properties) {}
 
+  @override
+  purchase(String currency, double amount, String itemId, String itemType,
+      String receipt, String signature) async {}
+
+  @override
+  ad(MyAd ad, AdState state) {
+    var map = <String, Object>{
+      'adAction': state.name,
+      'adType': ad.type.name,
+      'adPlacement': ad.id.name,
+      'adSdkName': ad.sdk.name,
+    };
+    KochavaTracker.instance.sendEventWithDictionary("ad_${ad.id}", map);
+  }
+

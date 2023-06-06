@@ -29,3 +29,59 @@ class GATracker extends AbstractTracker {
         "tracker_${sdk.name}_${Platform.operatingSystem}_sec".l());
   }
 
+  @override
+  Future<int> getVariantId(String testName) async {
+    var testVersion = ''; //PrefsService.testVersion.getString();
+    var version = "app_version".l();
+    debugPrint("Analytics version ==> $version testVersion ==> $testVersion");
+    if (testVersion.isNotEmpty && testVersion != version) {
+      return 0;
+    }
+    if (testVersion.isEmpty) {
+      Pref.testVersion.setString(version);
+    }
+    var variantId =
+        await GameAnalytics.getRemoteConfigsValueAsString(testName, "0");
+    var variant = int.parse(variantId ?? "0");
+    debugPrint("Analytics testVariantId ==> $variant");
+
+    return variant;
+  }
+
+  @override
+  setProperties(Map<String, String> properties) {
+    GameAnalytics.configureUserId(properties['userId']!);
+  }
+
+  @override
+  purchase(String currency, double amount, String itemId, String itemType,
+      String receipt, String signature) {
+    var data = {
+      "currency": currency,
+      "cartType": "shop",
+      "amount": (amount * 100),
+      "itemType": itemType,
+      "itemId": itemId,
+      "receipt": receipt,
+      "signature": signature,
+    };
+    GameAnalytics.addBusinessEvent(data);
+  }
+
+  @override
+  ad(MyAd ad, AdState state) {
+    GameAnalytics.addAdEvent({
+      "adAction": ad.state.name,
+      "adType": _getGAAdType(ad.type),
+      "adSdkName": ad.sdk.name,
+      "adPlacement": ad.id
+    });
+  }
+
+  _getGAAdType(AdType type) => switch (type) {
+        AdType.interstitial => GAAdType.OfferWall,
+        AdType.banner => GAAdType.Banner,
+        AdType.interstitialVideo => GAAdType.Interstitial,
+        AdType.rewarded => GAAdType.RewardedVideo
+      };
+

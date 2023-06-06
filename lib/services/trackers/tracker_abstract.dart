@@ -34,4 +34,18 @@ abstract class AbstractTracker {
   // Smartlook.instance.user.setName(account.user.displayName);
   // AppMetrica.setUserProfileID(account.user.id);
 
+  purchase(
+    String currency,
+    double amount,
+    String itemId,
+    String itemType,
+    String receipt,
+    String signature,
+  );
+  // AppMetrica.reportEventWithMap("purchase", data);
+  // _appsflyerSdk.validateAndLogInAppAndroidPurchase("shop_base64".l(),
+
+  ad(MyAd ad, AdState state);
+  // AppMetrica.reportEventWithMap("ads", map);
+  // AppMetrica.reportEventWithMap("ad_$placementID", map);
 }
