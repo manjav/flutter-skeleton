@@ -52,7 +52,7 @@ abstract class AbstractTracker {
   resource(ResourceFlowType type, String currency, int amount, String itemType,
       String itemId);
 
-  design(String name, {Map<String, String>? parameters});
+  design(String name, {Map<String, dynamic>? parameters});
   // AppMetrica.reportEventWithMap(name, data);
 
   setScreen(String screenName);
