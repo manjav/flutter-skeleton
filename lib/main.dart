@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
     NetworkService netConnection = Network();
     SoundService sound = Sounds();
     GameApisService gameApi = MainGameApi();
-    AnalyticsService analytics = Analytics(_firebaseAnalytics);
-    AdsService adsData = AdsService(analytics: analytics, sound: sound);
+    TrackersService trackers = TrackersService(_firebaseAnalytics);
+    AdsService adsData = AdsService(analytics: trackers, sound: sound);
     LocalizationService localization = ILocalization();
     PrefsService prefsService = PrefsService();
     SoundService sounds = Sounds();
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           create: (context) => ServicesBloc(
               adsService: adsData,
               gameApiService: gameApi,
-              analyticsService: analytics,
+              trackers: trackers,
               localizationService: localization,
               networkService: netConnection,
               prefsService: prefsService,

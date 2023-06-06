@@ -5,7 +5,7 @@ import '../services/sounds_service.dart';
 import '../services/theme.dart';
 import '../services/network_service.dart';
 import '../services/ads_service.dart';
-import '../services/analytics_service.dart';
+import '../services/trackers/trackers_service.dart';
 import '../services/game_apis_service.dart';
 
 class ServicesEvent {}
@@ -15,7 +15,7 @@ class ServicesEvent {}
 abstract class ServicesState {
   final IAdsService adsService;
   final GameApisService gameApiService;
-  final AnalyticsService analyticsService;
+  final TrackersService analyticsService;
   final LocalizationService localizationService;
   final NetworkService networkService;
   final PrefsService prefsService;
@@ -65,7 +65,7 @@ class ServicesUpdate extends ServicesState {
 class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   IAdsService adsService;
   GameApisService gameApiService;
-  AnalyticsService analyticsService;
+  TrackersService trackers;
   LocalizationService localizationService;
   NetworkService networkService;
   SoundService soundService;
@@ -75,7 +75,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   ServicesBloc({
     required this.adsService,
     required this.gameApiService,
-    required this.analyticsService,
+    required this.trackers,
     required this.localizationService,
     required this.networkService,
     required this.prefsService,
@@ -83,7 +83,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     required this.themeSevice,
   }) : super(ServicesInit(
           adsService: adsService,
-          analyticsService: analyticsService,
+          analyticsService: trackers,
           gameApiService: gameApiService,
           localizationService: localizationService,
           networkService: networkService,
@@ -101,7 +101,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     await soundService.initialize();
     await gameApiService.initialize();
     await networkService.initialize();
-    await analyticsService.initialize();
+    await trackers.initialize();
     await adsService.initialize();
   }
 }
