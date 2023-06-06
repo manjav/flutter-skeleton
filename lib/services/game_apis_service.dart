@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_skeleton/services/analytics_service.dart';
 
 import 'core/iservices.dart';
 
@@ -17,8 +16,7 @@ class Games extends GameApisService {
   // String? playerToken;
   String? playerName;
 
-  Games({required this.analytics});
-  final AnalyticsService analytics;
+  Games();
   // signIn({int timeoutSeconds = 10}) async {
   //   var checks = 0;
   //   getPlayerData();
@@ -59,8 +57,6 @@ class Games extends GameApisService {
 
   bool showLeaderboards(String source) {
     // var analytics = analytics;
-    analytics.funnle("rankclicks");
-    analytics.design('guiClick:record:$source');
     // GamesServices.showLeaderboards();
     return true;
   }

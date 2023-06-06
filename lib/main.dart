@@ -8,7 +8,7 @@ import '../services/sounds_service.dart';
 import '../services/theme.dart';
 import 'blocs/services_bloc.dart';
 import 'services/ads_service.dart';
-import 'services/analytics_service.dart';
+import 'services/trackers/trackers_service.dart';
 import 'services/game_apis_service.dart';
 import 'services/network_service.dart';
 import 'services/prefs_service.dart';
@@ -35,9 +35,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     NetworkService netConnection = Network();
     SoundService sound = Sounds();
-    AnalyticsService analytics = Analytics(_firebaseAnalytics);
-    GameApisService gameApi = Games(analytics: analytics);
-    AdsService adsData = AdsService(analytics: analytics, sound: sound);
+    TrackersService trackers = TrackersService(_firebaseAnalytics);
+    GameApisService gameApi = Games();
+    AdsService adsData = AdsService(analytics: trackers, sound: sound);
     LocalizationService localization = ILocalization();
     PrefsService prefsService = PrefsService();
     ThemeService theme = MyTheme();
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           create: (context) => ServicesBloc(
               adsService: adsData,
               gameApiService: gameApi,
-              analyticsService: analytics,
+              trackers: trackers,
               localizationService: localization,
               networkService: netConnection,
               prefsService: prefsService,

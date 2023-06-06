@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'analytics_service.dart';
+import 'trackers/trackers_service.dart';
 import 'core/iservices.dart';
 import 'sounds_service.dart';
 
@@ -36,7 +36,7 @@ class AdsService implements IAdsService {
   final AdRequest _request = const AdRequest(nonPersonalizedAds: false);
   AdSDK? selectedSDK;
   bool showSuicideInterstitial = true;
-  final AnalyticsService analytics;
+  final TrackersService analytics;
   final SoundService sound;
 
   AdsService({required this.analytics, required this.sound});
@@ -83,7 +83,7 @@ class AdsService implements IAdsService {
           ad.dispose();
         },
         onAdOpened: (ad) {
-          analytics.funnle("adbannerclick", island);
+          // analytics.funnle("adbannerclick", island);
 
           _updateState(myAd, AdState.clicked);
         },
@@ -213,7 +213,7 @@ class AdsService implements IAdsService {
     iAd.show();
     await _waitForClose(id);
     _resetAd(myAd);
-    analytics.funnle("adinterstitial", island);
+    // analytics.funnle("adinterstitial", island);
   }
 
   @override
