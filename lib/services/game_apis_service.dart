@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:games_services/games_services.dart';
 
 import 'core/iservices.dart';
-
-import 'package:games_services/games_services.dart';
 
 abstract class GameApisService extends IService {}
 

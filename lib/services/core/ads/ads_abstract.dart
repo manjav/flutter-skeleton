@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
+import '../../localization_service.dart';
 
 enum AdSDKName { none, adivery, google, unity }
 
@@ -44,13 +44,16 @@ class Placement {
   final gapThreshold = 35000;
   final AdSDKName sdk;
   final AdType type;
+  late final String id;
   int attempts = 0;
   dynamic data;
   dynamic reward;
   dynamic nativeAd;
   AdState state = AdState.closed;
 
-  Placement(this.sdk, this.type);
+  Placement(this.sdk, this.type) {
+    id = "adid_${sdk}_$type".l();
+  }
   int get order {
     if (state == AdState.failedLoad) return -1;
     return state.index;
@@ -68,9 +71,6 @@ abstract class AbstractAdSDK {
   initialize({bool testMode = false}) {
     this.testMode = testMode;
   }
-
-  @protected
-  String getId(AdType type) => "adid_${sdk}_$type".l();
 
   Placement getBanner(String origin, {Size? size});
 

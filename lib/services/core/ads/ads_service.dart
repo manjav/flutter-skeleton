@@ -5,9 +5,8 @@ import 'ads_abstract.dart';
 
 class AdsService implements IService {
   final _sdks = <AdSDKName, AbstractAdSDK>{};
+  final _selectedSDK = AdSDKName.unity;
   Function(Placement?)? onUpdate;
-
-  var _selectedSDK = AdSDKName.unity;
 
   @override
   initialize({List<Object>? args}) async {

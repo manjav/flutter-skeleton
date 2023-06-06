@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:adivery/adivery.dart';
 import 'package:adivery/adivery_ads.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/core/ads/ads_abstract.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
+
+import '../../localization_service.dart';
+import 'ads_abstract.dart';
 
 class AdUnity extends AbstractAdSDK {
   static String platform = Platform.isAndroid ? "Android" : "iOS";
@@ -13,6 +14,9 @@ class AdUnity extends AbstractAdSDK {
   void initialize({bool testMode = false}) {
     super.initialize(testMode: testMode);
     sdk = AdSDKName.adivery;
+
+
+    
     AdiveryPlugin.initialize("ads_${sdk}_${platform.toLowerCase()}".l());
     AdiveryPlugin.setLoggingEnabled(testMode);
     AdiveryPlugin.addListener(

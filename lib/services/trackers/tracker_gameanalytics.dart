@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
-import 'package:flutter_skeleton/services/prefs_service.dart';
-import 'package:flutter_skeleton/services/trackers/tracker_abstract.dart';
+import 'package:flutter_skeleton/services/core/ads/ads_abstract.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
-import '../ads_service.dart';
+import '../../services/localization_service.dart';
+import '../prefs_service.dart';
+import 'tracker_abstract.dart';
 import 'trackers_service.dart';
 
 class GATracker extends AbstractTracker {
@@ -69,12 +69,12 @@ class GATracker extends AbstractTracker {
   }
 
   @override
-  ad(MyAd ad, AdState state) {
+  ad(Placement placement, AdState state) {
     GameAnalytics.addAdEvent({
-      "adAction": ad.state.name,
-      "adType": _getGAAdType(ad.type),
-      "adSdkName": ad.sdk.name,
-      "adPlacement": ad.id
+      "adAction": placement.state.name,
+      "adType": _getGAAdType(placement.type),
+      "adSdkName": placement.sdk.name,
+      "adPlacement": placement.id
     });
   }
 

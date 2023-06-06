@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:flutter_skeleton/services/ads_service.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
-import 'package:flutter_skeleton/services/trackers/tracker_abstract.dart';
 import 'package:kochava_tracker/kochava_tracker.dart';
 
+import '../../services/core/ads/ads_abstract.dart';
+import '../../services/localization_service.dart';
+import 'tracker_abstract.dart';
 import 'trackers_service.dart';
 
 class KochavaaTracker extends AbstractTracker {
@@ -35,14 +35,14 @@ class KochavaaTracker extends AbstractTracker {
       String receipt, String signature) async {}
 
   @override
-  ad(MyAd ad, AdState state) {
+  ad(Placement placement, AdState state) {
     var map = <String, Object>{
       'adAction': state.name,
-      'adType': ad.type.name,
-      'adPlacement': ad.id.name,
-      'adSdkName': ad.sdk.name,
+      'adType': placement.type.name,
+      'adPlacement': placement.id,
+      'adSdkName': placement.sdk.name,
     };
-    KochavaTracker.instance.sendEventWithDictionary("ad_${ad.id}", map);
+    KochavaTracker.instance.sendEventWithDictionary("ad_${placement.id}", map);
   }
 
   @override

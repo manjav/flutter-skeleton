@@ -1,4 +1,4 @@
-import '../ads_service.dart';
+import '../core/ads/ads_abstract.dart';
 import 'trackers_service.dart';
 
 abstract class AbstractTracker {
@@ -45,7 +45,7 @@ abstract class AbstractTracker {
   // AppMetrica.reportEventWithMap("purchase", data);
   // _appsflyerSdk.validateAndLogInAppAndroidPurchase("shop_base64".l(),
 
-  ad(MyAd ad, AdState state);
+  ad(Placement placement, AdState state);
   // AppMetrica.reportEventWithMap("ads", map);
   // AppMetrica.reportEventWithMap("ad_$placementID", map);
 

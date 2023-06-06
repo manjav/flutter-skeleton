@@ -2,10 +2,10 @@
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_skeleton/services/core/ads/ads_abstract.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../utils/device.dart';
-import '../ads_service.dart';
 import '../core/iservices.dart';
 import '../prefs_service.dart';
 import 'tracker_abstract.dart';
@@ -82,9 +82,9 @@ class TrackersService extends IService {
     }
   }
 
-  Future<void> ad(MyAd ad, AdState state) async {
+  Future<void> ad(Placement placement, AdState state) async {
     for (var sdk in _sdks.values) {
-      sdk.ad(ad, state);
+      sdk.ad(placement, state);
     }
   }
 
