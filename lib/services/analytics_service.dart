@@ -12,6 +12,7 @@ import 'prefs_service.dart';
 
 abstract class AnalyticsService extends IService {
   funnle(String type, [String? name]);
+  Future<void> design(String name, {Map<String, dynamic>? parameters});
 }
 
 class Analytics implements AnalyticsService {
@@ -231,6 +232,7 @@ class Analytics implements AnalyticsService {
     design(name, parameters: args);
   }
 
+  @override
   Future<void> design(String name, {Map<String, dynamic>? parameters}) async {
     firebaseAnalytics.logEvent(name: name, parameters: parameters);
 
