@@ -7,9 +7,8 @@ class AdGoogle extends AbstractAdSDK {
   final AdRequest _request = const AdRequest(nonPersonalizedAds: false);
 
   @override
-  Future<void> initialize({bool testMode = false}) async {
-    super.initialize(testMode: testMode);
-    sdk = AdSDKName.google;
+  Future<void> initialize(AdSDKName sdk, {bool testMode = false}) async {
+    super.initialize(sdk, testMode: testMode);
     await MobileAds.instance.initialize();
   }
 

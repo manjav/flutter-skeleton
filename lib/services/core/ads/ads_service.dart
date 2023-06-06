@@ -11,7 +11,7 @@ class AdsService implements IService {
   @override
   initialize({List<Object>? args}) async {
     debugPrint("ads init");
-    _sdks[_selectedSDK]!.initialize();
+    _sdks[_selectedSDK]!.initialize(_selectedSDK);
     _sdks[_selectedSDK]!.onUpdate = (p) => onUpdate?.call(p);
   }
 

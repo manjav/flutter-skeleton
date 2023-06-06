@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import '../core/ads/ads_abstract.dart';
 
+import '../core/ads/ads_abstract.dart';
 import 'tracker_abstract.dart';
 import 'trackers_service.dart';
 

@@ -11,11 +11,8 @@ class AdUnity extends AbstractAdSDK {
   static String platform = Platform.isAndroid ? "Android" : "iOS";
 
   @override
-  void initialize({bool testMode = false}) {
-    super.initialize(testMode: testMode);
-    sdk = AdSDKName.adivery;
-
-
+  void initialize(AdSDKName sdk, {bool testMode = false}) {
+    super.initialize(sdk, testMode: testMode);
     
     AdiveryPlugin.initialize("ads_${sdk}_${platform.toLowerCase()}".l());
     AdiveryPlugin.setLoggingEnabled(testMode);

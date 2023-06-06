@@ -10,8 +10,8 @@ class AdUnity extends AbstractAdSDK {
   static String platform = Platform.isAndroid ? "Android" : "iOS";
 
   @override
-  void initialize({bool testMode = false}) {
-    super.initialize(testMode: testMode);
+  Future<void> initialize(AdSDKName sdk, {bool testMode = false}) async {
+    super.initialize(sdk, testMode: testMode);
     sdk = AdSDKName.unity;
     UnityAds.init(
       testMode: false,

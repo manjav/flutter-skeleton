@@ -64,12 +64,16 @@ abstract class AbstractAdSDK {
   late final AdSDKName sdk;
   late final bool testMode;
   final maxFailedLoadAttempts = 3;
-  final placements = <AdType, Placement>{};
+  late final Map<AdType, Placement> placements;
   Function(Placement?)? onUpdate;
   final Duration waitingDuration = const Duration(milliseconds: 200);
 
-  initialize({bool testMode = false}) {
+  initialize(AdSDKName sdk, {bool testMode = false}) {
     this.testMode = testMode;
+    placements = {
+      AdType.interstitial: Placement(sdk, AdType.interstitial),
+      AdType.rewarded: Placement(sdk, AdType.rewarded),
+    };
   }
 
   Placement getBanner(String origin, {Size? size});
