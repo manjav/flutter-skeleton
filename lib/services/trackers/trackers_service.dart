@@ -35,8 +35,27 @@ class TrackersService extends IService {
   initialize({List<Object>? args}) async {
     await Future.delayed(const Duration(milliseconds: 200));
     debugPrint("Analytics init");
+
+    // Initialize sdk classes
+    for (var sdk in _sdks.values) {
+      await sdk.initialize(args: [firebaseAnalytics]);
+      var deviceId = await sdk.getDeviceId();
+      if (deviceId == null) Device.adId = deviceId!;
+      var variant = await sdk.getVariantId(_testName);
+      if (variant == 0) this.variant = variant;
   }
 
+    // Set user data
+    for (var sdk in _sdks.values) {
+      sdk.setProperties({
+        'buildType': _buildType.name,
+        'build_type': _buildType.name,
+        'userId': '',
+        'deviceId': Device.adId,
+        'test_name': _testName,
+        'test_variant': variant.toString(),
+      });
+    }
   @override
   log(log) {
     throw UnimplementedError();
