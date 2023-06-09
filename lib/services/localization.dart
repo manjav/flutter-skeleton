@@ -40,7 +40,10 @@ extension LocalizationExtension on String {
       debugPrint("[Localization System] sentences = null");
     }
     var result = Localization._sentences![key];
-    if (result == null) return key;
+    if (result == null) {
+      debugPrint("[Localization System] $key not found!");
+      return key;
+    }
     if (args != null) {
       for (var arg in args) {
         result = result!.replaceFirst(RegExp(r'%s'), arg.toString());
