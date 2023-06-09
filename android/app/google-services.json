@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:412816258324:android:cfd655b99a7f95cba4fe01",
         "android_client_info": {
-          "package_name": "raya.merge.game.alchemy.craftsman.loot.n.combine"
+          "package_name": "com.tcg.fruitcraft.trading.card.game.battle"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "412816258324-2ttv437estfe6imut3mmh8sp3t464tea.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "raya.merge.game.alchemy.craftsman.loot.n.combine",
+            "package_name": "com.tcg.fruitcraft.trading.card.game.battle",
             "certificate_hash": "9c20400ee6e8459f03c8437c40ebd710aec5ae15"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "412816258324-54ocdbj7ds0voqe6tl0hfm1nteh96cof.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "raya.merge.game.alchemy.craftsman.loot.n.combine",
+            "package_name": "com.tcg.fruitcraft.trading.card.game.battle",
             "certificate_hash": "20c7899a18a8829b6789d99b907fbd56e772d10b"
           }
         },
@@ -50,7 +50,7 @@
               "client_id": "412816258324-p712hhu80ir4obkjfkumjm45rmooq18a.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "raya.merge.game.alchemy.craftsman.loot.n.combine"
+                "bundle_id": "com.tcg.fruitcraft.trading.card.game.battle"
               }
             }
           ]
