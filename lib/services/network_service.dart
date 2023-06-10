@@ -7,12 +7,12 @@ import 'package:http/http.dart' as http;
 import '../services/core/iservices.dart';
 import 'core/infra.dart';
 
-abstract class INetwork extends IService {
+abstract class NetworkService extends IService {
   Future<Result<T>> rpc<T>(RpcId id, {String? payload});
   updateResponse(LoadingState state, String message);
 }
 
-class Network implements INetwork {
+class Network implements NetworkService {
   Network();
   var baseURL = "https://fc.turnedondigital.com/";
 

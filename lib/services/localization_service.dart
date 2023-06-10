@@ -3,15 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Localization {
+import '../services/core/iservices.dart';
+
+abstract class LocalizationService implements IService {}
+
+class ILocalization implements LocalizationService {
   static Map<String, dynamic>? _sentences;
   var dir = TextDirection.ltr;
   var languageCode = "en";
   var isLoaded = false;
   var isRTL = false;
 
-  Localization();
-
+  ILocalization();
+  @override
   initialize({List<Object>? args}) async {
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
@@ -31,15 +35,20 @@ class Localization {
       _sentences![key] = value.toString();
     });
   }
+
+  @override
+  log(log) {
+    debugPrint(log);
+  }
 }
 
 extension LocalizationExtension on String {
   String l([List<dynamic>? args]) {
     final key = this;
-    if (Localization._sentences == null) {
+    if (ILocalization._sentences == null) {
       debugPrint("[Localization System] sentences = null");
     }
-    var result = Localization._sentences![key];
+    var result = ILocalization._sentences![key];
     if (result == null) return key;
     if (args != null) {
       for (var arg in args) {

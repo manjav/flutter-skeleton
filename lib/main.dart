@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/services_bloc.dart';
 import 'services/core/ads/ads_service.dart';
-import 'services/game_service.dart';
-import 'services/localization.dart';
-import 'services/network.dart';
-import 'services/prefs.dart';
-import 'services/sounds.dart';
+import 'services/game_apis_service.dart';
+import 'services/localization_service.dart';
+import 'services/network_service.dart';
+import 'services/prefs_service.dart';
+import 'services/sounds_service.dart';
 import 'services/theme.dart';
 import 'services/trackers/trackers_service.dart';
 import 'view/pages/loading_screen.dart';
@@ -34,27 +34,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    INetwork network = Network();
-    ISound sound = Sound();
+    NetworkService netConnection = Network();
+    SoundService sound = Sounds();
     TrackersService trackers = TrackersService(_firebaseAnalytics);
-    IGameService gameApi = GamesService();
-    AdsService adsService = AdsService();
-    Localization localization = Localization();
-    Prefs prefs = Prefs();
-    ITheme theme = MyTheme();
+    GameApisService gameApi = Games();
+    AdsService adsData = AdsService();
+    LocalizationService localization = ILocalization();
+    PrefsService prefsService = PrefsService();
+    ThemeService theme = MyTheme();
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => ServicesBloc(
-              adsService: adsService,
+              adsService: adsData,
               gameApiService: gameApi,
               trackers: trackers,
-              localization: localization,
-              network: network,
-              prefs: prefs,
-              sound: sound,
-              theme: theme),
+              localizationService: localization,
+              networkService: netConnection,
+              prefsService: prefsService,
+              soundService: sound,
+              themeSevice: theme),
         ),
       ],
       child: MaterialApp(

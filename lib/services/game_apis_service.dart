@@ -6,16 +6,16 @@ import 'package:games_services/games_services.dart';
 
 import 'core/iservices.dart';
 
-abstract class IGameService extends IService {}
+abstract class GameApisService extends IService {}
 
-class GamesService extends IGameService {
+class Games extends GameApisService {
   static const duration = Duration(seconds: 5);
   Timer? _timer;
   String? playerId;
   // String? playerToken;
   String? playerName;
 
-  GamesService();
+  Games();
   // signIn({int timeoutSeconds = 10}) async {
   //   var checks = 0;
   //   getPlayerData();

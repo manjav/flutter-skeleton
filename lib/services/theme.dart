@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import '../utils/device.dart';
 import 'core/iservices.dart';
 
-abstract class ITheme extends IService {}
+abstract class ThemeService extends IService {}
 
-class MyTheme implements ITheme {
+class MyTheme implements ThemeService {
   @override
   initialize({List<Object>? args}) {
     debugPrint("Analytics init");
