@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/core/ads/ads_adivery.dart';
 
 import '../iservices.dart';
 import 'ads_abstract.dart';
 
 class AdsService implements IService {
   final _sdks = <AdSDKName, AbstractAdSDK>{};
-  final _selectedSDK = AdSDKName.unity;
+  final _selectedSDK = AdSDKName.adivery;
   Function(Placement?)? onUpdate;
 
   @override
   initialize({List<Object>? args}) async {
     debugPrint("ads init");
+    _sdks[_selectedSDK] = AdAdivery();
     _sdks[_selectedSDK]!.initialize(_selectedSDK);
     _sdks[_selectedSDK]!.onUpdate = (p) => onUpdate?.call(p);
   }

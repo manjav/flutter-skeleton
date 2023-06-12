@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import '../../localization.dart';
 import 'ads_abstract.dart';
 
-class AdUnity extends AbstractAdSDK {
+class AdAdivery extends AbstractAdSDK {
   static String platform = Platform.isAndroid ? "Android" : "iOS";
 
   @override
   void initialize(AdSDKName sdk, {bool testMode = false}) {
     super.initialize(sdk, testMode: testMode);
 
-    AdiveryPlugin.initialize("ads_${sdk}_${platform.toLowerCase()}".l());
+    AdiveryPlugin.initialize("ads_${sdk.name}_${platform.toLowerCase()}".l());
     AdiveryPlugin.setLoggingEnabled(testMode);
     AdiveryPlugin.addListener(
         onError: (placementId, error) =>
@@ -31,7 +31,7 @@ class AdUnity extends AbstractAdSDK {
         });
 
     request(AdType.interstitial);
-    request(AdType.interstitialVideo);
+    request(AdType.native);
     request(AdType.rewarded);
   }
 
