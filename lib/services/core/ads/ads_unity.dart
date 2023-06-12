@@ -15,7 +15,7 @@ class AdUnity extends AbstractAdSDK {
     sdk = AdSDKName.unity;
     UnityAds.init(
       testMode: false,
-      gameId: "ads_${sdk}_${platform.toLowerCase()}".l(),
+      gameId: "ads_${sdk.name}_${platform.toLowerCase()}".l(),
       onComplete: () {
         request(AdType.interstitial);
         request(AdType.interstitialVideo);
