@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_skeleton/services/core/ads/ads_abstract.dart';
 
 import '../game_service.dart';
 import '../localization.dart';
@@ -20,25 +21,36 @@ class IntegratedServices {
   late ITheme theme;
 
   IntegratedServices({required FirebaseAnalytics firebaseAnalytics}) {
+    prefs = Prefs();
+    localization = Localization();
     network = Network();
     sound = Sound();
     trackers = TrackersService(firebaseAnalytics);
     gameApi = GamesService();
     adsService = AdsService();
-    localization = Localization();
-    prefs = Prefs();
     theme = MyTheme();
   }
 
-  init() {
-    network.initialize();
+  init() async {
+    theme.initialize();
     sound.initialize();
-    trackers.initialize();
+    await prefs.initialize();
+    await localization.initialize();
+    await trackers.initialize();
+    network.initialize();
     gameApi.initialize();
     adsService.initialize();
-    localization.initialize();
-    localization.initialize();
-    prefs.initialize();
-    theme.initialize();
+    adsService.onUpdate = _onAdsServicesUpdate;
+  }
+
+  _onAdsServicesUpdate(Placement? placement) {
+    if (Prefs.getBool("settings_music")) {
+      if (placement!.state == AdState.show) {
+        // sound.stop("music");
+      } else if (placement.state == AdState.closed ||
+          placement.state == AdState.failedShow) {
+        // sound.play("african-fun", channel: "music");
+      }
+    }
   }
 }
