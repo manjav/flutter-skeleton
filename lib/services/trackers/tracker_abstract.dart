@@ -1,4 +1,4 @@
-import '../core/ads/ads_abstract.dart';
+import '../ads/ads_abstract.dart';
 import 'trackers_service.dart';
 
 abstract class AbstractTracker {

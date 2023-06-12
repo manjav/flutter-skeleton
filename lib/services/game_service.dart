@@ -62,7 +62,7 @@ class GamesService extends IGameService {
 
   @override
   initialize({List<Object>? args}) {
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 
   @override

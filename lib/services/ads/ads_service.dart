@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/core/ads/ads_adivery.dart';
+import 'package:flutter_skeleton/services/ads/ads_adivery.dart';
 
-import '../iservices.dart';
+import '../core/iservices.dart';
 import 'ads_abstract.dart';
 
 class AdsService implements IService {

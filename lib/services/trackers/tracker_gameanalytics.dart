@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/core/ads/ads_abstract.dart';
+import 'package:flutter_skeleton/services/ads/ads_abstract.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
 import '../localization.dart';

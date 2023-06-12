@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:kochava_tracker/kochava_tracker.dart';
 
-import '../../services/core/ads/ads_abstract.dart';
+import '../ads/ads_abstract.dart';
 import '../localization.dart';
 import 'tracker_abstract.dart';
 import 'trackers_service.dart';
