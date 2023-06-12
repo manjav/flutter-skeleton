@@ -1,62 +1,46 @@
 {
   "project_info": {
-    "project_number": "412816258324",
-    "project_id": "alchemy-craftsman",
-    "storage_bucket": "alchemy-craftsman.appspot.com"
+    "project_number": "701520098502",
+    "project_id": "new-fruitcraft",
+    "storage_bucket": "new-fruitcraft.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:412816258324:android:cfd655b99a7f95cba4fe01",
+        "mobilesdk_app_id": "1:701520098502:android:14865a821419c0fed713c7",
         "android_client_info": {
           "package_name": "com.tcg.fruitcraft.trading.card.game.battle"
         }
       },
       "oauth_client": [
         {
-          "client_id": "412816258324-2ttv437estfe6imut3mmh8sp3t464tea.apps.googleusercontent.com",
+          "client_id": "701520098502-75e3v48ck9v49otcqnb1jgsngpje4a7p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.tcg.fruitcraft.trading.card.game.battle",
-            "certificate_hash": "9c20400ee6e8459f03c8437c40ebd710aec5ae15"
+            "certificate_hash": "ad9d5b7e08984473afe2a13253a708801754ea66"
           }
         },
         {
-          "client_id": "412816258324-54ocdbj7ds0voqe6tl0hfm1nteh96cof.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.tcg.fruitcraft.trading.card.game.battle",
-            "certificate_hash": "20c7899a18a8829b6789d99b907fbd56e772d10b"
-          }
-        },
-        {
-          "client_id": "412816258324-p9p5d17gfj9usvncvqpho2n7mng2t8g6.apps.googleusercontent.com",
+          "client_id": "701520098502-9fme7atmifivp1mh76oqdfnppc0td4e0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAu31HISfRolGblxDTgDtSa2gZXUnKqsfM"
+          "current_key": "AIzaSyDMvWDa-5JBkbtrhuIez0zx67baV-4oEKA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "412816258324-p9p5d17gfj9usvncvqpho2n7mng2t8g6.apps.googleusercontent.com",
+              "client_id": "701520098502-9fme7atmifivp1mh76oqdfnppc0td4e0.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "412816258324-p712hhu80ir4obkjfkumjm45rmooq18a.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.tcg.fruitcraft.trading.card.game.battle"
-              }
             }
           ]
         }
-      },
-      "admob_app_id": "ca-app-pub-5018637481206902~2875726229"
+      }
     }
   ],
   "configuration_version": "1"
