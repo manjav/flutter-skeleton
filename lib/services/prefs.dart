@@ -98,32 +98,19 @@ enum TutorSteps {
 }
 
 extension PTutorStapsExt on TutorSteps {
-  int get value {
-    switch (this) {
-      case TutorSteps.welcome:
-        return 0;
-      case TutorSteps.exploreFirst:
-        return 1;
-      case TutorSteps.exploreSecond:
-        return 2;
-      case TutorSteps.mergeWelcome:
-        return 10;
-      case TutorSteps.mergeFirst:
-        return 11;
-      case TutorSteps.mergeSecond:
-        return 12;
-      case TutorSteps.mergeOffer:
-        return 13;
-      case TutorSteps.mergeFine:
-        return 14;
-      case TutorSteps.orderTap:
-        return 20;
-      case TutorSteps.orderFill:
-        return 21;
-      case TutorSteps.fine:
-        return 30;
-    }
-  }
+  int get value => switch (this) {
+      TutorSteps.welcome => 0,
+      TutorSteps.exploreFirst => 1,
+      TutorSteps.exploreSecond => 2,
+      TutorSteps.mergeWelcome => 10,
+      TutorSteps.mergeFirst => 11,
+      TutorSteps.mergeSecond => 12,
+      TutorSteps.mergeOffer => 13,
+      TutorSteps.mergeFine => 14,
+      TutorSteps.orderTap => 20,
+      TutorSteps.orderFill => 21,
+      TutorSteps.fine => 30
+    };
 
   void commit([bool force = false]) {
     if (!force && value <= Prefs.tutorStep) return;
