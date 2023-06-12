@@ -36,6 +36,7 @@ extension AdTypeExtension on AdType {
         AdType.banner => 'banner',
         AdType.interstitial => 'interstitial',
         AdType.interstitialVideo => 'interstitialVideo',
+        AdType.native => 'native',
         AdType.rewarded => 'rewarded',
       };
 
@@ -75,6 +76,7 @@ abstract class AbstractAdSDK {
     this.testMode = testMode;
     placements = {
       AdType.interstitial: Placement(sdk, AdType.interstitial),
+      AdType.native: Placement(sdk, AdType.native),
       AdType.rewarded: Placement(sdk, AdType.rewarded),
     };
   }

@@ -79,9 +79,10 @@ class GATracker extends AbstractTracker {
   }
 
   _getGAAdType(AdType type) => switch (type) {
-        AdType.interstitial => GAAdType.OfferWall,
         AdType.banner => GAAdType.Banner,
+        AdType.interstitial => GAAdType.OfferWall,
         AdType.interstitialVideo => GAAdType.Interstitial,
+        AdType.native => GAAdType.Playable,
         AdType.rewarded => GAAdType.RewardedVideo
       };
 
