@@ -15,6 +15,15 @@ import 'tracker_kochava.dart';
 
 enum TrackerSDK { none, firebase, gameAnalytics, kochava }
 
+extension TrackerSDKExtension on TrackerSDK {
+  String get name => switch (this) {
+        TrackerSDK.firebase => 'firebase',
+        TrackerSDK.gameAnalytics => 'gameAnalytics',
+        TrackerSDK.kochava => 'kochava',
+        _ => 'none'
+      };
+}
+
 enum BuildType { installed, instant }
 
 enum ResourceFlowType { none, sink, source }
@@ -42,16 +51,13 @@ class TrackersService extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    debugPrint("Analytics init");
-
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
       await sdk.initialize(args: [firebaseAnalytics]);
       var deviceId = await sdk.getDeviceId();
-      if (deviceId == null) Device.adId = deviceId!;
+      if (deviceId != null) Device.adId = deviceId;
       var variant = await sdk.getVariantId(_testName);
-      if (variant == 0) this.variant = variant;
+      if (variant != 0) this.variant = variant;
     }
 
     // Set user data
