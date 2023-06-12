@@ -38,6 +38,7 @@ extension LocalizationExtension on String {
     final key = this;
     if (Localization._sentences == null) {
       debugPrint("[Localization System] sentences = null");
+      return '';
     }
     var result = Localization._sentences![key];
     if (result == null) {
