@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../utils/device.dart';
 import 'core/iservices.dart';
@@ -66,27 +66,20 @@ TextStyle _style({Color? color, double? size, FontWeight? weight}) {
 }
 
 class Themes {
-  static CupertinoThemeData? get darkData {
-    var textTheme = CupertinoTextThemeData(
-      primaryColor: TColors.primary,
-      actionTextStyle: _style(weight: FontWeight.bold, size: 20.d),
-      navLargeTitleTextStyle: _style(weight: FontWeight.bold, size: 22.d),
-      navTitleTextStyle: _style(size: 16.d, weight: FontWeight.bold),
-      navActionTextStyle: _style(weight: FontWeight.bold),
-      tabLabelTextStyle: _style(weight: FontWeight.bold, size: 15.d),
-      pickerTextStyle: _style(weight: FontWeight.bold, size: 15.d),
-      dateTimePickerTextStyle:
-          _style(size: 14.d, weight: FontWeight.bold, color: TColors.primary),
-      textStyle: TStyles.small,
-    );
+  static ThemeData? get darkData {
+    // var textTheme = CupertinoTextThemeData(
+    //   primaryColor: TColors.primary,
+    //   actionTextStyle: _style(weight: FontWeight.bold, size: 20.d),
+    //   navLargeTitleTextStyle: _style(weight: FontWeight.bold, size: 22.d),
+    //   navTitleTextStyle: _style(size: 16.d, weight: FontWeight.bold),
+    //   navActionTextStyle: _style(weight: FontWeight.bold),
+    //   tabLabelTextStyle: _style(weight: FontWeight.bold, size: 15.d),
+    //   pickerTextStyle: _style(weight: FontWeight.bold, size: 15.d),
+    //   dateTimePickerTextStyle:
+    //       _style(size: 14.d, weight: FontWeight.bold, color: TColors.primary),
+    //   textStyle: TStyles.small,
+    // );
 
-    return CupertinoThemeData.raw(
-        Brightness.light,
-        TColors.primary70,
-        TColors.primary10,
-        textTheme,
-        TColors.primary90,
-        TColors.primary90,
-        true);
+    return ThemeData.dark(useMaterial3: true);
   }
 }
