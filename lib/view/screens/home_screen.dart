@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/view/screens/iscreen.dart';
 
-class MainScreen extends AbstractScreen {
-  MainScreen({super.key}) : super(Screens.home);
+class HomeScreen extends AbstractScreen {
+  HomeScreen({super.key}) : super(Screens.home);
 
   @override
-  createState() => _MainScreenState();
+  createState() => _HomeScreenState();
 }
 
-class _MainScreenState extends AbstractScreenState<AbstractScreen> {
+class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {});

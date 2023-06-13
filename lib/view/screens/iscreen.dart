@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/view/screens/home_screen.dart';
 
 import '../../services/theme.dart';
 import '../../view/screens/loading_screen.dart';
@@ -96,9 +97,8 @@ enum Screens {
 extension ScreenTools on Screens {
   static AbstractScreen getScreen(String routeName, {List<Object>? args}) {
     return switch (routeName) {
-      // case "/shop":
-      //   return ShopPage(services);
-      _ => LoadingScreen()
+      "/home" => HomeScreen(),
+      _ => LoadingScreen(),
     };
   }
 
