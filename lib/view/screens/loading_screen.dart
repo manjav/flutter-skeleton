@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/services_bloc.dart';
+import '../../view/screens/iscreen.dart';
 
-class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({super.key});
+class LoadingScreen extends AbstractScreen {
+  LoadingScreen({super.key}) : super(Screens.loading);
 
   @override
-  State<LoadingScreen> createState() => _LoadingScreenState();
+  createState() => _LoadingScreenState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> {
+class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void initState() {
-    loadServices(context);
+    loadServices();
     super.initState();
   }
 
@@ -23,14 +24,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
       child: BlocBuilder<ServicesBloc, ServicesState>(
         builder: (context, state) {
           return const SizedBox();
-        },
+        }
       ),
     )));
   }
 
-  loadServices(BuildContext context) async {
-    var services = BlocProvider.of<ServicesBloc>(context);
-    await services.initialize();
-    await Future.delayed(const Duration(seconds: 1)).then((value) {});
+  loadServices() async {
+    await BlocProvider.of<ServicesBloc>(context).initialize();
   }
 }
