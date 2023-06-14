@@ -9,7 +9,9 @@ import 'core/infra.dart';
 
 abstract class INetwork extends IService {
   Future<Result<T>> rpc<T>(RpcId id, {String? payload});
-  updateResponse(LoadingState state, String message);
+  final response = NetResponse();
+  @protected
+  void updateResponse(LoadingState state, String message);
 }
 
 class Network extends INetwork {
@@ -22,8 +24,6 @@ class Network extends INetwork {
   final _serverLessMode = false;
   final _localHost = ''; //'192.168.1.101';
   final _rpcTimes = <RpcId, int>{};
-
-  var response = NetResponse();
 
   @override
   initialize({List<Object>? args}) async {
@@ -63,8 +63,11 @@ class Network extends INetwork {
     }
   }
 
-  // Connect to nakama server
-  _connection() async {}
+  // Connect to server
+  _connection() async {
+    await Future.delayed(const Duration(seconds: 1));
+    updateResponse(LoadingState.connect, "connected.");
+  }
 
   @override
   Future<Result<T>> rpc<T>(RpcId id, {String? payload}) async {
@@ -96,7 +99,7 @@ class Network extends INetwork {
   }
 
   @override
-  updateResponse(LoadingState state, String message) {
+  void updateResponse(LoadingState state, String message) {
     response.state = state;
     response.message = message;
   }
