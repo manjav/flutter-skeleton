@@ -24,18 +24,6 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   SMIBool? _closeInput;
   var logViewVisibility = false;
 
-  late Services _services;
-
-  @override
-  void initState() {
-    super.initState();
-    loadServices();
-  }
-
-  loadServices() async {
-    BlocProvider.of<Services>(context).initialize(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [

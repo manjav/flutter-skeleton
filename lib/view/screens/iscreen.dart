@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../services/theme.dart';
 import '../../view/screens/home_screen.dart';
+import 'loading_screen.dart';
 
 class AbstractScreen extends StatefulWidget {
   final Screens type;
@@ -101,7 +102,7 @@ extension ScreenTools on Screens {
   static AbstractScreen getScreen(String routeName, {List<Object>? args}) {
     return switch (routeName) {
       "/home" => HomeScreen(),
-      _ => AbstractScreen(Screens.none),
+      _ => LoadingScreen(),
     };
   }
 

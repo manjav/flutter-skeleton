@@ -22,14 +22,6 @@ enum AdType {
 }
 
 extension AdTypeExtension on AdType {
-  String get name => switch (this) {
-        AdType.banner => 'banner',
-        AdType.interstitial => 'interstitial',
-        AdType.interstitialVideo => 'interstitialVideo',
-        AdType.native => 'native',
-        AdType.rewarded => 'rewarded',
-      };
-
   bool get isIntrestitial =>
       this == AdType.interstitial || this == AdType.interstitialVideo;
 }
