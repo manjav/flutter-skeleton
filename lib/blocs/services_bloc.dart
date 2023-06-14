@@ -38,7 +38,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   late AdsService adsService;
   late Localization localization;
   late Prefs prefs;
-  late ITheme theme;
+  late MyTheme theme;
 
   ServicesBloc({required this.firebaseAnalytics}) : super(ServicesInit()) {
     prefs = Prefs();

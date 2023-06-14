@@ -3,14 +3,7 @@ import 'package:flutter/material.dart';
 import '../utils/device.dart';
 import 'core/iservices.dart';
 
-abstract class ITheme extends IService {}
-
-class MyTheme implements ITheme {
-  @override
-  initialize({List<Object>? args}) {
-    debugPrint("Analytics init");
-  }
-
+class MyTheme extends IService {
   @override
   log(log) {
     debugPrint("Analytics init");
