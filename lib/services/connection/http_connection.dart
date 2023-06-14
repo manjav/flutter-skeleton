@@ -121,11 +121,9 @@ enum RpcId { battle, playerLoad }
 
 extension RpcIdEx on RpcId {
   String get name {
-    switch (this) {
-      case RpcId.battle:
-        return "battle";
-      default:
-        return "default_id";
-    }
+    return switch (this) {
+      RpcId.battle => "battle",
+      _ => "default_id",
+    };
   }
 }

@@ -3,16 +3,6 @@ import '../localization.dart';
 
 enum AdSDKName { none, adivery, applovin, google, unity }
 
-extension AdSDKNameExtension on AdSDKName {
-  String get name => switch (this) {
-        AdSDKName.adivery => 'adivery',
-        AdSDKName.applovin => 'applovin',
-        AdSDKName.google => 'google',
-        AdSDKName.unity => 'unity',
-        _ => 'none'
-      };
-}
-
 enum AdState {
   closed,
   clicked, //Clicked = 1;

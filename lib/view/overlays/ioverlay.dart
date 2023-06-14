@@ -16,13 +16,6 @@ extension Overlays on OverlayType {
     };
   }
 
-  String get name {
-    return switch (this) {
-      OverlayType.loading => "loading",
-      OverlayType.outcome => "outcome",
-      _ => "none",
-    };
-  }
 
   String get routeName => "/$name";
 

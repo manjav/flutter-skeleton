@@ -105,16 +105,6 @@ extension ScreenTools on Screens {
     };
   }
 
-  String get name {
-    return switch (this) {
-      Screens.home => "home",
-      Screens.loading => "loading",
-      Screens.profile => "profile",
-      Screens.shop => "shop",
-      Screens.settings => "settings",
-      _ => "none",
-    };
-  }
 
   String get routeName => "/$name";
 }

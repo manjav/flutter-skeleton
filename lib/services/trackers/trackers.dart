@@ -12,15 +12,6 @@ import 'tracker_kochava.dart';
 
 enum TrackerSDK { none, firebase, gameAnalytics, kochava }
 
-extension TrackerSDKExtension on TrackerSDK {
-  String get name => switch (this) {
-        TrackerSDK.firebase => 'firebase',
-        TrackerSDK.gameAnalytics => 'gameAnalytics',
-        TrackerSDK.kochava => 'kochava',
-        _ => 'none'
-      };
-}
-
 enum BuildType { installed, instant }
 
 enum ResourceFlowType { none, sink, source }
