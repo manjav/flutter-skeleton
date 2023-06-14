@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/view/screens/iscreen.dart';
+
+import '../../view/screens/iscreen.dart';
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Screens.home);

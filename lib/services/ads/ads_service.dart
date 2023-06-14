@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/ads/ads_adivery.dart';
 
+import '../../services/ads/ads_adivery.dart';
 import '../core/iservices.dart';
 import 'ads_abstract.dart';
 

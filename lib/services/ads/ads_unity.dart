@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/localization.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
+import '../../services/localization.dart';
 import 'ads_abstract.dart';
 
 class AdUnity extends AbstractAdSDK {

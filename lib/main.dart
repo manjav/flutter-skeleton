@@ -3,7 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/view/screens/iscreen.dart';
+
+import '../view/overlays/ioverlay.dart';
+import '../view/screens/iscreen.dart';
 import 'blocs/services_bloc.dart';
 import 'services/theme.dart';
 
@@ -14,19 +16,28 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({
     super.key,
   });
+  @override
+  State<StatefulWidget> createState() => _MyAppStat();
+}
 
+class _MyAppStat extends State<MyApp> {
   static final _firebaseAnalytics = FirebaseAnalytics.instance;
   static final _observer =
       FirebaseAnalyticsObserver(analytics: _firebaseAnalytics);
+  @override
+  void initState() {
+    Overlays.insert(context, OverlayType.loading);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return KeyedSubtree(
-        key: key,
+        key: widget.key,
         child: MultiBlocProvider(
             providers: [
               BlocProvider(

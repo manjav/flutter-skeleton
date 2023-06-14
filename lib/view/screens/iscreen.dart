@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/view/screens/home_screen.dart';
 
 import '../../services/theme.dart';
+import '../../view/screens/home_screen.dart';
 
 class AbstractScreen extends StatefulWidget {
   final Screens type;

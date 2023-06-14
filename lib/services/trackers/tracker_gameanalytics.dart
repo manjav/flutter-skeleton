@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/ads/ads_abstract.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
+import '../../services/ads/ads_abstract.dart';
 import '../localization.dart';
 import '../prefs.dart';
 import 'tracker_abstract.dart';
