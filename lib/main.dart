@@ -3,10 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/blocs/player_bloc.dart';
 
-import '../view/overlays/ioverlay.dart';
 import '../view/screens/iscreen.dart';
-import 'blocs/services_bloc.dart';
+import 'blocs/services.dart';
 import 'services/theme.dart';
 
 void main() async {
@@ -16,33 +16,25 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
   });
-  @override
-  State<StatefulWidget> createState() => _MyAppStat();
-}
 
-class _MyAppStat extends State<MyApp> {
   static final _firebaseAnalytics = FirebaseAnalytics.instance;
   static final _observer =
       FirebaseAnalyticsObserver(analytics: _firebaseAnalytics);
-  @override
-  void initState() {
-    Overlays.insert(context, OverlayType.loading);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return KeyedSubtree(
-        key: widget.key,
+        key: key,
         child: MultiBlocProvider(
             providers: [
               BlocProvider(
                   create: (context) =>
-                      ServicesBloc(firebaseAnalytics: _firebaseAnalytics)),
+                      Services(firebaseAnalytics: _firebaseAnalytics)),
+              BlocProvider(create: (context) => PlayerBloc())
             ],
             child: MaterialApp(
                 navigatorObservers: [_observer],

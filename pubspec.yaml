@@ -52,6 +52,6 @@ flutter:
   # generate: true
 
   assets:
-    - texts/keys.json
-    - texts/locale.json
+    - texts/
+    - anims/
 

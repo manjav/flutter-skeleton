@@ -54,17 +54,6 @@ enum Pref {
 }
 
 extension PrefExt on Pref {
-  String get name {
-    switch (this) {
-      case Pref.testVersion:
-        return "testVersion";
-      case Pref.visitCount:
-        return "visitCount";
-      case Pref.tutorStep:
-        return "tutorStep";
-    }
-  }
-
   bool contains() => Prefs.contains(name);
 
   int setInt(int value) => Prefs.setInt(name, value);

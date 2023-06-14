@@ -17,7 +17,7 @@ extension Device on double {
   static String baseVersion = '';
   static Map<String, dynamic> _deviceData = {};
 
-  static Future<void> init(Size size) async {
+  static Future<void> initialize(Size size) async {
     Device.size = size;
     var width = min(size.width, size.height);
     var height = max(size.width, size.height);

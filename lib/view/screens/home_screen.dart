@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/player_bloc.dart';
 import '../../view/screens/iscreen.dart';
 
 class HomeScreen extends AbstractScreen {
@@ -11,9 +12,11 @@ class HomeScreen extends AbstractScreen {
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
-  Widget build(BuildContext context) {
-    return const SafeArea(
-      child: Scaffold(body: SizedBox()),
-    );
+  void onRender(Duration timeStamp) {
+    super.onRender(timeStamp);
+    var bloc = BlocProvider.of<PlayerBloc>(context);
+
+    bloc.player!.loadinfState = PlayerLoadingState.complete;
+    bloc.add(SetPlayer(player: bloc.player!));
   }
 }

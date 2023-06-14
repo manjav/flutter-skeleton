@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../services/theme.dart';
 import '../../view/screens/home_screen.dart';
+import 'loading_screen.dart';
 
 class AbstractScreen extends StatefulWidget {
   final Screens type;
@@ -24,7 +25,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T> {
     // if (sfx.isNotEmpty) widget.services.get<Sounds>().play(sfx);
     // Analytics.setScreen(widget.mode.name);
     WidgetsBinding.instance.addPostFrameCallback(onRender);
-
     super.initState();
   }
 
@@ -102,20 +102,10 @@ extension ScreenTools on Screens {
   static AbstractScreen getScreen(String routeName, {List<Object>? args}) {
     return switch (routeName) {
       "/home" => HomeScreen(),
-      _ => AbstractScreen(Screens.none),
+      _ => LoadingScreen(),
     };
   }
 
-  String get name {
-    return switch (this) {
-      Screens.home => "home",
-      Screens.loading => "loading",
-      Screens.profile => "profile",
-      Screens.shop => "shop",
-      Screens.settings => "settings",
-      _ => "none",
-    };
-  }
 
   String get routeName => "/$name";
 }

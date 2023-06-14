@@ -1,15 +1,19 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/utils/device.dart';
 
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
+import '../services/connection/fake_connector.dart';
+import '../services/connection/http_connection.dart';
 import '../services/games.dart';
 import '../services/localization.dart';
-import '../services/network.dart';
 import '../services/prefs.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
+import 'player_bloc.dart';
 
 class ServicesEvent {}
 
@@ -29,9 +33,9 @@ class ServicesUpdate extends ServicesState {
 
 //--------------------------------------------------------
 
-class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
+class Services extends Bloc<ServicesEvent, ServicesState> {
   FirebaseAnalytics firebaseAnalytics;
-  late INetwork network;
+  late IConnection connection;
   late ISounds sound;
   late Trackers trackers;
   late IGames games;
@@ -40,10 +44,10 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   late Prefs prefs;
   late MyTheme theme;
 
-  ServicesBloc({required this.firebaseAnalytics}) : super(ServicesInit()) {
+  Services({required this.firebaseAnalytics}) : super(ServicesInit()) {
     prefs = Prefs();
     localization = Localization();
-    network = Network();
+    connection = FakeConnector();
     sound = Sounds();
     trackers = Trackers(firebaseAnalytics);
     games = Games();
@@ -51,13 +55,21 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     theme = MyTheme();
   }
 
-  initialize() async {
+  initialize(BuildContext context) async {
+    Device.initialize(MediaQuery.of(context).size);
+    debugPrint("${Device.size} ${MediaQuery.of(context).devicePixelRatio}");
+
     theme.initialize();
-    sound.initialize();
     await prefs.initialize();
+    await sound.initialize();
     await localization.initialize();
     await trackers.initialize();
-    await network.initialize();
+    await connection.initialize();
+    var result = await connection.rpc<PlayerData>(RpcId.playerLoad);
+    if (context.mounted) {
+      BlocProvider.of<PlayerBloc>(context).add(SetPlayer(player: result.data));
+    }
+
     games.initialize();
     adsService.initialize();
     adsService.onUpdate = _onAdsServicesUpdate;

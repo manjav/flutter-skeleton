@@ -1,14 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/view/screens/iscreen.dart';
 import 'package:rive/rive.dart';
 
-import '../../../utils/device.dart';
-import '../../blocs/services_bloc.dart';
-import '../../services/localization.dart';
-import '../../services/network.dart';
-import '../../services/theme.dart';
+import '../../blocs/player_bloc.dart';
 import '../../utils/utils.dart';
-import '../widgets.dart';
 import 'ioverlay.dart';
 
 class LoadingOverlay extends AbstractOverlay {
@@ -22,19 +18,6 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   Widget _alert = const SizedBox();
   SMIBool? _closeInput;
   var logViewVisibility = false;
-
-  late ServicesBloc _blocProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    loadServices();
-  }
-
-  loadServices() async {
-    _blocProvider = BlocProvider.of<ServicesBloc>(context);
-    await _blocProvider.initialize();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,36 +36,48 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
         _closeInput = controller!.findInput<bool>('close') as SMIBool;
         artboard.addController(controller);
       }, fit: BoxFit.fitWidth),
-      Positioned(
-          bottom: 4.d,
-          right: 16.d,
-          child: _blocProvider.localization.isInitialized
-              ? Text("v.${'app_version'.l()}", style: TStyles.smallInvert)
-              : const SizedBox()),
-      Positioned(
-          bottom: 4.d,
-          left: 16.d,
-          child: Text(Device.adId, style: TStyles.tinyInvert)),
-      Positioned(
-          top: 4.d,
-          right: 4.d,
-          bottom: 4.d,
-          left: 4.d,
-          child: GestureDetector(
-              onDoubleTap: () {
-                setState(() => logViewVisibility = !logViewVisibility);
-              },
-              child: logViewVisibility
-                  ? Text(_blocProvider.network.accumulatedLog,
-                      style: TStyles.tinyInvert)
-                  : Widgets.rect(color: TColors.transparent))),
+      BlocConsumer<PlayerBloc, PlayerState>(
+        builder: (context, state) {
+          return Text(state.player.name);
+        },
+        listener: (context, state) {
+          if (state.player.loadinfState == PlayerLoadingState.complete) {
+            _closeInput?.value = true;
+          } else if (state.player.loadinfState == PlayerLoadingState.load) {
+            Navigator.pushNamed(context, Screens.home.routeName);
+          }
+        },
+      ),
+      // Positioned(
+      //     bottom: 4.d,
+      //     right: 16.d,
+      //     child: _services.localization.isInitialized
+      //         ? Text("v.${'app_version'.l()}", style: TStyles.smallInvert)
+      //         : const SizedBox()),
+      // Positioned(
+      //     bottom: 4.d,
+      //     left: 16.d,
+      //     child: Text(Device.adId, style: TStyles.tinyInvert)),
+      // Positioned(
+      //     top: 4.d,
+      //     right: 4.d,
+      //     bottom: 4.d,
+      //     left: 4.d,
+      //     child: GestureDetector(
+      //         onDoubleTap: () {
+      //           setState(() => logViewVisibility = !logViewVisibility);
+      //         },
+      //         child: logViewVisibility
+      //             ? Text(_services.connection.accumulatedLog,
+      //                 style: TStyles.tinyInvert)
+      //             : Widgets.rect(color: TColors.transparent))),
       _alert,
     ]);
   }
 
-  _onNetworkEventChange() {
+  /* _onNetworkEventChange() {
     setState(() {});
-    if (_blocProvider.network.response.state == LoadingState.disconnect) {
+    if (_services.connection.response.state == LoadingState.disconnect) {
       _alert = Positioned(
           bottom: 48.d,
           child: Column(
@@ -104,10 +99,10 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
             ],
           ));
       setState(() {});
-    } else if (_blocProvider.network.response.state == LoadingState.complete) {
-      _closeInput?.value = true;
+      } else if (_services.connection.response.state == LoadingState.complete) {
+        _closeInput?.value = true;
     }
-  }
+  } */
 
   void _reload() {
     close();
