@@ -30,11 +30,6 @@ class Localization extends IService {
       _sentences![key] = value.toString();
     });
   }
-
-  @override
-  log(log) {
-    debugPrint(log);
-  }
 }
 
 extension LocalizationExtension on String {
