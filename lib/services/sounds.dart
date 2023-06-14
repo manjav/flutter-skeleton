@@ -17,7 +17,8 @@ class Sound extends ISound {
 
   @override
   initialize({List<Object>? args}) {
-    debugPrint("Analytics init");
+    play('main-theme', channel: "music");
+    super.initialize();
   }
 
 /*

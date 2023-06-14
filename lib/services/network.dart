@@ -12,7 +12,7 @@ abstract class INetwork extends IService {
   updateResponse(LoadingState state, String message);
 }
 
-class Network implements INetwork {
+class Network extends INetwork {
   Network();
   var baseURL = "https://fc.turnedondigital.com/";
 
@@ -36,6 +36,7 @@ class Network implements INetwork {
     log("Account data loaded.");
 
     updateResponse(LoadingState.connect, "Account ${'user'} connected.");
+    super.initialize();
   }
 
   // Load the Config file

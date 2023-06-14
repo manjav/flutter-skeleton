@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/iservices.dart';
 
-class Prefs implements IService {
+class Prefs extends IService {
   static SharedPreferences? _instance;
   static var tutorStep = 0;
   static bool get inTutorial => tutorStep < TutorSteps.fine.value;
@@ -17,6 +17,7 @@ class Prefs implements IService {
     }
     Pref.visitCount.increase(1);
     tutorStep = Pref.tutorStep.getInt();
+    super.initialize();
   }
 
   static bool contains(String key) => _instance!.containsKey(key);

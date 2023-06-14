@@ -2,16 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_skeleton/services/core/iservices.dart';
 
-class Localization {
+class Localization extends IService {
   static Map<String, dynamic>? _sentences;
   var dir = TextDirection.ltr;
   var languageCode = "en";
-  var isLoaded = false;
   var isRTL = false;
 
   Localization();
 
+  @override
   initialize({List<Object>? args}) async {
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
@@ -19,9 +20,7 @@ class Localization {
     await rootBundle.loadString('texts/keys.json');
     await _getData('keys.json');
     await _getData('locale.json');
-    isLoaded = true;
-
-    debugPrint("localization init");
+    super.initialize();
   }
 
   static _getData(String file) async {

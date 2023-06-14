@@ -1,4 +1,4 @@
 abstract class IService {
-  initialize({List<Object>? args});
-  log(dynamic log);
+  bool isInitialized = false;
+  initialize({List<Object>? args}) => isInitialized = true;
 }

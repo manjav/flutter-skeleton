@@ -4,7 +4,7 @@ import 'package:flutter_skeleton/services/ads/ads_adivery.dart';
 import '../core/iservices.dart';
 import 'ads_abstract.dart';
 
-class AdsService implements IService {
+class AdsService extends IService {
   final _sdks = <AdSDKName, AbstractAdSDK>{};
   final _selectedSDK = AdSDKName.adivery;
   Function(Placement?)? onUpdate;
@@ -15,6 +15,7 @@ class AdsService implements IService {
     _sdks[_selectedSDK] = AdAdivery();
     _sdks[_selectedSDK]!.initialize(_selectedSDK);
     _sdks[_selectedSDK]!.onUpdate = (p) => onUpdate?.call(p);
+    super.initialize();
   }
 
   void isReady(AdType type) => _sdks[_selectedSDK]!.isReady(type);
