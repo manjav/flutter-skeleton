@@ -83,9 +83,4 @@ class Sound extends ISound {
       e.value.stop();
     }
   }
-
-  @override
-  log(log) {
-    debugPrint(log);
-  }
 }

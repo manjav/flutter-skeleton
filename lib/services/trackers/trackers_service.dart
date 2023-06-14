@@ -1,5 +1,3 @@
-// ignore_for_file: unused_element
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_skeleton/services/ads/ads_abstract.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -152,10 +150,5 @@ class TrackersService extends IService {
   _funnle(String name, [int step = -1]) {
     var args = step > 0 ? {"step": '$step'} : null;
     design(name, parameters: args);
-  }
-
-  @override
-  log(log) {
-    throw UnimplementedError();
   }
 }

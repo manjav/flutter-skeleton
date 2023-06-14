@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import '../utils/device.dart';
 import 'core/iservices.dart';
 
-class MyTheme extends IService {
-  @override
-  log(log) {
-    debugPrint("Analytics init");
-  }
-}
+class MyTheme extends IService {}
 
 class TColors {
   static const accent = Color(0xFFFF5D54);

@@ -37,10 +37,4 @@ class AdsService extends IService {
     //   if (value.type != AdType.banner && value.state == AdState.show) {}
     // });
   }
-
-  @override
-  log(log) {
-    debugPrint(log);
-    // sound.log("*-sound inside ads log");
-  }
 }

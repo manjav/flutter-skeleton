@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/iservices.dart';
@@ -45,11 +44,6 @@ class Prefs extends IService {
     var newValue = getInt(key) + value;
     setInt(key, newValue);
     return newValue;
-  }
-
-  @override
-  log(log) {
-    debugPrint(log);
   }
 }
 
@@ -100,18 +94,18 @@ enum TutorSteps {
 
 extension PTutorStapsExt on TutorSteps {
   int get value => switch (this) {
-      TutorSteps.welcome => 0,
-      TutorSteps.exploreFirst => 1,
-      TutorSteps.exploreSecond => 2,
-      TutorSteps.mergeWelcome => 10,
-      TutorSteps.mergeFirst => 11,
-      TutorSteps.mergeSecond => 12,
-      TutorSteps.mergeOffer => 13,
-      TutorSteps.mergeFine => 14,
-      TutorSteps.orderTap => 20,
-      TutorSteps.orderFill => 21,
-      TutorSteps.fine => 30
-    };
+        TutorSteps.welcome => 0,
+        TutorSteps.exploreFirst => 1,
+        TutorSteps.exploreSecond => 2,
+        TutorSteps.mergeWelcome => 10,
+        TutorSteps.mergeFirst => 11,
+        TutorSteps.mergeSecond => 12,
+        TutorSteps.mergeOffer => 13,
+        TutorSteps.mergeFine => 14,
+        TutorSteps.orderTap => 20,
+        TutorSteps.orderFill => 21,
+        TutorSteps.fine => 30
+      };
 
   void commit([bool force = false]) {
     if (!force && value <= Prefs.tutorStep) return;

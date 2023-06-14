@@ -59,14 +59,4 @@ class GamesService extends IGameService {
     // GamesServices.showLeaderboards();
     return true;
   }
-
-  @override
-  initialize({List<Object>? args}) {
-    // throw UnimplementedError();
-  }
-
-  @override
-  log(log) {
-    throw UnimplementedError();
-  }
 }

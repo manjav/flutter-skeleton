@@ -100,11 +100,6 @@ class Network extends INetwork {
     response.state = state;
     response.message = message;
   }
-
-  @override
-  log(log) {
-    debugPrint(log);
-  }
 }
 
 enum LoadingState { loading, disconnect, connect, complete, error }
