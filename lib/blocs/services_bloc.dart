@@ -51,7 +51,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     theme = MyTheme();
   }
 
-  initialize() async {
+  Future<Response> initialize() async {
     theme.initialize();
     sound.initialize();
     await prefs.initialize();
@@ -61,6 +61,9 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     games.initialize();
     adsService.initialize();
     adsService.onUpdate = _onAdsServicesUpdate;
+
+//TODO added by hamiid
+    return network.loadData();
   }
 
   _onAdsServicesUpdate(Placement? placement) {

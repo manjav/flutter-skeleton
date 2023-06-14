@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/blocs/player_bloc.dart';
 import 'package:rive/rive.dart';
 
 import '../../../utils/device.dart';
@@ -32,13 +33,25 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   }
 
   loadServices() async {
+    //TODO hamid getting async data from whatever scource
     _blocProvider = BlocProvider.of<ServicesBloc>(context);
-    await _blocProvider.initialize();
+    await _blocProvider.initialize().then((playerData) {
+      ///TODO hamid after getting data, serializes player data and triggers `SetPlayer` event to update the `Player` data
+      Player player = Player.fromJson(playerData.getData);
+      BlocProvider.of<PlayerBloc>(context).add(SetPlayer(player: player));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [
+      ///TODO added by hamid: read data from player_bloc
+      BlocBuilder<PlayerBloc, PlayerState>(
+        builder: (context, state) {
+          return Text(state.player.name);
+        },
+      ),
+
       RiveAnimation.asset('anims/${Asset.prefix}loading.riv',
           onInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(
