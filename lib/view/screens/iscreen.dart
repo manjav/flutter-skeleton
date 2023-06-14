@@ -17,15 +17,19 @@ class AbstractScreen extends StatefulWidget {
 
 class AbstractScreenState<T extends AbstractScreen> extends State<T> {
   List<Widget> stepChildren = <Widget>[];
-  String title = "";
 
   @override
   void initState() {
     // var sfx = widget.sfx ?? "message";
     // if (sfx.isNotEmpty) widget.services.get<Sounds>().play(sfx);
     // Analytics.setScreen(widget.mode.name);
+    WidgetsBinding.instance.addPostFrameCallback(onRender);
+
     super.initState();
   }
+
+  @protected
+  void onRender(Duration timeStamp) {}
 
   @override
   Widget build(BuildContext context) {

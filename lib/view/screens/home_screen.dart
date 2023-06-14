@@ -10,16 +10,9 @@ class HomeScreen extends AbstractScreen {
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return const SafeArea(
-      child: Scaffold(body: FlutterLogo()),
+      child: Scaffold(body: SizedBox()),
     );
   }
 }
