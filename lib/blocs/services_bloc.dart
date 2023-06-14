@@ -34,7 +34,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   late INetwork network;
   late ISounds sound;
   late Trackers trackers;
-  late Games games;
+  late IGames games;
   late Ads adsService;
   late Localization localization;
   late Prefs prefs;
