@@ -4,21 +4,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../services/core/iservices.dart';
-import 'core/infra.dart';
+import '../core/iservices.dart';
+import '../core/infra.dart';
 
-abstract class INetwork extends IService {
+abstract class IConnection extends IService {
   Future<Result<T>> rpc<T>(RpcId id, {String? payload});
   final response = NetResponse();
   @protected
   void updateResponse(LoadingState state, String message);
-
-//TODO added by hamid
-  Future<Response> loadData();
 }
 
-class Network extends INetwork {
-  Network();
+class HttpConnection extends IConnection {
+  HttpConnection();
   var baseURL = "https://fc.turnedondigital.com/";
 
   dynamic config;
@@ -27,71 +24,6 @@ class Network extends INetwork {
   final _serverLessMode = false;
   final _localHost = ''; //'192.168.1.101';
   final _rpcTimes = <RpcId, int>{};
-
-//TODO added by hamid
-  @override
-  loadData() async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    return Response(statusCode: 200, data: {
-      "name": "Hamiiid testi",
-      "gold": 2000,
-      "nectar": 1800,
-      "positionInTribe": 265,
-      "rank": 623,
-      "level": 25,
-      "cards": [
-        {
-          "imageUrl": "assets/images/fruits/o1.png",
-          "title": "orange1",
-          "level": 1,
-          "stamina": 2
-        },
-        {
-          "imageUrl": "assets/images/fruits/o2.png",
-          "title": "orange2",
-          "level": 2,
-          "stamina": 6
-        },
-        {
-          "imageUrl": "assets/images/fruits/c1.png",
-          "title": "Carrot1",
-          "level": 3,
-          "stamina": 15
-        },
-        {
-          "imageUrl": "assets/images/fruits/c2.png",
-          "title": "Carrot2",
-          "level": 4,
-          "stamina": 30
-        },
-        {
-          "imageUrl": "assets/images/fruits/c2.png",
-          "title": "Carrot2",
-          "level": 4,
-          "stamina": 30
-        },
-        {
-          "imageUrl": "assets/images/fruits/c2.png",
-          "title": "Carrot2",
-          "level": 4,
-          "stamina": 30
-        },
-        {
-          "imageUrl": "assets/images/fruits/c2.png",
-          "title": "Carrot2",
-          "level": 4,
-          "stamina": 30
-        },
-        {
-          "imageUrl": "assets/images/fruits/c2.png",
-          "title": "Carrot2",
-          "level": 4,
-          "stamina": 30
-        }
-      ]
-    });
-  }
 
   @override
   initialize({List<Object>? args}) async {
@@ -185,7 +117,7 @@ class NetResponse {
   }
 }
 
-enum RpcId { battle }
+enum RpcId { battle, playerLoad }
 
 extension RpcIdEx on RpcId {
   String get name {
@@ -196,17 +128,4 @@ extension RpcIdEx on RpcId {
         return "default_id";
     }
   }
-}
-
-//TODO added by hamid
-class Response<T> {
-  final int _statusCode;
-  final Map<String, T> _data;
-
-  Response({required int statusCode, required Map<String, T> data})
-      : _statusCode = statusCode,
-        _data = data;
-
-  get getStatusCode => _statusCode;
-  get getData => _data;
 }

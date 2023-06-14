@@ -1,11 +1,13 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
+import '../services/connection/fake_connector.dart';
+import '../services/connection/http_connection.dart';
 import '../services/games.dart';
 import '../services/localization.dart';
-import '../services/network.dart';
 import '../services/prefs.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
@@ -31,7 +33,7 @@ class ServicesUpdate extends ServicesState {
 
 class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   FirebaseAnalytics firebaseAnalytics;
-  late INetwork network;
+  late IConnection connection;
   late ISounds sound;
   late Trackers trackers;
   late IGames games;
@@ -40,10 +42,10 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   late Prefs prefs;
   late MyTheme theme;
 
-  ServicesBloc({required this.firebaseAnalytics}) : super(ServicesInit()) {
+  Services({required this.firebaseAnalytics}) : super(ServicesInit()) {
     prefs = Prefs();
     localization = Localization();
-    network = Network();
+    connection = FakeConnector();
     sound = Sounds();
     trackers = Trackers(firebaseAnalytics);
     games = Games();
@@ -57,7 +59,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     await prefs.initialize();
     await localization.initialize();
     await trackers.initialize();
-    await network.initialize();
+    await connection.initialize();
     games.initialize();
     adsService.initialize();
     adsService.onUpdate = _onAdsServicesUpdate;
