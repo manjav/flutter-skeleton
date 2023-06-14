@@ -12,6 +12,7 @@ import '../services/prefs.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
+import 'player_bloc.dart';
 
 class ServicesEvent {}
 
@@ -31,7 +32,7 @@ class ServicesUpdate extends ServicesState {
 
 //--------------------------------------------------------
 
-class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
+class Services extends Bloc<ServicesEvent, ServicesState> {
   FirebaseAnalytics firebaseAnalytics;
   late IConnection connection;
   late ISounds sound;
@@ -53,19 +54,19 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     theme = MyTheme();
   }
 
-  Future<Response> initialize() async {
+  initialize(BuildContext context) async {
     theme.initialize();
     sound.initialize();
     await prefs.initialize();
     await localization.initialize();
     await trackers.initialize();
     await connection.initialize();
+    var result = await connection.rpc<PlayerData>(RpcId.playerLoad);
+    BlocProvider.of<PlayerBloc>(context).add(SetPlayer(player: result.data));
+
     games.initialize();
     adsService.initialize();
     adsService.onUpdate = _onAdsServicesUpdate;
-
-//TODO added by hamiid
-    return network.loadData();
   }
 
   _onAdsServicesUpdate(Placement? placement) {

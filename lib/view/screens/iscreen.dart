@@ -24,7 +24,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T> {
     // if (sfx.isNotEmpty) widget.services.get<Sounds>().play(sfx);
     // Analytics.setScreen(widget.mode.name);
     WidgetsBinding.instance.addPostFrameCallback(onRender);
-
     super.initState();
   }
 

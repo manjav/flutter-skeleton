@@ -7,14 +7,14 @@ class PlayerInitEvent extends PlayerEvent {
 }
 
 class SetPlayer extends PlayerEvent {
-  Player player;
+  PlayerData player;
   SetPlayer({required this.player});
 }
 
 //--------------------------------------------------------
 
 abstract class PlayerState {
-  final Player player;
+  final PlayerData player;
   PlayerState({required this.player});
 }
 
@@ -29,9 +29,9 @@ class PlayerUpdate extends PlayerState {
 //--------------------------------------------------------
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
-  late Player? player;
+  late PlayerData? player;
 
-  PlayerBloc() : super(PlayerInit(player: Player.defult())) {
+  PlayerBloc() : super(PlayerInit(player: PlayerData.defult())) {
     on<SetPlayer>(setPlayer);
   }
 
@@ -49,19 +49,18 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 }
 
-/// TODO added by hamiiid
-class Player {
+class PlayerData {
   final String name;
-  final int id;
-  Player({required this.name, required this.id});
+  final String id;
+  PlayerData({required this.name, required this.id});
 
-  factory Player.defult() {
-    return Player(name: "NA", id: 0);
+  factory PlayerData.defult() {
+    return PlayerData(name: "NA", id: "0");
   }
 
-  factory Player.fromJson(Map<String, dynamic> json) {
-    return Player(
-      id: json['id'] ?? 0,
+  factory PlayerData.fromJson(Map<String, dynamic> json) {
+    return PlayerData(
+      id: json['id'] ?? "0",
       name: json['name'] ?? "NAs",
     );
   }

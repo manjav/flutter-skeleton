@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/blocs/player_bloc.dart';
+import 'package:flutter_skeleton/blocs/services_bloc.dart';
 import 'package:rive/rive.dart';
 
 import '../../../utils/device.dart';
-import '../../blocs/services_bloc.dart';
+import '../../blocs/player_bloc.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/localization.dart';
-import '../../services/network.dart';
 import '../../services/theme.dart';
 import '../../utils/utils.dart';
 import '../widgets.dart';
@@ -24,7 +24,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   SMIBool? _closeInput;
   var logViewVisibility = false;
 
-  late ServicesBloc _blocProvider;
+  late Services _services;
 
   @override
   void initState() {
@@ -33,25 +33,15 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   }
 
   loadServices() async {
-    //TODO hamid getting async data from whatever scource
-    _blocProvider = BlocProvider.of<ServicesBloc>(context);
-    await _blocProvider.initialize().then((playerData) {
-      ///TODO hamid after getting data, serializes player data and triggers `SetPlayer` event to update the `Player` data
-      Player player = Player.fromJson(playerData.getData);
-      BlocProvider.of<PlayerBloc>(context).add(SetPlayer(player: player));
-    });
+    BlocProvider.of<Services>(context).initialize(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [
-      ///TODO added by hamid: read data from player_bloc
-      BlocBuilder<PlayerBloc, PlayerState>(
-        builder: (context, state) {
-          return Text(state.player.name);
-        },
-      ),
-
+      BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
+        return Text(state.player.name);
+      }),
       RiveAnimation.asset('anims/${Asset.prefix}loading.riv',
           onInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(
@@ -69,7 +59,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
       Positioned(
           bottom: 4.d,
           right: 16.d,
-          child: _blocProvider.localization.isInitialized
+          child: _services.localization.isInitialized
               ? Text("v.${'app_version'.l()}", style: TStyles.smallInvert)
               : const SizedBox()),
       Positioned(
@@ -86,7 +76,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                 setState(() => logViewVisibility = !logViewVisibility);
               },
               child: logViewVisibility
-                  ? Text(_blocProvider.network.accumulatedLog,
+                  ? Text(_services.connection.accumulatedLog,
                       style: TStyles.tinyInvert)
                   : Widgets.rect(color: TColors.transparent))),
       _alert,
@@ -95,7 +85,8 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
 
   _onNetworkEventChange() {
     setState(() {});
-    if (_blocProvider.network.response.state == LoadingState.disconnect) {
+    if (_services.connection.response.state ==
+        LoadingState.disconnect) {
       _alert = Positioned(
           bottom: 48.d,
           child: Column(
@@ -117,7 +108,8 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
             ],
           ));
       setState(() {});
-    } else if (_blocProvider.network.response.state == LoadingState.complete) {
+    } else if (_services.connection.response.state ==
+        LoadingState.complete) {
       _closeInput?.value = true;
     }
   }

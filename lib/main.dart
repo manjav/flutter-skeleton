@@ -42,7 +42,7 @@ class _MyAppStat extends State<MyApp> {
             providers: [
               BlocProvider(
                   create: (context) =>
-                      ServicesBloc(firebaseAnalytics: _firebaseAnalytics)),
+                      Services(firebaseAnalytics: _firebaseAnalytics)),
             ],
             child: MaterialApp(
                 navigatorObservers: [_observer],
