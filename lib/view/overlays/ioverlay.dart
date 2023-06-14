@@ -21,17 +21,17 @@ extension Overlays on OverlayType {
 
   static final _entries = <OverlayType, OverlayEntry>{};
   static insert(BuildContext context, OverlayType type, {List<Object>? args}) {
-    if (!_entries.containsKey(type.name)) {
+    if (!_entries.containsKey(type)) {
       _entries[type] =
           OverlayEntry(builder: (c) => getWidget(type.routeName, args: args));
       Overlay.of(context).insert(_entries[type]!);
     }
   }
 
-  static remove(OverlayType overlay) {
-    if (_entries.containsKey(overlay.name)) {
-      _entries[overlay.name]?.remove();
-      _entries.remove(overlay.name);
+  static remove(OverlayType type) {
+    if (_entries.containsKey(type)) {
+      _entries[type]?.remove();
+      _entries.remove(type.name);
     }
   }
 }
