@@ -49,9 +49,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 }
 
+enum PlayerLoadingState { none, load, complete }
+
 class PlayerData {
   final String name;
   final String id;
+  PlayerLoadingState loadinfState = PlayerLoadingState.load;
   PlayerData({required this.name, required this.id});
 
   factory PlayerData.defult() {

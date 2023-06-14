@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/utils/device.dart';
 
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
@@ -55,14 +56,19 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
   }
 
   initialize(BuildContext context) async {
+    Device.initialize(MediaQuery.of(context).size);
+    debugPrint("${Device.size} ${MediaQuery.of(context).devicePixelRatio}");
+
     theme.initialize();
-    sound.initialize();
     await prefs.initialize();
+    await sound.initialize();
     await localization.initialize();
     await trackers.initialize();
     await connection.initialize();
     var result = await connection.rpc<PlayerData>(RpcId.playerLoad);
-    BlocProvider.of<PlayerBloc>(context).add(SetPlayer(player: result.data));
+    if (context.mounted) {
+      BlocProvider.of<PlayerBloc>(context).add(SetPlayer(player: result.data));
+    }
 
     games.initialize();
     adsService.initialize();
