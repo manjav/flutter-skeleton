@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/view/screens/home_screen.dart';
 
 import '../../services/theme.dart';
-import '../../view/screens/loading_screen.dart';
 
 class AbstractScreen extends StatefulWidget {
-  final Screens mode;
+  final Screens type;
   final String? sfx;
   AbstractScreen(
-    this.mode, {
+    this.type, {
     Key? key,
     this.sfx,
-  }) : super(key: key ??= Key(mode.name));
+  }) : super(key: key ??= Key(type.name));
   @override
   createState() => AbstractScreenState();
 }
@@ -87,6 +86,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T> {
 }
 
 enum Screens {
+  none,
   home,
   loading,
   profile,
@@ -98,7 +98,7 @@ extension ScreenTools on Screens {
   static AbstractScreen getScreen(String routeName, {List<Object>? args}) {
     return switch (routeName) {
       "/home" => HomeScreen(),
-      _ => LoadingScreen(),
+      _ => AbstractScreen(Screens.none),
     };
   }
 
@@ -108,7 +108,8 @@ extension ScreenTools on Screens {
       Screens.loading => "loading",
       Screens.profile => "profile",
       Screens.shop => "shop",
-      Screens.settings => "settings"
+      Screens.settings => "settings",
+      _ => "none",
     };
   }
 
