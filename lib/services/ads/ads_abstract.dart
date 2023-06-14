@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../localization_service.dart';
+import '../localization.dart';
 
-enum AdSDKName { none, adivery, google, unity }
+enum AdSDKName { none, adivery, applovin, google, unity }
 
-extension AdSDKExt on AdSDKName {
-  String get name {
-    switch (this) {
-      case AdSDKName.none:
-        return "none";
-      case AdSDKName.adivery:
-        return "adivery";
-      case AdSDKName.google:
-        return "google";
-      case AdSDKName.unity:
-        return "unity";
-    }
-  }
+extension AdSDKNameExtension on AdSDKName {
+  String get name => switch (this) {
+        AdSDKName.adivery => 'adivery',
+        AdSDKName.applovin => 'applovin',
+        AdSDKName.google => 'google',
+        AdSDKName.unity => 'unity',
+        _ => 'none'
+      };
 }
 
 enum AdState {
@@ -32,10 +27,19 @@ enum AdType {
   banner,
   interstitial,
   interstitialVideo,
+  native,
   rewarded,
 }
 
 extension AdTypeExtension on AdType {
+  String get name => switch (this) {
+        AdType.banner => 'banner',
+        AdType.interstitial => 'interstitial',
+        AdType.interstitialVideo => 'interstitialVideo',
+        AdType.native => 'native',
+        AdType.rewarded => 'rewarded',
+      };
+
   bool get isIntrestitial =>
       this == AdType.interstitial || this == AdType.interstitialVideo;
 }
@@ -52,7 +56,7 @@ class Placement {
   AdState state = AdState.closed;
 
   Placement(this.sdk, this.type) {
-    id = "adid_${sdk}_$type".l();
+    id = "adid_${sdk.name}_${type.name}".l();
   }
   int get order {
     if (state == AdState.failedLoad) return -1;
@@ -72,6 +76,7 @@ abstract class AbstractAdSDK {
     this.testMode = testMode;
     placements = {
       AdType.interstitial: Placement(sdk, AdType.interstitial),
+      AdType.native: Placement(sdk, AdType.native),
       AdType.rewarded: Placement(sdk, AdType.rewarded),
     };
   }

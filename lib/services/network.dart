@@ -7,12 +7,14 @@ import 'package:http/http.dart' as http;
 import '../services/core/iservices.dart';
 import 'core/infra.dart';
 
-abstract class NetworkService extends IService {
+abstract class INetwork extends IService {
   Future<Result<T>> rpc<T>(RpcId id, {String? payload});
-  updateResponse(LoadingState state, String message);
+  final response = NetResponse();
+  @protected
+  void updateResponse(LoadingState state, String message);
 }
 
-class Network implements NetworkService {
+class Network extends INetwork {
   Network();
   var baseURL = "https://fc.turnedondigital.com/";
 
@@ -22,8 +24,6 @@ class Network implements NetworkService {
   final _serverLessMode = false;
   final _localHost = ''; //'192.168.1.101';
   final _rpcTimes = <RpcId, int>{};
-
-  var response = NetResponse();
 
   @override
   initialize({List<Object>? args}) async {
@@ -36,6 +36,7 @@ class Network implements NetworkService {
     log("Account data loaded.");
 
     updateResponse(LoadingState.connect, "Account ${'user'} connected.");
+    super.initialize();
   }
 
   // Load the Config file
@@ -62,8 +63,11 @@ class Network implements NetworkService {
     }
   }
 
-  // Connect to nakama server
-  _connection() async {}
+  // Connect to server
+  _connection() async {
+    await Future.delayed(const Duration(seconds: 1));
+    updateResponse(LoadingState.connect, "connected.");
+  }
 
   @override
   Future<Result<T>> rpc<T>(RpcId id, {String? payload}) async {
@@ -95,14 +99,9 @@ class Network implements NetworkService {
   }
 
   @override
-  updateResponse(LoadingState state, String message) {
+  void updateResponse(LoadingState state, String message) {
     response.state = state;
     response.message = message;
-  }
-
-  @override
-  log(log) {
-    debugPrint(log);
   }
 }
 

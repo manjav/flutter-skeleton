@@ -1,108 +1,76 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../services/core/ads/ads_service.dart';
-import '../services/game_apis_service.dart';
-import '../services/localization_service.dart';
-import '../services/network_service.dart';
-import '../services/prefs_service.dart';
-import '../services/sounds_service.dart';
+import '../services/ads/ads.dart';
+import '../services/ads/ads_abstract.dart';
+import '../services/games.dart';
+import '../services/localization.dart';
+import '../services/network.dart';
+import '../services/prefs.dart';
+import '../services/sounds.dart';
 import '../services/theme.dart';
-import '../services/trackers/trackers_service.dart';
+import '../services/trackers/trackers.dart';
 
 class ServicesEvent {}
 
 //--------------------------------------------------------
 
 abstract class ServicesState {
-  final AdsService adsService;
-  final GameApisService gameApiService;
-  final TrackersService analyticsService;
-  final LocalizationService localizationService;
-  final NetworkService networkService;
-  final PrefsService prefsService;
-  final SoundService soundService;
-  final ThemeService themeService;
-
-  ServicesState({
-    required this.prefsService,
-    required this.gameApiService,
-    required this.adsService,
-    required this.analyticsService,
-    required this.networkService,
-    required this.localizationService,
-    required this.soundService,
-    required this.themeService,
-  });
+  ServicesState();
 }
 
 class ServicesInit extends ServicesState {
-  ServicesInit({
-    required super.prefsService,
-    required super.gameApiService,
-    required super.analyticsService,
-    required super.networkService,
-    required super.localizationService,
-    required super.soundService,
-    required super.adsService,
-    required super.themeService,
-  });
+  ServicesInit();
 }
 
 class ServicesUpdate extends ServicesState {
-  ServicesUpdate({
-    required super.prefsService,
-    required super.gameApiService,
-    required super.analyticsService,
-    required super.networkService,
-    required super.localizationService,
-    required super.soundService,
-    required super.adsService,
-    required super.themeService,
-  });
+  ServicesUpdate();
 }
 
 //--------------------------------------------------------
 
 class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
-  AdsService adsService;
-  GameApisService gameApiService;
-  TrackersService trackers;
-  LocalizationService localizationService;
-  NetworkService networkService;
-  SoundService soundService;
-  ThemeService themeSevice;
-  PrefsService prefsService;
+  FirebaseAnalytics firebaseAnalytics;
+  late INetwork network;
+  late ISounds sound;
+  late Trackers trackers;
+  late Games games;
+  late Ads adsService;
+  late Localization localization;
+  late Prefs prefs;
+  late MyTheme theme;
 
-  ServicesBloc({
-    required this.adsService,
-    required this.gameApiService,
-    required this.trackers,
-    required this.localizationService,
-    required this.networkService,
-    required this.prefsService,
-    required this.soundService,
-    required this.themeSevice,
-  }) : super(ServicesInit(
-          adsService: adsService,
-          analyticsService: trackers,
-          gameApiService: gameApiService,
-          localizationService: localizationService,
-          networkService: networkService,
-          prefsService: prefsService,
-          soundService: soundService,
-          themeService: themeSevice,
-        )) {
-    // on<ServicesEvent>(update);
+  ServicesBloc({required this.firebaseAnalytics}) : super(ServicesInit()) {
+    prefs = Prefs();
+    localization = Localization();
+    network = Network();
+    sound = Sounds();
+    trackers = Trackers(firebaseAnalytics);
+    games = Games();
+    adsService = Ads();
+    theme = MyTheme();
   }
 
   initialize() async {
-    await prefsService.initialize();
-    await localizationService.initialize();
-    await themeSevice.initialize();
-    await soundService.initialize();
-    await gameApiService.initialize();
-    await networkService.initialize();
+    theme.initialize();
+    sound.initialize();
+    await prefs.initialize();
+    await localization.initialize();
     await trackers.initialize();
-    await adsService.initialize();
+    await network.initialize();
+    games.initialize();
+    adsService.initialize();
+    adsService.onUpdate = _onAdsServicesUpdate;
+  }
+
+  _onAdsServicesUpdate(Placement? placement) {
+    if (Prefs.getBool("settings_music")) {
+      if (placement!.state == AdState.show) {
+        // sound.stop("music");
+      } else if (placement.state == AdState.closed ||
+          placement.state == AdState.failedShow) {
+        // sound.play("african-fun", channel: "music");
+      }
+    }
   }
 }

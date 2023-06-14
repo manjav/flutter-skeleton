@@ -1,13 +1,10 @@
-// ignore_for_file: unused_element
-
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_skeleton/services/core/ads/ads_abstract.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+import '../../services/ads/ads_abstract.dart';
 import '../../utils/device.dart';
 import '../core/iservices.dart';
-import '../prefs_service.dart';
+import '../prefs.dart';
 import 'tracker_abstract.dart';
 import 'tracker_firebase.dart';
 import 'tracker_gameanalytics.dart';
@@ -15,11 +12,20 @@ import 'tracker_kochava.dart';
 
 enum TrackerSDK { none, firebase, gameAnalytics, kochava }
 
+extension TrackerSDKExtension on TrackerSDK {
+  String get name => switch (this) {
+        TrackerSDK.firebase => 'firebase',
+        TrackerSDK.gameAnalytics => 'gameAnalytics',
+        TrackerSDK.kochava => 'kochava',
+        _ => 'none'
+      };
+}
+
 enum BuildType { installed, instant }
 
 enum ResourceFlowType { none, sink, source }
 
-class TrackersService extends IService {
+class Trackers extends IService {
   final _funnelConfigs = {
     "open": [1],
     "mute_sfx": [1],
@@ -38,20 +44,17 @@ class TrackersService extends IService {
   final _testName = "_";
   int variant = 1;
 
-  TrackersService(this.firebaseAnalytics);
+  Trackers(this.firebaseAnalytics);
 
   @override
   initialize({List<Object>? args}) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    debugPrint("Analytics init");
-
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
       await sdk.initialize(args: [firebaseAnalytics]);
       var deviceId = await sdk.getDeviceId();
-      if (deviceId == null) Device.adId = deviceId!;
+      if (deviceId != null) Device.adId = deviceId;
       var variant = await sdk.getVariantId(_testName);
-      if (variant == 0) this.variant = variant;
+      if (variant != 0) this.variant = variant;
     }
 
     // Set user data
@@ -129,7 +132,7 @@ class TrackersService extends IService {
 
   funnle(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";
-    var step = PrefsService.increase(name, 1);
+    var step = Prefs.increase(name, 1);
 
     // Unique events
     if (_funnelConfigs.containsKey(type)) {
@@ -147,10 +150,5 @@ class TrackersService extends IService {
   _funnle(String name, [int step = -1]) {
     var args = step > 0 ? {"step": '$step'} : null;
     design(name, parameters: args);
-  }
-
-  @override
-  log(log) {
-    throw UnimplementedError();
   }
 }

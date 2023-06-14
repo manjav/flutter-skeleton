@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/core/ads/ads_abstract.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
-import '../../services/localization_service.dart';
-import '../prefs_service.dart';
+import '../../services/ads/ads_abstract.dart';
+import '../localization.dart';
+import '../prefs.dart';
 import 'tracker_abstract.dart';
-import 'trackers_service.dart';
+import 'trackers.dart';
 
 class GATracker extends AbstractTracker {
   @override
@@ -79,9 +79,10 @@ class GATracker extends AbstractTracker {
   }
 
   _getGAAdType(AdType type) => switch (type) {
-        AdType.interstitial => GAAdType.OfferWall,
         AdType.banner => GAAdType.Banner,
+        AdType.interstitial => GAAdType.OfferWall,
         AdType.interstitialVideo => GAAdType.Interstitial,
+        AdType.native => GAAdType.Playable,
         AdType.rewarded => GAAdType.RewardedVideo
       };
 

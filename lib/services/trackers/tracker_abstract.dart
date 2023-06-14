@@ -1,5 +1,5 @@
-import '../core/ads/ads_abstract.dart';
-import 'trackers_service.dart';
+import '../ads/ads_abstract.dart';
+import 'trackers.dart';
 
 abstract class AbstractTracker {
   var sdk = TrackerSDK.none;

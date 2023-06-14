@@ -2,19 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../services/core/iservices.dart';
 
-abstract class LocalizationService implements IService {}
-
-class ILocalization implements LocalizationService {
+class Localization extends IService {
   static Map<String, dynamic>? _sentences;
   var dir = TextDirection.ltr;
   var languageCode = "en";
-  var isLoaded = false;
   var isRTL = false;
 
-  ILocalization();
+  Localization();
+
   @override
   initialize({List<Object>? args}) async {
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
@@ -23,9 +20,7 @@ class ILocalization implements LocalizationService {
     await rootBundle.loadString('texts/keys.json');
     await _getData('keys.json');
     await _getData('locale.json');
-    isLoaded = true;
-
-    debugPrint("localization init");
+    super.initialize();
   }
 
   static _getData(String file) async {
@@ -45,11 +40,15 @@ class ILocalization implements LocalizationService {
 extension LocalizationExtension on String {
   String l([List<dynamic>? args]) {
     final key = this;
-    if (ILocalization._sentences == null) {
+    if (Localization._sentences == null) {
       debugPrint("[Localization System] sentences = null");
+      return '';
     }
-    var result = ILocalization._sentences![key];
-    if (result == null) return key;
+    var result = Localization._sentences![key];
+    if (result == null) {
+      debugPrint("[Localization System] $key not found!");
+      return key;
+    }
     if (args != null) {
       for (var arg in args) {
         result = result!.replaceFirst(RegExp(r'%s'), arg.toString());

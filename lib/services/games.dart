@@ -6,9 +6,9 @@ import 'package:games_services/games_services.dart';
 
 import 'core/iservices.dart';
 
-abstract class GameApisService extends IService {}
+abstract class IGames extends IService {}
 
-class Games extends GameApisService {
+class Games extends IGames {
   static const duration = Duration(seconds: 5);
   Timer? _timer;
   String? playerId;
@@ -16,15 +16,6 @@ class Games extends GameApisService {
   String? playerName;
 
   Games();
-  // signIn({int timeoutSeconds = 10}) async {
-  //   var checks = 0;
-  //   getPlayerData();
-  //   while (playerToken == null && checks < timeoutSeconds * 2) {
-  //     await Future.delayed(const Duration(milliseconds: 500));
-  //     ++checks;
-  //   }
-  //   return playerToken;
-  // }
 
   signIn() async {
     try {
@@ -58,15 +49,5 @@ class Games extends GameApisService {
     // var analytics = analytics;
     // GamesServices.showLeaderboards();
     return true;
-  }
-
-  @override
-  initialize({List<Object>? args}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  log(log) {
-    throw UnimplementedError();
   }
 }

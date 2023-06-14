@@ -4,16 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../view/overlays/ioverlay.dart';
+import '../view/screens/iscreen.dart';
 import 'blocs/services_bloc.dart';
-import 'services/core/ads/ads_service.dart';
-import 'services/game_apis_service.dart';
-import 'services/localization_service.dart';
-import 'services/network_service.dart';
-import 'services/prefs_service.dart';
-import 'services/sounds_service.dart';
 import 'services/theme.dart';
-import 'services/trackers/trackers_service.dart';
-import 'view/pages/loading_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,43 +16,73 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({
     super.key,
   });
+  @override
+  State<StatefulWidget> createState() => _MyAppStat();
+}
 
-  //NOTE: would be included later
+class _MyAppStat extends State<MyApp> {
   static final _firebaseAnalytics = FirebaseAnalytics.instance;
   static final _observer =
       FirebaseAnalyticsObserver(analytics: _firebaseAnalytics);
+  @override
+  void initState() {
+    Overlays.insert(context, OverlayType.loading);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    NetworkService netConnection = Network();
-    SoundService sound = Sounds();
-    TrackersService trackers = TrackersService(_firebaseAnalytics);
-    GameApisService gameApi = Games();
-    AdsService adsData = AdsService();
-    LocalizationService localization = ILocalization();
-    PrefsService prefsService = PrefsService();
-    ThemeService theme = MyTheme();
+    return KeyedSubtree(
+        key: widget.key,
+        child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                  create: (context) =>
+                      ServicesBloc(firebaseAnalytics: _firebaseAnalytics)),
+            ],
+            child: MaterialApp(
+                navigatorObservers: [_observer],
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => ServicesBloc(
-              adsService: adsData,
-              gameApiService: gameApi,
-              trackers: trackers,
-              localizationService: localization,
-              networkService: netConnection,
-              prefsService: prefsService,
-              soundService: sound,
-              themeSevice: theme),
-        ),
-      ],
-      child: MaterialApp(
-          home: const LoadingScreen(), navigatorObservers: [_observer]),
-    );
+                // Provide the generated AppLocalizations to the MaterialApp. This
+                // allows descendant Widgets to display the correct translations
+                // depending on the user's locale.
+                /* localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale('en', ''), // English, no country code
+                ], */
+
+                // Use AppLocalizations to configure the correct application title
+                // depending on the user's locale.
+                //
+                // The appTitle is defined in .arb files found in the localization
+                // directory.
+                /* onGenerateTitle: (BuildContext context) =>
+                    AppLocalizations.of(context)!.appTitle, */
+
+                // Define a light and dark color theme. Then, read the user's
+                // preferred ThemeMode (light, dark, or system default) from the
+                // SettingsController to display the correct theme.
+                theme: Themes.darkData,
+                // darkTheme: Themes.darkData,
+                // themeMode: settingsController.themeMode,
+
+                // Define a function to handle named routes in order to support
+                // Flutter web url navigation and deep linking.
+                onGenerateRoute: (RouteSettings routeSettings) {
+                  return MaterialPageRoute<void>(
+                      settings: routeSettings,
+                      builder: (BuildContext context) => ScreenTools.getScreen(
+                          routeSettings.name!,
+                          args: routeSettings.arguments as List<Object>?));
+                })));
   }
 }

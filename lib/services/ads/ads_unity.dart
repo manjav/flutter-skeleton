@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/localization_service.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
+import '../../services/localization.dart';
 import 'ads_abstract.dart';
 
 class AdUnity extends AbstractAdSDK {
@@ -15,7 +15,7 @@ class AdUnity extends AbstractAdSDK {
     sdk = AdSDKName.unity;
     UnityAds.init(
       testMode: false,
-      gameId: "ads_${sdk}_${platform.toLowerCase()}".l(),
+      gameId: "ads_${sdk.name}_${platform.toLowerCase()}".l(),
       onComplete: () {
         request(AdType.interstitial);
         request(AdType.interstitialVideo);
