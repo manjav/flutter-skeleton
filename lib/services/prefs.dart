@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/iservices.dart';
 
-class PrefsService implements IService {
+class Prefs extends IService {
   static SharedPreferences? _instance;
   static var tutorStep = 0;
   static bool get inTutorial => tutorStep < TutorSteps.fine.value;
@@ -17,6 +16,7 @@ class PrefsService implements IService {
     }
     Pref.visitCount.increase(1);
     tutorStep = Pref.tutorStep.getInt();
+    super.initialize();
   }
 
   static bool contains(String key) => _instance!.containsKey(key);
@@ -45,11 +45,6 @@ class PrefsService implements IService {
     setInt(key, newValue);
     return newValue;
   }
-
-  @override
-  log(log) {
-    debugPrint(log);
-  }
 }
 
 enum Pref {
@@ -59,28 +54,17 @@ enum Pref {
 }
 
 extension PrefExt on Pref {
-  String get name {
-    switch (this) {
-      case Pref.testVersion:
-        return "testVersion";
-      case Pref.visitCount:
-        return "visitCount";
-      case Pref.tutorStep:
-        return "tutorStep";
-    }
-  }
+  bool contains() => Prefs.contains(name);
 
-  bool contains() => PrefsService.contains(name);
+  int setInt(int value) => Prefs.setInt(name, value);
+  int getInt() => Prefs.getInt(name);
+  int increase(int value) => Prefs.increase(name, value);
 
-  int setInt(int value) => PrefsService.setInt(name, value);
-  int getInt() => PrefsService.getInt(name);
-  int increase(int value) => PrefsService.increase(name, value);
+  String setString(String value) => Prefs.setString(name, value);
+  String getString() => Prefs.getString(name);
 
-  String setString(String value) => PrefsService.setString(name, value);
-  String getString() => PrefsService.getString(name);
-
-  bool setBool(bool value) => PrefsService.setBool(name, value);
-  bool getBool() => PrefsService.getBool(name);
+  bool setBool(bool value) => Prefs.setBool(name, value);
+  bool getBool() => Prefs.getBool(name);
 }
 
 enum TutorSteps {
@@ -98,38 +82,25 @@ enum TutorSteps {
 }
 
 extension PTutorStapsExt on TutorSteps {
-  int get value {
-    switch (this) {
-      case TutorSteps.welcome:
-        return 0;
-      case TutorSteps.exploreFirst:
-        return 1;
-      case TutorSteps.exploreSecond:
-        return 2;
-      case TutorSteps.mergeWelcome:
-        return 10;
-      case TutorSteps.mergeFirst:
-        return 11;
-      case TutorSteps.mergeSecond:
-        return 12;
-      case TutorSteps.mergeOffer:
-        return 13;
-      case TutorSteps.mergeFine:
-        return 14;
-      case TutorSteps.orderTap:
-        return 20;
-      case TutorSteps.orderFill:
-        return 21;
-      case TutorSteps.fine:
-        return 30;
-    }
-  }
+  int get value => switch (this) {
+        TutorSteps.welcome => 0,
+        TutorSteps.exploreFirst => 1,
+        TutorSteps.exploreSecond => 2,
+        TutorSteps.mergeWelcome => 10,
+        TutorSteps.mergeFirst => 11,
+        TutorSteps.mergeSecond => 12,
+        TutorSteps.mergeOffer => 13,
+        TutorSteps.mergeFine => 14,
+        TutorSteps.orderTap => 20,
+        TutorSteps.orderFill => 21,
+        TutorSteps.fine => 30
+      };
 
   void commit([bool force = false]) {
-    if (!force && value <= PrefsService.tutorStep) return;
+    if (!force && value <= Prefs.tutorStep) return;
     if (value % 10 == 0) {
       Pref.tutorStep.setInt(value);
     }
-    PrefsService.tutorStep = value;
+    Prefs.tutorStep = value;
   }
 }

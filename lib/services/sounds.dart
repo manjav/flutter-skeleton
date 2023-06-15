@@ -3,21 +3,22 @@ import 'package:flutter/cupertino.dart';
 
 import '../utils/loader.dart';
 import 'core/iservices.dart';
-import 'prefs_service.dart';
+import 'prefs.dart';
 
-abstract class SoundService extends IService {
+abstract class ISounds extends IService {
   play(String name, {String extension, String? channel});
   stop(String channel);
   stopAll();
 }
 
-class Sounds extends SoundService {
+class Sounds extends ISounds {
   dynamic configs;
   String? baseURL;
 
   @override
   initialize({List<Object>? args}) {
-    debugPrint("Analytics init");
+    play('main-theme', channel: "music");
+    super.initialize();
   }
 
 /*
@@ -31,10 +32,10 @@ class Sounds extends SoundService {
   play(String name, {String extension = "mp3", String? channel}) {
     AudioPlayer player;
     if (channel == null) {
-      if (!PrefsService.getBool("settings_sfx")) return;
+      if (!Prefs.getBool("settings_sfx")) return;
       player = _findPlayer();
     } else {
-      if (channel == "music" && !PrefsService.getBool("settings_music")) return;
+      if (channel == "music" && !Prefs.getBool("settings_music")) return;
       if (!_players.containsKey(channel)) {
         _players[channel] = AudioPlayer();
       }
@@ -81,10 +82,5 @@ class Sounds extends SoundService {
     for (var e in entries) {
       e.value.stop();
     }
-  }
-
-  @override
-  log(log) {
-    debugPrint(log);
   }
 }
