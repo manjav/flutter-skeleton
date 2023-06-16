@@ -1,11 +1,9 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/utils/device.dart';
 
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
-import '../services/connection/fake_connector.dart';
 import '../services/connection/http_connection.dart';
 import '../services/games.dart';
 import '../services/localization.dart';
@@ -13,6 +11,7 @@ import '../services/prefs.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
+import '../utils/device.dart';
 import 'player_bloc.dart';
 
 class ServicesEvent {}
@@ -56,8 +55,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
   }
 
   initialize(BuildContext context) async {
-    Device.initialize(MediaQuery.of(context).size);
-    debugPrint("${Device.size} ${MediaQuery.of(context).devicePixelRatio}");
+    Device.initialize(MediaQuery.of(context).size, MediaQuery.of(context).devicePixelRatio);
 
     theme.initialize();
     await prefs.initialize();

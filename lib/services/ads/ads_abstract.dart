@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/iservices.dart';
 import '../localization.dart';
 
 enum AdSDKName { none, adivery, applovin, google, unity }
@@ -75,15 +76,14 @@ abstract class AbstractAdSDK {
     placement.state = state;
     onUpdate?.call(placement);
     if (placement.order > 0) {}
-    debugPrint(
-        "Ads ==> ${placement.sdk} ${placement.type} $state ${error ?? ''}");
+    log("${placement.sdk} ${placement.type} $state ${error ?? ''}");
   }
 
   @protected
   waitForClose(AdType type) async {
     var myAd = placements[type]!;
     while (myAd.state == AdState.loaded || myAd.state == AdState.show) {
-      debugPrint("Ads ==> _wait  ${myAd.type}  ${myAd.sdk} ${myAd.state}");
+      log("wait  ${myAd.type}  ${myAd.sdk} ${myAd.state}");
       await Future.delayed(waitingDuration);
     }
   }
@@ -112,5 +112,9 @@ abstract class AbstractAdSDK {
       }
     }
     return placements[AdType.rewarded]!;
+  }
+
+  void log(message) {
+    IService.slog(this, message);
   }
 }

@@ -5,6 +5,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import '../services/core/iservices.dart';
+
 extension Device on double {
   static double ratio = 1;
   static double aspectRatio = 1;
@@ -17,7 +19,8 @@ extension Device on double {
   static String baseVersion = '';
   static Map<String, dynamic> _deviceData = {};
 
-  static Future<void> initialize(Size size) async {
+  static Future<void> initialize(Size size, double devicePixelRatio) async {
+    IService.slog("Device", "$size $devicePixelRatio");
     Device.size = size;
     var width = min(size.width, size.height);
     var height = max(size.width, size.height);

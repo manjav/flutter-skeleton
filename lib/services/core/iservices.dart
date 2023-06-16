@@ -6,7 +6,11 @@ abstract class IService {
 
   String accumulatedLog = "";
   void log(dynamic log) {
-    accumulatedLog += "\n[$this]: $log";
-    debugPrint(log);
+    serviceLog(this, log);
+  }
+
+  void serviceLog(IService source, log) {
+    accumulatedLog += "\n[$source]: $log";
+    log(log);
   }
 }
