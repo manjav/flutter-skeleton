@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:games_services/games_services.dart';
 
 import 'core/iservices.dart';
@@ -28,7 +27,7 @@ class Games extends IGames {
         playerId = '';
       }
     } catch (e) {
-      debugPrint(e.toString());
+      log(e.toString());
     }
     return playerId;
   }
