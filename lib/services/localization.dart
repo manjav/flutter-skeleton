@@ -49,6 +49,6 @@ extension LocalizationExtension on String {
         result = result!.replaceFirst(RegExp(r'%s'), arg.toString());
       }
     }
-    return "result";
+    return result;
   }
 }
