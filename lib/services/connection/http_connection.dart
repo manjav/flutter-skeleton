@@ -35,6 +35,7 @@ class HttpConnection extends IConnection {
   HttpConnection();
 
   dynamic config;
+  Map cookies = {};
   var messages = <Message>[];
 
   @override
@@ -71,7 +72,7 @@ class HttpConnection extends IConnection {
   @override
   Future<Result<T>> rpc<T>(RpcId id, {Map? params}) async {
     try {
-      final headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+      final headers = getDefaultHeader();
       var data = {};
       if (params != null) {
         // var json = '{"game_version":"2","device_name":"Ali MacBook P6ro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","restore_key":"apple1sys","os_type":2}';
@@ -117,9 +118,8 @@ class HttpConnection extends IConnection {
     log("update response => ${state.name} - $messages");
   }
 
-  Map cookies = {};
-  Map<String, dynamic>? getDefaultHeader(
-      {Map<String, dynamic>? headers, bool showLogs = true}) {
+  Map<String, String>? getDefaultHeader(
+      {Map<String, String>? headers, bool showLogs = true}) {
     if (!Platform.isAndroid && !Platform.isWindows /*&& buildType!="debug"*/) {
       return null;
     }
@@ -135,7 +135,7 @@ class HttpConnection extends IConnection {
       if (headers["Cookie"] == null) {
         headers["Cookie"] = "";
       }
-      headers["Cookie"] += " ${entry.key}=${entry.value}; ";
+      headers["Cookie"] = "${headers["Cookie"]} ${entry.key}=${entry.value}; ";
     }
 
     return headers;
