@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
 import '../../services/ads/ads_abstract.dart';
@@ -33,7 +32,7 @@ class GATracker extends AbstractTracker {
   Future<int> getVariantId(String testName) async {
     var testVersion = ''; //PrefsService.testVersion.getString();
     var version = "app_version".l();
-    debugPrint("Analytics version ==> $version testVersion ==> $testVersion");
+    log("Analytics version ==> $version testVersion ==> $testVersion");
     if (testVersion.isNotEmpty && testVersion != version) {
       return 0;
     }
@@ -43,7 +42,7 @@ class GATracker extends AbstractTracker {
     var variantId =
         await GameAnalytics.getRemoteConfigsValueAsString(testName, "0");
     var variant = int.parse(variantId ?? "0");
-    debugPrint("Analytics testVariantId ==> $variant");
+    log("Analytics testVariantId ==> $variant");
 
     return variant;
   }

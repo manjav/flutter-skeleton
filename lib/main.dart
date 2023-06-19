@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/blocs/player_bloc.dart';
 
+import '../blocs/player_bloc.dart';
 import '../view/screens/iscreen.dart';
 import 'blocs/services.dart';
 import 'services/theme.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
                   AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
                 ],
                 supportedLocales: const [
                   Locale('en', ''), // English, no country code

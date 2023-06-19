@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 
 abstract class IService {
   bool isInitialized = false;
-  initialize({List<Object>? args}) => isInitialized = true;
+  initialize({List<Object>? args}) {
+    isInitialized = true;
+    log("initialized.");
+  }
 
-  String accumulatedLog = "";
+  static String accumulatedLog = "";
   void log(dynamic log) {
-    accumulatedLog += "\n[$this]: $log";
+    slog(this, log);
+  }
+
+  static void slog(source, log) {
+    accumulatedLog += "\n[$source]: $log";
     debugPrint(log);
   }
 }
