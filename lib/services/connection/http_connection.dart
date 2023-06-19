@@ -14,10 +14,18 @@ import '../core/infra.dart';
 import '../core/iservices.dart';
 
 abstract class IConnection extends IService {
-  Future<Result<T>> rpc<T>(RpcId id, {Map<String, dynamic>? params});
   final response = NetResponse();
+
+  @protected
+  Future<void> loadConfigs();
+
+  @protected
+  Future<Result<String>> loadAccount();
+
   @protected
   void updateResponse(LoadingState state, String message);
+
+  Future<Result<T>> rpc<T>(RpcId id, {Map<String, dynamic>? params});
 }
 
 enum LoadParams {
@@ -40,20 +48,22 @@ class HttpConnection extends IConnection {
 
   @override
   initialize({List<Object>? args}) async {
-    await _loadConfig();
-    var playerData = await _loadAccount();
+    await loadConfigs();
+    var playerData = await loadAccount();
     updateResponse(LoadingState.connect, "Account ${'user'} connected.");
     super.initialize();
     return playerData;
   }
 
   // Load the Config file
-  _loadConfig() async {
+  @override
+  loadConfigs() async {
     //  log("Config loaded.");
   }
 
   // Connect to server
-  _loadAccount() async {
+  @override
+  Future<Result<String>> loadAccount() async {
     var params = <String, dynamic>{
       LoadParams.udid.name: Device.adId,
       LoadParams.device_name.name: Device.model,
@@ -115,7 +125,7 @@ class HttpConnection extends IConnection {
   void updateResponse(LoadingState state, String message) {
     response.state = state;
     response.message = message;
-    log("update response => ${state.name} - $messages");
+    log("update response => ${state.name} - $message");
   }
 
   Map<String, String>? getDefaultHeader(
