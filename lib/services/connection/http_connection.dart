@@ -42,9 +42,7 @@ enum LoadParams {
 class HttpConnection extends IConnection {
   HttpConnection();
 
-  dynamic config;
   Map cookies = {};
-  var messages = <Message>[];
 
   @override
   initialize({List<Object>? args}) async {
