@@ -1,4 +1,5 @@
 import '../ads/ads_abstract.dart';
+import '../core/iservices.dart';
 import 'trackers.dart';
 
 abstract class AbstractTracker {
@@ -26,7 +27,7 @@ abstract class AbstractTracker {
     var url =
         "https://numbers.sarand.net/variant/?test=$_testName&variant=$variant&ads=${Ads.selectedSDK}&v=$version";
     var response = await http.get(Uri.parse(url));
-    if (response.statusCode != 200) debugPrint('Failure status code 😱');
+    if (response.statusCode != 200) log('Failure status code 😱');
   } */
 
   setProperties(Map<String, String> properties);
@@ -56,4 +57,8 @@ abstract class AbstractTracker {
   // AppMetrica.reportEventWithMap(name, data);
 
   setScreen(String screenName);
+
+  void log(message) {
+    IService.slog(this, message);
+  }
 }

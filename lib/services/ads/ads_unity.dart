@@ -22,7 +22,7 @@ class AdUnity extends AbstractAdSDK {
         request(AdType.rewarded);
       },
       onFailed: (error, message) =>
-          debugPrint('UnityAds Initialization Failed: $error $message'),
+          log('Initialization Failed: $error $message'),
     );
   }
 

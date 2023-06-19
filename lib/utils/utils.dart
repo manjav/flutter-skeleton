@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:xor_cipher/xor_cipher.dart';
 
 import '../services/localization.dart';
 import 'device.dart';
@@ -51,6 +52,38 @@ extension IntExt on int {
 extension StringExt on String {
   String toPascalCase() {
     return substring(0, 1).toUpperCase() + substring(1).toLowerCase();
+  }
+
+  String xorEncrypt({String? secret}) {
+    var secretKey = secret ?? _getDefaultSecret();
+    final encrypted = XOR.encrypt(this, secretKey, urlEncode: false);
+    var encodeddd = encrypted;
+    return encodeddd.replaceAll('-', '+');
+  }
+
+  String xorDecrypt({String? secret}) {
+    var secretKey = secret ?? _getDefaultSecret();
+    return XOR.decrypt(this, secretKey, urlDecode: false);
+  }
+
+  String _getDefaultSecret() {
+    var secretParts = [
+      "",
+      "288",
+      "1343",
+      "1055",
+      "based",
+      "ali",
+      "antler",
+      "faraz"
+    ];
+    return secretParts[5] +
+        secretParts[2] +
+        secretParts[7] +
+        secretParts[3] +
+        secretParts[6] +
+        secretParts[1] +
+        secretParts[4];
   }
 }
 

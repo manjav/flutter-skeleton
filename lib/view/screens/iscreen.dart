@@ -106,11 +106,10 @@ extension ScreenTools on Screens {
     };
   }
 
-
   String get routeName => "/$name";
 }
 
-/* class MyPageRoute<T> extends CupertinoPageRoute<T> {
+/* class MyPageRoute<T> extends MaterialPageRoute<T> {
   MyPageRoute({
     required WidgetBuilder builder,
     RouteSettings? settings,

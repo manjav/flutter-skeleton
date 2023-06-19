@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../services/core/iservices.dart';
 
 class Localization extends IService {
@@ -36,12 +36,12 @@ extension LocalizationExtension on String {
   String l([List<dynamic>? args]) {
     final key = this;
     if (Localization._sentences == null) {
-      debugPrint("[Localization System] sentences = null");
+      IService.slog(this, "sentences = null");
       return '';
     }
     var result = Localization._sentences![key];
     if (result == null) {
-      debugPrint("[Localization System] $key not found!");
+      IService.slog(this, "$key not found!");
       return key;
     }
     if (args != null) {
@@ -49,6 +49,6 @@ extension LocalizationExtension on String {
         result = result!.replaceFirst(RegExp(r'%s'), arg.toString());
       }
     }
-    return "result";
+    return result;
   }
 }

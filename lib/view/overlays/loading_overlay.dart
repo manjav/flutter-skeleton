@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/view/screens/iscreen.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/player_bloc.dart';
 import '../../utils/utils.dart';
+import '../../view/screens/iscreen.dart';
 import 'ioverlay.dart';
 
 class LoadingOverlay extends AbstractOverlay {

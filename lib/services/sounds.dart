@@ -1,5 +1,4 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../utils/loader.dart';
 import 'core/iservices.dart';
@@ -17,7 +16,7 @@ class Sounds extends ISounds {
 
   @override
   initialize({List<Object>? args}) {
-    play('main-theme', channel: "music");
+    // play('main-theme', channel: "music");
     super.initialize();
   }
 
@@ -46,7 +45,7 @@ class Sounds extends ISounds {
       try {
         player.play(_sounds[name]!);
       } catch (e) {
-        debugPrint('$e');
+        log('$e');
       }
       return;
     }
