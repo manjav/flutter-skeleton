@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:xor_cipher/xor_cipher.dart';
 
 import '../services/localization.dart';
-import 'device.dart';
+import '../services/deviceinfo.dart';
 
 extension IntExt on int {
   static final _formatter = NumberFormat('###,###,###');
@@ -129,7 +129,7 @@ class Utils {
       await controller.animateTo(controller.position.pixels + top * direction,
           duration: duration, curve: curve);
     }
-    final bottom = Device.size.height - position.dy - marginBottom;
+    final bottom = DeviceInfo.size.height - position.dy - marginBottom;
     if (bottom < 0) {
       position = position.translate(0, bottom);
       await controller.animateTo(

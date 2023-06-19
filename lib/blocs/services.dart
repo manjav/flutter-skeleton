@@ -12,7 +12,7 @@ import '../services/prefs.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
-import '../utils/device.dart';
+import '../services/deviceinfo.dart';
 import 'player_bloc.dart';
 
 enum ServiceType {
@@ -20,6 +20,7 @@ enum ServiceType {
   ads,
   games,
   connection,
+  device,
   localization,
   prefs,
   sounds,
@@ -57,6 +58,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
       Ads => ServiceType.ads,
       Games => ServiceType.games,
       IConnection => ServiceType.connection,
+      DeviceInfo => ServiceType.device,
       Localization => ServiceType.localization,
       Prefs => ServiceType.prefs,
       Sounds => ServiceType.sounds,
@@ -78,9 +80,8 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
   }
 
   initialize(BuildContext context) async {
-    Device.initialize(
-        MediaQuery.of(context).size, MediaQuery.of(context).devicePixelRatio);
-
+    var q = MediaQuery.of(context);
+    _map[ServiceType.device]!.initialize(args: [q.size, q.devicePixelRatio]);
     _map[ServiceType.theme]!.initialize();
     await _map[ServiceType.prefs]!.initialize();
     await _map[ServiceType.sounds]!.initialize();

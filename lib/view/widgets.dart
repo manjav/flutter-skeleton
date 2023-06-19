@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/prefs.dart';
-import '../../utils/device.dart';
+import '../services/deviceinfo.dart';
 import '../services/theme.dart';
 
 class Widgets {

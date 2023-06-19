@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/device.dart';
+import 'deviceinfo.dart';
 import 'core/iservices.dart';
 
 class MyTheme extends IService {}

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../services/localization.dart';
-import '../../utils/device.dart';
+import '../deviceinfo.dart';
 import '../../utils/utils.dart';
 import '../core/infra.dart';
 import '../core/iservices.dart';
@@ -63,12 +63,12 @@ class HttpConnection extends IConnection {
   @override
   Future<Result<String>> loadAccount() async {
     var params = <String, dynamic>{
-      LoadParams.udid.name: Device.adId,
-      LoadParams.device_name.name: Device.model,
+      LoadParams.udid.name: DeviceInfo.adId,
+      LoadParams.device_name.name: DeviceInfo.model,
       LoadParams.game_version.name: 'app_version'.l(),
       LoadParams.os_type.name: 1,
-      LoadParams.os_version.name: Device.osVersion,
-      LoadParams.model.name: Device.model,
+      LoadParams.os_version.name: DeviceInfo.osVersion,
+      LoadParams.model.name: DeviceInfo.model,
       LoadParams.store_type.name: "bazar",
       LoadParams.name.name: "Mansour"
     };
