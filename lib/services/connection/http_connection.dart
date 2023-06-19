@@ -1,11 +1,17 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../core/iservices.dart';
+import '../../services/localization.dart';
+import '../../utils/device.dart';
+import '../../utils/utils.dart';
 import '../core/infra.dart';
+import '../core/iservices.dart';
 
 abstract class IConnection extends IService {
   Future<Result<T>> rpc<T>(RpcId id, {Map<String, dynamic>? params});
@@ -14,9 +20,19 @@ abstract class IConnection extends IService {
   void updateResponse(LoadingState state, String message);
 }
 
+enum LoadParams {
+  udid,
+  device_name,
+  game_version,
+  os_type,
+  os_version,
+  model,
+  store_type,
+  name
+}
+
 class HttpConnection extends IConnection {
   HttpConnection();
-  var baseURL = "https://fc.turnedondigital.com/";
 
   dynamic config;
   var messages = <Message>[];
@@ -24,15 +40,10 @@ class HttpConnection extends IConnection {
   @override
   initialize({List<Object>? args}) async {
     await _loadConfig();
-    log("Config loaded.");
-    await _connection();
-    log("Nakama connected.");
-
-    // Load account
-    log("Account data loaded.");
-
-    updateResponse(LoadingState.connect, "Account ${'user'} connected.");
+    var playerData = await _loadAccount();
     super.initialize();
+    updateResponse(LoadingState.connect, "Account ${'user'} connected.");
+    return playerData;
   }
 
   // Load the Config file
@@ -41,9 +52,20 @@ class HttpConnection extends IConnection {
   }
 
   // Connect to server
-  _connection() async {
-    await Future.delayed(const Duration(seconds: 1));
+  _loadAccount() async {
+    var params = <String, dynamic>{
+      LoadParams.udid.name: "111eab5fa6eb7de12222a71616812f5f1d184741",
+      LoadParams.device_name.name: Device.adId,
+      LoadParams.game_version.name: 'app_version'.l(),
+      LoadParams.os_type.name: 1,
+      LoadParams.os_version.name: Device.osVersion,
+      LoadParams.model.name: Device.model,
+      LoadParams.store_type.name: "bazar",
+      LoadParams.name.name: "Mansour"
+    };
+    var playerData = await rpc<String>(RpcId.playerLoad, params: params);
     updateResponse(LoadingState.connect, "connected.");
+    return playerData;
   }
 
   @override
@@ -84,7 +106,7 @@ class HttpConnection extends IConnection {
         error = "RPC: ${id.name} Error: $e";
       }
       updateResponse(LoadingState.error, error);
-      return Result(Responses.unknown, error, null);
+      return Result(Responses.unknown, "error", null);
     }
   }
 
@@ -92,6 +114,31 @@ class HttpConnection extends IConnection {
   void updateResponse(LoadingState state, String message) {
     response.state = state;
     response.message = message;
+    log("update response => ${state.name} - $messages");
+  }
+
+  Map cookies = {};
+  Map<String, dynamic>? getDefaultHeader(
+      {Map<String, dynamic>? headers, bool showLogs = true}) {
+    if (!Platform.isAndroid && !Platform.isWindows /*&& buildType!="debug"*/) {
+      return null;
+    }
+    if (showLogs) log("getting default headers");
+    headers = headers ?? {};
+
+    // if (!cookiesLoaded) {
+    //     loadCookies();
+    //  }
+
+    headers["Content-Type"] = "application/x-www-form-urlencoded";
+    for (var entry in cookies.entries) {
+      if (headers["Cookie"] == null) {
+        headers["Cookie"] = "";
+      }
+      headers["Cookie"] += " ${entry.key}=${entry.value}; ";
+    }
+
+    return headers;
   }
 }
 
@@ -110,10 +157,10 @@ class NetResponse {
 enum RpcId { battle, playerLoad }
 
 extension RpcIdEx on RpcId {
-  String get name {
+  String get value {
     return switch (this) {
       RpcId.battle => "battle",
-      _ => "default_id",
+      RpcId.playerLoad => "player/load",
     };
   }
 }
