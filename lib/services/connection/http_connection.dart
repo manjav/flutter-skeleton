@@ -42,8 +42,8 @@ class HttpConnection extends IConnection {
   initialize({List<Object>? args}) async {
     await _loadConfig();
     var playerData = await _loadAccount();
-    super.initialize();
     updateResponse(LoadingState.connect, "Account ${'user'} connected.");
+    super.initialize();
     return playerData;
   }
 
@@ -55,8 +55,8 @@ class HttpConnection extends IConnection {
   // Connect to server
   _loadAccount() async {
     var params = <String, dynamic>{
-      LoadParams.udid.name: "111eab5fa6eb7de12222a71616812f5f1d184741",
-      LoadParams.device_name.name: Device.adId,
+      LoadParams.udid.name: Device.adId,
+      LoadParams.device_name.name: Device.model,
       LoadParams.game_version.name: 'app_version'.l(),
       LoadParams.os_type.name: 1,
       LoadParams.os_version.name: Device.osVersion,
