@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../services/ads/ads_abstract.dart';
-import '../../utils/device.dart';
+import '../deviceinfo.dart';
 import '../core/iservices.dart';
 import '../prefs.dart';
 import 'tracker_abstract.dart';
@@ -43,7 +43,7 @@ class Trackers extends IService {
     for (var sdk in _sdks.values) {
       await sdk.initialize(args: [firebaseAnalytics]);
       var deviceId = await sdk.getDeviceId();
-      if (deviceId != null) Device.adId = deviceId;
+      if (deviceId != null) DeviceInfo.adId = deviceId;
       var variant = await sdk.getVariantId(_testName);
       if (variant != 0) this.variant = variant;
     }
@@ -54,7 +54,7 @@ class Trackers extends IService {
         'buildType': _buildType.name,
         'build_type': _buildType.name,
         'userId': '',
-        'deviceId': Device.adId,
+        'deviceId': DeviceInfo.adId,
         'test_name': _testName,
         'test_variant': variant.toString(),
       });

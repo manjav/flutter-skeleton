@@ -5,13 +5,12 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import '../services/core/iservices.dart';
+import 'core/iservices.dart';
 
-extension Device on double {
+class DeviceInfo extends IService {
   static double ratio = 1;
   static double aspectRatio = 1;
   static Size size = Size.zero;
-  double get d => this * Device.ratio;
   static String id = '';
   static String adId = '';
   static String model = '';
@@ -19,9 +18,10 @@ extension Device on double {
   static String baseVersion = '';
   static Map<String, dynamic> _deviceData = {};
 
-  static Future<void> initialize(Size size, double devicePixelRatio) async {
-    IService.slog("Device", "$size $devicePixelRatio");
-    Device.size = size;
+  @override
+  initialize({List<Object>? args}) async {
+    IService.slog("Device", "${args![0]} ${args[1]}");
+    DeviceInfo.size = args[0] as Size;
     var width = min(size.width, size.height);
     var height = max(size.width, size.height);
     ratio = height / 764;
@@ -173,5 +173,9 @@ extension Device on double {
 }
 
 extension DeviceI on int {
-  double get d => this * Device.ratio;
+  double get d => this * DeviceInfo.ratio;
+}
+
+extension DeviceD on double {
+  double get d => this * DeviceInfo.ratio;
 }
