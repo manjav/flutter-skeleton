@@ -8,7 +8,7 @@ import '../core/iservices.dart';
 import '../core/infra.dart';
 
 abstract class IConnection extends IService {
-  Future<Result<T>> rpc<T>(RpcId id, {String? payload});
+  Future<Result<T>> rpc<T>(RpcId id, {Map<String, dynamic>? params});
   final response = NetResponse();
   @protected
   void updateResponse(LoadingState state, String message);
@@ -70,7 +70,7 @@ class HttpConnection extends IConnection {
   }
 
   @override
-  Future<Result<T>> rpc<T>(RpcId id, {String? payload}) async {
+  Future<Result<T>> rpc<T>(RpcId id, {Map? params}) async {
     var now = DateTime.now().millisecondsSinceEpoch;
     var diff = (now - (_rpcTimes[id] ?? 0));
     if (diff < 100 && response.state == LoadingState.complete) {
