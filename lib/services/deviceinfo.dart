@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -20,10 +20,10 @@ class DeviceInfo extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    IService.slog("Device", "${args![0]} ${args[1]}");
-    DeviceInfo.size = args[0] as Size;
-    var width = min(size.width, size.height);
-    var height = max(size.width, size.height);
+    DeviceInfo.size = args![0] as Size;
+    log("${args[0]} ${args[1]}");
+    var width = math.min(size.width, size.height);
+    var height = math.max(size.width, size.height);
     ratio = height / 764;
     aspectRatio = width / height;
     var deviceInfoPlugin = DeviceInfoPlugin();
