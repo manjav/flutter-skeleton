@@ -37,26 +37,7 @@ class HttpConnection extends IConnection {
 
   // Load the Config file
   _loadConfig() async {
-    if (_serverLessMode) {
-      var configJson =
-          '{"server":{"host":"$_localHost","port":4349},"files":{}}';
-      config = json.decode(configJson);
-    } else {
-      if (config != null) return;
-      try {
-        final response = await http.get(Uri.parse('${baseURL}configs.json'));
-        if (response.statusCode == 200) {
-          config = json.decode(response.body);
-          if (_localHost.isNotEmpty) {
-            config['server']['host'] = _localHost;
-          }
-        } else {
-          throw Exception('Failed to load config file');
-        }
-      } catch (e) {
-        updateResponse(LoadingState.disconnect, e.toString());
-      }
-    }
+    //  log("Config loaded.");
   }
 
   // Connect to server
