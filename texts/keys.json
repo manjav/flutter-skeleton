@@ -10,5 +10,7 @@
     "adid_adivery_rewarded": "2a843d6e-17b1-4075-9165-312ffe206a43",
     "tracker_gameAnalytics_android_key": "e7726c809a3f78fdc5f669afc19b28c2",
     "tracker_gameAnalytics_android_sec": "cdf94869c839f6a506d7649ca24579c5bb1b90d3",
-    "tracker_kochava_android_key": "konew-fruitcraft-jwx7t"
+    "tracker_kochava_android_key": "konew-fruitcraft-jwx7t",
+    "server_host": "gfs.fruitcraft.ir",
+    "server_protocol": "http"
 }

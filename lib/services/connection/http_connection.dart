@@ -21,10 +21,6 @@ class HttpConnection extends IConnection {
   dynamic config;
   var messages = <Message>[];
 
-  final _serverLessMode = false;
-  final _localHost = ''; //'192.168.1.101';
-  final _rpcTimes = <RpcId, int>{};
-
   @override
   initialize({List<Object>? args}) async {
     await _loadConfig();
@@ -71,18 +67,31 @@ class HttpConnection extends IConnection {
 
   @override
   Future<Result<T>> rpc<T>(RpcId id, {Map? params}) async {
-    var now = DateTime.now().millisecondsSinceEpoch;
-    var diff = (now - (_rpcTimes[id] ?? 0));
-    if (diff < 100 && response.state == LoadingState.complete) {
-      return Result(Responses.alreadyExists, "Duplicate RPC call.", null);
-    }
-    _rpcTimes[id] = now;
-
     try {
-      var rpc = await http.get(Uri.parse("uri"));
-      var res = json.decode(rpc.body);
-      var response = (res['response'] as int).toResponse();
-      return Result<T>(response, res['message'], res['data']);
+      final headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+      var data = {};
+      if (params != null) {
+        // var json = '{"game_version":"2","device_name":"Ali MacBook P6ro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","restore_key":"apple1sys","os_type":2}';
+        var json = jsonEncode(params);
+        log(json);
+        data = {'edata': json.xorEncrypt()};
+        log(json.xorEncrypt());
+      }
+      final url = Uri.parse(
+          '${"server_protocol".l()}://${"server_host".l()}/${id.value}');
+      final response = await http.post(url, headers: headers, body: data);
+      final status = response.statusCode;
+      if (status != 200) {
+        throw Exception('http.post error: statusCode= $status');
+      }
+      log(response.body);
+      var body = response.body.xorDecrypt();
+      log(body);
+
+      // var res = json.decode(rpc.body);
+      // var response = (res['response'] as int).toResponse();
+      // return Result<T>(response, res['message'], res['data']);
+      return Result<T>(Responses.notEnough, '', body as T);
     } catch (e) {
       var error = '$e'.split('codeName: ')[1].split(",")[0];
       if (error == "UNAUTHENTICATED" ||
