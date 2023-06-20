@@ -37,14 +37,12 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
         _closeInput = controller!.findInput<bool>('close') as SMIBool;
         artboard.addController(controller);
       }, fit: BoxFit.fitWidth),
-      BlocConsumer<AccountBloc, AccountState>(
-        builder: (context, state) {
-          return Text(state.account.loadingState.name);
-        },
-        listener: (context, state) {
-          if (state.account.loadingState == AccountLoadingState.complete) {
+      BlocConsumer<Services, ServicesState>(
+        builder: (context, state) => const SizedBox(),
+        listener: (context, state) async {
+          if (state.initState == ServicesInitState.complete) {
             _closeInput?.value = true;
-          } else if (state.account.loadingState == AccountLoadingState.load) {
+          } else if (state.initState == ServicesInitState.initialize) {
             Navigator.pushNamed(context, Screens.home.routeName);
           }
         },
