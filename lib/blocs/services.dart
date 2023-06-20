@@ -103,10 +103,10 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
   _onAdsServicesUpdate(Placement? placement) {
     if (Prefs.getBool("settings_music")) {
       if (placement!.state == AdState.show) {
-        // get<Sounds>().stop("music");
+        get<Sounds>().stopAll();
       } else if (placement.state == AdState.closed ||
           placement.state == AdState.failedShow) {
-        // get<Sounds>().play("african-fun", channel: "music");
+        get<Sounds>().playMusic();
       }
     }
   }
