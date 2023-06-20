@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
 import '../services/connection/http_connection.dart';
-import '../services/core/iservices.dart';
+import '../services/iservices.dart';
 import '../services/games.dart';
 import '../services/localization.dart';
 import '../services/prefs.dart';
@@ -72,6 +72,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.ads] = Ads();
     _map[ServiceType.games] = Games();
     _map[ServiceType.connection] = HttpConnection();
+    _map[ServiceType.device] = DeviceInfo();
     _map[ServiceType.localization] = Localization();
     _map[ServiceType.prefs] = Prefs();
     _map[ServiceType.sounds] = Sounds();

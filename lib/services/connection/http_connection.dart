@@ -8,10 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../services/localization.dart';
-import '../deviceinfo.dart';
 import '../../utils/utils.dart';
-import '../core/infra.dart';
-import '../core/iservices.dart';
+import '../deviceinfo.dart';
+import '../iservices.dart';
 
 abstract class IConnection extends IService {
   final response = NetResponse();

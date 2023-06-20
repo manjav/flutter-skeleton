@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 
 import '../utils/loader.dart';
-import 'core/iservices.dart';
+import 'iservices.dart';
 import 'prefs.dart';
 
 abstract class ISounds extends IService {

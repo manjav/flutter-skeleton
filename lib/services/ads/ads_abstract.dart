@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/iservices.dart';
+import '../iservices.dart';
 import '../localization.dart';
 
 enum AdSDKName { none, adivery, applovin, google, unity }
