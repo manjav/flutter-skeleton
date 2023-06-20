@@ -2,18 +2,26 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../data/core/account.dart';
+import '../data/core/result.dart';
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
 import '../services/connection/http_connection.dart';
-import '../services/iservices.dart';
+import '../services/deviceinfo.dart';
 import '../services/games.dart';
+import '../services/iservices.dart';
 import '../services/localization.dart';
 import '../services/prefs.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
-import '../services/deviceinfo.dart';
-import 'account_bloc.dart';
+
+enum ServicesInitState {
+  none,
+  initialize,
+  complete,
+  error,
+}
 
 enum ServiceType {
   none,
@@ -29,20 +37,26 @@ enum ServiceType {
   trackers,
 }
 
-class ServicesEvent {}
+class ServicesEvent {
+  final ServicesInitState initState;
+  final Result<Account>? result;
+  ServicesEvent(this.initState, this.result);
+}
 
 //--------------------------------------------------------
 
 abstract class ServicesState {
-  ServicesState();
+  final ServicesInitState initState;
+  final Result<Account>? result;
+  ServicesState(this.initState, this.result);
 }
 
 class ServicesInit extends ServicesState {
-  ServicesInit();
+  ServicesInit(super.initState, super.result);
 }
 
 class ServicesUpdate extends ServicesState {
-  ServicesUpdate();
+  ServicesUpdate(super.initState, super.result);
 }
 
 //--------------------------------------------------------
@@ -68,7 +82,15 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     };
   }
 
-  Services({required this.firebaseAnalytics}) : super(ServicesInit()) {
+  updateService(ServicesEvent event, Emitter<ServicesState> emit) {
+    // account = event.account;
+    emit(ServicesUpdate(event.initState, event.result));
+  }
+
+  Services({required this.firebaseAnalytics})
+      : super(ServicesInit(ServicesInitState.none, null)) {
+    on<ServicesEvent>(updateService);
+
     _map[ServiceType.ads] = Ads();
     _map[ServiceType.games] = Games();
     _map[ServiceType.connection] = HttpConnection();
@@ -89,10 +111,14 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     await _map[ServiceType.localization]!.initialize();
     await _map[ServiceType.trackers]!.initialize();
 
-    var result = await get<IConnection>().initialize();
+    var result = await get<IConnection>().initialize() as Result<Account>;
     if (context.mounted) {
-      BlocProvider.of<AccountBloc>(context)
-          .add(SetAccount(account: result.data));
+      var bloc = BlocProvider.of<Services>(context);
+      bloc.add(ServicesEvent(
+          result.isSuccess()
+              ? ServicesInitState.initialize
+              : ServicesInitState.error,
+          result));
     }
 
     _map[ServiceType.games]!.initialize();
@@ -103,10 +129,10 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
   _onAdsServicesUpdate(Placement? placement) {
     if (Prefs.getBool("settings_music")) {
       if (placement!.state == AdState.show) {
-        // get<Sounds>().stop("music");
+        get<Sounds>().stopAll();
       } else if (placement.state == AdState.closed ||
           placement.state == AdState.failedShow) {
-        // get<Sounds>().play("african-fun", channel: "music");
+        get<Sounds>().playMusic();
       }
     }
   }

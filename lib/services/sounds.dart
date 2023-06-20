@@ -5,9 +5,10 @@ import 'iservices.dart';
 import 'prefs.dart';
 
 abstract class ISounds extends IService {
-  play(String name, {String extension, String? channel});
-  stop(String channel);
-  stopAll();
+  void play(String name, {String extension, String? channel});
+  void playMusic();
+  void stop(String channel);
+  void stopAll();
 }
 
 class Sounds extends ISounds {
@@ -16,7 +17,7 @@ class Sounds extends ISounds {
 
   @override
   initialize({List<Object>? args}) {
-    // play('main-theme', channel: "music");
+    // playMusic();
     super.initialize();
   }
 
@@ -28,7 +29,7 @@ class Sounds extends ISounds {
   final _sounds = <String, DeviceFileSource>{};
 
   @override
-  play(String name, {String extension = "mp3", String? channel}) {
+  void play(String name, {String extension = "mp3", String? channel}) {
     AudioPlayer player;
     if (channel == null) {
       if (!Prefs.getBool("settings_sfx")) return;
@@ -71,15 +72,20 @@ class Sounds extends ISounds {
   }
 
   @override
-  stop(String channel) {
+  void stop(String channel) {
     _players[channel]!.stop();
   }
 
   @override
-  stopAll() {
+  void stopAll() {
     var entries = _players.entries;
     for (var e in entries) {
       e.value.stop();
     }
+  }
+
+  @override
+  void playMusic() {
+    play('main-theme', channel: "music");
   }
 }

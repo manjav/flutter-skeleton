@@ -2,8 +2,6 @@
 
 import 'infra.dart';
 
-enum AccountLoadingState { none, load, complete, error }
-
 enum AccountVar {
   id,
   name,
@@ -127,7 +125,6 @@ enum AccountVar {
 }
 
 class Account extends StringMap<dynamic> {
-  AccountLoadingState loadingState = AccountLoadingState.none;
   Account(Map<String, dynamic> data) {
     map.addAll(data);
   }
