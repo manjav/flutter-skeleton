@@ -6,6 +6,7 @@ class Result<Type> {
   final Type? _data;
   Result(this.statusCode, this.message, this._data);
   Type get data => _data!;
+  bool isSuccess() => statusCode == StatusCode.C0_SUCCESS;
 }
 
 enum StatusCode {
@@ -316,6 +317,4 @@ extension StatusCodeEx on StatusCode {
       _ => 250
     };
   }
-
-  bool isSuccess() => this == StatusCode.C0_SUCCESS;
 }
