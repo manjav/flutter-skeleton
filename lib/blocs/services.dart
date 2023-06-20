@@ -13,7 +13,7 @@ import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
 import '../services/deviceinfo.dart';
-import 'player_bloc.dart';
+import 'account_bloc.dart';
 
 enum ServiceType {
   none,
@@ -91,7 +91,8 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
 
     var result = await get<IConnection>().initialize();
     if (context.mounted) {
-      BlocProvider.of<PlayerBloc>(context).add(SetPlayer(player: result.data));
+      BlocProvider.of<AccountBloc>(context)
+          .add(SetAccount(account: result.data));
     }
 
     _map[ServiceType.games]!.initialize();

@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../../data/core/account.dart';
+import '../../data/core/result.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
 import '../deviceinfo.dart';
@@ -19,11 +21,12 @@ abstract class IConnection extends IService {
   Future<void> loadConfigs();
 
   @protected
-  Future<Result<String>> loadAccount();
+  Future<Result<Account>> loadAccount();
 
   @protected
   void updateResponse(LoadingState state, String message);
 
+  @protected
   Future<Result<T>> rpc<T>(RpcId id, {Map<String, dynamic>? params});
 }
 
@@ -39,8 +42,6 @@ enum LoadParams {
 }
 
 class HttpConnection extends IConnection {
-  HttpConnection();
-
   Map cookies = {};
 
   @override
@@ -60,20 +61,22 @@ class HttpConnection extends IConnection {
 
   // Connect to server
   @override
-  Future<Result<String>> loadAccount() async {
+  Future<Result<Account>> loadAccount() async {
     var params = <String, dynamic>{
-      LoadParams.udid.name: DeviceInfo.adId,
+      LoadParams.udid.name: 'e6ac281eae92abd4581116b380da33a8',//DeviceInfo.adId,
       LoadParams.device_name.name: DeviceInfo.model,
       LoadParams.game_version.name: 'app_version'.l(),
       LoadParams.os_type.name: 1,
       LoadParams.os_version.name: DeviceInfo.osVersion,
       LoadParams.model.name: DeviceInfo.model,
       LoadParams.store_type.name: "bazar",
-      LoadParams.name.name: "Mansour"
+      LoadParams.name.name: "Mansour2"
     };
-    var playerData = await rpc<String>(RpcId.playerLoad, params: params);
+    var result =
+        await rpc<Map<String, dynamic>>(RpcId.playerLoad, params: params);
     updateResponse(LoadingState.connect, "connected.");
-    return playerData;
+    return Result<Account>(
+        result.statusCode, "Account loading complete.", Account(result.data));
   }
 
   @override
@@ -82,7 +85,8 @@ class HttpConnection extends IConnection {
       final headers = getDefaultHeader();
       var data = {};
       if (params != null) {
-        // var json = '{"game_version":"2","device_name":"Ali MacBook P6ro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","restore_key":"apple1sys","os_type":2}';
+        // var json =
+        //     '{"game_version":"","device_name":"Ali MacBook Pro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","os_type":2}';
         var json = jsonEncode(params);
         log(json);
         data = {'edata': json.xorEncrypt()};
@@ -99,10 +103,13 @@ class HttpConnection extends IConnection {
       var body = response.body.xorDecrypt();
       log(body);
 
-      // var res = json.decode(rpc.body);
-      // var response = (res['response'] as int).toResponse();
-      // return Result<T>(response, res['message'], res['data']);
-      return Result<T>(Responses.notEnough, '', body as T);
+      var responseData = json.decode(body);
+      if (!responseData['status']) {
+        var statusCode = (responseData['data']['code'] as int).toStatus();
+        return Result<T>(statusCode, '', responseData['data'] as T?);
+      }
+
+      return Result<T>(StatusCode.C0_SUCCESS, '', responseData['data'] as T);
     } catch (e) {
       var error = '$e'.split('codeName: ')[1].split(",")[0];
       if (error == "UNAUTHENTICATED" ||
@@ -114,7 +121,7 @@ class HttpConnection extends IConnection {
         error = "RPC: ${id.name} Error: $e";
       }
       updateResponse(LoadingState.error, error);
-      return Result(Responses.unknown, "error", null);
+      return Result(StatusCode.C250_UNKNOWN_ERROR, "error", null);
     }
   }
 

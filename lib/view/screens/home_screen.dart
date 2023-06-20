@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/core/account.dart';
 
-import '../../blocs/player_bloc.dart';
+import '../../blocs/account_bloc.dart';
 import '../../view/screens/iscreen.dart';
 
 class HomeScreen extends AbstractScreen {
@@ -14,9 +15,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
-    var bloc = BlocProvider.of<PlayerBloc>(context);
+    var bloc = BlocProvider.of<AccountBloc>(context);
 
-    bloc.player!.loadinfState = PlayerLoadingState.complete;
-    bloc.add(SetPlayer(player: bloc.player!));
+    bloc.account!.loadingState = AccountLoadingState.complete;
+    bloc.add(SetAccount(account: bloc.account!));
   }
 }

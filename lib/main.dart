@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/player_bloc.dart';
+import 'blocs/account_bloc.dart';
 import '../view/screens/iscreen.dart';
 import 'blocs/services.dart';
 import 'services/theme.dart';
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                   create: (context) =>
                       Services(firebaseAnalytics: _firebaseAnalytics)),
-              BlocProvider(create: (context) => PlayerBloc())
+              BlocProvider(create: (context) => AccountBloc())
             ],
             child: MaterialApp(
                 navigatorObservers: [_observer],
