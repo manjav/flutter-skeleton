@@ -3,7 +3,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../services/ads/ads_abstract.dart';
 import '../deviceinfo.dart';
-import '../core/iservices.dart';
+import '../iservices.dart';
 import '../prefs.dart';
 import 'tracker_abstract.dart';
 import 'tracker_firebase.dart';

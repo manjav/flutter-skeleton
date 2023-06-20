@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/player_bloc.dart';
+import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
 import '../../utils/utils.dart';
 import '../../view/screens/iscreen.dart';
 import 'ioverlay.dart';
@@ -36,14 +37,14 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
         _closeInput = controller!.findInput<bool>('close') as SMIBool;
         artboard.addController(controller);
       }, fit: BoxFit.fitWidth),
-      BlocConsumer<PlayerBloc, PlayerState>(
+      BlocConsumer<AccountBloc, AccountState>(
         builder: (context, state) {
-          return Text(state.player.name);
+          return Text(state.account.loadingState.name);
         },
         listener: (context, state) {
-          if (state.player.loadinfState == PlayerLoadingState.complete) {
+          if (state.account.loadingState == AccountLoadingState.complete) {
             _closeInput?.value = true;
-          } else if (state.player.loadinfState == PlayerLoadingState.load) {
+          } else if (state.account.loadingState == AccountLoadingState.load) {
             Navigator.pushNamed(context, Screens.home.routeName);
           }
         },

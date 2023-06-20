@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-import '../services/core/iservices.dart';
+import 'iservices.dart';
 
 class Localization extends IService {
   static Map<String, dynamic>? _sentences;

@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
 import '../services/connection/http_connection.dart';
-import '../services/core/iservices.dart';
+import '../services/iservices.dart';
 import '../services/games.dart';
 import '../services/localization.dart';
 import '../services/prefs.dart';
@@ -13,7 +13,7 @@ import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
 import '../services/deviceinfo.dart';
-import 'player_bloc.dart';
+import 'account_bloc.dart';
 
 enum ServiceType {
   none,
@@ -72,6 +72,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.ads] = Ads();
     _map[ServiceType.games] = Games();
     _map[ServiceType.connection] = HttpConnection();
+    _map[ServiceType.device] = DeviceInfo();
     _map[ServiceType.localization] = Localization();
     _map[ServiceType.prefs] = Prefs();
     _map[ServiceType.sounds] = Sounds();
@@ -90,7 +91,8 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
 
     var result = await get<IConnection>().initialize();
     if (context.mounted) {
-      BlocProvider.of<PlayerBloc>(context).add(SetPlayer(player: result.data));
+      BlocProvider.of<AccountBloc>(context)
+          .add(SetAccount(account: result.data));
     }
 
     _map[ServiceType.games]!.initialize();
