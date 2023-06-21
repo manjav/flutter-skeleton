@@ -53,6 +53,5 @@ flutter:
   # generate: true
 
   assets:
-    - texts/
-    - anims/
-
+    - assets/texts/
+    - assets/animations/

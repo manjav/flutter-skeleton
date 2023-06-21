@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/theme.dart';
+import '../../utils/ilogger.dart';
 import '../../view/screens/home_screen.dart';
 import 'loading_screen.dart';
 
@@ -16,7 +17,7 @@ class AbstractScreen extends StatefulWidget {
   createState() => AbstractScreenState();
 }
 
-class AbstractScreenState<T extends AbstractScreen> extends State<T> {
+class AbstractScreenState<T extends AbstractScreen> extends State<T> with ILogger{
   List<Widget> stepChildren = <Widget>[];
 
   @override

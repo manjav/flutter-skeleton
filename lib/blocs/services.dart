@@ -15,6 +15,7 @@ import '../services/prefs.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
+import 'account_bloc.dart';
 
 enum ServicesInitState {
   none,
@@ -119,6 +120,10 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
               ? ServicesInitState.initialize
               : ServicesInitState.error,
           result));
+      if (result.isSuccess()) {
+        BlocProvider.of<AccountBloc>(context)
+            .add(SetAccount(account: result.data));
+      }
     }
 
     _map[ServiceType.games]!.initialize();

@@ -4,9 +4,9 @@ import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
 import '../../services/deviceinfo.dart';
-import '../../services/iservices.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
+import '../../utils/ilogger.dart';
 import '../../utils/utils.dart';
 import '../../view/screens/iscreen.dart';
 import '../widgets.dart';
@@ -35,7 +35,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [
-      RiveAnimation.asset('anims/${Asset.prefix}loading.riv',
+      RiveAnimation.asset('assets/animations/${Asset.prefix}loading.riv',
           onInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(
           artboard,
@@ -104,7 +104,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                 setState(() => _logViewVisibility = !_logViewVisibility);
               },
               child: _logViewVisibility
-                  ? Text(IService.accumulatedLog, style: TStyles.tinyInvert)
+                  ? Text(ILogger.accumulatedLog, style: TStyles.tinyInvert)
                   : Widgets.rect(color: TColors.transparent))),
       _alert,
     ]);

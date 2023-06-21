@@ -1,8 +1,8 @@
+import '../../utils/ilogger.dart';
 import '../ads/ads_abstract.dart';
-import '../iservices.dart';
 import 'trackers.dart';
 
-abstract class AbstractTracker {
+abstract class AbstractTracker with ILogger {
   var sdk = TrackerSDK.none;
   initialize({List? args});
   // AppMetrica.runZoneGuarded(() {
@@ -57,8 +57,4 @@ abstract class AbstractTracker {
   // AppMetrica.reportEventWithMap(name, data);
 
   setScreen(String screenName);
-
-  void log(message) {
-    IService.slog(this, message);
-  }
 }
