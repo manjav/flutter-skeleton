@@ -18,7 +18,6 @@ class Localization extends IService {
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
 
-    await rootBundle.loadString('texts/keys.json');
     await _getData('keys.json');
     await _getData('locale.json');
     super.initialize();
