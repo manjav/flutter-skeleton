@@ -35,7 +35,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [
-      RiveAnimation.asset('anims/${Asset.prefix}loading.riv',
+      RiveAnimation.asset('assets/animations/${Asset.prefix}loading.riv',
           onInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(
           artboard,

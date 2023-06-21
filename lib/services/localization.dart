@@ -24,7 +24,7 @@ class Localization extends IService {
   }
 
   static _getData(String file) async {
-    var data = await rootBundle.loadString('texts/$file');
+    var data = await rootBundle.loadString('assets/texts/$file');
     var result = json.decode(data);
     result.forEach((String key, dynamic value) {
       _sentences![key] = value.toString();
