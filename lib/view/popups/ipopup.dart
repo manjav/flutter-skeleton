@@ -4,6 +4,7 @@ import '../../blocs/services.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
+import '../../utils/ilogger.dart';
 import '../widgets.dart';
 
 class PopupData {
@@ -101,7 +102,8 @@ class AbstractPopup extends StatefulWidget {
   }
 }
 
-class AbstractPopupState<T extends AbstractPopup> extends State<T> {
+class AbstractPopupState<T extends AbstractPopup> extends State<T>
+    with ILogger {
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.topCenter, children: [

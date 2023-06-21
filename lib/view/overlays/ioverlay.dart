@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/ilogger.dart';
 import '../../view/overlays/loading_overlay.dart';
 
 enum OverlayType {
@@ -15,7 +16,6 @@ extension Overlays on OverlayType {
       _ => const AbstractOverlay(type: OverlayType.none),
     };
   }
-
 
   String get routeName => "/$name";
 
@@ -44,7 +44,8 @@ class AbstractOverlay extends StatefulWidget {
   createState() => AbstractOverlayState();
 }
 
-class AbstractOverlayState<T extends AbstractOverlay> extends State<T> {
+class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
+    with ILogger {
   @override
   Widget build(BuildContext context) {
     return const SizedBox();

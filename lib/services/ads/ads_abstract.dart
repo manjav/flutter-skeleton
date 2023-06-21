@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../iservices.dart';
+
+import '../../utils/ilogger.dart';
 import '../localization.dart';
 
 enum AdSDKName { none, adivery, applovin, google, unity }
@@ -47,7 +48,7 @@ class Placement {
   }
 }
 
-abstract class AbstractAdSDK {
+abstract class AbstractAdSDK with ILogger {
   late final AdSDKName sdk;
   late final bool testMode;
   final maxFailedLoadAttempts = 3;
@@ -112,9 +113,5 @@ abstract class AbstractAdSDK {
       }
     }
     return placements[AdType.rewarded]!;
-  }
-
-  void log(message) {
-    IService.slog(this, message);
   }
 }
