@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
+import '../../utils/ilogger.dart';
 import 'iservices.dart';
 
 class Localization extends IService {
@@ -36,12 +37,12 @@ extension LocalizationExtension on String {
   String l([List<dynamic>? args]) {
     final key = this;
     if (Localization._sentences == null) {
-      IService.slog(this, "sentences = null");
+      ILogger.slog(this, "sentences = null");
       return '';
     }
     var result = Localization._sentences![key];
     if (result == null) {
-      IService.slog(this, "$key not found!");
+      ILogger.slog(this, "$key not found!");
       return key;
     }
     if (args != null) {
