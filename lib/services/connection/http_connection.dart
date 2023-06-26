@@ -11,6 +11,7 @@ import '../../data/core/account.dart';
 import '../../data/core/result.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
+import '../../view/widgets/loaderwidget.dart';
 import '../deviceinfo.dart';
 import '../iservices.dart';
 
@@ -78,7 +79,8 @@ class HttpConnection extends IConnection {
   @override
   Future<Result<Account>> loadAccount() async {
     var params = <String, dynamic>{
-      LoadParams.udid.name: 'e6ac281eae92abd4581116b380da33a8',//DeviceInfo.adId,
+      LoadParams.udid.name:
+          'e6ac281eae92abd4581116b380da33a8', //DeviceInfo.adId,
       LoadParams.device_name.name: DeviceInfo.model,
       LoadParams.game_version.name: 'app_version'.l(),
       LoadParams.os_type.name: 1,
@@ -107,8 +109,7 @@ class HttpConnection extends IConnection {
         data = {'edata': json.xorEncrypt()};
         log(json.xorEncrypt());
       }
-      final url = Uri.parse(
-          '${"server_protocol".l()}://${"server_host".l()}/${id.value}');
+      final url = Uri.parse('$baseURL/${id.value}');
       final response = await http.post(url, headers: headers, body: data);
       final status = response.statusCode;
       if (status != 200) {
