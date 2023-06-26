@@ -4,19 +4,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 
 class Asset {
-  static T load<T>(String path, {BoxFit? fit, Map<String, dynamic>? args}) {
+  static T load<T>(String path,
+      {BoxFit? fit,
+      double? width,
+      double? height,
+      Function(Artboard)? onRiveInit}) {
     var type = _getType(T);
     var address = "assets/${type.name}s/$path.${type.extension}";
-    args ??= {};
     return switch (type) {
       AssetType.animation =>
-        RiveAnimation.asset(address, fit: fit, onInit: args['onInit']) as T,
-      AssetType.image => Image.asset(address,
-          width: args['width'], height: args['height'], fit: fit) as T,
+        RiveAnimation.asset(address, fit: fit, onInit: onRiveInit) as T,
+      AssetType.image =>
+        Image.asset(address, width: width, height: height, fit: fit) as T,
       AssetType.vector => SvgPicture.asset(address,
-          width: args['width'],
-          height: args['height'],
-          fit: fit ?? BoxFit.contain) as T,
+          width: width, height: height, fit: fit ?? BoxFit.contain) as T,
       _ => null as T
     };
   }

@@ -38,10 +38,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             height: 240.d,
             child: Asset.load<RiveAnimation>('loading',
                 fit: BoxFit.fitWidth,
-                args: {
-                  'onInit': (artboard) => artboard.addController(
-                      StateMachineController.fromArtboard(artboard, 'Loading'))
-                })),
+                onRiveInit: (artboard) => artboard.addController(
+                    StateMachineController.fromArtboard(artboard, 'Loading')
+                        as RiveAnimationController))),
       ],
     );
   }

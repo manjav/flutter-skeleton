@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/utils/assets.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
@@ -7,7 +8,6 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/ilogger.dart';
-import '../../utils/utils.dart';
 import '../../view/screens/iscreen.dart';
 import '../widgets.dart';
 import 'ioverlay.dart';
@@ -35,8 +35,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [
-      RiveAnimation.asset('assets/animations/${Asset.prefix}loading.riv',
-          onInit: (Artboard artboard) {
+      Asset.load<RiveAnimation>('loading', onRiveInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(
           artboard,
           'Loading',
