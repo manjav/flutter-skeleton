@@ -1,23 +1,22 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_skeleton/utils/assets.dart';
 
 import '../utils/loader.dart';
+import '../view/widgets/loaderwidget.dart';
 import 'iservices.dart';
 import 'prefs.dart';
 
 abstract class ISounds extends IService {
-  void play(String name, {String extension, String? channel});
+  void play(String name, {String? channel});
   void playMusic();
   void stop(String channel);
   void stopAll();
 }
 
 class Sounds extends ISounds {
-  dynamic configs;
-  String? baseURL;
-
   @override
   initialize({List<Object>? args}) {
-    // playMusic();
+    playMusic();
     super.initialize();
   }
 
@@ -29,7 +28,7 @@ class Sounds extends ISounds {
   final _sounds = <String, DeviceFileSource>{};
 
   @override
-  void play(String name, {String extension = "mp3", String? channel}) {
+  void play(String name, {String? channel}) {
     AudioPlayer player;
     if (channel == null) {
       if (!Prefs.getBool("settings_sfx")) return;
@@ -51,11 +50,10 @@ class Sounds extends ISounds {
       return;
     }
 
-    String? md5;
-    if (configs != null) {
-      md5 = configs!['files']['$name.$extension'];
-    }
-    Loader().load('$name.$extension', '${baseURL}sounds/$name.$extension',
+    var extension = AssetType.sound.extension;
+    var md5 = LoaderWidget.hashMap['$name.$extension'];
+    Loader().load(
+        '$name.$extension', '${LoaderWidget.baseURL}/sounds/$name.$extension',
         hash: md5, onDone: (file) async {
       player.play(_sounds[name] = DeviceFileSource(file.path));
     });

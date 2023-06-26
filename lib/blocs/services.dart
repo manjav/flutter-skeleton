@@ -108,7 +108,6 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.device]!.initialize(args: [q.size, q.devicePixelRatio]);
     _map[ServiceType.theme]!.initialize();
     await _map[ServiceType.prefs]!.initialize();
-    await _map[ServiceType.sounds]!.initialize();
     await _map[ServiceType.localization]!.initialize();
     await _map[ServiceType.trackers]!.initialize();
 
@@ -129,6 +128,8 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.games]!.initialize();
     get<Ads>().initialize();
     (_map[ServiceType.ads]! as Ads).onUpdate = _onAdsServicesUpdate;
+
+    _map[ServiceType.sounds]!.initialize();
   }
 
   _onAdsServicesUpdate(Placement? placement) {
