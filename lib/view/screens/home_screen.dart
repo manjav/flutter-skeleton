@@ -31,29 +31,17 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         Positioned(
             top: 0,
             child: LoaderWidget(AssetType.image, 'weather-4', width: 128.d)),
+        LoaderWidget(AssetType.animation, 'coin', width: 156.d),
         Positioned(
             bottom: 0,
             width: 240.d,
             height: 240.d,
-            child: Asset.load<RiveAnimation>(
-              'loading',
-              fit: BoxFit.fitWidth,
-              args: {
-                'onInit': (artboard) {
-                  final controller = StateMachineController.fromArtboard(
-                    artboard,
-                    'Loading',
-                    onStateChange: (state, animation) {},
-                  );
-                  artboard.addController(controller);
-                }
-              },
-            )),
-        LoaderWidget(
-          AssetType.animation,
-          'coin',
-          width: 156.d,
-        ),
+            child: Asset.load<RiveAnimation>('loading',
+                fit: BoxFit.fitWidth,
+                args: {
+                  'onInit': (artboard) => artboard.addController(
+                      StateMachineController.fromArtboard(artboard, 'Loading'))
+                })),
       ],
     );
   }
