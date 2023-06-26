@@ -11,6 +11,7 @@ import '../../data/core/account.dart';
 import '../../data/core/result.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
+import '../../view/widgets/loaderwidget.dart';
 import '../deviceinfo.dart';
 import '../iservices.dart';
 
@@ -42,6 +43,7 @@ enum LoadParams {
 }
 
 class HttpConnection extends IConnection {
+  static String baseURL = '';
   Map cookies = {};
 
   @override
@@ -56,14 +58,29 @@ class HttpConnection extends IConnection {
   // Load the Config file
   @override
   loadConfigs() async {
-    //  log("Config loaded.");
+    try {
+      final response = await http
+          .get(Uri.parse('https://8ball.turnedondigital.com/fc/configs.json'));
+      if (response.statusCode == 200) {
+        var config = json.decode(response.body);
+        baseURL = config['server'];
+        LoaderWidget.baseURL = config['assetsServer'];
+        LoaderWidget.hashMap = Map.castFrom(config['files']);
+      } else {
+        throw Exception('Failed to load config file');
+      }
+    } catch (e) {
+      updateResponse(LoadingState.disconnect, e.toString());
+    }
+    log("Config loaded.");
   }
 
   // Connect to server
   @override
   Future<Result<Account>> loadAccount() async {
     var params = <String, dynamic>{
-      LoadParams.udid.name: 'e6ac281eae92abd4581116b380da33a8',//DeviceInfo.adId,
+      LoadParams.udid.name:
+          'e6ac281eae92abd4581116b380da33a8', //DeviceInfo.adId,
       LoadParams.device_name.name: DeviceInfo.model,
       LoadParams.game_version.name: 'app_version'.l(),
       LoadParams.os_type.name: 1,
@@ -92,8 +109,7 @@ class HttpConnection extends IConnection {
         data = {'edata': json.xorEncrypt()};
         log(json.xorEncrypt());
       }
-      final url = Uri.parse(
-          '${"server_protocol".l()}://${"server_host".l()}/${id.value}');
+      final url = Uri.parse('$baseURL/${id.value}');
       final response = await http.post(url, headers: headers, body: data);
       final status = response.statusCode;
       if (status != 200) {

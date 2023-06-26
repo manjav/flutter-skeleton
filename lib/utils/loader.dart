@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
-import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../utils/ilogger.dart';
@@ -79,13 +78,7 @@ class Loader with ILogger {
     if (hash == fileHash.toString()) {
       return true;
     }
-    log("$path MD5 $hash != $fileHash}", isForce: true);
+    log("$path MD5 $hash != $fileHash}");
     return false;
-  }
-
-  void log(String text, {bool isForce = false}) {
-    if (debugMode || isForce) {
-      debugPrint("Loader => $text");
-    }
   }
 }
