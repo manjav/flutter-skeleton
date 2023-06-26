@@ -42,6 +42,7 @@ enum LoadParams {
 }
 
 class HttpConnection extends IConnection {
+  static String baseURL = '';
   Map cookies = {};
 
   @override
@@ -56,7 +57,21 @@ class HttpConnection extends IConnection {
   // Load the Config file
   @override
   loadConfigs() async {
-    //  log("Config loaded.");
+    try {
+      final response = await http
+          .get(Uri.parse('https://8ball.turnedondigital.com/fc/configs.json'));
+      if (response.statusCode == 200) {
+        var config = json.decode(response.body);
+        baseURL = config['server'];
+        LoaderWidget.baseURL = config['assetsServer'];
+        LoaderWidget.hashMap = Map.castFrom(config['files']);
+      } else {
+        throw Exception('Failed to load config file');
+      }
+    } catch (e) {
+      updateResponse(LoadingState.disconnect, e.toString());
+    }
+    log("Config loaded.");
   }
 
   // Connect to server
