@@ -1,12 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:xor_cipher/xor_cipher.dart';
 
-import '../services/localization.dart';
 import '../services/deviceinfo.dart';
+import '../services/localization.dart';
 
 extension IntExt on int {
   static final _formatter = NumberFormat('###,###,###');
@@ -86,26 +85,6 @@ extension StringExt on String {
         secretParts[4];
   }
 }
-
-class Asset {
-  static const String prefix = "";
-}
-
-class SVG {
-  static SvgPicture show(
-    String name, {
-    double? width,
-    double? height,
-    Color? color,
-  }) {
-    return SvgPicture.asset("images/${Asset.prefix}$name.svg",
-        width: width,
-        height: height,
-        colorFilter:
-            color == null ? null : ColorFilter.mode(color, BlendMode.srcIn));
-  }
-}
-
 class Utils {
   static const _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
