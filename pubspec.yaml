@@ -56,3 +56,8 @@ flutter:
     - assets/animations/
     - assets/images/
     - assets/texts/
+    
+  fonts:
+    - family: LilitaOneSultanAdan
+      fonts:
+        - asset: assets/fonts/lilitaonesultanadan-bold.ttf

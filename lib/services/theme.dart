@@ -41,9 +41,9 @@ class TStyles {
 TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   return TextStyle(
     fontSize: size,
-    color: color ?? TColors.primary10,
+    color: color ?? TColors.primary,
     fontWeight: weight ?? FontWeight.bold,
-    // fontFamily: font ?? GoogleFonts.secularOne().fontFamily,
+    fontFamily: 'LilitaOneSultanAdan',
   );
 }
 
