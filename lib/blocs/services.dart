@@ -34,7 +34,7 @@ enum ServiceType {
   prefs,
   sounds,
   settings,
-  theme,
+  themes,
   trackers,
 }
 
@@ -78,7 +78,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
       Prefs => ServiceType.prefs,
       Sounds => ServiceType.sounds,
       Trackers => ServiceType.trackers,
-      Theme => ServiceType.theme,
+      Theme => ServiceType.themes,
       _ => ServiceType.none
     };
   }
@@ -99,14 +99,14 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.localization] = Localization();
     _map[ServiceType.prefs] = Prefs();
     _map[ServiceType.sounds] = Sounds();
-    _map[ServiceType.theme] = MyTheme();
+    _map[ServiceType.themes] = Themes();
     _map[ServiceType.trackers] = Trackers(firebaseAnalytics);
   }
 
   initialize(BuildContext context) async {
     var q = MediaQuery.of(context);
     _map[ServiceType.device]!.initialize(args: [q.size, q.devicePixelRatio]);
-    _map[ServiceType.theme]!.initialize();
+    _map[ServiceType.themes]!.initialize();
     await _map[ServiceType.prefs]!.initialize();
     await _map[ServiceType.localization]!.initialize();
     await _map[ServiceType.trackers]!.initialize();

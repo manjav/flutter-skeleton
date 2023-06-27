@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'deviceinfo.dart';
 import 'iservices.dart';
 
-class MyTheme extends IService {}
-
 class TColors {
   static const accent = Color(0xFFFF5D54);
   static const black = Color(0xFF000000);
@@ -29,19 +27,15 @@ class TColors {
 }
 
 class TStyles {
-  static final tiny = _style(size: 10.d, weight: FontWeight.w100);
-  static final small = _style(size: 13.4.d, weight: FontWeight.w300);
-  static final medium = _style(size: 16.d, weight: FontWeight.w600);
-  static final large = _style(size: 20.d, weight: FontWeight.w800);
-  static final extraLarg = _style(size: 22.d, weight: FontWeight.w900);
-  static final tinyInvert =
-      _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary);
-  static final smallInvert =
-      _style(size: 13.4.d, weight: FontWeight.normal, color: TColors.primary);
-  static final mediumInvert =
-      _style(size: 16.d, weight: FontWeight.normal, color: TColors.primary);
-  static final largeInvert =
-      _style(size: 20.4.d, weight: FontWeight.normal, color: TColors.primary);
+  static TextStyle tiny = _style();
+  static TextStyle small = _style();
+  static TextStyle medium = _style();
+  static TextStyle large = _style();
+  static TextStyle extraLarg = _style();
+  static TextStyle tinyInvert = _style();
+  static TextStyle smallInvert = _style();
+  static TextStyle mediumInvert = _style();
+  static TextStyle largeInvert = _style();
 }
 
 TextStyle _style({Color? color, double? size, FontWeight? weight}) {
@@ -53,7 +47,26 @@ TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   );
 }
 
-class Themes {
+class Themes extends IService {
+  @override
+  initialize({List<Object>? args}) {
+    super.initialize(args: args);
+
+    TStyles.tiny = _style(size: 10.d, weight: FontWeight.w100);
+    TStyles.small = _style(size: 13.4.d, weight: FontWeight.w300);
+    TStyles.medium = _style(size: 16.d, weight: FontWeight.w600);
+    TStyles.large = _style(size: 20.d, weight: FontWeight.w800);
+    TStyles.extraLarg = _style(size: 22.d, weight: FontWeight.w900);
+    TStyles.tinyInvert =
+        _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary);
+    TStyles.smallInvert =
+        _style(size: 13.4.d, weight: FontWeight.normal, color: TColors.primary);
+    TStyles.mediumInvert =
+        _style(size: 16.d, weight: FontWeight.normal, color: TColors.primary);
+    TStyles.largeInvert =
+        _style(size: 20.4.d, weight: FontWeight.normal, color: TColors.primary);
+  }
+
   static ThemeData? get darkData {
     // var textTheme = CupertinoTextThemeData(
     //   primaryColor: TColors.primary,
