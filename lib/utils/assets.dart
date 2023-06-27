@@ -1,21 +1,35 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/deviceinfo.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 
 class Asset {
-  static T load<T>(String path,
-      {BoxFit? fit,
-      double? width,
-      double? height,
-      Function(Artboard)? onRiveInit}) {
+  static T load<T>(
+    String path, {
+    BoxFit? fit,
+    double? width,
+    double? height,
+    int? imageCacheWidth,
+    int? imageCacheHeight,
+    Function(Artboard)? onRiveInit,
+    Rect? imageCenterSlice,
+    ImageRepeat imageRepeat = ImageRepeat.noRepeat,
+  }) {
     var type = _getType(T);
     var address = "assets/${type.name}s/$path.${type.extension}";
     return switch (type) {
       AssetType.animation =>
         RiveAnimation.asset(address, fit: fit, onInit: onRiveInit) as T,
-      AssetType.image =>
-        Image.asset(address, width: width, height: height, fit: fit) as T,
+      AssetType.image => Image.asset(
+          address,
+          fit: fit,
+          width: width,
+          height: height,
+          cacheWidth: imageCacheWidth,
+          cacheHeight: imageCacheHeight,
+          centerSlice: imageCenterSlice,
+        ) as T,
       AssetType.vector => SvgPicture.asset(address,
           width: width, height: height, fit: fit ?? BoxFit.contain) as T,
       _ => null as T
