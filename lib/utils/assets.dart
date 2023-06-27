@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/deviceinfo.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 
@@ -12,9 +11,9 @@ class Asset {
     double? height,
     int? imageCacheWidth,
     int? imageCacheHeight,
-    Function(Artboard)? onRiveInit,
     Rect? imageCenterSlice,
     ImageRepeat imageRepeat = ImageRepeat.noRepeat,
+    Function(Artboard)? onRiveInit,
   }) {
     var type = _getType(T);
     var address = "assets/${type.name}s/$path.${type.extension}";

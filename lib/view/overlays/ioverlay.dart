@@ -13,7 +13,7 @@ extension Overlays on OverlayType {
   static AbstractOverlay getWidget(String routeName, {List<Object>? args}) {
     return switch (routeName) {
       "/loading" => const LoadingOverlay(),
-      _ => const AbstractOverlay(type: OverlayType.none),
+      _ => const AbstractOverlay(),
     };
   }
 
