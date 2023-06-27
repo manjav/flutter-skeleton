@@ -21,11 +21,11 @@ class DeviceInfo extends IService {
   @override
   initialize({List<Object>? args}) async {
     DeviceInfo.size = args![0] as Size;
-    log("${args[0]} ${args[1]}");
     var width = math.min(size.width, size.height);
     var height = math.max(size.width, size.height);
     ratio = width / 1080;
     aspectRatio = width / height;
+    log("${args[0]} ${args[1]} $ratio");
     var deviceInfoPlugin = DeviceInfoPlugin();
     try {
       if (kIsWeb) {
