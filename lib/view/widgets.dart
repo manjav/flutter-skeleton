@@ -76,7 +76,7 @@ class Widgets {
   }
 
   static bool _isActive(int id) {
-    return id == -1 || Prefs.tutorStep == id;
+    return true; //id == -1 || Prefs.tutorStep == id;
   }
 
   static Widget rect({
