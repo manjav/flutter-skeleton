@@ -1,51 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/deviceinfo.dart';
 
-import '../../blocs/services.dart';
-import '../../services/deviceinfo.dart';
-import '../../services/localization.dart';
 import '../../services/theme.dart';
+import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
 import '../widgets.dart';
 
-class PopupData {
-  final bool? overlayMode;
-  final Color? backgroundColor;
-  final Color? barrierColor;
-  final bool? barrierDismissible;
-  final BuildContext context;
-  final Function(BuildContext) childFactory;
-
-  EdgeInsets? insetPadding;
-
-  PopupData(
-    this.context,
-    this.childFactory, {
-    this.overlayMode,
-    this.insetPadding,
-    this.backgroundColor,
-    this.barrierColor,
-    this.barrierDismissible,
-  });
+enum PopupType {
+  none,
+  scout,
 }
 
-class AbstractPopup extends StatefulWidget {
-  final Services services;
-  final bool showConfetti;
-  const AbstractPopup(this.services, {Key? key, this.showConfetti = false})
-      : super(key: key);
-  @override
-  createState() => AbstractPopupState();
+extension Popups on PopupType {
+  String get routeName => "/$name";
 
-  static force(
-    BuildContext context,
-    Function(BuildContext) childFactory, {
-    String sfx = '',
-    bool? overlayMode,
+  AbstractPopup getWidget({
     EdgeInsets? insetPadding,
-    EdgeInsets? padding,
-    Color? backgroundColor,
+    List<Object>? args,
+  }) {
+    return switch (this) {
+      _ => AbstractPopup(insetPadding: insetPadding!, args: args),
+    };
+  }
+
+  static show(
+    BuildContext context,
+    PopupType type, {
+    EdgeInsets? insetPadding,
+    List<Object>? args,
     Color? barrierColor,
     bool? barrierDismissible,
+    // String sfx = '',
   }) async {
     var result = await showGeneralDialog(
         barrierDismissible: barrierDismissible ?? true,
@@ -53,53 +38,31 @@ class AbstractPopup extends StatefulWidget {
         context: context,
         barrierLabel: "",
         pageBuilder: (c, _, __) {
-          if (overlayMode ?? false) {
-            return _Alert(childFactory);
-          }
-          return Dialog(
-              backgroundColor: TColors.transparent,
-              insetPadding: insetPadding ??
-                  EdgeInsets.symmetric(horizontal: 20.d, vertical: 24.d),
-              child: Widgets.rect(
-                  width: 360.d,
-                  radius: 24.d,
-                  color: backgroundColor ?? TColors.primary90,
-                  padding: padding ?? EdgeInsets.all(12.d),
-                  child: _Alert(childFactory)));
+          return type.getWidget(
+              insetPadding:
+                  insetPadding ?? EdgeInsets.fromLTRB(92.d, 128.d, 92.d, 92.d),
+              args: args);
         });
     return result;
   }
+}
 
-  static alert(
-    Services services,
-    BuildContext context,
-    String title, {
-    String? message,
-    String? buttonLabel,
-    Function? onButtonTap,
-    bool barrierDismissible = true,
-  }) {
-    force(
-        context,
-        (context) => Column(mainAxisSize: MainAxisSize.min, children: [
-              Text(title, style: TStyles.medium),
-              SizedBox(height: 24.d),
-              message != null
-                  ? Text(message, style: TStyles.small)
-                  : const SizedBox(),
-              SizedBox(height: message != null ? 32.d : 0),
-              Widgets.button(
-                  buttonId: -1,
-                  width: 180.d,
-                  child: Text(buttonLabel ?? 'ok_l'.l(),
-                      style: TStyles.mediumInvert),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    onButtonTap?.call();
-                  })
-            ]),
-        barrierDismissible: barrierDismissible);
-  }
+class AbstractPopup extends StatefulWidget {
+  // final bool showConfetti;
+  final PopupType type;
+  final String sfx;
+  final EdgeInsets insetPadding;
+  final List<Object>? args;
+
+  const AbstractPopup({
+    this.type = PopupType.none,
+    this.sfx = '',
+    this.insetPadding = EdgeInsets.zero,
+    this.args,
+    super.key,
+  });
+  @override
+  createState() => AbstractPopupState();
 }
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
@@ -107,8 +70,20 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.topCenter, children: [
+      Positioned(
+          top: widget.insetPadding.top,
+          right: widget.insetPadding.right,
+          bottom: widget.insetPadding.bottom,
+          left: widget.insetPadding.left,
+          child: Asset.load<Image>(
+            'popup-chrome',
+            imageCacheWidth: (128 * DeviceInfo.ratio).round(),
+            imageCacheHeight: (128 * DeviceInfo.ratio).round(),
+            imageCenterSlice: const Rect.fromLTWH(20, 20, 4, 4),
+          )),
+      Positioned(top: 80.d, child: headerFactory('')),
+      Positioned(top: 180.d, right: 140.d, child: closeButtonFactory('')),
       Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        titleFactory(''),
         contentFactory(),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -117,25 +92,33 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ]);
   }
 
-  titleFactory(String title) {
-    return Text(title);
+  headerFactory(String title) {
+    return Widgets.rect(
+        width: 562.d,
+        height: 130.d,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                centerSlice: const Rect.fromLTWH(20, 20, 4, 4),
+                image: Asset.load<Image>(
+                  'popup-header',
+                  imageCacheWidth: (128 * DeviceInfo.ratio).round(),
+                  imageCacheHeight: (128 * DeviceInfo.ratio).round(),
+                ).image)),
+        child: Text(title));
+  }
+
+  closeButtonFactory(String title) {
+    return Widgets.button(
+        color: TColors.transparent,
+        width: 100.d,
+        height: 100.d,
+        onPressed: () => Navigator.pop(context),
+        child: Asset.load<Image>('popup-close', height: 38.d));
+    // return Text(title);
   }
 
   contentFactory() => const SizedBox();
 
   actionsFactory() => <Widget>[];
-}
-
-class _Alert extends StatefulWidget {
-  final Function(BuildContext) contentFactory;
-  const _Alert(this.contentFactory, {Key? key}) : super(key: key);
-  @override
-  createState() => _AlertState();
-}
-
-class _AlertState extends State<_Alert> {
-  @override
-  Widget build(BuildContext context) {
-    return widget.contentFactory(context);
-  }
 }
