@@ -31,7 +31,7 @@ class TStyles {
   static TextStyle small = _style();
   static TextStyle medium = _style();
   static TextStyle large = _style();
-  static TextStyle extraLarg = _style();
+  static TextStyle big = _style();
   static TextStyle tinyInvert = _style();
   static TextStyle smallInvert = _style();
   static TextStyle mediumInvert = _style();
@@ -52,19 +52,19 @@ class Themes extends IService {
   initialize({List<Object>? args}) {
     super.initialize(args: args);
 
-    TStyles.tiny = _style(size: 10.d, weight: FontWeight.w100);
-    TStyles.small = _style(size: 13.4.d, weight: FontWeight.w300);
-    TStyles.medium = _style(size: 16.d, weight: FontWeight.w600);
-    TStyles.large = _style(size: 20.d, weight: FontWeight.w800);
-    TStyles.extraLarg = _style(size: 22.d, weight: FontWeight.w900);
+    TStyles.tiny = _style(size: 22.d, weight: FontWeight.w100);
+    TStyles.small = _style(size: 30.4.d, weight: FontWeight.w300);
+    TStyles.medium = _style(size: 40.d, weight: FontWeight.w600);
+    TStyles.large = _style(size: 52.d, weight: FontWeight.w800);
+    TStyles.big = _style(size: 72.d, weight: FontWeight.w900);
     TStyles.tinyInvert =
-        _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary);
-    TStyles.smallInvert =
-        _style(size: 13.4.d, weight: FontWeight.normal, color: TColors.primary);
+        _style(size: 22.d, weight: FontWeight.w100, color: TColors.primary10);
+    TStyles.smallInvert = _style(
+        size: 30.4.d, weight: FontWeight.normal, color: TColors.primary10);
     TStyles.mediumInvert =
-        _style(size: 16.d, weight: FontWeight.normal, color: TColors.primary);
+        _style(size: 40.d, weight: FontWeight.normal, color: TColors.primary10);
     TStyles.largeInvert =
-        _style(size: 20.4.d, weight: FontWeight.normal, color: TColors.primary);
+        _style(size: 52.d, weight: FontWeight.normal, color: TColors.primary10);
   }
 
   static ThemeData? get darkData {
@@ -81,6 +81,8 @@ class Themes extends IService {
     //   textStyle: TStyles.small,
     // );
 
-    return ThemeData.dark(useMaterial3: true);
+    return ThemeData.dark(
+      useMaterial3: true,
+    );
   }
 }
