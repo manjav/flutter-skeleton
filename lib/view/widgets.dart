@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../services/prefs.dart';
 import '../services/deviceinfo.dart';
 import '../services/theme.dart';
 

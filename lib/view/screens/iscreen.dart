@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../services/theme.dart';
 import '../../utils/ilogger.dart';
 import '../../view/screens/home_screen.dart';
 import 'loading_screen.dart';
@@ -17,7 +16,8 @@ class AbstractScreen extends StatefulWidget {
   createState() => AbstractScreenState();
 }
 
-class AbstractScreenState<T extends AbstractScreen> extends State<T> with ILogger{
+class AbstractScreenState<T extends AbstractScreen> extends State<T>
+    with ILogger {
   List<Widget> stepChildren = <Widget>[];
 
   @override
@@ -38,8 +38,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T> with ILogge
     children.add(Positioned(
         top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()));
     children.addAll(navigationFactory());
-    return Container(
-        color: TColors.primary90, child: Stack(children: children));
+    return Scaffold(body: Stack(children: children));
     /*var rows = <Widget>[];
     rows.add(headerFactory(theme, width));
     rows.add(chromeFactory(theme, width));
