@@ -6,7 +6,10 @@ import 'package:flutter_skeleton/view/widgets/loaderwidget.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
+import '../../services/theme.dart';
 import '../../view/screens/iscreen.dart';
+import '../popups/ipopup.dart';
+import '../widgets.dart';
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Screens.home);
@@ -31,7 +34,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         Positioned(
             top: 0,
             child: LoaderWidget(AssetType.image, 'weather-4', width: 128.d)),
-        LoaderWidget(AssetType.animation, 'coin', width: 156.d),
+        Positioned(
+            bottom: 300.d,
+            width: 240.d,
+            height: 240.d,
+            child: LoaderWidget(AssetType.animation, 'coin', width: 156.d)),
         Positioned(
             bottom: 0,
             width: 240.d,
@@ -41,6 +48,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                 onRiveInit: (artboard) => artboard.addController(
                     StateMachineController.fromArtboard(artboard, 'Loading')
                         as RiveAnimationController))),
+        Widgets.button(
+            width: 220.d,
+            height: 120.d,
+            color: TColors.clay,
+            onPressed: () => Popups.show(context, PopupType.none),
+            child: Text("Show Pop Up", style: TStyles.extraLarg))
       ],
     );
   }
