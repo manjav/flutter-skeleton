@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_skeleton/services/deviceinfo.dart';
 import 'package:flutter_skeleton/utils/assets.dart';
 import 'package:flutter_skeleton/view/widgets/loaderwidget.dart';
+import 'package:flutter_skeleton/view/widgets/skinnedtext.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
@@ -49,11 +50,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     StateMachineController.fromArtboard(artboard, 'Loading')
                         as RiveAnimationController))),
         Widgets.button(
-            width: 220.d,
+            width: 330.d,
             height: 120.d,
             color: TColors.clay,
             onPressed: () => Popups.show(context, PopupType.none),
-            child: Text("Show Pop Up", style: TStyles.extraLarg))
+            child: SkinnedText("Show Pop Up", style: TStyles.medium))
       ],
     );
   }
