@@ -76,7 +76,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
           bottom: widget.insetPadding.bottom,
           left: widget.insetPadding.left,
           child: Asset.load<Image>(
-            'popup-chrome',
+            'popup_chrome',
             imageCacheWidth: (128 * DeviceInfo.ratio).round(),
             imageCacheHeight: (128 * DeviceInfo.ratio).round(),
             imageCenterSlice: const Rect.fromLTWH(20, 20, 4, 4),
@@ -101,7 +101,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
             image: DecorationImage(
                 centerSlice: const Rect.fromLTWH(20, 20, 4, 4),
                 image: Asset.load<Image>(
-                  'popup-header',
+                  'popup_header',
                   imageCacheWidth: (128 * DeviceInfo.ratio).round(),
                   imageCacheHeight: (128 * DeviceInfo.ratio).round(),
                 ).image)),
@@ -114,7 +114,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         width: 100.d,
         height: 100.d,
         onPressed: () => Navigator.pop(context),
-        child: Asset.load<Image>('popup-close', height: 38.d));
+        child: Asset.load<Image>('popup_close', height: 38.d));
     // return Text(title);
   }
 
