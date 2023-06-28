@@ -60,4 +60,4 @@ flutter:
   fonts:
     - family: LilitaOneSultanAdan
       fonts:
-        - asset: assets/fonts/lilitaonesultanadan-bold.ttf
+        - asset: assets/fonts/lilitaonesultanadan_bold.ttf
