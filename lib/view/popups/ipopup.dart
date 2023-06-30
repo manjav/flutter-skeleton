@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/data/core/account.dart';
-import 'package:flutter_skeleton/services/deviceinfo.dart';
-import 'package:flutter_skeleton/view/widgets/indicator.dart';
-import 'package:flutter_skeleton/view/widgets/skinnedtext.dart';
 
+import '../../data/core/account.dart';
+import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
+import '../../view/widgets/indicator.dart';
+import '../../view/widgets/skinnedtext.dart';
 import '../widgets.dart';
 
 enum PopupType {

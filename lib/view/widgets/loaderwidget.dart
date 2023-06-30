@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_skeleton/utils/assets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 
+import '../../utils/assets.dart';
 import '../../utils/loader.dart';
 
 class LoaderWidget extends StatefulWidget {

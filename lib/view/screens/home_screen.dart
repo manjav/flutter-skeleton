@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/services/deviceinfo.dart';
-import 'package:flutter_skeleton/utils/assets.dart';
-import 'package:flutter_skeleton/view/widgets/loaderwidget.dart';
-import 'package:flutter_skeleton/view/widgets/skinnedtext.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
+import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
+import '../../utils/assets.dart';
 import '../../view/screens/iscreen.dart';
+import '../../view/widgets/loaderwidget.dart';
+import '../../view/widgets/skinnedtext.dart';
 import '../popups/ipopup.dart';
 import '../widgets.dart';
 

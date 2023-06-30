@@ -1,6 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter_skeleton/utils/assets.dart';
 
+import '../../utils/assets.dart';
 import '../utils/loader.dart';
 import '../view/widgets/loaderwidget.dart';
 import 'iservices.dart';

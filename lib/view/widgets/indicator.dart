@@ -3,8 +3,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/blocs/account_bloc.dart';
 
+import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';

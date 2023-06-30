@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/utils/assets.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
+import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
 import '../../view/screens/iscreen.dart';
 import '../widgets.dart';
