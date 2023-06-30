@@ -92,9 +92,11 @@ class Widgets {
     Decoration? foregroundDecoration,
     Matrix4? transform,
     Alignment? transformAlignment,
+    BoxConstraints? constraints,
     Widget? child,
   }) {
     return Container(
+      constraints: constraints,
       width: width,
       height: height,
       alignment: alignment,
@@ -136,7 +138,7 @@ class Widgets {
         onTap: onPressed,
         child: rect(
           width: width,
-          height: height ?? 56.d,
+          height: height ?? 156.d,
           alignment: alignment ?? Alignment.center,
           transform: transform,
           transformAlignment: transformAlignment,
@@ -146,7 +148,7 @@ class Widgets {
           foregroundDecoration: foregroundDecoration,
           radius: radius ?? 16.d,
           borderRadius: borderRadius,
-          color: color ?? TColors.primary10,
+          color: color ?? TColors.transparent,
           child: child,
         ));
   }
