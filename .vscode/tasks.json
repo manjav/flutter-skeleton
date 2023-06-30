@@ -10,7 +10,12 @@
             "windows": {
                 "command": ".\\commands\\convert_images.bat"
             },
-            "group": "build"
+            "group": "build",
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
         }
     ]
 }
