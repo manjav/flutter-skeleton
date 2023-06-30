@@ -21,16 +21,11 @@ class SkinnedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var style = this.style ??
-        TextStyle(
-            fontSize: 12.d,
-            foreground: Paint()..color = TColors.white,
-            decorationThickness: 2);
-
+    var style = this.style ?? TStyles.large;
     return Stack(
       children: [
         Center(
-            heightFactor: 0.5,
+            heightFactor: 0.53,
             child: Text(
               text,
               textAlign: textAlign,
@@ -42,7 +37,7 @@ class SkinnedText extends StatelessWidget {
               ),
             )),
         Center(
-            heightFactor: 0.42,
+            heightFactor: 0.47,
             child: Text(text, textAlign: textAlign, style: style)),
       ],
     );
