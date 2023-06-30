@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/data/core/account.dart';
 import 'package:flutter_skeleton/services/deviceinfo.dart';
+import 'package:flutter_skeleton/view/widgets/indicator.dart';
+import 'package:flutter_skeleton/view/widgets/skinnedtext.dart';
 
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
@@ -86,7 +89,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
               alignment: Alignment.center,
               fit: StackFit.loose,
               children: [
-      Positioned(
+                Positioned(
                     top: 0, child: headerFactory('popup_${widget.type.name}')),
                 Padding(
                     padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
@@ -100,14 +103,15 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
                 // Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               ]),
-          )),
-      Positioned(top: 80.d, child: headerFactory('')),
-      Positioned(top: 180.d, right: 140.d, child: closeButtonFactory('')),
-      Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        contentFactory(),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: actionsFactory()),
+        )),
+        Positioned(
+            top: 16.d,
+            left: 32.d,
+            right: 32.d,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: appBarFactory())),
       ]),
     ));
   }
@@ -134,6 +138,14 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         height: 100.d,
         onPressed: () => Navigator.pop(context),
         child: Asset.load<Image>('popup_close', height: 38.d));
+  }
+
+  List<Widget> appBarFactory() {
+    return [
+      Indicator(widget.type.name, AccountVar.gold),
+      SizedBox(width: 16.d),
+      Indicator(widget.type.name, AccountVar.nectar, width: 260.d),
+    ];
   }
 
   contentFactory() => Widgets.rect(
