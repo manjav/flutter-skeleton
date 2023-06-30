@@ -48,7 +48,6 @@ extension Popups on PopupType {
 }
 
 class AbstractPopup extends StatefulWidget {
-  // final bool showConfetti;
   final PopupType type;
   final String sfx;
   final EdgeInsets insetPadding;
@@ -69,17 +68,38 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     with ILogger {
   @override
   Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.topCenter, children: [
+    return SafeArea(
+        child: Scaffold(
+      body: Stack(children: [
+        Widgets.touchable(onTap: () => Navigator.pop(context)),
+        Align(
+            child: Widgets.rect(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.fill,
+                  centerSlice: const Rect.fromLTWH(80, 80, 4, 4),
+                  image: Asset.load<Image>('popup_chrome',
+                          imageCacheWidth: (410 * DeviceInfo.ratio).round(),
+                          imageCacheHeight: (460 * DeviceInfo.ratio).round())
+                      .image)),
+          child: Stack(
+              alignment: Alignment.center,
+              fit: StackFit.loose,
+              children: [
       Positioned(
-          top: widget.insetPadding.top,
-          right: widget.insetPadding.right,
-          bottom: widget.insetPadding.bottom,
-          left: widget.insetPadding.left,
-          child: Asset.load<Image>(
-            'popup_chrome',
-            imageCacheWidth: (128 * DeviceInfo.ratio).round(),
-            imageCacheHeight: (128 * DeviceInfo.ratio).round(),
-            imageCenterSlice: const Rect.fromLTWH(20, 20, 4, 4),
+                    top: 0, child: headerFactory('popup_${widget.type.name}')),
+                Padding(
+                    padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
+                    child: contentFactory()),
+                // Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //     children: actionsFactory()),
+                // ]),
+                Positioned(
+                    top: 90.d, right: 56.d, child: closeButtonFactory('')),
+
+                // Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              ]),
           )),
       Positioned(top: 80.d, child: headerFactory('')),
       Positioned(top: 180.d, right: 140.d, child: closeButtonFactory('')),
@@ -89,7 +109,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: actionsFactory()),
       ]),
-    ]);
+    ));
   }
 
   headerFactory(String title) {
@@ -99,26 +119,25 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         alignment: Alignment.center,
         decoration: BoxDecoration(
             image: DecorationImage(
-                centerSlice: const Rect.fromLTWH(20, 20, 4, 4),
+                centerSlice: const Rect.fromLTWH(12, 120, 4, 4),
                 image: Asset.load<Image>(
                   'popup_header',
-                  imageCacheWidth: (128 * DeviceInfo.ratio).round(),
-                  imageCacheHeight: (128 * DeviceInfo.ratio).round(),
+                  imageCacheWidth: (562 * DeviceInfo.ratio).round(),
+                  imageCacheHeight: (130 * DeviceInfo.ratio).round(),
                 ).image)),
-        child: Text(title));
+        child: SkinnedText(title));
   }
 
   closeButtonFactory(String title) {
     return Widgets.button(
-        color: TColors.transparent,
         width: 100.d,
         height: 100.d,
         onPressed: () => Navigator.pop(context),
         child: Asset.load<Image>('popup_close', height: 38.d));
-    // return Text(title);
   }
 
-  contentFactory() => const SizedBox();
+  contentFactory() => Widgets.rect(
+      height: 480.d, width: 880.d, color: TColors.green.withAlpha(133));
 
   actionsFactory() => <Widget>[];
 }
