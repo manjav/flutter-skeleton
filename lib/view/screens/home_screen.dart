@@ -33,7 +33,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       alignment: Alignment.center,
       children: [
         Positioned(
-            top: 0,
+            top: 310.d,
             child: LoaderWidget(AssetType.image, 'weather-4', width: 128.d)),
         Positioned(
             bottom: 300.d,
