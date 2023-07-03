@@ -64,35 +64,36 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
           tag: widget.itemType.name,
           child: Widgets.touchable(
               child: Material(
+                  color: TColors.transparent,
                   child: Stack(alignment: Alignment.centerLeft, children: [
-                Positioned(
-                    right: right,
-                    left: 10.d,
-                    height: 64.d,
-                    child: Asset.load<Image>(
-                      'ui_frame_wood',
+                    Positioned(
+                        right: right,
+                        left: 10.d,
+                        height: 64.d,
+                        child: Asset.load<Image>(
+                          'ui_frame_wood',
                           centerSlice: ImageCenterSliceDate(
                               160, 64, const Rect.fromLTWH(12, 12, 4, 4)),
-                    )),
-                Positioned(
-                  left: left,
-                  right: right + 8.d,
-                  child: SkinnedText(
-                    text,
-                    style: TStyles.large.copyWith(
-                        fontSize:
-                            (24.d + 60.d / (text.length)).clamp(22.d, 42.d)),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                icon,
-                Positioned(
-                    right: 0,
-                    height: 84.d,
-                    child: widget.clickable
-                        ? Asset.load<Image>('ui_plus')
-                        : const SizedBox()),
-              ])),
+                        )),
+                    Positioned(
+                      left: left,
+                      right: right + 8.d,
+                      child: SkinnedText(
+                        text,
+                        style: TStyles.large.copyWith(
+                            fontSize: (24.d + 60.d / (text.length))
+                                .clamp(22.d, 42.d)),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    icon,
+                    Positioned(
+                        right: 0,
+                        height: 84.d,
+                        child: widget.clickable
+                            ? Asset.load<Image>('ui_plus')
+                            : const SizedBox()),
+                  ])),
               onTap: () {
                 if (widget.clickable) {
                   // widget.services.get<Analytics>().funnle("shopclicks");
