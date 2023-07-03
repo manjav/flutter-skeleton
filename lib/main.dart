@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/account_bloc.dart';
 import 'blocs/services.dart';
 import 'services/theme.dart';
-import 'view/navigation_route.dart';
+import 'view/route_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,8 +71,9 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute<void>(
                       settings: routeSettings,
                       builder: (BuildContext context) =>
-                          RouteProvider.getScreen(routeSettings.name!,
-                              args: routeSettings.arguments as List<Object>?));
+                          RouteProvider.getWidget(routeSettings.name!,
+                              args: routeSettings.arguments
+                                  as Map<String, dynamic>?));
                 })));
   }
 }

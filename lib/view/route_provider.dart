@@ -17,11 +17,10 @@ enum Routes {
 }
 
 extension RouteProvider on Routes {
-  static Widget getScreen(String routeName, {List<Object>? args}) {
+  static Widget getWidget(String routeName, {Map<String, dynamic>? args}) {
     return switch (routeName) {
       "/home" => HomeScreen(),
-      "/popupTabPage" =>
-        const TabPagePopup(Routes.popupTabPage, args: {'tabsCount': 3}),
+      "/popupTabPage" => TabPagePopup(Routes.popupTabPage, args: args ?? {}),
       _ => LoadingScreen(),
     };
   }

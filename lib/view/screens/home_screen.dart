@@ -9,7 +9,7 @@ import '../../utils/assets.dart';
 import '../../view/screens/iscreen.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
-import '../navigation_route.dart';
+import '../route_provider.dart';
 import '../widgets.dart';
 
 class HomeScreen extends AbstractScreen {
@@ -50,12 +50,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     StateMachineController.fromArtboard(artboard, 'Loading')
                         as RiveAnimationController))),
         Widgets.button(
-            width: 330.d,
-            height: 120.d,
+            width: 360.d,
             color: TColors.clay,
-            onPressed: () =>
-                Navigator.pushNamed(context, Routes.popupTabPage.routeName),
-            child: SkinnedText("Show Pop Up", style: TStyles.medium))
+            onPressed: () => Navigator.pushNamed(
+                context, Routes.popupTabPage.routeName,
+                arguments: {'tabsCount': 4}),
+            child: const SkinnedText("Show Pop Up"))
       ],
     );
   }

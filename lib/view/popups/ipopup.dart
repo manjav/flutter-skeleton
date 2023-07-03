@@ -6,9 +6,9 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
-import '../../view/navigation_route.dart';
 import '../../view/widgets/indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../route_provider.dart';
 import '../widgets.dart';
 
 enum PopupType {

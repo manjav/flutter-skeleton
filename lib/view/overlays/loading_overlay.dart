@@ -8,7 +8,7 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
-import '../navigation_route.dart';
+import '../route_provider.dart';
 import '../widgets.dart';
 import 'ioverlay.dart';
 

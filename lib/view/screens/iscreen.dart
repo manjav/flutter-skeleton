@@ -4,9 +4,9 @@ import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
-import '../../view/navigation_route.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
+import '../route_provider.dart';
 
 class AbstractScreen extends StatefulWidget {
   final Routes type;
