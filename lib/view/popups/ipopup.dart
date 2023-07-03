@@ -19,11 +19,10 @@ extension Popups on PopupType {
   String get routeName => "/$name";
 
   AbstractPopup getWidget({
-    EdgeInsets? insetPadding,
     List<Object>? args,
   }) {
     return switch (this) {
-      _ => AbstractPopup(insetPadding: insetPadding!, args: args),
+      _ => AbstractPopup(PopupType.none, args: args),
     };
   }
 
@@ -41,12 +40,7 @@ extension Popups on PopupType {
         barrierColor: barrierColor ?? TColors.black80,
         context: context,
         barrierLabel: "",
-        pageBuilder: (c, _, __) {
-          return type.getWidget(
-              insetPadding:
-                  insetPadding ?? EdgeInsets.fromLTRB(92.d, 128.d, 92.d, 92.d),
-              args: args);
-        });
+        pageBuilder: (c, _, __) => type.getWidget(args: args));
     return result;
   }
 }
@@ -54,13 +48,11 @@ extension Popups on PopupType {
 class AbstractPopup extends StatefulWidget {
   final PopupType type;
   final String sfx;
-  final EdgeInsets insetPadding;
   final List<Object>? args;
 
-  const AbstractPopup({
-    this.type = PopupType.none,
+  const AbstractPopup(
+    this.type, {
     this.sfx = '',
-    this.insetPadding = EdgeInsets.zero,
     this.args,
     super.key,
   });
