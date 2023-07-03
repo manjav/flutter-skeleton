@@ -83,7 +83,8 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
               alignment: Alignment.topCenter,
               fit: StackFit.loose,
               children: [
-                Positioned(child: titleFactory()),
+                innerChromeFactory(),
+                titleFactory(),
                 Padding(
                     padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
                     child: contentFactory()),
@@ -133,6 +134,10 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
       SizedBox(width: 16.d),
       Indicator(widget.type.name, AccountVar.nectar, width: 260.d),
     ];
+  }
+
+  innerChromeFactory() {
+    return const SizedBox();
   }
 
   contentFactory() => Widgets.rect(
