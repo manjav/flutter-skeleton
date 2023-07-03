@@ -174,8 +174,10 @@ class DeviceInfo extends IService {
 
 extension DeviceI on int {
   double get d => this * DeviceInfo.ratio;
+  int get i => d.round();
 }
 
 extension DeviceD on double {
   double get d => this * DeviceInfo.ratio;
+  int get i => d.round();
 }

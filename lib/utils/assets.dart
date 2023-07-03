@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 
+import '../services/deviceinfo.dart';
+
 class Asset {
   static T load<T>(
     String path, {
     BoxFit? fit,
     double? width,
     double? height,
-    int? imageCacheWidth,
-    int? imageCacheHeight,
-    Rect? imageCenterSlice,
+    ImageCenterSliceDate? centerSlice,
     ImageRepeat imageRepeat = ImageRepeat.noRepeat,
     Function(Artboard)? onRiveInit,
   }) {
@@ -25,9 +25,9 @@ class Asset {
           fit: fit,
           width: width,
           height: height,
-          cacheWidth: imageCacheWidth,
-          cacheHeight: imageCacheHeight,
-          centerSlice: imageCenterSlice,
+          cacheWidth: centerSlice?.width,
+          cacheHeight: centerSlice?.height,
+          centerSlice: centerSlice?.centerSlice,
         ) as T,
       AssetType.vector => SvgPicture.asset(address,
           width: width, height: height, fit: fit ?? BoxFit.contain) as T,
@@ -43,6 +43,20 @@ class Asset {
       SvgPicture => AssetType.vector,
       _ => AssetType.text
     };
+  }
+}
+
+class ImageCenterSliceDate {
+  late int width;
+  late int height;
+  late Rect centerSlice;
+  ImageCenterSliceDate(int width, int height, [Rect? centerSlice]) {
+    this.width = (width * DeviceInfo.ratio).round();
+    this.height = (height * DeviceInfo.ratio).round();
+    var rect =
+        centerSlice ?? Rect.fromLTWH(width * 0.5 - 3, height * 0.5 - 3, 6, 6);
+    this.centerSlice =
+        Rect.fromLTWH(rect.left.d, rect.top.d, rect.width.d, rect.height.d);
   }
 }
 

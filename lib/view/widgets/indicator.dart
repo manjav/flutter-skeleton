@@ -71,9 +71,8 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                     height: 64.d,
                     child: Asset.load<Image>(
                       'ui_frame_wood',
-                      imageCenterSlice: const Rect.fromLTWH(12, 12, 4, 4),
-                      imageCacheWidth: (160 * DeviceInfo.ratio).round(),
-                      imageCacheHeight: (64 * DeviceInfo.ratio).round(),
+                          centerSlice: ImageCenterSliceDate(
+                              160, 64, const Rect.fromLTWH(12, 12, 4, 4)),
                     )),
                 Positioned(
                   left: left,

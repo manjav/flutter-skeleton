@@ -64,6 +64,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     with ILogger {
   @override
   Widget build(BuildContext context) {
+    var chromeCenterSlice = ImageCenterSliceDate(410, 460);
     return SafeArea(
         child: Scaffold(
       body: Stack(children: [
@@ -73,11 +74,11 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
           decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.fill,
-                  centerSlice: const Rect.fromLTWH(80, 80, 4, 4),
-                  image: Asset.load<Image>('popup_chrome',
-                          imageCacheWidth: (410 * DeviceInfo.ratio).round(),
-                          imageCacheHeight: (460 * DeviceInfo.ratio).round())
-                      .image)),
+                  centerSlice: chromeCenterSlice.centerSlice,
+                  image: Asset.load<Image>(
+                    'popup_chrome',
+                    centerSlice: chromeCenterSlice,
+                  ).image)),
           child: Stack(
               alignment: Alignment.topCenter,
               fit: StackFit.loose,
@@ -103,17 +104,17 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   }
 
   titleFactory() {
+    var centerSlice = ImageCenterSliceDate(562, 130);
     return Widgets.rect(
         width: 562.d,
         height: 130.d,
         alignment: Alignment.center,
         decoration: BoxDecoration(
             image: DecorationImage(
-                centerSlice: const Rect.fromLTWH(12, 120, 4, 4),
+                centerSlice: centerSlice.centerSlice,
                 image: Asset.load<Image>(
                   'popup_title',
-                  imageCacheWidth: (562 * DeviceInfo.ratio).round(),
-                  imageCacheHeight: (130 * DeviceInfo.ratio).round(),
+                  centerSlice: centerSlice,
                 ).image)),
         child: SkinnedText('popup_${widget.type.name}'.l()));
   }

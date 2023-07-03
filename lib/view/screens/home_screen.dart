@@ -9,7 +9,6 @@ import '../../utils/assets.dart';
 import '../../view/screens/iscreen.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
-import '../popups/ipopup.dart';
 import '../widgets.dart';
 
 class HomeScreen extends AbstractScreen {
