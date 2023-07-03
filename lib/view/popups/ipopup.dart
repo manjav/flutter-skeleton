@@ -11,11 +11,6 @@ import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
-enum PopupType {
-  none,
-  scout,
-}
-
 class AbstractPopup extends StatefulWidget {
   final Routes type;
   final Map<String, dynamic> args;
@@ -86,7 +81,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                   'popup_title',
                   centerSlice: centerSlice,
                 ).image)),
-        child: SkinnedText('popup_${widget.type.name}'.l()));
+        child: SkinnedText('popup_${widget.type.name.toLowerCase()}'.l()));
   }
 
   closeButtonFactory(String title) {
