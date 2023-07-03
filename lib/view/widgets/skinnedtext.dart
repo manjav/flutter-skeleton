@@ -23,22 +23,20 @@ class SkinnedText extends StatelessWidget {
   Widget build(BuildContext context) {
     var style = this.style ?? TStyles.large;
     return Stack(
+      alignment: Alignment.center,
       children: [
-        Center(
-            heightFactor: 0.53,
-            child: Text(
-              text,
-              textAlign: textAlign,
-              style: style.copyWith(
-                foreground: Paint()
-                  ..strokeWidth = strokeWidth ?? 8.d
-                  ..color = strokeColor ?? TColors.primary10
-                  ..style = PaintingStyle.stroke,
-              ),
-            )),
-        Center(
-            heightFactor: 0.47,
-            child: Text(text, textAlign: textAlign, style: style)),
+        Text(
+          text,
+          textAlign: textAlign,
+          style: style.copyWith(
+            height: -0.18,
+            foreground: Paint()
+              ..strokeWidth = strokeWidth ?? 10.d
+              ..color = strokeColor ?? TColors.primary10
+              ..style = PaintingStyle.stroke,
+          ),
+        ),
+        Text(text, textAlign: textAlign, style: style),
       ],
     );
   }
