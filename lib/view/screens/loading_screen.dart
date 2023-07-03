@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/services.dart';
 import '../../view/screens/iscreen.dart';
+import '../navigation_route.dart';
 import '../overlays/ioverlay.dart';
 
 class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Screens.home);
+  LoadingScreen({super.key}) : super(Routes.home);
 
   @override
   createState() => _HomeScreenState();

@@ -8,7 +8,7 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
-import '../../view/screens/iscreen.dart';
+import '../navigation_route.dart';
 import '../widgets.dart';
 import 'ioverlay.dart';
 
@@ -58,7 +58,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
             await Future.delayed(
                 Duration(milliseconds: _minAnimationTime - elapsedTime));
             if (mounted) {
-              Navigator.pushNamed(context, Screens.home.routeName);
+              Navigator.pushNamed(context, Routes.home.routeName);
             }
           } else if (state.initState == ServicesInitState.error) {
             _alert = Positioned(

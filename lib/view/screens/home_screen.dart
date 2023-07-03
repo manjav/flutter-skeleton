@@ -9,10 +9,11 @@ import '../../utils/assets.dart';
 import '../../view/screens/iscreen.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../navigation_route.dart';
 import '../widgets.dart';
 
 class HomeScreen extends AbstractScreen {
-  HomeScreen({super.key}) : super(Screens.home);
+  HomeScreen({super.key}) : super(Routes.home);
 
   @override
   createState() => _HomeScreenState();

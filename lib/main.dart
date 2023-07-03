@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/account_bloc.dart';
-import '../view/screens/iscreen.dart';
 import 'blocs/services.dart';
 import 'services/theme.dart';
+import 'view/navigation_route.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +17,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({
-    super.key,
-  });
+  const MyApp({super.key});
 
   static final _firebaseAnalytics = FirebaseAnalytics.instance;
   static final _observer =
@@ -72,9 +70,9 @@ class MyApp extends StatelessWidget {
                 onGenerateRoute: (RouteSettings routeSettings) {
                   return MaterialPageRoute<void>(
                       settings: routeSettings,
-                      builder: (BuildContext context) => ScreenTools.getScreen(
-                          routeSettings.name!,
-                          args: routeSettings.arguments as List<Object>?));
+                      builder: (BuildContext context) =>
+                          RouteProvider.getScreen(routeSettings.name!,
+                              args: routeSettings.arguments as List<Object>?));
                 })));
   }
 }
