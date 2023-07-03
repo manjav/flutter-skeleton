@@ -89,8 +89,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
               alignment: Alignment.center,
               fit: StackFit.loose,
               children: [
-                Positioned(
-                    top: 0, child: headerFactory('popup_${widget.type.name}')),
+                Positioned(top: 0, child: headerFactory()),
                 Padding(
                     padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
                     child: contentFactory()),
@@ -116,7 +115,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ));
   }
 
-  headerFactory(String title) {
+  headerFactory() {
     return Widgets.rect(
         width: 562.d,
         height: 130.d,
