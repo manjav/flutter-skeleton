@@ -4,6 +4,7 @@ import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
+import '../../view/popups/ipopup.dart';
 import '../../view/screens/home_screen.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
@@ -79,12 +80,15 @@ enum Screens {
   profile,
   settings,
   shop,
+
+  popupNone
 }
 
 extension ScreenTools on Screens {
-  static AbstractScreen getScreen(String routeName, {List<Object>? args}) {
+  static Widget getScreen(String routeName, {List<Object>? args}) {
     return switch (routeName) {
       "/home" => HomeScreen(),
+      "/popupNone" => AbstractPopup(PopupType.none),
       _ => LoadingScreen(),
     };
   }
