@@ -54,7 +54,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             height: 120.d,
             color: TColors.clay,
             onPressed: () =>
-                Navigator.pushNamed(context, Screens.popupNone.routeName),
+                Navigator.pushNamed(context, Routes.popupTabPage.routeName),
             child: SkinnedText("Show Pop Up", style: TStyles.medium))
       ],
     );

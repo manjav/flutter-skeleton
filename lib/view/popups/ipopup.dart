@@ -6,6 +6,7 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
+import '../../view/navigation_route.dart';
 import '../../view/widgets/indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../widgets.dart';
@@ -15,45 +16,13 @@ enum PopupType {
   scout,
 }
 
-extension Popups on PopupType {
-  String get routeName => "/$name";
-
-  AbstractPopup getWidget({
-    List<Object>? args,
-  }) {
-    return switch (this) {
-      _ => AbstractPopup(PopupType.none, args: args),
-    };
-  }
-
-  static show(
-    BuildContext context,
-    PopupType type, {
-    EdgeInsets? insetPadding,
-    List<Object>? args,
-    Color? barrierColor,
-    bool? barrierDismissible,
-    // String sfx = '',
-  }) async {
-    var result = await showGeneralDialog(
-        barrierDismissible: barrierDismissible ?? true,
-        barrierColor: barrierColor ?? TColors.black80,
-        context: context,
-        barrierLabel: "",
-        pageBuilder: (c, _, __) => type.getWidget(args: args));
-    return result;
-  }
-}
-
 class AbstractPopup extends StatefulWidget {
-  final PopupType type;
-  final String sfx;
-  final List<Object>? args;
+  final Routes type;
+  final Map<String, dynamic> args;
 
   const AbstractPopup(
     this.type, {
-    this.sfx = '',
-    this.args,
+    required this.args,
     super.key,
   });
   @override
