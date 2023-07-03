@@ -49,30 +49,14 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: appBarFactory())),
+                children: appBarElements())),
         Positioned(
             top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
       ]),
     ));
-    /*var rows = <Widget>[];
-    rows.add(headerFactory(theme, width));
-    rows.add(chromeFactory(theme, width));
-    children.add(
-        Column(mainAxisAlignment: MainAxisAlignment.center, children: rows));
-    children.addAll(stepChildren);
-    children.add(coinsButtonFactory(theme)); 
-
-    return WillPopScope(
-        key: Key(widget.mode.name),
-        onWillPop: () async {
-          onWillPop?.call();
-          return /* widget.closeOnBack ??  */ true;
-        },
-        child: Stack(alignment: Alignment.center, children: children));
-  */
   }
 
-  List<Widget> appBarFactory() {
+  List<Widget> appBarElements() {
     return [
       SizedBox(width: 234.d),
       Indicator(widget.type.name, AccountVar.gold),
@@ -107,28 +91,3 @@ extension ScreenTools on Screens {
 
   String get routeName => "/$name";
 }
-
-/* class MyPageRoute<T> extends MaterialPageRoute<T> {
-  MyPageRoute({
-    required WidgetBuilder builder,
-    RouteSettings? settings,
-    bool maintainState = true,
-    bool fullscreenDialog = false,
-  }) : super(
-            builder: builder,
-            maintainState: maintainState,
-            settings: settings,
-            fullscreenDialog: fullscreenDialog);
-  @override
-  Duration get transitionDuration => const Duration(milliseconds: 500);
-
-  @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    final tween = Tween(begin: 0.0, end: 1.0)
-        .chain(CurveTween(curve: Curves.easeOutExpo));
-    return ScaleTransition(
-        scale: animation.drive(tween),
-        child: FadeTransition(opacity: animation, child: child));
-  }
-} */

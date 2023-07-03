@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
@@ -86,21 +87,15 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                           imageCacheHeight: (460 * DeviceInfo.ratio).round())
                       .image)),
           child: Stack(
-              alignment: Alignment.center,
+              alignment: Alignment.topCenter,
               fit: StackFit.loose,
               children: [
-                Positioned(top: 0, child: headerFactory()),
+                Positioned(child: headerFactory()),
                 Padding(
                     padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
                     child: contentFactory()),
-                // Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //     children: actionsFactory()),
-                // ]),
                 Positioned(
                     top: 90.d, right: 56.d, child: closeButtonFactory('')),
-
-                // Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               ]),
         )),
         Positioned(
@@ -110,7 +105,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: appBarFactory())),
+                children: appBarElements())),
       ]),
     ));
   }
@@ -128,7 +123,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                   imageCacheWidth: (562 * DeviceInfo.ratio).round(),
                   imageCacheHeight: (130 * DeviceInfo.ratio).round(),
                 ).image)),
-        child: SkinnedText(title));
+        child: SkinnedText('popup_${widget.type.name}'.l()));
   }
 
   closeButtonFactory(String title) {
@@ -139,7 +134,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         child: Asset.load<Image>('popup_close', height: 38.d));
   }
 
-  List<Widget> appBarFactory() {
+  List<Widget> appBarElements() {
     return [
       Indicator(widget.type.name, AccountVar.gold),
       SizedBox(width: 16.d),
