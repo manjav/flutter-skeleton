@@ -43,6 +43,7 @@ TextStyle _style({Color? color, double? size, FontWeight? weight}) {
     fontSize: size,
     color: color ?? TColors.primary,
     fontWeight: weight ?? FontWeight.bold,
+    height: -0.3,
     fontFamily: 'LilitaOneSultanAdan',
   );
 }
