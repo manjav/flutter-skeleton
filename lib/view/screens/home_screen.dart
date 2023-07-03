@@ -34,7 +34,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       children: [
         Positioned(
             top: 310.d,
-            child: LoaderWidget(AssetType.image, 'weather-4', width: 128.d)),
+            child: LoaderWidget(AssetType.image, 'weather_4', width: 128.d)),
         Positioned(
             bottom: 300.d,
             width: 240.d,
