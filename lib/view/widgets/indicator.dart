@@ -57,14 +57,14 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
       left = info.image.width * DeviceInfo.ratio - 16.d;
       setState(() {});
     }));
-
-    return Hero(
-        tag: widget.itemType.name,
-        child: SizedBox(
-          width: widget.width ?? 340.d,
-          height: height,
+    return SizedBox(
+        width: widget.width ?? 340.d,
+        height: height,
+        child: Hero(
+          tag: widget.itemType.name,
           child: Widgets.touchable(
-              child: Stack(alignment: Alignment.centerLeft, children: [
+              child: Material(
+                  child: Stack(alignment: Alignment.centerLeft, children: [
                 Positioned(
                     right: right,
                     left: 10.d,
@@ -93,7 +93,7 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                     child: widget.clickable
                         ? Asset.load<Image>('ui_plus')
                         : const SizedBox()),
-              ]),
+              ])),
               onTap: () {
                 if (widget.clickable) {
                   // widget.services.get<Analytics>().funnle("shopclicks");
