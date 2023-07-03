@@ -82,7 +82,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
               alignment: Alignment.topCenter,
               fit: StackFit.loose,
               children: [
-                Positioned(child: headerFactory()),
+                Positioned(child: titleFactory()),
                 Padding(
                     padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
                     child: contentFactory()),
@@ -102,7 +102,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ));
   }
 
-  headerFactory() {
+  titleFactory() {
     return Widgets.rect(
         width: 562.d,
         height: 130.d,
@@ -111,7 +111,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
             image: DecorationImage(
                 centerSlice: const Rect.fromLTWH(12, 120, 4, 4),
                 image: Asset.load<Image>(
-                  'popup_header',
+                  'popup_title',
                   imageCacheWidth: (562 * DeviceInfo.ratio).round(),
                   imageCacheHeight: (130 * DeviceInfo.ratio).round(),
                 ).image)),
