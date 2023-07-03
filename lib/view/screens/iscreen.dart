@@ -4,14 +4,12 @@ import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/screens/home_screen.dart';
+import '../../view/navigation_route.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
-import 'loading_screen.dart';
 
 class AbstractScreen extends StatefulWidget {
-  final Screens type;
+  final Routes type;
   final String? sfx;
   AbstractScreen(
     this.type, {
@@ -23,7 +21,7 @@ class AbstractScreen extends StatefulWidget {
 }
 
 class AbstractScreenState<T extends AbstractScreen> extends State<T>
-    with ILogger {
+    with ILogger, TickerProviderStateMixin {
   List<Widget> stepChildren = <Widget>[];
 
   @override
@@ -71,27 +69,4 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   }
 
   Widget contentFactory() => const SizedBox();
-}
-
-enum Screens {
-  none,
-  home,
-  loading,
-  profile,
-  settings,
-  shop,
-
-  popupNone
-}
-
-extension ScreenTools on Screens {
-  static Widget getScreen(String routeName, {List<Object>? args}) {
-    return switch (routeName) {
-      "/home" => HomeScreen(),
-      "/popupNone" => AbstractPopup(PopupType.none),
-      _ => LoadingScreen(),
-    };
-  }
-
-  String get routeName => "/$name";
 }
