@@ -31,7 +31,7 @@ extension Overlays on OverlayType {
   static remove(OverlayType type) {
     if (_entries.containsKey(type)) {
       _entries[type]?.remove();
-      _entries.remove(type.name);
+      _entries.remove(type);
     }
   }
 }
