@@ -31,17 +31,6 @@ abstract class IConnection extends IService {
   Future<Result<T>> rpc<T>(RpcId id, {Map<String, dynamic>? params});
 }
 
-enum LoadParams {
-  udid,
-  device_name,
-  game_version,
-  os_type,
-  os_version,
-  model,
-  store_type,
-  name
-}
-
 class HttpConnection extends IConnection {
   static String baseURL = '';
   Map cookies = {};
@@ -79,15 +68,15 @@ class HttpConnection extends IConnection {
   @override
   Future<Result<Account>> loadAccount() async {
     var params = <String, dynamic>{
-      LoadParams.udid.name:
-          'e6ac281eae92abd4581116b380da33a8', //DeviceInfo.adId,
-      LoadParams.device_name.name: DeviceInfo.model,
-      LoadParams.game_version.name: 'app_version'.l(),
-      LoadParams.os_type.name: 1,
-      LoadParams.os_version.name: DeviceInfo.osVersion,
-      LoadParams.model.name: DeviceInfo.model,
-      LoadParams.store_type.name: "bazar",
-      LoadParams.name.name: "Mansour2"
+      ParamName.udid.name:
+          '111eab5fa6eb7de12222a71616812f5f1d184741', //DeviceInfo.adId,
+      ParamName.device_name.name: DeviceInfo.model,
+      ParamName.game_version.name: 'app_version'.l(),
+      ParamName.os_type.name: 1,
+      ParamName.os_version.name: DeviceInfo.osVersion,
+      ParamName.model.name: DeviceInfo.model,
+      ParamName.store_type.name: "bazar",
+      ParamName.name.name: "Mansour3"
     };
     var result =
         await rpc<Map<String, dynamic>>(RpcId.playerLoad, params: params);
@@ -182,6 +171,18 @@ class NetResponse {
   String toString() {
     return '[state:$state, message:$message]';
   }
+}
+
+enum ParamName {
+  // Player laod
+  udid,
+  device_name,
+  game_version,
+  os_type,
+  os_version,
+  model,
+  store_type,
+  name
 }
 
 enum RpcId { battle, playerLoad }
