@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/prefs.dart';
 import 'package:http/http.dart' as http;
 
 import '../../data/core/account.dart';
@@ -88,7 +89,7 @@ class HttpConnection extends IConnection {
   @override
   Future<Result<T>> rpc<T>(RpcId id, {Map? params}) async {
     try {
-      final headers = getDefaultHeader();
+      final headers = _getDefaultHeader();
       var data = {};
       if (params != null) {
         // var json =
@@ -104,6 +105,8 @@ class HttpConnection extends IConnection {
       if (status != 200) {
         throw Exception('http.post error: statusCode= $status');
       }
+
+      _proccessResponseHeaders(response.headers);
       log(response.body);
       var body = response.body.xorDecrypt();
       log(body);
@@ -137,7 +140,13 @@ class HttpConnection extends IConnection {
     log("update response => ${state.name} - $message");
   }
 
-  Map<String, String>? getDefaultHeader(
+  void _proccessResponseHeaders(Map<String, String> header) {
+    if (header.containsKey('set-cookie')) {
+      Pref.cookies.setString(header["set-cookie"]!);
+    }
+  }
+
+  Map<String, String>? _getDefaultHeader(
       {Map<String, String>? headers, bool showLogs = true}) {
     if (!Platform.isAndroid && !Platform.isWindows /*&& buildType!="debug"*/) {
       return null;
@@ -145,18 +154,11 @@ class HttpConnection extends IConnection {
     if (showLogs) log("getting default headers");
     headers = headers ?? {};
 
-    // if (!cookiesLoaded) {
-    //     loadCookies();
-    //  }
-
     headers["Content-Type"] = "application/x-www-form-urlencoded";
-    for (var entry in cookies.entries) {
-      if (headers["Cookie"] == null) {
-        headers["Cookie"] = "";
+    var cookies = Pref.cookies.getString();
+    if (cookies.isNotEmpty) {
+      headers["Cookie"] = cookies;
       }
-      headers["Cookie"] = "${headers["Cookie"]} ${entry.key}=${entry.value}; ";
-    }
-
     return headers;
   }
 }
