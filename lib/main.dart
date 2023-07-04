@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../services/deviceinfo.dart';
 import 'blocs/account_bloc.dart';
 import 'blocs/services.dart';
 import 'services/theme.dart';
@@ -16,12 +17,39 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   static final _firebaseAnalytics = FirebaseAnalytics.instance;
   static final _observer =
       FirebaseAnalyticsObserver(analytics: _firebaseAnalytics);
+
+  @override
+  createState() => _MyAppState();
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_MyAppState>()?.restartApp();
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  late UniqueKey key;
+
+  @override
+  void initState() {
+    _initialize();
+    super.initState();
+  }
+
+  void restartApp() {
+    setState(() => _initialize());
+  }
+
+  void _initialize() {
+    if (Navigator.canPop(context)) Navigator.pop(context);
+    key = UniqueKey();
+    DeviceInfo.size = Size.zero;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +59,11 @@ class MyApp extends StatelessWidget {
             providers: [
               BlocProvider(
                   create: (context) =>
-                      Services(firebaseAnalytics: _firebaseAnalytics)),
+                      Services(firebaseAnalytics: MyApp._firebaseAnalytics)),
               BlocProvider(create: (context) => AccountBloc())
             ],
             child: MaterialApp(
-                navigatorObservers: [_observer],
+                navigatorObservers: [MyApp._observer],
 
                 // Provide the generated AppLocalizations to the MaterialApp. This
                 // allows descendant Widgets to display the correct translations

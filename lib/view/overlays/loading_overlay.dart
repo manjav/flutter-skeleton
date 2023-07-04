@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
+import '../../data/core/result.dart';
+import '../../main.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -21,7 +23,7 @@ class LoadingOverlay extends AbstractOverlay {
 
 class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   bool _logViewVisibility = false;
-  Widget _alert = const SizedBox();
+  Result _result = Result(StatusCode.C0_SUCCESS, '', null);
   SMIBool? _closeInput;
   int _startTime = 0;
   final _minAnimationTime = 3000;
@@ -62,26 +64,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                 Navigator.pushNamed(context, Routes.home.routeName);
               }
             } else if (state.initState == ServicesInitState.error) {
-              _alert = Positioned(
-                  bottom: 200.d,
-                  child: Column(
-                    children: [
-                      Text(
-                        "Connection Lost!\nPlease try again.",
-                        textAlign: TextAlign.center,
-                        style: TStyles.medium,
-                      ),
-                      SizedBox(height: 16.d),
-                      Widgets.button(
-                          buttonId: -1,
-                          child: Text('Retry', style: TStyles.large),
-                          width: 320.d,
-                          color: TColors.blue,
-                          onPressed: () {
-                            _reload();
-                          })
-                    ],
-                  ));
+              _result = state.result!;
               setState(() {});
             }
           },
@@ -106,14 +89,38 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                 child: _logViewVisibility
                     ? Text(ILogger.accumulatedLog, style: TStyles.tiny)
                     : Widgets.rect(color: TColors.transparent))),
-        _alert,
+        _result.isSuccess()
+            ? const SizedBox()
+            : Positioned(
+                left: 20.d,
+                right: 20.d,
+                bottom: 200.d,
+                child: Column(
+                  children: [
+                    Text(
+                      "${'error_${_result.statusCode.value}'.l()}\n\nPlease try again.",
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      style: TStyles.medium,
+                    ),
+                    SizedBox(height: 48.d),
+                    Widgets.button(
+                        buttonId: -1,
+                        child: Text('Retry', style: TStyles.large),
+                        width: 320.d,
+                        color: TColors.blue,
+                        onPressed: () {
+                          _reload();
+                        })
+                  ],
+                )),
       ]),
     );
   }
 
   void _reload() {
     close();
-    // MyApp.restartApp(context);
+    MyApp.restartApp(context);
   }
 
   @override
