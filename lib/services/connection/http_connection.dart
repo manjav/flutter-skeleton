@@ -76,7 +76,8 @@ class HttpConnection extends IConnection {
       ParamName.os_version.name: DeviceInfo.osVersion,
       ParamName.model.name: DeviceInfo.model,
       ParamName.store_type.name: "bazar",
-      ParamName.name.name: "Mansour3"
+      ParamName.restore_key.name: "keep3oil11",
+      ParamName.name.name: "ArMaN"
     };
     var result =
         await rpc<Map<String, dynamic>>(RpcId.playerLoad, params: params);
@@ -181,14 +182,15 @@ class NetResponse {
 
 enum ParamName {
   // Player laod
-  udid,
   device_name,
   game_version,
+  model,
+  name,
   os_type,
   os_version,
-  model,
+  restore_key,
   store_type,
-  name
+  udid,
 }
 
 enum RpcId {
