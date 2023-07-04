@@ -96,7 +96,7 @@ class HttpConnection extends IConnection {
         //     '{"game_version":"","device_name":"Ali MacBook Pro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","os_type":2}';
         var json = jsonEncode(params);
         log(json);
-        data = {'edata': json.xorEncrypt()};
+        data = id.needsEncryption ? {'edata': json.xorEncrypt()} : params;
         log(json.xorEncrypt());
       }
       final url = Uri.parse('$baseURL/${id.value}');
@@ -113,7 +113,8 @@ class HttpConnection extends IConnection {
 
       _proccessResponseHeaders(response.headers);
       log(response.body);
-      var body = response.body.xorDecrypt();
+      var body =
+          id.needsEncryption ? response.body.xorDecrypt() : response.body;
       log(body);
 
       var responseData = json.decode(body);
@@ -240,6 +241,12 @@ extension RpcIdEx on RpcId {
       RpcId.captcha => "bot/getcaptcha",
       RpcId.forgotPassword => "user/iforgot",
       RpcId.getVCBalance => "user/getvcbalance/client/iOS/"
+    };
+  }
+
+  bool get needsEncryption {
+    return switch (this) {
+      _ => true,
     };
   }
 
