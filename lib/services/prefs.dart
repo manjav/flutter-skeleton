@@ -21,19 +21,22 @@ class Prefs extends IService {
 
   static bool contains(String key) => _instance!.containsKey(key);
 
-  static String getString(String key) => _instance!.getString(key) ?? "";
+  static String getString(String key, {String defaultValue = ''}) =>
+      _instance!.getString(key) ?? defaultValue;
   static String setString(String key, String value) {
     _instance!.setString(key, value);
     return value;
   }
 
-  static bool getBool(String key) => _instance!.getBool(key) ?? false;
+  static bool getBool(String key, {bool defaultValue = false}) =>
+      _instance!.getBool(key) ?? defaultValue;
   static bool setBool(String key, bool value) {
     _instance!.setBool(key, value);
     return value;
   }
 
-  static int getInt(String key) => _instance!.getInt(key) ?? 0;
+  static int getInt(String key, {int defaultValue = 0}) =>
+      _instance!.getInt(key) ?? defaultValue;
   static int setInt(String key, int value) {
     _instance!.setInt(key, value);
     return value;
@@ -48,6 +51,7 @@ class Prefs extends IService {
 }
 
 enum Pref {
+  cookies,
   testVersion,
   visitCount,
   tutorStep,
@@ -57,14 +61,17 @@ extension PrefExt on Pref {
   bool contains() => Prefs.contains(name);
 
   int setInt(int value) => Prefs.setInt(name, value);
-  int getInt() => Prefs.getInt(name);
+  int getInt({int defaultValue = 0}) =>
+      Prefs.getInt(name, defaultValue: defaultValue);
   int increase(int value) => Prefs.increase(name, value);
 
   String setString(String value) => Prefs.setString(name, value);
-  String getString() => Prefs.getString(name);
+  String getString({String defaultValue = ''}) =>
+      Prefs.getString(name, defaultValue: defaultValue);
 
   bool setBool(bool value) => Prefs.setBool(name, value);
-  bool getBool() => Prefs.getBool(name);
+  bool getBool({bool defaultValue = false}) =>
+      Prefs.getBool(name, defaultValue: defaultValue);
 }
 
 enum TutorSteps {
