@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/services/prefs.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/result.dart';
@@ -34,7 +35,6 @@ abstract class IConnection extends IService {
 
 class HttpConnection extends IConnection {
   static String baseURL = '';
-  Map cookies = {};
 
   @override
   initialize({List<Object>? args}) async {
@@ -100,7 +100,12 @@ class HttpConnection extends IConnection {
         log(json.xorEncrypt());
       }
       final url = Uri.parse('$baseURL/${id.value}');
-      final response = await http.post(url, headers: headers, body: data);
+      http.Response response;
+      if (id.requestType == HttpRequestType.get) {
+        response = await http.get(url, headers: headers);
+      } else {
+        response = await http.post(url, headers: headers, body: data);
+      }
       final status = response.statusCode;
       if (status != 200) {
         throw Exception('http.post error: statusCode= $status');
@@ -238,6 +243,30 @@ extension RpcIdEx on RpcId {
     };
   }
 
+  HttpRequestType get requestType {
+    return switch (this) {
+      RpcId.tutorialExport ||
+      RpcId.tutorialLangEnExport ||
+      RpcId.tutorialLangFaExport ||
+      RpcId.comboExport ||
+      RpcId.comboLangEnExport ||
+      RpcId.comboLangFaExport ||
+      RpcId.heroItemsExport ||
+      RpcId.heroItemsLangEnExport ||
+      RpcId.heroItemsLangFaExport ||
+      RpcId.buyHeroItem ||
+      RpcId.setHeroItems ||
+      RpcId.fruitLangFaExport ||
+      RpcId.fruitLangEnExport ||
+      RpcId.imageStorageAPI_ImageStorage ||
+      RpcId.cardsExport ||
+      RpcId.captcha ||
+      RpcId.forgotPassword ||
+      RpcId.getVCBalance =>
+        HttpRequestType.get,
+      _ => HttpRequestType.post,
     };
   }
 }
+
+enum HttpRequestType { get, post }
