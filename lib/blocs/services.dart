@@ -72,7 +72,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     return switch (type) {
       Ads => ServiceType.ads,
       Games => ServiceType.games,
-      IConnection => ServiceType.connection,
+      IConnection || HttpConnection => ServiceType.connection,
       DeviceInfo => ServiceType.device,
       Localization => ServiceType.localization,
       Prefs => ServiceType.prefs,
