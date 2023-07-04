@@ -29,14 +29,14 @@ class SkinnedText extends StatelessWidget {
           text,
           textAlign: textAlign,
           style: style.copyWith(
-            height: -0.18,
+            height: -0.1,
             foreground: Paint()
               ..strokeWidth = strokeWidth ?? 10.d
               ..color = strokeColor ?? TColors.primary10
               ..style = PaintingStyle.stroke,
           ),
         ),
-        Text(text, textAlign: textAlign, style: style),
+        Text(text, textAlign: textAlign, style: style.copyWith(height: -0.3)),
       ],
     );
   }
