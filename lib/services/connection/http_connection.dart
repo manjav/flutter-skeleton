@@ -5,12 +5,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/prefs.dart';
 import 'package:http/http.dart' as http;
 
 import '../../data/core/account.dart';
 import '../../data/core/result.dart';
 import '../../services/localization.dart';
+import '../../services/prefs.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../deviceinfo.dart';

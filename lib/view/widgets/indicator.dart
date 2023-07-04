@@ -78,7 +78,7 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                     Positioned(
                       left: left,
                       right: right + 8.d,
-                      child: SkinnedText(
+                      child:  SkinnedText(
                         text,
                         style: TStyles.large.copyWith(
                             fontSize: (24.d + 60.d / (text.length))

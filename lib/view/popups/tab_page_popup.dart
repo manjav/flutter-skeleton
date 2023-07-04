@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../view/tab_provider.dart';
 
 import '../../services/deviceinfo.dart';
 import '../../view/popups/ipopup.dart';
+import '../../view/tab_provider.dart';
 
 class TabPagePopup extends AbstractPopup {
   const TabPagePopup(super.type, {super.key, required super.args});
@@ -26,12 +26,13 @@ class _TabPagePopupState extends AbstractPopupState<AbstractPopup>
         height: 880.d,
         child: tabsBuilder(data: [
           TabData("Gold", "ui_gold"),
-          TabData("Nectar"),
+          TabData("Nectar", "ui_nectar"),
+          TabData("Pluus", "ui_plus"),
         ]));
   }
 
   @override
   void onTapChange() {
-    print(selectedTabIndex);
+    log(selectedTabIndex);
   }
 }
