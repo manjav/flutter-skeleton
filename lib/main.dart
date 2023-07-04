@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/deviceinfo.dart';
+import '../../services/sounds.dart';
 import 'blocs/account_bloc.dart';
 import 'blocs/services.dart';
 import 'services/theme.dart';
@@ -32,13 +33,24 @@ class MyApp extends StatefulWidget {
   }
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late UniqueKey key;
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     _initialize();
     super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      // BlocProvider.of<Services>(context).get<Sounds>().stopAll();
+    } else if (state == AppLifecycleState.resumed) {
+      BlocProvider.of<Services>(context).get<Sounds>().playMusic();
+    }
   }
 
   void restartApp() {
@@ -103,5 +115,11 @@ class _MyAppState extends State<MyApp> {
                               args: routeSettings.arguments
                                   as Map<String, dynamic>?));
                 })));
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
