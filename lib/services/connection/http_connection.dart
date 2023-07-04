@@ -7,7 +7,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/services/prefs.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/result.dart';
@@ -88,17 +87,16 @@ class HttpConnection extends IConnection {
 
   @override
   Future<Result<T>> rpc<T>(RpcId id, {Map? params}) async {
+    params = params ?? {};
     try {
       final headers = _getDefaultHeader();
       var data = {};
-      if (params != null) {
         // var json =
         //     '{"game_version":"","device_name":"Ali MacBook Pro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","os_type":2}';
         var json = jsonEncode(params);
         log(json);
         data = id.needsEncryption ? {'edata': json.xorEncrypt()} : params;
         log(json.xorEncrypt());
-      }
       final url = Uri.parse('$baseURL/${id.value}');
       http.Response response;
       if (id.requestType == HttpRequestType.get) {
@@ -117,7 +115,7 @@ class HttpConnection extends IConnection {
           id.needsEncryption ? response.body.xorDecrypt() : response.body;
       log(body);
 
-      var responseData = json.decode(body);
+      var responseData = jsonDecode(body);
       if (!responseData['status']) {
         var statusCode = (responseData['data']['code'] as int).toStatus();
         return Result<T>(statusCode, '', responseData['data'] as T?);
@@ -125,7 +123,7 @@ class HttpConnection extends IConnection {
 
       return Result<T>(StatusCode.C0_SUCCESS, '', responseData['data'] as T);
     } catch (e) {
-      var error = '$e'.split('codeName: ')[1].split(",")[0];
+      var error = '$e'.split('statusCode= ')[1].split(",")[0];
       if (error == "UNAUTHENTICATED" ||
           error == "UNAVAILABLE" ||
           error == "NOT_FOUND" ||
