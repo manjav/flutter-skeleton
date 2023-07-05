@@ -12,14 +12,22 @@ class LoaderWidget extends StatefulWidget {
 
   final String name;
   final AssetType type;
+  final BoxFit? fit;
   final double? width;
   final double? height;
   final String? baseUrl;
-  final Function(dynamic)? onLoad;
+  final Function(Artboard)? onRiveInit;
 
-  const LoaderWidget(this.type, this.name,
-      {this.width, this.height, this.onLoad, this.baseUrl, Key? key})
-      : super(key: key);
+  const LoaderWidget(
+    this.type,
+    this.name, {
+    this.fit,
+    this.width,
+    this.height,
+    this.onRiveInit,
+    this.baseUrl,
+    super.key,
+  });
 
   @override
   createState() => _LoaderWidgetState();
@@ -65,7 +73,8 @@ class _LoaderWidgetState extends State<LoaderWidget> {
       case AssetType.animation:
       case AssetType.animationZipped:
         return RiveAnimation.file(_loader.file!.path,
-            onInit: ((p0) => widget.onLoad?.call(p0)), fit: BoxFit.fitWidth);
+            onInit: ((p0) => widget.onRiveInit?.call(p0)),
+            fit: BoxFit.fitWidth);
       case AssetType.image:
         return Image.memory(Uint8List.fromList(_loader.bytes!));
       case AssetType.vector:
