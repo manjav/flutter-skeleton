@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
@@ -20,6 +21,7 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+  late SMINumber _level;
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
@@ -36,10 +38,21 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             top: 310.d,
             child: LoaderWidget(AssetType.image, 'weather_4', width: 128.d)),
         Positioned(
-            bottom: 300.d,
-            width: 240.d,
-            height: 240.d,
-            child: LoaderWidget(AssetType.animation, 'coin', width: 156.d)),
+            bottom: 500.d,
+            width: 500.d,
+            height: 500.d,
+            child: LoaderWidget(AssetType.animation, 'building_greenhouse',
+                onRiveInit: (Artboard artboard) {
+              final controller = StateMachineController.fromArtboard(
+                artboard,
+                'Building',
+                onStateChange: (state, animation) {
+                  print('$state ====== $animation');
+                },
+              )!;
+              _level = controller.findInput<double>('greenhouse') as SMINumber;
+              artboard.addController(controller);
+            }, fit: BoxFit.fitWidth)),
         Positioned(
             bottom: 0,
             width: 240.d,
@@ -50,12 +63,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     StateMachineController.fromArtboard(artboard, 'Loading')
                         as RiveAnimationController))),
         Widgets.button(
-            width: 360.d,
             color: TColors.clay,
-            onPressed: () => Navigator.pushNamed(
-                context, Routes.popupTabPage.routeName,
-                arguments: {'tabsCount': 4}),
-            child: const SkinnedText("Show Pop Up"))
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.popupTabPage.routeName,
+                  arguments: {'selectedTabIndex': 2});
+            },
+            child: const SkinnedText("Show Pop Up")),
+        Positioned(
+            bottom: 400.d,
+            width: 450.d,
+            child: Widgets.button(
+                color: TColors.clay,
+                onPressed: () => _level.value = (_level.value + 1) % 12,
+                child: const SkinnedText("Upgrade Building"))),
       ],
     );
   }
