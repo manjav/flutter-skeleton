@@ -137,8 +137,9 @@ class Widgets {
         id: buttonId,
         onTap: onPressed,
         child: rect(
+          constraints: BoxConstraints.tight(Size(400.d, 156.d)),
           width: width,
-          height: height ?? 156.d,
+          height: height,
           alignment: alignment ?? Alignment.center,
           transform: transform,
           transformAlignment: transformAlignment,
