@@ -6,7 +6,7 @@ import '../utils/assets.dart';
 import 'widgets.dart';
 
 @optionalTypeArgs
-mixin TabProviderStateMixin<T extends StatefulWidget> on State<T> {
+mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
   int _selectedTabIndex = -1;
 
   @protected
@@ -53,7 +53,8 @@ mixin TabProviderStateMixin<T extends StatefulWidget> on State<T> {
     return Expanded(
       child: Widgets.button(
           margin: EdgeInsets.symmetric(horizontal: 6.d),
-          height: 120.d,
+          padding: EdgeInsets.zero,
+          height: 118.d,
           decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.fill,
@@ -69,7 +70,7 @@ mixin TabProviderStateMixin<T extends StatefulWidget> on State<T> {
               SizedBox(width: data.icon == null ? 0 : 32.d),
               data.icon == null
                   ? const SizedBox()
-                  : Asset.load<Image>(data.icon!, width: 72.d),
+                  : Asset.load<Image>(data.icon!, width: 64.d),
             ],
           ),
           onPressed: () {

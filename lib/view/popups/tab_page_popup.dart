@@ -12,7 +12,7 @@ class TabPagePopup extends AbstractPopup {
 }
 
 class _TabPagePopupState extends AbstractPopupState<AbstractPopup>
-    with TabProviderStateMixin {
+    with TabProviderMixin {
   @override
   void initState() {
     selectedTabIndex = widget.args['selectedTabIndex'] ?? 0;
@@ -33,6 +33,6 @@ class _TabPagePopupState extends AbstractPopupState<AbstractPopup>
 
   @override
   void onTapChange() {
-    log(selectedTabIndex);
+    log('$selectedTabIndex');
   }
 }
