@@ -42,15 +42,15 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
         child: Scaffold(
       body: Stack(children: [
         Positioned(
+            top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
+        Positioned(
             top: 16.d,
-            left: 12.d,
-            right: 12.d,
+            left: 32.d,
+            right: 32.d,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: appBarElements())),
-        Positioned(
-            top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
       ]),
     ));
   }
@@ -58,13 +58,15 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   List<Widget> appBarElements() {
     return [
       SizedBox(width: 234.d),
+      const Expanded(child: SizedBox()),
       Indicator(widget.type.name, AccountVar.gold),
       SizedBox(width: 16.d),
       Indicator(widget.type.name, AccountVar.nectar, width: 260.d),
       Widgets.button(
-          padding: EdgeInsets.all(32.d),
-          child: Asset.load<Image>('ui_settings'),
-          onPressed: () => Navigator.of(context).pop()),
+          width: 110.d,
+          height: 110.d,
+          padding: EdgeInsets.all(16.d),
+          child: Asset.load<Image>('ui_settings'))
     ];
   }
 

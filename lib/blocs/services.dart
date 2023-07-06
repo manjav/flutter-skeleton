@@ -121,7 +121,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
           result));
       if (result.isSuccess()) {
         BlocProvider.of<AccountBloc>(context)
-            .add(SetAccount(account: result.data));
+            .add(SetAccount(account: result.data!));
       }
     }
 
