@@ -37,6 +37,7 @@ dependencies:
   path_provider: ^2.0.13
   rive: ^0.9.1
   shared_preferences: ^2.0.18
+  square_percent_indicater: ^0.1.0
   unity_ads_plugin: ^0.3.7
   xor_cipher: ^1.0.0+1
 

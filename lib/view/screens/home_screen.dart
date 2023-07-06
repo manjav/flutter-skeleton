@@ -29,6 +29,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
   }
 
+
+  @override
+  List<Widget> appBarElements() {
+    return <Widget>[
+      SizedBox(
+          width: 194.d,
+          height: 202.d,
+          child: const LevelIndicator(level: "2", xp: 12)),
+      ...super.appBarElements(),
+    ];
+  }
+
   @override
   Widget contentFactory() {
     return Stack(
