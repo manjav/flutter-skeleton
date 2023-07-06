@@ -82,8 +82,8 @@ class HttpConnection extends IConnection {
     var result =
         await rpc<Map<String, dynamic>>(RpcId.playerLoad, params: params);
     updateResponse(LoadingState.connect, "connected.");
-    return Result<Account>(
-        result.statusCode, "Account loading complete.", Account(result.data));
+    return Result<Account>(result.statusCode, "Account loading finished.",
+        result.data != null ? Account(result.data!) : null);
   }
 
   @override
@@ -92,12 +92,12 @@ class HttpConnection extends IConnection {
     try {
       final headers = _getDefaultHeader();
       var data = {};
-        // var json =
-        //     '{"game_version":"","device_name":"Ali MacBook Pro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","os_type":2}';
-        var json = jsonEncode(params);
-        log(json);
-        data = id.needsEncryption ? {'edata': json.xorEncrypt()} : params;
-        log(json.xorEncrypt());
+      // var json =
+      //     '{"game_version":"","device_name":"Ali MacBook Pro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","os_type":2}';
+      var json = jsonEncode(params);
+      log(json);
+      data = id.needsEncryption ? {'edata': json.xorEncrypt()} : params;
+      log(json.xorEncrypt());
       final url = Uri.parse('$baseURL/${id.value}');
       http.Response response;
       if (id.requestType == HttpRequestType.get) {
@@ -107,7 +107,7 @@ class HttpConnection extends IConnection {
       }
       final status = response.statusCode;
       if (status != 200) {
-        throw Exception('http.post error: statusCode= $status');
+        throw Exception('{"code":$status, "message":"${response.body}"}');
       }
 
       _proccessResponseHeaders(response.headers);
@@ -124,17 +124,14 @@ class HttpConnection extends IConnection {
 
       return Result<T>(StatusCode.C0_SUCCESS, '', responseData['data'] as T);
     } catch (e) {
-      var error = '$e'.split('statusCode= ')[1].split(",")[0];
-      if (error == "UNAUTHENTICATED" ||
-          error == "UNAVAILABLE" ||
-          error == "NOT_FOUND" ||
-          error == "INTERNAL") {
-        error = 'error_${error.toLowerCase()}';
-      } else {
-        error = "RPC: ${id.name} Error: $e";
+      var error = '$e';
+      if (error.contains("No host specified in URI")) {
+        return Result(503.toStatus(), 'error_503'.l(), null);
       }
+      var json = jsonDecode(error);
       updateResponse(LoadingState.error, error);
-      return Result(StatusCode.C250_UNKNOWN_ERROR, "error", null);
+      return Result(json['code'].toStatus(),
+          json['message'] ?? 'error_${json['code']}'.l(), null);
     }
   }
 
@@ -161,9 +158,15 @@ class HttpConnection extends IConnection {
 
     headers["Content-Type"] = "application/x-www-form-urlencoded";
     var cookies = Pref.cookies.getString();
+    // for (var entry in cookies.entries) {
+    //   if (headers["Cookie"] == null) {
+    //     headers["Cookie"] = "";
+    //   }
+    //   headers["Cookie"] = "${headers["Cookie"]} ${entry.key}=${entry.value}; ";
+    // }
     if (cookies.isNotEmpty) {
       headers["Cookie"] = cookies;
-      }
+    }
     return headers;
   }
 }

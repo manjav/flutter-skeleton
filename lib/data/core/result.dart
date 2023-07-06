@@ -1,11 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
-class Result<Type> {
+class Result<T> {
   final StatusCode statusCode;
   final String message;
-  final Type? _data;
+  final T? _data;
   Result(this.statusCode, this.message, this._data);
-  Type get data => _data!;
+  T? get data => _data;
   bool isSuccess() => statusCode == StatusCode.C0_SUCCESS;
 }
 
@@ -156,6 +156,8 @@ enum StatusCode {
   C242_INVALID_LEAGUE_ID,
 
   C250_UNKNOWN_ERROR,
+
+  C503_SERVICE_UNAVAILABLE,
 }
 
 extension StatusCodeintEx on int {
@@ -314,6 +316,7 @@ extension StatusCodeEx on StatusCode {
       StatusCode.C240_UPDATING_LEAGUE_IN_PROGRESS => 240,
       StatusCode.C241_NOT_IMPLEMENTED => 241,
       StatusCode.C242_INVALID_LEAGUE_ID => 242,
+      StatusCode.C503_SERVICE_UNAVAILABLE => 503,
       _ => 250
     };
   }
