@@ -71,40 +71,28 @@ enum AssetType {
 }
 
 extension AssetTypeExtension on AssetType {
-  String folder([String staging = '']) {
-    switch (this) {
-      case AssetType.animation:
-      case AssetType.animationZipped:
-        return "animations$staging";
-      case AssetType.font:
-        return "fonts";
-      case AssetType.image:
-        return "images$staging";
-      case AssetType.sound:
-        return "sounds";
-      case AssetType.text:
-        return "text";
-      case AssetType.vector:
-        return "vectors";
-    }
+  String folder([String? subFolder]) {
+    var folder = switch (this) {
+      AssetType.animation || AssetType.animationZipped => "animations",
+      AssetType.font => "fonts",
+      AssetType.image => "images",
+      AssetType.sound => "sounds",
+      AssetType.text => "text",
+      AssetType.vector => "vectors",
+    };
+    if (subFolder != null) folder += '/$subFolder';
+    return folder;
   }
 
   String get type {
-    switch (this) {
-      case AssetType.animation:
-      case AssetType.animationZipped:
-        return "riv";
-      case AssetType.font:
-        return "ttf";
-      case AssetType.image:
-        return "webp";
-      case AssetType.sound:
-        return "mp3";
-      case AssetType.text:
-        return "json";
-      case AssetType.vector:
-        return "svg";
-    }
+    return switch (this) {
+      AssetType.animation || AssetType.animationZipped => "riv",
+      AssetType.font => "ttf",
+      AssetType.image => "webp",
+      AssetType.sound => "mp3",
+      AssetType.text => "json",
+      AssetType.vector => "svg"
+    };
   }
 
   String get extension {
