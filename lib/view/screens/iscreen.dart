@@ -44,8 +44,8 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
         Positioned(
             top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
         Positioned(
-            top: 16.d,
-            left: 32.d,
+            top: 32.d,
+            left: 54.d,
             right: 32.d,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -57,7 +57,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   List<Widget> appBarElements() {
     return [
-      SizedBox(width: 234.d),
       const Expanded(child: SizedBox()),
       Indicator(widget.type.name, AccountVar.gold),
       SizedBox(width: 16.d),

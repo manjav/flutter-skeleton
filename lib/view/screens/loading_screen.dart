@@ -21,7 +21,5 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return const SizedBox();
-  }
+  Widget build(BuildContext context) => const SizedBox();
 }

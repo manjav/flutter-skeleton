@@ -12,6 +12,7 @@ class LoaderWidget extends StatefulWidget {
 
   final String name;
   final AssetType type;
+  final String? subFolder;
   final BoxFit? fit;
   final double? width;
   final double? height;
@@ -21,6 +22,7 @@ class LoaderWidget extends StatefulWidget {
   const LoaderWidget(
     this.type,
     this.name, {
+    this.subFolder,
     this.fit,
     this.width,
     this.height,
@@ -49,8 +51,8 @@ class _LoaderWidgetState extends State<LoaderWidget> {
   }
 
   void _load() {
-    var url =
-        widget.baseUrl ?? "${LoaderWidget.baseURL}/${widget.type.folder()}";
+    var url = widget.baseUrl ??
+        "${LoaderWidget.baseURL}/${widget.type.folder(widget.subFolder ?? '')}";
     var netPath = "${widget.name}.${widget.type.extension}";
     var path = "${widget.name}.${widget.type.type}";
     if (_loader.path != path) {
