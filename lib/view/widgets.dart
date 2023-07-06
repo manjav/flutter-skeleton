@@ -137,13 +137,13 @@ class Widgets {
         id: buttonId,
         onTap: onPressed,
         child: rect(
-          constraints: BoxConstraints.tight(Size(400.d, 156.d)),
           width: width,
           height: height,
           alignment: alignment ?? Alignment.center,
           transform: transform,
           transformAlignment: transformAlignment,
-          padding: padding,
+          padding:
+              padding ?? EdgeInsets.symmetric(horizontal: 32.d, vertical: 48.d),
           margin: margin,
           decoration: decoration,
           foregroundDecoration: foregroundDecoration,
