@@ -3,15 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
-import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/screens/iscreen.dart';
-import '../../view/widgets/loaderwidget.dart';
-import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/level_indicator.dart';
+import '../widgets/loaderwidget.dart';
+import 'iscreen.dart';
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Routes.home);
@@ -21,7 +19,6 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
-  late SMINumber _level;
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
@@ -29,6 +26,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
   }
 
+  final double _navbarHeight = 200.d;
+  final Map<String, SMIBool> _tabInputs = {};
+  final PageController _pageController = PageController(initialPage: 2);
+  final List<String> _tabs = ['shop', 'cards', 'battle', 'message', 'auctions'];
 
   @override
   List<Widget> appBarElements() {
@@ -43,52 +44,60 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   Widget contentFactory() {
-    return Stack(
-      alignment: Alignment.center,
+    return Column(
       children: [
-        Positioned(
-            top: 310.d,
-            child: LoaderWidget(AssetType.image, 'weather_4', width: 128.d)),
-        Positioned(
-            bottom: 500.d,
-            width: 500.d,
-            height: 500.d,
-            child: LoaderWidget(AssetType.animation, 'building_greenhouse',
-                onRiveInit: (Artboard artboard) {
-              final controller = StateMachineController.fromArtboard(
-                artboard,
-                'Building',
-                onStateChange: (state, animation) {
-                  print('$state ====== $animation');
-                },
-              )!;
-              _level = controller.findInput<double>('greenhouse') as SMINumber;
-              artboard.addController(controller);
-            }, fit: BoxFit.fitWidth)),
-        Positioned(
-            bottom: 0,
-            width: 240.d,
-            height: 240.d,
-            child: Asset.load<RiveAnimation>('loading',
-                fit: BoxFit.fitWidth,
-                onRiveInit: (artboard) => artboard.addController(
-                    StateMachineController.fromArtboard(artboard, 'Loading')
-                        as RiveAnimationController))),
-        Widgets.button(
-            color: TColors.clay,
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.popupTabPage.routeName,
-                  arguments: {'selectedTabIndex': 2});
-            },
-            child: const SkinnedText("Show Pop Up")),
-        Positioned(
-            bottom: 400.d,
-            width: 450.d,
-            child: Widgets.button(
-                color: TColors.clay,
-                onPressed: () => _level.value = (_level.value + 1) % 12,
-                child: const SkinnedText("Upgrade Building"))),
+        Expanded(
+            child: PageView.builder(
+          itemCount: _tabs.length,
+          itemBuilder: _pageItemBuilder,
+          onPageChanged: (value) => _selectTap(value, pageChange: false),
+          controller: _pageController,
+        )),
+        SizedBox(
+            height: _navbarHeight,
+            child: ListView.builder(
+                itemExtent: DeviceInfo.size.width / _tabs.length,
+                itemBuilder: _tabItemBuilder,
+                scrollDirection: Axis.horizontal,
+                itemCount: _tabs.length))
       ],
     );
+  }
+
+  Widget? _pageItemBuilder(BuildContext context, int index) {
+    log("Page $index");
+    return Center(child: Text(_tabs[index]));
+  }
+
+  Widget? _tabItemBuilder(BuildContext context, int index) {
+    return Widgets.touchable(
+      onTap: () => _selectTap(index, tabsChange: false),
+      child: LoaderWidget(
+        AssetType.animation,
+        "tab_${_tabs[index]}",
+        fit: BoxFit.fill,
+        onRiveInit: (Artboard artboard) {
+          final controller =
+              StateMachineController.fromArtboard(artboard, 'Tab');
+          _tabInputs[_tabs[index]] =
+              controller!.findInput<bool>('close') as SMIBool;
+          _tabInputs[_tabs[index]]!.value =
+              index == _pageController.initialPage;
+          artboard.addController(controller);
+        },
+      ),
+    );
+  }
+
+  _selectTap(int index, {bool tabsChange = true, bool pageChange = true}) {
+    if (tabsChange) {
+      for (var key in _tabInputs.keys) {
+        _tabInputs[key]!.value = _tabs[index] != key;
+      }
+    }
+    if (pageChange) {
+      _pageController.animateToPage(index,
+          duration: const Duration(milliseconds: 700), curve: Curves.ease);
+    }
   }
 }
