@@ -75,8 +75,7 @@ class _LoaderWidgetState extends State<LoaderWidget> {
       case AssetType.animation:
       case AssetType.animationZipped:
         return RiveAnimation.file(_loader.file!.path,
-            onInit: ((p0) => widget.onRiveInit?.call(p0)),
-            fit: BoxFit.fitWidth);
+            onInit: ((p0) => widget.onRiveInit?.call(p0)), fit: widget.fit);
       case AssetType.image:
         return Image.memory(Uint8List.fromList(_loader.bytes!));
       case AssetType.vector:

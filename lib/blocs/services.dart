@@ -84,7 +84,6 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
   }
 
   updateService(ServicesEvent event, Emitter<ServicesState> emit) {
-    // account = event.account;
     emit(ServicesUpdate(event.initState, event.exception));
   }
 
