@@ -59,13 +59,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
-        Expanded(
-            child: PageView.builder(
+        PageView.builder(
           itemCount: _tabInputs.length,
           itemBuilder: _pageItemBuilder,
           onPageChanged: (value) => _selectTap(value, pageChange: false),
           controller: _pageController,
-        )),
+        ),
         SizedBox(
             height: _navbarHeight,
             child: ListView.builder(
@@ -98,8 +97,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               final controller =
                   StateMachineController.fromArtboard(artboard, 'Tab');
               _tabInputs[index] =
-                  controller!.findInput<bool>('close') as SMIBool;
-              _tabInputs[index]!.value = index != _pageController.initialPage;
+                  controller!.findInput<bool>('active') as SMIBool;
+              _tabInputs[index]!.value = index == _pageController.initialPage;
               artboard.addController(controller);
             },
           ),
@@ -112,7 +111,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   _selectTap(int index, {bool tabsChange = true, bool pageChange = true}) {
     if (tabsChange) {
       for (var i = 0; i < _tabInputs.length; i++) {
-        _tabInputs[i]!.value = i != index;
+        _tabInputs[i]!.value = i == index;
       }
       setState(() => _selectedTab = index);
     }
