@@ -16,23 +16,7 @@ import '../../view/widgets/loaderwidget.dart';
 import '../deviceinfo.dart';
 import '../iservices.dart';
 
-abstract class IConnection extends IService {
-  final response = NetResponse();
-
-  @protected
-  Future<void> loadConfigs();
-
-  @protected
-  Future<Result<Account>> loadAccount();
-
-  @protected
-  void updateResponse(LoadingState state, String message);
-
-  @protected
-  Future<Result<T>> rpc<T>(RpcId id, {Map<String, dynamic>? params});
-}
-
-class HttpConnection extends IConnection {
+class HttpConnection extends IService {
   static String baseURL = '';
 
   @override
