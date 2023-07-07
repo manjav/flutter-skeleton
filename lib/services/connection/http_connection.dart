@@ -23,6 +23,10 @@ class HttpConnection extends IService {
   initialize({List<Object>? args}) async {
     await loadConfigs();
 
+    // Load cards data
+    var data = await rpc(RpcId.cardsExport);
+    loadData.cards = Cards()..init(data);
+
     // Load account data
     var params = <String, dynamic>{
       RpcParams.udid.name:
@@ -36,12 +40,8 @@ class HttpConnection extends IService {
       RpcParams.restore_key.name: "keep3oil11",
       RpcParams.name.name: "ArMaN"
     };
-    var data = await rpc(RpcId.playerLoad, params: params);
-    loadData.account = Account()..init(data);
-
-    // Load cards data
-    data = await rpc(RpcId.cardsExport);
-    loadData.cards = Cards()..init(data);
+    data = await rpc(RpcId.playerLoad, params: params);
+    loadData.account = Account()..init(data, args: loadData.cards);
 
     super.initialize();
     return loadData;

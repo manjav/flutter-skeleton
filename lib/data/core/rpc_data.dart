@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/material.dart';
+
 import 'infra.dart';
 
 class LoadData {
@@ -132,6 +134,17 @@ enum AccountField {
 }
 
 class Account extends StringMap<dynamic> {
+  @override
+  void init(Map<String, dynamic> data, {dynamic args}) {
+    var baseCards = args as Cards;
+    super.init(data);
+    var accountCards = <AccountCard>[];
+    for (var card in map['cards']) {
+      accountCards.add(AccountCard(card, baseCards));
+    }
+    map['cards'] = accountCards;
+  }
+
   T get<T>(AccountField fieldName) => map[fieldName.name] as T;
 }
 
@@ -155,9 +168,26 @@ class CardData extends StringMap<dynamic> {
 
 class Cards extends StringMap<CardData> {
   @override
-  void init(Map<String, dynamic> data) {
+  void init(Map<String, dynamic> data, {dynamic args}) {
     data.forEach((key, value) {
       map[key] = CardData()..init(value);
     });
+  }
+
+  CardData get(String key) => map[key]!;
+}
+
+class AccountCard {
+  late int id;
+  late int power;
+  late CardData base;
+  late int lastUsedAt;
+  late GlobalKey key;
+  AccountCard(Map map, Cards cards) {
+    id = map['id'];
+    power = map['power'];
+    base = cards.get("${map['base_card_id']}");
+    lastUsedAt = map['last_used_at'];
+    key = GlobalKey();
   }
 }
