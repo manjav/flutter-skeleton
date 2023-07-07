@@ -32,6 +32,7 @@ class LevelIndicator extends StatelessWidget {
               ).image)),
       child: Stack(
         clipBehavior: Clip.none,
+        alignment: Alignment.center,
         children: [
           SquarePercentIndicator(
             progress: 0.5,
@@ -43,7 +44,12 @@ class LevelIndicator extends StatelessWidget {
             progressColor: TColors.green,
           ),
           Positioned(
-              top: 8.d, right: -16.d, child: SkinnedText(level.toString())),
+              top: 18.d,
+              right: -14.d,
+              child: SkinnedText(
+                level.toString(),
+                style: TStyles.large,
+              )),
           Widgets.rect(
               margin: EdgeInsets.all(14.d),
               padding: EdgeInsets.all(4.d),

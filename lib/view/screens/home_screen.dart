@@ -10,7 +10,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/page_item.dart';
 import '../items/page_item_cards.dart';
-import '../items/main_map_item.dart';
+import '../items/page_item_map.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/level_indicator.dart';

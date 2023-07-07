@@ -7,7 +7,6 @@ class SkinnedText extends StatelessWidget {
   final String text;
   final TextStyle? style;
   final Color? strokeColor;
-  final TextAlign? textAlign;
   final double? strokeWidth;
 
   const SkinnedText(
@@ -15,19 +14,17 @@ class SkinnedText extends StatelessWidget {
     Key? key,
     this.style,
     this.strokeColor,
-    this.textAlign,
     this.strokeWidth,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var style = this.style ?? TStyles.large;
+    var style = this.style ?? TStyles.medium;
     return Stack(
       alignment: Alignment.center,
       children: [
         Text(
           text,
-          textAlign: textAlign,
           style: style.copyWith(
             height: -0.18,
             foreground: Paint()
@@ -36,7 +33,7 @@ class SkinnedText extends StatelessWidget {
               ..style = PaintingStyle.stroke,
           ),
         ),
-        Text(text, textAlign: textAlign, style: style.copyWith(height: -0.3)),
+        Text(text, style: style.copyWith(height: -0.3)),
       ],
     );
   }
