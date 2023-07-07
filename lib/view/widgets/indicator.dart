@@ -32,11 +32,8 @@ class Indicator extends StatefulWidget {
 }
 
 class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
-  late AccountBloc _account;
-
   @override
   void initState() {
-    _account = BlocProvider.of<AccountBloc>(context);
     super.initState();
   }
 
@@ -46,7 +43,6 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
     var left = 0.0;
     var height = 117.d;
     var right = widget.clickable ? height - 40.d : 0.0;
-    var text = _account.account!.get(widget.itemType).toString();
 
     var completer = Completer<ui.Image>();
     var icon = Asset.load<Image>("ui_${widget.itemType.name}");
@@ -64,11 +60,14 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
           tag: widget.itemType.name,
           child: Widgets.touchable(
               child: Material(
-                  color: TColors.transparent,
-                  child: Stack(alignment: Alignment.centerLeft, children: [
+                color: TColors.transparent,
+                child: BlocBuilder<AccountBloc, AccountState>(
+                    builder: (context, state) {
+                  var text = state.account.get(widget.itemType).toString();
+                  return Stack(alignment: Alignment.centerLeft, children: [
                     Positioned(
                         right: right,
-                        left: 10.d,
+                        left: 12.d,
                         height: 64.d,
                         child: Asset.load<Image>(
                           'ui_frame_wood',
@@ -83,7 +82,6 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                         style: TStyles.large.copyWith(
                             fontSize: (24.d + 60.d / (text.length))
                                 .clamp(22.d, 42.d)),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                     icon,
@@ -93,7 +91,9 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                         child: widget.clickable
                             ? Asset.load<Image>('ui_plus')
                             : const SizedBox()),
-                  ])),
+                  ]);
+                }),
+              ),
               onTap: () {
                 if (widget.clickable) {
                   // widget.services.get<Analytics>().funnle("shopclicks");
