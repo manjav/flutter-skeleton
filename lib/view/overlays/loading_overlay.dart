@@ -61,7 +61,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
               await Future.delayed(
                   Duration(milliseconds: _minAnimationTime - elapsedTime));
               if (mounted) {
-                Navigator.pushNamed(context, Routes.home.routeName);
+                Navigator.pushReplacementNamed(context, Routes.home.routeName);
               }
             } else if (state.initState == ServicesInitState.error) {
               _result = state.result!;
