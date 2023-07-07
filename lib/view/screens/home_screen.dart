@@ -4,11 +4,17 @@ import 'package:rive/rive.dart';
 
 import '../../blocs/services.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
+import '../../services/theme.dart';
 import '../../utils/assets.dart';
+import '../../utils/utils.dart';
+import '../../view/items/page_item.dart';
+import '../items/main_map_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/level_indicator.dart';
 import '../widgets/loaderwidget.dart';
+import '../widgets/skinnedtext.dart';
 import 'iscreen.dart';
 
 class HomeScreen extends AbstractScreen {
@@ -50,7 +56,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   Widget contentFactory() {
-    return Column(
+    return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
         Expanded(
             child: PageView.builder(
@@ -71,29 +78,35 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget? _pageItemBuilder(BuildContext context, int index) {
-    log("Page $index");
-    return Center(child: Text(_tabs[index]));
+    var name = "home_tab_$index".l();
+    return switch (name) {
+      "battle" => const MainMapItem(),
+      _ => AbstractPageItem(name)
+    };
   }
 
   Widget? _tabItemBuilder(BuildContext context, int index) {
     var name = "home_tab_$index".l();
     return Widgets.touchable(
-      onTap: () => _selectTap(index, tabsChange: false),
+        onTap: () => _selectTap(index, tabsChange: false),
         child: Stack(alignment: const Alignment(0, 0.75), children: [
           LoaderWidget(
-        AssetType.animation,
+            AssetType.animation,
             "tab_$name",
-        fit: BoxFit.fill,
-        onRiveInit: (Artboard artboard) {
-          final controller =
-              StateMachineController.fromArtboard(artboard, 'Tab');
+            fit: BoxFit.fill,
+            onRiveInit: (Artboard artboard) {
+              final controller =
+                  StateMachineController.fromArtboard(artboard, 'Tab');
               _tabInputs[index] =
-              controller!.findInput<bool>('close') as SMIBool;
+                  controller!.findInput<bool>('close') as SMIBool;
               _tabInputs[index]!.value = index != _pageController.initialPage;
-          artboard.addController(controller);
-        },
-      ),
-    );
+              artboard.addController(controller);
+            },
+          ),
+          _selectedTab == index
+              ? SkinnedText(name.toPascalCase(), style: TStyles.medium)
+              : const SizedBox()
+        ]));
   }
 
   _selectTap(int index, {bool tabsChange = true, bool pageChange = true}) {
