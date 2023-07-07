@@ -57,7 +57,7 @@ class Loader with ILogger {
           return onError?.call("$path md5 is invalid!");
         }
         await file!.writeAsBytes(bytes!);
-        log("Complete loading $url");
+        log("Complete downloading $url");
         if (!exists || !forceUpdate) onDone?.call(file!);
       }, onError: (d) {
         log("$url loading failed.");

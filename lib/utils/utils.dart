@@ -26,6 +26,40 @@ extension IntExt on int {
     return "$hs : $ms : $ss";
   }
 
+  String summarize() {
+    return switch (this) {
+      > 10000000000 => "${(this / 1000000000).toStringAsFixed(1)}b",
+      > 1000000000 => "${(this / 1000000000).round()}b",
+      > 10000000 => "${(this / 1000000).toStringAsFixed(1)}M",
+      > 1000000 => "${(this / 1000000).round()}M",
+      > 10000 => "${(this / 1000).round()}K",
+      > 1000 => "${(this / 1000).toStringAsFixed(1)}K",
+      _ => "$this",
+    };
+  }
+
+  String toRemainingTime() {
+    if (this < 60) return "${this}s";
+
+    var seconds = this % 60;
+    var minutes = (this / 60).round();
+    if (minutes < 60) {
+      if (seconds > 0) return "${minutes}m${seconds}s";
+      return "${minutes}m";
+    }
+    var hours = (minutes / 60).floor();
+    minutes = minutes % 60;
+    if (hours < 24) {
+      if (minutes > 0) return "${hours}h${minutes}m";
+      return "${hours}h";
+    }
+
+    var days = (hours / 24).floor();
+    hours = hours % 24;
+    if (hours > 0) return "${days}d${hours}h";
+    return "${days}d";
+  }
+
   String toElapsedTime() {
     if (this < 300) return "ago_moments".l();
 
@@ -85,6 +119,7 @@ extension StringExt on String {
         secretParts[4];
   }
 }
+
 class Utils {
   static const _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
