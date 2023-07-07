@@ -17,13 +17,34 @@ import '../iservices.dart';
 class HttpConnection extends IService {
   static String baseURL = '';
 
+  LoadData loadData = LoadData(null, null);
+
   @override
   initialize({List<Object>? args}) async {
     await loadConfigs();
-    var playerData = await loadAccount();
-    updateResponse(LoadingState.connect, "Account ${'user'} connected.");
+
+    // Load account data
+    var params = <String, dynamic>{
+      RpcParams.udid.name:
+          '111eab5fa6eb7de12222a71616812f5f1d184741', //DeviceInfo.adId,
+      RpcParams.device_name.name: DeviceInfo.model,
+      RpcParams.game_version.name: 'app_version'.l(),
+      RpcParams.os_type.name: 1,
+      RpcParams.os_version.name: DeviceInfo.osVersion,
+      RpcParams.model.name: DeviceInfo.model,
+      RpcParams.store_type.name: "bazar",
+      RpcParams.restore_key.name: "keep3oil11",
+      RpcParams.name.name: "ArMaN"
+    };
+    var data = await rpc(RpcId.playerLoad, params: params);
+    loadData.account = Account()..init(data);
+
+    // Load cards data
+    data = await rpc(RpcId.cardsExport);
+    loadData.cards = Cards()..init(data);
+
     super.initialize();
-    return playerData;
+    return loadData;
   }
 
   loadConfigs() async {
@@ -39,37 +60,15 @@ class HttpConnection extends IService {
       }
     }
     if (response!.statusCode == 200) {
-        var config = json.decode(response.body);
-        baseURL = config['server'];
-        LoaderWidget.baseURL = config['assetsServer'];
-        LoaderWidget.hashMap = Map.castFrom(config['files']);
+      var config = json.decode(response.body);
+      baseURL = config['server'];
+      LoaderWidget.baseURL = config['assetsServer'];
+      LoaderWidget.hashMap = Map.castFrom(config['files']);
       log("Config loaded.");
-      } else {
+    } else {
       throw RpcException(
           StatusCode.C100_UNEXPECTED_ERROR, 'Failed to load config file');
-      }
-  }
-
-  // Connect to server
-  @override
-  Future<Result<Account>> loadAccount() async {
-    var params = <String, dynamic>{
-      ParamName.udid.name:
-          '111eab5fa6eb7de12222a71616812f5f1d184741', //DeviceInfo.adId,
-      ParamName.device_name.name: DeviceInfo.model,
-      ParamName.game_version.name: 'app_version'.l(),
-      ParamName.os_type.name: 1,
-      ParamName.os_version.name: DeviceInfo.osVersion,
-      ParamName.model.name: DeviceInfo.model,
-      ParamName.store_type.name: "bazar",
-      ParamName.restore_key.name: "keep3oil11",
-      ParamName.name.name: "ArMaN"
-    };
-    var result =
-        await rpc<Map<String, dynamic>>(RpcId.playerLoad, params: params);
-    updateResponse(LoadingState.connect, "connected.");
-    return Result<Account>(result.statusCode, "Account loading finished.",
-        result.data != null ? Account(result.data!) : null);
+    }
   }
 
   Future<Map<String, dynamic>> rpc(RpcId id, {Map? params}) async {
@@ -98,20 +97,20 @@ class HttpConnection extends IService {
       }
     }
     final status = response!.statusCode;
-      if (status != 200) {
+    if (status != 200) {
       throw RpcException(status.toStatus(), response.body);
-      }
+    }
 
-      _proccessResponseHeaders(response.headers);
-      log(response.body);
+    _proccessResponseHeaders(response.headers);
+    log(response.body);
     var body = id.needsEncryption ? response.body.xorDecrypt() : response.body;
-      log(body);
+    log(body);
 
-      var responseData = jsonDecode(body);
-      if (!responseData['status']) {
-        var statusCode = (responseData['data']['code'] as int).toStatus();
+    var responseData = jsonDecode(body);
+    if (!responseData['status']) {
+      var statusCode = (responseData['data']['code'] as int).toStatus();
       throw RpcException(statusCode, response.body);
-  }
+    }
     return responseData['data'];
   }
 

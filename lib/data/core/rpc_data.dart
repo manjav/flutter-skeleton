@@ -2,6 +2,12 @@
 
 import 'infra.dart';
 
+class LoadData {
+  Account? account;
+  Cards? cards;
+  LoadData(this.account, this.cards);
+}
+
 //         -=-=-=-    Account    -=-=-=-
 enum AccountField {
   id,
