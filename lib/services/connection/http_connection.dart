@@ -26,24 +26,28 @@ class HttpConnection extends IService {
     return playerData;
   }
 
-  // Load the Config file
-  @override
   loadConfigs() async {
+    http.Response? response;
     try {
-      final response = await http
+      response = await http
           .get(Uri.parse('https://8ball.turnedondigital.com/fc/configs.json'));
-      if (response.statusCode == 200) {
+    } catch (e) {
+      var error = '$e';
+      if (error.contains("No host specified in URI") ||
+          error.contains("Failed host lookup")) {
+        throw RpcException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
+      }
+    }
+    if (response!.statusCode == 200) {
         var config = json.decode(response.body);
         baseURL = config['server'];
         LoaderWidget.baseURL = config['assetsServer'];
         LoaderWidget.hashMap = Map.castFrom(config['files']);
+      log("Config loaded.");
       } else {
-        throw Exception('Failed to load config file');
+      throw RpcException(
+          StatusCode.C100_UNEXPECTED_ERROR, 'Failed to load config file');
       }
-    } catch (e) {
-      updateResponse(LoadingState.disconnect, e.toString());
-    }
-    log("Config loaded.");
   }
 
   // Connect to server
@@ -68,9 +72,9 @@ class HttpConnection extends IService {
         result.data != null ? Account(result.data!) : null);
   }
 
-  @override
-  Future<Result<T>> rpc<T>(RpcId id, {Map? params}) async {
+  Future<Map<String, dynamic>> rpc(RpcId id, {Map? params}) async {
     params = params ?? {};
+    http.Response? response;
     try {
       final headers = _getDefaultHeader();
       var data = {};
@@ -81,47 +85,34 @@ class HttpConnection extends IService {
       data = id.needsEncryption ? {'edata': json.xorEncrypt()} : params;
       log(json.xorEncrypt());
       final url = Uri.parse('$baseURL/${id.value}');
-      http.Response response;
       if (id.requestType == HttpRequestType.get) {
         response = await http.get(url, headers: headers);
       } else {
         response = await http.post(url, headers: headers, body: data);
       }
-      final status = response.statusCode;
+    } catch (e) {
+      var error = '$e';
+      if (error.contains("No host specified in URI") ||
+          error.contains("Failed host lookup")) {
+        throw RpcException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
+      }
+    }
+    final status = response!.statusCode;
       if (status != 200) {
-        throw Exception('{"code":$status, "message":"${response.body}"}');
+      throw RpcException(status.toStatus(), response.body);
       }
 
       _proccessResponseHeaders(response.headers);
       log(response.body);
-      var body =
-          id.needsEncryption ? response.body.xorDecrypt() : response.body;
+    var body = id.needsEncryption ? response.body.xorDecrypt() : response.body;
       log(body);
 
       var responseData = jsonDecode(body);
       if (!responseData['status']) {
         var statusCode = (responseData['data']['code'] as int).toStatus();
-        return Result<T>(statusCode, '', responseData['data'] as T?);
-      }
-
-      return Result<T>(StatusCode.C0_SUCCESS, '', responseData['data'] as T);
-    } catch (e) {
-      var error = '$e';
-      if (error.contains("No host specified in URI")) {
-        return Result(503.toStatus(), 'error_503'.l(), null);
-      }
-      var json = jsonDecode(error);
-      updateResponse(LoadingState.error, error);
-      return Result(json['code'].toStatus(),
-          json['message'] ?? 'error_${json['code']}'.l(), null);
-    }
+      throw RpcException(statusCode, response.body);
   }
-
-  @override
-  void updateResponse(LoadingState state, String message) {
-    response.state = state;
-    response.message = message;
-    log("update response => ${state.name} - $message");
+    return responseData['data'];
   }
 
   void _proccessResponseHeaders(Map<String, String> header) {

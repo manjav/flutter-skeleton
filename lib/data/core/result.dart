@@ -1,14 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
-class Result<T> {
-  final StatusCode statusCode;
-  final String message;
-  final T? _data;
-  Result(this.statusCode, this.message, this._data);
-  T? get data => _data;
-  bool isSuccess() => statusCode == StatusCode.C0_SUCCESS;
-}
-
 enum StatusCode {
   C0_SUCCESS,
   C100_UNEXPECTED_ERROR,
@@ -320,4 +311,11 @@ extension StatusCodeEx on StatusCode {
       _ => 250
     };
   }
+}
+
+class RpcException implements Exception {
+  final StatusCode statusCode;
+  final String message;
+
+  RpcException(this.statusCode, this.message);
 }

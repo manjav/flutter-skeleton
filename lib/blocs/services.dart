@@ -40,24 +40,24 @@ enum ServiceType {
 
 class ServicesEvent {
   final ServicesInitState initState;
-  final Result<Account>? result;
-  ServicesEvent(this.initState, this.result);
+  final RpcException? exception;
+  ServicesEvent(this.initState, this.exception);
 }
 
 //--------------------------------------------------------
 
 abstract class ServicesState {
   final ServicesInitState initState;
-  final Result<Account>? result;
-  ServicesState(this.initState, this.result);
+  final RpcException? exception;
+  ServicesState(this.initState, this.exception);
 }
 
 class ServicesInit extends ServicesState {
-  ServicesInit(super.initState, super.result);
+  ServicesInit(super.initState, super.exception);
 }
 
 class ServicesUpdate extends ServicesState {
-  ServicesUpdate(super.initState, super.result);
+  ServicesUpdate(super.initState, super.exception);
 }
 
 //--------------------------------------------------------
@@ -72,7 +72,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     return switch (type) {
       Ads => ServiceType.ads,
       Games => ServiceType.games,
-      IConnection || HttpConnection => ServiceType.connection,
+      HttpConnection => ServiceType.connection,
       DeviceInfo => ServiceType.device,
       Localization => ServiceType.localization,
       Prefs => ServiceType.prefs,
@@ -85,7 +85,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
 
   updateService(ServicesEvent event, Emitter<ServicesState> emit) {
     // account = event.account;
-    emit(ServicesUpdate(event.initState, event.result));
+    emit(ServicesUpdate(event.initState, event.exception));
   }
 
   Services({required this.firebaseAnalytics})
@@ -111,6 +111,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     await _map[ServiceType.localization]!.initialize();
     await _map[ServiceType.trackers]!.initialize();
 
+    try {
     var result = await get<IConnection>().initialize() as Result<Account>;
     if (context.mounted) {
       var bloc = BlocProvider.of<Services>(context);
@@ -121,7 +122,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
           result));
       if (result.isSuccess()) {
         BlocProvider.of<AccountBloc>(context)
-            .add(SetAccount(account: result.data!));
+    } catch (e) {
       }
     }
 
