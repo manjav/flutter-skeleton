@@ -1,3 +1,7 @@
+// ignore_for_file: constant_identifier_names
+
+import 'infra.dart';
+
 //         -=-=-=-    Account    -=-=-=-
 enum AccountField {
   id,
@@ -125,3 +129,29 @@ class Account extends StringMap<dynamic> {
   T get<T>(AccountField fieldName) => map[fieldName.name] as T;
 }
 
+//         -=-=-=-    Card    -=-=-=-
+enum CardFields {
+  id,
+  fruitId,
+  power,
+  cooldown,
+  image,
+  rarity,
+  powerLimit,
+  virtualRarity,
+  name,
+  veteran_level,
+}
+
+class CardData extends StringMap<dynamic> {
+  T get<T>(CardFields field) => map[field.name] as T;
+}
+
+class Cards extends StringMap<CardData> {
+  @override
+  void init(Map<String, dynamic> data) {
+    data.forEach((key, value) {
+      map[key] = CardData()..init(value);
+    });
+  }
+}
