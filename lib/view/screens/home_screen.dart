@@ -9,6 +9,7 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/page_item.dart';
+import '../items/page_item_cards.dart';
 import '../items/main_map_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
@@ -26,7 +27,7 @@ class HomeScreen extends AbstractScreen {
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   int _selectedTab = 2;
-  final double _navbarHeight = 200.d;
+  final double _navbarHeight = 210.d;
   final _tabInputs = List<SMIBool?>.generate(5, (index) => null);
   late PageController _pageController;
 
@@ -45,41 +46,52 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   List<Widget> appBarElements() {
-    return <Widget>[
-      SizedBox(
-          width: 194.d,
-          height: 202.d,
-          child: const LevelIndicator(level: "2", xp: 12)),
-      ...super.appBarElements(),
-    ];
+    if (_selectedTab == 2) {
+      return <Widget>[
+        SizedBox(
+            width: 196.d,
+            height: 200.d,
+            child: const LevelIndicator(level: "2", xp: 12)),
+        ...super.appBarElements()
+          ..add(Widgets.button(
+              width: 110.d,
+              height: 110.d,
+              padding: EdgeInsets.all(16.d),
+              child: Asset.load<Image>('ui_settings'))),
+      ];
+    }
+    return super.appBarElements();
   }
 
   @override
   Widget contentFactory() {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        PageView.builder(
-          itemCount: _tabInputs.length,
-          itemBuilder: _pageItemBuilder,
-          onPageChanged: (value) => _selectTap(value, pageChange: false),
-          controller: _pageController,
-        ),
-        SizedBox(
-            height: _navbarHeight,
-            child: ListView.builder(
-                itemExtent: DeviceInfo.size.width / _tabInputs.length,
-                itemBuilder: _tabItemBuilder,
-                scrollDirection: Axis.horizontal,
-                itemCount: _tabInputs.length))
-      ],
-    );
+    return Widgets.rect(
+        color: const Color(0xffAA9A45),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            PageView.builder(
+              itemCount: _tabInputs.length,
+              itemBuilder: _pageItemBuilder,
+              onPageChanged: (value) => _selectTap(value, pageChange: false),
+              controller: _pageController,
+            ),
+            SizedBox(
+                height: _navbarHeight,
+                child: ListView.builder(
+                    itemExtent: DeviceInfo.size.width / _tabInputs.length,
+                    itemBuilder: _tabItemBuilder,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _tabInputs.length))
+          ],
+        ));
   }
 
   Widget? _pageItemBuilder(BuildContext context, int index) {
     var name = "home_tab_$index".l();
     return switch (name) {
-      "battle" => const MainMapItem(),
+      "cards" => const CardsPageItem(),
+      "battle" => const MainMapPageItem(),
       _ => AbstractPageItem(name)
     };
   }
@@ -92,7 +104,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           LoaderWidget(
             AssetType.animation,
             "tab_$name",
-            fit: BoxFit.fill,
+            fit: BoxFit.fitWidth,
             onRiveInit: (Artboard artboard) {
               final controller =
                   StateMachineController.fromArtboard(artboard, 'Tab');
@@ -103,7 +115,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             },
           ),
           _selectedTab == index
-              ? SkinnedText(name.toPascalCase(), style: TStyles.medium)
+              ? SkinnedText(name.toPascalCase(), style: TStyles.small)
               : const SizedBox()
         ]));
   }

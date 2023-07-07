@@ -11,10 +11,8 @@ import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../widgets.dart';
 
-class MainMapItem extends AbstractPageItem {
-  const MainMapItem({
-    super.key,
-  }) : super("battle");
+class MainMapPageItem extends AbstractPageItem {
+  const MainMapPageItem({super.key}) : super("battle");
   @override
   createState() => _MainMapItemState();
 }
@@ -22,25 +20,22 @@ class MainMapItem extends AbstractPageItem {
 class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
   @override
   Widget build(BuildContext context) {
-    return Widgets.rect(
-        color: const Color(0xffAA9A45),
-        child:
-            BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-          return Stack(children: [
-            const LoaderWidget(AssetType.image, "map_main_bg",
-                fit: BoxFit.fill, subFolder: "maps"),
-            _building(BuildingType.cards, 167, 560),
-            _building(BuildingType.tribe, 500, 500),
-            _building(BuildingType.mine, 754, 699),
-            _building(BuildingType.war, 45, 943),
-            _building(BuildingType.battle, 400, 930),
-            _building(BuildingType.shop, 773, 1040),
-            _building(BuildingType.quest, 169, 1244),
-            _building(BuildingType.message, 532, 1268),
-            _button("battle", "battle_l", 150, 270, 442),
-            _button("quest", "quest_l", 620, 270, 310),
-          ]);
-        }));
+    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+      return Stack(alignment: Alignment.topLeft, children: [
+        const LoaderWidget(AssetType.animation, "home_background",
+            fit: BoxFit.fitWidth),
+        _building(BuildingType.cards, 167, 560),
+        _building(BuildingType.tribe, 500, 500),
+        _building(BuildingType.mine, 754, 699),
+        _building(BuildingType.war, 45, 943),
+        _building(BuildingType.battle, 400, 930),
+        _building(BuildingType.shop, 773, 1040),
+        _building(BuildingType.quest, 169, 1244),
+        _building(BuildingType.message, 532, 1268),
+        _button("battle", "battle_l", 150, 270, 442),
+        _button("quest", "quest_l", 620, 270, 310),
+      ]);
+    });
   }
 
   _button(String icon, String text, double x, double bottom, double width) {
@@ -73,155 +68,8 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
           ),
         ));
   }
+
+  Widget _building(BuildingType type, double x, double y) {
+    return Positioned(left: x.d, top: y.d, child: Building(type));
+  }
 }
-
-Widget _building(BuildingType type, double x, double y) {
-  return Positioned(left: x.d, top: y.d, child: Building(type));
-}
-// reward would get added soon or later
-// Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-//   BlocBuilder<AccountBloc, AccountState>(
-//     builder: (context, state) {
-//       return RewardChess(
-//           text: state.account
-//               .get(AccountVar.bonus_remaining_time)
-//               .toString());
-//     },
-//   )
-// ]),
-//   SizedBox(height: 30.d),
-//   Expanded(
-//     child: AspectRatio(
-//       aspectRatio: 1,
-//       child: BlocBuilder<AccountBloc, AccountState>(
-//         builder: (context, state) {
-//           return Stack(
-//             clipBehavior: Clip.none,
-//             children: [
-//               Building(battle, onTap: () {
-//                 log("battle");
-//               }),
-//               const Building(data: MainMapElements.mine),
-//               const Building(data: MainMapElements.shop),
-//               const Building(data: MainMapElements.message),
-//               Building(
-//                 data: MainMapElements.quest,
-//                 onTap: () {
-//                   // Navigator.push(
-//                   //     context,
-//                   //     MaterialPageRoute(
-//                   //         builder: (context) =>
-//                   //             const QuestScreen()));
-//                 },
-//               ),
-//               const Building(
-//                 data: MainMapElements.millitary,
-//               ),
-//               const Building(
-//                 data: MainMapElements.cards,
-//               ),
-//               const Building(
-//                 data: MainMapElements.greenhouse,
-//               ),
-//             ],
-//           );
-//         },
-//       ),
-//     ),
-//   ),
-//   SizedBox(height: 40.d),
-//   Row(
-//     mainAxisAlignment: MainAxisAlignment.center,
-//     children: [
-//       Widgets.touchable(
-//           onTap: () {
-//             // Navigator.push(
-//             //     context,
-//             //     MaterialPageRoute(
-//             //         builder: (context) => const QuestScreen()
-//             //         ));
-//           },
-//           child: SizedBox(
-//             width: 300.d,
-//             height: 200.d,
-//             child: Expanded(
-//               child: Stack(clipBehavior: Clip.none, children: [
-//                 Asset.load<Image>(MainMapElements.battleBtn.url,
-//                     width: 300.d),
-//                 Align(
-//                     alignment: const Alignment(0, 0.1),
-//                     child: SkinnedText("Battle".l())
-
-//                     //  StrockText(
-//                     //     text: "battle".l(),
-//                     //     frontSize: TStyles.medium.fontSize!)
-//                     ),
-//                 Align(
-//                     alignment: const Alignment(0, -3),
-//                     child: SizedBox(
-//                       // color: Colors.red,
-//                       width: 150.d,
-//                       height: 150.d,
-//                       child: Asset.load<Image>('icon_battle',
-//                           width: 300.d),
-//                     )),
-//               ]),
-//             ),
-//           )),
-//       SizedBox(width: 40.d),
-//       Widgets.touchable(
-//           onTap: () {
-//             // Navigator.push(
-//             //     context,
-//             //     MaterialPageRoute(
-//             //         builder: (context) => const QuestScreen()));
-//           },
-//           child: SizedBox(
-//             width: 300.d,
-//             height: 200.d,
-//             child: Expanded(
-//               child: Stack(clipBehavior: Clip.none, children: [
-//                 Asset.load<Image>(MainMapElements.battleBtn.url,
-//                     width: 300.d),
-//                 Align(
-//                     alignment: const Alignment(0, 0.1),
-//                     child: SkinnedText("Quest".l())
-
-//                     //  StrockText(
-//                     //     text: "battle".l(),
-//                     //     frontSize: TStyles.medium.fontSize!)
-//                     ),
-//                 Align(
-//                     alignment: const Alignment(0, -3),
-//                     child: SizedBox(
-//                       // color: Colors.red,
-//                       width: 150.d,
-//                       height: 150.d,
-//                       child: Asset.load<Image>('icon_quest',
-//                           width: 300.d),
-//                     )),
-//               ]),
-//             ),
-//           )),
-//     ],
-//   ),
-//   SizedBox(height: 40.d),
-//   BlocBuilder<AccountBloc, AccountState>(
-//       builder: (context, state) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         RankingElement(
-//             backgroundImageUrl: MainMapElements.league.url,
-//             text: state.account
-//                 .get(AccountVar.league_rank)
-//                 .toString(),
-//             alignment: const Alignment(0.45, -0.07)),
-//         RankingElement(
-//             backgroundImageUrl: MainMapElements.tribe.url,
-//             text: state.account.get(AccountVar.rank).toString(),
-//             alignment: const Alignment(-0.45, -0.07)),
-//       ],
-//     );
-//   }),
-//   SizedBox(height: 250.d),
