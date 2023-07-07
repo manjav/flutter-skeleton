@@ -21,18 +21,4 @@ class StringMap<T> {
       map[key] = value;
     });
   }
-
-  // T? operator [](String key) => map[key];
-  // void operator []=(String key, T value) {
-  //   map[key] = value;
-  // }
-
-  // T? remove(Object? key) => map.remove(key);
-  // bool containsKey(Object? key) => map.containsKey(key);
-  // bool get isEmpty => throw map.isEmpty;
-  // Iterable<MapEntry<String, T>> get entries => map.entries;
-  // Iterable<String> get keys => map.keys;
-  // Iterable<T> get values => map.values;
-  // int get length => map.length;
 }
-

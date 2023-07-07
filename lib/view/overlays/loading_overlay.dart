@@ -23,7 +23,7 @@ class LoadingOverlay extends AbstractOverlay {
 
 class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
   bool _logViewVisibility = false;
-  Result _result = Result(StatusCode.C0_SUCCESS, '', null);
+  RpcException? _exception;
   SMIBool? _closeInput;
   int _startTime = 0;
   final _minAnimationTime = 3000;
@@ -64,7 +64,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                 Navigator.pushReplacementNamed(context, Routes.home.routeName);
               }
             } else if (state.initState == ServicesInitState.error) {
-              _result = state.result!;
+              _exception = state.exception;
               setState(() {});
             }
           },
@@ -89,7 +89,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                 child: _logViewVisibility
                     ? Text(ILogger.accumulatedLog, style: TStyles.tiny)
                     : Widgets.rect(color: TColors.transparent))),
-        _result.isSuccess()
+        _exception == null
             ? const SizedBox()
             : Positioned(
                 left: 20.d,
@@ -98,7 +98,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                 child: Column(
                   children: [
                     Text(
-                      "${'error_${_result.statusCode.value}'.l()}\n\nPlease try again.",
+                      "${'error_${_exception!.statusCode.value}'.l()}\n\nPlease try again.",
                       textAlign: TextAlign.center,
                       softWrap: true,
                       style: TStyles.medium,

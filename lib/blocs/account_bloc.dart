@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/core/account.dart';
+import '../data/core/rpc_data.dart';
 
 class AccountEvent {}
 
@@ -33,7 +33,7 @@ class AccountUpdate extends AccountState {
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   late Account? account;
 
-  AccountBloc() : super(AccountInit(account: Account({}))) {
+  AccountBloc() : super(AccountInit(account: Account())) {
     on<SetAccount>(setAccount);
   }
 
@@ -42,4 +42,3 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     emit(AccountUpdate(account: account!));
   }
 }
-

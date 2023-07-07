@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/account.dart';
+import '../../data/core/rpc_data.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
@@ -14,7 +14,7 @@ import '../widgets.dart';
 
 class Indicator extends StatefulWidget {
   final String origin;
-  final AccountVar itemType;
+  final AccountField itemType;
   final double? width;
   final Function? onTap;
   final bool clickable;
@@ -78,7 +78,7 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                     Positioned(
                       left: left,
                       right: right + 8.d,
-                      child:  SkinnedText(
+                      child: SkinnedText(
                         text,
                         style: TStyles.large.copyWith(
                             fontSize: (24.d + 60.d / (text.length))

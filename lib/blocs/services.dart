@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/core/account.dart';
+import '../../data/core/rpc_data.dart';
 import '../data/core/result.dart';
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';

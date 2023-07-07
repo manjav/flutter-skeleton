@@ -1,8 +1,5 @@
-// ignore_for_file: constant_identifier_names
-
-import 'infra.dart';
-
-enum AccountVar {
+//         -=-=-=-    Account    -=-=-=-
+enum AccountField {
   id,
   name,
   rank,
@@ -125,9 +122,6 @@ enum AccountVar {
 }
 
 class Account extends StringMap<dynamic> {
-  Account(Map<String, dynamic> data) {
-    map.addAll(data);
-  }
-
-  T get<T>(AccountVar fieldName) => map[fieldName.name] as T;
+  T get<T>(AccountField fieldName) => map[fieldName.name] as T;
 }
+

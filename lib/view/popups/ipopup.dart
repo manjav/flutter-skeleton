@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
+import '../../data/core/rpc_data.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -94,9 +94,9 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   List<Widget> appBarElements() {
     return [
-      Indicator(widget.type.name, AccountVar.gold),
+      Indicator(widget.type.name, AccountField.gold),
       SizedBox(width: 16.d),
-      Indicator(widget.type.name, AccountVar.nectar, width: 260.d),
+      Indicator(widget.type.name, AccountField.nectar, width: 260.d),
     ];
   }
 
