@@ -19,17 +19,23 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+  int _selectedTab = 2;
+  final double _navbarHeight = 200.d;
+  final _tabInputs = List<SMIBool?>.generate(5, (index) => null);
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    _pageController = PageController(initialPage: _selectedTab);
+    super.initState();
+  }
+
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
     var bloc = BlocProvider.of<Services>(context);
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
   }
-
-  final double _navbarHeight = 200.d;
-  final Map<String, SMIBool> _tabInputs = {};
-  final PageController _pageController = PageController(initialPage: 2);
-  final List<String> _tabs = ['shop', 'cards', 'battle', 'message', 'auctions'];
 
   @override
   List<Widget> appBarElements() {
@@ -48,7 +54,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       children: [
         Expanded(
             child: PageView.builder(
-          itemCount: _tabs.length,
+          itemCount: _tabInputs.length,
           itemBuilder: _pageItemBuilder,
           onPageChanged: (value) => _selectTap(value, pageChange: false),
           controller: _pageController,
@@ -56,10 +62,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         SizedBox(
             height: _navbarHeight,
             child: ListView.builder(
-                itemExtent: DeviceInfo.size.width / _tabs.length,
+                itemExtent: DeviceInfo.size.width / _tabInputs.length,
                 itemBuilder: _tabItemBuilder,
                 scrollDirection: Axis.horizontal,
-                itemCount: _tabs.length))
+                itemCount: _tabInputs.length))
       ],
     );
   }
@@ -70,19 +76,20 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget? _tabItemBuilder(BuildContext context, int index) {
+    var name = "home_tab_$index".l();
     return Widgets.touchable(
       onTap: () => _selectTap(index, tabsChange: false),
-      child: LoaderWidget(
+        child: Stack(alignment: const Alignment(0, 0.75), children: [
+          LoaderWidget(
         AssetType.animation,
-        "tab_${_tabs[index]}",
+            "tab_$name",
         fit: BoxFit.fill,
         onRiveInit: (Artboard artboard) {
           final controller =
               StateMachineController.fromArtboard(artboard, 'Tab');
-          _tabInputs[_tabs[index]] =
+              _tabInputs[index] =
               controller!.findInput<bool>('close') as SMIBool;
-          _tabInputs[_tabs[index]]!.value =
-              index == _pageController.initialPage;
+              _tabInputs[index]!.value = index != _pageController.initialPage;
           artboard.addController(controller);
         },
       ),
@@ -91,9 +98,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   _selectTap(int index, {bool tabsChange = true, bool pageChange = true}) {
     if (tabsChange) {
-      for (var key in _tabInputs.keys) {
-        _tabInputs[key]!.value = _tabs[index] != key;
+      for (var i = 0; i < _tabInputs.length; i++) {
+        _tabInputs[i]!.value = i != index;
       }
+      setState(() => _selectedTab = index);
     }
     if (pageChange) {
       _pageController.animateToPage(index,
