@@ -98,17 +98,15 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                 child: Column(
                   children: [
                     Text(
-                      "${'error_${_exception!.statusCode.value}'.l()}\n\nPlease try again.",
+                      "${'error_${_exception!.statusCode.value}'.l()}\nPlease try again.",
                       textAlign: TextAlign.center,
                       softWrap: true,
-                      style: TStyles.medium,
+                      style: TStyles.mediumInvert,
                     ),
                     SizedBox(height: 48.d),
-                    Widgets.button(
+                    Widgets.labeledButton(
+                        lable: 'Retry',
                         buttonId: -1,
-                        child: Text('Retry', style: TStyles.large),
-                        width: 320.d,
-                        color: TColors.blue,
                         onPressed: () {
                           _reload();
                         })

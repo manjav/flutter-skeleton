@@ -163,10 +163,12 @@ class Widgets {
     int buttonId = 30,
     double? width,
     double? height,
+    Function()? onPressed,
   }) {
     var slicingData = ImageCenterSliceDate(102, 106);
     return Widgets.button(
         padding: EdgeInsets.symmetric(horizontal: 38.d, vertical: 58.d),
+        onPressed: onPressed,
         width: width,
         height: height,
         buttonId: buttonId,
