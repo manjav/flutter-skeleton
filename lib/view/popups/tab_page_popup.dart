@@ -11,7 +11,7 @@ class TabPagePopup extends AbstractPopup {
   createState() => _TabPagePopupState();
 }
 
-class _TabPagePopupState extends AbstractPopupState<AbstractPopup>
+class _TabPagePopupState extends AbstractPopupState<TabPagePopup>
     with TabProviderMixin {
   @override
   void initState() {

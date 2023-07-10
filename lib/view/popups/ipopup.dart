@@ -35,6 +35,8 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         Widgets.touchable(onTap: () => Navigator.pop(context)),
         Align(
             child: Widgets.rect(
+          margin: EdgeInsets.symmetric(horizontal: 24.d),
+          padding: EdgeInsets.symmetric(horizontal: 36.d),
           decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.fill,
@@ -52,7 +54,8 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                 Padding(
                     padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
                     child: contentFactory()),
-                Positioned(top: 60.d, right: 24.d, child: closeButtonFactory()),
+                Positioned(
+                    top: 60.d, right: -12.d, child: closeButtonFactory()),
               ]),
         )),
         Positioned(
