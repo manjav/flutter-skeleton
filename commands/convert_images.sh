@@ -7,4 +7,3 @@ for file in *.png;
     rm $file
     );
  done
-exit
