@@ -156,7 +156,7 @@ class Widgets {
         ));
   }
 
-  static labelButton({
+  static labeledButton({
     String? lable,
     String color = "yellow",
     Widget? child,
@@ -180,5 +180,21 @@ class Widgets {
                 ).image)),
         child:
             lable != null ? SkinnedText(lable, style: TStyles.large) : child!);
+  }
+
+  static verticalDivider({double? height, double margin = 0}) {
+    var slicingData = ImageCenterSliceDate(16, 38);
+    return rect(
+        width: 16.d,
+        height: height,
+        margin: EdgeInsets.all(margin),
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                centerSlice: slicingData.centerSlice,
+                image: Asset.load<Image>(
+                  "ui_divider_v",
+                  centerSlice: slicingData,
+                ).image)));
   }
 }
