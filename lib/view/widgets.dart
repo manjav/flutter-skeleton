@@ -157,15 +157,23 @@ class Widgets {
   }
 
   static labeledButton({
-    String? lable,
+    String? label,
     String color = "yellow",
+    String size = "small",
     Widget? child,
     int buttonId = 30,
     double? width,
     double? height,
     Function()? onPressed,
   }) {
-    var slicingData = ImageCenterSliceDate(102, 106);
+    if (size != "small") {
+      size = "medium";
+    }
+    var slicingData = switch (size) {
+      "small" =>
+        ImageCenterSliceDate(102, 106, const Rect.fromLTWH(50, 30, 2, 46)),
+      _ => ImageCenterSliceDate(130, 158, const Rect.fromLTWH(64, 50, 2, 58)),
+    };
     return Widgets.button(
         padding: EdgeInsets.symmetric(horizontal: 38.d, vertical: 58.d),
         onPressed: onPressed,
@@ -177,11 +185,11 @@ class Widgets {
                 fit: BoxFit.fill,
                 centerSlice: slicingData.centerSlice,
                 image: Asset.load<Image>(
-                  "ui_button_$color",
+                  "ui_button_${size}_$color",
                   centerSlice: slicingData,
                 ).image)),
         child:
-            lable != null ? SkinnedText(lable, style: TStyles.large) : child!);
+            label != null ? SkinnedText(label, style: TStyles.large) : child!);
   }
 
   static verticalDivider({double? height, double margin = 0}) {

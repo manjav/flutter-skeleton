@@ -107,7 +107,7 @@ class HttpConnection extends IService {
     _proccessResponseHeaders(response.headers);
     // log(response.body);
     var body = id.needsEncryption ? response.body.xorDecrypt() : response.body;
-    print(body);
+    log(body);
 
     var responseData = jsonDecode(body);
     if (!responseData['status']) {
