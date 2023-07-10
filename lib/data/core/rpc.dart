@@ -16,6 +16,7 @@ enum RpcId {
   heroItemsLangFaExport,
   buyHeroItem,
   setHeroItems,
+  fruitJsonExport,
   fruitLangFaExport,
   fruitLangEnExport,
   imageStorageAPI_ImageStorage,
@@ -43,6 +44,7 @@ extension RpcIdEx on RpcId {
       RpcId.setHeroItems => "cards/equipheroitems",
       RpcId.fruitLangFaExport => "i18n/fa-IR/BaseFruitLanguage.json",
       RpcId.fruitLangEnExport => "i18n/en-US/BaseFruitLanguage.json",
+      RpcId.fruitJsonExport => "cards/fruitsjsonexport",
       RpcId.imageStorageAPI_ImageStorage => "cardpool/",
       RpcId.cardsExport => "cards/cardsjsonexport",
       RpcId.captcha => "bot/getcaptcha",
@@ -53,7 +55,7 @@ extension RpcIdEx on RpcId {
 
   bool get needsEncryption {
     return switch (this) {
-      RpcId.cardsExport => false,
+      RpcId.cardsExport || RpcId.tutorialExport => false,
       _ => true,
     };
   }

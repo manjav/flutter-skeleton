@@ -100,13 +100,14 @@ class HttpConnection extends IService {
     }
     final status = response!.statusCode;
     if (status != 200) {
-      throw RpcException(status.toStatus(), response.body);
+      throw RpcException(status.toStatus(),
+          response.body.isNotEmpty ? response.body : "error_$status".l());
     }
 
     _proccessResponseHeaders(response.headers);
-    log(response.body);
+    // log(response.body);
     var body = id.needsEncryption ? response.body.xorDecrypt() : response.body;
-    log(body);
+    print(body);
 
     var responseData = jsonDecode(body);
     if (!responseData['status']) {

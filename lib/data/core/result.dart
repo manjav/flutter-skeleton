@@ -148,6 +148,7 @@ enum StatusCode {
 
   C250_UNKNOWN_ERROR,
 
+  C403_SERVICE_UNAVAILABLE,
   C503_SERVICE_UNAVAILABLE,
 }
 
@@ -307,6 +308,7 @@ extension StatusCodeEx on StatusCode {
       StatusCode.C240_UPDATING_LEAGUE_IN_PROGRESS => 240,
       StatusCode.C241_NOT_IMPLEMENTED => 241,
       StatusCode.C242_INVALID_LEAGUE_ID => 242,
+      StatusCode.C403_SERVICE_UNAVAILABLE => 403,
       StatusCode.C503_SERVICE_UNAVAILABLE => 503,
       _ => 250
     };
