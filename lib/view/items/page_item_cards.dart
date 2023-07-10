@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/view/route_provider.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/deviceinfo.dart';
-import '../../view/items/card_view.dart';
 import '../../view/items/page_item.dart';
+import '../widgets.dart';
+import 'card_item.dart';
 
 class CardsPageItem extends AbstractPageItem {
   const CardsPageItem({super.key}) : super("cards");
@@ -17,6 +19,9 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
   @override
   Widget build(BuildContext context) {
     var gap = 10.d;
+    var crossAxisCount = 4;
+    var itemSize =
+        (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var cards = state.account.get<List<AccountCard>>(AccountField.cards);
       return Stack(children: [
@@ -28,12 +33,17 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
                 crossAxisCount: 4,
                 crossAxisSpacing: gap,
                 mainAxisSpacing: gap),
-            itemBuilder: (c, i) => cardItemBuilder(c, i, cards[i])),
+            itemBuilder: (c, i) => cardItemBuilder(c, i, cards[i], itemSize)),
       ]);
     });
   }
 
-  Widget? cardItemBuilder(BuildContext context, int index, AccountCard card) {
-    return CardView(card);
+  Widget? cardItemBuilder(
+      BuildContext context, int index, AccountCard card, double itemSize) {
+    return Widgets.touchable(
+      onTap: () => Navigator.pushNamed(context, Routes.popupCard.routeName,
+          arguments: {'card': card}),
+      child: CardView(card, size: itemSize, key: card.key),
+    );
   }
 }

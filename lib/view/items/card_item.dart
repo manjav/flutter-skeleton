@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/rpc_data.dart';
-import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
@@ -18,23 +17,24 @@ class CardView extends StatefulWidget {
 }
 
 class _CardViewState extends State<CardView> {
-  // GlobalKey? _imageKey;
-
-  @override
-  void initState() {
-    // _imageKey = GlobalKey();
-    super.initState();
-  }
-
+  static late TextStyle medium;
+  static late TextStyle small;
+  static late TextStyle tiny;
   @override
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
+    var fruit = baseCard.get<FruitData>(CardFields.fruit);
+    var level = baseCard.get<int>(CardFields.rarity).toString();
+    var name = fruit.get<String>(FriutFields.name);
+
     var s = widget.size / 256;
     medium = TStyles.medium.copyWith(fontSize: 42 * s);
     small = TStyles.medium.copyWith(fontSize: 33 * s);
     tiny = TStyles.medium.copyWith(fontSize: 28 * s);
 
     return Stack(alignment: Alignment.center, children: [
+      Asset.load<Image>('cards_frame_$level'),
+      LoaderWidget(AssetType.image, baseCard.get<String>(CardFields.name),
           subFolder: "cards", width: 216 * s),
       Positioned(
           top: 30 * s,
