@@ -52,8 +52,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                 Padding(
                     padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
                     child: contentFactory()),
-                Positioned(
-                    top: 90.d, right: 56.d, child: closeButtonFactory('')),
+                Positioned(top: 60.d, right: 24.d, child: closeButtonFactory()),
               ]),
         )),
         Positioned(
@@ -83,13 +82,13 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                   'popup_title',
                   centerSlice: centerSlice,
                 ).image)),
-        child: SkinnedText(titleBuilder()));
+        child: SkinnedText(titleBuilder(), style: TStyles.large));
   }
 
-  closeButtonFactory(String title) {
+  closeButtonFactory() {
     return Widgets.button(
-        width: 100.d,
-        height: 100.d,
+        width: 160.d,
+        height: 160.d,
         onPressed: () => Navigator.pop(context),
         child: Asset.load<Image>('popup_close', height: 38.d));
   }
