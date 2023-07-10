@@ -16,16 +16,19 @@ import '../iservices.dart';
 
 class HttpConnection extends IService {
   static String baseURL = '';
-
-  LoadData loadData = LoadData(null, null);
+  LoadData loadData = LoadData();
 
   @override
   initialize({List<Object>? args}) async {
     await loadConfigs();
+    dynamic data;
+    // Load fruits data
+    data = await rpc(RpcId.fruitJsonExport);
+    loadData.fruits = Fruits()..init(data);
 
     // Load cards data
-    var data = await rpc(RpcId.cardsExport);
-    loadData.cards = Cards()..init(data);
+    data = await rpc(RpcId.cardsExport);
+    loadData.cards = Cards()..init(data, args: loadData.fruits);
 
     // Load account data
     var params = <String, dynamic>{
@@ -80,10 +83,9 @@ class HttpConnection extends IService {
       // var json =
       //     '{"game_version":"","device_name":"Ali MacBook Pro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","os_type":2}';
       var json = jsonEncode(params);
-      log(json);
       data = id.needsEncryption ? {'edata': json.xorEncrypt()} : params;
-      log(json.xorEncrypt());
       final url = Uri.parse('$baseURL/${id.value}');
+      log("${url.toString()} $json");
       if (id.requestType == HttpRequestType.get) {
         response = await http.get(url, headers: headers);
       } else {
