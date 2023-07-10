@@ -58,13 +58,13 @@ class Themes extends IService {
     TStyles.large = _style(size: 56.d, weight: FontWeight.w800);
     TStyles.big = _style(size: 76.d, weight: FontWeight.w900);
     TStyles.tinyInvert =
-        _style(size: 22.d, weight: FontWeight.w100, color: TColors.primary10);
+        _style(size: 22.d, weight: FontWeight.w100, color: TColors.primary90);
     TStyles.smallInvert = _style(
-        size: 30.4.d, weight: FontWeight.normal, color: TColors.primary10);
+        size: 30.4.d, weight: FontWeight.normal, color: TColors.primary90);
     TStyles.mediumInvert =
-        _style(size: 40.d, weight: FontWeight.normal, color: TColors.primary10);
+        _style(size: 40.d, weight: FontWeight.normal, color: TColors.primary90);
     TStyles.largeInvert =
-        _style(size: 52.d, weight: FontWeight.normal, color: TColors.primary10);
+        _style(size: 52.d, weight: FontWeight.normal, color: TColors.primary90);
   }
 
   static ThemeData? get darkData {
