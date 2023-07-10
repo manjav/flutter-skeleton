@@ -48,7 +48,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
               fit: StackFit.loose,
               children: [
                 innerChromeFactory(),
-                titleFactory(),
+                titleTextFactory(),
                 Padding(
                     padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
                     child: contentFactory()),
@@ -68,7 +68,9 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ));
   }
 
-  titleFactory() {
+  titleBuilder() => 'popup_${widget.type.name.toLowerCase()}'.l();
+
+  titleTextFactory() {
     var centerSlice = ImageCenterSliceDate(562, 130);
     return Widgets.rect(
         width: 562.d,
@@ -81,7 +83,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                   'popup_title',
                   centerSlice: centerSlice,
                 ).image)),
-        child: SkinnedText('popup_${widget.type.name.toLowerCase()}'.l()));
+        child: SkinnedText(titleBuilder()));
   }
 
   closeButtonFactory(String title) {
