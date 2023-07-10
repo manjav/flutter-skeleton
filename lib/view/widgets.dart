@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/view/widgets/skinnedtext.dart';
 
 import '../services/deviceinfo.dart';
 import '../services/theme.dart';
+import '../utils/assets.dart';
 
 class Widgets {
   static GestureDetector touchable({
@@ -152,5 +154,31 @@ class Widgets {
           color: color ?? TColors.transparent,
           child: child,
         ));
+  }
+
+  static labelButton({
+    String? lable,
+    String color = "yellow",
+    Widget? child,
+    int buttonId = 30,
+    double? width,
+    double? height,
+  }) {
+    var slicingData = ImageCenterSliceDate(102, 106);
+    return Widgets.button(
+        padding: EdgeInsets.symmetric(horizontal: 38.d, vertical: 58.d),
+        width: width,
+        height: height,
+        buttonId: buttonId,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                centerSlice: slicingData.centerSlice,
+                image: Asset.load<Image>(
+                  "ui_button_$color",
+                  centerSlice: slicingData,
+                ).image)),
+        child:
+            lable != null ? SkinnedText(lable, style: TStyles.large) : child!);
   }
 }
