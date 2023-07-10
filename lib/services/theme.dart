@@ -41,7 +41,7 @@ class TStyles {
 TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   return TextStyle(
     fontSize: size,
-    color: color ?? TColors.primary,
+    color: color ?? TColors.primary10,
     fontWeight: weight ?? FontWeight.bold,
     fontFamily: 'LilitaOneSultanAdan',
   );
@@ -68,20 +68,25 @@ class Themes extends IService {
   }
 
   static ThemeData? get darkData {
-    // var textTheme = CupertinoTextThemeData(
-    //   primaryColor: TColors.primary,
-    //   actionTextStyle: _style(weight: FontWeight.bold, size: 20.d),
-    //   navLargeTitleTextStyle: _style(weight: FontWeight.bold, size: 22.d),
-    //   navTitleTextStyle: _style(size: 16.d, weight: FontWeight.bold),
-    //   navActionTextStyle: _style(weight: FontWeight.bold),
-    //   tabLabelTextStyle: _style(weight: FontWeight.bold, size: 15.d),
-    //   pickerTextStyle: _style(weight: FontWeight.bold, size: 15.d),
-    //   dateTimePickerTextStyle:
-    //       _style(size: 14.d, weight: FontWeight.bold, color: TColors.primary),
-    //   textStyle: TStyles.small,
-    // );
+    var textTheme = TextTheme(
+      bodySmall: TStyles.small,
+      bodyMedium: TStyles.medium,
+      bodyLarge: TStyles.large,
+      //   primaryColor: TColors.primary,
+      //   actionTextStyle: _style(weight: FontWeight.bold, size: 20.d),
+      //   navLargeTitleTextStyle: _style(weight: FontWeight.bold, size: 22.d),
+      //   navTitleTextStyle: _style(size: 16.d, weight: FontWeight.bold),
+      //   navActionTextStyle: _style(weight: FontWeight.bold),
+      //   tabLabelTextStyle: _style(weight: FontWeight.bold, size: 15.d),
+      //   pickerTextStyle: _style(weight: FontWeight.bold, size: 15.d),
+      //   dateTimePickerTextStyle:
+      //       _style(size: 14.d, weight: FontWeight.bold, color: TColors.primary),
+      //   textStyle: TStyles.small,
+    );
 
-    return ThemeData.dark(
+    return ThemeData(
+      brightness: Brightness.dark,
+      textTheme: textTheme,
       useMaterial3: true,
     );
   }

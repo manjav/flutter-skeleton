@@ -33,7 +33,7 @@ class SkinnedText extends StatelessWidget {
               ..style = PaintingStyle.stroke,
           ),
         ),
-        Text(text, style: style.copyWith(height: -0.3)),
+        Text(text, style: style.copyWith(height: -0.3, color: TColors.primary)),
       ],
     );
   }
