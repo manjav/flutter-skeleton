@@ -51,7 +51,7 @@ class _CardViewState extends State<CardView> {
       Positioned(
           bottom: 36 * s,
           left: 22 * s,
-          child: SkinnedText(widget.card.power.summarize(), style: small)),
+          child: SkinnedText(widget.card.power.compact(), style: small)),
       Positioned(
           bottom: 36 * s,
           right: 20 * s,

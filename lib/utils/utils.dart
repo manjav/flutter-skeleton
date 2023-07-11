@@ -8,10 +8,10 @@ import '../services/deviceinfo.dart';
 import '../services/localization.dart';
 
 extension IntExt on int {
-  static final _formatter = NumberFormat('###,###,###');
-  String format() {
-    return _formatter.format(this);
-  }
+  static final _separator = NumberFormat('###,###,###');
+  String format() => _separator.format(this);
+  static final _compactor = NumberFormat.compact(explicitSign: true);
+  String compact() => _compactor.format(this);
 
   String toTime() {
     var t = (this / 1000).round();
@@ -24,18 +24,6 @@ extension IntExt on int {
     var ms = m < 10 ? "0$m" : "$m";
     var hs = h < 10 ? "0$h" : "$h";
     return "$hs : $ms : $ss";
-  }
-
-  String summarize() {
-    return switch (this) {
-      > 10000000000 => "${(this / 1000000000).toStringAsFixed(1)}b",
-      > 1000000000 => "${(this / 1000000000).round()}b",
-      > 10000000 => "${(this / 1000000).toStringAsFixed(1)}M",
-      > 1000000 => "${(this / 1000000).round()}M",
-      > 10000 => "${(this / 1000).round()}K",
-      > 1000 => "${(this / 1000).toStringAsFixed(1)}K",
-      _ => "$this",
-    };
   }
 
   String toRemainingTime() {
