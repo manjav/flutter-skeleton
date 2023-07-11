@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/core/rpc_data.dart';
+import '../data/core/account.dart';
 
 class AccountEvent {}
 

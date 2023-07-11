@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/rpc_data.dart';
+import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';

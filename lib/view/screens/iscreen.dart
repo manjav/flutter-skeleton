@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/rpc_data.dart';
+import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
