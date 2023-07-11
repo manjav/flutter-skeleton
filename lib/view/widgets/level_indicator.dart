@@ -14,9 +14,11 @@ import 'skinnedtext.dart';
 class LevelIndicator extends StatefulWidget {
   final int? xp;
   final int? level;
+  final TextAlign align;
   const LevelIndicator({
     this.xp,
     this.level,
+    this.align = TextAlign.left,
     super.key,
   });
 
@@ -27,23 +29,32 @@ class LevelIndicator extends StatefulWidget {
 class _LevelIndicatorState extends State<LevelIndicator> {
   int _xp = 0;
   int _level = 0;
-  Size _size = Size.zero;
+  Size _size = const Size(100, 100);
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final keyContext = (widget.key as GlobalKey).currentContext;
-      final renderObject = keyContext!.findRenderObject();
-      if (renderObject != null) {
-        _size = (renderObject as RenderBox).size;
+      if (_measureSize()) {
         setState(() {});
       }
     });
     super.initState();
   }
 
+  bool _measureSize() {
+    if (_size.width != 100) return false;
+    final keyContext = (widget.key as GlobalKey).currentContext;
+    final renderObject = keyContext!.findRenderObject();
+    if (renderObject != null) {
+      _size = (renderObject as RenderBox).size;
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _measureSize();
     if (widget.level == null) {
       return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
         _xp = state.account.get<int>(AccountField.xp);
@@ -82,11 +93,13 @@ class _LevelIndicatorState extends State<LevelIndicator> {
             progressColor: TColors.green,
           ),
           Positioned(
-              top: -32.d,
-              left: _size.height - 62.d,
+              top: -24.d,
+              left: widget.align == TextAlign.left ? _size.height - 56.d : null,
+              right:
+                  widget.align == TextAlign.right ? _size.height - 56.d : null,
               child: SkinnedText(
                 _level.toString(),
-                style: TStyles.large,
+                style: TStyles.medium,
               )),
           Widgets.rect(
               margin: EdgeInsets.all(14.d),

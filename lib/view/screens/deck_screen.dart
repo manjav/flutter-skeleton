@@ -82,8 +82,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  GlobalKey k = GlobalKey();
-  _header() {
+  Widget _header() {
     var slicingData = ImageCenterSliceDate(117, 509);
     return Widgets.rect(
         decoration: BoxDecoration(
@@ -94,20 +93,33 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                   "deck_header",
                   centerSlice: slicingData,
                 ).image)),
-        child: Column(children: [
-          Widgets.rect(
-              height: 190.d,
-              padding: EdgeInsets.symmetric(horizontal: 36.d, vertical: 12.d),
+        padding: EdgeInsets.fromLTRB(28.d, 12.d, 28.d, 32.d),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                  height: 168.d,
               child: Row(
+                    children: [
+                      _avatar(TextAlign.left),
+                      SizedBox(width: 8.d),
+                      _opponentInfo(
+                          CrossAxisAlignment.start, "You", _calculatePower()),
+                      Expanded(
+                          child: Asset.load<Image>("deck_battle_icon",
+                              height: 136.d)),
+                      _opponentInfo(CrossAxisAlignment.end, "Enemy", "110~130"),
+                      SizedBox(width: 8.d),
+                      _avatar(TextAlign.right),
+                    ],
+                  )),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  SizedBox(
-                      width: 160.d,
-                      height: 160.d,
-                      child: LevelIndicator(key: k)),
-                  Asset.load<Image>("deck_battle_icon", width: 139.d),
+                  for (var i = 0; i < _selectedCards.length; i++) _cardHolder(i)
                 ],
-              ))
+              ),
         ]));
   }
 }
