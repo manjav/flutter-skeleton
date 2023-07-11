@@ -10,8 +10,9 @@ enum BuildingType { battle, cards, message, mine, shop, tribe, quest, war }
 
 class Building extends StatefulWidget {
   final BuildingType type;
+  final int level;
   final void Function()? onTap;
-  const Building(this.type, {super.key, this.onTap});
+  const Building(this.type, {super.key, this.level = 1, this.onTap});
 
   @override
   State<Building> createState() => _BuildingState();
@@ -24,9 +25,6 @@ class _BuildingState extends State<Building> {
   Widget build(BuildContext context) {
     return Widgets.touchable(
       onTap: () {
-        if (_levelInput != null) {
-          _levelInput!.value = (_levelInput!.value + 1) % 12;
-        }
         widget.onTap?.call();
       },
       child: SizedBox(
@@ -42,6 +40,7 @@ class _BuildingState extends State<Building> {
             var input = controller.findInput<double>('level');
             if (input != null) {
               _levelInput = input as SMINumber;
+              _levelInput!.value = widget.level.toDouble();
             }
             artboard.addController(controller);
           },
