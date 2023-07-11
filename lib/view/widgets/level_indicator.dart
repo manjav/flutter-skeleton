@@ -27,6 +27,20 @@ class LevelIndicator extends StatefulWidget {
 class _LevelIndicatorState extends State<LevelIndicator> {
   int _xp = 0;
   int _level = 0;
+  Size _size = Size.zero;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final keyContext = (widget.key as GlobalKey).currentContext;
+      final renderObject = keyContext!.findRenderObject();
+      if (renderObject != null) {
+        _size = (renderObject as RenderBox).size;
+        setState(() {});
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +83,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
           ),
           Positioned(
               top: 18.d,
-              right: -14.d,
+              left: _size.height - 62.d,
               child: SkinnedText(
                 _level.toString(),
                 style: TStyles.large,
