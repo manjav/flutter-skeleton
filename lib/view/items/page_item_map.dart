@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/rpc_data.dart';
+import '../../data/core/building.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../../view/items/page_item.dart';
-import '../../view/map_elements/building.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../map_elements/building_widget.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -28,9 +28,10 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
             fit: BoxFit.fitWidth),
         _building(BuildingType.cards, 167, 560),
         _building(BuildingType.tribe, 500, 500),
-        _building(BuildingType.mine, 754, 699,
-            state.account.get<int>(AccountField.bank_building_level)),
-        _building(BuildingType.war, 45, 943),
+        _building(BuildingType.mine, 754, 699),
+        _building(BuildingType.treasury, 754, 399),
+        _building(BuildingType.offence, 45, 943),
+        _building(BuildingType.defence, 45, 743),
         _building(BuildingType.battle, 400, 930),
         _building(BuildingType.shop, 773, 1040),
         _building(BuildingType.quest, 169, 1244),
@@ -76,6 +77,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _building(BuildingType type, double x, double y, [int level = 1]) {
-    return Positioned(left: x.d, top: y.d, child: Building(type, level: level));
+    return Positioned(
+        left: x.d, top: y.d, child: BuildingWidget(type, level: level));
   }
 }

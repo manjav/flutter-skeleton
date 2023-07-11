@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
+import '../../data/core/building.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/loaderwidget.dart';
 
-enum BuildingType { battle, cards, message, mine, shop, tribe, quest, war }
-
-class Building extends StatefulWidget {
+class BuildingWidget extends StatefulWidget {
   final BuildingType type;
   final int level;
   final void Function()? onTap;
-  const Building(this.type, {super.key, this.level = 1, this.onTap});
+  const BuildingWidget(this.type, {super.key, this.level = 1, this.onTap});
 
   @override
-  State<Building> createState() => _BuildingState();
+  State<BuildingWidget> createState() => _BuildingWidgetState();
 }
 
-class _BuildingState extends State<Building> {
+class _BuildingWidgetState extends State<BuildingWidget> {
   SMINumber? _levelInput;
 
   @override
