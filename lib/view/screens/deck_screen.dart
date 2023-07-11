@@ -24,7 +24,9 @@ class DeckScreen extends AbstractScreen {
 }
 
 class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
-  final List<AccountCard?> _selectedCards = List.generate(5, (index) => null);
+  final SelectedCards _selectedCards =
+      SelectedCards(List.generate(5, (index) => null));
+
   @override
   Widget contentFactory() {
     var paddingTop = 172.d;
@@ -38,20 +40,25 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
       cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
       return Stack(alignment: Alignment.bottomCenter, children: [
         Positioned(
-            top: paddingTop + headerSize,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            child: GridView.builder(
-                padding: EdgeInsets.fromLTRB(gap, gap, gap, 270.d),
-                itemCount: cards.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.74,
-                    crossAxisCount: 4,
-                    crossAxisSpacing: gap,
-                    mainAxisSpacing: gap),
-                itemBuilder: (c, i) =>
-                    _cardItemBuilder(c, i, cards[i], itemSize))),
+          top: paddingTop + headerSize,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          child: ValueListenableBuilder<List<AccountCard?>>(
+              valueListenable: _selectedCards,
+              builder: (context, value, child) {
+                return GridView.builder(
+                    padding: EdgeInsets.fromLTRB(gap, gap, gap, 270.d),
+                    itemCount: cards.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 0.74,
+                        crossAxisCount: 4,
+                        crossAxisSpacing: gap,
+                        mainAxisSpacing: gap),
+                    itemBuilder: (c, i) =>
+                        _cardItemBuilder(c, i, cards[i], itemSize));
+              }),
+        ),
         Positioned(
             top: paddingTop,
             right: 16.d,
@@ -81,28 +88,26 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
   Widget? _cardItemBuilder(
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.button(
-      foregroundDecoration: _selectedCards.contains(card)
+      foregroundDecoration: _selectedCards.value.contains(card)
           ? BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(28.d)),
               border: Border.all(color: TColors.white, width: 8.d))
           : null,
       padding: EdgeInsets.zero,
-      onPressed: () {
-        if (_addCard(card)) setState(() {});
-      },
+      onPressed: () => _addCard(card),
       child: CardView(card, size: itemSize, key: card.key),
     );
   }
 
   bool _addCard(card) {
-    var index = _selectedCards.indexOf(card);
+    var index = _selectedCards.value.indexOf(card);
     if (index > -1) {
-      _selectedCards[index] = null;
+      _selectedCards.setCard(index, null);
       return true;
     }
-    for (var i = 0; i < _selectedCards.length; i++) {
-      if (i != 2 && _selectedCards[i] == null || i == 4) {
-        _selectedCards[i] = card;
+    for (var i = 0; i < _selectedCards.value.length; i++) {
+      if (i != 2 && _selectedCards.value[i] == null || i == 4) {
+        _selectedCards.setCard(i, card);
         return true;
       }
     }
@@ -130,23 +135,25 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                     children: [
                       _avatar(TextAlign.left),
                       SizedBox(width: 8.d),
-                      _opponentInfo(
-                          CrossAxisAlignment.start, "You", _calculatePower()),
-                      Expanded(
-                          child: Asset.load<Image>("deck_battle_icon",
-                              height: 136.d)),
+                      _opponentInfo(CrossAxisAlignment.start, "You"),
+                      Asset.load<Image>("deck_battle_icon", height: 136.d),
                       _opponentInfo(CrossAxisAlignment.end, "Enemy", "110~130"),
                       SizedBox(width: 8.d),
                       _avatar(TextAlign.right),
                     ],
                   )),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  for (var i = 0; i < _selectedCards.length; i++) _cardHolder(i)
-                ],
-              ),
+              ValueListenableBuilder<List<AccountCard?>>(
+                  valueListenable: _selectedCards,
+                  builder: (context, value, child) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        for (var i = 0; i < _selectedCards.value.length; i++)
+                          _cardHolder(i)
+                      ],
+                    );
+                  }),
             ]));
   }
 
@@ -157,22 +164,31 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
         child: LevelIndicator(key: GlobalKey(), align: align));
   }
 
-  Widget _opponentInfo(CrossAxisAlignment align, String name, String power) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: align,
-      children: [
-        SkinnedText(name,
-            style: TStyles.small.copyWith(
-                height: 0.8, color: TColors.primary10, fontSize: 36.d)),
-        SkinnedText(power, style: TStyles.medium.copyWith(height: 0.8)),
-        SizedBox(height: 16.d)
-      ],
+  Widget _opponentInfo(CrossAxisAlignment align, String name, [String? power]) {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: align,
+        children: [
+          SkinnedText(name,
+              style: TStyles.small.copyWith(
+                  height: 0.8, color: TColors.primary10, fontSize: 36.d)),
+          power == null
+              ? ValueListenableBuilder<List<AccountCard?>>(
+                  valueListenable: _selectedCards,
+                  builder: (context, value, child) => SkinnedText(
+                      _calculatePower(),
+                      style: TStyles.medium.copyWith(height: 0.8)),
+                )
+              : SkinnedText(power, style: TStyles.medium.copyWith(height: 0.8)),
+          SizedBox(height: 16.d)
+        ],
+      ),
     );
   }
 
   Widget _cardHolder(int index) {
-    var card = _selectedCards[index];
+    var card = _selectedCards.value[index];
     var balloonData =
         ImageCenterSliceDate(50, 57, const Rect.fromLTWH(28, 19, 2, 2));
     var slicingData = ImageCenterSliceDate(117, 117);
@@ -191,9 +207,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                       ).image)),
               child: Text(card.power.compact(), style: TStyles.mediumInvert)),
       Widgets.button(
-          onPressed: () => setState(() {
-                _selectedCards[index] = null;
-              }),
+          onPressed: () => _selectedCards.setCard(index, null),
           width: index == 2 ? 202.d : 184.d,
           height: index == 2 ? 202.d : 184.d,
           padding: EdgeInsets.all(12.d),
@@ -205,9 +219,9 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                     "deck_placeholder",
                     centerSlice: slicingData,
                   ).image)),
-          child: _selectedCards[index] == null
+          child: _selectedCards.value[index] == null
               ? _emptyCard(index)
-              : _filledCard(_selectedCards[index]!))
+              : _filledCard(_selectedCards.value[index]!))
     ]);
   }
 
@@ -226,9 +240,18 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
 
   String _calculatePower() {
     var power = 0;
-    for (var card in _selectedCards) {
+    for (var card in _selectedCards.value) {
       power += card != null ? card.power : 0;
     }
     return power.compact();
+  }
+}
+
+class SelectedCards extends ValueNotifier<List<AccountCard?>> {
+  SelectedCards(super.value);
+
+  setCard(int index, AccountCard? card) {
+    value[index] = card;
+    notifyListeners();
   }
 }
