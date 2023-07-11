@@ -37,23 +37,23 @@ class _CardViewState extends State<CardView> {
       LoaderWidget(AssetType.image, baseCard.get<String>(CardFields.name),
           subFolder: "cards", width: 216 * s),
       Positioned(
-          top: 30 * s,
+          top: 4 * s,
           left: 22 * s,
           child: SkinnedText(name,
               style: TStyles.small.copyWith(
                   fontSize: (22 * s + 60 * s / (name.length))
                       .clamp(22 * s, 40 * s)))),
       Positioned(
-          top: 37 * s,
+          top: 2 * s,
           right: 24 * s,
           width: 27 * s,
           child: SkinnedText(level, style: medium)),
       Positioned(
-          bottom: 36 * s,
+          bottom: 6 * s,
           left: 22 * s,
           child: SkinnedText(widget.card.power.compact(), style: small)),
       Positioned(
-          bottom: 36 * s,
+          bottom: 6 * s,
           right: 20 * s,
           child: SkinnedText(
               baseCard.get<int>(CardFields.cooldown).toRemainingTime(),

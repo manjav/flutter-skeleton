@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/data/core/rpc_data.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../data/core/rpc_data.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
@@ -69,7 +69,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
                   top: -80.d,
                   width: 148.d,
                   child: LoaderWidget(AssetType.image, "icon_$icon")),
-              Positioned(bottom: 20.d, child: SkinnedText(text.l()))
+              Positioned(bottom: -10.d, child: SkinnedText(text.l()))
             ],
           ),
         ));

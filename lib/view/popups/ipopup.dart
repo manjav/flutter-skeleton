@@ -77,7 +77,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     return Widgets.rect(
         width: 562.d,
         height: 130.d,
-        alignment: Alignment.center,
+        padding: EdgeInsets.only(top: 12.d),
         decoration: BoxDecoration(
             image: DecorationImage(
                 centerSlice: centerSlice.centerSlice,

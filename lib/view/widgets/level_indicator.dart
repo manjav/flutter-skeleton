@@ -82,7 +82,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
             progressColor: TColors.green,
           ),
           Positioned(
-              top: 18.d,
+              top: -32.d,
               left: _size.height - 62.d,
               child: SkinnedText(
                 _level.toString(),

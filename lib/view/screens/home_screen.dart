@@ -49,7 +49,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     if (_selectedTab != 2) return [];
     return [
       SizedBox(
-          width: 196.d, height: 200.d, child: LevelIndicator())
+          width: 196.d, height: 200.d, child: LevelIndicator(key: GlobalKey()))
     ];
   }
 
@@ -105,24 +105,30 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     var name = "home_tab_$index".l();
     return Widgets.touchable(
         onTap: () => _selectTap(index, tabsChange: false),
-        child: Stack(alignment: const Alignment(0, 0.75), children: [
-          LoaderWidget(
-            AssetType.animation,
-            "tab_$name",
-            fit: BoxFit.fitWidth,
-            onRiveInit: (Artboard artboard) {
-              final controller =
-                  StateMachineController.fromArtboard(artboard, 'Tab');
-              _tabInputs[index] =
-                  controller!.findInput<bool>('active') as SMIBool;
-              _tabInputs[index]!.value = index == _pageController.initialPage;
-              artboard.addController(controller);
-            },
-          ),
-          _selectedTab == index
-              ? SkinnedText(name.toPascalCase(), style: TStyles.small)
-              : const SizedBox()
-        ]));
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            LoaderWidget(
+              AssetType.animation,
+              "tab_$name",
+              fit: BoxFit.fitWidth,
+              onRiveInit: (Artboard artboard) {
+                final controller =
+                    StateMachineController.fromArtboard(artboard, 'Tab');
+                _tabInputs[index] =
+                    controller!.findInput<bool>('active') as SMIBool;
+                _tabInputs[index]!.value = index == _pageController.initialPage;
+                artboard.addController(controller);
+              },
+            ),
+            _selectedTab == index
+                ? Positioned(
+                    bottom: 6.d,
+                    child:
+                        SkinnedText(name.toPascalCase(), style: TStyles.small))
+                : const SizedBox()
+          ],
+        ));
   }
 
   _selectTap(int index, {bool tabsChange = true, bool pageChange = true}) {
