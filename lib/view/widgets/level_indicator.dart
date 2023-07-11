@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
 
+import '../../blocs/account_bloc.dart';
+import '../../data/core/rpc_data.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
@@ -8,17 +11,38 @@ import '../../view/widgets/loaderwidget.dart';
 import '../widgets.dart';
 import 'skinnedtext.dart';
 
-class LevelIndicator extends StatelessWidget {
-  final int xp;
-  final String level;
+class LevelIndicator extends StatefulWidget {
+  final int? xp;
+  final int? level;
   const LevelIndicator({
+    this.xp,
+    this.level,
     super.key,
-    required this.level,
-    required this.xp,
   });
 
   @override
+  State<LevelIndicator> createState() => _LevelIndicatorState();
+}
+
+class _LevelIndicatorState extends State<LevelIndicator> {
+  int _xp = 0;
+  int _level = 0;
+
+  @override
   Widget build(BuildContext context) {
+    if (widget.level == null) {
+      return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+        _xp = state.account.get<int>(AccountField.xp);
+        _level = state.account.get<int>(AccountField.level);
+        return _elementsBuilder();
+      });
+    }
+    _xp = widget.xp!;
+    _level = widget.level!;
+    return _elementsBuilder();
+  }
+
+  _elementsBuilder() {
     var bgSliceCenter = ImageCenterSliceDate(134, 134);
     return Widgets.button(
       padding: EdgeInsets.fromLTRB(22.d, 20.d, 22.d, 26.d),
@@ -35,7 +59,7 @@ class LevelIndicator extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           SquarePercentIndicator(
-            progress: 0.5,
+            progress: _xp / (_xp * 2),
             shadowWidth: 16.d,
             progressWidth: 8.d,
             borderRadius: 36.d,
@@ -47,7 +71,7 @@ class LevelIndicator extends StatelessWidget {
               top: 18.d,
               right: -14.d,
               child: SkinnedText(
-                level.toString(),
+                _level.toString(),
                 style: TStyles.large,
               )),
           Widgets.rect(

@@ -49,7 +49,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     if (_selectedTab != 2) return [];
     return [
       SizedBox(
-          width: 196.d, height: 200.d, child: LevelIndicator(level: "2", xp: 12))
+          width: 196.d, height: 200.d, child: LevelIndicator())
     ];
   }
 
