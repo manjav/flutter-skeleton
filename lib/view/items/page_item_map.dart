@@ -32,13 +32,15 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
         _building(BuildingType.shop, 773, 1040),
         _building(BuildingType.quest, 169, 1244),
         _building(BuildingType.message, 532, 1268),
-        _button("battle", "battle_l", 150, 270, 442),
+        _button("battle", "battle_l", 150, 270, 442,
+            () => Navigator.pushNamed(context, Routes.deck.routeName)),
         _button("quest", "quest_l", 620, 270, 310),
       ]);
     });
   }
 
-  _button(String icon, String text, double x, double bottom, double width) {
+  _button(String icon, String text, double x, double bottom, double width,
+      [Function()? onPressed]) {
     var bgCenterSlice = ImageCenterSliceDate(
         422, 202, const Rect.fromLTWH(85, 85, 422 - 85 * 2, 202 - 85 * 2));
     return Positioned(
@@ -47,6 +49,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
         width: width.d,
         height: 202.d,
         child: Widgets.button(
+          onPressed: onPressed,
           decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.fill,
