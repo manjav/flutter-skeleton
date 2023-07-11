@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/rpc_data.dart';
 import '../../services/deviceinfo.dart';
+import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
+import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
 import '../route_provider.dart';
 
@@ -36,6 +38,10 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   @override
   Widget build(BuildContext context) {
+    var appBarElements = <Widget>[];
+    appBarElements.addAll(appBarElementsLeft());
+    appBarElements.add(const Expanded(child: SizedBox()));
+    appBarElements.addAll(appBarElementsRight());
     return SafeArea(
         child: Scaffold(
       body: Stack(children: [
@@ -48,14 +54,24 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: appBarElements())),
+                children: appBarElements)),
       ]),
     ));
   }
 
-  List<Widget> appBarElements() {
+  List<Widget> appBarElementsLeft() {
     return [
-      const Expanded(child: SizedBox()),
+      Widgets.button(
+          // width: 132.d,
+          height: 117.d,
+          padding: EdgeInsets.all(22.d),
+          child: Asset.load<Image>("ui_back"),
+          onPressed: () => Navigator.pop(context))
+    ];
+  }
+
+  List<Widget> appBarElementsRight() {
+    return [
       Indicator(widget.type.name, AccountField.gold),
       SizedBox(width: 16.d),
       Indicator(widget.type.name, AccountField.nectar, width: 260.d)

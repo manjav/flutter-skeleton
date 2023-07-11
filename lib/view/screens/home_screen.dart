@@ -45,14 +45,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
-  List<Widget> appBarElements() {
+  List<Widget> appBarElementsLeft() {
+    if (_selectedTab != 2) return [];
+    return [
+      SizedBox(
+          width: 196.d, height: 200.d, child: LevelIndicator(level: "2", xp: 12))
+    ];
+  }
+
+  @override
+  List<Widget> appBarElementsRight() {
     if (_selectedTab == 2) {
       return <Widget>[
-        SizedBox(
-            width: 196.d,
-            height: 200.d,
-            child: const LevelIndicator(level: "2", xp: 12)),
-        ...super.appBarElements()
+        ...super.appBarElementsRight()
           ..add(Widgets.button(
               width: 110.d,
               height: 110.d,
@@ -60,7 +65,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               child: Asset.load<Image>('ui_settings'))),
       ];
     }
-    return super.appBarElements();
+    return super.appBarElementsRight();
   }
 
   @override
