@@ -49,7 +49,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                     crossAxisSpacing: gap,
                     mainAxisSpacing: gap),
                 itemBuilder: (c, i) =>
-                    cardItemBuilder(c, i, cards[i], itemSize))),
+                    _cardItemBuilder(c, i, cards[i], itemSize))),
         Positioned(
             top: paddingTop,
             right: 16.d,
@@ -122,4 +122,79 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
               ),
         ]));
   }
+
+  Widget _avatar(TextAlign align) {
+    return SizedBox(
+        width: 160.d,
+        height: 160.d,
+        child: LevelIndicator(key: GlobalKey(), align: align));
+  }
+
+  Widget _opponentInfo(CrossAxisAlignment align, String name, String power) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: align,
+      children: [
+        SkinnedText(name,
+            style: TStyles.small.copyWith(
+                height: 0.8, color: TColors.primary10, fontSize: 36.d)),
+        SkinnedText(power, style: TStyles.medium.copyWith(height: 0.8)),
+        SizedBox(height: 16.d)
+      ],
+    );
+  }
+
+  Widget _cardHolder(int index) {
+    var card = _selectedCards[index];
+    var balloonData =
+        ImageCenterSliceDate(50, 57, const Rect.fromLTWH(28, 19, 2, 2));
+    var slicingData = ImageCenterSliceDate(117, 117);
+    return Column(children: [
+      card == null
+          ? const SizedBox()
+          : Widgets.rect(
+              padding: EdgeInsets.all(12.d),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      centerSlice: balloonData.centerSlice,
+                      image: Asset.load<Image>(
+                        "deck_balloon",
+                        centerSlice: balloonData,
+                      ).image)),
+              child: Text(card.power.compact(), style: TStyles.mediumInvert)),
+      Widgets.button(
+          onPressed: () => setState(() {
+                _selectedCards[index] = null;
+              }),
+          width: index == 2 ? 202.d : 184.d,
+          height: index == 2 ? 202.d : 184.d,
+          padding: EdgeInsets.all(12.d),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.fill,
+                  centerSlice: slicingData.centerSlice,
+                  image: Asset.load<Image>(
+                    "deck_placeholder",
+                    centerSlice: slicingData,
+                  ).image)),
+          child: _selectedCards[index] == null
+              ? _emptyCard(index)
+              : _filledCard(_selectedCards[index]!))
+    ]);
+  }
+
+  Widget _emptyCard(int index) {
+    return Padding(
+        padding: EdgeInsets.all(24.d),
+        child: Asset.load<Image>(
+            "deck_placeholder_${index == 2 ? 'hero' : 'card'}"));
+  }
+
+  Widget _filledCard(AccountCard accountCard) {
+    return LoaderWidget(
+        AssetType.image, accountCard.base.get<String>(CardFields.name),
+        subFolder: "cards");
+  }
+
 }
