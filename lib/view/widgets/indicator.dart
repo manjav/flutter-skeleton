@@ -3,13 +3,13 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/utils/utils.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
+import '../../utils/utils.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../widgets.dart';
 
@@ -64,8 +64,7 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                 color: TColors.transparent,
                 child: BlocBuilder<AccountBloc, AccountState>(
                     builder: (context, state) {
-                  var text =
-                      state.account.get<int>(widget.itemType).summarize();
+                  var text = state.account.get<int>(widget.itemType).compact();
                   return Stack(alignment: Alignment.centerLeft, children: [
                     Positioned(
                         right: right,

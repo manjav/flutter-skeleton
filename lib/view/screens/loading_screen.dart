@@ -10,10 +10,10 @@ class LoadingScreen extends AbstractScreen {
   LoadingScreen({super.key}) : super(Routes.home);
 
   @override
-  createState() => _HomeScreenState();
+  createState() => _LoadingScreenState();
 }
 
-class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void onRender(Duration timeStamp) {
     Overlays.insert(context, OverlayType.loading);

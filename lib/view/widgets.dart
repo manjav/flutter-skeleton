@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/view/widgets/skinnedtext.dart';
 
+import '../../view/widgets/skinnedtext.dart';
 import '../services/deviceinfo.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/view/route_provider.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/items/page_item.dart';
+import '../../view/route_provider.dart';
 import '../widgets.dart';
 import 'card_item.dart';
 

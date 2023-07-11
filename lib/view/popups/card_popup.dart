@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/deviceinfo.dart';
-import 'package:flutter_skeleton/services/localization.dart';
-import 'package:flutter_skeleton/services/theme.dart';
 
 import '../../data/core/rpc_data.dart';
+import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
+import '../../services/theme.dart';
 import '../../view/items/card_item.dart';
 import '../../view/popups/ipopup.dart';
 import '../widgets.dart';
@@ -45,14 +45,14 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
           children: [
             Column(
               children: [
-                Widgets.labeledButton(lable: "card_enhance".l(), width: 370.d),
+                Widgets.labeledButton(label: "card_enhance".l(), width: 370.d),
                 SizedBox(height: 16.d),
-                Widgets.labeledButton(lable: "card_evolve".l(), width: 370.d),
+                Widgets.labeledButton(label: "card_evolve".l(), width: 370.d),
               ],
             ),
             Widgets.verticalDivider(height: 140.d, margin: 48.d),
             Widgets.labeledButton(
-                lable: "card_sell".l(), color: "green", width: 370.d),
+                label: "card_sell".l(), color: "green", width: 370.d),
           ],
         ),
         SizedBox(height: 48.d),

@@ -105,7 +105,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                     ),
                     SizedBox(height: 48.d),
                     Widgets.labeledButton(
-                        lable: 'Retry',
+                        label: 'Retry',
                         buttonId: -1,
                         onPressed: () {
                           _reload();
