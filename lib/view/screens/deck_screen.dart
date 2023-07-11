@@ -7,6 +7,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
+import '../../utils/utils.dart';
 import '../../view/screens/iscreen.dart';
 import '../../view/widgets/level_indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
@@ -23,6 +24,7 @@ class DeckScreen extends AbstractScreen {
 }
 
 class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
+  final List<AccountCard?> _selectedCards = List.generate(5, (index) => null);
   @override
   Widget contentFactory() {
     var paddingTop = 172.d;
@@ -58,14 +60,17 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
             child: _header()),
         Positioned(
             width: 600.d,
-            height: 220.d,
+            height: 214.d,
             bottom: 24.d,
             child: Widgets.labeledButton(
+                alignment: Alignment.center,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const LoaderWidget(AssetType.image, "icon_battle"),
-                    SkinnedText("battle_start".l(), style: TStyles.large),
+                    SkinnedText("battle_start".l(),
+                        style: TStyles.large.copyWith(height: 1.7)),
                   ],
                 ),
                 size: ""))
@@ -73,13 +78,35 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
     });
   }
 
-  Widget? cardItemBuilder(
+  Widget? _cardItemBuilder(
       BuildContext context, int index, AccountCard card, double itemSize) {
-    return Widgets.touchable(
-      onTap: () => Navigator.pushNamed(context, Routes.popupCard.routeName,
-          arguments: {'card': card}),
+    return Widgets.button(
+      foregroundDecoration: _selectedCards.contains(card)
+          ? BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(28.d)),
+              border: Border.all(color: TColors.white, width: 8.d))
+          : null,
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        if (_addCard(card)) setState(() {});
+      },
       child: CardView(card, size: itemSize, key: card.key),
     );
+  }
+
+  bool _addCard(card) {
+    var index = _selectedCards.indexOf(card);
+    if (index > -1) {
+      _selectedCards[index] = null;
+      return true;
+    }
+    for (var i = 0; i < _selectedCards.length; i++) {
+      if (i != 2 && _selectedCards[i] == null || i == 4) {
+        _selectedCards[i] = card;
+        return true;
+      }
+    }
+    return false;
   }
 
   Widget _header() {
@@ -99,7 +126,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
             children: [
               SizedBox(
                   height: 168.d,
-              child: Row(
+                  child: Row(
                     children: [
                       _avatar(TextAlign.left),
                       SizedBox(width: 8.d),
@@ -120,7 +147,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                   for (var i = 0; i < _selectedCards.length; i++) _cardHolder(i)
                 ],
               ),
-        ]));
+            ]));
   }
 
   Widget _avatar(TextAlign align) {
@@ -197,4 +224,11 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
         subFolder: "cards");
   }
 
+  String _calculatePower() {
+    var power = 0;
+    for (var card in _selectedCards) {
+      power += card != null ? card.power : 0;
+    }
+    return power.compact();
+  }
 }

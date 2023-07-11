@@ -164,6 +164,7 @@ class Widgets {
     int buttonId = 30,
     double? width,
     double? height,
+    Alignment? alignment,
     Function()? onPressed,
   }) {
     if (size != "small") {
@@ -177,7 +178,9 @@ class Widgets {
     return Widgets.button(
         onPressed: onPressed,
         width: width,
+        height: height,
         buttonId: buttonId,
+        alignment: alignment,
         decoration: BoxDecoration(
             image: DecorationImage(
                 fit: BoxFit.fill,
