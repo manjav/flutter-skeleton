@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +29,7 @@ class DeckScreen extends AbstractScreen {
 
 class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
   final SelectedCards _selectedCards =
-      SelectedCards(List.generate(5, (index) => null));
+      SelectedCards(List.generate(5, (i) => null));
 
   @override
   Widget contentFactory() {
@@ -37,7 +40,8 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var cards = state.account.get<List<AccountCard>>(AccountField.cards);
+      var account = state.account;
+      var cards = account.get<List<AccountCard>>(AccountField.cards);
       cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
       return Stack(alignment: Alignment.bottomCenter, children: [
         Positioned(
@@ -65,7 +69,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
             right: 16.d,
             height: headerSize,
             left: 16.d,
-            child: _header()),
+            child: _header(account)),
         Positioned(
             width: 600.d,
             height: 214.d,
@@ -115,7 +119,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
     return false;
   }
 
-  Widget _header() {
+  Widget _header(Account account) {
     var slicingData = ImageCenterSliceDate(117, 509);
     return Widgets.rect(
         decoration: BoxDecoration(
@@ -136,9 +140,9 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                     children: [
                       _avatar(TextAlign.left),
                       SizedBox(width: 8.d),
-                      _opponentInfo(CrossAxisAlignment.start, "You"),
+                      _opponentInfo(CrossAxisAlignment.start, account),
                       Asset.load<Image>("deck_battle_icon", height: 136.d),
-                      _opponentInfo(CrossAxisAlignment.end, "Enemy", "110~130"),
+                      _opponentInfo(CrossAxisAlignment.end, null),
                       SizedBox(width: 8.d),
                       _avatar(TextAlign.right),
                     ],
@@ -165,23 +169,24 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
         child: LevelIndicator(key: GlobalKey(), align: align));
   }
 
-  Widget _opponentInfo(CrossAxisAlignment align, String name, [String? power]) {
+  Widget _opponentInfo(CrossAxisAlignment align, [Account? account]) {
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: align,
         children: [
-          SkinnedText(name,
+          SkinnedText((account == null ? "enemy_l" : "you_l").l(),
               style: TStyles.small.copyWith(
                   height: 0.8, color: TColors.primary10, fontSize: 36.d)),
-          power == null
+          account == null
               ? ValueListenableBuilder<List<AccountCard?>>(
                   valueListenable: _selectedCards,
                   builder: (context, value, child) => SkinnedText(
-                      _calculatePower(),
+                      account!.calculatePower(_selectedCards.value).compact(),
                       style: TStyles.medium.copyWith(height: 0.8)),
                 )
-              : SkinnedText(power, style: TStyles.medium.copyWith(height: 0.8)),
+              : SkinnedText("~${getQuestPower(account)[2].compact()}",
+                  style: TStyles.medium.copyWith(height: 0.8)),
           SizedBox(height: 16.d)
         ],
       ),
@@ -239,18 +244,55 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
         subFolder: "cards");
   }
 
-  String _calculatePower() {
-    var power = 0;
-    for (var card in _selectedCards.value) {
-      power += card != null ? card.power : 0;
+/* This function returns the power of the next quest.
+ @param tutorialPowerMultiplier, the number that will be multiplied to the real power.
+ @return A table is returned with three children. 'realPower' is the actual power of the quest; 'minPower' is the approximate min value of the quest and 'maxPower'
+ is the approximate maximum power of the quest. The min and max powers are only for display purposes and have no real effect on anything.
+ */
+
+  List<int> getQuestPower(Account account, {int tutorialPowerMultiplier = 1}) {
+    var initialPower = 35;
+    var initialGold = 40;
+// var costPerPowerRatio = 230;
+// var costPerPowerRatioExponent = 0.002;
+// var defenceMultiplier = 14;
+    var costPowerRatio = 230;
+    var bossPowerMultiplier = 2;
+// var purgeStep = 30;
+    var coef = 0.4761;
+    var exponent = 1.0786;
+    var defenceMin = 40;
+    var defenceValue = <int>[0, 0, 0];
+    var multiplier = tutorialPowerMultiplier;
+    var q = account.get<int>(AccountField.q);
+    if (account.get<int>(AccountField.level) < 80) {
+      defenceValue[1] = (initialPower +
+                  (initialGold * q + (q * (q - 1)) / 80) / costPowerRatio)
+              .floor() *
+          multiplier;
+    } else {
+      defenceValue[1] = (coef * math.pow(q, exponent)).floor().min(defenceMin);
     }
-    return power.compact();
+    var random = Random();
+    defenceValue[0] = (defenceValue[1] - random.nextInt(10) - 10).min(0);
+    defenceValue[2] = defenceValue[1] + random.nextInt(10) + 10;
+
+    //log3("Min:",defenceValue.minPower,"Real:",defenceValue.realPower,"Max:",defenceValue.maxPower)
+    if (isBossQuest(account)) {
+      defenceValue[1] = bossPowerMultiplier * defenceValue[1];
+      defenceValue[0] = bossPowerMultiplier * defenceValue[0];
+      defenceValue[2] = bossPowerMultiplier * defenceValue[2];
+    }
+    return defenceValue;
   }
+
+  // every 10 quests is boss fight
+  bool isBossQuest(Account account) =>
+      ((account.get<int>(AccountField.total_quests) / 10) % 1 == 0);
 }
 
 class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   SelectedCards(super.value);
-
   setCard(int index, AccountCard? card) {
     value[index] = card;
     notifyListeners();
