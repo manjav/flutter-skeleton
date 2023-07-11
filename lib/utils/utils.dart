@@ -10,7 +10,7 @@ import '../services/localization.dart';
 extension IntExt on int {
   static final _separator = NumberFormat('###,###,###');
   String format() => _separator.format(this);
-  static final _compactor = NumberFormat.compact(explicitSign: true);
+  static final _compactor = NumberFormat.compact();
   String compact() => _compactor.format(this);
 
   String toTime() {
