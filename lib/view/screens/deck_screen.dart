@@ -41,7 +41,10 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var account = state.account;
-      var cards = account.get<List<AccountCard>>(AccountField.cards);
+      var cards = account
+          .get<Map<int, AccountCard>>(AccountField.cards)
+          .values
+          .toList();
       cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
       return Stack(alignment: Alignment.bottomCenter, children: [
         Positioned(
@@ -142,7 +145,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                       SizedBox(width: 8.d),
                       _opponentInfo(CrossAxisAlignment.start, account),
                       Asset.load<Image>("deck_battle_icon", height: 136.d),
-                      _opponentInfo(CrossAxisAlignment.end, null),
+                      _opponentInfo(CrossAxisAlignment.end, account),
                       SizedBox(width: 8.d),
                       _avatar(TextAlign.right),
                     ],
@@ -169,20 +172,21 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
         child: LevelIndicator(key: GlobalKey(), align: align));
   }
 
-  Widget _opponentInfo(CrossAxisAlignment align, [Account? account]) {
+  Widget _opponentInfo(CrossAxisAlignment align, Account account) {
+    var itsMe = align == CrossAxisAlignment.start;
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: align,
         children: [
-          SkinnedText((account == null ? "enemy_l" : "you_l").l(),
+          SkinnedText((itsMe ? "you_l" : "enemy_l").l(),
               style: TStyles.small.copyWith(
                   height: 0.8, color: TColors.primary10, fontSize: 36.d)),
-          account == null
+          itsMe
               ? ValueListenableBuilder<List<AccountCard?>>(
                   valueListenable: _selectedCards,
                   builder: (context, value, child) => SkinnedText(
-                      account!.calculatePower(_selectedCards.value).compact(),
+                      account.calculatePower(_selectedCards.value).compact(),
                       style: TStyles.medium.copyWith(height: 0.8)),
                 )
               : SkinnedText("~${getQuestPower(account)[2].compact()}",

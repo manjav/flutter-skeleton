@@ -14,10 +14,12 @@ import 'skinnedtext.dart';
 class LevelIndicator extends StatefulWidget {
   final int? xp;
   final int? level;
+  final int? avatarId;
   final TextAlign align;
   const LevelIndicator({
     this.xp,
     this.level,
+    this.avatarId,
     this.align = TextAlign.left,
     super.key,
   });
@@ -29,6 +31,7 @@ class LevelIndicator extends StatefulWidget {
 class _LevelIndicatorState extends State<LevelIndicator> {
   int _xp = 0;
   int _level = 0;
+  int _avatarId = 0;
   Size _size = const Size(100, 100);
 
   @override
@@ -59,11 +62,13 @@ class _LevelIndicatorState extends State<LevelIndicator> {
       return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
         _xp = state.account.get<int>(AccountField.xp);
         _level = state.account.get<int>(AccountField.level);
+        _avatarId = state.account.get<int>(AccountField.avatar_id) + 1;
         return _elementsBuilder();
       });
     }
     _xp = widget.xp!;
     _level = widget.level!;
+    _avatarId = widget.avatarId! + 1;
     return _elementsBuilder();
   }
 
@@ -106,7 +111,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
               padding: EdgeInsets.all(4.d),
               color: TColors.primary20,
               radius: 20.d,
-              child: const LoaderWidget(AssetType.image, 'avatar_11',
+              child: LoaderWidget(AssetType.image, 'avatar_$_avatarId',
                   subFolder: 'avatars')),
         ],
       ),
