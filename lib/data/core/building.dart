@@ -32,8 +32,9 @@ class Building extends StringMap<dynamic> {
 
   int get level => map['level'];
   Buildings get type => map['type'];
-  List<int> get cards => map['cards'];
-
+  List<int> get assignedCardsId => map['cards'];
+  AccountCard getAssignedCard(Account account, int id) =>
+      account.get<Map<int, AccountCard>>(AccountField.cards)[id]!;
   T get<T>(BuildingField fieldName) => map[fieldName.name] as T;
 
   int get upgradeCost {
@@ -321,17 +322,17 @@ class Building extends StringMap<dynamic> {
     return benefit;
   }
 
-  int getCardsBenefit(Account account, List<AccountCard?> cards) {
+  int getCardsBenefit(Account account) {
     var totalPower = 0.0;
     // a table for storing the hero cards benefits.
     var heroCardBenefits = <CardData, Map<String, int>>{};
-    var heros = account
-        .get<Map<int, HeroCard>>(AccountField.heroes);
-    for (var card in cards) {
-      if (card == null) continue;
+    var heros = account.get<Map<int, HeroCard>>(AccountField.heroes);
+
+    for (var cardId in assignedCardsId) {
+      var card = getAssignedCard(account, cardId);
       totalPower += card.power;
 
-      // // stores the gained attributes of items for hero cards.
+      // stores the gained attributes of items for hero cards.
       if (card.base.get<bool>(CardFields.isHero)) {
         heroCardBenefits[card.base] =
             heros[card.id]!.getGainedAttributesByItems();

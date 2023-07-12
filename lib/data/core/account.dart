@@ -198,14 +198,14 @@ class Account extends StringMap<dynamic> {
  @param cards An array of cards
  */
   int calculatePower(List<AccountCard?> cards) {
-    var totalPower = 0;
+    var totalPower = 0.0;
     for (var card in cards) {
       totalPower += card != null ? card.power : 0;
     }
     Building offense = map['buildings'][Buildings.offence];
-    totalPower = (totalPower * offense.getBenefit()).floor();
-    totalPower = (totalPower + offense.getCardsBenefit(this, cards)).floor();
-    return totalPower;
+    totalPower *= offense.getBenefit();
+    totalPower += offense.getCardsBenefit(this);
+    return totalPower.floor();
   }
 
   void _addBuilding(Buildings type, [int level = 1, List? cards]) {
@@ -214,7 +214,7 @@ class Account extends StringMap<dynamic> {
       ..init({
         "type": type,
         "level": level,
-        "cards": List.generate(cards.length, (i) => cards![i]['id'])
+        "cards": List<int>.generate(cards.length, (i) => cards![i]['id'])
       });
   }
 }
