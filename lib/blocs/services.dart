@@ -118,10 +118,10 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
         BlocProvider.of<Services>(context)
             .add(ServicesEvent(ServicesInitState.initialize, null));
       }
-    } catch (e) {
+    } on RpcException catch (e) {
       if (context.mounted) {
         BlocProvider.of<Services>(context)
-            .add(ServicesEvent(ServicesInitState.error, e as RpcException));
+            .add(ServicesEvent(ServicesInitState.error, e));
       }
     }
 
