@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/data/core/account.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/building.dart';
@@ -23,19 +24,21 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+      var buildings =
+          state.account.get<Map<Buildings, Building>>(AccountField.buildings);
       return Stack(alignment: Alignment.topLeft, children: [
         const LoaderWidget(AssetType.animation, "home_background",
             fit: BoxFit.fitWidth),
-        _building(BuildingType.cards, 167, 560),
-        _building(BuildingType.tribe, 500, 500),
-        _building(BuildingType.mine, 754, 699),
-        _building(BuildingType.treasury, 754, 399),
-        _building(BuildingType.offence, 45, 943),
-        _building(BuildingType.defence, 45, 743),
-        _building(BuildingType.battle, 400, 930),
-        _building(BuildingType.shop, 773, 1040),
-        _building(BuildingType.quest, 169, 1244),
-        _building(BuildingType.message, 532, 1268),
+        _building(buildings[Buildings.cards]!, 167, 560),
+        _building(buildings[Buildings.tribe]!, 500, 500),
+        _building(buildings[Buildings.mine]!, 754, 699),
+        _building(buildings[Buildings.treasury]!, 754, 399),
+        _building(buildings[Buildings.offence]!, 45, 943),
+        _building(buildings[Buildings.defence]!, 45, 743),
+        _building(buildings[Buildings.base]!, 400, 930),
+        _building(buildings[Buildings.shop]!, 773, 1040),
+        _building(buildings[Buildings.quest]!, 169, 1244),
+        _building(buildings[Buildings.message]!, 532, 1268),
         _button("battle", "battle_l", 150, 270, 442,
             () => Navigator.pushNamed(context, Routes.deck.routeName)),
         _button("quest", "quest_l", 620, 270, 310),
@@ -76,8 +79,10 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
         ));
   }
 
-  Widget _building(BuildingType type, double x, double y, [int level = 1]) {
+  Widget _building(Building building, double x, double y) {
     return Positioned(
-        left: x.d, top: y.d, child: BuildingWidget(type, level: level));
+        left: x.d,
+        top: y.d,
+        child: BuildingWidget(building.type, level: building.level));
   }
 }

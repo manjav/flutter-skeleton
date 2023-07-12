@@ -7,6 +7,7 @@ import 'infra.dart';
 enum AccountField {
   id,
   name,
+  buildings,
   rank,
   league_rank,
   xp,
@@ -137,14 +138,31 @@ class Account extends StringMap<dynamic> {
     }
     map['cards'] = accountCards;
 
-    map['buildings'] = <BuildingType, Building>{};
-
+    map['buildings'] = <Buildings, Building>{};
+    _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
+    _addBuilding(Buildings.base, map['tribe']?['mainhall_building_level']);
+    _addBuilding(Buildings.cards);
+    _addBuilding(Buildings.defence, map['tribe']?['defense_building_level'],
+        map['defense_building_assigned_cards']);
+    _addBuilding(Buildings.message);
+    _addBuilding(Buildings.mine, map['gold_building_level'],
+        map['gold_building_assigned_cards']);
+    _addBuilding(Buildings.offence, map['tribe']?['offense_building_level'],
+        map['offense_building_assigned_cards']);
+    _addBuilding(Buildings.shop);
+    _addBuilding(Buildings.treasury, map['bank_building_level']);
+    _addBuilding(Buildings.quest);
     if (map.containsKey('tribe')) {
-      map['tribe'] = Tribe()..init(map['tribe']);
+      map['tribe']['level'] = 1;
+      map['tribe']['cards'] = [];
+      map['tribe']['type'] = Buildings.tribe;
+      map['buildings'][Buildings.tribe] = Building()..init(map['tribe']);
+    }
     }
   }
 
   T get<T>(AccountField fieldName) => map[fieldName.name] as T;
+
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
  @param player Player whose cards you are evaluating
  @param cards An array of cards
@@ -162,6 +180,14 @@ class Account extends StringMap<dynamic> {
       //     totalPower = totalPower + player.tribe.buildings.offense:benefitFromAssignedCards();
       // }
     }
-    return totalPower.floor();
+
+  void _addBuilding(Buildings type, [int level = 1, List? cards]) {
+    cards = cards ?? [];
+    map['buildings'][type] = Building()
+      ..init({
+        "type": type,
+        "level": level,
+        "cards": List.generate(cards.length, (i) => cards![i]['id'])
+      });
   }
 }

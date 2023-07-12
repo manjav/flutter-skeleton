@@ -21,4 +21,9 @@ class StringMap<T> {
       map[key] = value;
     });
   }
+
+  void setDefault(
+      String name, Map<String, dynamic> data, dynamic defaultValue) {
+    map[name] = data[name] ?? defaultValue;
+  }
 }
