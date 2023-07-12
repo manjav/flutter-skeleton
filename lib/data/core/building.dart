@@ -1,6 +1,6 @@
 
-enum BuildingType {
-  battle,
+enum Buildings {
+  base,
   cards,
   defence,
   message,

@@ -8,7 +8,7 @@ import '../../view/widgets.dart';
 import '../../view/widgets/loaderwidget.dart';
 
 class BuildingWidget extends StatefulWidget {
-  final BuildingType type;
+  final Buildings type;
   final int level;
   final void Function()? onTap;
   const BuildingWidget(this.type, {super.key, this.level = 1, this.onTap});
