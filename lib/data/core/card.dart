@@ -43,6 +43,12 @@ enum CardFields {
   virtualRarity,
   name,
   veteran_level,
+  heroType,
+  isHero,
+  powerAttribute,
+  wisdomAttribute,
+  blessingAttribute,
+  potion_limit,
 }
 
 class CardData extends StringMap<dynamic> {
@@ -50,6 +56,12 @@ class CardData extends StringMap<dynamic> {
   void init(Map<String, dynamic> data, {dynamic args}) {
     super.init(data);
     map['fruit'] = args as FruitData;
+    setDefault('heroType', data, 0);
+    setDefault('isHero', data, false);
+    setDefault('powerAttribute', data, 0);
+    setDefault('wisdomAttribute', data, 0);
+    setDefault('blessingAttribute', data, 0);
+    setDefault('potion_limit', data, 0);
   }
 
   T get<T>(CardFields field) => map[field.name] as T;
