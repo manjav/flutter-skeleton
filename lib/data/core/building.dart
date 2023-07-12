@@ -5,6 +5,7 @@ import 'package:flutter_skeleton/data/core/card.dart';
 import 'package:flutter_skeleton/utils/utils.dart';
 
 import 'infra.dart';
+import 'dart:math' as math;
 
 enum Buildings {
   base,
@@ -34,5 +35,281 @@ class Building extends StringMap<dynamic> {
   List<int> get cards => map['cards'];
 
   T get<T>(BuildingField fieldName) => map[fieldName.name] as T;
+
+  int get upgradeCost {
+    var values = <Buildings, List<int>>{};
+    values[Buildings.mine] = [0, 20, 40, 80, 300, 1500, 3500, 9000];
+    values[Buildings.offence] = [
+      20,
+      50,
+      75,
+      110,
+      170,
+      250,
+      380,
+      570,
+      850,
+      1300,
+      2000,
+      4000,
+      8000,
+      16000,
+      32000,
+      64000,
+      128000,
+      256000,
+      400000,
+      500000,
+      600000,
+      700000,
+      800000,
+      900000,
+      1000000,
+      1200000,
+      1400000,
+      1600000,
+      1800000,
+      2000000,
+      2500000,
+      3000000,
+      3500000,
+      4000000,
+      4700000,
+      5400000,
+      6100000,
+      6800000,
+      7500000,
+      8400000,
+      9300000,
+      10400000,
+      11500000,
+      13000000
+    ];
+    values[Buildings.defence] = [
+      0,
+      40,
+      60,
+      90,
+      135,
+      200,
+      300,
+      455,
+      680,
+      1025,
+      1800,
+      3600,
+      7200,
+      14400,
+      28800,
+      32000,
+      64000,
+      128000,
+      256000,
+      400000,
+      500000,
+      600000,
+      700000,
+      800000,
+      900000,
+      1000000,
+      1200000,
+      1400000,
+      1600000,
+      1800000,
+      2100000,
+      2400000,
+      2700000,
+      3200000,
+      3700000,
+      4200000,
+      4700000,
+      5400000,
+      6100000,
+      6800000,
+      7600000,
+      8400000,
+      9200000,
+      10000000
+    ];
+    values[Buildings.cards] = [
+      15,
+      40,
+      60,
+      90,
+      135,
+      200,
+      300,
+      450,
+      680,
+      1025,
+      1250,
+      1500,
+      1750,
+      2000,
+      2250,
+      2500,
+      2750,
+      3000,
+      3500,
+      4000,
+      4500,
+      5000,
+      6000,
+      7000,
+      8000,
+      9000,
+      10000,
+      12000,
+      15000,
+      20000,
+      50000,
+      100000,
+      300000,
+      500000,
+      1000000,
+      1500000,
+      3000000,
+      4500000,
+      9000000,
+      12500000
+    ];
+    values[Buildings.base] = [0, 30, 80, 120, 180, 270, 400, 1350];
+    values[Buildings.treasury] = [0, 2, 5, 30, 100, 250, 1000];
+
+    return values[type]![values[type]!.length.max(level)] * 1000;
+  }
+
+  int get benefit {
+    if (level == 0) return 0;
+    if (type == Buildings.base) {
+      return level.max(10) * 5 + 10;
+    }
+    var values = <Buildings, List<int>>{};
+
+    values[Buildings.mine] = [
+      0,
+      200,
+      1000,
+      3000,
+      10000,
+      40000,
+      100000,
+      300000,
+      500000
+    ];
+    values[Buildings.offence] = values[Buildings.defence] = [
+      0,
+      5,
+      10,
+      15,
+      20,
+      25,
+      30,
+      35,
+      40,
+      45,
+      50,
+      55,
+      60,
+      65,
+      70,
+      75,
+      77,
+      82,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      110
+    ];
+
+    values[Buildings.cards] = [
+      0,
+      5,
+      9,
+      13,
+      17,
+      19,
+      22,
+      24,
+      26,
+      28,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      49,
+      48,
+      47,
+      46,
+      45,
+      44,
+      43,
+      42,
+      41,
+      40
+    ];
+
+    values[Buildings.treasury] = [
+      0,
+      1000,
+      5000,
+      10000,
+      30000,
+      100000,
+      250000,
+      1000000
+    ];
+    return values[type]![values[type]!.length.max(level)];
+  }
+
+  int get maxCards {
+    if (type == Buildings.offence || type == Buildings.defence) {
+      return switch (level) { < 1 => 0, < 3 => 1, < 6 => 2, < 10 => 3, _ => 4 };
+    }
+    if (type == Buildings.mine) {
+      return level.max(4);
+    }
+    return 4;
+  }
+
 }
 }
