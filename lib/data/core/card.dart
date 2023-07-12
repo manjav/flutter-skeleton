@@ -94,3 +94,78 @@ class AccountCard {
     key = GlobalKey();
   }
 }
+
+class HeroCard {
+  static const attributeMultiplier = 2;
+  static const benefitModifier = 0.01;
+  static const benefit_BlessingMaxMultiplier = 4.0;
+  static const benefit_WisdomMaxMultiplier = 1.1;
+  static const benefit_PowerMaxMultiplier = 5.0;
+  static const evolveBaseNectar = 0.08;
+  static const fakePowerModifier = 0.016666667;
+  static const benefitDecreaseModifier = 3.0;
+
+  final int potion;
+  final AccountCard card;
+  final List<HeroItem> items;
+  HeroCard(this.card, this.potion, this.items);
+
+  // returns the gained attributes by hero based on its equipped items.
+  // @param baseId, the base id of hero
+  Map<String, int> getGainedAttributesByItems() {
+    // setups a table for containing the each value.
+    var values = <String, int>{};
+    values['power'] = 0;
+    values['wisdom'] = 0;
+    values['blessing'] = 0;
+
+    // setups the default multipliers for each attribute.
+    var powerMultiplier = 1;
+    var wisdomMultiplier = 1;
+    var blessingMultiplier = 1;
+    var heroType = card.base.get<int>(CardFields.heroType);
+    if (heroType == 0) {
+      powerMultiplier = HeroCard.attributeMultiplier;
+    } else if (heroType == 1) {
+      wisdomMultiplier = HeroCard.attributeMultiplier;
+    } else {
+      blessingMultiplier = HeroCard.attributeMultiplier;
+    }
+
+    // adds the  attributes for each equipped item.
+    for (var item in items) {
+      values['power'] = item.base.powerAmount * powerMultiplier;
+      values['wisdom'] = item.base.wisdomAmount * wisdomMultiplier;
+      values['blessing'] = item.base.blessingAmount * blessingMultiplier;
+    }
+    return values;
+  }
+}
+
+class HeroItem {
+  final int id, state, position; //, usedCount;
+  final BaseHeroItem base;
+  HeroItem(
+      this.id, this.base, this.state, this.position /* , this.usedCount */);
+}
+
+class BaseHeroItem {
+  final int id;
+  final int powerAmount;
+  final int wisdomAmount;
+  final int blessingAmount;
+  final int cost;
+  final int unlockLevel;
+  final int category;
+  final String image;
+  BaseHeroItem(
+    this.id,
+    this.powerAmount,
+    this.wisdomAmount,
+    this.blessingAmount,
+    this.cost,
+    this.unlockLevel,
+    this.category,
+    this.image,
+  );
+}

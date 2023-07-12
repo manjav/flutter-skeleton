@@ -33,7 +33,6 @@ enum AccountField {
   tutorial_index,
   potion_number,
   nectar,
-  hero_id,
   birth_year,
   gender,
   phone,
@@ -72,10 +71,6 @@ enum AccountField {
   is_existing_player,
   is_name_temp,
   sale_info,
-  heroitems,
-  base_hero_id,
-  hero_id_set,
-  hero_max_rarity,
   available_combo_id_set,
   potion_price,
   nectar_price,
@@ -102,6 +97,13 @@ enum AccountField {
   show_task_until_levelup,
   better_restore_button_label,
   better_quest_tutorial,
+  heroes,
+  heroitems,
+  base_heroitems,
+  hero_id,
+  hero_id_set,
+  hero_max_rarity,
+  base_hero_id,
   hero_tutorial_at_first,
   hero_tutorial_at_first_and_selected,
   hero_tutorial_at_first_and_selected_and_animated,
@@ -158,7 +160,35 @@ class Account extends StringMap<dynamic> {
       map['tribe']['type'] = Buildings.tribe;
       map['buildings'][Buildings.tribe] = Building()..init(map['tribe']);
     }
+
+    // Heroes
+    var baseHeroitems = <int, BaseHeroItem>{};
+    baseHeroitems[1] = BaseHeroItem(1, 2, 6, 1, 80, 3, 1, "Xameen");
+    baseHeroitems[2] = BaseHeroItem(2, 5, 2, 1, 70, 1, 1, "Paleez");
+    baseHeroitems[3] = BaseHeroItem(3, 2, 1, 6, 80, 1, 1, "RoboLeaf");
+    baseHeroitems[4] = BaseHeroItem(4, 2, 3, 1, 60, 1, 2, "BloodyKnife");
+    baseHeroitems[5] = BaseHeroItem(5, 1, 4, 1, 60, 20, 2, "CursedGun");
+    baseHeroitems[6] = BaseHeroItem(6, 1, 3, 5, 90, 20, 1, "Thorny");
+    baseHeroitems[7] = BaseHeroItem(7, 1, 1, 4, 60, 5, 2, "HairDryer");
+    baseHeroitems[8] = BaseHeroItem(8, 3, 1, 1, 50, 1, 2, "RainbowGun");
+    baseHeroitems[9] = BaseHeroItem(9, 5, 1, 1, 70, 50, 2, "AdmiralSword");
+    map['base_heroitems'] = baseHeroitems;
+
+    var heroes = <int, HeroCard>{};
+    if (map['hero_id_set'] != null) {
+      for (var v in map['hero_id_set']) {
+        var items = <HeroItem>[];
+        for (var item in v['items']) {
+          items.add(HeroItem(
+              item['id'],
+              baseHeroitems[item['base_heroitem_id']]!,
+              item['state'],
+              item['position']));
+        }
+        heroes[v['id']] = HeroCard(accountCards[v['id']]!, v['potion'], items);
+      }
     }
+    map['heroes'] = heroes;
   }
 
   T get<T>(AccountField fieldName) => map[fieldName.name] as T;
@@ -172,14 +202,11 @@ class Account extends StringMap<dynamic> {
     for (var card in cards) {
       totalPower += card != null ? card.power : 0;
     }
-
-    var tribe = get<Tribe?>(AccountField.tribe);
-    if (tribe != null) {
-      // if tribe ~= nil and player.tribe.buildings.offense ~= nil then
-      //     totalPower = totalPower * player.tribe.buildings.offense:benefitFromLevel();
-      //     totalPower = totalPower + player.tribe.buildings.offense:benefitFromAssignedCards();
-      // }
-    }
+    Building offense = map['buildings'][Buildings.offence];
+    totalPower = (totalPower * offense.getBenefit()).floor();
+    totalPower = (totalPower + offense.getCardsBenefit(this, cards)).floor();
+    return totalPower;
+  }
 
   void _addBuilding(Buildings type, [int level = 1, List? cards]) {
     cards = cards ?? [];
