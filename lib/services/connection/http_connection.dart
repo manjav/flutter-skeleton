@@ -13,7 +13,6 @@ import '../../services/localization.dart';
 import '../../services/prefs.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/loaderwidget.dart';
-import '../deviceinfo.dart';
 import '../iservices.dart';
 
 class HttpConnection extends IService {
@@ -35,13 +34,13 @@ class HttpConnection extends IService {
     // Load account data
     var params = <String, dynamic>{
       RpcParams.udid.name:
-          '111eab5fa6eb7de12222a71616812f5f1d184741', //DeviceInfo.adId,
-      RpcParams.device_name.name: DeviceInfo.model,
+          '5675748eb59ad8cb1bd14eaa5f8ea043', //DeviceInfo.adId,
+      RpcParams.device_name.name: "Mansours MacBook Pro", //DeviceInfo.model,
       RpcParams.game_version.name: 'app_version'.l(),
-      RpcParams.os_type.name: 1,
-      RpcParams.os_version.name: DeviceInfo.osVersion,
-      RpcParams.model.name: DeviceInfo.model,
-      RpcParams.store_type.name: "bazar",
+      RpcParams.os_type.name: 2,
+      RpcParams.os_version.name: "13.4.1", //DeviceInfo.osVersion,
+      RpcParams.model.name: "GA02099", //DeviceInfo.model,
+      RpcParams.store_type.name: "google",
       RpcParams.restore_key.name: "keep3oil11",
       RpcParams.name.name: "ArMaN"
     };
