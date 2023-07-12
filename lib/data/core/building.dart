@@ -311,5 +311,99 @@ class Building extends StringMap<dynamic> {
     return 4;
   }
 
+  num getBenefit() {
+    if (type == Buildings.offence || type == Buildings.defence) {
+      return 1 + (benefit / 100);
+    }
+    if (type == Buildings.cards) {
+      return 1 - (benefit) / 100;
+    }
+    return benefit;
+  }
+
+  int getCardsBenefit(Account account, List<AccountCard?> cards) {
+    var totalPower = 0.0;
+    // a table for storing the hero cards benefits.
+    var heroCardBenefits = <CardData, Map<String, int>>{};
+    var heros = account
+        .get<Map<int, HeroCard>>(AccountField.heroes);
+    for (var card in cards) {
+      if (card == null) continue;
+      totalPower += card.power;
+
+      // // stores the gained attributes of items for hero cards.
+      if (card.base.get<bool>(CardFields.isHero)) {
+        heroCardBenefits[card.base] =
+            heros[card.id]!.getGainedAttributesByItems();
+      }
+    }
+
+    if (type == Buildings.mine) {
+      var blessingBenefit = 0.0; // default benefit of blessing value
+
+      // adds benefit(blessing items + base blessing) of each assigned hero
+      for (var e in heroCardBenefits.entries) {
+        blessingBenefit +=
+            e.value['bassing']! + e.key.get<int>(CardFields.blessingAttribute);
+      }
+
+      // modifies the final blessing benefit with related modifiers.
+      blessingBenefit *= HeroCard.benefitModifier *
+          HeroCard.benefit_BlessingMaxMultiplier /
+          HeroCard.benefitDecreaseModifier;
+
+      // Applies blessing benefit to total power if(there is blessing benefit.
+      if (blessingBenefit > 0) {
+        totalPower += (totalPower * blessingBenefit);
+      }
+
+      return (math.pow(totalPower, goldMinePowerModifier1) *
+              goldMinePowerModifier2)
+          .floor();
+    } else {
+      var buildingPowerModifier = 0.0;
+      if (type == Buildings.offence) {
+        buildingPowerModifier = offensePowerModifier;
+      } else if (type == Buildings.defence) {
+        buildingPowerModifier = defensePowerModifier;
+      }
+
+      var powerBenefit = 0.0; // default benefit of blessing value
+      // adds blessing benefit( blessing from items + base blessing) of each assigned hero
+
+      for (var e in heroCardBenefits.entries) {
+        powerBenefit +=
+            e.value['power']! + e.key.get<int>(CardFields.powerAttribute);
+      }
+
+      // modifies the final blessing benefit with related modifiers.
+      powerBenefit *= HeroCard.benefitModifier *
+          HeroCard.benefit_PowerMaxMultiplier /
+          HeroCard.benefitDecreaseModifier;
+
+      // Applies blessing benefit to total power if(there is blessing benefit.
+      if (powerBenefit > 0) {
+        totalPower += (totalPower * powerBenefit);
+      }
+      return (totalPower * buildingPowerModifier).floor();
+    }
+  }
 }
+
+enum TribeField {
+  id,
+  name,
+  description,
+  score,
+  rank,
+  gold,
+  member_count,
+  defense_building_level,
+  offense_building_level,
+  cooldown_building_level,
+  mainhall_building_level,
+  donates_number,
+  status,
+  weekly_score,
+  weekly_rank,
 }
