@@ -41,11 +41,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var account = state.account;
-      var cards = account
-          .get<Map<int, AccountCard>>(AccountField.cards)
-          .values
-          .toList();
-      cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
+      var cards = account.getReadyCards();
       return Stack(alignment: Alignment.bottomCenter, children: [
         Positioned(
           top: paddingTop + headerSize,

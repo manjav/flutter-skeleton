@@ -130,6 +130,8 @@ enum AccountField {
 }
 
 class Account extends StringMap<dynamic> {
+  Building getBuilding(Buildings type) => map['buildings'][type] as Building;
+
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
     var baseCards = args as Cards;
@@ -206,6 +208,20 @@ class Account extends StringMap<dynamic> {
     totalPower *= offense.getBenefit();
     totalPower += offense.getCardsBenefit(this);
     return totalPower.floor();
+  }
+
+  List<AccountCard> getReadyCards() {
+    List<AccountCard> cards = map['cards'].values.toList();
+    cards.removeWhere((card) {
+      return (getBuilding(Buildings.defence)
+              .assignedCardsId
+              .contains(card.id) ||
+          getBuilding(Buildings.mine).assignedCardsId.contains(card.id) ||
+          getBuilding(Buildings.auction).assignedCardsId.contains(card.id) ||
+          getBuilding(Buildings.offence).assignedCardsId.contains(card.id));
+    });
+    cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
+    return cards;
   }
 
   void _addBuilding(Buildings type, [int level = 1, List? cards]) {
