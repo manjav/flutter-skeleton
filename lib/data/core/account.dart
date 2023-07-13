@@ -131,7 +131,7 @@ enum AccountField {
 }
 
 class Account extends StringMap<dynamic> {
-  Building getBuilding(Buildings type) => map['buildings'][type] as Building;
+  Building? getBuilding(Buildings type) => map['buildings'][type] as Building;
 
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
@@ -148,7 +148,7 @@ class Account extends StringMap<dynamic> {
     map['buildings'] = <Buildings, Building>{};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
     _addBuilding(Buildings.base, map['tribe']?['mainhall_building_level']);
-    _addBuilding(Buildings.cards);
+    _addBuilding(Buildings.cards, map['tribe']?['cooldown_building_level']);
     _addBuilding(Buildings.defence, map['tribe']?['defense_building_level'],
         map['defense_building_assigned_cards']);
     _addBuilding(Buildings.message);
@@ -159,11 +159,9 @@ class Account extends StringMap<dynamic> {
     _addBuilding(Buildings.shop);
     _addBuilding(Buildings.treasury, map['bank_building_level']);
     _addBuilding(Buildings.quest);
-    if (map.containsKey('tribe')) {
-      map['tribe']['level'] = 1;
-      map['tribe']['cards'] = [];
-      map['tribe']['type'] = Buildings.tribe;
-      map['buildings'][Buildings.tribe] = Building()..init(map['tribe']);
+    _addBuilding(Buildings.tribe, 1);
+    if (map['tribe'] != null) {
+      map['buildings'][Buildings.tribe].init(map['tribe']);
     }
 
     // Heroes
@@ -227,7 +225,8 @@ class Account extends StringMap<dynamic> {
     return cards;
   }
 
-  void _addBuilding(Buildings type, [int level = 1, List? cards]) {
+  void _addBuilding(Buildings type, [int? level, List? cards]) {
+    level = level ?? 0;
     cards = cards ?? [];
     map['buildings'][type] = Building()
       ..init({
