@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/deviceinfo.dart';
+import 'package:flutter_skeleton/view/widgets.dart';
 
 import '../../data/core/card.dart';
 import '../../services/theme.dart';
@@ -10,27 +14,42 @@ import '../widgets/skinnedtext.dart';
 class CardView extends StatefulWidget {
   final AccountCard card;
   final double size;
-  const CardView(this.card, {this.size = 400, super.key});
+  final bool inDeck;
+  const CardView(this.card, {this.size = 400, this.inDeck = false, super.key});
 
   @override
   State<CardView> createState() => _CardViewState();
 }
 
 class _CardViewState extends State<CardView> {
-  static late TextStyle medium;
-  static late TextStyle small;
-  static late TextStyle tiny;
+  static TextStyle? _medium;
+  static TextStyle? _small;
+  static TextStyle? _tiny;
+  Timer? _cooldownTimer;
+  final ValueNotifier<int> _remainingCooldown = ValueNotifier(0);
+
   @override
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
     var fruit = baseCard.get<FruitData>(CardFields.fruit);
     var level = baseCard.get<int>(CardFields.rarity).toString();
     var name = fruit.get<String>(FriutFields.name);
-
+    var cooldown = baseCard.get<int>(CardFields.cooldown);
+    if (widget.inDeck) {
+      _remainingCooldown.value = widget.card.getRemainingCooldown();
+      _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        _remainingCooldown.value = widget.card.getRemainingCooldown();
+        if (_remainingCooldown.value <= 0) {
+          setState(() => timer.cancel());
+        }
+      });
+    }
     var s = widget.size / 256;
-    medium = TStyles.medium.copyWith(fontSize: 42 * s);
-    small = TStyles.medium.copyWith(fontSize: 33 * s);
-    tiny = TStyles.medium.copyWith(fontSize: 28 * s);
+    if (_tiny == null) {
+      _medium = TStyles.medium.copyWith(fontSize: 42 * s);
+      _small = TStyles.medium.copyWith(fontSize: 33 * s);
+      _tiny = TStyles.medium.copyWith(fontSize: 28 * s);
+    }
 
     return Stack(alignment: Alignment.center, children: [
       Asset.load<Image>('cards_frame_$level'),
@@ -47,17 +66,38 @@ class _CardViewState extends State<CardView> {
           top: 2 * s,
           right: 24 * s,
           width: 27 * s,
-          child: SkinnedText(level, style: medium)),
+          child: SkinnedText(level, style: _medium)),
       Positioned(
           bottom: 6 * s,
           left: 22 * s,
-          child: SkinnedText(widget.card.power.compact(), style: small)),
+          child: SkinnedText(widget.card.power.compact(), style: _small)),
       Positioned(
           bottom: 6 * s,
           right: 20 * s,
-          child: SkinnedText(
-              baseCard.get<int>(CardFields.cooldown).toRemainingTime(),
-              style: tiny)),
+          child: SkinnedText(cooldown.toRemainingTime(), style: _tiny)),
+      _remainingCooldown.value == 0
+          ? const SizedBox()
+          : ValueListenableBuilder<int>(
+              valueListenable: _remainingCooldown,
+              builder: (context, value, child) => Positioned(
+                  child: Widgets.button(
+                      margin: EdgeInsets.all(8.d),
+                      color: TColors.white50,
+                      child: Column(
+                        children: [
+                          SkinnedText(
+                              _remainingCooldown.value.toRemainingTime()),
+                          SkinnedText(widget.card
+                              .cooldownTimeToCost(_remainingCooldown.value)
+                              .compact())
+                        ],
+                      ))))
     ]);
+  }
+
+  @override
+  void dispose() {
+    _cooldownTimer?.cancel();
+    super.dispose();
   }
 }

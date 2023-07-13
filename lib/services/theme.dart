@@ -23,7 +23,8 @@ class TColors {
   static const teal = Color(0xFF59AFC2);
   static const transparent = Color(0x00000000);
   static const white = Color(0xFFFFFFFF);
-  static const white10 = Color(0x55FFFFFF);
+  static const white30 = Color(0x55FFFFFF);
+  static const white50 = Color(0x88FFFFFF);
 }
 
 class TStyles {
