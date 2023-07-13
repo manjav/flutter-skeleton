@@ -21,15 +21,16 @@ class HttpConnection extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    await loadConfigs();
-    dynamic data;
-    // Load fruits data
-    data = await rpc(RpcId.fruitJsonExport);
-    loadData.fruits = Fruits()..init(data);
+    await _loadConfigs();
 
-    // Load cards data
-    data = await rpc(RpcId.cardsExport);
-    loadData.cards = Cards()..init(data, args: loadData.fruits);
+    var loader = Loader();
+    await loader.load(
+        "data.json.zip", "${LoaderWidget.baseURL}/texts/data.json.zip",
+        hash: LoaderWidget.hashMap["data.json.zip"]);
+    var jsonData = utf8.decode(loader.bytes!);
+    var data = jsonDecode(jsonData);
+    loadData.fruits = Fruits()..init(data['fruits']);
+    loadData.cards = Cards()..init(data['cards'], args: loadData.fruits);
 
     // Load account data
     var params = <String, dynamic>{
