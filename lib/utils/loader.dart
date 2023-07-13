@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
@@ -14,10 +15,8 @@ class Loader with ILogger {
   List<int>? bytes;
   String path = "";
 
-  Future<Loader> load(String path, String url,
-      {Function(File)? onDone,
-      Function(double)? onProgress,
-      Function(dynamic)? onError,
+  Future<File?> load(String path, String url,
+      {Function(double)? onProgress,
       String? hash,
       bool forceUpdate = false}) async {
     this.path = path;
@@ -30,8 +29,7 @@ class Loader with ILogger {
       bytes = await file!.readAsBytes();
       if (isHashMatch(bytes!, hash, path)) {
         log("Complete loading $path");
-        onDone?.call(file!);
-        return this;
+        return file!;
       }
     }
 
@@ -40,34 +38,42 @@ class Loader with ILogger {
       var response = await request.close();
       if (response.statusCode != 200) {
         log('Failure status code 😱');
-        onError?.call(response.statusCode);
-        return this;
+        return null;
       }
-      var contentLength = response.contentLength;
       bytes = <int>[];
-      response.asBroadcastStream().listen((List<int> newBytes) {
-        bytes!.addAll(newBytes);
-        onProgress?.call(bytes!.length / contentLength);
-      }, onDone: () async {
-        if (ext == 'zip') {
-          Archive archive = ZipDecoder().decodeBytes(bytes!);
-          bytes = archive.first.content as List<int>;
-        }
-        if (!isHashMatch(bytes!, hash, path)) {
-          return onError?.call("$path md5 is invalid!");
-        }
-        await file!.writeAsBytes(bytes!);
-        log("Complete downloading $url");
-        if (!exists || !forceUpdate) onDone?.call(file!);
-      }, onError: (d) {
-        log("$url loading failed.");
-        return onError?.call(d);
-      }, cancelOnError: true);
+      await _readResponse(response, onProgress);
+
+      if (!isHashMatch(bytes!, hash, path)) {
+        log("$path md5 is invalid!");
+        return null;
+      }
+      if (ext == 'zip') {
+        Archive archive = ZipDecoder().decodeBytes(bytes!);
+        bytes = archive.first.content as List<int>;
+      }
+      await file!.writeAsBytes(bytes!);
+      log("Complete downloading $url");
+      if (!exists || !forceUpdate) {
+        return file!;
+      }
     } on Exception {
       log("Exception while $url loading.");
-      onError?.call("exception");
     }
-    return this;
+    return null;
+  }
+
+  Future<List<int>?> _readResponse(HttpClientResponse response,
+      [Function(double)? onProgress]) {
+    final completer = Completer<List<int>?>();
+    final contentLength = response.contentLength;
+    response.asBroadcastStream().listen((List<int> newBytes) {
+      bytes!.addAll(newBytes);
+      onProgress?.call(bytes!.length / contentLength);
+    },
+        onDone: () => completer.complete(bytes),
+        onError: (d) => log("loading failed. $d"),
+        cancelOnError: true);
+    return completer.future;
   }
 
   void abort() => httpClient.close(force: true);

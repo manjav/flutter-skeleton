@@ -28,7 +28,7 @@ class Sounds extends ISounds {
   final _sounds = <String, DeviceFileSource>{};
 
   @override
-  void play(String name, {String? channel}) {
+  Future<void> play(String name, {String? channel}) async {
     AudioPlayer player;
     if (channel == null) {
       if (!Prefs.getBool("settings_sfx")) return;
@@ -52,11 +52,10 @@ class Sounds extends ISounds {
 
     var extension = AssetType.sound.extension;
     var md5 = LoaderWidget.hashMap['$name.$extension'];
-    Loader().load(
+    var file = await Loader().load(
         '$name.$extension', '${LoaderWidget.baseURL}/sounds/$name.$extension',
-        hash: md5, onDone: (file) async {
-      player.play(_sounds[name] = DeviceFileSource(file.path));
-    });
+        hash: md5);
+    player.play(_sounds[name] = DeviceFileSource(file!.path));
   }
 
   AudioPlayer _findPlayer() {

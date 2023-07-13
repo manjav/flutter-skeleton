@@ -50,19 +50,18 @@ class _LoaderWidgetState extends State<LoaderWidget> {
     );
   }
 
-  void _load() {
+  Future<void> _load() async {
     var url = widget.baseUrl ??
         "${LoaderWidget.baseURL}/${widget.type.folder(widget.subFolder ?? '')}";
     var netPath = "${widget.name}.${widget.type.extension}";
     var path = "${widget.name}.${widget.type.type}";
     if (_loader.path != path) {
-      _loader.load(path, '$url/$netPath', hash: LoaderWidget.hashMap[path],
-          onDone: (file) {
-        if (mounted) {
-          _result = _getResult();
-          setState(() {});
-        }
-      }, forceUpdate: false);
+      await _loader.load(path, '$url/$netPath',
+          hash: LoaderWidget.hashMap[path]);
+      if (mounted) {
+        _result = _getResult();
+        setState(() {});
+      }
     }
   }
 
