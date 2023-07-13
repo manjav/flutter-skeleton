@@ -126,7 +126,8 @@ enum AccountField {
   latest_constants_version,
   modules_version,
   emergency_message,
-  update_message
+  update_message,
+  delta_time
 }
 
 class Account extends StringMap<dynamic> {
@@ -136,6 +137,8 @@ class Account extends StringMap<dynamic> {
   void init(Map<String, dynamic> data, {dynamic args}) {
     var baseCards = args as Cards;
     super.init(data);
+    map['delta_time'] = map['now'] - DateTime.now().secondsSinceEpoch;
+
     var accountCards = <int, AccountCard>{};
     for (var card in map['cards']) {
       accountCards[card['id']] = AccountCard(card, baseCards);
