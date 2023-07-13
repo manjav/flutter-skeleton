@@ -141,7 +141,7 @@ class Account extends StringMap<dynamic> {
 
     var accountCards = <int, AccountCard>{};
     for (var card in map['cards']) {
-      accountCards[card['id']] = AccountCard(card, baseCards);
+      accountCards[card['id']] = AccountCard(this, card, baseCards);
     }
     map['cards'] = accountCards;
 
@@ -214,12 +214,12 @@ class Account extends StringMap<dynamic> {
   List<AccountCard> getReadyCards() {
     List<AccountCard> cards = map['cards'].values.toList();
     cards.removeWhere((card) {
-      return (getBuilding(Buildings.defence)
+      return (getBuilding(Buildings.defence)!
               .assignedCardsId
               .contains(card.id) ||
-          getBuilding(Buildings.mine).assignedCardsId.contains(card.id) ||
-          getBuilding(Buildings.auction).assignedCardsId.contains(card.id) ||
-          getBuilding(Buildings.offence).assignedCardsId.contains(card.id));
+          getBuilding(Buildings.mine)!.assignedCardsId.contains(card.id) ||
+          getBuilding(Buildings.auction)!.assignedCardsId.contains(card.id) ||
+          getBuilding(Buildings.offence)!.assignedCardsId.contains(card.id));
     });
     cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
     return cards;

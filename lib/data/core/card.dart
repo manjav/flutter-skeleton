@@ -2,7 +2,10 @@
 
 //         -=-=-=-    Fruit    -=-=-=-
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/utils/utils.dart';
 
+import 'account.dart';
+import 'building.dart';
 import 'infra.dart';
 
 enum FriutFields {
@@ -52,6 +55,10 @@ enum CardFields {
 }
 
 class CardData extends StringMap<dynamic> {
+  static const cooldownCostModifier = 0.25;
+  static const cooldownIncreaseModifier = 0.2;
+  static const veteranCooldownModifier = 0.1;
+
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
     super.init(data);
@@ -85,13 +92,57 @@ class AccountCard {
   late int power;
   late CardData base;
   late int lastUsedAt;
+  final Account account;
   late GlobalKey key;
-  AccountCard(Map map, Cards cards) {
+  AccountCard(this.account, Map map, Cards cards) {
     id = map['id'];
     power = map['power'];
     base = cards.get("${map['base_card_id']}");
     lastUsedAt = map['last_used_at'];
     key = GlobalKey();
+  }
+
+  int getRemainingCooldown() {
+    var currentTime = DateTime.now().secondsSinceEpoch +
+        account.get<int>(AccountField.delta_time);
+    var tribe = account.getBuilding(Buildings.tribe);
+    var benefit = tribe != null
+        ? account.getBuilding(Buildings.cards)!.getBenefit()
+        : 1.0;
+    var delta = currentTime - lastUsedAt;
+    var cooldownTime = base.get<int>(CardFields.cooldown) * benefit;
+    return (cooldownTime - delta).ceil().min(0);
+  }
+
+/* returns the gold cost for purchasing the cooldown of this card, takes into
+     account the bonuses that the player's tribe might include and also the number of
+     cooldowns the player has purchased within the past day
+ */
+  int cooldownTimeToCost(int time) {
+    num cooldownPrice = 0;
+    var veteranLevel = base.get<int>(CardFields.veteran_level);
+    if (veteranLevel > 0) {
+      var tribe = account.getBuilding(Buildings.tribe);
+      var benefit = tribe != null
+          ? account.getBuilding(Buildings.cards)!.getBenefit()
+          : 1.0;
+      cooldownPrice = _cooldownTimeToCost(base.get<int>(CardFields.cooldown)) *
+          CardData.veteranCooldownModifier *
+          benefit *
+          veteranLevel;
+    } else {
+      // the tribe building benefit is already calculated in remaining time
+      cooldownPrice = _cooldownTimeToCost(time);
+    }
+    return cooldownPrice.ceil();
+  }
+
+  num _cooldownTimeToCost(int time) {
+    var cooldownsBoughtToday =
+        account.get<int>(AccountField.cooldowns_bought_today) + 1;
+    return time *
+        (cooldownsBoughtToday * CardData.cooldownIncreaseModifier).ceil() *
+        CardData.cooldownCostModifier;
   }
 }
 
