@@ -1,11 +1,12 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names, unused_local_variable
 
+import 'dart:math' as math;
+
 import 'package:flutter_skeleton/data/core/account.dart';
 import 'package:flutter_skeleton/data/core/card.dart';
 import 'package:flutter_skeleton/utils/utils.dart';
 
 import 'infra.dart';
-import 'dart:math' as math;
 
 enum Buildings {
   base,
@@ -244,7 +245,6 @@ class Building extends StringMap<dynamic> {
       108,
       110
     ];
-
     values[Buildings.cards] = [
       0,
       5,
@@ -288,7 +288,6 @@ class Building extends StringMap<dynamic> {
       41,
       40
     ];
-
     values[Buildings.treasury] = [
       0,
       1000,
@@ -312,14 +311,14 @@ class Building extends StringMap<dynamic> {
     return 4;
   }
 
-  num getBenefit() {
+  double getBenefit() {
     if (type == Buildings.offence || type == Buildings.defence) {
-      return 1 + (benefit / 100);
+      return 1 + benefit / 100;
     }
     if (type == Buildings.cards) {
-      return 1 - (benefit) / 100;
+      return 1 - benefit / 100;
     }
-    return benefit;
+    return benefit.toDouble();
   }
 
   int getCardsBenefit(Account account) {

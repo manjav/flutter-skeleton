@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter_skeleton/utils/utils.dart';
+
 import 'building.dart';
 import 'card.dart';
 import 'infra.dart';
