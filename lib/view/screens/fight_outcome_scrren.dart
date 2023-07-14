@@ -30,6 +30,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
   String _color = "green";
 
   List<MapEntry<String, int>> _prizes = [];
+  List<MapEntry<String, int>> _heroBenefits = [];
   late Account _account;
 
   @override
@@ -42,6 +43,15 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _isWin = widget.result['outcome'];
     _color = _isWin ? "green" : "red";
+    if (widget.result["attacker_hero_benefits_info"].length > 0) {
+      var benefits = widget.result["attacker_hero_benefits_info"];
+      var map = <String, int>{
+        "benefit_gold": benefits['gold_benefit'],
+        "benefit_power": benefits['power_benefit'],
+        "benefit_cooldown": benefits['cooldown_benefit']
+      };
+      _heroBenefits = map.entries.toList();
+    }
     _prizes = [
       MapEntry("gold", widget.result['gold_added'] ?? 0),
       MapEntry("xp", widget.result['xp_added'] ?? 0),
@@ -137,10 +147,15 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
   }
 
   _outResults() {
-    if (!_isWin) return const SizedBox();
-    return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+    var hasBenefits = _isWin && _heroBenefits.isNotEmpty;
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
       SizedBox(
-          width: 160.d, height: 160.d, child: LevelIndicator(key: GlobalKey())),
+              width: 160.d,
+              height: 160.d,
+              child: LevelIndicator(key: GlobalKey())),
       SizedBox(width: 12.d),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,11 +168,15 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                   .get<String>(BuildingField.name)),
         ],
       ),
-      const Expanded(child: SizedBox()),
-      SizedBox(
+          hasBenefits ? const Expanded(child: SizedBox()) : const SizedBox(),
+          hasBenefits
+              ? SizedBox(
           width: 260.d,
           child: ListView.builder(
-              itemCount: 3, itemBuilder: (c, i) => _heroItemBuilder("", 12)))
+                      itemCount: _heroBenefits.length,
+                      itemBuilder: (c, i) => _benefitItemBuilder(
+                          _heroBenefits[i].key, _heroBenefits[i].value)))
+              : const SizedBox()
     ]);
   }
 
@@ -177,13 +196,12 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
     ]);
   }
 
-  Widget? _heroItemBuilder(String type, int value) {
+  Widget? _benefitItemBuilder(String type, dynamic value) {
     return SizedBox(
         height: 76.d,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Asset.load<Image>("ui_xp"),
-          SizedBox(width: 8.d),
-          SkinnedText(value.toString())
+          Asset.load<Image>("ui_$type", height: 62.d),
+          SkinnedText("  +$value")
         ]));
   }
 }
