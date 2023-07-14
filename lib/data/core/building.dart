@@ -21,7 +21,27 @@ enum Buildings {
   auction,
 }
 
-enum BuildingField { type, cards, level }
+enum BuildingField {
+  type,
+  cards,
+  level,
+  // Tribe fields
+  id,
+  name,
+  description,
+  score,
+  rank,
+  gold,
+  member_count,
+  defense_building_level,
+  offense_building_level,
+  cooldown_building_level,
+  mainhall_building_level,
+  donates_number,
+  status,
+  weekly_score,
+  weekly_rank,
+}
 
 class Building extends StringMap<dynamic> {
   static const goldMinePowerModifier1 = 0.7; //per hour
@@ -387,22 +407,4 @@ class Building extends StringMap<dynamic> {
       return (totalPower * buildingPowerModifier).floor();
     }
   }
-}
-
-enum TribeField {
-  id,
-  name,
-  description,
-  score,
-  rank,
-  gold,
-  member_count,
-  defense_building_level,
-  offense_building_level,
-  cooldown_building_level,
-  mainhall_building_level,
-  donates_number,
-  status,
-  weekly_score,
-  weekly_rank,
 }
