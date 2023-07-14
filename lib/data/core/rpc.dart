@@ -3,6 +3,7 @@
 enum RpcId {
   scout,
   playerLoad,
+  quest,
 // Files
   tutorialExport,
   tutorialLangEnExport,
@@ -28,6 +29,7 @@ extension RpcIdEx on RpcId {
   String get value {
     return switch (this) {
       RpcId.scout => "battle/scout",
+      RpcId.quest => "battle/quest",
       RpcId.playerLoad => "player/load",
       RpcId.tutorialExport => "metadata/TutorialData.json",
       RpcId.tutorialLangEnExport => "i18n/en-US/Tutorial.json",
@@ -93,4 +95,8 @@ enum RpcParams {
   restore_key,
   store_type,
   udid,
+  // Quest - Battle
+  cards,
+  hero_id,
+  check
 }

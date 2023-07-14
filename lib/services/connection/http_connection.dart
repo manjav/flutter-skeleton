@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/utils/loader.dart';
 import 'package:http/http.dart' as http;
 
 import '../../data/core/account.dart';
@@ -12,6 +14,7 @@ import '../../data/core/rpc_data.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
 import '../../utils/utils.dart';
+import '../../view/route_provider.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../iservices.dart';
 
@@ -52,7 +55,7 @@ class HttpConnection extends IService {
     return loadData;
   }
 
-  loadConfigs() async {
+  _loadConfigs() async {
     http.Response? response;
     try {
       response = await http

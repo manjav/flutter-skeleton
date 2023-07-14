@@ -1,12 +1,17 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:math' as math;
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../blocs/services.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/rpc.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -70,21 +75,21 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
             left: 16.d,
             child: _header(account)),
         Positioned(
-            width: 600.d,
             height: 214.d,
             bottom: 24.d,
             child: Widgets.labeledButton(
+                padding: EdgeInsets.fromLTRB(56.d, 48.d, 56.d, 64.d),
                 alignment: Alignment.center,
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const LoaderWidget(AssetType.image, "icon_battle"),
-                    SkinnedText("battle_start".l(),
-                        style: TStyles.large.copyWith(height: 1.7)),
+                    SizedBox(width: 16.d),
+                    SkinnedText("battle_start".l(), style: TStyles.large),
                   ],
                 ),
-                size: ""))
+                size: "",
+                onPressed: () => _fight(account)))
       ]);
     });
   }
@@ -99,7 +104,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
           : null,
       padding: EdgeInsets.zero,
       onPressed: () => _addCard(card),
-      child: CardView(card, size: itemSize, key: card.key),
+      child: CardView(card, inDeck: true, size: itemSize, key: card.key),
     );
   }
 
@@ -182,11 +187,9 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
               ? ValueListenableBuilder<List<AccountCard?>>(
                   valueListenable: _selectedCards,
                   builder: (context, value, child) => SkinnedText(
-                      account.calculatePower(_selectedCards.value).compact(),
-                      style: TStyles.medium.copyWith(height: 0.8)),
+                      account.calculatePower(_selectedCards.value).compact()),
                 )
-              : SkinnedText("~${getQuestPower(account)[2].compact()}",
-                  style: TStyles.medium.copyWith(height: 0.8)),
+              : SkinnedText("~${getQuestPower(account)[2].compact()}"),
           SizedBox(height: 16.d)
         ],
       ),
@@ -289,6 +292,32 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
   // every 10 quests is boss fight
   bool isBossQuest(Account account) =>
       ((account.get<int>(AccountField.total_quests) / 10) % 1 == 0);
+
+  _fight(Account account) async {
+    var bloc = BlocProvider.of<Services>(context);
+    var params = <String, dynamic>{
+      RpcParams.cards.name: "[${_selectedCards.getIds()}]",
+      RpcParams.check.name: md5
+          .convert(utf8.encode("${account.get<int>(AccountField.q)}"))
+          .toString()
+    };
+    if (_selectedCards.value[2] != null) {
+      params[RpcParams.hero_id.name] = _selectedCards.value[2]!.id;
+    }
+
+    try {
+      var data = await bloc
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.quest, params: params);
+      if (mounted) {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, Routes.battleOutcome.routeName,
+            arguments: data);
+      }
+    } catch (e) {
+      // log("$e");
+    }
+  }
 }
 
 class SelectedCards extends ValueNotifier<List<AccountCard?>> {
@@ -296,5 +325,9 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   setCard(int index, AccountCard? card) {
     value[index] = card;
     notifyListeners();
+  }
+
+  getIds() {
+    return value.map((c) => c?.id).where((id) => id != null).join(',');
   }
 }
