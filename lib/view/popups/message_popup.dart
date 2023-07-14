@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
-import '../../services/localization.dart';
 import '../../services/theme.dart';
-import '../../view/items/card_item.dart';
 import '../../view/popups/ipopup.dart';
 import '../route_provider.dart';
-import '../widgets.dart';
 
 class MessagePopup extends AbstractPopup {
   const MessagePopup({super.key, required super.args})

@@ -85,7 +85,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                   children: [
                     const LoaderWidget(AssetType.image, "icon_battle"),
                     SizedBox(width: 16.d),
-                    SkinnedText("battle_start".l(), style: TStyles.large),
+                    SkinnedText("fight_l".l(), style: TStyles.large),
                   ],
                 ),
                 size: "",
@@ -309,6 +309,8 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
       var data = await bloc
           .get<HttpConnection>()
           .tryRpc(context, RpcId.quest, params: params);
+      // var data = jsonDecode(
+      //     '{"outcome":true,"boss_mode":false,"gold":1927243,"gold_added":1229,"levelup_gold_added":0,"level":280,"xp":5372397,"xp_added":38,"rank":1,"tribe_rank":1,"attack_cards":[{"id":407811,"last_used_at":1689436232,"power":23,"base_card_id":198,"player_id":2775},{"id":586801,"last_used_at":1689436232,"power":55,"base_card_id":415,"player_id":2775}],"tribe_gold":11856196,"gift_card":null,"q":207840,"total_quests":203767,"needs_captcha":false,"league_id":24,"tutorial_required_cards":null,"attacker_combo_info":[],"potion_number":0,"nectar":50,"available_combo_id_set":null,"purchase_deposits_to_bank":null,"attacker_hero_benefits_info":{"cards":[{"id":407811,"power":23}],"power_benefit":7,"gold_benefit":194,"cooldown_benefit":0}}');
       account.update(data);
 
       if (mounted) {
