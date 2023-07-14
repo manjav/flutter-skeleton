@@ -11,6 +11,8 @@ import 'screens/loading_screen.dart';
 enum Routes {
   none,
   deck,
+  questOutcome,
+  battleOutcome,
   home,
   loading,
   profile,
@@ -27,6 +29,8 @@ extension RouteProvider on Routes {
   static Widget getWidget(String routeName, {Map<String, dynamic>? args}) {
     return switch (routeName) {
       "/deck" => DeckScreen(),
+      "/questOutcome" => FightOutcomeScreen(Routes.questOutcome, args ?? {}),
+      "/battleOutcome" => FightOutcomeScreen(Routes.battleOutcome, args ?? {}),
       "/home" => HomeScreen(),
       "/popupCard" => CardDetailsPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
