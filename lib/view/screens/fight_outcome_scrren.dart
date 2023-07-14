@@ -125,6 +125,22 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                     width: 720.d,
                     bottom: 180.d,
                     child: _prizeList()),
+                Positioned(
+                    height: 322.d,
+                    width: 720.d,
+                    bottom: 12.d,
+                    child: Opacity(
+                        opacity: (_animationController.value - 1.9).clamp(0, 1),
+                        child: SkinnedText("card_available".l()))),
+                Positioned(
+                    height: 322.d,
+                    width: 720.d,
+                    bottom: -42.d,
+                    child: Opacity(
+                        opacity: (_animationController.value - 2).clamp(0, 1),
+                        child: SkinnedText("${_account.getReadyCards().length}",
+                            style: TStyles.large))),
+
               ]))),
       Positioned(
           height: 180.d,
