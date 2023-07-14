@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../services/deviceinfo.dart';
-import '../../services/localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
+import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
+import '../../data/core/building.dart';
+import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../route_provider.dart';
@@ -17,7 +21,6 @@ enum FightMode { quest, battle }
 class FightOutcomeScreen extends AbstractScreen {
   final Map<String, dynamic> result;
   FightOutcomeScreen(super.mode, this.result, {super.key});
-
   @override
   createState() => _FightOutcomeScreenState();
 }
@@ -27,6 +30,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
   String _color = "green";
 
   List<MapEntry<String, int>> _prizes = [];
+  late Account _account;
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -35,15 +39,16 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
 
   @override
   void initState() {
+    _account = BlocProvider.of<AccountBloc>(context).account!;
     _isWin = widget.result['outcome'];
     _color = _isWin ? "green" : "red";
     _prizes = [
-      MapEntry("goldAdded", widget.result['goldAdded'] ?? 0),
-      MapEntry("xpAdded", widget.result['xpAdded'] ?? 0),
+      MapEntry("gold", widget.result['gold_added'] ?? 0),
+      MapEntry("xp", widget.result['xp_added'] ?? 0),
     ];
     if (widget.type == Routes.battleOutcome) {
       _prizes.add(MapEntry("league_bonus", widget.result['league_bonus'] ?? 0));
-      _prizes.add(MapEntry("seedAdded", widget.result['seedAdded'] ?? 0));
+      _prizes.add(MapEntry("seed", widget.result['seed_added'] ?? 0));
     }
     super.initState();
   }
@@ -142,8 +147,10 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: 36.d),
-          const SkinnedText("text asca"),
-          const SkinnedText("text"),
+              SkinnedText(_account.get<String>(AccountField.name)),
+              SkinnedText(_account
+                  .getBuilding(Buildings.tribe)!
+                  .get<String>(BuildingField.name)),
         ],
       ),
       const Expanded(child: SizedBox()),
