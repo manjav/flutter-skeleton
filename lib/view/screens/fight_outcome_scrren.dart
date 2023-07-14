@@ -92,35 +92,31 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image:
-                                Asset.load<Image>("ui_ribbon_$_color").image)),
-                    child: SkinnedText("fight_lebel_$_color".l()))),
+                                        Asset.load<Image>("ui_ribbon_$_color")
+                                            .image)),
+                            child: SkinnedText("fight_lebel_$_color".l())))),
             Positioned(
                 bottom: -180.d,
                 width: 1050.d,
                 height: 980.d,
-                child:
-                    LoaderWidget(AssetType.animation, "outcome_panel_$_color",
+                    child: LoaderWidget(
+                        AssetType.animation, "outcome_panel_$_color",
                         onRiveInit: (Artboard artboard) {
-                  final controller =
-                      StateMachineController.fromArtboard(artboard, 'Panel');
-                  artboard.addController(controller!);
+                      artboard.addController(
+                          StateMachineController.fromArtboard(
+                              artboard, 'Panel')!);
                 }, fit: BoxFit.fitWidth)),
             Positioned(
-                top: 140.d, height: 240.d, width: 800.d, child: _outResults()),
+                    bottom: 660.d,
+                    height: 240.d,
+                    width: 800.d,
+                    child: _outResults()),
             Positioned(
                 height: 322.d,
                 width: 720.d,
                 bottom: 180.d,
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisExtent: 130.d,
-                      // childAspectRatio: 3,
-                      crossAxisCount: 3,
-                    ),
-                    itemCount: _prizes.length,
-                    itemBuilder: (c, i) =>
-                        _prizeItemBuilder(_prizes[i].key, _prizes[i].value))),
-          ])),
+                    child: _prizeList()),
+              ]))),
       Positioned(
           height: 180.d,
           bottom: 240.d,
@@ -180,6 +176,17 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
     ]);
   }
 
+  _prizeList() {
+    return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisExtent: 130.d,
+        ),
+        itemCount: _prizes.length,
+        itemBuilder: (c, i) =>
+            _prizeItemBuilder(_prizes[i].key, _prizes[i].value));
+  }
+
   Widget? _prizeItemBuilder(String type, int value) {
     return Row(children: [
       Widgets.rect(
@@ -190,10 +197,9 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
               image: DecorationImage(
                   fit: BoxFit.fill,
                   image: Asset.load<Image>("ui_prize_frame").image)),
-          child: Asset.load<Image>("ui_xp")),
-      SizedBox(width: 16.d),
-      SkinnedText(value.toString())
-    ]);
+              child: Asset.load<Image>("ui_$type")),
+          SkinnedText("+  $value")
+        ]);
   }
 
   Widget? _benefitItemBuilder(String type, dynamic value) {
