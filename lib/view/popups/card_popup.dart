@@ -6,10 +6,12 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../view/items/card_item.dart';
 import '../../view/popups/ipopup.dart';
+import '../route_provider.dart';
 import '../widgets.dart';
 
 class CardDetailsPopup extends AbstractPopup {
-  const CardDetailsPopup(super.type, {super.key, required super.args});
+  const CardDetailsPopup({super.key, required super.args})
+      : super(Routes.popupCard);
 
   @override
   createState() => _CardPopupState();

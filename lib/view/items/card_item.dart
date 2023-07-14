@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/deviceinfo.dart';
-import 'package:flutter_skeleton/view/widgets.dart';
 
 import '../../data/core/card.dart';
+import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
+import '../../view/widgets.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../widgets/skinnedtext.dart';
 

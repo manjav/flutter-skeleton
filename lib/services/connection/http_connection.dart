@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/utils/loader.dart';
 import 'package:http/http.dart' as http;
 
 import '../../data/core/account.dart';
@@ -13,6 +12,7 @@ import '../../data/core/rpc.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
+import '../../utils/loader.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';
 import '../../view/widgets/loaderwidget.dart';

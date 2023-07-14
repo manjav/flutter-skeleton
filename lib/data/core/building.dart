@@ -2,10 +2,9 @@
 
 import 'dart:math' as math;
 
-import 'package:flutter_skeleton/data/core/account.dart';
-import 'package:flutter_skeleton/data/core/card.dart';
-import 'package:flutter_skeleton/utils/utils.dart';
-
+import '../../data/core/account.dart';
+import '../../data/core/card.dart';
+import '../../utils/utils.dart';
 import 'infra.dart';
 
 enum Buildings {

@@ -165,6 +165,7 @@ class Widgets {
     double? width,
     double? height,
     Alignment? alignment,
+    EdgeInsets? padding,
     Function()? onPressed,
   }) {
     if (size != "small") {
@@ -181,6 +182,7 @@ class Widgets {
         height: height,
         buttonId: buttonId,
         alignment: alignment,
+        padding: padding,
         decoration: BoxDecoration(
             image: DecorationImage(
                 fit: BoxFit.fill,

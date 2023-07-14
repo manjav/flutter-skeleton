@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../view/popups/card_popup.dart';
-import '../../view/screens/deck_screen.dart';
 
+import '../../view/popups/card_popup.dart';
+import '../../view/popups/message_popup.dart';
+import '../../view/screens/deck_screen.dart';
+import '../../view/screens/fight_outcome_scrren.dart';
 import 'popups/tab_page_popup.dart';
 import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
@@ -17,6 +19,7 @@ enum Routes {
 
   popupNone,
   popupCard,
+  popupMessage,
   popupTabPage,
 }
 
@@ -25,8 +28,9 @@ extension RouteProvider on Routes {
     return switch (routeName) {
       "/deck" => DeckScreen(),
       "/home" => HomeScreen(),
-      "/popupCard" => CardDetailsPopup(Routes.popupCard, args: args ?? {}),
-      "/popupTabPage" => TabPagePopup(Routes.popupTabPage, args: args ?? {}),
+      "/popupCard" => CardDetailsPopup(args: args ?? {}),
+      "/popupMessage" => MessagePopup(args: args ?? {}),
+      "/popupTabPage" => TabPagePopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }

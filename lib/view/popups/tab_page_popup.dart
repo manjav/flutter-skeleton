@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/popups/ipopup.dart';
 import '../../view/tab_provider.dart';
+import '../route_provider.dart';
 
 class TabPagePopup extends AbstractPopup {
-  const TabPagePopup(super.type, {super.key, required super.args});
+  const TabPagePopup({super.key, required super.args})
+      : super(Routes.popupTabPage);
 
   @override
   createState() => _TabPagePopupState();

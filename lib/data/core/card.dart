@@ -2,8 +2,8 @@
 
 //         -=-=-=-    Fruit    -=-=-=-
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/utils/utils.dart';
 
+import '../../utils/utils.dart';
 import 'account.dart';
 import 'building.dart';
 import 'infra.dart';
