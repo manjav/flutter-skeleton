@@ -32,6 +32,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
   List<MapEntry<String, int>> _prizes = [];
   List<MapEntry<String, int>> _heroBenefits = [];
   late Account _account;
+  late AnimationController _animationController;
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -40,6 +41,10 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
 
   @override
   void initState() {
+    _animationController = AnimationController(
+        vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
+    _animationController.forward();
+
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _isWin = widget.result['outcome'];
     _color = _isWin ? "green" : "red";
@@ -79,42 +84,46 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                 artboard.addController(controller!);
               }))
           : const SizedBox(),
-      Widgets.rect(
-          height: DeviceInfo.size.width,
-          alignment: Alignment.center,
-          child: Stack(alignment: Alignment.center, children: [
-            Positioned(
-                top: 0.d,
-                width: 622.d,
-                height: 114.d,
-                child: Widgets.rect(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image:
+      AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) => Widgets.rect(
+              height: DeviceInfo.size.width,
+              alignment: Alignment.center,
+              child: Stack(alignment: Alignment.center, children: [
+                Positioned(
+                    top: 32.d,
+                    width: 622.d,
+                    height: 114.d,
+                    child: Opacity(
+                        opacity: (_animationController.value / 2).clamp(0, 1),
+                        child: Widgets.rect(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image:
                                         Asset.load<Image>("ui_ribbon_$_color")
                                             .image)),
                             child: SkinnedText("fight_lebel_$_color".l())))),
-            Positioned(
-                bottom: -180.d,
-                width: 1050.d,
-                height: 980.d,
+                Positioned(
+                    bottom: -180.d,
+                    width: 1050.d,
+                    height: 980.d,
                     child: LoaderWidget(
                         AssetType.animation, "outcome_panel_$_color",
                         onRiveInit: (Artboard artboard) {
                       artboard.addController(
                           StateMachineController.fromArtboard(
                               artboard, 'Panel')!);
-                }, fit: BoxFit.fitWidth)),
-            Positioned(
+                    }, fit: BoxFit.fitWidth)),
+                Positioned(
                     bottom: 660.d,
                     height: 240.d,
                     width: 800.d,
                     child: _outResults()),
-            Positioned(
-                height: 322.d,
-                width: 720.d,
-                bottom: 180.d,
+                Positioned(
+                    height: 322.d,
+                    width: 720.d,
+                    bottom: 180.d,
                     child: _prizeList()),
               ]))),
       Positioned(
@@ -148,32 +157,32 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-      SizedBox(
+          SizedBox(
               width: 160.d,
               height: 160.d,
               child: LevelIndicator(key: GlobalKey())),
-      SizedBox(width: 12.d),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 36.d),
+          SizedBox(width: 12.d),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 36.d),
               SkinnedText(_account.get<String>(AccountField.name)),
               SkinnedText(_account
                   .getBuilding(Buildings.tribe)!
                   .get<String>(BuildingField.name)),
-        ],
-      ),
+            ],
+          ),
           hasBenefits ? const Expanded(child: SizedBox()) : const SizedBox(),
           hasBenefits
               ? SizedBox(
-          width: 260.d,
-          child: ListView.builder(
+                  width: 260.d,
+                  child: ListView.builder(
                       itemCount: _heroBenefits.length,
                       itemBuilder: (c, i) => _benefitItemBuilder(
                           _heroBenefits[i].key, _heroBenefits[i].value)))
               : const SizedBox()
-    ]);
+        ]);
   }
 
   _prizeList() {
@@ -188,18 +197,20 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
   }
 
   Widget? _prizeItemBuilder(String type, int value) {
-    return Row(children: [
-      Widgets.rect(
-          width: 100.d,
-          height: 130.d,
-          padding: EdgeInsets.all(16.d),
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: Asset.load<Image>("ui_prize_frame").image)),
+    return Opacity(
+        opacity: (_animationController.value - 1.2).clamp(0, 1),
+        child: Row(children: [
+          Widgets.rect(
+              width: 100.d,
+              height: 130.d,
+              padding: EdgeInsets.all(16.d),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: Asset.load<Image>("ui_prize_frame").image)),
               child: Asset.load<Image>("ui_$type")),
           SkinnedText("+  $value")
-        ]);
+        ]));
   }
 
   Widget? _benefitItemBuilder(String type, dynamic value) {
