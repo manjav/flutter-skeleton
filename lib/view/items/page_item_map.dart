@@ -39,9 +39,9 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
         _building(buildings[Buildings.shop]!, 773, 1040),
         _building(buildings[Buildings.quest]!, 169, 1244),
         _building(buildings[Buildings.message]!, 532, 1268),
-        _button("battle", "battle_l", 150, 270, 442,
+        _button("battle", "battle_l", 150, 270, 442),
+        _button("quest", "quest_l", 620, 270, 310,
             () => Navigator.pushNamed(context, Routes.deck.routeName)),
-        _button("quest", "quest_l", 620, 270, 310),
       ]);
     });
   }

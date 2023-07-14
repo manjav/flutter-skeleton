@@ -40,7 +40,7 @@ class _CardViewState extends State<CardView> {
       _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _remainingCooldown.value = widget.card.getRemainingCooldown();
         if (_remainingCooldown.value <= 0) {
-          setState(() => timer.cancel());
+          if (mounted) setState(() => timer.cancel());
         }
       });
     }
