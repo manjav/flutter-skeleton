@@ -133,6 +133,7 @@ enum AccountField {
 
 class Account extends StringMap<dynamic> {
   Building? getBuilding(Buildings type) => map['buildings'][type] as Building;
+  Map<int, AccountCard> getCards() => map['cards'];
 
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
@@ -235,5 +236,18 @@ class Account extends StringMap<dynamic> {
         "level": level,
         "cards": List<int>.generate(cards.length, (i) => cards![i]['id'])
       });
+  }
+
+  void update(Map<String, dynamic> data) {
+    for (var field in AccountField.values) {
+      if (data[field.name] != null) {
+        map[field.name] = data[field.name];
+      }
+    }
+    if (data.containsKey("attack_cards")) {
+      for (var attackCard in data["attack_cards"]) {
+        getCards()[attackCard['id']]?.lastUsedAt = attackCard["last_used_at"];
+      }
+    }
   }
 }
