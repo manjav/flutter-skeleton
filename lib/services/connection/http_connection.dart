@@ -76,6 +76,21 @@ class HttpConnection extends IService {
     }
   }
 
+  Future<Map<String, dynamic>> tryRpc(BuildContext context, RpcId id,
+      {Map? params}) async {
+    var result = <String, dynamic>{};
+    try {
+      result = await rpc(id, params: params);
+    } on RpcException catch (e) {
+      Navigator.pushNamed(context, Routes.popupMessage.routeName, arguments: {
+        "title": "Error",
+        "message": "error_${e.statusCode.value}".l()
+      });
+      rethrow;
+    }
+    return result;
+  }
+
   Future<Map<String, dynamic>> rpc(RpcId id, {Map? params}) async {
     params = params ?? {};
     http.Response? response;
