@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'dart:math' as math;
+
 import '../../utils/utils.dart';
 import 'building.dart';
 import 'card.dart';
@@ -132,6 +134,11 @@ enum AccountField {
 }
 
 class Account extends StringMap<dynamic> {
+  static const levelMultiplier = 1.3;
+  static const levelExpo = 2.7;
+  static int getXpRequiered(int level) =>
+      (math.pow(level, levelExpo) * levelMultiplier).ceil();
+
   Building? getBuilding(Buildings type) => map['buildings'][type] as Building;
   Map<int, AccountCard> getCards() => map['cards'];
 
