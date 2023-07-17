@@ -63,16 +63,16 @@ class _CardViewState extends State<CardView> {
                   fontSize: (22 * s + 60 * s / (name.length))
                       .clamp(22 * s, 40 * s)))),
       Positioned(
-          top: 2 * s,
+          top: 1 * s,
           right: 24 * s,
           width: 27 * s,
           child: SkinnedText(level, style: _medium)),
       Positioned(
-          bottom: 6 * s,
+          bottom: 16 * s,
           left: 22 * s,
           child: SkinnedText(widget.card.power.compact(), style: _small)),
       Positioned(
-          bottom: 6 * s,
+          bottom: 20 * s,
           right: 20 * s,
           child: SkinnedText(cooldown.toRemainingTime(), style: _tiny)),
       _remainingCooldown.value == 0

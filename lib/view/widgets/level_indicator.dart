@@ -84,7 +84,6 @@ class _LevelIndicatorState extends State<LevelIndicator> {
 
   _elementsBuilder() {
     var bgSliceCenter = ImageCenterSliceDate(134, 134);
-    print("level => $_xp  ${(_xp - _minXp) / (_maxXp - _minXp)}");
     return Widgets.button(
       padding: EdgeInsets.fromLTRB(22.d, 20.d, 22.d, 26.d),
       decoration: BoxDecoration(

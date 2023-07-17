@@ -182,7 +182,7 @@ class Widgets {
         height: height,
         buttonId: buttonId,
         alignment: alignment,
-        padding: padding,
+        padding: padding ?? EdgeInsets.only(bottom: 16.d),
         decoration: BoxDecoration(
             image: DecorationImage(
                 fit: BoxFit.fill,
@@ -191,9 +191,8 @@ class Widgets {
                   "ui_button_${size}_$color",
                   centerSlice: slicingData,
                 ).image)),
-        child: label != null
-            ? SkinnedText(label, style: TStyles.large.copyWith(height: 0.1))
-            : child!);
+        child:
+            label != null ? SkinnedText(label, style: TStyles.large) : child!);
   }
 
   static verticalDivider({double? height, double margin = 0}) {
