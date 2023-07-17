@@ -32,7 +32,9 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   int _xp = 0;
   int _level = 0;
   int _avatarId = 0;
-  Size _size = const Size(100, 100);
+  int _minXp = 0;
+  int _maxXp = 0;
+  Size _size = const Size(75, 75);
 
   @override
   void initState() {
@@ -45,7 +47,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   }
 
   bool _measureSize() {
-    if (_size.width != 100) return false;
+    if (_size.width != 75) return false;
     final keyContext = (widget.key as GlobalKey).currentContext;
     final renderObject = keyContext!.findRenderObject();
     if (renderObject != null) {
@@ -55,25 +57,34 @@ class _LevelIndicatorState extends State<LevelIndicator> {
     return false;
   }
 
+  void _updateParams(int xp, int level, int avatarId) {
+    _xp = xp;
+    _level = level;
+    _avatarId = avatarId + 1;
+    _minXp = Account.getXpRequiered(level - 1);
+    _maxXp = Account.getXpRequiered(level);
+  }
+
   @override
   Widget build(BuildContext context) {
     _measureSize();
     if (widget.level == null) {
       return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-        _xp = state.account.get<int>(AccountField.xp);
-        _level = state.account.get<int>(AccountField.level);
-        _avatarId = state.account.get<int>(AccountField.avatar_id) + 1;
+        _updateParams(
+          state.account.get<int>(AccountField.xp),
+          state.account.get<int>(AccountField.level),
+          state.account.get<int>(AccountField.avatar_id),
+        );
         return _elementsBuilder();
       });
     }
-    _xp = widget.xp!;
-    _level = widget.level!;
-    _avatarId = widget.avatarId! + 1;
+    _updateParams(widget.xp!, widget.level!, widget.avatarId!);
     return _elementsBuilder();
   }
 
   _elementsBuilder() {
     var bgSliceCenter = ImageCenterSliceDate(134, 134);
+    print("level => $_xp  ${(_xp - _minXp) / (_maxXp - _minXp)}");
     return Widgets.button(
       padding: EdgeInsets.fromLTRB(22.d, 20.d, 22.d, 26.d),
       decoration: BoxDecoration(
@@ -89,7 +100,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
         alignment: Alignment.center,
         children: [
           SquarePercentIndicator(
-            progress: _xp / (_xp * 2),
+            progress: (_xp - _minXp) / (_maxXp - _minXp),
             shadowWidth: 16.d,
             progressWidth: 8.d,
             borderRadius: 36.d,
