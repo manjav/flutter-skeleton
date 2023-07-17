@@ -31,6 +31,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   final _tabInputs = List<SMIBool?>.generate(5, (index) => null);
   late PageController _pageController;
 
+  final GlobalKey _playerLevelKey = GlobalKey();
+
   @override
   void initState() {
     _pageController = PageController(initialPage: _selectedTab);
@@ -49,7 +51,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     if (_selectedTab != 2) return [];
     return [
       SizedBox(
-          width: 196.d, height: 200.d, child: LevelIndicator(key: GlobalKey()))
+          width: 196.d,
+          height: 200.d,
+          child: LevelIndicator(key: _playerLevelKey))
     ];
   }
 

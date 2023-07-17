@@ -35,6 +35,8 @@ class DeckScreen extends AbstractScreen {
 class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
   final SelectedCards _selectedCards =
       SelectedCards(List.generate(5, (i) => null));
+  final GlobalKey<State<StatefulWidget>> _playerLevelKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _enemyLevelKey = GlobalKey();
 
   @override
   Widget contentFactory() {
@@ -142,13 +144,13 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                   height: 168.d,
                   child: Row(
                     children: [
-                      _avatar(TextAlign.left),
+                      _avatar(TextAlign.left, _playerLevelKey),
                       SizedBox(width: 8.d),
                       _opponentInfo(CrossAxisAlignment.start, account),
                       Asset.load<Image>("deck_battle_icon", height: 136.d),
                       _opponentInfo(CrossAxisAlignment.end, account),
                       SizedBox(width: 8.d),
-                      _avatar(TextAlign.right),
+                      _avatar(TextAlign.right, _enemyLevelKey),
                     ],
                   )),
               ValueListenableBuilder<List<AccountCard?>>(
@@ -166,11 +168,11 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
             ]));
   }
 
-  Widget _avatar(TextAlign align) {
+  Widget _avatar(TextAlign align, GlobalKey key) {
     return SizedBox(
         width: 160.d,
         height: 160.d,
-        child: LevelIndicator(key: GlobalKey(), align: align));
+        child: LevelIndicator(key: key, align: align));
   }
 
   Widget _opponentInfo(CrossAxisAlignment align, Account account) {

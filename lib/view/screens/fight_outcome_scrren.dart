@@ -33,6 +33,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
   List<MapEntry<String, int>> _heroBenefits = [];
   late Account _account;
   late AnimationController _animationController;
+  final GlobalKey _playerLevelKey = GlobalKey();
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -140,7 +141,6 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                         opacity: (_animationController.value - 2).clamp(0, 1),
                         child: SkinnedText("${_account.getReadyCards().length}",
                             style: TStyles.large))),
-
               ]))),
       Positioned(
           height: 180.d,
@@ -176,7 +176,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
           SizedBox(
               width: 160.d,
               height: 160.d,
-              child: LevelIndicator(key: GlobalKey())),
+              child: LevelIndicator(key: _playerLevelKey)),
           SizedBox(width: 12.d),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
