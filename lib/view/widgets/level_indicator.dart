@@ -16,7 +16,9 @@ class LevelIndicator extends StatefulWidget {
   final int? level;
   final int? avatarId;
   final TextAlign align;
+  final double size;
   const LevelIndicator({
+    this.size = 75,
     this.xp,
     this.level,
     this.avatarId,
@@ -34,28 +36,6 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   int _avatarId = 0;
   int _minXp = 0;
   int _maxXp = 0;
-  Size _size = const Size(75, 75);
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_measureSize()) {
-        setState(() {});
-      }
-    });
-    super.initState();
-  }
-
-  bool _measureSize() {
-    if (_size.width != 75) return false;
-    final keyContext = (widget.key as GlobalKey).currentContext;
-    final renderObject = keyContext!.findRenderObject();
-    if (renderObject != null) {
-      _size = (renderObject as RenderBox).size;
-      return true;
-    }
-    return false;
-  }
 
   void _updateParams(int xp, int level, int avatarId) {
     _xp = xp;
@@ -67,7 +47,6 @@ class _LevelIndicatorState extends State<LevelIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    _measureSize();
     if (widget.level == null) {
       return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
         _updateParams(
@@ -85,6 +64,8 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   _elementsBuilder() {
     var bgSliceCenter = ImageCenterSliceDate(134, 134);
     return Widgets.button(
+      width: widget.size,
+      height: widget.size + 5.d,
       padding: EdgeInsets.fromLTRB(22.d, 20.d, 22.d, 26.d),
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -109,9 +90,9 @@ class _LevelIndicatorState extends State<LevelIndicator> {
           ),
           Positioned(
               top: -24.d,
-              left: widget.align == TextAlign.left ? _size.height - 56.d : null,
+              left: widget.align == TextAlign.left ? widget.size - 56.d : null,
               right:
-                  widget.align == TextAlign.right ? _size.height - 56.d : null,
+                  widget.align == TextAlign.right ? widget.size - 56.d : null,
               child: SkinnedText(
                 _level.toString(),
                 style: TStyles.medium,

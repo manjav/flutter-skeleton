@@ -33,7 +33,6 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
   List<MapEntry<String, int>> _heroBenefits = [];
   late Account _account;
   late AnimationController _animationController;
-  final GlobalKey _playerLevelKey = GlobalKey();
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -176,10 +175,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-              width: 160.d,
-              height: 160.d,
-              child: LevelIndicator(key: _playerLevelKey)),
+          LevelIndicator(size: 180.d),
           SizedBox(width: 12.d),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
