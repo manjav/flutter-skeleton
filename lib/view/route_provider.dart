@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../view/popups/card_popup.dart';
-import '../../view/popups/message_popup.dart';
-import '../../view/screens/deck_screen.dart';
-import '../../view/screens/fight_outcome_scrren.dart';
+import 'popups/card_popup.dart';
+import 'popups/message_popup.dart';
 import 'popups/tab_page_popup.dart';
+import 'screens/deck_screen.dart';
+import 'screens/fight_outcome_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
 

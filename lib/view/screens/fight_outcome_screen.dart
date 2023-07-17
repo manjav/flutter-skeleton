@@ -162,7 +162,10 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                     SkinnedText("battle_more".l(), style: TStyles.large),
                   ],
                 ),
-                onPressed: () => print("dfdsf"))
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, Routes.deck.routeName);
+                })
           ]))
     ]);
   }
