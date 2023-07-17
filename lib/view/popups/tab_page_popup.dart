@@ -18,14 +18,15 @@ class _TabPagePopupState extends AbstractPopupState<TabPagePopup>
   @override
   void initState() {
     selectedTabIndex = widget.args['selectedTabIndex'] ?? 0;
+    contentPadding = EdgeInsets.fromLTRB(12.d, 176.d, 12.d, 64.d);
     super.initState();
   }
 
   @override
   contentFactory() {
     return SizedBox(
-        width: 880.d,
-        height: 880.d,
+        width: 850.d,
+        height: 850.d,
         child: tabsBuilder(data: [
           TabData("Gold", "ui_gold"),
           TabData("Nectar", "ui_nectar"),

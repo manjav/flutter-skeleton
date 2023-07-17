@@ -26,6 +26,8 @@ class AbstractPopup extends StatefulWidget {
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
     with ILogger {
+  EdgeInsets contentPadding = EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d);
+
   @override
   Widget build(BuildContext context) {
     var chromeCenterSlice = ImageCenterSliceDate(410, 460);
@@ -36,7 +38,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         Align(
             child: Widgets.rect(
           margin: EdgeInsets.symmetric(horizontal: 24.d),
-          padding: EdgeInsets.symmetric(horizontal: 36.d),
+          padding: EdgeInsets.symmetric(horizontal: 28.d),
           decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.fill,
@@ -51,9 +53,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
               children: [
                 innerChromeFactory(),
                 titleTextFactory(),
-                Padding(
-                    padding: EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d),
-                    child: contentFactory()),
+                Padding(padding: contentPadding, child: contentFactory()),
                 Positioned(
                     top: 60.d, right: -12.d, child: closeButtonFactory()),
               ]),
@@ -77,7 +77,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     return Widgets.rect(
         width: 562.d,
         height: 130.d,
-        padding: EdgeInsets.only(top: 12.d),
+        padding: EdgeInsets.only(bottom: 14.d),
         decoration: BoxDecoration(
             image: DecorationImage(
                 centerSlice: centerSlice.centerSlice,

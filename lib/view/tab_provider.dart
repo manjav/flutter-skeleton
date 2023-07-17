@@ -24,8 +24,8 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
   Widget innerChromeFactory() {
     return Positioned(
       top: 68.d,
-      left: 24.d,
-      right: 24.d,
+      left: 0,
+      right: 0,
       height: 225.d,
       child: Asset.load<Image>('popup_header',
           centerSlice: ImageCenterSliceDate(
@@ -48,8 +48,7 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
 
   Widget _tabItemBuilder(int index, TabData data) {
     var imageName = index == selectedTabIndex ? 'selected' : 'normal';
-    var slicingData =
-        ImageCenterSliceDate(68, 42, const Rect.fromLTWH(33, 33, 2, 2));
+    var slicingData = ImageCenterSliceDate(68, 42);
     return Expanded(
       child: Widgets.button(
           margin: EdgeInsets.symmetric(horizontal: 6.d),
