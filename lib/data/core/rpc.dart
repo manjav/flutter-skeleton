@@ -1,8 +1,9 @@
 // ignore_for_file: constant_identifier_names
 
 enum RpcId {
-  scout,
   playerLoad,
+// Battle
+  getOpponents,
   quest,
 // Files
   tutorialExport,
@@ -30,6 +31,7 @@ extension RpcIdEx on RpcId {
     return switch (this) {
       RpcId.scout => "battle/scout",
       RpcId.quest => "battle/quest",
+      RpcId.getOpponents => "battle/getopponents",
       RpcId.playerLoad => "player/load",
       RpcId.tutorialExport => "metadata/TutorialData.json",
       RpcId.tutorialLangEnExport => "i18n/en-US/Tutorial.json",

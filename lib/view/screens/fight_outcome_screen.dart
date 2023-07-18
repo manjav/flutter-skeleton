@@ -225,7 +225,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                       fit: BoxFit.fill,
                       image: Asset.load<Image>("ui_prize_frame").image)),
               child: Asset.load<Image>("ui_$type")),
-          SkinnedText("+  $value")
+          SkinnedText("  ${value > 0 ? '+' : ''}$value")
         ]));
   }
 
@@ -234,7 +234,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
         height: 76.d,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Asset.load<Image>("ui_$type", height: 62.d),
-          SkinnedText("  +$value")
+          SkinnedText("  ${value > 0 ? '+' : ''}$value")
         ]));
   }
 }

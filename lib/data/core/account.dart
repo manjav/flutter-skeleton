@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
 import 'dart:math' as math;
 
@@ -214,7 +214,7 @@ class Account extends StringMap<dynamic> {
     for (var card in cards) {
       totalPower += card != null ? card.power : 0;
     }
-    Building offense = map['buildings'][Buildings.offence];
+    Building offense = map['buildings'][Buildings.offense];
     totalPower *= offense.getBenefit();
     totalPower += offense.getCardsBenefit(this);
     return totalPower.floor();
@@ -256,5 +256,50 @@ class Account extends StringMap<dynamic> {
         getCards()[attackCard['id']]?.lastUsedAt = attackCard["last_used_at"];
       }
     }
+  }
+}
+
+class Opponents {
+  int scoutCost = 0;
+  final List<Opponent> list = [];
+  Opponents([Map<String, dynamic>? map]) {
+    if (map == null) return;
+    scoutCost = map["scout_cost"];
+    for (var player in map['players']) {
+      list.add(Opponent(player));
+    }
+  }
+}
+
+class Opponent {
+  int id = 0,
+      rank = 0,
+      xp = 0,
+      gold = 0,
+      tribePermission = 0,
+      level = 0,
+      defPower = 0,
+      status = 0,
+      leagueId = 0,
+      leagueRank = 0,
+      avatarId = 0,
+      powerRatio = 0;
+  String name = "", tribeName = "";
+  Opponent(Map<String, dynamic>? map) {
+    if (map == null) return;
+    id = map["id"] ?? 0;
+    xp = map["xp"] ?? 0;
+    name = map["name"] ?? "";
+    rank = map["rank"] ?? 0;
+    gold = map["gold"] ?? 0;
+    level = map["level"] ?? 0;
+    status = map["status"] ?? 0;
+    defPower = map["def_power"] ?? 0;
+    leagueId = map["league_id"] ?? 0;
+    avatarId = map["avatar_id"] ?? 0;
+    tribeName = map["tribe_name"] ?? "";
+    leagueRank = map["league_rank"] ?? 0;
+    powerRatio = map["power_ratio"] ?? 0;
+    tribePermission = map["tribe_permission"] ?? 0;
   }
 }
