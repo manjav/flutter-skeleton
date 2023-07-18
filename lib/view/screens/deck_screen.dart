@@ -76,6 +76,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
             child: _header(account)),
         Positioned(
             height: 214.d,
+            width: 420.d,
             bottom: 24.d,
             child: Widgets.labeledButton(
                 padding: EdgeInsets.fromLTRB(56.d, 48.d, 56.d, 64.d),
@@ -85,11 +86,11 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                   children: [
                     const LoaderWidget(AssetType.image, "icon_battle"),
                     SizedBox(width: 16.d),
-                    SkinnedText("fight_l".l(), style: TStyles.large),
+                    SkinnedText("attack_l".l(), style: TStyles.large),
                   ],
                 ),
                 size: "",
-                onPressed: () => _fight(account)))
+                onPressed: () => _attack(account)))
       ]);
     });
   }
@@ -166,9 +167,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
             ]));
   }
 
-  Widget _avatar(TextAlign align) {
-    return LevelIndicator(align: align, size: 160.d);
-  }
+  Widget _avatar(TextAlign align) => LevelIndicator(align: align, size: 160.d);
 
   Widget _opponentInfo(CrossAxisAlignment align, Account account) {
     var itsMe = align == CrossAxisAlignment.start;
@@ -290,7 +289,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
   bool isBossQuest(Account account) =>
       ((account.get<int>(AccountField.total_quests) / 10) % 1 == 0);
 
-  _fight(Account account) async {
+  _attack(Account account) async {
     var bloc = BlocProvider.of<Services>(context);
     var params = <String, dynamic>{
       RpcParams.cards.name: "[${_selectedCards.getIds()}]",
