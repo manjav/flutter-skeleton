@@ -259,19 +259,8 @@ class Account extends StringMap<dynamic> {
   }
 }
 
-class Opponents {
-  int scoutCost = 0;
-  final List<Opponent> list = [];
-  Opponents([Map<String, dynamic>? map]) {
-    if (map == null) return;
-    scoutCost = map["scout_cost"];
-    for (var player in map['players']) {
-      list.add(Opponent(player));
-    }
-  }
-}
-
 class Opponent {
+  static int scoutCost = 0;
   int id = 0,
       rank = 0,
       xp = 0,
@@ -285,6 +274,8 @@ class Opponent {
       avatarId = 0,
       powerRatio = 0;
   String name = "", tribeName = "";
+  bool isRevealed = false;
+
   Opponent(Map<String, dynamic>? map) {
     if (map == null) return;
     id = map["id"] ?? 0;
@@ -301,5 +292,14 @@ class Opponent {
     leagueRank = map["league_rank"] ?? 0;
     powerRatio = map["power_ratio"] ?? 0;
     tribePermission = map["tribe_permission"] ?? 0;
+  }
+
+  static List<Opponent> fromMap(Map<String, dynamic> map) {
+    scoutCost = map["scout_cost"];
+    var list = <Opponent>[];
+    for (var player in map['players']) {
+      list.add(Opponent(player));
+    }
+    return list;
   }
 }

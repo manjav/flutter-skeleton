@@ -31,7 +31,7 @@ class OpponentsPopup extends AbstractPopup {
 }
 
 class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
-  Opponents _opponents = Opponents();
+  List<Opponent> _opponents = [];
   final ValueNotifier<Opponent> _selectedOpponent =
       ValueNotifier(Opponent(null));
   late Account _account;
@@ -52,8 +52,8 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     var data = await BlocProvider.of<Services>(context)
         .get<HttpConnection>()
         .tryRpc(context, RpcId.getOpponents);
-    _opponents = Opponents(data);
-    _selectedOpponent.value = _opponents.list[0];
+    _opponents = Opponent.fromMap(data);
+    _selectedOpponent.value = _opponents[0];
     setState(() {});
   }
 
@@ -77,7 +77,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
               children: [
                 PageView.builder(
                     itemBuilder: _pageItemBuilder,
-                    itemCount: _opponents.list.length,
+                    itemCount: _opponents.length,
                     onPageChanged: (value) =>
                         _selectMap(value + 0.0, pageChange: false),
                     controller: _pageController),
@@ -252,12 +252,12 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   _selectMap(double page, {bool pageChange = true}) {
-    var index = page.clamp(0, _opponents.list.length).round();
+    var index = page.clamp(0, _opponents.length).round();
     if (pageChange) {
       _pageController.animateToPage(index,
           duration: const Duration(milliseconds: 700), curve: Curves.ease);
     }
-    _selectedOpponent.value = _opponents.list[index];
+    _selectedOpponent.value = _opponents[index];
   }
 
   _scout() {}
