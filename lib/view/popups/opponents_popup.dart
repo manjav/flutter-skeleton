@@ -31,6 +31,16 @@ class OpponentsPopup extends AbstractPopup {
 }
 
 class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
+  int get floatingCost {
+    var scoutCostRelCoef = 0.05;
+    var scoutCostMax = 20000;
+    var scoutCostBase = 80;
+    return ((_account.get<int>(AccountField.q) * scoutCostRelCoef)
+                .clamp(0, scoutCostMax) +
+            scoutCostBase)
+        .floor();
+  }
+
   List<Opponent> _opponents = [];
   final ValueNotifier<Opponent> _selectedOpponent =
       ValueNotifier(Opponent(null));
@@ -150,7 +160,6 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
           },
         ));
   }
-  // return  math.floor(math.min(mainPlayer.q * Constants.Scout_CostRelCoef, Constants.Scout_CostMax) + Constants.Scout_CostBase)
   //       local opponentMaxGold = opponents[inOpp].gold / attackInToday
   // if opponentMaxGold < 100 * mainPlayer.level then
   //       goldPower = 1
@@ -186,7 +195,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                     children: [
                       Asset.load<Image>("ui_gold", width: 96.d),
                       SizedBox(width: 8.d),
-                      SkinnedText(_opponents.scoutCost.compact(),
+                                SkinnedText(floatingCost.compact(),
                           style: TStyles.large),
                     ],
                   ),
