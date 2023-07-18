@@ -65,7 +65,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
           // width: 132.d,
           height: 117.d,
           padding: EdgeInsets.all(22.d),
-          child: Asset.load<Image>("ui_back"),
+          child: Asset.load<Image>("ui_arrow_back"),
           onPressed: () => Navigator.pop(context))
     ];
   }
