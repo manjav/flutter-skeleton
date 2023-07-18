@@ -158,12 +158,12 @@ class Account extends StringMap<dynamic> {
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
     _addBuilding(Buildings.base, map['tribe']?['mainhall_building_level']);
     _addBuilding(Buildings.cards, map['tribe']?['cooldown_building_level']);
-    _addBuilding(Buildings.defence, map['tribe']?['defense_building_level'],
+    _addBuilding(Buildings.defense, map['tribe']?['defense_building_level'],
         map['defense_building_assigned_cards']);
     _addBuilding(Buildings.message);
     _addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
-    _addBuilding(Buildings.offence, map['tribe']?['offense_building_level'],
+    _addBuilding(Buildings.offense, map['tribe']?['offense_building_level'],
         map['offense_building_assigned_cards']);
     _addBuilding(Buildings.shop);
     _addBuilding(Buildings.treasury, map['bank_building_level']);
@@ -223,12 +223,12 @@ class Account extends StringMap<dynamic> {
   List<AccountCard> getReadyCards() {
     List<AccountCard> cards = map['cards'].values.toList();
     cards.removeWhere((card) {
-      return (getBuilding(Buildings.defence)!
+      return (getBuilding(Buildings.defense)!
               .assignedCardsId
               .contains(card.id) ||
           getBuilding(Buildings.mine)!.assignedCardsId.contains(card.id) ||
           getBuilding(Buildings.auction)!.assignedCardsId.contains(card.id) ||
-          getBuilding(Buildings.offence)!.assignedCardsId.contains(card.id));
+          getBuilding(Buildings.offense)!.assignedCardsId.contains(card.id));
     });
     cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
     return cards;

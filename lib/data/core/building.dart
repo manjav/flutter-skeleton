@@ -10,10 +10,10 @@ import 'infra.dart';
 enum Buildings {
   base,
   cards,
-  defence,
+  defense,
   message,
   mine,
-  offence,
+  offense,
   shop,
   treasury,
   tribe,
@@ -60,7 +60,7 @@ class Building extends StringMap<dynamic> {
   int get upgradeCost {
     var values = <Buildings, List<int>>{};
     values[Buildings.mine] = [0, 20, 40, 80, 300, 1500, 3500, 9000];
-    values[Buildings.offence] = [
+    values[Buildings.offense] = [
       20,
       50,
       75,
@@ -106,7 +106,7 @@ class Building extends StringMap<dynamic> {
       11500000,
       13000000
     ];
-    values[Buildings.defence] = [
+    values[Buildings.defense] = [
       0,
       40,
       60,
@@ -218,7 +218,7 @@ class Building extends StringMap<dynamic> {
       300000,
       500000
     ];
-    values[Buildings.offence] = values[Buildings.defence] = [
+    values[Buildings.offense] = values[Buildings.defense] = [
       0,
       5,
       10,
@@ -321,7 +321,7 @@ class Building extends StringMap<dynamic> {
   }
 
   int get maxCards {
-    if (type == Buildings.offence || type == Buildings.defence) {
+    if (type == Buildings.offense || type == Buildings.defense) {
       return switch (level) { < 1 => 0, < 3 => 1, < 6 => 2, < 10 => 3, _ => 4 };
     }
     if (type == Buildings.mine) {
@@ -331,7 +331,7 @@ class Building extends StringMap<dynamic> {
   }
 
   double getBenefit() {
-    if (type == Buildings.offence || type == Buildings.defence) {
+    if (type == Buildings.offense || type == Buildings.defense) {
       return 1 + benefit / 100;
     }
     if (type == Buildings.cards) {
@@ -381,9 +381,9 @@ class Building extends StringMap<dynamic> {
           .floor();
     } else {
       var buildingPowerModifier = 0.0;
-      if (type == Buildings.offence) {
+      if (type == Buildings.offense) {
         buildingPowerModifier = offensePowerModifier;
-      } else if (type == Buildings.defence) {
+      } else if (type == Buildings.defense) {
         buildingPowerModifier = defensePowerModifier;
       }
 
