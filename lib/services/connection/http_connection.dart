@@ -79,9 +79,8 @@ class HttpConnection extends IService {
     }
   }
 
-  Future<Map<String, dynamic>> tryRpc(BuildContext context, RpcId id,
-      {Map? params}) async {
-    var result = <String, dynamic>{};
+  Future<T> tryRpc<T>(BuildContext context, RpcId id, {Map? params}) async {
+    dynamic result;
     try {
       result = await rpc(id, params: params);
     } on RpcException catch (e) {
@@ -91,10 +90,10 @@ class HttpConnection extends IService {
       });
       rethrow;
     }
-    return result;
+    return result as T;
   }
 
-  Future<Map<String, dynamic>> rpc(RpcId id, {Map? params}) async {
+  Future<dynamic> rpc(RpcId id, {Map? params}) async {
     params = params ?? {};
     http.Response? response;
     try {
