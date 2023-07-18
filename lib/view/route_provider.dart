@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'popups/card_popup.dart';
 import 'popups/message_popup.dart';
+import 'popups/opponents_popup.dart';
 import 'popups/tab_page_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
@@ -23,6 +24,7 @@ enum Routes {
   popupCard,
   popupMessage,
   popupTabPage,
+  popupOpponents
 }
 
 extension RouteProvider on Routes {
@@ -35,6 +37,7 @@ extension RouteProvider on Routes {
       "/popupCard" => CardDetailsPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
       "/popupTabPage" => TabPagePopup(args: args ?? {}),
+      "/popupOpponents" => OpponentsPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }
