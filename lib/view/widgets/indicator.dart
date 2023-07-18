@@ -16,6 +16,7 @@ import '../widgets.dart';
 class Indicator extends StatefulWidget {
   final String origin;
   final AccountField itemType;
+  final int? value;
   final double? width;
   final Function? onTap;
   final bool clickable;
@@ -24,6 +25,7 @@ class Indicator extends StatefulWidget {
     this.origin,
     this.itemType, {
     Key? key,
+    this.value,
     this.width,
     this.onTap,
     this.clickable = true,
@@ -62,38 +64,33 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
           child: Widgets.touchable(
               child: Material(
                 color: TColors.transparent,
-                child: BlocBuilder<AccountBloc, AccountState>(
-                    builder: (context, state) {
-                  var text = state.account.get<int>(widget.itemType).compact();
-                  return Stack(alignment: Alignment.centerLeft, children: [
-                    Positioned(
-                        right: right,
-                        left: 12.d,
-                        height: 64.d,
-                        child: Asset.load<Image>(
-                          'ui_frame_wood',
-                          centerSlice: ImageCenterSliceDate(
-                              160, 64, const Rect.fromLTWH(12, 12, 4, 4)),
-                        )),
-                    Positioned(
-                      left: left,
-                      right: right + 8.d,
-                      child: SkinnedText(
-                        text,
-                        style: TStyles.large.copyWith(
-                            fontSize: (24.d + 60.d / (text.length))
-                                .clamp(22.d, 42.d)),
-                      ),
-                    ),
-                    icon,
-                    Positioned(
-                        right: 0,
-                        height: 84.d,
-                        child: widget.clickable
-                            ? Asset.load<Image>('ui_plus')
-                            : const SizedBox()),
-                  ]);
-                }),
+                child: Stack(alignment: Alignment.centerLeft, children: [
+                  widget.clickable
+                      ? Positioned(
+                          right: right,
+                          left: 12.d,
+                          height: 64.d,
+                          child: Asset.load<Image>(
+                            'ui_frame_wood',
+                            centerSlice: ImageCenterSliceDate(
+                                160, 64, const Rect.fromLTWH(12, 12, 4, 4)),
+                          ))
+                      : const SizedBox(),
+                  (widget.value == null)
+                      ? BlocBuilder<AccountBloc, AccountState>(
+                          builder: (context, state) => _textField(
+                              state.account.get<int>(widget.itemType),
+                              left,
+                              right))
+                      : _textField(widget.value!, left, right),
+                  icon,
+                  Positioned(
+                      right: 0,
+                      height: 84.d,
+                      child: widget.clickable
+                          ? Asset.load<Image>('ui_plus')
+                          : const SizedBox()),
+                ]),
               ),
               onTap: () {
                 if (widget.clickable) {
@@ -109,5 +106,20 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                 }
               }),
         ));
+  }
+
+  _textField(int value, double left, double right) {
+    var text = value.compact();
+    return Positioned(
+      left: left + 24.d,
+      right: right + 16.d,
+      child: SkinnedText(
+        text,
+        alignment:
+            widget.clickable ? Alignment.centerLeft : Alignment.centerLeft,
+        style: TStyles.large.copyWith(
+            fontSize: (24.d + 60.d / (text.length)).clamp(22.d, 42.d)),
+      ),
+    );
   }
 }
