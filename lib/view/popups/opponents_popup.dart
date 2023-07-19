@@ -105,11 +105,11 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                           radius: 32.d,
                           color: color.withOpacity(0.6),
                           padding: EdgeInsets.all(16.d),
-                          height: 220.d,
+                          height: 200.d,
                           child: Row(
                             children: [
                               LevelIndicator(
-                                  size: 190.d,
+                                  size: 170.d,
                                   level: value.level,
                                   xp: value.xp,
                                   avatarId: value.avatarId),
@@ -121,6 +121,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
+                                    SizedBox(height: 36.d),
                                     SkinnedText(
                                       value.name,
                                       overflow: TextOverflow.ellipsis,
@@ -232,45 +233,45 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     return ValueListenableBuilder<Opponent>(
         valueListenable: _selectedOpponent,
         builder: (context, value, child) {
-    return Widgets.rect(
-        height: 196.d,
-        padding: EdgeInsets.symmetric(horizontal: 24.d),
-        child: Row(children: [
+          return Widgets.rect(
+              height: 196.d,
+              padding: EdgeInsets.symmetric(horizontal: 24.d),
+              child: Row(children: [
                 Opacity(
                     opacity: value.index <= 0 ? 0.4 : 1,
                     child: Widgets.labeledButton(
-              size: "",
-              child: Asset.load<Image>("ui_arrow_back", width: 68.d),
-              color: "green",
-              width: 230.d,
+                        size: "",
+                        child: Asset.load<Image>("ui_arrow_back", width: 68.d),
+                        color: "green",
+                        width: 230.d,
                         onPressed: () =>
                             _selectMap(_pageController.page! - 1))),
-          SizedBox(width: 8.d),
-          Expanded(
-              child: Widgets.labeledButton(
-                  padding: EdgeInsets.fromLTRB(32.d, 28.d, 42.d, 42.d),
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const LoaderWidget(AssetType.image, "icon_battle"),
-                      SkinnedText("attack_l".l(), style: TStyles.large),
-                    ],
-                  ),
-                  size: "",
-                  onPressed: _attack)),
-          SizedBox(width: 8.d),
+                SizedBox(width: 8.d),
+                Expanded(
+                    child: Widgets.labeledButton(
+                        padding: EdgeInsets.fromLTRB(32.d, 28.d, 42.d, 42.d),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const LoaderWidget(AssetType.image, "icon_battle"),
+                            SkinnedText("attack_l".l(), style: TStyles.large),
+                          ],
+                        ),
+                        size: "",
+                        onPressed: _attack)),
+                SizedBox(width: 8.d),
                 Opacity(
                     opacity: value.index >= _opponents.length - 1 ? 0.4 : 1,
                     child: Widgets.labeledButton(
-              size: "",
+                        size: "",
                         child:
                             Asset.load<Image>("ui_arrow_forward", width: 68.d),
-              color: "green",
-              width: 230.d,
+                        color: "green",
+                        width: 230.d,
                         onPressed: () =>
                             _selectMap(_pageController.page! + 1))),
-        ]));
+              ]));
         });
   }
 

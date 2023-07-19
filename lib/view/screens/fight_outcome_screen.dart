@@ -9,6 +9,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
+import '../../utils/utils.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/level_indicator.dart';
@@ -122,7 +123,8 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                     child: _outResults()),
                 Positioned(
                     height: 322.d,
-                    width: 720.d,
+                    right: 60.d,
+                    left: 180.d,
                     bottom: 180.d,
                     child: _prizeList()),
                 Positioned(
@@ -229,7 +231,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                       fit: BoxFit.fill,
                       image: Asset.load<Image>("ui_prize_frame").image)),
               child: Asset.load<Image>("ui_$type")),
-          SkinnedText("  ${value > 0 ? '+' : ''}$value")
+          SkinnedText(" ${value > 0 ? '+' : ''}${value.compact()}")
         ]));
   }
 
