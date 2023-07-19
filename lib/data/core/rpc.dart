@@ -6,6 +6,7 @@ enum RpcId {
   getOpponents,
   scout,
   quest,
+  battle,
 // Files
   tutorialExport,
   tutorialLangEnExport,
@@ -32,6 +33,7 @@ extension RpcIdEx on RpcId {
     return switch (this) {
       RpcId.scout => "battle/scout",
       RpcId.quest => "battle/quest",
+      RpcId.battle => "battle/battle",
       RpcId.getOpponents => "battle/getopponents",
       RpcId.playerLoad => "player/load",
       RpcId.tutorialExport => "metadata/TutorialData.json",
@@ -101,5 +103,7 @@ enum RpcParams {
   // Quest - Battle
   cards,
   hero_id,
-  check
+  check,
+  opponent_id,
+  attacks_in_today
 }

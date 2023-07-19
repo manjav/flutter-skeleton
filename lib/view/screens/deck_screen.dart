@@ -303,6 +303,10 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
     };
     var route =
         widget.opponent == null ? Routes.questOutcome : Routes.battleOutcome;
+    if (route == Routes.battleOutcome) {
+      params[RpcParams.opponent_id.name] = widget.opponent!.id;
+      params[RpcParams.attacks_in_today.name] = widget.opponent!.attacksCount;
+    }
     if (_selectedCards.value[2] != null) {
       params[RpcParams.hero_id.name] = _selectedCards.value[2]!.id;
     }

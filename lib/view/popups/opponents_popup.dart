@@ -285,11 +285,14 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
       await BlocProvider.of<Services>(context)
           .get<HttpConnection>()
           .tryRpc<List>(context, RpcId.scout);
-      _opponents[_pageController.page!.round()].isRevealed = true;
       _selectedOpponent.value.isRevealed = true;
       setState(() {});
     } finally {}
   }
 
-  _attack() {}
+  _attack() {
+    _selectedOpponent.value.increaseAttacksCount();
+    Navigator.pushNamed(context, Routes.deck.routeName,
+        arguments: {"opponent": _selectedOpponent.value});
+  }
 }
