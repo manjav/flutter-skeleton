@@ -1,10 +1,8 @@
+@ECHO OFF
+setlocal enabledelayedexpansion
 cd assets\\images
-for file in *.png;
- do (
-    [ -e "%file%" ] || continue
-    echo \'%file%\' converted to \'%file%.*%.webp\'
-    cwebp %file% -lossless -m 6 -o %file%.*%.webp
-    rm %file%
-    );
- done
-exit
+for %%f in (*.png) do (
+  echo %%f converted to %%~nf.webp
+  cwebp %%f -lossless -m 6 -o %%~nf.webp
+  del %%f
+)
