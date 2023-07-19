@@ -278,7 +278,7 @@ class Opponent {
       powerRatio = 0;
   String name = "", tribeName = "";
   bool isRevealed = false;
-  int attacksCount = 0;
+  int todayAttacksCount = 0;
 
   Opponent(Map<String, dynamic>? map) {
     if (map == null) return;
@@ -304,7 +304,7 @@ class Opponent {
     var list = <Opponent>[];
     for (var player in map["players"]) {
       var o = Opponent(player);
-      o.attacksCount = (_attackLogs["${o.id}"] ?? 0);
+      o.todayAttacksCount = (_attackLogs["${o.id}"] ?? 0);
       list.add(o);
     }
     return list;
@@ -320,8 +320,16 @@ class Opponent {
   }
 
   void increaseAttacksCount() {
-    attacksCount++;
-    _attackLogs["$id"] = attacksCount;
+    todayAttacksCount++;
+    _attackLogs["$id"] = todayAttacksCount;
     Pref.attacks.setString(jsonEncode(_attackLogs));
+  }
+
+  int getGoldLevel(int accountLevel) {
+    var goldRate = gold / todayAttacksCount;
+    if (goldRate < 100 * accountLevel) return 1;
+    if (goldRate < 500 * accountLevel) return 2;
+    if (goldRate < 1000 * accountLevel) return 3;
+    return 4;
   }
 }

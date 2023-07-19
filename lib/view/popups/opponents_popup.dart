@@ -153,23 +153,15 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                 StateMachineController.fromArtboard(artboard, 'Map')!;
             artboard.addController(controller);
             controller.findInput<double>('weather')?.value = 0;
-            controller.findInput<double>('money')?.value =
-                random.nextInt(4).floorToDouble();
+            controller.findInput<double>('money')?.value = _selectedOpponent
+                .value
+                .getGoldLevel(_account.get<int>(AccountField.level))
+                .floorToDouble();
             controller.findInput<double>('building')?.value =
                 random.nextInt(4).floorToDouble();
           },
         ));
   }
-  //       local opponentMaxGold = opponents[inOpp].gold / attackInToday
-  // if opponentMaxGold < 100 * mainPlayer.level then
-  //       goldPower = 1
-  //   elseif opponentMaxGold < 500 * mainPlayer.level then
-  //       goldPower = 2
-  //   elseif opponentMaxGold < 1000 * mainPlayer.level then
-  //       goldPower = 3
-  //   else
-  //       goldPower = 4
-  //   end
 
   _groups() {
     return Widgets.rect(
