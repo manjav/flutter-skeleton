@@ -4,6 +4,7 @@ enum RpcId {
   playerLoad,
 // Battle
   getOpponents,
+  scout,
   quest,
 // Files
   tutorialExport,

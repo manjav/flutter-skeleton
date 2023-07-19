@@ -181,25 +181,36 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
           _group(
               "my_max_power".l(),
               SkinnedText(_account.get<int>(AccountField.def_power).compact(),
-                  style: TStyles.big
-                      .copyWith(color: TColors.primary70, height: 3.d))),
+                  style: TStyles.big.copyWith(
+                      color: TColors.orange.withGreen(10700), height: 3.d))),
           SizedBox(width: 32.d),
-          _group(
-              "scout_l".l(),
-              Widgets.labeledButton(
-                  width: 320.d,
-                  color: "green",
-                  padding: EdgeInsets.fromLTRB(16.d, 8.d, 16.d, 22.d),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Asset.load<Image>("ui_gold", width: 96.d),
-                      SizedBox(width: 8.d),
+          ValueListenableBuilder<Opponent>(
+              valueListenable: _selectedOpponent,
+              builder: (context, value, child) {
+                return value.isRevealed
+                    ? _group(
+                        "my_max_power".l(),
+                        SkinnedText(value.defPower.compact(),
+                            style: TStyles.big
+                                .copyWith(color: TColors.accent, height: 3.d)))
+                    : _group(
+                        "scout_l".l(),
+                        Widgets.labeledButton(
+                            width: 320.d,
+                            color: "green",
+                            padding: EdgeInsets.fromLTRB(16.d, 8.d, 16.d, 22.d),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Asset.load<Image>("ui_gold", width: 96.d),
+                                SizedBox(width: 8.d),
                                 SkinnedText(floatingCost.compact(),
-                          style: TStyles.large),
-                    ],
-                  ),
-                  onPressed: _scout)),
+                                    style: TStyles.large),
+                              ],
+                            ),
+                            onPressed: _scout));
+              }),
+          SizedBox(width: 32.d),
         ],
       ),
     );
@@ -269,7 +280,16 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     _selectedOpponent.value = _opponents[index];
   }
 
-  _scout() {}
+  _scout() async {
+    try {
+      await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc<List>(context, RpcId.scout);
+      _opponents[_pageController.page!.round()].isRevealed = true;
+      _selectedOpponent.value.isRevealed = true;
+      setState(() {});
+    } finally {}
+  }
 
   _attack() {}
 }
