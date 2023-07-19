@@ -26,13 +26,13 @@ import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
 
 class DeckScreen extends AbstractScreen {
-  DeckScreen({super.key}) : super(Routes.deck);
-
+  final Opponent? opponent;
+  DeckScreen({this.opponent, super.key}) : super(Routes.deck);
   @override
   createState() => _DeckScreenState();
 }
 
-class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
+class _DeckScreenState extends AbstractScreenState<DeckScreen> {
   final SelectedCards _selectedCards =
       SelectedCards(List.generate(5, (i) => null));
 
@@ -45,8 +45,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var account = state.account;
-      var cards = account.getReadyCards();
+      var cards = state.account.getReadyCards();
       return Stack(alignment: Alignment.bottomCenter, children: [
         Positioned(
           top: paddingTop + headerSize,
@@ -73,7 +72,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
             right: 16.d,
             height: headerSize,
             left: 16.d,
-            child: _header(account)),
+            child: _header(state.account)),
         Positioned(
             height: 214.d,
             width: 420.d,
@@ -90,7 +89,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                   ],
                 ),
                 size: "",
-                onPressed: () => _attack(account)))
+                onPressed: () => _attack(state.account)))
       ]);
     });
   }
@@ -171,12 +170,17 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
 
   Widget _opponentInfo(CrossAxisAlignment align, Account account) {
     var itsMe = align == CrossAxisAlignment.start;
+    var opponent = widget.opponent ??
+        Opponent({
+          "name": (itsMe ? "you_l" : "enemy_l").l(),
+          "def_power": getQuestPower(account)[2]
+        });
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: align,
         children: [
-          SkinnedText((itsMe ? "you_l" : "enemy_l").l(),
+          SkinnedText(opponent.name,
               style: TStyles.small.copyWith(
                   height: 0.8, color: TColors.primary10, fontSize: 36.d)),
           itsMe
@@ -185,7 +189,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
                   builder: (context, value, child) => SkinnedText(
                       account.calculatePower(_selectedCards.value).compact()),
                 )
-              : SkinnedText("~${getQuestPower(account)[2].compact()}"),
+              : SkinnedText("~${opponent.defPower.compact()}"),
           SizedBox(height: 16.d)
         ],
       ),
@@ -297,6 +301,8 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
           .convert(utf8.encode("${account.get<int>(AccountField.q)}"))
           .toString()
     };
+    var route =
+        widget.opponent == null ? Routes.questOutcome : Routes.battleOutcome;
     if (_selectedCards.value[2] != null) {
       params[RpcParams.hero_id.name] = _selectedCards.value[2]!.id;
     }
@@ -312,8 +318,7 @@ class _DeckScreenState extends AbstractScreenState<AbstractScreen> {
       if (mounted) {
         BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
         Navigator.pop(context);
-        Navigator.pushNamed(context, Routes.battleOutcome.routeName,
-            arguments: data);
+        Navigator.pushNamed(context, route.routeName, arguments: data);
       }
     } catch (e) {
       // log("$e");

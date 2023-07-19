@@ -163,8 +163,12 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                   ],
                 ),
                 onPressed: () {
-                  Navigator.pushReplacementNamed(
-                      context, Routes.deck.routeName);
+                  if (widget.type == Routes.battleOutcome) {
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.pushReplacementNamed(
+                        context, Routes.deck.routeName);
+                  }
                 })
           ]))
     ]);

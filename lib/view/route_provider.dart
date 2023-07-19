@@ -30,7 +30,7 @@ enum Routes {
 extension RouteProvider on Routes {
   static Widget getWidget(String routeName, {Map<String, dynamic>? args}) {
     return switch (routeName) {
-      "/deck" => DeckScreen(),
+      "/deck" => DeckScreen(opponent: args?['opponent']),
       "/questOutcome" => FightOutcomeScreen(Routes.questOutcome, args ?? {}),
       "/battleOutcome" => FightOutcomeScreen(Routes.battleOutcome, args ?? {}),
       "/home" => HomeScreen(),
