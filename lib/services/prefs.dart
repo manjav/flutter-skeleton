@@ -51,6 +51,7 @@ class Prefs extends IService {
 }
 
 enum Pref {
+  attacks,
   cookies,
   testVersion,
   visitCount,

@@ -1,7 +1,9 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:math' as math;
 
+import '../../services/prefs.dart';
 import '../../utils/utils.dart';
 import 'building.dart';
 import 'card.dart';
@@ -261,6 +263,7 @@ class Account extends StringMap<dynamic> {
 
 class Opponent {
   static int scoutCost = 0;
+  static Map<String, dynamic> _attackLogs = {};
   int id = 0,
       rank = 0,
       xp = 0,
@@ -275,6 +278,7 @@ class Opponent {
       powerRatio = 0;
   String name = "", tribeName = "";
   bool isRevealed = false;
+  int attacksCount = 0;
 
   Opponent(Map<String, dynamic>? map) {
     if (map == null) return;
@@ -296,10 +300,28 @@ class Opponent {
 
   static List<Opponent> fromMap(Map<String, dynamic> map) {
     scoutCost = map["scout_cost"];
+    _attackLogs = Opponent._getAttacksLog();
     var list = <Opponent>[];
-    for (var player in map['players']) {
-      list.add(Opponent(player));
+    for (var player in map["players"]) {
+      var o = Opponent(player);
+      o.attacksCount = (_attackLogs["${o.id}"] ?? 0);
+      list.add(o);
     }
     return list;
+  }
+
+  static Map<String, dynamic> _getAttacksLog() {
+    var attacks = jsonDecode(Pref.attacks.getString(defaultValue: '{}'));
+    var days = DateTime.now().daysSinceEpoch;
+    if (attacks["days"] != days) {
+      attacks = {"days": days};
+    }
+    return attacks;
+  }
+
+  void increaseAttacksCount() {
+    attacksCount++;
+    _attackLogs["$id"] = attacksCount;
+    Pref.attacks.setString(jsonEncode(_attackLogs));
   }
 }
