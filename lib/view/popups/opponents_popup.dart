@@ -229,16 +229,22 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   _buttons() {
+    return ValueListenableBuilder<Opponent>(
+        valueListenable: _selectedOpponent,
+        builder: (context, value, child) {
     return Widgets.rect(
         height: 196.d,
         padding: EdgeInsets.symmetric(horizontal: 24.d),
         child: Row(children: [
-          Widgets.labeledButton(
+                Opacity(
+                    opacity: value.index <= 0 ? 0.4 : 1,
+                    child: Widgets.labeledButton(
               size: "",
               child: Asset.load<Image>("ui_arrow_back", width: 68.d),
               color: "green",
               width: 230.d,
-              onPressed: () => _selectMap(_pageController.page! - 1)),
+                        onPressed: () =>
+                            _selectMap(_pageController.page! - 1))),
           SizedBox(width: 8.d),
           Expanded(
               child: Widgets.labeledButton(
@@ -254,17 +260,22 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                   size: "",
                   onPressed: _attack)),
           SizedBox(width: 8.d),
-          Widgets.labeledButton(
+                Opacity(
+                    opacity: value.index >= _opponents.length - 1 ? 0.4 : 1,
+                    child: Widgets.labeledButton(
               size: "",
-              child: Asset.load<Image>("ui_arrow_forward", width: 68.d),
+                        child:
+                            Asset.load<Image>("ui_arrow_forward", width: 68.d),
               color: "green",
               width: 230.d,
-              onPressed: () => _selectMap(_pageController.page! + 1)),
+                        onPressed: () =>
+                            _selectMap(_pageController.page! + 1))),
         ]));
+        });
   }
 
   _selectMap(double page, {bool pageChange = true}) {
-    var index = page.clamp(0, _opponents.length).round();
+    var index = page.clamp(0, _opponents.length - 1).round();
     if (pageChange) {
       _pageController.animateToPage(index,
           duration: const Duration(milliseconds: 700), curve: Curves.ease);

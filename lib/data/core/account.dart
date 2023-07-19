@@ -266,6 +266,7 @@ class Opponent {
   static Map<String, dynamic> _attackLogs = {};
   int id = 0,
       rank = 0,
+      index = 0,
       xp = 0,
       gold = 0,
       tribePermission = 0,
@@ -302,10 +303,12 @@ class Opponent {
     scoutCost = map["scout_cost"];
     _attackLogs = Opponent._getAttacksLog();
     var list = <Opponent>[];
+    var index = 0;
     for (var player in map["players"]) {
-      var o = Opponent(player);
-      o.todayAttacksCount = (_attackLogs["${o.id}"] ?? 0);
-      list.add(o);
+      var opponent = Opponent(player);
+      opponent.index = index++;
+      opponent.todayAttacksCount = (_attackLogs["${opponent.id}"] ?? 0);
+      list.add(opponent);
     }
     return list;
   }

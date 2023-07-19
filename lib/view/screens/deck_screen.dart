@@ -305,7 +305,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
         widget.opponent == null ? Routes.questOutcome : Routes.battleOutcome;
     if (route == Routes.battleOutcome) {
       params[RpcParams.opponent_id.name] = widget.opponent!.id;
-      params[RpcParams.attacks_in_today.name] = widget.opponent!.attacksCount;
+      params[RpcParams.attacks_in_today.name] =
+          widget.opponent!.todayAttacksCount;
     }
     if (_selectedCards.value[2] != null) {
       params[RpcParams.hero_id.name] = _selectedCards.value[2]!.id;
