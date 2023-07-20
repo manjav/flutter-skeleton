@@ -172,7 +172,8 @@ class Account extends StringMap<dynamic> {
     _addBuilding(Buildings.quest);
     _addBuilding(Buildings.tribe, 1);
     if (map['tribe'] != null) {
-      map['buildings'][Buildings.tribe].init(map['tribe']);
+      map['buildings'][Buildings.tribe]
+          .init(map['tribe'], args: {'account': this, 'cards': []});
     }
 
     // Heroes
@@ -237,20 +238,21 @@ class Account extends StringMap<dynamic> {
     return totalPower.floor();
   }
 
-  List<AccountCard> getReadyCards({bool removeCooldowns = false}) {
-    List<AccountCard> cards = getCards().values.toList();
+  List<AccountCard> getReadyCards(
+      {List<Buildings>? exceptions, bool removeCooldowns = false}) {
+    exceptions = exceptions ??
+        [
+          Buildings.defense,
+          Buildings.mine,
+          Buildings.auction,
+          Buildings.offense
+        ];
+    var cards = getCards().values.toList();
     cards.removeWhere((card) {
-      return (getBuilding(Buildings.defense)!
-                  .assignedCardsId
-                  .contains(card.id) ||
-              getBuilding(Buildings.mine)!.assignedCardsId.contains(card.id) ||
-              getBuilding(Buildings.auction)!
-                  .assignedCardsId
-                  .contains(card.id) ||
-              getBuilding(Buildings.offense)!
-                  .assignedCardsId
-                  .contains(card.id)) ||
-          (removeCooldowns && card.getRemainingCooldown() > 0);
+      for (var exception in exceptions!) {
+        if (getBuilding(exception)!.cards.contains(card)) return true;
+      }
+      return (removeCooldowns && card.getRemainingCooldown() > 0);
     });
     cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
     return cards;
@@ -260,11 +262,8 @@ class Account extends StringMap<dynamic> {
     level = level ?? 0;
     cards = cards ?? [];
     map['buildings'][type] = Building()
-      ..init({
-        "type": type,
-        "level": level,
-        "cards": List<int>.generate(cards.length, (i) => cards![i]['id'])
-      });
+      ..init({"type": type, "level": level},
+          args: {"account": this, "cards": cards});
   }
 
   void update(Map<String, dynamic> data) {

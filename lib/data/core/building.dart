@@ -52,10 +52,20 @@ class Building extends StringMap<dynamic> {
 
   int get level => map['level'];
   Buildings get type => map['type'];
-  List<int> get assignedCardsId => map['cards'];
-  AccountCard getAssignedCard(Account account, int id) =>
-      account.getCards()[id]!;
+  List<AccountCard?> get cards => map['cards'];
   T get<T>(BuildingField fieldName) => map[fieldName.name] as T;
+
+  @override
+  void init(Map<String, dynamic> data, {args}) {
+    super.init(data, args: args);
+    var account = args['account']! as Account;
+    var cards = List.generate(
+        4,
+        (i) => i < args['cards'].length
+            ? account.getCards()[args['cards'][i]['id']]
+            : null);
+    map['cards'] = cards;
+  }
 
   int get upgradeCost {
     var values = <Buildings, List<int>>{};
@@ -346,8 +356,8 @@ class Building extends StringMap<dynamic> {
     var heroCardBenefits = <CardData, Map<String, int>>{};
     var heros = account.get<Map<int, HeroCard>>(AccountField.heroes);
 
-    for (var cardId in assignedCardsId) {
-      var card = getAssignedCard(account, cardId);
+    for (var card in cards) {
+      if (card == null) continue;
       totalPower += card.power;
 
       // stores the gained attributes of items for hero cards.
