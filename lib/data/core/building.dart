@@ -54,7 +54,7 @@ class Building extends StringMap<dynamic> {
   Buildings get type => map['type'];
   List<int> get assignedCardsId => map['cards'];
   AccountCard getAssignedCard(Account account, int id) =>
-      account.get<Map<int, AccountCard>>(AccountField.cards)[id]!;
+      account.getCards()[id]!;
   T get<T>(BuildingField fieldName) => map[fieldName.name] as T;
 
   int get upgradeCost {

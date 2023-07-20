@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/view/widgets/card_holder.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services.dart';
@@ -159,7 +160,10 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         for (var i = 0; i < _selectedCards.value.length; i++)
-                          _cardHolder(i)
+                          CardHolder(
+                              card: _selectedCards.value[i],
+                              heroMode: i == 2,
+                              onTap: () => _selectedCards.setCard(i, null))
                       ],
                     );
                   }),
@@ -194,57 +198,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
         ],
       ),
     );
-  }
-
-  Widget _cardHolder(int index) {
-    var card = _selectedCards.value[index];
-    var balloonData =
-        ImageCenterSliceDate(50, 57, const Rect.fromLTWH(28, 19, 2, 2));
-    var slicingData = ImageCenterSliceDate(117, 117);
-    return Column(children: [
-      card == null
-          ? const SizedBox()
-          : Widgets.rect(
-              padding: EdgeInsets.all(12.d),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      centerSlice: balloonData.centerSlice,
-                      image: Asset.load<Image>(
-                        "deck_balloon",
-                        centerSlice: balloonData,
-                      ).image)),
-              child: Text(card.power.compact(), style: TStyles.mediumInvert)),
-      Widgets.button(
-          onPressed: () => _selectedCards.setCard(index, null),
-          width: index == 2 ? 202.d : 184.d,
-          height: index == 2 ? 202.d : 184.d,
-          padding: EdgeInsets.all(12.d),
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  centerSlice: slicingData.centerSlice,
-                  image: Asset.load<Image>(
-                    "deck_placeholder",
-                    centerSlice: slicingData,
-                  ).image)),
-          child: _selectedCards.value[index] == null
-              ? _emptyCard(index)
-              : _filledCard(_selectedCards.value[index]!))
-    ]);
-  }
-
-  Widget _emptyCard(int index) {
-    return Padding(
-        padding: EdgeInsets.all(24.d),
-        child: Asset.load<Image>(
-            "deck_placeholder_${index == 2 ? 'hero' : 'card'}"));
-  }
-
-  Widget _filledCard(AccountCard accountCard) {
-    return LoaderWidget(
-        AssetType.image, accountCard.base.get<String>(CardFields.name),
-        subFolder: "cards");
   }
 
 /* This function returns the power of the next quest.
@@ -328,17 +281,5 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
     } catch (e) {
       // log("$e");
     }
-  }
-}
-
-class SelectedCards extends ValueNotifier<List<AccountCard?>> {
-  SelectedCards(super.value);
-  setCard(int index, AccountCard? card) {
-    value[index] = card;
-    notifyListeners();
-  }
-
-  getIds() {
-    return value.map((c) => c?.id).where((id) => id != null).join(',');
   }
 }
