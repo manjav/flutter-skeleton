@@ -109,6 +109,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 // Flutter web url navigation and deep linking.
                 onGenerateRoute: (RouteSettings routeSettings) {
                   return MaterialTransparentRoute(
+                      isOpaque: RouteProvider.getOpaque(routeSettings.name!),
                       settings: routeSettings,
                       builder: (BuildContext context) =>
                           RouteProvider.getWidget(routeSettings.name!,

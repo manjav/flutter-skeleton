@@ -46,13 +46,29 @@ extension RouteProvider on Routes {
   }
 
   String get routeName => "/$name";
+
+  static bool getOpaque(String routeName) {
+    return switch (routeName) {
+      "/popupNone" ||
+      "/popupCard" ||
+      "/popupMessage" ||
+      "/popupTabPage" ||
+      "/popupOpponents" ||
+      "/popupBuildingWar" =>
+        false,
+      _ => true,
+    };
+  }
 }
 
 class MaterialTransparentRoute<T> extends PageRoute<T>
     with MaterialRouteTransitionMixin<T> {
+  final bool isOpaque;
+
   MaterialTransparentRoute({
     required this.builder,
     required RouteSettings settings,
+    this.isOpaque = true,
     this.maintainState = true,
     bool fullscreenDialog = true,
   }) : super(settings: settings, fullscreenDialog: fullscreenDialog);
@@ -63,7 +79,7 @@ class MaterialTransparentRoute<T> extends PageRoute<T>
   Widget buildContent(BuildContext context) => builder(context);
 
   @override
-  bool get opaque => false;
+  bool get opaque => isOpaque;
 
   @override
   final bool maintainState;
