@@ -59,6 +59,19 @@ class _WarBuildingPopupState extends AbstractPopupState<SupportiveBuildingPopup>
                 style: TStyles.medium.copyWith(color: TColors.orange)),
           ]),
           SizedBox(height: 16.d),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (var i = 0; i < _selectedCards.value.length; i++)
+                CardHolder(
+                    card: i >= building.assignedCardsId.length
+                        ? null
+                        : cards[building.assignedCardsId[i]],
+                    onTap: () => print(i))
+            ],
+          ),
+          SizedBox(height: 48.d),
         ],
       );
     });

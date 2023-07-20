@@ -222,15 +222,35 @@ class Account extends StringMap<dynamic> {
     return totalPower.floor();
   }
 
-  List<AccountCard> getReadyCards() {
-    List<AccountCard> cards = map['cards'].values.toList();
+  int calculateMaxPower() {
+    var cards = getReadyCards(removeCooldowns: true);
+    var index = 0;
+    var totalPower = 0.0;
+    for (var card in cards) {
+      if (index > 3) break;
+      totalPower += card.power;
+      index++;
+    }
+    var offense = getBuilding(Buildings.offense)!;
+    totalPower *= offense.getBenefit();
+    totalPower += offense.getCardsBenefit(this);
+    return totalPower.floor();
+  }
+
+  List<AccountCard> getReadyCards({bool removeCooldowns = false}) {
+    List<AccountCard> cards = getCards().values.toList();
     cards.removeWhere((card) {
       return (getBuilding(Buildings.defense)!
-              .assignedCardsId
-              .contains(card.id) ||
-          getBuilding(Buildings.mine)!.assignedCardsId.contains(card.id) ||
-          getBuilding(Buildings.auction)!.assignedCardsId.contains(card.id) ||
-          getBuilding(Buildings.offense)!.assignedCardsId.contains(card.id));
+                  .assignedCardsId
+                  .contains(card.id) ||
+              getBuilding(Buildings.mine)!.assignedCardsId.contains(card.id) ||
+              getBuilding(Buildings.auction)!
+                  .assignedCardsId
+                  .contains(card.id) ||
+              getBuilding(Buildings.offense)!
+                  .assignedCardsId
+                  .contains(card.id)) ||
+          (removeCooldowns && card.getRemainingCooldown() > 0);
     });
     cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
     return cards;
