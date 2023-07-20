@@ -17,6 +17,7 @@ dependencies:
   adivery: ^4.6.1
   archive: ^3.3.6
   audioplayers: ^4.0.1
+  collection: any
   crypto: ^3.0.2
   device_info_plus: ^9.0.2
   firebase_analytics: ^10.1.5

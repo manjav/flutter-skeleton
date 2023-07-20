@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'popups/building_supportive_popup.dart';
 
 import 'popups/card_details_popup.dart';
+import 'popups/card_select_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/tab_page_popup.dart';
@@ -23,6 +24,7 @@ enum Routes {
 
   popupNone,
   popupCardDetails,
+  popupCardSelect,
   popupMessage,
   popupTabPage,
   popupOpponents,
@@ -37,6 +39,7 @@ extension RouteProvider on Routes {
       "/battleOutcome" => FightOutcomeScreen(Routes.battleOutcome, args ?? {}),
       "/home" => HomeScreen(),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
+      "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
       "/popupTabPage" => TabPagePopup(args: args ?? {}),
       "/popupOpponents" => OpponentsPopup(args: args ?? {}),
@@ -51,6 +54,7 @@ extension RouteProvider on Routes {
     return switch (routeName) {
       "/popupNone" ||
       "/popupCardDetails" ||
+      "/popupCardSelect" ||
       "/popupMessage" ||
       "/popupTabPage" ||
       "/popupOpponents" ||

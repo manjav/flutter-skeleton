@@ -1,8 +1,14 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../blocs/services.dart';
+import '../../data/core/account.dart';
 import '../../data/core/building.dart';
+import '../../data/core/card.dart';
+import '../../data/core/rpc.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -17,7 +23,7 @@ import 'building_mixin.dart';
 
 class SupportiveBuildingPopup extends AbstractPopup {
   const SupportiveBuildingPopup({super.key, required super.args})
-      : super(Routes.popupCard);
+      : super(Routes.popupSupportiveBuilding);
 
   @override
   createState() => _WarBuildingPopupState();
@@ -25,15 +31,12 @@ class SupportiveBuildingPopup extends AbstractPopup {
 
 class _WarBuildingPopupState extends AbstractPopupState<SupportiveBuildingPopup>
     with BuildingPopupMixin {
-  final SelectedCards _selectedCards =
-      SelectedCards(List.generate(4, (i) => null));
 
   @override
   contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var accountPower = state.account.calculateMaxPower();
       var benefits = building.getCardsBenefit(state.account);
-      var cards = state.account.getCards();
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -63,17 +66,33 @@ class _WarBuildingPopupState extends AbstractPopupState<SupportiveBuildingPopup>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              for (var i = 0; i < _selectedCards.value.length; i++)
+              for (var i = 0; i < building.cards.length; i++)
                 CardHolder(
-                    card: i >= building.assignedCardsId.length
-                        ? null
-                        : cards[building.assignedCardsId[i]],
-                    onTap: () => print(i))
+                    card: building.cards[i], onTap: () => _onSelectCard(i))
             ],
           ),
           SizedBox(height: 48.d),
         ],
       );
     });
+  }
+
+  _onSelectCard(int index) async {
+    var returnValue = await Navigator.pushNamed(
+        context, Routes.popupCardSelect.routeName,
+        arguments: {'building': building});
+    if (returnValue == null) return;
+    var selectedCards = returnValue as List<AccountCard?>;
+    if (const ListEquality().equals(selectedCards, building.cards) ||
+        !mounted) {
+      return;
+    }
+    for (var i = 0; i < selectedCards.length; i++) {
+      building.cards[i] = selectedCards[i];
+    }
+    var accountBloc = BlocProvider.of<AccountBloc>(context);
+    accountBloc.account!.get<Map<Buildings, Building>>(
+        AccountField.buildings)[building.type] = building;
+    accountBloc.add(SetAccount(account: accountBloc.account!));
   }
 }

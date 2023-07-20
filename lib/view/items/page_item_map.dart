@@ -30,7 +30,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
         const LoaderWidget(AssetType.animation, "map_home",
             fit: BoxFit.fitWidth),
         // _building(buildings[Buildings.cards]!, 167, 560),
-        _building(buildings[Buildings.defense]!, 400, 380),
+        _building(buildings[Buildings.defense]!, 400, 300),
         _building(buildings[Buildings.offense]!, 95, 670),
         _building(buildings[Buildings.tribe]!, 725, 630),
         _building(buildings[Buildings.base]!, 400, 840),
@@ -90,6 +90,8 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
     return Positioned(
         left: x.d,
         top: y.d,
+        width: 280.d,
+        height: 300.d,
         child: BuildingWidget(
           building.type,
           level: building.level,
