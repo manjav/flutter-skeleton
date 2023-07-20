@@ -12,7 +12,13 @@ class CardHolder extends StatefulWidget {
   final AccountCard? card;
   final Function()? onTap;
   final bool heroMode;
-  const CardHolder({this.card, this.heroMode = false, this.onTap, super.key});
+  final bool showPower;
+  const CardHolder(
+      {this.card,
+      this.heroMode = false,
+      this.onTap,
+      super.key,
+      this.showPower = true});
 
   @override
   State<CardHolder> createState() => _CardHolderState();
@@ -22,10 +28,10 @@ class _CardHolderState extends State<CardHolder> {
   @override
   Widget build(BuildContext context) {
     var balloonData =
-        ImageCenterSliceDate(50, 57, const Rect.fromLTWH(28, 19, 2, 2));
+        ImageCenterSliceDate(50, 57, const Rect.fromLTWH(11, 11, 2, 2));
     var slicingData = ImageCenterSliceDate(117, 117);
     return Column(children: [
-      widget.card == null
+      widget.card == null || !widget.showPower
           ? const SizedBox()
           : Widgets.rect(
               padding: EdgeInsets.all(12.d),
