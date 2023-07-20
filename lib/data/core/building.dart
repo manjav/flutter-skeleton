@@ -21,6 +21,19 @@ enum Buildings {
   auction,
 }
 
+extension BuildingExtension on Buildings {
+  int get id {
+    return switch (this) {
+      Buildings.treasury => 1001,
+      Buildings.offense => 1002,
+      Buildings.defense => 1003,
+      Buildings.cards => 1004,
+      Buildings.base => 1005,
+      _ => 1000,
+    };
+  }
+}
+
 enum BuildingField {
   type,
   cards,

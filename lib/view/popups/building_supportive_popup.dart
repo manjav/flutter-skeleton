@@ -87,9 +87,20 @@ class _WarBuildingPopupState extends AbstractPopupState<SupportiveBuildingPopup>
         !mounted) {
       return;
     }
+    var cardIds =
+        selectedCards.map((c) => c?.id).where((id) => id != null).join(',');
+    var params = {
+      RpcParams.cards.name: "[$cardIds]",
+      RpcParams.type.name: building.type.id
+    };
+    await BlocProvider.of<Services>(context)
+        .get<HttpConnection>()
+        .tryRpc(context, RpcId.assignCard, params: params);
     for (var i = 0; i < selectedCards.length; i++) {
       building.cards[i] = selectedCards[i];
     }
+
+    if (!mounted) return;
     var accountBloc = BlocProvider.of<AccountBloc>(context);
     accountBloc.account!.get<Map<Buildings, Building>>(
         AccountField.buildings)[building.type] = building;

@@ -2,6 +2,8 @@
 
 enum RpcId {
   playerLoad,
+//Card
+  assignCard,
 // Battle
   getOpponents,
   scout,
@@ -31,6 +33,7 @@ enum RpcId {
 extension RpcIdEx on RpcId {
   String get value {
     return switch (this) {
+      RpcId.assignCard => "cards/assign",
       RpcId.scout => "battle/scout",
       RpcId.quest => "battle/quest",
       RpcId.battle => "battle/battle",
@@ -101,6 +104,7 @@ enum RpcParams {
   store_type,
   udid,
   // Quest - Battle
+  type,
   cards,
   hero_id,
   check,
