@@ -7,7 +7,7 @@ import '../route_provider.dart';
 
 class MessagePopup extends AbstractPopup {
   const MessagePopup({super.key, required super.args})
-      : super(Routes.popupCard);
+      : super(Routes.popupMessage);
 
   @override
   createState() => _MessagePopupState();

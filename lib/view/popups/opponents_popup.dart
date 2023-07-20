@@ -24,7 +24,7 @@ import '../widgets/skinnedtext.dart';
 
 class OpponentsPopup extends AbstractPopup {
   const OpponentsPopup({super.key, required super.args})
-      : super(Routes.popupCard);
+      : super(Routes.popupOpponents);
 
   @override
   createState() => _OpponentsPopupState();
@@ -64,7 +64,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         .tryRpc(context, RpcId.getOpponents);
     _opponents = Opponent.fromMap(data);
     _selectedOpponent.value = _opponents[0];
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override

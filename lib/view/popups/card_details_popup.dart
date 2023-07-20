@@ -11,7 +11,7 @@ import '../widgets.dart';
 
 class CardDetailsPopup extends AbstractPopup {
   const CardDetailsPopup({super.key, required super.args})
-      : super(Routes.popupCard);
+      : super(Routes.popupCardDetails);
 
   @override
   createState() => _CardPopupState();

@@ -22,7 +22,7 @@ enum Routes {
   shop,
 
   popupNone,
-  popupCard,
+  popupCardDetails,
   popupMessage,
   popupTabPage,
   popupOpponents,
@@ -36,7 +36,7 @@ extension RouteProvider on Routes {
       "/questOutcome" => FightOutcomeScreen(Routes.questOutcome, args ?? {}),
       "/battleOutcome" => FightOutcomeScreen(Routes.battleOutcome, args ?? {}),
       "/home" => HomeScreen(),
-      "/popupCard" => CardDetailsPopup(args: args ?? {}),
+      "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
       "/popupTabPage" => TabPagePopup(args: args ?? {}),
       "/popupOpponents" => OpponentsPopup(args: args ?? {}),
@@ -50,7 +50,7 @@ extension RouteProvider on Routes {
   static bool getOpaque(String routeName) {
     return switch (routeName) {
       "/popupNone" ||
-      "/popupCard" ||
+      "/popupCardDetails" ||
       "/popupMessage" ||
       "/popupTabPage" ||
       "/popupOpponents" ||

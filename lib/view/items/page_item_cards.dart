@@ -45,7 +45,8 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
   Widget? cardItemBuilder(
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.touchable(
-      onTap: () => Navigator.pushNamed(context, Routes.popupCard.routeName,
+      onTap: () => Navigator.pushNamed(
+          context, Routes.popupCardDetails.routeName,
           arguments: {'card': card}),
       child: CardView(card, size: itemSize, key: card.key),
     );
