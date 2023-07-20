@@ -5,7 +5,6 @@ import 'dart:math' as math;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/view/widgets/card_holder.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services.dart';
@@ -19,6 +18,7 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/screens/iscreen.dart';
+import '../../view/widgets/card_holder.dart';
 import '../../view/widgets/level_indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
@@ -104,24 +104,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
               border: Border.all(color: TColors.white, width: 8.d))
           : null,
       padding: EdgeInsets.zero,
-      onPressed: () => _addCard(card),
+      onPressed: () => _selectedCards.addCard(card, exception: 2),
       child: CardView(card, inDeck: true, size: itemSize, key: card.key),
     );
-  }
-
-  bool _addCard(card) {
-    var index = _selectedCards.value.indexOf(card);
-    if (index > -1) {
-      _selectedCards.setCard(index, null);
-      return true;
-    }
-    for (var i = 0; i < _selectedCards.value.length; i++) {
-      if (i != 2 && _selectedCards.value[i] == null || i == 4) {
-        _selectedCards.setCard(i, card);
-        return true;
-      }
-    }
-    return false;
   }
 
   Widget _header(Account account) {

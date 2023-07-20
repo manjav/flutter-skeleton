@@ -86,4 +86,19 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   getIds() {
     return value.map((c) => c?.id).where((id) => id != null).join(',');
   }
+
+  bool addCard(AccountCard card, {int exception = -1}) {
+    var index = value.indexOf(card);
+    if (index > -1) {
+      setCard(index, null);
+      return true;
+    }
+    for (var i = 0; i < value.length; i++) {
+      if (i != exception && value[i] == null || i == 4) {
+        setCard(i, card);
+        return true;
+      }
+    }
+    return false;
+  }
 }
