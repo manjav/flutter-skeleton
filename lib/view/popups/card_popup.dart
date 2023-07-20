@@ -52,7 +52,8 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 Widgets.labeledButton(label: "card_evolve".l(), width: 370.d),
               ],
             ),
-            Widgets.verticalDivider(height: 140.d, margin: 48.d),
+            Widgets.divider(
+                height: 140.d, margin: 48.d, direction: Axis.vertical),
             Widgets.labeledButton(
                 label: "card_sell".l(), color: "green", width: 370.d),
           ],

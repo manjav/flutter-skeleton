@@ -195,18 +195,23 @@ class Widgets {
             label != null ? SkinnedText(label, style: TStyles.large) : child!);
   }
 
-  static verticalDivider({double? height, double margin = 0}) {
-    var slicingData = ImageCenterSliceDate(16, 38);
+  static divider(
+      {double? width,
+      double? height,
+      double margin = 0,
+      Axis direction = Axis.horizontal}) {
+    var v = direction == Axis.vertical;
+    var slicingData = ImageCenterSliceDate(v ? 16 : 38, v ? 38 : 16);
     return rect(
-        width: 16.d,
-        height: height,
+        width: width ?? 16.d,
+        height: height ?? 16.d,
         margin: EdgeInsets.all(margin),
         decoration: BoxDecoration(
             image: DecorationImage(
                 fit: BoxFit.fill,
                 centerSlice: slicingData.centerSlice,
                 image: Asset.load<Image>(
-                  "ui_divider_v",
+                  "ui_divider_${v ? 'v' : 'h'}",
                   centerSlice: slicingData,
                 ).image)));
   }
