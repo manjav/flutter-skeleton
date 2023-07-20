@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../view/popups/building_war_popup.dart';
 
-import 'popups/card_popup.dart';
+import 'popups/card_details_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/tab_page_popup.dart';
@@ -24,7 +25,8 @@ enum Routes {
   popupCard,
   popupMessage,
   popupTabPage,
-  popupOpponents
+  popupOpponents,
+  popupBuildingWar,
 }
 
 extension RouteProvider on Routes {
@@ -38,9 +40,34 @@ extension RouteProvider on Routes {
       "/popupMessage" => MessagePopup(args: args ?? {}),
       "/popupTabPage" => TabPagePopup(args: args ?? {}),
       "/popupOpponents" => OpponentsPopup(args: args ?? {}),
+      "/popupBuildingWar" => CardBuildingPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }
 
   String get routeName => "/$name";
+}
+
+class MaterialTransparentRoute<T> extends PageRoute<T>
+    with MaterialRouteTransitionMixin<T> {
+  MaterialTransparentRoute({
+    required this.builder,
+    required RouteSettings settings,
+    this.maintainState = true,
+    bool fullscreenDialog = true,
+  }) : super(settings: settings, fullscreenDialog: fullscreenDialog);
+
+  final WidgetBuilder builder;
+
+  @override
+  Widget buildContent(BuildContext context) => builder(context);
+
+  @override
+  bool get opaque => false;
+
+  @override
+  final bool maintainState;
+
+  @override
+  String get debugLabel => '${super.debugLabel}(${settings.name})';
 }

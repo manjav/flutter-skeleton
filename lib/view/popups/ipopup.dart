@@ -33,6 +33,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     var chromeCenterSlice = ImageCenterSliceDate(410, 460);
     return SafeArea(
         child: Scaffold(
+      backgroundColor: TColors.black80,
       body: Stack(children: [
         Widgets.touchable(onTap: () => Navigator.pop(context)),
         Align(

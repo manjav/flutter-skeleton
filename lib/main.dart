@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 // Define a function to handle named routes in order to support
                 // Flutter web url navigation and deep linking.
                 onGenerateRoute: (RouteSettings routeSettings) {
-                  return MaterialPageRoute<void>(
+                  return MaterialTransparentRoute(
                       settings: routeSettings,
                       builder: (BuildContext context) =>
                           RouteProvider.getWidget(routeSettings.name!,
