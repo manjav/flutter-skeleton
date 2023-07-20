@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../view/popups/building_war_popup.dart';
+import 'popups/building_supportive_popup.dart';
 
 import 'popups/card_details_popup.dart';
 import 'popups/message_popup.dart';
@@ -26,7 +26,7 @@ enum Routes {
   popupMessage,
   popupTabPage,
   popupOpponents,
-  popupBuildingWar,
+  popupSupportiveBuilding,
 }
 
 extension RouteProvider on Routes {
@@ -40,7 +40,7 @@ extension RouteProvider on Routes {
       "/popupMessage" => MessagePopup(args: args ?? {}),
       "/popupTabPage" => TabPagePopup(args: args ?? {}),
       "/popupOpponents" => OpponentsPopup(args: args ?? {}),
-      "/popupBuildingWar" => CardBuildingPopup(args: args ?? {}),
+      "/popupSupportiveBuilding" => SupportiveBuildingPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }
@@ -54,7 +54,7 @@ extension RouteProvider on Routes {
       "/popupMessage" ||
       "/popupTabPage" ||
       "/popupOpponents" ||
-      "/popupBuildingWar" =>
+      "/popupSupportiveBuilding" =>
         false,
       _ => true,
     };

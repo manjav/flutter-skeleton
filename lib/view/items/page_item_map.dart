@@ -90,6 +90,12 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
     return Positioned(
         left: x.d,
         top: y.d,
-        child: BuildingWidget(building.type, level: building.level));
+        child: BuildingWidget(
+          building.type,
+          level: building.level,
+          onTap: () => Navigator.pushNamed(
+              context, Routes.popupSupportiveBuilding.routeName,
+              arguments: {"building": building}),
+        ));
   }
 }
