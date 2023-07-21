@@ -104,7 +104,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
               border: Border.all(color: TColors.white, width: 8.d))
           : null,
       padding: EdgeInsets.zero,
-      onPressed: () => _selectedCards.addCard(card, exception: 2),
+      onPressed: () => _selectedCards.setCard(card, exception: 2),
       child: CardItem(card, inDeck: true, size: itemSize, key: card.key),
     );
   }
@@ -148,7 +148,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
                           CardHolder(
                               card: _selectedCards.value[i],
                               heroMode: i == 2,
-                              onTap: () => _selectedCards.setCard(i, null))
+                              onTap: () => _selectedCards.setAtCard(i, null))
                       ],
                     );
                   }),

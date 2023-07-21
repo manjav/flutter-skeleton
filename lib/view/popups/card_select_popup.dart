@@ -34,7 +34,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup> {
   }
 
   @override
-  titleBuilder() => "select_card".l();
+  titleBuilder() => "card_select".l();
 
   @override
   Widget contentFactory() {
@@ -83,7 +83,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup> {
                         CardHolder(
                             card: _selectedCards.value[i],
                             showPower: false,
-                            onTap: () => _selectedCards.setCard(i, null)),
+                            onTap: () => _selectedCards.setAtCard(i, null)),
                     ],
                   ),
                   Positioned(

@@ -78,7 +78,7 @@ class _CardHolderState extends State<CardHolder> {
 
 class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   SelectedCards(super.value);
-  setCard(int index, AccountCard? card) {
+  setAtCard(int index, AccountCard? card) {
     value[index] = card;
     notifyListeners();
   }
@@ -87,18 +87,28 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
     return value.map((c) => c?.id).where((id) => id != null).join(',');
   }
 
-  bool addCard(AccountCard card, {int exception = -1}) {
+  bool setCard(AccountCard card, {int exception = -1}) {
     var index = value.indexOf(card);
     if (index > -1) {
-      setCard(index, null);
+      setAtCard(index, null);
       return true;
     }
+
     for (var i = 0; i < value.length; i++) {
-      if (i != exception && value[i] == null || i == 4) {
-        setCard(i, card);
+      if (i != exception && value[i] == null || i == value.length - 1) {
+        setAtCard(i, card);
         return true;
       }
     }
     return false;
+  }
+
+  void addCard(AccountCard card) {
+    if (value.contains(card)) {
+      value.remove(card);
+    } else {
+      value.add(card);
+    }
+    notifyListeners();
   }
 }
