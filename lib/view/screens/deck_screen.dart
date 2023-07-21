@@ -61,7 +61,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
                     itemCount: cards.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         childAspectRatio: 0.74,
-                        crossAxisCount: 4,
+                        crossAxisCount: crossAxisCount,
                         crossAxisSpacing: gap,
                         mainAxisSpacing: gap),
                     itemBuilder: (c, i) =>
