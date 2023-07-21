@@ -47,7 +47,12 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
           children: [
             Column(
               children: [
-                Widgets.labeledButton(label: "card_enhance".l(), width: 370.d),
+                Widgets.labeledButton(
+                    label: "card_enhance".l(),
+                    width: 370.d,
+                    onPressed: () => Navigator.pushNamed(
+                        context, Routes.popupCardEnhance.routeName,
+                        arguments: {"card": _card})),
                 SizedBox(height: 16.d),
                 Widgets.labeledButton(label: "card_evolve".l(), width: 370.d),
               ],
