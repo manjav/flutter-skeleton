@@ -105,7 +105,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
           : null,
       padding: EdgeInsets.zero,
       onPressed: () => _selectedCards.addCard(card, exception: 2),
-      child: CardView(card, inDeck: true, size: itemSize, key: card.key),
+      child: CardItem(card, inDeck: true, size: itemSize, key: card.key),
     );
   }
 

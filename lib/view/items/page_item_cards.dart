@@ -48,7 +48,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
       onTap: () => Navigator.pushNamed(
           context, Routes.popupCardDetails.routeName,
           arguments: {'card': card}),
-      child: CardView(card, size: itemSize, key: card.key),
+      child: CardItem(card, size: itemSize, key: card.key),
     );
   }
 }

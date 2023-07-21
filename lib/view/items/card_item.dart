@@ -21,7 +21,7 @@ class CardView extends StatefulWidget {
   State<CardView> createState() => _CardViewState();
 }
 
-class _CardViewState extends State<CardView> {
+class _CardItemState extends State<CardItem> {
   static TextStyle? _medium;
   static TextStyle? _small;
   static TextStyle? _tiny;
