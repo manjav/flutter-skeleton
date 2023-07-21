@@ -11,20 +11,20 @@ import '../../view/widgets.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../widgets/skinnedtext.dart';
 
-class CardView extends StatefulWidget {
+class CardItem extends StatefulWidget {
   final AccountCard card;
   final double size;
   final bool inDeck;
-  const CardView(this.card, {this.size = 400, this.inDeck = false, super.key});
+  const CardItem(this.card, {this.size = 400, this.inDeck = false, super.key});
 
   @override
-  State<CardView> createState() => _CardViewState();
+  State<CardItem> createState() => _CardItemState();
 }
 
 class _CardItemState extends State<CardItem> {
-  static TextStyle? _medium;
-  static TextStyle? _small;
-  static TextStyle? _tiny;
+  TextStyle? _medium;
+  TextStyle? _small;
+  TextStyle? _tiny;
   Timer? _cooldownTimer;
   final ValueNotifier<int> _remainingCooldown = ValueNotifier(0);
 
@@ -64,7 +64,7 @@ class _CardItemState extends State<CardItem> {
                       .clamp(22 * s, 40 * s)))),
       Positioned(
           top: 1 * s,
-          right: 24 * s,
+          right: 23 * s,
           width: 27 * s,
           child: SkinnedText(level, style: _medium)),
       Positioned(
