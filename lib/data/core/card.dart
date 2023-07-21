@@ -144,6 +144,14 @@ class AccountCard {
         (cooldownsBoughtToday * CardData.cooldownIncreaseModifier).ceil() *
         CardData.cooldownCostModifier;
   }
+
+  int get cost {
+    const maxEnhanceModifier = 45;
+    const priceModifier = 100;
+    return ((priceModifier / maxEnhanceModifier) *
+            base.get<int>(CardFields.powerLimit))
+        .floor();
+  }
 }
 
 class HeroCard {
