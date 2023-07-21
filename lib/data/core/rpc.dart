@@ -4,6 +4,8 @@ enum RpcId {
   playerLoad,
 //Card
   assignCard,
+  enhanceCard,
+  enhanceMax,
 // Battle
   getOpponents,
   scout,
@@ -34,6 +36,8 @@ extension RpcIdEx on RpcId {
   String get value {
     return switch (this) {
       RpcId.assignCard => "cards/assign",
+      RpcId.enhanceCard => "cards/enhance",
+      RpcId.enhanceMax => "cards/nectarify",
       RpcId.scout => "battle/scout",
       RpcId.quest => "battle/quest",
       RpcId.battle => "battle/battle",
@@ -109,5 +113,8 @@ enum RpcParams {
   hero_id,
   check,
   opponent_id,
-  attacks_in_today
+  attacks_in_today,
+  // Cards
+  card_id,
+  sacrifices
 }

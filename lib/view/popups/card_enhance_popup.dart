@@ -106,6 +106,24 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
                           child: Asset.load<Image>("ui_shade_bottom",
                               centerSlice: ImageCenterSliceDate(200, 165,
                                   const Rect.fromLTWH(98, 1, 3, 160))))),
+                  _isSacrificeAvailable || _selectedCards.value.isEmpty
+                      ? const SizedBox()
+                      : Positioned(
+                          bottom: 230.d,
+                          child: SkinnedText("card_max_power".l(),
+                              style: TStyles.large
+                                  .copyWith(color: TColors.accent))),
+                  Positioned(
+                      left: 16.d,
+                      right: 16.d,
+                      height: 210.d,
+                      bottom: 20.d,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _scarificeButton(),
+                          ]))
                 ],
               ));
         });
@@ -119,6 +137,129 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
         child: Stack(
           children: [
             MinimalCardItem(card, size: itemSize),
+            _selectedCards.value.contains(card)
+                ? Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Widgets.rect(
+                        radius: 16.d,
+                        padding: EdgeInsets.all(32.d),
+                        color: TColors.primary10.withOpacity(0.4),
+                        child: Asset.load<Image>('icon_sacrifice')))
+                : const SizedBox()
           ],
         ));
   }
+
+  _scarificeButton() {
+    var bgCenterSlice = ImageCenterSliceDate(42, 42);
+    return Opacity(
+        opacity: _isSacrificeAvailable ? 1 : 0.8,
+        child: Widgets.labeledButton(
+            padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
+            child: Row(
+              children: [
+                SkinnedText("card_sacrifice".l(),
+                    style: TStyles.large.copyWith(height: 3.d)),
+                SizedBox(width: 24.d),
+                Widgets.rect(
+                    padding: EdgeInsets.symmetric(horizontal: 12.d),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            centerSlice: bgCenterSlice.centerSlice,
+                            image: Asset.load<Image>('ui_frame_inside',
+                                    centerSlice: bgCenterSlice)
+                                .image)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(children: [
+                          Asset.load<Image>("card_sacrifice", height: 64.d),
+                          SkinnedText(" x${_selectedCards.value.length}"),
+                        ]),
+                        Row(children: [
+                          Asset.load<Image>("ui_gold", height: 76.d),
+                          SkinnedText(_getSacrificeCost().compact(),
+                              style: TStyles.large),
+                        ]),
+                      ],
+                    ))
+              ],
+            ),
+            onPressed: _sacrifice));
+  }
+
+  _sacrifice() async {
+    if (!_isSacrificeAvailable) return;
+    var params = {
+      RpcParams.card_id.name: _card.id,
+      RpcParams.sacrifices.name: _selectedCards.getIds()
+    };
+    try {
+      var result = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.enhanceCard, params: params);
+      if (!mounted) return;
+      var accountBloc = BlocProvider.of<AccountBloc>(context);
+      accountBloc.account!.update(result);
+      accountBloc.add(SetAccount(account: accountBloc.account!));
+    } finally {}
+
+    // {"card_id":407069,"sacrifices":"[407579]"}
+  }
+
+  int _getSacrificesPower() {
+    const enhancementModifier = 0.2;
+    const enhanceRarityModifier = 0.7;
+    const veteranEnhancementModifier = 0.02;
+    const veteranSacrificePowerModifier = 1.5;
+    const veteranEnhanceRarityModifier = 0.4;
+    // const enhanceMaximumCardPower = 1450000000;
+    // final enhanceNectarModifier = 1;
+    // final minimumNectarCostForEnhancement = 100;
+
+    var cardPowers = 0.0;
+    for (var card in _selectedCards.value) {
+      // if there is active power boost, we use non-boost power as power in formula.
+      // var power = card.powerBeforeBoost or element.power
+      var power = card!.base.get<int>(CardFields.power);
+      var verteranLevel = card.base.get<int>(CardFields.veteran_level);
+      if (verteranLevel > 0) {
+        cardPowers += power * veteranSacrificePowerModifier * verteranLevel;
+      } else {
+        cardPowers += power;
+      }
+    }
+
+    var rarity = _card.base.get<double>(CardFields.virtualRarity);
+    var verteranLevel = _card.base.get<int>(CardFields.veteran_level);
+    var calculatePower = 0;
+    if (verteranLevel == 0) {
+      calculatePower = (cardPowers *
+              enhancementModifier *
+              math.pow(rarity, enhanceRarityModifier))
+          .floor();
+    } else {
+      calculatePower = (cardPowers *
+              veteranEnhancementModifier *
+              math.pow(rarity / verteranLevel, veteranEnhanceRarityModifier))
+          .floor();
+    }
+    _isSacrificeAvailable = calculatePower > 0 &&
+        _card.power + calculatePower <=
+            _card.base.get<int>(CardFields.powerLimit);
+    return calculatePower;
+  }
+
+  int _getSacrificeCost() {
+    const enhancementCostModifier = 0.1;
+    var cardPrices = 0;
+    for (var card in _selectedCards.value) {
+      cardPrices += card!.cost;
+    }
+    return (cardPrices * enhancementCostModifier).round();
+  }
+}
