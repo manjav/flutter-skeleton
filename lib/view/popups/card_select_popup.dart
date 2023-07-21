@@ -91,7 +91,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup> {
                       height: 160.d,
                       bottom: 24.d,
                       child: Widgets.labeledButton(
-                          label: "Select Cards",
+                          label: "card_select".l(),
                           onPressed: () =>
                               Navigator.pop(context, _selectedCards.value)))
                 ],
@@ -106,10 +106,10 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup> {
       foregroundDecoration: _selectedCards.value.contains(card)
           ? BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(28.d)),
-              border: Border.all(color: TColors.accent, width: 8.d))
+              border: Border.all(color: TColors.primary10, width: 10.d))
           : null,
-      onPressed: () => _selectedCards.addCard(card),
-      child: CardView(card, inDeck: true, size: itemSize, key: card.key),
+      onPressed: () => _selectedCards.setCard(card),
+      child: CardItem(card, inDeck: true, size: itemSize, key: card.key),
     );
   }
 }
