@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../view/popups/building_mine_popup.dart';
 import '../../view/popups/card_enhance_popup.dart';
 import 'popups/building_supportive_popup.dart';
 import 'popups/card_details_popup.dart';
@@ -31,6 +32,7 @@ enum Routes {
   popupTabPage,
   popupOpponents,
   popupSupportiveBuilding,
+  popupMineBuilding,
 }
 
 extension RouteProvider on Routes {
@@ -47,6 +49,7 @@ extension RouteProvider on Routes {
       "/popupTabPage" => TabPagePopup(args: args ?? {}),
       "/popupOpponents" => OpponentsPopup(args: args ?? {}),
       "/popupSupportiveBuilding" => SupportiveBuildingPopup(args: args ?? {}),
+      "/popupMineBuilding" => MineBuildingPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }
@@ -61,7 +64,8 @@ extension RouteProvider on Routes {
       "/popupMessage" ||
       "/popupTabPage" ||
       "/popupOpponents" ||
-      "/popupSupportiveBuilding" =>
+      "/popupSupportiveBuilding" ||
+      "/popupMineBuilding" =>
         false,
       _ => true,
     };
