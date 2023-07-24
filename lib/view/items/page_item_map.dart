@@ -92,12 +92,16 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
         top: y.d,
         width: 280.d,
         height: 300.d,
-        child: BuildingWidget(
-          building.type,
-          level: building.level,
-          onTap: () => Navigator.pushNamed(
-              context, Routes.popupSupportiveBuilding.routeName,
-              arguments: {"building": building}),
-        ));
+        child: BuildingWidget(building.type,
+            level: building.level, onTap: () => _onBuildingTap(building)));
+  }
+
+  _onBuildingTap(Building building) {
+    var type = switch (building.type) {
+      Buildings.mine => Routes.popupMineBuilding,
+      _ => Routes.popupSupportiveBuilding,
+    };
+    Navigator.pushNamed(context, type.routeName,
+        arguments: {"building": building});
   }
 }
