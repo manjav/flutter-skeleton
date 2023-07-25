@@ -234,7 +234,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
   _attack(Account account) async {
     var bloc = BlocProvider.of<Services>(context);
     var params = <String, dynamic>{
-      RpcParams.cards.name: "[${_selectedCards.getIds()}]",
+      RpcParams.cards.name: _selectedCards.getIds(),
       RpcParams.check.name: md5
           .convert(utf8.encode("${account.get<int>(AccountField.q)}"))
           .toString()
