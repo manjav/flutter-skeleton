@@ -39,7 +39,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         Align(
             child: Widgets.rect(
           margin: EdgeInsets.symmetric(horizontal: 24.d),
-          padding: EdgeInsets.symmetric(horizontal: 28.d),
+          padding: EdgeInsets.symmetric(horizontal: 24.d),
           decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.fill,
@@ -105,9 +105,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ];
   }
 
-  innerChromeFactory() {
-    return const SizedBox();
-  }
+  innerChromeFactory() => const SizedBox();
 
   contentFactory() => Widgets.rect(
       height: 480.d, width: 880.d, color: TColors.green.withAlpha(133));
