@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../view/popups/card_merge_popup.dart';
 
 import '../../view/popups/building_mine_popup.dart';
 import '../../view/popups/card_enhance_popup.dart';
@@ -27,6 +28,7 @@ enum Routes {
   popupNone,
   popupCardDetails,
   popupCardEnhance,
+  popupCardMerge,
   popupCardSelect,
   popupMessage,
   popupTabPage,
@@ -38,12 +40,13 @@ enum Routes {
 extension RouteProvider on Routes {
   static Widget getWidget(String routeName, {Map<String, dynamic>? args}) {
     return switch (routeName) {
+      "/home" => HomeScreen(),
       "/deck" => DeckScreen(opponent: args?['opponent']),
       "/questOutcome" => FightOutcomeScreen(Routes.questOutcome, args ?? {}),
       "/battleOutcome" => FightOutcomeScreen(Routes.battleOutcome, args ?? {}),
-      "/home" => HomeScreen(),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
+      "/popupCardMerge" => CardMergePopup(args: args ?? {}),
       "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
       "/popupTabPage" => TabPagePopup(args: args ?? {}),

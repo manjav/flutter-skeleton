@@ -50,21 +50,28 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 Widgets.labeledButton(
                     label: "card_enhance".l(),
                     width: 370.d,
-                    onPressed: () => Navigator.pushNamed(
-                        context, Routes.popupCardEnhance.routeName,
-                        arguments: {"card": _card})),
+                    onPressed: () => _onButtonsTap(Routes.popupCardEnhance)),
                 SizedBox(height: 16.d),
-                Widgets.labeledButton(label: "card_evolve".l(), width: 370.d),
+                Widgets.labeledButton(
+                    label: "card_merge".l(),
+                    width: 370.d,
+                    onPressed: () => _onButtonsTap(Routes.popupCardMerge)),
               ],
             ),
             Widgets.divider(
                 height: 140.d, margin: 48.d, direction: Axis.vertical),
             Widgets.labeledButton(
-                label: "card_sell".l(), color: "green", width: 370.d),
+                label: "card_sell".l(),
+                color: "green",
+                width: 370.d,
+                onPressed: () => _onButtonsTap(Routes.popupCardMerge)),
           ],
         ),
         SizedBox(height: 48.d),
       ],
     );
   }
+
+  _onButtonsTap(Routes route) =>
+      Navigator.pushNamed(context, route.routeName, arguments: {"card": _card});
 }
