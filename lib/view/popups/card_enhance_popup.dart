@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../view/card_edit_mixin.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services.dart';
@@ -18,7 +18,6 @@ import '../../view/items/card_item_minimal.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/card_holder.dart';
 import 'ipopup.dart';
 
 class CardEnhancePopup extends AbstractPopup {
@@ -29,16 +28,13 @@ class CardEnhancePopup extends AbstractPopup {
   createState() => _CardEnhancePopupState();
 }
 
-class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
-  final _selectedCards = SelectedCards([]);
-  late AccountCard _card;
-
+class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
+    with CardEditMixin {
   bool _isSacrificeAvailable = false;
 
   @override
   void initState() {
-    _card = widget.args['card'];
-    contentPadding = EdgeInsets.fromLTRB(24.d, 142.d, 24.d, 32.d);
+    contentPadding = EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
     super.initState();
   }
 
@@ -47,15 +43,9 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
 
   @override
   Widget contentFactory() {
-    var gap = 10.d;
-    var crossAxisCount = 5;
-    var itemSize =
-        (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
-    var cards = BlocProvider.of<AccountBloc>(context).account!.getReadyCards()
-      ..remove(_card);
-    cards.reverseRange(0, cards.length);
+    var account = BlocProvider.of<AccountBloc>(context).account!;
     return ValueListenableBuilder<List<AccountCard?>>(
-        valueListenable: _selectedCards,
+        valueListenable: selectedCards,
         builder: (context, value, child) {
           return SizedBox(
               width: 980.d,
@@ -64,49 +54,13 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
                 clipBehavior: Clip.none,
                 alignment: Alignment.topCenter,
                 children: [
-                  Positioned(
-                      bottom: 0,
-                      right: -contentPadding.right,
-                      left: -contentPadding.left,
-                      height: 846.d,
-                      child: Asset.load<Image>("ui_popup_bottom",
-                          centerSlice: ImageCenterSliceDate(
-                              200, 114, const Rect.fromLTWH(99, 4, 3, 3)))),
-                  Positioned(
-                      height: 838.d,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(64.d),
-                              bottomRight: Radius.circular(64.d)),
-                          child: GridView.builder(
-                              itemCount: cards.length,
-                              padding: EdgeInsets.fromLTRB(0, 32.d, 0, 220.d),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: 0.74,
-                                      crossAxisCount: crossAxisCount,
-                                      crossAxisSpacing: gap,
-                                      mainAxisSpacing: gap),
-                              itemBuilder: (c, i) =>
-                                  _cardItemBuilder(c, i, cards[i], itemSize)))),
-                  SizedBox(
-                      width: 300.d,
-                      child: MinimalCardItem(_card,
-                          size: 300.d, extraPower: _getSacrificesPower())),
-                  Positioned(
-                      bottom: 0,
-                      right: -contentPadding.right,
-                      left: -contentPadding.left,
-                      height: 200.d,
-                      child: IgnorePointer(
-                          ignoring: true,
-                          child: Asset.load<Image>("ui_shade_bottom",
-                              centerSlice: ImageCenterSliceDate(200, 165,
-                                  const Rect.fromLTWH(98, 1, 3, 160))))),
-                  _isSacrificeAvailable || _selectedCards.value.isEmpty
+                  Widgets.rect(
+                    width: 300.d,
+                    child: MinimalCardItem(card,
+                        size: 300.d, extraPower: _getSacrificesPower()),
+                  ),
+                  cardsListBuilder(account, crossAxisCount: 5),
+                  _isSacrificeAvailable || selectedCards.value.isEmpty
                       ? const SizedBox()
                       : Positioned(
                           bottom: 230.d,
@@ -127,30 +81,6 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
                 ],
               ));
         });
-  }
-
-  Widget? _cardItemBuilder(
-      BuildContext context, int index, AccountCard card, double itemSize) {
-    return Widgets.button(
-        padding: EdgeInsets.zero,
-        onPressed: () => _selectedCards.addCard(card),
-        child: Stack(
-          children: [
-            MinimalCardItem(card, size: itemSize),
-            _selectedCards.value.contains(card)
-                ? Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Widgets.rect(
-                        radius: 16.d,
-                        padding: EdgeInsets.all(32.d),
-                        color: TColors.primary10.withOpacity(0.4),
-                        child: Asset.load<Image>('icon_sacrifice')))
-                : const SizedBox()
-          ],
-        ));
   }
 
   _scarificeButton() {
@@ -178,7 +108,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
                       children: [
                         Row(children: [
                           Asset.load<Image>("card_sacrifice", height: 64.d),
-                          SkinnedText(" x${_selectedCards.value.length}"),
+                          SkinnedText(" x${selectedCards.value.length}"),
                         ]),
                         Row(children: [
                           Asset.load<Image>("ui_gold", height: 76.d),
@@ -195,8 +125,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
   _sacrifice() async {
     if (!_isSacrificeAvailable) return;
     var params = {
-      RpcParams.card_id.name: _card.id,
-      RpcParams.sacrifices.name: _selectedCards.getIds()
+      RpcParams.card_id.name: card.id,
+      RpcParams.sacrifices.name: selectedCards.getIds()
     };
     try {
       var result = await BlocProvider.of<Services>(context)
@@ -222,7 +152,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
     // final minimumNectarCostForEnhancement = 100;
 
     var cardPowers = 0.0;
-    for (var card in _selectedCards.value) {
+    for (var card in selectedCards.value) {
       // if there is active power boost, we use non-boost power as power in formula.
       // var power = card.powerBeforeBoost or element.power
       var power = card!.base.get<int>(CardFields.power);
@@ -234,8 +164,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
       }
     }
 
-    var rarity = _card.base.get<double>(CardFields.virtualRarity);
-    var verteranLevel = _card.base.get<int>(CardFields.veteran_level);
+    var rarity = card.base.get<double>(CardFields.virtualRarity);
+    var verteranLevel = card.base.get<int>(CardFields.veteran_level);
     var calculatePower = 0;
     if (verteranLevel == 0) {
       calculatePower = (cardPowers *
@@ -249,17 +179,26 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup> {
           .floor();
     }
     _isSacrificeAvailable = calculatePower > 0 &&
-        _card.power + calculatePower <=
-            _card.base.get<int>(CardFields.powerLimit);
-    return calculatePower;
+        card.power + calculatePower <=
+            card.base.get<int>(CardFields.powerLimit);
+    return calculatePower.round();
   }
 
   int _getSacrificeCost() {
     const enhancementCostModifier = 0.1;
     var cardPrices = 0;
-    for (var card in _selectedCards.value) {
-      cardPrices += card!.cost;
+    for (var card in selectedCards.value) {
+      cardPrices += card!.base.cost;
     }
     return (cardPrices * enhancementCostModifier).round();
+  }
+
+  @override
+  selectedForeground() {
+    return Widgets.rect(
+        radius: 16.d,
+        padding: EdgeInsets.all(32.d),
+        color: TColors.primary10.withOpacity(0.4),
+        child: Asset.load<Image>('icon_sacrifice'));
   }
 }
