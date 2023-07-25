@@ -138,6 +138,7 @@ enum AccountField {
 class Account extends StringMap<dynamic> {
   static const levelMultiplier = 1.3;
   static const levelExpo = 2.7;
+  late Cards baseCards;
   static int getXpRequiered(int level) =>
       (math.pow(level, levelExpo) * levelMultiplier).ceil();
 
@@ -146,7 +147,7 @@ class Account extends StringMap<dynamic> {
 
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
-    var baseCards = args as Cards;
+    baseCards = args as Cards;
     super.init(data);
     map['delta_time'] = map['now'] - DateTime.now().secondsSinceEpoch;
 
