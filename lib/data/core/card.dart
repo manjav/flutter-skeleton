@@ -72,6 +72,17 @@ class CardData extends StringMap<dynamic> {
   }
 
   T get<T>(CardFields field) => map[field.name] as T;
+
+  int get cost {
+    const maxEnhanceModifier = 45;
+    const priceModifier = 100;
+    return ((priceModifier / maxEnhanceModifier) *
+            get<int>(CardFields.powerLimit))
+        .floor();
+  }
+
+  bool get isMonster =>
+      get<FruitData>(CardFields.fruit).get<int>(FriutFields.category) == 2;
 }
 
 class Cards extends StringMap<CardData> {
@@ -95,10 +106,10 @@ class AccountCard {
   final Account account;
   late GlobalKey key;
   AccountCard(this.account, Map map, Cards cards) {
-    id = map['id'];
+    id = map['id'] ?? -1;
     power = map['power'];
     base = cards.get("${map['base_card_id']}");
-    lastUsedAt = map['last_used_at'];
+    lastUsedAt = map['last_used_at'] ?? 0;
     key = GlobalKey();
   }
 
@@ -143,14 +154,6 @@ class AccountCard {
     return time *
         (cooldownsBoughtToday * CardData.cooldownIncreaseModifier).ceil() *
         CardData.cooldownCostModifier;
-  }
-
-  int get cost {
-    const maxEnhanceModifier = 45;
-    const priceModifier = 100;
-    return ((priceModifier / maxEnhanceModifier) *
-            base.get<int>(CardFields.powerLimit))
-        .floor();
   }
 }
 
