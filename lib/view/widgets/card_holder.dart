@@ -110,4 +110,9 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
     }
     notifyListeners();
   }
+
+  void clear() {
+    value.clear();
+    notifyListeners();
+  }
 }

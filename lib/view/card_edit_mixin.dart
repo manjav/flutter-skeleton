@@ -109,9 +109,32 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
   selectedForeground() {
     return Widgets.rect(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(32.d)),
+            borderRadius: BorderRadius.all(Radius.circular(24.d)),
             border: Border.all(color: TColors.primary10, width: 10.d)));
   }
 
   onSelectCard(int index, AccountCard card) => selectedCards.addCard(card);
+
+  updateAccount(Map<String, dynamic> data) {
+    for (var card in selectedCards.value) {
+      account.getCards().remove(card!.id);
+    }
+
+    if (data.containsKey("card")) {
+      var newCard = data["card"];
+      var oldCard = account.getCards()[newCard["id"]];
+      if (oldCard == null) {
+        account.map['cards'][newCard["id"]] =
+            AccountCard(account, newCard, account.baseCards);
+      } else {
+        oldCard.power = newCard["power"];
+        oldCard.lastUsedAt = newCard["last_used_at"];
+        oldCard.base = account.baseCards.get("${newCard['base_card_id']}");
+      }
+    }
+
+    account.update(data);
+    if (!mounted) return;
+    BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+  }
 }

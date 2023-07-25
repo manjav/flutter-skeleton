@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/account_bloc.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -35,6 +37,10 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
 
   @override
   contentFactory() {
+    var siblings = BlocProvider.of<AccountBloc>(context)
+        .account!
+        .getReadyCards()
+        .where((c) => c.base == _card.base);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

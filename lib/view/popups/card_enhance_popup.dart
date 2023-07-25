@@ -128,13 +128,10 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
       var result = await BlocProvider.of<Services>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.enhanceCard, params: params);
-      if (!mounted) return;
-      var accountBloc = BlocProvider.of<AccountBloc>(context);
-      accountBloc.account!.update(result);
-      accountBloc.add(SetAccount(account: accountBloc.account!));
+      updateAccount(result);
+      cards = getCards(account);
+      if (mounted) Navigator.pop(context);
     } finally {}
-
-    // {"card_id":407069,"sacrifices":"[407579]"}
   }
 
   int _getSacrificesPower() {
