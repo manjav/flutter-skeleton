@@ -182,7 +182,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
               builder: (context, value, child) {
                 return value.isRevealed
                     ? _group(
-                        "my_max_power".l(),
+                        "enemy_max_power".l(),
                         SkinnedText(value.defPower.compact(),
                             style: TStyles.big
                                 .copyWith(color: TColors.accent, height: 3.d)))
