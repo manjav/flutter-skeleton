@@ -116,12 +116,10 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     return Positioned(
       bottom: 40.d,
       height: 160.d,
-      child: Opacity(
-        opacity: selectedCards.value.length >= 2 ? 1 : 0.8,
         child: Widgets.labeledButton(
+          isEnable: selectedCards.value.length >= 2,
             padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
-            child: Row(
-              children: [
+          child: Row(children: [
                 SkinnedText("card_merge".l(),
                     style: TStyles.large.copyWith(height: 3.d)),
                 SizedBox(width: 24.d),
@@ -136,14 +134,11 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
                               .image)),
                   child: Row(children: [
                     Asset.load<Image>("ui_gold", height: 76.d),
-                    SkinnedText(_getMergeCost().compact(),
-                        style: TStyles.large),
+                SkinnedText(_getMergeCost().compact(), style: TStyles.large),
                   ]),
                 )
-              ],
-            ),
+          ]),
             onPressed: _merge),
-      ),
     );
   }
 

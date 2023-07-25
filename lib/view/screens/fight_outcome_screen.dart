@@ -151,7 +151,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                 padding: EdgeInsets.fromLTRB(48.d, 48.d, 48.d, 60.d),
                 child: Asset.load<Image>("ui_arrow_back"),
                 width: 160.d,
-                color: "green",
+                color: ButtonColor.green,
                 onPressed: () => Navigator.pop(context)),
             SizedBox(width: 20.d),
             Widgets.labeledButton(

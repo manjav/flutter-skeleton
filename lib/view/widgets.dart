@@ -158,26 +158,28 @@ class Widgets {
 
   static labeledButton({
     String? label,
-    String color = "yellow",
-    String size = "small",
+    ButtonColor color = ButtonColor.yellow,
+    ButtonSize size = ButtonSize.small,
     Widget? child,
     int buttonId = 30,
     double? width,
     double? height,
+    bool isEnable = true,
     Alignment? alignment,
     EdgeInsets? padding,
     Function()? onPressed,
+    Function()? onDisablePressed,
   }) {
-    if (size != "small") {
-      size = "medium";
-    }
     var slicingData = switch (size) {
-      "small" =>
+      ButtonSize.small =>
         ImageCenterSliceDate(102, 106, const Rect.fromLTWH(50, 30, 2, 46)),
       _ => ImageCenterSliceDate(130, 158, const Rect.fromLTWH(64, 50, 2, 58)),
     };
+    if (!isEnable) {
+      color = ButtonColor.gray;
+    }
     return Widgets.button(
-        onPressed: onPressed,
+        onPressed: isEnable ? onPressed : onDisablePressed,
         width: width,
         height: height,
         buttonId: buttonId,
@@ -188,11 +190,14 @@ class Widgets {
                 fit: BoxFit.fill,
                 centerSlice: slicingData.centerSlice,
                 image: Asset.load<Image>(
-                  "ui_button_${size}_$color",
+                  "ui_button_${size.name}_${color.name}",
                   centerSlice: slicingData,
                 ).image)),
-        child:
-            label != null ? SkinnedText(label, style: TStyles.large) : child!);
+        child: Opacity(
+            opacity: isEnable ? 1 : 0.8,
+            child: label != null
+                ? SkinnedText(label, style: TStyles.large)
+                : child!));
   }
 
   static divider(
@@ -216,3 +221,7 @@ class Widgets {
                 ).image)));
   }
 }
+
+enum ButtonColor { gray, green, teal, yellow }
+
+enum ButtonSize { small, medium }

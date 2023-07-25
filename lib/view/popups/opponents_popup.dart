@@ -190,7 +190,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                         "scout_l".l(),
                         Widgets.labeledButton(
                             width: 320.d,
-                            color: "green",
+                            color: ButtonColor.green,
                             padding: EdgeInsets.fromLTRB(16.d, 8.d, 16.d, 22.d),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -237,15 +237,13 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
               height: 196.d,
               padding: EdgeInsets.symmetric(horizontal: 24.d),
               child: Row(children: [
-                Opacity(
-                    opacity: value.index <= 0 ? 0.4 : 1,
-                    child: Widgets.labeledButton(
-                        size: "",
-                        child: Asset.load<Image>("ui_arrow_back", width: 68.d),
-                        color: "green",
-                        width: 230.d,
-                        onPressed: () =>
-                            _selectMap(_pageController.page! - 1))),
+                Widgets.labeledButton(
+                    width: 230.d,
+                    size: ButtonSize.medium,
+                    color: ButtonColor.green,
+                    isEnable: value.index > 0,
+                    child: Asset.load<Image>("ui_arrow_back", width: 68.d),
+                    onPressed: () => _selectMap(_pageController.page! - 1)),
                 SizedBox(width: 8.d),
                 Expanded(
                     child: Widgets.labeledButton(
@@ -258,19 +256,16 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                             SkinnedText("attack_l".l(), style: TStyles.large),
                           ],
                         ),
-                        size: "",
+                        size: ButtonSize.medium,
                         onPressed: _attack)),
                 SizedBox(width: 8.d),
-                Opacity(
-                    opacity: value.index >= _opponents.length - 1 ? 0.4 : 1,
-                    child: Widgets.labeledButton(
-                        size: "",
-                        child:
-                            Asset.load<Image>("ui_arrow_forward", width: 68.d),
-                        color: "green",
-                        width: 230.d,
-                        onPressed: () =>
-                            _selectMap(_pageController.page! + 1))),
+                Widgets.labeledButton(
+                    width: 230.d,
+                    size: ButtonSize.medium,
+                    color: ButtonColor.green,
+                    isEnable: value.index < _opponents.length - 1,
+                    child: Asset.load<Image>("ui_arrow_forward", width: 68.d),
+                    onPressed: () => _selectMap(_pageController.page! + 1)),
               ]));
         });
   }

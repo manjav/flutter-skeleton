@@ -68,7 +68,7 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Widgets.labeledButton(
-          color: "green",
+          color: ButtonColor.green,
           height: 160.d,
           padding: EdgeInsets.fromLTRB(44.d, 10.d, 32.d, 30.d),
           child: Row(

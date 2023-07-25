@@ -85,12 +85,10 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   _scarificeButton() {
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
-    return Opacity(
-        opacity: _isSacrificeAvailable ? 1 : 0.8,
-        child: Widgets.labeledButton(
+    return Widgets.labeledButton(
+        isEnable: _isSacrificeAvailable,
             padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
-            child: Row(
-              children: [
+        child: Row(children: [
                 SkinnedText("card_sacrifice".l(),
                     style: TStyles.large.copyWith(height: 3.d)),
                 SizedBox(width: 24.d),
@@ -103,9 +101,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                             image: Asset.load<Image>('ui_frame_inside',
                                     centerSlice: bgCenterSlice)
                                 .image)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                         Row(children: [
                           Asset.load<Image>("card_sacrifice", height: 64.d),
                           SkinnedText(" x${selectedCards.value.length}"),
@@ -115,11 +112,10 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                           SkinnedText(_getSacrificeCost().compact(),
                               style: TStyles.large),
                         ]),
-                      ],
-                    ))
-              ],
-            ),
-            onPressed: _sacrifice));
+            ]),
+          )
+        ]),
+        onPressed: _sacrifice);
   }
 
   _sacrifice() async {

@@ -89,7 +89,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
                     SkinnedText("attack_l".l(), style: TStyles.large),
                   ],
                 ),
-                size: "",
+                size: ButtonSize.medium,
                 onPressed: () => _attack(state.account)))
       ]);
     });
