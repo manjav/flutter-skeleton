@@ -87,31 +87,31 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
     return Widgets.labeledButton(
         isEnable: _isSacrificeAvailable,
-            padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
+        padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
         child: Row(children: [
-                SkinnedText("card_sacrifice".l(),
-                    style: TStyles.large.copyWith(height: 3.d)),
-                SizedBox(width: 24.d),
-                Widgets.rect(
-                    padding: EdgeInsets.symmetric(horizontal: 12.d),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            centerSlice: bgCenterSlice.centerSlice,
-                            image: Asset.load<Image>('ui_frame_inside',
-                                    centerSlice: bgCenterSlice)
-                                .image)),
+          SkinnedText("card_sacrifice".l(),
+              style: TStyles.large.copyWith(height: 3.d)),
+          SizedBox(width: 24.d),
+          Widgets.rect(
+            padding: EdgeInsets.symmetric(horizontal: 12.d),
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.fill,
+                    centerSlice: bgCenterSlice.centerSlice,
+                    image: Asset.load<Image>('ui_frame_inside',
+                            centerSlice: bgCenterSlice)
+                        .image)),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Row(children: [
-                          Asset.load<Image>("card_sacrifice", height: 64.d),
-                          SkinnedText(" x${selectedCards.value.length}"),
-                        ]),
-                        Row(children: [
-                          Asset.load<Image>("ui_gold", height: 76.d),
-                          SkinnedText(_getSacrificeCost().compact(),
-                              style: TStyles.large),
-                        ]),
+              Row(children: [
+                Asset.load<Image>("card_sacrifice", height: 64.d),
+                SkinnedText(" x${selectedCards.value.length}"),
+              ]),
+              Row(children: [
+                Asset.load<Image>("ui_gold", height: 76.d),
+                SkinnedText(_getSacrificeCost().compact(),
+                    style: TStyles.large),
+              ]),
             ]),
           )
         ]),

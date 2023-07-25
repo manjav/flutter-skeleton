@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/items/page_item.dart';
@@ -24,10 +23,9 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var cards = state.account
-          .get<Map<int, AccountCard>>(AccountField.cards)
-          .values
-          .toList();
+      var cards = state.account.getCards().values.toList();
+      cards.sort((AccountCard a, AccountCard b) =>
+          a.base.get<int>(CardFields.id) - b.base.get<int>(CardFields.id));
       return Stack(children: [
         GridView.builder(
             itemCount: cards.length,

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../blocs/services.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/rpc.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -37,9 +40,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
 
   @override
   getCards(Account account) {
-    var f = CardFields.id;
-    return account.getReadyCards()
-      ..removeWhere((c) => c.base.get<int>(f) != card.base.get<int>(f));
+    return account.getReadyCards().where((c) => c.base == card.base).toList();
   }
 
   @override
@@ -108,6 +109,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
   }
 
   _getCard(AccountCard card, double size) {
+    card = account.getCards()[card.id] ?? card;
     return SizedBox(width: size, child: MinimalCardItem(card, size: size));
   }
 
@@ -116,29 +118,29 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     return Positioned(
       bottom: 40.d,
       height: 160.d,
-        child: Widgets.labeledButton(
+      child: Widgets.labeledButton(
           isEnable: selectedCards.value.length >= 2,
-            padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
+          padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
           child: Row(children: [
-                SkinnedText("card_merge".l(),
-                    style: TStyles.large.copyWith(height: 3.d)),
-                SizedBox(width: 24.d),
-                Widgets.rect(
-                  padding: EdgeInsets.symmetric(horizontal: 12.d),
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          centerSlice: bgCenterSlice.centerSlice,
-                          image: Asset.load<Image>('ui_frame_inside',
-                                  centerSlice: bgCenterSlice)
-                              .image)),
-                  child: Row(children: [
-                    Asset.load<Image>("ui_gold", height: 76.d),
+            SkinnedText("card_merge".l(),
+                style: TStyles.large.copyWith(height: 3.d)),
+            SizedBox(width: 24.d),
+            Widgets.rect(
+              padding: EdgeInsets.symmetric(horizontal: 12.d),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      centerSlice: bgCenterSlice.centerSlice,
+                      image: Asset.load<Image>('ui_frame_inside',
+                              centerSlice: bgCenterSlice)
+                          .image)),
+              child: Row(children: [
+                Asset.load<Image>("ui_gold", height: 76.d),
                 SkinnedText(_getMergeCost().compact(), style: TStyles.large),
-                  ]),
-                )
+              ]),
+            )
           ]),
-            onPressed: _merge),
+          onPressed: _merge),
     );
   }
 
@@ -216,7 +218,24 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     return null;
   }
 
-  _merge() {
-    
+  _merge() async {
+    if (selectedCards.value.length < 2) return;
+    var params = {RpcParams.sacrifices.name: selectedCards.getIds()};
+    try {
+      var result = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.evolveCard, params: params);
+      updateAccount(result);
+      cards = getCards(account);
+      if (cards.length < 2) {
+        setState(() {});
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (mounted) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+        }
+      } else {
+        selectedCards.clear();
+      }
+    } finally {}
   }
 }

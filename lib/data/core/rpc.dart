@@ -6,6 +6,7 @@ enum RpcId {
   assignCard,
   enhanceCard,
   enhanceMax,
+  evolveCard,
 // Battle
   getOpponents,
   scout,
@@ -22,6 +23,7 @@ extension RpcIdEx on RpcId {
       RpcId.assignCard => "cards/assign",
       RpcId.enhanceCard => "cards/enhance",
       RpcId.enhanceMax => "cards/nectarify",
+      RpcId.evolveCard => "cards/evolve",
       RpcId.scout => "battle/scout",
       RpcId.quest => "battle/quest",
       RpcId.battle => "battle/battle",
