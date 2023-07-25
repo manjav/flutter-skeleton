@@ -192,9 +192,9 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   @override
   selectedForeground() {
     return Widgets.rect(
-        radius: 16.d,
+        radius: 18.d,
         padding: EdgeInsets.all(32.d),
-        color: TColors.primary10.withOpacity(0.4),
+        color: TColors.primary10.withOpacity(0.5),
         child: Asset.load<Image>('icon_sacrifice'));
   }
 }

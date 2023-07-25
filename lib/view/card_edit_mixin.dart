@@ -83,7 +83,12 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
         child: Stack(children: [
           MinimalCardItem(card, size: itemSize, showTitle: showCardTitle),
           selectedCards.value.contains(card)
-              ? selectedForeground()
+              ? Positioned(
+                  top: 2.d,
+                  left: 4.d,
+                  bottom: 8.d,
+                  right: 4.d,
+                  child: selectedForeground())
               : const SizedBox()
         ]));
   }
