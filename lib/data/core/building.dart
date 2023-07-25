@@ -81,6 +81,14 @@ class Building extends StringMap<dynamic> {
     map['cards'] = cards;
   }
 
+  int get maxLevel {
+    return switch (type) {
+      Buildings.treasury => 7,
+      Buildings.mine => 8,
+      _ => 0
+    };
+  }
+
   int get upgradeCost {
     var values = <Buildings, List<int>>{};
     values[Buildings.mine] = [0, 20, 40, 80, 300, 1500, 3500, 9000];

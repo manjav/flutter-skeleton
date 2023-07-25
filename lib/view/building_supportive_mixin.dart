@@ -66,10 +66,12 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
 
   upgtadeButton(Account account, Building building) {
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        mainAxisSize: MainAxisSize.min,
+        children: [
       Widgets.labeledButton(
+              height: 160.d,
+              isEnable: building.level < building.maxLevel,
           color: ButtonColor.green,
-          height: 160.d,
           padding: EdgeInsets.fromLTRB(44.d, 10.d, 32.d, 30.d),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
