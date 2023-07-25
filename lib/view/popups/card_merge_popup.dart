@@ -1,0 +1,227 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
+import '../../data/core/card.dart';
+import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
+import '../../services/theme.dart';
+import '../../utils/assets.dart';
+import '../../utils/utils.dart';
+import '../../view/card_edit_mixin.dart';
+import '../../view/widgets/skinnedtext.dart';
+import '../items/card_item_minimal.dart';
+import '../route_provider.dart';
+import '../widgets.dart';
+import 'ipopup.dart';
+
+class CardMergePopup extends AbstractPopup {
+  const CardMergePopup({super.key, required super.args})
+      : super(Routes.popupCardEnhance);
+
+  @override
+  createState() => _CardMergePopupState();
+}
+
+class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
+    with CardEditMixin {
+  @override
+  void initState() {
+    contentPadding = EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
+    super.initState();
+  }
+
+  @override
+  titleBuilder() => "card_merge".l();
+
+  @override
+  getCards(Account account) {
+    var f = CardFields.id;
+    return account.getReadyCards()
+      ..removeWhere((c) => c.base.get<int>(f) != card.base.get<int>(f));
+  }
+
+  @override
+  Widget contentFactory() {
+    var account = BlocProvider.of<AccountBloc>(context).account!;
+    return ValueListenableBuilder<List<AccountCard?>>(
+        valueListenable: selectedCards,
+        builder: (context, value, child) {
+          return SizedBox(
+              width: 980.d,
+              height: 1280.d,
+              child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Widgets.rect(
+                        height: 440.d,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _cardHolder(0, 200.d),
+                            const SkinnedText(" + "),
+                            _cardHolder(1, 200.d),
+                            const SkinnedText(" = "),
+                            _cardHolder(-1, 270.d)
+                          ],
+                        )),
+                    cardsListBuilder(account),
+                    _submitButton(),
+                  ]));
+        });
+  }
+
+  // Only 2 cards can be selected
+  @override
+  onSelectCard(int index, AccountCard card) {
+    if (selectedCards.value.length >= 2 &&
+        !selectedCards.value.contains(card)) {
+      selectedCards.value.removeLast();
+    }
+    selectedCards.addCard(card);
+  }
+
+  _cardHolder(int index, double size) {
+    if (index == -1) {
+      if (selectedCards.value.length >= 2) {
+        var card = selectedCards.value[0]!;
+        var nextBaseCard = _findNextLevel(card.base);
+        var nextCard = AccountCard(
+            account,
+            {
+              "power": _getMergePower(card, selectedCards.value[1]!),
+              "base_card_id": nextBaseCard!.get(CardFields.id)
+            },
+            account.baseCards);
+        return _getCard(nextCard, size);
+      }
+      return Asset.load<Image>("card_placeholder", width: size);
+    }
+
+    if (index >= selectedCards.value.length) {
+      return Asset.load<Image>("card_placeholder", width: size);
+    }
+    return _getCard(selectedCards.value[index]!, size);
+  }
+
+  _getCard(AccountCard card, double size) {
+    return SizedBox(width: size, child: MinimalCardItem(card, size: size));
+  }
+
+  _submitButton() {
+    var bgCenterSlice = ImageCenterSliceDate(42, 42);
+    return Positioned(
+      bottom: 40.d,
+      height: 160.d,
+      child: Opacity(
+        opacity: selectedCards.value.length >= 2 ? 1 : 0.8,
+        child: Widgets.labeledButton(
+            padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
+            child: Row(
+              children: [
+                SkinnedText("card_merge".l(),
+                    style: TStyles.large.copyWith(height: 3.d)),
+                SizedBox(width: 24.d),
+                Widgets.rect(
+                  padding: EdgeInsets.symmetric(horizontal: 12.d),
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          centerSlice: bgCenterSlice.centerSlice,
+                          image: Asset.load<Image>('ui_frame_inside',
+                                  centerSlice: bgCenterSlice)
+                              .image)),
+                  child: Row(children: [
+                    Asset.load<Image>("ui_gold", height: 76.d),
+                    SkinnedText(_getMergeCost().compact(),
+                        style: TStyles.large),
+                  ]),
+                )
+              ],
+            ),
+            onPressed: _merge),
+      ),
+    );
+  }
+
+  int _getMergePower(AccountCard first, AccountCard second) {
+    const evolveEnhancePowerModifier = 1;
+    const monsterEvolveMinRarity = 5;
+    const monsterEvolveMaxPower = 300000000;
+    const monsterEvolvePowerModifier = 100000000;
+
+    var nextLevelCard = _findNextLevel(first.base);
+    if (nextLevelCard != null) {
+      var basePower = first.base.get<int>(CardFields.power);
+      var nextPower = nextLevelCard.get<int>(CardFields.power);
+      var diffs = first.power + second.power - basePower * 2;
+      diffs = evolveEnhancePowerModifier * diffs;
+      var finalPower = nextPower + diffs;
+
+      // Soften Monster's power after adding 6th level of monsters
+      if (first.base.isMonster) {
+        if (first.base.get<int>(CardFields.rarity) >= monsterEvolveMinRarity) {
+          if (finalPower > monsterEvolveMaxPower) {
+            finalPower -= monsterEvolvePowerModifier;
+          }
+        }
+      }
+      return finalPower;
+    }
+    return 0;
+  }
+
+  int _getMergeCost() {
+    const evolveCostModifier = 1;
+    const vetEvolveCostModifier = 2;
+    const evolveCostCorrectionModifier = -2;
+    const monsterEvolveMinRarity = 5;
+    const monsterEvolveMinCost = 400000000;
+
+    if (selectedCards.value.length < 2) return 0;
+    var first = selectedCards.value.first!.base;
+    var goldPrice = 0;
+    for (var card in selectedCards.value) {
+      goldPrice += card!.base.cost;
+    }
+    var nextCardPrice = _findNextLevel(first)!.cost;
+    var veteranLevel = first.get<int>(CardFields.veteran_level);
+    if (veteranLevel == 0) {
+      goldPrice = ((nextCardPrice - goldPrice) * evolveCostModifier).floor();
+      if (goldPrice < 0) {
+        goldPrice *= evolveCostCorrectionModifier;
+      }
+
+      // Soften Monster's evolve cost after adding 6th level of monsters
+      var level = first.get<int>(CardFields.rarity);
+      if (first.isMonster && level >= monsterEvolveMinRarity) {
+        goldPrice =
+            monsterEvolveMinCost * (level - (monsterEvolveMinRarity - 1));
+      }
+    } else {
+      goldPrice =
+          ((nextCardPrice - goldPrice) * vetEvolveCostModifier * veteranLevel)
+              .floor();
+    }
+    return goldPrice;
+  }
+
+  CardData? _findNextLevel(CardData base) {
+    var nextLevel = base.get<int>(CardFields.rarity) + 1;
+    for (var e in account.baseCards.map.entries) {
+      if (e.value.get<int>(CardFields.fruitId) ==
+              base.get<int>(CardFields.fruitId) &&
+          e.value.get<int>(CardFields.rarity) == nextLevel) {
+        return e.value;
+      }
+    }
+    return null;
+  }
+
+  _merge() {
+    
+  }
+}

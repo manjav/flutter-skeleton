@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../view/card_edit_mixin.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services.dart';
@@ -14,6 +13,7 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
+import '../../view/card_edit_mixin.dart';
 import '../../view/items/card_item_minimal.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
