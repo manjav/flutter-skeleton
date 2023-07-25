@@ -73,6 +73,9 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
     );
   }
 
-  _onButtonsTap(Routes route) =>
-      Navigator.pushNamed(context, route.routeName, arguments: {"card": _card});
+  _onButtonsTap(Routes route) async {
+    await Navigator.pushNamed(context, route.routeName,
+        arguments: {"card": _card});
+    setState(() {});
+  }
 }

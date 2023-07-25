@@ -51,48 +51,50 @@ class _CardItemState extends State<CardItem> {
       _tiny = TStyles.medium.copyWith(fontSize: 28 * s);
     }
 
-    return Stack(alignment: Alignment.center, children: [
-      Asset.load<Image>('cards_frame_$level'),
-      LoaderWidget(AssetType.image, baseCard.get<String>(CardFields.name),
-          subFolder: "cards", width: 216 * s),
-      Positioned(
-          top: 4 * s,
-          left: 22 * s,
-          child: SkinnedText(name,
-              style: TStyles.small.copyWith(
-                  fontSize: (22 * s + 60 * s / (name.length))
-                      .clamp(22 * s, 40 * s)))),
-      Positioned(
-          top: 1 * s,
-          right: 23 * s,
-          width: 27 * s,
-          child: SkinnedText(level, style: _medium)),
-      Positioned(
-          bottom: 16 * s,
-          left: 22 * s,
-          child: SkinnedText(widget.card.power.compact(), style: _small)),
-      Positioned(
-          bottom: 20 * s,
-          right: 20 * s,
-          child: SkinnedText(cooldown.toRemainingTime(), style: _tiny)),
-      _remainingCooldown.value == 0
-          ? const SizedBox()
-          : ValueListenableBuilder<int>(
-              valueListenable: _remainingCooldown,
-              builder: (context, value, child) => Positioned(
-                  child: Widgets.button(
-                      margin: EdgeInsets.all(8.d),
-                      color: TColors.white50,
-                      child: Column(
-                        children: [
-                          SkinnedText(
-                              _remainingCooldown.value.toRemainingTime()),
-                          SkinnedText(widget.card
-                              .cooldownTimeToCost(_remainingCooldown.value)
-                              .compact())
-                        ],
-                      ))))
-    ]);
+    return Hero(
+      tag: widget.card.id,
+      child: Stack(alignment: Alignment.center, children: [
+        Asset.load<Image>('cards_frame_$level'),
+        LoaderWidget(AssetType.image, baseCard.get<String>(CardFields.name),
+            subFolder: "cards", width: 216 * s),
+        Positioned(
+            top: 4 * s,
+            left: 22 * s,
+            child: SkinnedText(name,
+                style: TStyles.small.copyWith(
+                    fontSize: (22 * s + 60 * s / (name.length))
+                        .clamp(22 * s, 40 * s)))),
+        Positioned(
+            top: 1 * s,
+            right: 23 * s,
+            width: 27 * s,
+            child: SkinnedText(level, style: _medium)),
+        Positioned(
+            bottom: 16 * s,
+            left: 22 * s,
+            child: SkinnedText(widget.card.power.compact(), style: _small)),
+        Positioned(
+            bottom: 20 * s,
+            right: 20 * s,
+            child: SkinnedText(cooldown.toRemainingTime(), style: _tiny)),
+        _remainingCooldown.value == 0
+            ? const SizedBox()
+            : ValueListenableBuilder<int>(
+                valueListenable: _remainingCooldown,
+                builder: (context, value, child) => Positioned(
+                    child: Widgets.button(
+                  margin: EdgeInsets.all(8.d),
+                  color: TColors.white50,
+                  child: Column(children: [
+                    SkinnedText(_remainingCooldown.value.toRemainingTime()),
+                    SkinnedText(widget.card
+                        .cooldownTimeToCost(_remainingCooldown.value)
+                        .compact())
+                  ]),
+                )),
+              )
+      ]),
+    );
   }
 
   @override
