@@ -229,7 +229,7 @@ class Building extends StringMap<dynamic> {
     values[Buildings.base] = [0, 30, 80, 120, 180, 270, 400, 1350];
     values[Buildings.treasury] = [0, 2, 5, 30, 100, 250, 1000];
 
-    return values[type]![values[type]!.length.max(level)] * 1000;
+    return values[type]![(values[type]!.length - 1).max(level)] * 1000;
   }
 
   int get benefit {
@@ -349,7 +349,7 @@ class Building extends StringMap<dynamic> {
       250000,
       1000000
     ];
-    return values[type]![values[type]!.length.max(level)];
+    return values[type]![(values[type]!.length - 1).max(level)];
   }
 
   int get maxCards {
