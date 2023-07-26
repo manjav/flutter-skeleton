@@ -63,7 +63,7 @@ class CardData extends StringMap<dynamic> {
   void init(Map<String, dynamic> data, {dynamic args}) {
     super.init(data);
     map['fruit'] = args as FruitData;
-    setDefault('heroType', data, 0);
+    setDefault('heroType', data, -1);
     setDefault('isHero', data, false);
     setDefault('powerAttribute', data, 0);
     setDefault('wisdomAttribute', data, 0);
@@ -124,6 +124,18 @@ class AccountCard {
     var cooldownTime = base.get<int>(CardFields.cooldown) * benefit;
     return (cooldownTime - delta).ceil().min(0);
   }
+
+  bool get isMonster {
+    var baseId = base.get(CardFields.id);
+    if ((baseId >= 310 && baseId <= 319) ||
+        (baseId >= 330 && baseId <= 344) ||
+        (baseId >= 815 && baseId <= 819)) {
+      return true;
+    }
+    return false;
+  }
+
+  bool get isHero => base.get(CardFields.isHero);
 
 /* returns the gold cost for purchasing the cooldown of this card, takes into
      account the bonuses that the player's tribe might include and also the number of
