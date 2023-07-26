@@ -133,6 +133,7 @@ class Widgets {
     Decoration? foregroundDecoration,
     Matrix4? transform,
     Alignment? transformAlignment,
+    BoxConstraints? constraints,
     required Widget child,
   }) {
     return touchable(
@@ -141,6 +142,7 @@ class Widgets {
         child: rect(
           width: width,
           height: height,
+          constraints: constraints,
           alignment: alignment ?? Alignment.center,
           transform: transform,
           transformAlignment: transformAlignment,
@@ -169,6 +171,7 @@ class Widgets {
     EdgeInsets? padding,
     Function()? onPressed,
     Function()? onDisablePressed,
+    BoxConstraints? constraints,
   }) {
     var slicingData = switch (size) {
       ButtonSize.small =>
@@ -184,6 +187,7 @@ class Widgets {
         height: height,
         buttonId: buttonId,
         alignment: alignment,
+        constraints: constraints,
         padding: padding ?? EdgeInsets.only(bottom: 16.d),
         decoration: BoxDecoration(
             image: DecorationImage(
