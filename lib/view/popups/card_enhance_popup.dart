@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services.dart';
+import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
@@ -85,6 +86,21 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
+                            card.isHero || card.isMonster
+                                ? _enhanceButton(
+                                    ButtonColor.teal,
+                                    "card_enhance_max".l(),
+                                    [
+                                      Row(children: [
+                                        Asset.load<Image>("ui_nectar",
+                                            height: 76.d),
+                                        SkinnedText(
+                                            _getMaxEnhanceCost().compact()),
+                                      ]),
+                                    ],
+                                    true,
+                                    _enhanceMax)
+                                : const SizedBox(),
                             _enhanceButton(
                                 ButtonColor.yellow,
                                 "card_sacrifice".l(),
@@ -172,7 +188,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
       }
     }
 
-    var rarity = card.base.get<double>(CardFields.virtualRarity);
+    var rarity = card.base.get(CardFields.virtualRarity).toDouble();
     var verteranLevel = card.base.get<int>(CardFields.veteran_level);
     var calculatePower = 0;
     if (verteranLevel == 0) {
@@ -201,4 +217,39 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     return (cardPrices * enhancementCostModifier).round();
   }
 
+  int _getMaxEnhanceCost() {
+    const enhancementCostModifier = 0.1;
+    const enhancementModifier = 0.2;
+    const maxEnhanceModifier = 45;
+    const enhanceRarityModifier = 0.7;
+    const enhanceNectarModifier = 1;
+    const minimumNectarCostForEnhancement = 100;
+    const priceModifier = 100;
+
+    var enhancementPower = card.base.get(CardFields.powerLimit) - card.power;
+    var cardPower = (enhancementPower /
+            (enhancementModifier *
+                math.pow(card.base.get(CardFields.virtualRarity).toDouble(),
+                    enhanceRarityModifier)))
+        .floor();
+    var totalCardPrice = (cardPower *
+        enhanceNectarModifier *
+        (priceModifier / maxEnhanceModifier));
+    var enhancementCost =
+        totalCardPrice * enhancementCostModifier + totalCardPrice;
+    return minimumNectarCostForEnhancement.min(
+        (enhancementCost / account.get<int>(AccountField.nectar_price))
+            .floor());
+  }
+
+  _enhanceMax() async {
+    try {
+      var result = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.enhanceMax,
+              params: {RpcParams.card_id.name: card.id});
+      updateAccount(result);
+      if (mounted) Navigator.pop(context);
+    } finally {}
+  }
 }
