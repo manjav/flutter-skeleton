@@ -8,6 +8,7 @@ import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
 import '../../view/widgets/indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -110,5 +111,6 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   contentFactory() => Widgets.rect(
       height: 480.d, width: 880.d, color: TColors.green.withAlpha(133));
 
-  actionsFactory() => <Widget>[];
+  toast(String message) =>
+      Overlays.insert(context, OverlayType.toast, args: message);
 }

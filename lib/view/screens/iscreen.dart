@@ -6,6 +6,7 @@ import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 
 class AbstractScreen extends StatefulWidget {
@@ -79,4 +80,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   }
 
   Widget contentFactory() => const SizedBox();
+
+  toast(String message) =>
+      Overlays.insert(context, OverlayType.toast, args: message);
 }

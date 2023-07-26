@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../../utils/ilogger.dart';
 import '../../view/overlays/loading_overlay.dart';
+import 'toast_overlay.dart';
 
 enum OverlayType {
   none,
   loading,
   outcome,
+  toast,
 }
 
 extension Overlays on OverlayType {
-  static AbstractOverlay getWidget(String routeName, {List<Object>? args}) {
+  static AbstractOverlay getWidget(String routeName, {dynamic args}) {
     return switch (routeName) {
       "/loading" => const LoadingOverlay(),
+      "/toast" => ToastOverlay(args as String),
       _ => const AbstractOverlay(),
     };
   }
@@ -20,7 +23,7 @@ extension Overlays on OverlayType {
   String get routeName => "/$name";
 
   static final _entries = <OverlayType, OverlayEntry>{};
-  static insert(BuildContext context, OverlayType type, {List<Object>? args}) {
+  static insert(BuildContext context, OverlayType type, {dynamic args}) {
     if (!_entries.containsKey(type)) {
       _entries[type] =
           OverlayEntry(builder: (c) => getWidget(type.routeName, args: args));
