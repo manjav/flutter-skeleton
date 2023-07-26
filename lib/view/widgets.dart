@@ -220,6 +220,42 @@ class Widgets {
                   centerSlice: slicingData,
                 ).image)));
   }
+
+  static slider(double min, double value, double max,
+      {Widget? child,
+      double? width,
+      double? height,
+      double? border,
+      Color? borderColor,
+      double? padding,
+      Color? backgroundColor,
+      Color? progressColor}) {
+    var w = width ?? 760.d;
+    var h = height ?? 104.d;
+    var p = padding ?? 9.d;
+    var r = 1 - value / (max - min);
+    return rect(
+      width: w,
+      height: h,
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(56.d)),
+          color: backgroundColor ?? TColors.primary10),
+      child: Stack(alignment: Alignment.center, children: [
+        rect(
+            margin: EdgeInsets.only(
+                top: p, left: p, bottom: p, right: r * w + (1 - r) * p),
+            gradient: const LinearGradient(
+              colors: [Color(0xFFA1EE24), Color(0xFF41CB3E), Color(0xFF7EE12D)],
+              stops: [0.3, 0.8, 1],
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+            ),
+            radius: 44.d),
+        child ?? const SizedBox()
+      ]),
+    );
+  }
 }
 
 enum ButtonColor { gray, green, teal, yellow }
