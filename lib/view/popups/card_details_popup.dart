@@ -74,7 +74,6 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 onPressed: () => _onButtonsTap(Routes.popupCardMerge)),
           ],
         ),
-        SizedBox(height: 48.d),
       ],
     );
   }

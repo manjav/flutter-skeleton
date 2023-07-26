@@ -46,7 +46,6 @@ class _SupportiveBuildingPopupState
               style: TStyles.medium),
           SizedBox(height: 16.d),
           cardHolder(building),
-          SizedBox(height: 48.d)
         ],
       );
     });

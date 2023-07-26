@@ -194,7 +194,7 @@ class Widgets {
                   centerSlice: slicingData,
                 ).image)),
         child: Opacity(
-            opacity: isEnable ? 1 : 0.8,
+            opacity: isEnable ? 1 : 0.7,
             child: label != null
                 ? SkinnedText(label, style: TStyles.large)
                 : child!));

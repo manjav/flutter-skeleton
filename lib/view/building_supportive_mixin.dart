@@ -66,38 +66,41 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
 
   upgtadeButton(Account account, Building building) {
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-      Widgets.labeledButton(
+          Widgets.labeledButton(
               height: 160.d,
               isEnable: building.level < building.maxLevel,
-          color: ButtonColor.green,
-          padding: EdgeInsets.fromLTRB(44.d, 10.d, 32.d, 30.d),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SkinnedText("upgrade_l".l(),
-                  style: TStyles.large.copyWith(height: 3.d)),
-              SizedBox(width: 24.d),
-              Widgets.rect(
-                padding: EdgeInsets.symmetric(vertical: 6.d, horizontal: 12.d),
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        centerSlice: bgCenterSlice.centerSlice,
-                        image: Asset.load<Image>('ui_frame_inside',
-                                centerSlice: bgCenterSlice)
-                            .image)),
-                child: Row(children: [
-                  Asset.load<Image>("ui_gold", height: 76.d),
-                  SkinnedText(building.upgradeCost.compact(),
-                      style: TStyles.large),
-                ]),
-              )
-            ],
-          ),
-          onPressed: () => _upgrade(account, building))
-    ]);
+              color: ButtonColor.green,
+              padding: EdgeInsets.fromLTRB(44.d, 10.d, 32.d, 30.d),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SkinnedText("upgrade_l".l(),
+                      style: TStyles.large.copyWith(height: 3.d)),
+                  SizedBox(width: 24.d),
+                  Widgets.rect(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 6.d, horizontal: 12.d),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            centerSlice: bgCenterSlice.centerSlice,
+                            image: Asset.load<Image>('ui_frame_inside',
+                                    centerSlice: bgCenterSlice)
+                                .image)),
+                    child: Row(children: [
+                      Asset.load<Image>("ui_gold", height: 76.d),
+                      SkinnedText(building.upgradeCost.compact(),
+                          style: TStyles.large),
+                    ]),
+                  )
+                ],
+              ),
+              onPressed: () => _upgrade(account, building))
+        ]);
   }
 
   _upgrade(Account account, Building building) async {

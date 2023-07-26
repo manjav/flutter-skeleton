@@ -26,7 +26,7 @@ class AbstractPopup extends StatefulWidget {
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
     with ILogger {
-  EdgeInsets contentPadding = EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 64.d);
+  EdgeInsets contentPadding = EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 92.d);
 
   @override
   Widget build(BuildContext context) {
