@@ -70,7 +70,7 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Widgets.labeledButton(
+          Widgets.skinnedButton(
               height: 160.d,
               isEnable: building.level < building.maxLevel,
               color: ButtonColor.green,

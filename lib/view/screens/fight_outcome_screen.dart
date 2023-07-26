@@ -147,14 +147,14 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
           height: 180.d,
           bottom: 240.d,
           child: Row(children: [
-            Widgets.labeledButton(
+            Widgets.skinnedButton(
                 padding: EdgeInsets.fromLTRB(48.d, 48.d, 48.d, 60.d),
                 child: Asset.load<Image>("ui_arrow_back"),
                 width: 160.d,
                 color: ButtonColor.green,
                 onPressed: () => Navigator.pop(context)),
             SizedBox(width: 20.d),
-            Widgets.labeledButton(
+            Widgets.skinnedButton(
                 padding: EdgeInsets.fromLTRB(32.d, 32.d, 48.d, 48.d),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

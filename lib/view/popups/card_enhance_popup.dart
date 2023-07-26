@@ -85,7 +85,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   _scarificeButton() {
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
-    return Widgets.labeledButton(
+    return Widgets.skinnedButton(
         isEnable: _isSacrificeAvailable,
         padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
         child: Row(children: [

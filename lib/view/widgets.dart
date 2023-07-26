@@ -158,7 +158,7 @@ class Widgets {
         ));
   }
 
-  static labeledButton({
+  static skinnedButton({
     String? label,
     ButtonColor color = ButtonColor.yellow,
     ButtonSize size = ButtonSize.small,

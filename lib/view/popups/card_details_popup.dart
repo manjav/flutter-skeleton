@@ -53,12 +53,12 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
           children: [
             Column(
               children: [
-                Widgets.labeledButton(
+                Widgets.skinnedButton(
                     label: "card_enhance".l(),
                     width: 370.d,
                     onPressed: () => _onButtonsTap(Routes.popupCardEnhance)),
                 SizedBox(height: 16.d),
-                Widgets.labeledButton(
+                Widgets.skinnedButton(
                     isEnable: siblings.length > 1,
                     label: "card_merge".l(),
                     width: 370.d,
@@ -67,7 +67,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
             ),
             Widgets.divider(
                 height: 140.d, margin: 48.d, direction: Axis.vertical),
-            Widgets.labeledButton(
+            Widgets.skinnedButton(
                 label: "card_sell".l(),
                 color: ButtonColor.green,
                 width: 370.d,

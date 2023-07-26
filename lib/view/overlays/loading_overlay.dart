@@ -104,7 +104,7 @@ class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
                       style: TStyles.mediumInvert,
                     ),
                     SizedBox(height: 48.d),
-                    Widgets.labeledButton(
+                    Widgets.skinnedButton(
                         label: 'Retry',
                         buttonId: -1,
                         onPressed: () {

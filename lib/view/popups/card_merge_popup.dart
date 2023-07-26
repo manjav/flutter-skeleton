@@ -118,7 +118,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     return Positioned(
       bottom: 40.d,
       height: 160.d,
-      child: Widgets.labeledButton(
+      child: Widgets.skinnedButton(
           isEnable: selectedCards.value.length >= 2,
           padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
           child: Row(children: [

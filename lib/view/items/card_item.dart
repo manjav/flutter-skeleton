@@ -94,7 +94,7 @@ class _CardItemState extends State<CardItem> {
                               _remainingCooldown.value.toRemainingTime()),
                           IgnorePointer(
                             ignoring: true,
-                            child: Widgets.labeledButton(
+                            child: Widgets.skinnedButton(
                                 width: 230.d,
                                 color: ButtonColor.teal,
                                 padding:

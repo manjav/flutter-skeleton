@@ -188,7 +188,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                                 .copyWith(color: TColors.accent, height: 3.d)))
                     : _group(
                         "scout_l".l(),
-                        Widgets.labeledButton(
+                        Widgets.skinnedButton(
                             width: 320.d,
                             color: ButtonColor.green,
                             padding: EdgeInsets.fromLTRB(16.d, 8.d, 16.d, 22.d),
@@ -237,7 +237,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
               height: 196.d,
               padding: EdgeInsets.symmetric(horizontal: 24.d),
               child: Row(children: [
-                Widgets.labeledButton(
+                Widgets.skinnedButton(
                     width: 230.d,
                     size: ButtonSize.medium,
                     color: ButtonColor.green,
@@ -246,7 +246,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                     onPressed: () => _selectMap(_pageController.page! - 1)),
                 SizedBox(width: 8.d),
                 Expanded(
-                    child: Widgets.labeledButton(
+                    child: Widgets.skinnedButton(
                         padding: EdgeInsets.fromLTRB(32.d, 28.d, 42.d, 42.d),
                         alignment: Alignment.center,
                         child: Row(
@@ -259,7 +259,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                         size: ButtonSize.medium,
                         onPressed: _attack)),
                 SizedBox(width: 8.d),
-                Widgets.labeledButton(
+                Widgets.skinnedButton(
                     width: 230.d,
                     size: ButtonSize.medium,
                     color: ButtonColor.green,
