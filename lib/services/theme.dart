@@ -6,7 +6,7 @@ import 'iservices.dart';
 class TColors {
   static const accent = Color(0xFFFF5D54);
   static const black = Color(0xFF000000);
-  static const black80 = Color(0xCC000000);
+  static const black80 = Color(0xAA000000);
   static const blue = Color(0xFF017AFA);
   static const cream = Color(0xFFF6E5D0);
   static const clay = Color(0xFFD29774);

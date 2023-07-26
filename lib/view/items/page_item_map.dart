@@ -99,6 +99,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
   _onBuildingTap(Building building) {
     var type = switch (building.type) {
       Buildings.mine => Routes.popupMineBuilding,
+      Buildings.treasury => Routes.popupTreasuryBuilding,
       _ => Routes.popupSupportiveBuilding,
     };
     Navigator.pushNamed(context, type.routeName,

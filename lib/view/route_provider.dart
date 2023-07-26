@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../view/popups/card_merge_popup.dart';
 
-import '../../view/popups/building_mine_popup.dart';
-import '../../view/popups/card_enhance_popup.dart';
+import 'popups/building_mine_popup.dart';
 import 'popups/building_supportive_popup.dart';
+import 'popups/building_treasury_popup.dart';
 import 'popups/card_details_popup.dart';
+import 'popups/card_enhance_popup.dart';
+import 'popups/card_merge_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
@@ -35,6 +36,7 @@ enum Routes {
   popupOpponents,
   popupSupportiveBuilding,
   popupMineBuilding,
+  popupTreasuryBuilding,
 }
 
 extension RouteProvider on Routes {
@@ -53,6 +55,7 @@ extension RouteProvider on Routes {
       "/popupOpponents" => OpponentsPopup(args: args ?? {}),
       "/popupSupportiveBuilding" => SupportiveBuildingPopup(args: args ?? {}),
       "/popupMineBuilding" => MineBuildingPopup(args: args ?? {}),
+      "/popupTreasuryBuilding" => TreasuryBuildingPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }
@@ -68,6 +71,7 @@ extension RouteProvider on Routes {
       "/popupTabPage" ||
       "/popupOpponents" ||
       "/popupSupportiveBuilding" ||
+      "/popupTreasuryBuilding" ||
       "/popupMineBuilding" =>
         false,
       _ => true,

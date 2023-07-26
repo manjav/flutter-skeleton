@@ -130,6 +130,8 @@
     "Banana_t": "Banana",
     "building_treasury_t": "Treasury",
     "building_treasury_d": "You can use the bank to keep your gold safe from attack and save up for more expensive stuff. There's just a small %$$percent transaction cost which will be deducted when you deposit gold.",
+    "building_treasury_withdraw": "Withdraw",
+    "building_treasury_deposit": "Deposit",
     "building_mine_t": "Mine",
     "building_mine_d": "The gold building is a place that you can place your cards to work for you. Cards assigned to this building will slowly generate gold for you, the more cards you assign the higher the rate of gold generation.",
     "building_mine_speed": "Gold per Hour:",

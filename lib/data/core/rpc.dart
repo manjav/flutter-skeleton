@@ -15,6 +15,8 @@ enum RpcId {
 
   // Building
   upgrade,
+  deposit,
+  witdraw,
 }
 
 extension RpcIdEx on RpcId {
@@ -29,7 +31,9 @@ extension RpcIdEx on RpcId {
       RpcId.battle => "battle/battle",
       RpcId.getOpponents => "battle/getopponents",
       RpcId.playerLoad => "player/load",
-      RpcId.upgrade => "tribe/upgrade"
+      RpcId.upgrade => "tribe/upgrade",
+      RpcId.deposit => "player/deposittobank",
+      RpcId.witdraw => "player/withdrawfrombank"
     };
   }
 
@@ -70,5 +74,6 @@ enum RpcParams {
   sacrifices,
   // Buildings
   type,
-  tribe_id
+  tribe_id,
+  amount
 }
