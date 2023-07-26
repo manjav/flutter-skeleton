@@ -15,6 +15,7 @@ import '../data/core/rpc.dart';
 import '../services/connection/http_connection.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';
+import 'overlays/ioverlay.dart';
 import 'popups/ipopup.dart';
 import 'route_provider.dart';
 import 'widgets/card_holder.dart';
@@ -71,35 +72,39 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Widgets.skinnedButton(
-              height: 160.d,
-              isEnable: building.level < building.maxLevel,
-              color: ButtonColor.green,
-              padding: EdgeInsets.fromLTRB(44.d, 10.d, 32.d, 30.d),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SkinnedText("upgrade_l".l(),
-                      style: TStyles.large.copyWith(height: 3.d)),
-                  SizedBox(width: 24.d),
-                  Widgets.rect(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 6.d, horizontal: 12.d),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            centerSlice: bgCenterSlice.centerSlice,
-                            image: Asset.load<Image>('ui_frame_inside',
-                                    centerSlice: bgCenterSlice)
-                                .image)),
-                    child: Row(children: [
-                      Asset.load<Image>("ui_gold", height: 76.d),
-                      SkinnedText(building.upgradeCost.compact(),
-                          style: TStyles.large),
-                    ]),
-                  )
-                ],
-              ),
-              onPressed: () => _upgrade(account, building))
+            height: 160.d,
+            isEnable: building.level < building.maxLevel,
+            color: ButtonColor.green,
+            padding: EdgeInsets.fromLTRB(44.d, 10.d, 32.d, 30.d),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SkinnedText("upgrade_l".l(),
+                    style: TStyles.large.copyWith(height: 3.d)),
+                SizedBox(width: 24.d),
+                Widgets.rect(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 6.d, horizontal: 12.d),
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          centerSlice: bgCenterSlice.centerSlice,
+                          image: Asset.load<Image>('ui_frame_inside',
+                                  centerSlice: bgCenterSlice)
+                              .image)),
+                  child: Row(children: [
+                    Asset.load<Image>("ui_gold", height: 76.d),
+                    SkinnedText(building.upgradeCost.compact(),
+                        style: TStyles.large),
+                  ]),
+                )
+              ],
+            ),
+            onPressed: () => _upgrade(account, building),
+            onDisablePressed: () => Overlays.insert(context, OverlayType.toast,
+                args: "building_max_level"
+                    .l(["building_${building.type.name}_t".l()])),
+          )
         ]);
   }
 

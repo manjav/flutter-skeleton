@@ -138,18 +138,19 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
           SizedBox(width: 12.d),
           Widgets.rect(
               padding: EdgeInsets.all(12.d),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.fill,
-                    centerSlice: bgCenterSlice.centerSlice,
-                    image: Asset.load<Image>('ui_frame_inside',
-                            centerSlice: bgCenterSlice)
-                        .image)),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      centerSlice: bgCenterSlice.centerSlice,
+                      image: Asset.load<Image>('ui_frame_inside',
+                              centerSlice: bgCenterSlice)
+                          .image)),
               child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: children))
         ]),
+        onDisablePressed: () => toast("card_enhance_min".l()),
         onPressed: onTap);
   }
 
