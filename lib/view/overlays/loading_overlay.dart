@@ -21,7 +21,7 @@ class LoadingOverlay extends AbstractOverlay {
   createState() => _LoadingOverlayState();
 }
 
-class _LoadingOverlayState extends AbstractOverlayState<AbstractOverlay> {
+class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   bool _logViewVisibility = false;
   RpcException? _exception;
   SMIBool? _closeInput;

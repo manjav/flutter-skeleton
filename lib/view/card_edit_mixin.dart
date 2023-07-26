@@ -103,7 +103,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
             ignoring: true,
             child: Asset.load<Image>("ui_shade_bottom",
                 centerSlice: ImageCenterSliceDate(
-                    32, 32, const Rect.fromLTWH(1, 1, 30, 30)))));
+                    32, 32, const Rect.fromLTWH(0, 0, 32, 32)))));
   }
 
   selectedForeground() {
