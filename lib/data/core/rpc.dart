@@ -2,11 +2,13 @@
 
 enum RpcId {
   playerLoad,
-//Card
+// Card
+  coolOff,
   assignCard,
   enhanceCard,
   enhanceMax,
   evolveCard,
+
 // Battle
   getOpponents,
   scout,
@@ -22,6 +24,7 @@ enum RpcId {
 extension RpcIdEx on RpcId {
   String get value {
     return switch (this) {
+      RpcId.coolOff => "cards/cooloff",
       RpcId.assignCard => "cards/assign",
       RpcId.enhanceCard => "cards/enhance",
       RpcId.enhanceMax => "cards/nectarify",

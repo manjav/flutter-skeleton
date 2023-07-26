@@ -12,9 +12,9 @@ import '../../view/widgets/loaderwidget.dart';
 import '../widgets/skinnedtext.dart';
 
 class CardItem extends StatefulWidget {
-  final AccountCard card;
   final double size;
   final bool inDeck;
+  final AccountCard card;
   const CardItem(this.card, {this.size = 400, this.inDeck = false, super.key});
 
   @override
@@ -82,16 +82,38 @@ class _CardItemState extends State<CardItem> {
             : ValueListenableBuilder<int>(
                 valueListenable: _remainingCooldown,
                 builder: (context, value, child) => Positioned(
-                    child: Widgets.button(
-                  margin: EdgeInsets.all(8.d),
-                  color: TColors.white50,
-                  child: Column(children: [
-                    SkinnedText(_remainingCooldown.value.toRemainingTime()),
-                    SkinnedText(widget.card
-                        .cooldownTimeToCost(_remainingCooldown.value)
-                        .compact())
-                  ]),
-                )),
+                  child: Widgets.rect(
+                    margin: EdgeInsets.all(8.d),
+                    color: TColors.white50,
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 64.d),
+                          SkinnedText(
+                              _remainingCooldown.value.toRemainingTime()),
+                          IgnorePointer(
+                            ignoring: true,
+                            child: Widgets.labeledButton(
+                                width: 230.d,
+                                color: ButtonColor.teal,
+                                padding:
+                                    EdgeInsets.fromLTRB(20.d, 20.d, 20.d, 32.d),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Asset.load<Image>("ui_gold",
+                                          height: 64.d),
+                                      SizedBox(width: 4.d),
+                                      SkinnedText(widget.card
+                                          .cooldownTimeToCost(
+                                              _remainingCooldown.value)
+                                          .compact()),
+                                    ])),
+                          )
+                        ]),
+                  ),
+                ),
               )
       ]),
     );

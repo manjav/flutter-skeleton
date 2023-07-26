@@ -278,12 +278,6 @@ class Account extends StringMap<dynamic> {
         getCards()[attackCard['id']]?.lastUsedAt = attackCard["last_used_at"];
       }
     }
-    if (data.containsKey("card")) {
-      var card = getCards()[data["card"]["id"]]!;
-      card.power = data["card"]["power"];
-      card.lastUsedAt = data["card"]["last_used_at"];
-    }
-
     if (data.containsKey("player_gold")) map["gold"] = data["player_gold"];
     var tribe = getBuilding(Buildings.tribe);
     if (tribe != null) tribe.map["gold"] = data["tribe_gold"];

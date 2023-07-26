@@ -64,8 +64,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
                         crossAxisCount: crossAxisCount,
                         crossAxisSpacing: gap,
                         mainAxisSpacing: gap),
-                    itemBuilder: (c, i) =>
-                        _cardItemBuilder(c, i, cards[i], itemSize));
+                    itemBuilder: (c, i) => _cardItemBuilder(
+                        c, i, state.account, cards[i], itemSize));
               }),
         ),
         Positioned(
@@ -95,8 +95,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
     });
   }
 
-  Widget? _cardItemBuilder(
-      BuildContext context, int index, AccountCard card, double itemSize) {
+  Widget? _cardItemBuilder(BuildContext context, int index, Account account,
+      AccountCard card, double itemSize) {
     return Widgets.button(
       foregroundDecoration: _selectedCards.value.contains(card)
           ? BoxDecoration(
@@ -104,7 +104,13 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
               border: Border.all(color: TColors.white, width: 8.d))
           : null,
       padding: EdgeInsets.zero,
-      onPressed: () => _selectedCards.setCard(card, exception: 2),
+      onPressed: () {
+        if (card.getRemainingCooldown() > 0) {
+          _coolOff(account, card);
+        } else {
+          _selectedCards.setCard(card, exception: 2);
+        }
+      },
       child: CardItem(card, inDeck: true, size: itemSize, key: card.key),
     );
   }
@@ -254,17 +260,25 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
       var data = await bloc
           .get<HttpConnection>()
           .tryRpc(context, RpcId.quest, params: params);
-      // var data = jsonDecode(
-      //     '{"outcome":true,"boss_mode":false,"gold":1927243,"gold_added":1229,"levelup_gold_added":0,"level":280,"xp":5372397,"xp_added":38,"rank":1,"tribe_rank":1,"attack_cards":[{"id":407811,"last_used_at":1689436232,"power":23,"base_card_id":198,"player_id":2775},{"id":586801,"last_used_at":1689436232,"power":55,"base_card_id":415,"player_id":2775}],"tribe_gold":11856196,"gift_card":null,"q":207840,"total_quests":203767,"needs_captcha":false,"league_id":24,"tutorial_required_cards":null,"attacker_combo_info":[],"potion_number":0,"nectar":50,"available_combo_id_set":null,"purchase_deposits_to_bank":null,"attacker_hero_benefits_info":{"cards":[{"id":407811,"power":23}],"power_benefit":7,"gold_benefit":194,"cooldown_benefit":0}}');
       account.update(data);
-
       if (mounted) {
         BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
         Navigator.pop(context);
         Navigator.pushNamed(context, route.routeName, arguments: data);
       }
-    } catch (e) {
-      // log("$e");
-    }
+    } finally {}
+  }
+
+  _coolOff(Account account, AccountCard card) async {
+    var bloc = BlocProvider.of<Services>(context);
+    try {
+      var data = await bloc.get<HttpConnection>().tryRpc(context, RpcId.coolOff,
+          params: {RpcParams.card_id.name: card.id});
+      card.lastUsedAt = 0;
+      account.update(data);
+      if (mounted) {
+        BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+      }
+    } finally {}
   }
 }
