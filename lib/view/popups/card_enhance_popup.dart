@@ -42,6 +42,15 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   titleBuilder() => "card_enhance".l();
 
   @override
+  selectedForeground() {
+    return Widgets.rect(
+        radius: 18.d,
+        padding: EdgeInsets.all(32.d),
+        color: TColors.primary10.withOpacity(0.5),
+        child: Asset.load<Image>('icon_sacrifice'));
+  }
+
+  @override
   Widget contentFactory() {
     var account = BlocProvider.of<AccountBloc>(context).account!;
     return ValueListenableBuilder<List<AccountCard?>>(
@@ -71,29 +80,48 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                       left: 16.d,
                       right: 16.d,
                       height: 210.d,
-                      bottom: 20.d,
+                      bottom: 32.d,
                       child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            _scarificeButton(),
+                            _enhanceButton(
+                                ButtonColor.yellow,
+                                "card_sacrifice".l(),
+                                [
+                                  Row(children: [
+                                    Asset.load<Image>("card_sacrifice",
+                                        height: 60.d),
+                                    SkinnedText(
+                                        " x${selectedCards.value.length}"),
+                                  ]),
+                                  Row(children: [
+                                    Asset.load<Image>("ui_gold", height: 64.d),
+                                    SkinnedText(_getSacrificeCost().compact()),
+                                  ]),
+                                ],
+                                _isSacrificeAvailable,
+                                _sacrifice),
                           ]))
                 ],
               ));
         });
   }
 
-  _scarificeButton() {
+  Widget _enhanceButton(ButtonColor color, String text, List<Widget> children,
+      bool isEnable, Function() onTap) {
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
     return Widgets.skinnedButton(
-        isEnable: _isSacrificeAvailable,
-        padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
-        child: Row(children: [
-          SkinnedText("card_sacrifice".l(),
-              style: TStyles.large.copyWith(height: 3.d)),
-          SizedBox(width: 24.d),
+        width: 460.d,
+        color: color,
+        isEnable: isEnable,
+        padding: EdgeInsets.fromLTRB(30.d, 16.d, 14.d, 29.d),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          SkinnedText(text,
+              style: TStyles.medium.copyWith(fontSize: 46.d, height: 3.d)),
+          SizedBox(width: 12.d),
           Widgets.rect(
-            padding: EdgeInsets.symmetric(horizontal: 12.d),
+              padding: EdgeInsets.all(12.d),
             decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.fill,
@@ -101,21 +129,12 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                     image: Asset.load<Image>('ui_frame_inside',
                             centerSlice: bgCenterSlice)
                         .image)),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Row(children: [
-                Asset.load<Image>("card_sacrifice", height: 64.d),
-                SkinnedText(" x${selectedCards.value.length}"),
-              ]),
-              Row(children: [
-                Asset.load<Image>("ui_gold", height: 76.d),
-                SkinnedText(_getSacrificeCost().compact(),
-                    style: TStyles.large),
-              ]),
-            ]),
-          )
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: children))
         ]),
-        onPressed: _sacrifice);
+        onPressed: onTap);
   }
 
   _sacrifice() async {
@@ -129,7 +148,6 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
           .get<HttpConnection>()
           .tryRpc(context, RpcId.enhanceCard, params: params);
       updateAccount(result);
-      cards = getCards(account);
       if (mounted) Navigator.pop(context);
     } finally {}
   }
@@ -140,9 +158,6 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     const veteranEnhancementModifier = 0.02;
     const veteranSacrificePowerModifier = 1.5;
     const veteranEnhanceRarityModifier = 0.4;
-    // const enhanceMaximumCardPower = 1450000000;
-    // final enhanceNectarModifier = 1;
-    // final minimumNectarCostForEnhancement = 100;
 
     var cardPowers = 0.0;
     for (var card in selectedCards.value) {
@@ -186,12 +201,4 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     return (cardPrices * enhancementCostModifier).round();
   }
 
-  @override
-  selectedForeground() {
-    return Widgets.rect(
-        radius: 18.d,
-        padding: EdgeInsets.all(32.d),
-        color: TColors.primary10.withOpacity(0.5),
-        child: Asset.load<Image>('icon_sacrifice'));
-  }
 }
