@@ -43,19 +43,10 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();
-    var left = 0.0;
+    var left = 50.d;
     var height = 117.d;
     var right = widget.clickable ? height - 40.d : 0.0;
-
-    var completer = Completer<ui.Image>();
-    var icon = Asset.load<Image>("ui_${widget.itemType.name}");
-    icon.image
-        .resolve(const ImageConfiguration())
-        .addListener(ImageStreamListener((ImageInfo info, bool _) {
-      completer.complete(info.image);
-      left = info.image.width * DeviceInfo.ratio - 16.d;
-      setState(() {});
-    }));
+    var sliceData = ImageCenterSliceDate(160, 64);
     return SizedBox(
         width: widget.width ?? 340.d,
         height: height,
@@ -68,22 +59,26 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                   widget.clickable
                       ? Positioned(
                           right: right,
-                          left: 12.d,
+                          left: left,
                           height: 64.d,
-                          child: Asset.load<Image>(
-                            'ui_frame_wood',
-                            centerSlice: ImageCenterSliceDate(
-                                160, 64, const Rect.fromLTWH(12, 12, 4, 4)),
+                          child: Widgets.rect(
+                            padding: EdgeInsets.fromLTRB(40.d, 0, 0, 10.d),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    centerSlice: sliceData.centerSlice,
+                                    image: Asset.load<Image>('ui_frame_wood',
+                                            centerSlice: sliceData)
+                                        .image)),
+                            child: (widget.value == null)
+                                ? BlocBuilder<AccountBloc, AccountState>(
+                                    builder: (context, state) => _textField(
+                                        state.account.get<int>(widget.itemType),
+                                        left,
+                                        right))
+                                : _textField(widget.value!, left, right),
                           ))
                       : const SizedBox(),
-                  (widget.value == null)
-                      ? BlocBuilder<AccountBloc, AccountState>(
-                          builder: (context, state) => _textField(
-                              state.account.get<int>(widget.itemType),
-                              left,
-                              right))
-                      : _textField(widget.value!, left, right),
-                  icon,
+                  Asset.load<Image>("icon_${widget.itemType.name}"),
                   Positioned(
                       right: 0,
                       height: 84.d,
