@@ -65,9 +65,9 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                 alignment: Alignment.topCenter,
                 children: [
                   Widgets.rect(
-                    width: 300.d,
+                    width: 340.d,
                     child: MinimalCardItem(card,
-                        size: 300.d, extraPower: _getSacrificesPower()),
+                        size: 340.d, extraPower: _getSacrificesPower()),
                   ),
                   cardsListBuilder(account, crossAxisCount: 5),
                   _isSacrificeAvailable || selectedCards.value.isEmpty

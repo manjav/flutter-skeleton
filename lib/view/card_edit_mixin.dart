@@ -33,7 +33,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
         left: 0,
         right: 0,
         bottom: 32.d,
-        top: 580.d,
+        top: 620.d,
         child: Asset.load<Image>("ui_popup_bottom",
             centerSlice: ImageCenterSliceDate(
                 200, 114, const Rect.fromLTWH(99, 4, 3, 3))));
@@ -48,7 +48,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return Positioned(
-      top: 444.d,
+      top: 484.d,
       bottom: 0.d,
       right: 0,
       left: 0,
