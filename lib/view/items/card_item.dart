@@ -58,12 +58,11 @@ class _CardItemState extends State<CardItem> {
         LoaderWidget(AssetType.image, baseCard.get<String>(CardFields.name),
             subFolder: "cards", width: 216 * s),
         Positioned(
-            top: 4 * s,
+            top: 6 * s,
             left: 22 * s,
+            height: 52 * s,
             child: SkinnedText(name,
-                style: TStyles.small.copyWith(
-                    fontSize: (22 * s + 60 * s / (name.length))
-                        .clamp(22 * s, 40 * s)))),
+                style: _small!.autoSize(name.length, 8, 36 * s))),
         Positioned(
             top: 1 * s,
             right: 23 * s,

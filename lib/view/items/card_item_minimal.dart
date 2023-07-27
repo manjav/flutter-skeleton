@@ -30,7 +30,7 @@ class _MinimalCardItemState extends State<MinimalCardItem> {
         baseCard.get<FruitData>(CardFields.fruit).get<String>(FriutFields.name);
 
     var s = widget.size / 256;
-    _style = TStyles.medium.copyWith(fontSize: 44 * s);
+    _style = TStyles.medium.copyWith(fontSize: 32 * s);
 
     return Hero(
       tag: widget.card.id,
@@ -42,19 +42,19 @@ class _MinimalCardItemState extends State<MinimalCardItem> {
             ? Positioned(
                 top: 4 * s,
                 left: 22 * s,
+                height: 48 * s,
                 child: SkinnedText(name,
-                    style: _style!.copyWith(
-                        fontSize: (22 * s + 60 * s / (name.length))
-                            .clamp(22 * s, 40 * s))))
+                    style: _style!.autoSize(name.length, 12, 32 * s)))
             : const SizedBox(),
         Positioned(
-            top: 3 * s,
+            top: 6 * s,
             right: 20 * s,
-            width: 27 * s,
+            width: 30 * s,
+            height: 48 * s,
             child: SkinnedText(level, style: _style)),
         Positioned(
           bottom: 16 * s,
-          left: 22 * s,
+          left: 16 * s,
           child: Row(children: [
             SkinnedText(widget.card.power.compact(), style: _style),
             widget.extraPower > 0

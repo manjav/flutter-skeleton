@@ -39,6 +39,11 @@ class TStyles {
   static TextStyle largeInvert = _style();
 }
 
+extension Autosize on TextStyle {
+  TextStyle autoSize(int length, int defaultLength, double size) => copyWith(
+      fontSize: (defaultLength / length * size).clamp(size * 0.4, size));
+}
+
 TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   return TextStyle(
     fontSize: size,
