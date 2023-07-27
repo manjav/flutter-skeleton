@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -61,8 +58,8 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                       left: left,
                       height: 64.d,
                       child: Widgets.rect(
-                        alignment: const Alignment(0.4, -0.2),
-                        padding: EdgeInsets.only(bottom: 10.d),
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(bottom: 8.d, left: 40.d),
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 centerSlice: sliceData.centerSlice,
@@ -111,8 +108,7 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
         text,
         alignment:
             widget.clickable ? Alignment.centerLeft : Alignment.centerLeft,
-        style: TStyles.large.copyWith(
-            fontSize: (24.d + 60.d / (text.length)).clamp(22.d, 42.d)),
+        style: TStyles.large.autoSize(text.length, 5, 38.d),
       ),
     );
   }
