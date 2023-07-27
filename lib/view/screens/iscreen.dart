@@ -74,8 +74,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   List<Widget> appBarElementsRight() {
     return [
       Indicator(widget.type.name, AccountField.gold),
-      SizedBox(width: 16.d),
-      Indicator(widget.type.name, AccountField.nectar, width: 300.d)
+      Indicator(widget.type.name, AccountField.nectar, width: 310.d)
     ];
   }
 

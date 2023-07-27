@@ -56,29 +56,28 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
               child: Material(
                 color: TColors.transparent,
                 child: Stack(alignment: Alignment.centerLeft, children: [
-                  widget.clickable
-                      ? Positioned(
-                          right: right,
-                          left: left,
-                          height: 64.d,
-                          child: Widgets.rect(
-                            padding: EdgeInsets.fromLTRB(40.d, 0, 0, 10.d),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    centerSlice: sliceData.centerSlice,
-                                    image: Asset.load<Image>('ui_frame_wood',
-                                            centerSlice: sliceData)
-                                        .image)),
-                            child: (widget.value == null)
-                                ? BlocBuilder<AccountBloc, AccountState>(
-                                    builder: (context, state) => _textField(
-                                        state.account.get<int>(widget.itemType),
-                                        left,
-                                        right))
-                                : _textField(widget.value!, left, right),
-                          ))
-                      : const SizedBox(),
-                  Asset.load<Image>("icon_${widget.itemType.name}"),
+                  Positioned(
+                      right: right,
+                      left: left,
+                      height: 64.d,
+                      child: Widgets.rect(
+                        alignment: const Alignment(0.4, -0.2),
+                        padding: EdgeInsets.only(bottom: 10.d),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                centerSlice: sliceData.centerSlice,
+                                image: Asset.load<Image>('ui_frame_wood',
+                                        centerSlice: sliceData)
+                                    .image)),
+                        child: (widget.value == null)
+                            ? BlocBuilder<AccountBloc, AccountState>(
+                                builder: (context, state) => _textField(
+                                    state.account.get<int>(widget.itemType),
+                                    left,
+                                    right))
+                            : _textField(widget.value!, left, right),
+                      )),
+                  Asset.load<Image>(_getIcon()),
                   Positioned(
                       right: 0,
                       height: 84.d,
@@ -116,5 +115,12 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
             fontSize: (24.d + 60.d / (text.length)).clamp(22.d, 42.d)),
       ),
     );
+  }
+
+  String _getIcon() {
+    if (widget.itemType == AccountField.league_rank) {
+      return "icon_league_${0}";
+    }
+    return "icon_${widget.itemType.name}";
   }
 }

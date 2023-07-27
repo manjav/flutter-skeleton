@@ -132,7 +132,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                               SizedBox(width: 16.d),
                               Indicator("origin", AccountField.league_rank,
                                   clickable: false,
-                                  width: 220.d,
+                                  width: 240.d,
                                   value: _selectedOpponent.value.leagueRank)
                             ],
                           ));
