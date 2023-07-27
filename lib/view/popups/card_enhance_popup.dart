@@ -92,7 +92,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                                     "card_enhance_max".l(),
                                     [
                                       Row(children: [
-                                        Asset.load<Image>("ui_nectar",
+                                        Asset.load<Image>("icon_nectar",
                                             height: 76.d),
                                         SkinnedText(
                                             _getMaxEnhanceCost().compact()),
@@ -112,7 +112,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                                         " x${selectedCards.value.length}"),
                                   ]),
                                   Row(children: [
-                                    Asset.load<Image>("ui_gold", height: 64.d),
+                                    Asset.load<Image>("icon_gold",
+                                        height: 64.d),
                                     SkinnedText(_getSacrificeCost().compact()),
                                   ]),
                                 ],

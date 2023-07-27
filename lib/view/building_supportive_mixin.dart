@@ -93,7 +93,7 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
                                   centerSlice: bgCenterSlice)
                               .image)),
                   child: Row(children: [
-                    Asset.load<Image>("ui_gold", height: 76.d),
+                    Asset.load<Image>("icon_gold", height: 76.d),
                     SkinnedText(building.upgradeCost.compact(),
                         style: TStyles.large),
                   ]),

@@ -48,7 +48,7 @@ class _TreasuryBuildingPopupState
           Widgets.slider(0, gold.toDouble(), building.benefit.toDouble(),
               child:
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Asset.load<Image>("ui_gold", height: 64.d),
+                Asset.load<Image>("icon_gold", height: 64.d),
                 SkinnedText("${gold.compact()}/${building.benefit.compact()}",
                     style: TStyles.large),
               ])),
@@ -60,7 +60,7 @@ class _TreasuryBuildingPopupState
                   ButtonColor.teal,
                   gold > 0,
                   [
-                    Asset.load<Image>("ui_gold", height: 64.d),
+                    Asset.load<Image>("icon_gold", height: 64.d),
                     SizedBox(width: 8.d),
                     SkinnedText("-${step.compact()}".l())
                   ],

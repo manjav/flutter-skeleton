@@ -195,7 +195,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Asset.load<Image>("ui_gold", width: 96.d),
+                                Asset.load<Image>("icon_gold", width: 96.d),
                                 SizedBox(width: 8.d),
                                 SkinnedText(floatingCost.compact(),
                                     style: TStyles.large),

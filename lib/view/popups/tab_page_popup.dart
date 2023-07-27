@@ -28,8 +28,8 @@ class _TabPagePopupState extends AbstractPopupState<TabPagePopup>
         width: 850.d,
         height: 850.d,
         child: tabsBuilder(data: [
-          TabData("Gold", "ui_gold"),
-          TabData("Nectar", "ui_nectar"),
+          TabData("Gold", "icon_gold"),
+          TabData("Nectar", "icon_nectar"),
           TabData("Pluus", "ui_plus"),
         ]));
   }

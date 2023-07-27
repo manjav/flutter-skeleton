@@ -135,7 +135,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
                               centerSlice: bgCenterSlice)
                           .image)),
               child: Row(children: [
-                Asset.load<Image>("ui_gold", height: 76.d),
+                Asset.load<Image>("icon_gold", height: 76.d),
                 SkinnedText(_getMergeCost().compact(), style: TStyles.large),
               ]),
             )

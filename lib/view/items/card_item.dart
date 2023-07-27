@@ -102,7 +102,7 @@ class _CardItemState extends State<CardItem> {
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Asset.load<Image>("ui_gold",
+                                      Asset.load<Image>("icon_gold",
                                           height: 64.d),
                                       SizedBox(width: 4.d),
                                       SkinnedText(widget.card
