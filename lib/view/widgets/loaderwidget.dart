@@ -33,16 +33,24 @@ class LoaderWidget extends StatefulWidget {
 
   @override
   createState() => _LoaderWidgetState();
+  static final Map<String, Loader> cacshedLoders = {};
 }
 
 class _LoaderWidgetState extends State<LoaderWidget> {
-  final _loader = Loader();
-  String _loadedPath = "";
+  late Loader _loader;
   Widget? _result;
+  String _poolName = "";
+
+  @override
+  void initState() {
+    _poolName = "${widget.type.name}_${widget.name}";
+    _loader = LoaderWidget.cacshedLoders[_poolName] ?? Loader();
+    _load();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _load();
     return SizedBox(
       width: widget.width,
       height: widget.height,
@@ -55,28 +63,27 @@ class _LoaderWidgetState extends State<LoaderWidget> {
         "${LoaderWidget.baseURL}/${widget.type.folder(widget.subFolder ?? '')}";
     var netPath = "${widget.name}.${widget.type.extension}";
     var path = "${widget.name}.${widget.type.type}";
-    if (_loader.path != path) {
+    if (_loader.path.isEmpty) {
       await _loader.load(path, '$url/$netPath',
           hash: LoaderWidget.hashMap[path]);
-      if (mounted) {
-        _result = _getResult();
-        setState(() {});
-      }
+      LoaderWidget.cacshedLoders[_poolName] = _loader;
+    }
+    if (mounted) {
+      _result = _getResult();
+      setState(() {});
     }
   }
 
   Widget? _getResult() {
-    if (_loadedPath == _loader.path) return _result;
     if (_loader.bytes == null) return null;
-    _loadedPath = _loader.path;
-
     switch (widget.type) {
       case AssetType.animation:
       case AssetType.animationZipped:
         return RiveAnimation.file(_loader.file!.path,
             onInit: ((p0) => widget.onRiveInit?.call(p0)), fit: widget.fit);
       case AssetType.image:
-        return Image.memory(Uint8List.fromList(_loader.bytes!));
+        return Image.memory(Uint8List.fromList(_loader.bytes!),
+            gaplessPlayback: true);
       case AssetType.vector:
         return SvgPicture.memory(Uint8List.fromList(_loader.bytes!));
       default:

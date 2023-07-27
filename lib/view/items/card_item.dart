@@ -28,6 +28,8 @@ class _CardItemState extends State<CardItem> {
   Timer? _cooldownTimer;
   final ValueNotifier<int> _remainingCooldown = ValueNotifier(0);
 
+  GlobalKey _imageKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
@@ -56,7 +58,7 @@ class _CardItemState extends State<CardItem> {
       child: Stack(alignment: Alignment.center, children: [
         Asset.load<Image>('cards_frame_$level'),
         LoaderWidget(AssetType.image, baseCard.get<String>(CardFields.name),
-            subFolder: "cards", width: 216 * s),
+            key: _imageKey, subFolder: "cards", width: 216 * s),
         Positioned(
             top: 6 * s,
             left: 22 * s,

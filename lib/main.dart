@@ -10,6 +10,7 @@ import 'blocs/account_bloc.dart';
 import 'blocs/services.dart';
 import 'services/theme.dart';
 import 'view/route_provider.dart';
+import 'view/widgets/loaderwidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void restartApp() {
+    LoaderWidget.cacshedLoders.clear();
     setState(() => _initialize());
   }
 
