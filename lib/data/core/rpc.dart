@@ -24,6 +24,7 @@ enum RpcId {
   rankingGlobal,
   rankingExpertTribes,
   rankingTopTribes,
+  league,
 }
 
 extension RpcIdEx on RpcId {
@@ -45,6 +46,7 @@ extension RpcIdEx on RpcId {
       RpcId.rankingGlobal => "ranking/global",
       RpcId.rankingExpertTribes => "ranking/tribe",
       RpcId.rankingTopTribes => "ranking/tribebasedonseed",
+      RpcId.league => "ranking/league",
     };
   }
 

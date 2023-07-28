@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../blocs/services.dart';
 import '../../data/core/account.dart';
+import '../../data/core/ranking.dart';
+import '../../data/core/rpc.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
+import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
 import '../../view/tab_provider.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../route_provider.dart';
+import '../widgets.dart';
+import '../widgets/skinnedtext.dart';
 
 class LeaguePopup extends AbstractPopup {
   const LeaguePopup({super.key, required super.args})
@@ -23,11 +30,13 @@ class LeaguePopup extends AbstractPopup {
 class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
     with TabProviderMixin {
   late Account _account;
+  LeagueData? _leagueData;
 
   @override
   void initState() {
-    contentPadding = EdgeInsets.fromLTRB(12.d, 176.d, 12.d, 64.d);
+    contentPadding = EdgeInsets.fromLTRB(0, 176.d, 0, 32.d);
     _account = BlocProvider.of<AccountBloc>(context).account!;
+    selectedTabIndex = 0;
     super.initState();
   }
 
@@ -54,8 +63,151 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
     };
   }
 
-  Widget _myLeaguePage() {
+  _loadLeagueData() async {
+    try {
+      var data = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.league);
+      _leagueData = LeagueData.init(data, _account.get<int>(AccountField.id));
+      setState(() {});
+    } finally {}
+  }
+
+  _myLeaguePage() {
+    if (_leagueData == null) {
+      _loadLeagueData();
     return const SizedBox();
+  }
+    var indices = LeagueData.getIndices(_leagueData!.id);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(height: 16.d),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LoaderWidget(AssetType.image, "league_${indices.$1}",
+                    subFolder: "leagues", height: 170.d),
+                SkinnedText(
+                    "${'league_${indices.$1}'.l()}  ${'l_${indices.$2}'.l()}"),
+                Widgets.rect(
+                    radius: 24.d,
+                    padding: EdgeInsets.all(20.d),
+                    color: TColors.primary70,
+                    child: SkinnedText(
+                        (_account.get<int>(AccountField.league_remaining_time))
+                            .toRemainingTime()))
+              ],
+            ),
+            Widgets.rect(
+                width: 500.d,
+                height: 320.d,
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Asset.load<Image>('rank_platform'),
+                    _prizeItem(0, null, null, 115.d),
+                    _prizeItem(1, 8.d, null, 53.d),
+                    _prizeItem(2, null, 8.d, 30.d)
+                  ],
+                )),
+          ],
+        ),
+        SizedBox(height: 16.d),
+        Widgets.rect(
+            height: 92.d,
+            color: TColors.blue,
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              SkinnedText("tribe_name".l(), style: TStyles.small),
+              SizedBox(width: 60.d),
+              Asset.load<Image>("icon_seed", height: 56.d),
+              SizedBox(width: 8.d),
+              SkinnedText("weekly_score".l(),
+                  style: TStyles.tiny.copyWith(height: 1)),
+              SizedBox(width: 10.d),
+            ])),
+        Expanded(
+            child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(104.d),
+                    bottomRight: Radius.circular(104.d)),
+                child: ListView.builder(
+                    itemBuilder: (c, i) =>
+                        _itemBuilder(c, _leagueData!.list[i]),
+                    itemCount: _leagueData!.list.length))),
+      ],
+    );
+  }
+
+  _prizeItem(int index, double? left, double? right, double bottom) {
+    return Positioned(
+        bottom: bottom,
+        left: left,
+        right: right,
+        width: 150.d,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Asset.load<Image>("icon_cards", height: 46.d),
+            SkinnedText(" ${3 - index}")
+          ]),
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Asset.load<Image>("icon_power", height: 46.d),
+            SkinnedText("+${_leagueData!.rewardAvgCardPower.compact()}",
+                style: TStyles.small)
+          ]),
+          SizedBox(height: 30.d),
+          SkinnedText(_leagueData!.winnerRanges[index].join("~"),
+              style: TStyles.small)
+        ]));
+  }
+
+  _itemBuilder(BuildContext context, LeagueRank record) {
+    if (record.name.isEmpty) {
+      return SizedBox(height: 120.d, child: SkinnedText("rank_near".l()));
+    }
+    var color = record.index % 2 == 0 ? TColors.primary : TColors.primary90;
+    if (record.itsMe) {
+      color = TColors.orange;
+      record.name = record.itsMe ? "You" : record.name;
+    }
+
+    return Widgets.button(
+        height: 100.d,
+        radius: 0,
+        color: color,
+        padding: EdgeInsets.only(left: 8.d, right: 16.d),
+        child: Row(children: [
+          Widgets.rect(
+              radius: 24.d,
+              width: 144.d,
+              height: 76.d,
+              alignment: Alignment.center,
+              color: record.rank < 4 ? TColors.transparent : TColors.primary20,
+              child: record.rank < 4
+                  ? Asset.load<Image>("medal_${record.rank}")
+                  : Text("${record.rank}", style: TStyles.smallInvert)),
+          SizedBox(width: 16.d),
+          Expanded(child: Text(record.name, style: TStyles.tiny)),
+          SizedBox(width: 4.d),
+          SizedBox(
+              width: 200.d,
+              child: Text(record.tribeName,
+                  style: TStyles.small, textAlign: TextAlign.center)),
+          SizedBox(width: 100.d),
+          Text(record.weeklyScore.compact(), style: TStyles.small),
+        ]),
+        onPressed: () async {
+          if (!record.itsMe) {
+            // var accounts = await _network.getAccounts([record.ownerId]);
+            // if (mounted) {
+            //   Navigator.pushNamed(context, Pages.profile.routeName,
+            //       arguments: accounts[0]);
+            // }
+          }
+        });
   }
 
   Widget _roadMap() {
@@ -79,10 +231,10 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
                 left: 0,
                 child: Row(children: [
                   Asset.load<Image>("icon_gold", width: 60.d),
-                  Text("  ${_account.get<int>(AccountField.rank)}"),
+                  Text("  ${_leagueData!.currentBonus}"),
                   const Expanded(child: SizedBox()),
                   Asset.load<Image>("icon_gold", width: 60.d),
-                  Text("  ${_account.get<int>(AccountField.rank)}"),
+                  Text("  ${_leagueData!.nextBonus}"),
                 ])),
           ],
         ));
