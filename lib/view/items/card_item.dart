@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/localization.dart';
 
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';

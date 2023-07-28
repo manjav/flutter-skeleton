@@ -74,7 +74,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
     try {
       var data = await BlocProvider.of<Services>(context)
           .get<HttpConnection>()
-          .tryRpc(context, api, params: {});
+          .tryRpc(context, api);
       if (api == RpcId.rankingGlobal) {
         Ranks.lists[api] =
             Ranks.createList<Player>(data, _account.get<int>(AccountField.id));

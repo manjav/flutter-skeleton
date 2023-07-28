@@ -33,9 +33,6 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   }
 
   @override
-  titleBuilder() => "${_name}_t".l();
-
-  @override
   contentFactory() {
     var siblings = BlocProvider.of<AccountBloc>(context)
         .account!
@@ -54,7 +51,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
             Column(
               children: [
                 Widgets.skinnedButton(
-                  label: "card_enhance".l(),
+                  label: "popupcardenhance".l(),
                   width: 370.d,
                   isEnable:
                       _card.power < _card.base.get<int>(CardFields.powerLimit),
@@ -64,7 +61,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 SizedBox(height: 16.d),
                 Widgets.skinnedButton(
                   isEnable: siblings.length > 1,
-                  label: "card_merge".l(),
+                  label: "popupcardmerge".l(),
                   width: 370.d,
                   onPressed: () => _onButtonsTap(Routes.popupCardMerge),
                   onDisablePressed: () => toast("card_no_sibling".l()),
