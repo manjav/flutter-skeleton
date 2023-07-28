@@ -10,6 +10,7 @@ import '../../blocs/account_bloc.dart';
 import '../../blocs/services.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
@@ -166,10 +167,10 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
   Widget _opponentInfo(CrossAxisAlignment align, Account account) {
     var itsMe = align == CrossAxisAlignment.start;
     var opponent = widget.opponent ??
-        Opponent({
+        Opponent.init({
           "name": (itsMe ? "you_l" : "enemy_l").l(),
           "def_power": getQuestPower(account)[2]
-        });
+        }, 0);
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,

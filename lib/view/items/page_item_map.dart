@@ -8,6 +8,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../../view/items/page_item.dart';
+import '../../view/widgets/indicator.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../map_elements/building_widget.dart';
@@ -35,6 +36,12 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
             child: Indicator("home", AccountField.league_rank,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupLeague.routeName))),
+        Positioned(
+            top: 380.d,
+            left: 32.d,
+            child: Indicator("home", AccountField.rank,
+                onTap: () => Navigator.pushNamed(
+                    context, Routes.popupRanking.routeName))),
         // _building(buildings[Buildings.cards]!, 167, 560),
         _building(buildings[Buildings.defense]!, 400, 300),
         _building(buildings[Buildings.offense]!, 95, 670),

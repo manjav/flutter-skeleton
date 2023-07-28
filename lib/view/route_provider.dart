@@ -10,6 +10,7 @@ import 'popups/card_select_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/league_popup.dart';
+import 'popups/ranking_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
 import 'screens/home_screen.dart';
@@ -33,6 +34,7 @@ enum Routes {
   popupCardSelect,
   popupMessage,
   popupLeague,
+  popupRanking,
   popupOpponents,
   popupSupportiveBuilding,
   popupMineBuilding,
@@ -52,6 +54,7 @@ extension RouteProvider on Routes {
       "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
       "/popupLeague" => LeaguePopup(args: args ?? {}),
+      "/popupRanking" => RankingPopup(args: args ?? {}),
       "/popupOpponents" => OpponentsPopup(args: args ?? {}),
       "/popupSupportiveBuilding" => SupportiveBuildingPopup(args: args ?? {}),
       "/popupMineBuilding" => MineBuildingPopup(args: args ?? {}),

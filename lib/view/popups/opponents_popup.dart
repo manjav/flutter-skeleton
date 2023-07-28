@@ -7,6 +7,7 @@ import 'package:rive/rive.dart';
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services.dart';
 import '../../data/core/account.dart';
+import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
@@ -43,7 +44,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   List<Opponent> _opponents = [];
   final ValueNotifier<Opponent> _selectedOpponent =
-      ValueNotifier(Opponent(null));
+      ValueNotifier(Opponent.init(null, 0));
   late Account _account;
 
   final _mapSize = 924.d;
@@ -111,7 +112,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                               LevelIndicator(
                                   size: 170.d,
                                   level: value.level,
-                                  xp: value.xp,
+                                  xp: value.score,
                                   avatarId: value.avatarId),
                               SizedBox(width: 16.d),
                               Expanded(
