@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/data/core/ranking.dart';
 
 import '../../services/deviceinfo.dart';
 import '../../services/sounds.dart';
@@ -55,6 +56,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void restartApp() {
+    Ranks.lists.clear();
     LoaderWidget.cacshedLoders.clear();
     setState(() => _initialize());
   }
