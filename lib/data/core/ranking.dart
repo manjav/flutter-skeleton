@@ -85,6 +85,32 @@ class Player extends Rank {
     avatarId = map["avatar_id"] ?? 0;
   }
 }
+class LeagueData {
+  static const stages = <List<int>>[
+    [1],
+    [2, 3, 4, 5, 6],
+    [7, 8, 9, 10, 11],
+    [12, 13, 14, 15, 16],
+    [17, 18, 19, 20, 21],
+    [22, 23, 24]
+  ];
+
+  static (int, int) getIndices(int id) {
+    var stageIndex = 1;
+    for (var stage in stages) {
+      var stepIndex = 1;
+      for (var step in stage) {
+        if (step == id) {
+          return (stageIndex, stepIndex);
+        }
+        stepIndex++;
+      }
+      stageIndex++;
+    }
+    return (0, 0);
+  }
+
+}
 
 class Opponent extends Player {
   static int scoutCost = 0;
