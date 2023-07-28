@@ -230,7 +230,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                   image: DecorationImage(
                       fit: BoxFit.fill,
                       image: Asset.load<Image>("ui_prize_frame").image)),
-              child: Asset.load<Image>("ui_$type")),
+              child: Asset.load<Image>("icon_$type")),
           SkinnedText(" ${value > 0 ? '+' : ''}${value.compact()}")
         ]));
   }
