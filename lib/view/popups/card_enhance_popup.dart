@@ -40,9 +40,6 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   }
 
   @override
-  String titleBuilder() => "card_enhance".l();
-
-  @override
   selectedForeground() {
     return Widgets.rect(
         radius: 18.d,

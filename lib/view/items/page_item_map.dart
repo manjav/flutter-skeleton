@@ -29,6 +29,12 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
       return Stack(alignment: Alignment.topLeft, children: [
         const LoaderWidget(AssetType.animation, "map_home",
             fit: BoxFit.fitWidth),
+        Positioned(
+            top: 240.d,
+            left: 32.d,
+            child: Indicator("home", AccountField.league_rank,
+                onTap: () => Navigator.pushNamed(
+                    context, Routes.popupLeague.routeName))),
         // _building(buildings[Buildings.cards]!, 167, 560),
         _building(buildings[Buildings.defense]!, 400, 300),
         _building(buildings[Buildings.offense]!, 95, 670),

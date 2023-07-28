@@ -72,7 +72,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ));
   }
 
-  String titleBuilder() => 'popup_${widget.type.name.toLowerCase()}'.l();
+  String titleBuilder() => widget.type.name.toLowerCase().l();
 
   Widget titleTextFactory() {
     var centerSlice = ImageCenterSliceDate(562, 130);
