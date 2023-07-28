@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/localization.dart';
 
 import '../../data/core/card.dart';
 import '../../services/theme.dart';
@@ -21,7 +22,7 @@ class MinimalCardItem extends StatefulWidget {
 
 class _MinimalCardItemState extends State<MinimalCardItem> {
   TextStyle? _style;
-
+  final GlobalKey _imageKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
@@ -35,15 +36,16 @@ class _MinimalCardItemState extends State<MinimalCardItem> {
     return Hero(
       tag: widget.card.id,
       child: Stack(alignment: Alignment.center, children: [
-        Asset.load<Image>('cards_frame_$level'),
-        LoaderWidget(AssetType.image, baseCard.get<String>(CardFields.name),
-            subFolder: "cards", width: 216 * s),
+        Asset.load<Image>('card_frame_${_getCardBg(level)}'),
+        LoaderWidget(AssetType.image,
+            widget.card.isHero ? name : baseCard.get<String>(CardFields.name),
+            key: _imageKey, subFolder: "cards", width: 216 * s),
         widget.showTitle
             ? Positioned(
                 top: 4 * s,
                 left: 22 * s,
                 height: 48 * s,
-                child: SkinnedText(name,
+                child: SkinnedText("${name}_t".l(),
                     style: _style!.autoSize(name.length, 12, 32 * s)))
             : const SizedBox(),
         Positioned(
@@ -65,5 +67,11 @@ class _MinimalCardItemState extends State<MinimalCardItem> {
         )
       ]),
     );
+  }
+
+  _getCardBg(String level) {
+    if (widget.card.isHero) return "hero";
+    if (widget.card.isMonster) return "monster";
+    return level;
   }
 }

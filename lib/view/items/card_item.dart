@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/localization.dart';
 
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
@@ -31,9 +32,9 @@ class _CardItemState extends State<CardItem> {
   @override
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
-    var fruit = baseCard.get<FruitData>(CardFields.fruit);
     var level = baseCard.get<int>(CardFields.rarity).toString();
-    var name = fruit.get<String>(FriutFields.name);
+    var name =
+        baseCard.get<FruitData>(CardFields.fruit).get<String>(FriutFields.name);
     var cooldown = baseCard.get<int>(CardFields.cooldown);
     if (widget.inDeck) {
       _remainingCooldown.value = widget.card.getRemainingCooldown();
@@ -54,14 +55,15 @@ class _CardItemState extends State<CardItem> {
     return Hero(
       tag: widget.card.id,
       child: Stack(alignment: Alignment.center, children: [
-        Asset.load<Image>('cards_frame_$level'),
-        LoaderWidget(AssetType.image, baseCard.get<String>(CardFields.name),
+        Asset.load<Image>('card_frame_${_getCardBg(level)}'),
+        LoaderWidget(AssetType.image,
+            widget.card.isHero ? name : baseCard.get<String>(CardFields.name),
             key: _imageKey, subFolder: "cards", width: 216 * s),
         Positioned(
             top: 6 * s,
             left: 22 * s,
             height: 52 * s,
-            child: SkinnedText(name,
+            child: SkinnedText("${name}_t".l(),
                 style: _small!.autoSize(name.length, 8, 36 * s))),
         Positioned(
             top: 1 * s,
@@ -122,5 +124,11 @@ class _CardItemState extends State<CardItem> {
   void dispose() {
     _cooldownTimer?.cancel();
     super.dispose();
+  }
+
+  _getCardBg(String level) {
+    if (widget.card.isHero) return "hero";
+    if (widget.card.isMonster) return "monster";
+    return level;
   }
 }
