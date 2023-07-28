@@ -31,6 +31,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
     with TabProviderMixin {
   late Account _account;
   LeagueData? _leagueData;
+  LeagueHistory? _leagueHistory;
 
   @override
   void initState() {
@@ -76,8 +77,8 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
   _myLeaguePage() {
     if (_leagueData == null) {
       _loadLeagueData();
-    return const SizedBox();
-  }
+      return const SizedBox();
+    }
     var indices = LeagueData.getIndices(_leagueData!.id);
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -241,6 +242,56 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
   }
 
   Widget _historyPage() {
-    return const SizedBox();
+    if (_leagueHistory == null) {
+      _loadLeagueHistory();
+      return const SizedBox();
+    }
+    return ClipRRect(
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(104.d),
+            bottomRight: Radius.circular(104.d)),
+        child: ListView.builder(
+            itemBuilder: _historyItemBuilder,
+            itemCount: LeagueData.stages.length));
+  }
+
+  _loadLeagueHistory([int round = 1]) async {
+    try {
+      var data = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.leagueHistory,
+              params: {RpcParams.rounds.name: "[$round]"});
+      _leagueHistory =
+          LeagueHistory.init(data, round, _account.get<int>(AccountField.id));
+      setState(() {});
+    } finally {}
+  }
+
+  Widget? _historyItemBuilder(BuildContext context, int index) {
+    var stage = LeagueData.stages[index];
+    var steps = <Widget>[
+      LoaderWidget(AssetType.image, "league_${index + 1}",
+          subFolder: "leagues", height: 170.d)
+    ];
+    for (var step in stage) {
+      steps.add(_stepBuilder(step));
+    }
+    return Column(mainAxisSize: MainAxisSize.min, children: steps);
+  }
+
+  Widget _stepBuilder(int step) {
+    var indices = LeagueData.getIndices(step);
+    var lines = <Widget>[];
+    if (step > 1) {
+      lines.add(Widgets.rect(
+          height: 92.d,
+          color: TColors.blue,
+          alignment: Alignment.center,
+          child: Text("l_${indices.$2}".l(), style: TStyles.mediumInvert)));
+    }
+    for (var rank in _leagueHistory!.lists["$step"]!) {
+      lines.add(_itemBuilder(context, rank));
+    }
+    return Column(mainAxisSize: MainAxisSize.min, children: lines);
   }
 }

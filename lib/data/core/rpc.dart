@@ -25,6 +25,7 @@ enum RpcId {
   rankingExpertTribes,
   rankingTopTribes,
   league,
+  leagueHistory,
 }
 
 extension RpcIdEx on RpcId {
@@ -47,6 +48,7 @@ extension RpcIdEx on RpcId {
       RpcId.rankingExpertTribes => "ranking/tribe",
       RpcId.rankingTopTribes => "ranking/tribebasedonseed",
       RpcId.league => "ranking/league",
+      RpcId.leagueHistory => "ranking/leaguehistory",
     };
   }
 
@@ -88,5 +90,7 @@ enum RpcParams {
   // Buildings
   type,
   tribe_id,
-  amount
+  amount,
+  // League
+  rounds
 }
