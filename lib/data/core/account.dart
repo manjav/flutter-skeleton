@@ -1,9 +1,7 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
-import 'dart:convert';
 import 'dart:math' as math;
 
-import '../../services/prefs.dart';
 import '../../utils/utils.dart';
 import 'building.dart';
 import 'card.dart';
@@ -246,7 +244,9 @@ class Account extends StringMap<dynamic> {
           Buildings.defense,
           Buildings.mine,
           Buildings.auction,
-          Buildings.offense
+          Buildings.offense,
+          Buildings.cards,
+          Buildings.base
         ];
     var cards = getCards().values.toList();
     cards.removeWhere((card) {
@@ -281,81 +281,5 @@ class Account extends StringMap<dynamic> {
     if (data.containsKey("player_gold")) map["gold"] = data["player_gold"];
     var tribe = getBuilding(Buildings.tribe);
     if (tribe != null) tribe.map["gold"] = data["tribe_gold"];
-  }
-}
-
-class Opponent {
-  static int scoutCost = 0;
-  static Map<String, dynamic> _attackLogs = {};
-  int id = 0,
-      rank = 0,
-      index = 0,
-      xp = 0,
-      gold = 0,
-      tribePermission = 0,
-      level = 0,
-      defPower = 0,
-      status = 0,
-      leagueId = 0,
-      leagueRank = 0,
-      avatarId = 0,
-      powerRatio = 0;
-  String name = "", tribeName = "";
-  bool isRevealed = false;
-  int todayAttacksCount = 0;
-
-  Opponent(Map<String, dynamic>? map) {
-    if (map == null) return;
-    id = map["id"] ?? 0;
-    xp = map["xp"] ?? 0;
-    name = map["name"] ?? "";
-    rank = map["rank"] ?? 0;
-    gold = map["gold"] ?? 0;
-    level = map["level"] ?? 0;
-    status = map["status"] ?? 0;
-    defPower = map["def_power"] ?? 0;
-    leagueId = map["league_id"] ?? 0;
-    avatarId = map["avatar_id"] ?? 0;
-    tribeName = map["tribe_name"] ?? "";
-    leagueRank = map["league_rank"] ?? 0;
-    powerRatio = map["power_ratio"] ?? 0;
-    tribePermission = map["tribe_permission"] ?? 0;
-  }
-
-  static List<Opponent> fromMap(Map<String, dynamic> map) {
-    scoutCost = map["scout_cost"];
-    _attackLogs = Opponent._getAttacksLog();
-    var list = <Opponent>[];
-    var index = 0;
-    for (var player in map["players"]) {
-      var opponent = Opponent(player);
-      opponent.index = index++;
-      opponent.todayAttacksCount = (_attackLogs["${opponent.id}"] ?? 0);
-      list.add(opponent);
-    }
-    return list;
-  }
-
-  static Map<String, dynamic> _getAttacksLog() {
-    var attacks = jsonDecode(Pref.attacks.getString(defaultValue: '{}'));
-    var days = DateTime.now().daysSinceEpoch;
-    if (attacks["days"] != days) {
-      attacks = {"days": days};
-    }
-    return attacks;
-  }
-
-  void increaseAttacksCount() {
-    todayAttacksCount++;
-    _attackLogs["$id"] = todayAttacksCount;
-    Pref.attacks.setString(jsonEncode(_attackLogs));
-  }
-
-  int getGoldLevel(int accountLevel) {
-    var goldRate = gold / todayAttacksCount;
-    if (goldRate < 100 * accountLevel) return 1;
-    if (goldRate < 500 * accountLevel) return 2;
-    if (goldRate < 1000 * accountLevel) return 3;
-    return 4;
   }
 }
