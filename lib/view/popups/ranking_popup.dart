@@ -64,7 +64,26 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
 
   Widget _getSelectedPage() {
     var api = Ranks.lists.keys.toList()[selectedTabIndex];
+    // var icons = ["xp", "xp", "seed"];
+    _loadRanking(api);
     return _listView(api);
+  }
+
+  _loadRanking(RpcId api) async {
+    if (Ranks.lists[api] != null) return;
+    try {
+      var data = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, api, params: {});
+      if (api == RpcId.rankingGlobal) {
+        Ranks.lists[api] =
+            Ranks.createList<Player>(data, _account.get<int>(AccountField.id));
+      } else {
+        Ranks.lists[api] =
+            Ranks.createList<TribeRank>(data, _account.map["tribe"]["id"]);
+      }
+      setState(() {});
+    } finally {}
   }
 
   _listView(RpcId api) {

@@ -19,6 +19,11 @@ enum RpcId {
   upgrade,
   deposit,
   witdraw,
+
+  // Ranking
+  rankingGlobal,
+  rankingExpertTribes,
+  rankingTopTribes,
 }
 
 extension RpcIdEx on RpcId {
@@ -36,7 +41,10 @@ extension RpcIdEx on RpcId {
       RpcId.playerLoad => "player/load",
       RpcId.upgrade => "tribe/upgrade",
       RpcId.deposit => "player/deposittobank",
-      RpcId.witdraw => "player/withdrawfrombank"
+      RpcId.witdraw => "player/withdrawfrombank",
+      RpcId.rankingGlobal => "ranking/global",
+      RpcId.rankingExpertTribes => "ranking/tribe",
+      RpcId.rankingTopTribes => "ranking/tribebasedonseed",
     };
   }
 
