@@ -72,9 +72,9 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ));
   }
 
-  titleBuilder() => 'popup_${widget.type.name.toLowerCase()}'.l();
+  String titleBuilder() => 'popup_${widget.type.name.toLowerCase()}'.l();
 
-  titleTextFactory() {
+  Widget titleTextFactory() {
     var centerSlice = ImageCenterSliceDate(562, 130);
     return Widgets.rect(
         width: 562.d,
@@ -90,7 +90,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         child: SkinnedText(titleBuilder(), style: TStyles.large));
   }
 
-  closeButtonFactory() {
+  Widget closeButtonFactory() {
     return Widgets.button(
         width: 160.d,
         height: 160.d,
@@ -106,11 +106,11 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ];
   }
 
-  innerChromeFactory() => const SizedBox();
+  Widget innerChromeFactory() => const SizedBox();
 
-  contentFactory() => Widgets.rect(
+  Widget contentFactory() => Widgets.rect(
       height: 480.d, width: 880.d, color: TColors.green.withAlpha(133));
 
-  toast(String message) =>
+  void toast(String message) =>
       Overlays.insert(context, OverlayType.toast, args: message);
 }

@@ -28,7 +28,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
     super.initState();
   }
 
-  innerChromeFactory() {
+  Widget innerChromeFactory() {
     return Positioned(
         left: 0,
         right: 0,

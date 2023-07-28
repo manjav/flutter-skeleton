@@ -18,9 +18,8 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
     super.initState();
   }
 
-  titleBuilder() => "building_${building.type.name}_t".l();
-  descriptionBuilder() => "building_${building.type.name}_d".l();
-
+  String titleBuilder() => "building_${building.type.name}_t".l();
+  String descriptionBuilder() => "building_${building.type.name}_d".l();
   getBuildingIcon() {
     return SizedBox(
         width: 360.d,

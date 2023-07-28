@@ -27,9 +27,7 @@ class _CardItemState extends State<CardItem> {
   TextStyle? _tiny;
   Timer? _cooldownTimer;
   final ValueNotifier<int> _remainingCooldown = ValueNotifier(0);
-
-  GlobalKey _imageKey = GlobalKey();
-
+  final GlobalKey _imageKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;

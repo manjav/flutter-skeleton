@@ -40,7 +40,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   }
 
   @override
-  titleBuilder() => "card_enhance".l();
+  String titleBuilder() => "card_enhance".l();
 
   @override
   selectedForeground() {

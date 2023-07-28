@@ -9,7 +9,7 @@ import 'popups/card_merge_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
-import 'popups/tab_page_popup.dart';
+import 'popups/league_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
 import 'screens/home_screen.dart';
@@ -32,7 +32,7 @@ enum Routes {
   popupCardMerge,
   popupCardSelect,
   popupMessage,
-  popupTabPage,
+  popupLeague,
   popupOpponents,
   popupSupportiveBuilding,
   popupMineBuilding,
@@ -51,7 +51,7 @@ extension RouteProvider on Routes {
       "/popupCardMerge" => CardMergePopup(args: args ?? {}),
       "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
-      "/popupTabPage" => TabPagePopup(args: args ?? {}),
+      "/popupLeague" => LeaguePopup(args: args ?? {}),
       "/popupOpponents" => OpponentsPopup(args: args ?? {}),
       "/popupSupportiveBuilding" => SupportiveBuildingPopup(args: args ?? {}),
       "/popupMineBuilding" => MineBuildingPopup(args: args ?? {}),
@@ -68,7 +68,7 @@ extension RouteProvider on Routes {
       "/popupCardDetails" ||
       "/popupCardSelect" ||
       "/popupMessage" ||
-      "/popupTabPage" ||
+      "/popupLeague" ||
       "/popupOpponents" ||
       "/popupSupportiveBuilding" ||
       "/popupTreasuryBuilding" ||

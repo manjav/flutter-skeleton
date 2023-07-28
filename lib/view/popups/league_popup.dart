@@ -5,15 +5,15 @@ import '../../view/popups/ipopup.dart';
 import '../../view/tab_provider.dart';
 import '../route_provider.dart';
 
-class TabPagePopup extends AbstractPopup {
-  const TabPagePopup({super.key, required super.args})
-      : super(Routes.popupTabPage);
+class LeaguePopup extends AbstractPopup {
+  const LeaguePopup({super.key, required super.args})
+      : super(Routes.popupLeague);
 
   @override
-  createState() => _TabPagePopupState();
+  createState() => _LeaguePopupState();
 }
 
-class _TabPagePopupState extends AbstractPopupState<TabPagePopup>
+class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
     with TabProviderMixin {
   @override
   void initState() {
