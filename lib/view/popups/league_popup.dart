@@ -39,7 +39,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
         child: Column(
           children: [
             tabsBuilder(data: [
-              for (var i = 0; i < 3; i++) TabData("league_tap_$i".l()),
+              for (var i = 0; i < 3; i++) TabData("league_tab_$i".l()),
             ]),
             Expanded(child: _getSelectedPage())
           ],
