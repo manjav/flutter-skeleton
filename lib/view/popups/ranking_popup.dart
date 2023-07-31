@@ -33,7 +33,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
   @override
   void initState() {
     selectedTabIndex = 0;
-    contentPadding = EdgeInsets.fromLTRB(12.d, 176.d, 12.d, 64.d);
+    contentPadding = EdgeInsets.only(top: 192.d, bottom: 32.d);
     _account = BlocProvider.of<AccountBloc>(context).account!;
     if (Ranks.lists.isEmpty) {
       Ranks.lists.addAll({
@@ -52,14 +52,38 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
         height: DeviceInfo.size.height * 0.75,
         child: Column(
           children: [
-            tabsBuilder(data: [
-              for (var i = 0; i < 3; i++) TabData("rank_tab_$i".l()),
-            ]),
-            SizedBox(height: 32.d),
+            tabsBuilder(
+                data: [for (var i = 0; i < 3; i++) TabData("rank_tab_$i".l())]),
+            SizedBox(height: 6.d),
+            _getSelectedHeader(),
             _getSelectedPage(),
-            SizedBox(height: 32.d),
           ],
         ));
+  }
+
+  Widget _getSelectedHeader() {
+    var items = <Widget>[];
+    if (selectedTabIndex == 0) {
+      items.addAll([
+        SkinnedText("tribe_name".l(), style: TStyles.small),
+        SizedBox(width: 128.d)
+      ]);
+    }
+    items.add(Asset.load<Image>(selectedTabIndex == 0 ? "icon_xp" : "icon_seed",
+        height: 56.d));
+    if (selectedTabIndex == 2) {
+      items.addAll([
+        SizedBox(width: 8.d),
+        SkinnedText("weekly_l".l(), style: TStyles.tiny.copyWith(height: 1)),
+        SizedBox(width: 10.d)
+      ]);
+    } else {
+      items.add(SizedBox(width: 32.d));
+    }
+    return Widgets.rect(
+        height: 92.d,
+        color: TColors.teal,
+        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: items));
   }
 
   Widget _getSelectedPage() {
@@ -87,16 +111,15 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
   }
 
   _listView(RpcId api) {
-    return Expanded(
-        child: Ranks.lists[api] == null
-            ? const SizedBox()
-            : Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                    color: TColors.primary,
-                    borderRadius: BorderRadius.all(Radius.circular(12.d))),
+    return Ranks.lists[api] == null
+        ? const SizedBox()
+        : Expanded(
+            child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(104.d),
+                    bottomRight: Radius.circular(104.d)),
                 child: ListView.builder(
-                    padding: EdgeInsets.all(8.d),
+                    padding: EdgeInsets.only(bottom: 40.d),
                     itemBuilder: (c, i) => _itemBuilder(c, i, api),
                     itemCount: Ranks.lists[api]!.length)));
   }
@@ -120,7 +143,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
 
     return Widgets.button(
         height: 100.d,
-        radius: 24.d,
+        radius: 0,
         color: color,
         padding: EdgeInsets.only(left: 8.d, right: 16.d),
         child: Row(children: [

@@ -120,13 +120,13 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
         SizedBox(height: 16.d),
         Widgets.rect(
             height: 92.d,
-            color: TColors.blue,
+            color: TColors.teal,
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               SkinnedText("tribe_name".l(), style: TStyles.small),
               SizedBox(width: 60.d),
               Asset.load<Image>("icon_seed", height: 56.d),
               SizedBox(width: 8.d),
-              SkinnedText("weekly_score".l(),
+              SkinnedText("weekly_l".l(),
                   style: TStyles.tiny.copyWith(height: 1)),
               SizedBox(width: 10.d),
             ])),
@@ -136,6 +136,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
                     bottomLeft: Radius.circular(104.d),
                     bottomRight: Radius.circular(104.d)),
                 child: ListView.builder(
+                    padding: EdgeInsets.only(bottom: 40.d),
                     itemBuilder: (c, i) =>
                         _itemBuilder(c, _leagueData!.list[i]),
                     itemCount: _leagueData!.list.length))),
@@ -251,6 +252,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
             bottomLeft: Radius.circular(104.d),
             bottomRight: Radius.circular(104.d)),
         child: ListView.builder(
+            padding: EdgeInsets.only(bottom: 32.d),
             itemBuilder: _historyItemBuilder,
             itemCount: LeagueData.stages.length));
   }
@@ -270,8 +272,10 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
   Widget? _historyItemBuilder(BuildContext context, int index) {
     var stage = LeagueData.stages[index];
     var steps = <Widget>[
-      LoaderWidget(AssetType.image, "league_${index + 1}",
-          subFolder: "leagues", height: 170.d)
+      Padding(
+          padding: EdgeInsets.all(18.d),
+          child: LoaderWidget(AssetType.image, "league_${index + 1}",
+              subFolder: "leagues", height: 140.d))
     ];
     for (var step in stage) {
       steps.add(_stepBuilder(step));
@@ -285,7 +289,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
     if (step > 1) {
       lines.add(Widgets.rect(
           height: 92.d,
-          color: TColors.blue,
+          color: TColors.teal,
           alignment: Alignment.center,
           child: Text("l_${indices.$2}".l(), style: TStyles.mediumInvert)));
     }
