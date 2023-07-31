@@ -29,15 +29,28 @@ class CardMergePopup extends AbstractPopup {
 
 class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     with CardEditMixin {
+  List<AccountCard> _persistReadyCards = [];
   @override
   void initState() {
+    selectedCards.addCard(widget.args['card']);
     contentPadding = EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
+    _persistReadyCards =
+        BlocProvider.of<AccountBloc>(context).account!.getReadyCards();
     super.initState();
   }
 
   @override
   getCards(Account account) {
-    return account.getReadyCards().where((c) => c.base == card.base).toList();
+    if (selectedCards.value.isNotEmpty) {
+      return _persistReadyCards
+          .where((c) => c.base == selectedCards.value[0]!.base)
+          .toList();
+    }
+    return _persistReadyCards
+        .where((c) => _persistReadyCards
+            .where((c1) => c.base == c1.base && c != c1)
+            .isNotEmpty)
+        .toList();
   }
 
   @override
@@ -46,9 +59,10 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: selectedCards,
         builder: (context, value, child) {
+          cards = getCards(account);
           return SizedBox(
               width: 980.d,
-              height: 1280.d,
+              height: DeviceInfo.size.height - 450.d,
               child: Stack(
                   clipBehavior: Clip.none,
                   alignment: Alignment.topCenter,
@@ -94,7 +108,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
               "base_card_id": nextBaseCard!.get(CardFields.id)
             },
             account.baseCards);
-        return _getCard(nextCard, size);
+        return _getCardView(nextCard, size);
       }
       return Asset.load<Image>("card_placeholder", width: size);
     }
@@ -102,10 +116,13 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     if (index >= selectedCards.value.length) {
       return Asset.load<Image>("card_placeholder", width: size);
     }
-    return _getCard(selectedCards.value[index]!, size);
+    return Widgets.touchable(
+      child: _getCardView(selectedCards.value[index]!, size),
+      onTap: () => selectedCards.remove(selectedCards.value[index]!),
+    );
   }
 
-  _getCard(AccountCard card, double size) {
+  _getCardView(AccountCard card, double size) {
     card = account.getCards()[card.id] ?? card;
     return SizedBox(width: size, child: MinimalCardItem(card, size: size));
   }
