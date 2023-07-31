@@ -25,6 +25,7 @@ class CardHolder extends StatefulWidget {
 }
 
 class _CardHolderState extends State<CardHolder> {
+  final Map<int, GlobalKey> _keys = {};
   @override
   Widget build(BuildContext context) {
     var balloonData =
@@ -71,6 +72,9 @@ class _CardHolderState extends State<CardHolder> {
 
   Widget _filledCard() {
     var card = widget.card!;
+    var key = _keys.containsKey(card.id)
+        ? _keys[card.id]
+        : _keys[card.id] = GlobalKey();
     var name = card.isHero
         ? card.base
             .get<FruitData>(CardFields.fruit)
@@ -98,7 +102,7 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
     }
 
     for (var i = 0; i < value.length; i++) {
-      if (i != exception && value[i] == null || i == value.length - 1) {
+      if (i != exception && value[i] == null) {
         setAtCard(i, card);
         return true;
       }
