@@ -255,7 +255,8 @@ class Account extends StringMap<dynamic> {
       }
       return (removeCooldowns && card.getRemainingCooldown() > 0);
     });
-    cards.sort((AccountCard a, AccountCard b) => b.power - a.power);
+    cards.sort((AccountCard a, AccountCard b) =>
+        a.power * (b.isHero ? 1 : -1) - b.power * (a.isHero ? 1 : -1));
     return cards;
   }
 

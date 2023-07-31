@@ -23,9 +23,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var cards = state.account.getCards().values.toList();
-      cards.sort((AccountCard a, AccountCard b) =>
-          a.base.get<int>(CardFields.id) - b.base.get<int>(CardFields.id));
+      var cards = state.account.getReadyCards();
       return Stack(children: [
         GridView.builder(
             itemCount: cards.length,
