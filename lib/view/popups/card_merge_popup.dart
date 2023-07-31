@@ -21,7 +21,7 @@ import 'ipopup.dart';
 
 class CardMergePopup extends AbstractPopup {
   const CardMergePopup({super.key, required super.args})
-      : super(Routes.popupCardEnhance);
+      : super(Routes.popupCardMerge);
 
   @override
   createState() => _CardMergePopupState();
@@ -34,9 +34,6 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     contentPadding = EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
     super.initState();
   }
-
-  @override
-  titleBuilder() => "card_merge".l();
 
   @override
   getCards(Account account) {
@@ -122,7 +119,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
           isEnable: selectedCards.value.length >= 2,
           padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
           child: Row(children: [
-            SkinnedText("card_merge".l(),
+            SkinnedText("popupcardmerge".l(),
                 style: TStyles.large.copyWith(height: 3.d)),
             SizedBox(width: 24.d),
             Widgets.rect(
