@@ -18,6 +18,7 @@ class Indicator extends StatefulWidget {
   final double? width;
   final Function? onTap;
   final bool hasPlusIcon;
+  final dynamic data;
 
   const Indicator(
     this.origin,
@@ -26,6 +27,7 @@ class Indicator extends StatefulWidget {
     this.value,
     this.width,
     this.onTap,
+    this.data,
     this.hasPlusIcon = false,
   }) : super(key: key);
   @override
@@ -51,7 +53,7 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                             height,
                             state.account.get<int>(widget.itemType),
                             state.account.get<int>(AccountField.league_id)))
-                    : _getElements(height, widget.value!, 0),
+                    : _getElements(height, widget.value!, widget.data as int),
               ),
               onTap: () {
                 // widget.services.get<Analytics>().funnle("shopclicks");

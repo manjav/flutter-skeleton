@@ -96,12 +96,11 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                     valueListenable: _selectedOpponent,
                     builder: (context, value, child) {
                       if (value.id == 0) return const SizedBox();
-                      var color = TColors.white;
-                      if (value.status == 1) {
-                        color = TColors.green;
-                      } else if (value.status == 2) {
-                        color = TColors.accent;
-                      }
+                      var color = switch (value.status) {
+                        1 => TColors.green,
+                        2 => TColors.accent,
+                        _ => TColors.white
+                      };
                       return Widgets.rect(
                           radius: 32.d,
                           color: color.withOpacity(0.6),
@@ -131,8 +130,11 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                                         style: TStyles.small),
                                   ])),
                               SizedBox(width: 16.d),
-                              Indicator("origin", AccountField.league_rank,
+                              Indicator(
                                   width: 240.d,
+                                  widget.type.name,
+                                  AccountField.league_rank,
+                                  data: value.leagueId,
                                   value: _selectedOpponent.value.leagueRank)
                             ],
                           ));
