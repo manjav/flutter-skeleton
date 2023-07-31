@@ -12,6 +12,7 @@ import '../../view/widgets/indicator.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../map_elements/building_widget.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -113,8 +114,13 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
     var type = switch (building.type) {
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
-      _ => Routes.popupSupportiveBuilding,
+      Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
+      _ => Routes.none,
     };
+    if (type == Routes.none) {
+      Overlays.insert(context, OverlayType.toast, args: "coming_soon".l());
+      return;
+    }
     Navigator.pushNamed(context, type.routeName,
         arguments: {"building": building});
   }
