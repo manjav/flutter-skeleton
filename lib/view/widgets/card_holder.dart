@@ -103,6 +103,16 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
         return true;
       }
     }
+
+    var weakest = double.infinity;
+    var weakestPosition = 3;
+    for (var i = 0; i < value.length; i++) {
+      if (i != exception && value[i]!.power < weakest) {
+        weakest = value[i]!.power.toDouble();
+        weakestPosition = i;
+      }
+    }
+    setAtCard(weakestPosition, card);
     return false;
   }
 

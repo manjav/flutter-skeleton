@@ -111,9 +111,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
         } else {
           if (card.isHero) {
             _selectedCards.setAtCard(2, card);
-        } else {
-          _selectedCards.setCard(card, exception: 2);
-        }
+          } else {
+            _selectedCards.setCard(card, exception: 2);
+          }
         }
       },
       child: CardItem(card, inDeck: true, size: itemSize, key: card.key),
