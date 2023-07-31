@@ -39,7 +39,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         Widgets.touchable(onTap: () => Navigator.pop(context)),
         Align(
             child: Widgets.rect(
-          margin: EdgeInsets.symmetric(horizontal: 24.d),
+          margin: EdgeInsets.fromLTRB(24.d, 100.d, 24.d, 0),
           padding: EdgeInsets.symmetric(horizontal: 24.d),
           decoration: BoxDecoration(
               image: DecorationImage(
