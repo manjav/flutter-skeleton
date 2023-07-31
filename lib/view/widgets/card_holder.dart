@@ -70,16 +70,20 @@ class _CardHolderState extends State<CardHolder> {
   }
 
   Widget _filledCard() {
-    return LoaderWidget(
-        AssetType.image, widget.card!.base.get<String>(CardFields.name),
-        subFolder: "cards");
+    var card = widget.card!;
+    var name = card.isHero
+        ? card.base
+            .get<FruitData>(CardFields.fruit)
+            .get<String>(FriutFields.name)
+        : card.base.get<String>(CardFields.name);
+    return LoaderWidget(AssetType.image, name, subFolder: "cards", key: key);
   }
 }
 
 class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   SelectedCards(super.value);
   setAtCard(int index, AccountCard? card) {
-    value[index] = card;
+    value[index] = value[index] == card ? null : card;
     notifyListeners();
   }
 
