@@ -239,7 +239,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
     return SizedBox(
         height: 76.d,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Asset.load<Image>("ui_$type", height: 62.d),
+          Asset.load<Image>(type, height: 62.d),
           SkinnedText("  ${value > 0 ? '+' : ''}$value")
         ]));
   }
