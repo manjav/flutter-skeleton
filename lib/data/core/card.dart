@@ -224,22 +224,46 @@ class HeroItem {
 }
 
 class BaseHeroItem {
-  final int id;
-  final int powerAmount;
-  final int wisdomAmount;
-  final int blessingAmount;
-  final int cost;
-  final int unlockLevel;
-  final int category;
+  final int id,
+      itemType,
+      powerAmount,
+      wisdomAmount,
+      blessingAmount,
+      cost,
+      unlockLevel,
+      compatibility,
+      category;
   final String image;
+
   BaseHeroItem(
     this.id,
+    this.itemType,
     this.powerAmount,
     this.wisdomAmount,
     this.blessingAmount,
     this.cost,
     this.unlockLevel,
     this.category,
+    this.compatibility,
     this.image,
   );
+
+  static Map<int, BaseHeroItem> init(List<dynamic> data) {
+    var result = <int, BaseHeroItem>{};
+    for (var item in data) {
+      result[item["id"]] = BaseHeroItem(
+        item["id"],
+        item["itemType"],
+        item["powerAmount"],
+        item["wisdomAmount"],
+        item["blessingAmount"],
+        item["cost"],
+        item["unlock_level"],
+        item["category"],
+        item["compatibility"],
+        item["image"],
+      );
+    }
+    return result;
+  }
 }

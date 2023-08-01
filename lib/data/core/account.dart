@@ -2,6 +2,8 @@
 
 import 'dart:math' as math;
 
+import 'package:flutter_skeleton/data/core/rpc_data.dart';
+
 import '../../utils/utils.dart';
 import 'building.dart';
 import 'card.dart';
@@ -145,7 +147,8 @@ class Account extends StringMap<dynamic> {
 
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
-    baseCards = args as Cards;
+    var loadData = args as LoadData;
+    baseCards = loadData.cards!;
     super.init(data);
     map['delta_time'] = map['now'] - DateTime.now().secondsSinceEpoch;
 
@@ -176,17 +179,7 @@ class Account extends StringMap<dynamic> {
     }
 
     // Heroes
-    var baseHeroitems = <int, BaseHeroItem>{};
-    baseHeroitems[1] = BaseHeroItem(1, 2, 6, 1, 80, 3, 1, "Xameen");
-    baseHeroitems[2] = BaseHeroItem(2, 5, 2, 1, 70, 1, 1, "Paleez");
-    baseHeroitems[3] = BaseHeroItem(3, 2, 1, 6, 80, 1, 1, "RoboLeaf");
-    baseHeroitems[4] = BaseHeroItem(4, 2, 3, 1, 60, 1, 2, "BloodyKnife");
-    baseHeroitems[5] = BaseHeroItem(5, 1, 4, 1, 60, 20, 2, "CursedGun");
-    baseHeroitems[6] = BaseHeroItem(6, 1, 3, 5, 90, 20, 1, "Thorny");
-    baseHeroitems[7] = BaseHeroItem(7, 1, 1, 4, 60, 5, 2, "HairDryer");
-    baseHeroitems[8] = BaseHeroItem(8, 3, 1, 1, 50, 1, 2, "RainbowGun");
-    baseHeroitems[9] = BaseHeroItem(9, 5, 1, 1, 70, 50, 2, "AdmiralSword");
-    map['base_heroitems'] = baseHeroitems;
+    map['base_heroitems'] = loadData.baseHeroItems!;
 
     var heroes = <int, HeroCard>{};
     if (map['hero_id_set'] != null) {
@@ -195,7 +188,7 @@ class Account extends StringMap<dynamic> {
         for (var item in v['items']) {
           items.add(HeroItem(
               item['id'],
-              baseHeroitems[item['base_heroitem_id']]!,
+              loadData.baseHeroItems![item['base_heroitem_id']]!,
               item['state'],
               item['position']));
         }

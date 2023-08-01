@@ -34,6 +34,7 @@ class HttpConnection extends IService {
     var data = jsonDecode(jsonData);
     loadData.fruits = Fruits()..init(data['fruits']);
     loadData.cards = Cards()..init(data['cards'], args: loadData.fruits);
+    loadData.baseHeroItems = BaseHeroItem.init(data['heroItems']);
 
     // Load account data
     var params = <String, dynamic>{
@@ -49,7 +50,7 @@ class HttpConnection extends IService {
       RpcParams.name.name: "ArMaN"
     };
     data = await rpc(RpcId.playerLoad, params: params);
-    loadData.account = Account()..init(data, args: loadData.cards);
+    loadData.account = Account()..init(data, args: loadData);
 
     super.initialize();
     return loadData;
