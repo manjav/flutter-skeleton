@@ -194,9 +194,7 @@ class HeroCard {
     values['blessing'] = 0;
 
     // setups the default multipliers for each attribute.
-    var powerMultiplier = 1;
-    var wisdomMultiplier = 1;
-    var blessingMultiplier = 1;
+    var powerMultiplier = 1, wisdomMultiplier = 1, blessingMultiplier = 1;
     var heroType = card.base.get<int>(CardFields.heroType);
     if (heroType == 0) {
       powerMultiplier = HeroCard.attributeMultiplier;
@@ -208,9 +206,12 @@ class HeroCard {
 
     // adds the  attributes for each equipped item.
     for (var item in items) {
-      values['power'] = item.base.powerAmount * powerMultiplier;
-      values['wisdom'] = item.base.wisdomAmount * wisdomMultiplier;
-      values['blessing'] = item.base.blessingAmount * blessingMultiplier;
+      values['power'] =
+          values['power']! + item.base.powerAmount * powerMultiplier;
+      values['wisdom'] =
+          values['wisdom']! + item.base.wisdomAmount * wisdomMultiplier;
+      values['blessing'] =
+          values['blessing']! + item.base.blessingAmount * blessingMultiplier;
     }
     return values;
   }
