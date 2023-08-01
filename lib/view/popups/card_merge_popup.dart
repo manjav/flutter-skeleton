@@ -107,7 +107,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
               "power": _getMergePower(card, selectedCards.value[1]!),
               "base_card_id": nextBaseCard!.get(CardFields.id)
             },
-            account.baseCards);
+            account.loadingData.baseCards);
         return _getCardView(nextCard, size);
       }
       return Asset.load<Image>("card_placeholder", width: size);
@@ -222,7 +222,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
 
   CardData? _findNextLevel(CardData base) {
     var nextLevel = base.get<int>(CardFields.rarity) + 1;
-    for (var e in account.baseCards.map.entries) {
+    for (var e in account.loadingData.baseCards.map.entries) {
       if (e.value.get<int>(CardFields.fruitId) ==
               base.get<int>(CardFields.fruitId) &&
           e.value.get<int>(CardFields.rarity) == nextLevel) {

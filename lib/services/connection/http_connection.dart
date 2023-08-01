@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../data/core/account.dart';
-import '../../data/core/card.dart';
 import '../../data/core/result.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/rpc_data.dart';
@@ -20,7 +19,7 @@ import '../iservices.dart';
 
 class HttpConnection extends IService {
   static String baseURL = '';
-  LoadData loadData = LoadData();
+  LoadingData loadData = LoadingData();
 
   @override
   initialize({List<Object>? args}) async {
@@ -31,10 +30,7 @@ class HttpConnection extends IService {
         "data.json.zip", "${LoaderWidget.baseURL}/texts/data.json.zip",
         hash: LoaderWidget.hashMap["data.json.zip"]);
     var jsonData = utf8.decode(loader.bytes!);
-    var data = jsonDecode(jsonData);
-    loadData.fruits = Fruits()..init(data['fruits']);
-    loadData.cards = Cards()..init(data['cards'], args: loadData.fruits);
-    loadData.baseHeroItems = BaseHeroItem.init(data['heroItems']);
+    loadData.init(jsonDecode(jsonData));
 
     // Load account data
     var params = <String, dynamic>{
@@ -49,7 +45,7 @@ class HttpConnection extends IService {
       RpcParams.restore_key.name: "keep3oil11",
       RpcParams.name.name: "ArMaN"
     };
-    data = await rpc(RpcId.playerLoad, params: params);
+    var data = await rpc(RpcId.playerLoad, params: params);
     loadData.account = Account()..init(data, args: loadData);
 
     super.initialize();

@@ -111,10 +111,11 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     await _map[ServiceType.trackers]!.initialize();
 
     try {
-      var data = await _map[ServiceType.connection]!.initialize() as LoadData;
+      var data =
+          await _map[ServiceType.connection]!.initialize() as LoadingData;
       if (context.mounted) {
         BlocProvider.of<AccountBloc>(context)
-            .add(SetAccount(account: data.account!));
+            .add(SetAccount(account: data.account));
         BlocProvider.of<Services>(context)
             .add(ServicesEvent(ServicesInitState.initialize, null));
       }

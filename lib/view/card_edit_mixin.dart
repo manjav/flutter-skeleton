@@ -126,11 +126,12 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
       var oldCard = account.getCards()[newCard["id"]];
       if (oldCard == null) {
         account.map['cards'][newCard["id"]] =
-            AccountCard(account, newCard, account.baseCards);
+            AccountCard(account, newCard, account.loadingData.baseCards);
       } else {
         oldCard.power = newCard["power"];
         oldCard.lastUsedAt = newCard["last_used_at"];
-        oldCard.base = account.baseCards.get("${newCard['base_card_id']}");
+        oldCard.base =
+            account.loadingData.baseCards.get("${newCard['base_card_id']}");
       }
     }
 

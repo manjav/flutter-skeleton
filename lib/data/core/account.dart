@@ -138,7 +138,7 @@ enum AccountField {
 class Account extends StringMap<dynamic> {
   static const levelMultiplier = 1.3;
   static const levelExpo = 2.7;
-  late Cards baseCards;
+  late LoadingData loadingData;
   static int getXpRequiered(int level) =>
       (math.pow(level, levelExpo) * levelMultiplier).ceil();
 
@@ -147,14 +147,13 @@ class Account extends StringMap<dynamic> {
 
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
-    var loadData = args as LoadData;
-    baseCards = loadData.cards!;
+    var loadData = args as LoadingData;
     super.init(data);
     map['delta_time'] = map['now'] - DateTime.now().secondsSinceEpoch;
 
     var accountCards = <int, AccountCard>{};
     for (var card in map['cards']) {
-      accountCards[card['id']] = AccountCard(this, card, baseCards);
+      accountCards[card['id']] = AccountCard(this, card, loadData.baseCards);
     }
     map['cards'] = accountCards;
 
@@ -179,7 +178,7 @@ class Account extends StringMap<dynamic> {
     }
 
     // Heroes
-    map['base_heroitems'] = loadData.baseHeroItems!;
+    map['base_heroitems'] = loadData.baseHeroItems;
 
     var heroes = <int, HeroCard>{};
     if (map['hero_id_set'] != null) {
@@ -188,7 +187,7 @@ class Account extends StringMap<dynamic> {
         for (var item in v['items']) {
           items.add(HeroItem(
               item['id'],
-              loadData.baseHeroItems![item['base_heroitem_id']]!,
+              loadData.baseHeroItems[item['base_heroitem_id']]!,
               item['state'],
               item['position']));
         }
