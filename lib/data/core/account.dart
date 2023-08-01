@@ -2,8 +2,7 @@
 
 import 'dart:math' as math;
 
-import 'package:flutter_skeleton/data/core/rpc_data.dart';
-
+import '../../data/core/rpc_data.dart';
 import '../../utils/utils.dart';
 import 'building.dart';
 import 'card.dart';

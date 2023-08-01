@@ -225,45 +225,31 @@ class HeroItem {
 }
 
 class BaseHeroItem {
-  final int id,
-      itemType,
-      powerAmount,
-      wisdomAmount,
-      blessingAmount,
-      cost,
-      unlockLevel,
-      compatibility,
-      category;
-  final String image;
-
-  BaseHeroItem(
-    this.id,
-    this.itemType,
-    this.powerAmount,
-    this.wisdomAmount,
-    this.blessingAmount,
-    this.cost,
-    this.unlockLevel,
-    this.category,
-    this.compatibility,
-    this.image,
-  );
+  int id = 0,
+      itemType = 0,
+      powerAmount = 0,
+      wisdomAmount = 0,
+      blessingAmount = 0,
+      cost = 0,
+      unlockLevel = 0,
+      compatibility = 0,
+      category = 0;
+  String image = "";
 
   static Map<int, BaseHeroItem> init(List<dynamic> data) {
     var result = <int, BaseHeroItem>{};
     for (var item in data) {
-      result[item["id"]] = BaseHeroItem(
-        item["id"],
-        item["itemType"],
-        item["powerAmount"],
-        item["wisdomAmount"],
-        item["blessingAmount"],
-        item["cost"],
-        item["unlock_level"],
-        item["category"],
-        item["compatibility"],
-        item["image"],
-      );
+      result[item["id"]] = BaseHeroItem()
+        ..id = item["id"]
+        ..itemType = item["itemType"]
+        ..powerAmount = item["powerAmount"]
+        ..wisdomAmount = item["wisdomAmount"]
+        ..blessingAmount = item["blessingAmount"]
+        ..cost = item["cost"]
+        ..unlockLevel = item["unlock_level"]
+        ..category = item["category"]
+        ..compatibility = item["compatibility"]
+        ..image = item["image"];
     }
     return result;
   }

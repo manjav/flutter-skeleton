@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/blocs/account_bloc.dart';
-import 'package:flutter_skeleton/data/core/account.dart';
-import 'package:flutter_skeleton/data/core/card.dart';
-import 'package:flutter_skeleton/services/deviceinfo.dart';
-import 'package:flutter_skeleton/services/localization.dart';
-import 'package:flutter_skeleton/services/theme.dart';
-import 'package:flutter_skeleton/view/widgets/skinnedtext.dart';
+import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
+import '../../data/core/card.dart';
+import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
+import '../../services/theme.dart';
+import '../../view/widgets/skinnedtext.dart';
 
 import '../../utils/assets.dart';
 import '../../view/popups/ipopup.dart';
@@ -27,8 +27,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   late Account _account;
   late List<HeroCard> _cards;
   late List<GlobalKey> _keys;
-  List<BaseHeroItem> _minions = [];
-  List<BaseHeroItem> _weapons = [];
+  final List<BaseHeroItem> _minions = [];
+  final List<BaseHeroItem> _weapons = [];
   late Map<int, BaseHeroItem> _baseHeroItems;
   Map<String, String> benefits = {
     "blessing": "benefit_gold",

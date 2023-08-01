@@ -37,6 +37,7 @@ class _BuildingWidgetState extends State<BuildingWidget> {
             final controller =
                 StateMachineController.fromArtboard(artboard, 'Building')!;
             var input = controller.findInput<double>('level');
+            // controller.stateMachine.listeners.
             if (input != null) {
               _levelInput = input as SMINumber;
               _levelInput!.value = widget.level.toDouble();
