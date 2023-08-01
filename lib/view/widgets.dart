@@ -143,7 +143,7 @@ class Widgets {
           width: width,
           height: height,
           constraints: constraints,
-          alignment: alignment ?? Alignment.center,
+          alignment: alignment,
           transform: transform,
           transformAlignment: transformAlignment,
           padding:

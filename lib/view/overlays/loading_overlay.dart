@@ -100,11 +100,12 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                     Text(
                       "${'error_${_exception!.statusCode.value}'.l()}\nPlease try again.",
                       textAlign: TextAlign.center,
-                      softWrap: true,
                       style: TStyles.mediumInvert,
+                      softWrap: true,
                     ),
                     SizedBox(height: 48.d),
                     Widgets.skinnedButton(
+                        padding: EdgeInsets.fromLTRB(68.d, 32.d, 68.d, 56.d),
                         label: 'Retry',
                         buttonId: -1,
                         onPressed: () {

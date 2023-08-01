@@ -92,6 +92,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   Widget closeButtonFactory() {
     return Widgets.button(
+        alignment: Alignment.center,
         width: 160.d,
         height: 160.d,
         onPressed: () => Navigator.pop(context),

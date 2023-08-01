@@ -240,6 +240,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
               padding: EdgeInsets.symmetric(horizontal: 24.d),
               child: Row(children: [
                 Widgets.skinnedButton(
+                    alignment: Alignment.center,
                     width: 230.d,
                     size: ButtonSize.medium,
                     color: ButtonColor.green,
@@ -263,6 +264,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                 SizedBox(width: 8.d),
                 Widgets.skinnedButton(
                     width: 230.d,
+                    alignment: Alignment.center,
                     size: ButtonSize.medium,
                     color: ButtonColor.green,
                     isEnable: value.index < _opponents.length - 1,
