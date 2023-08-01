@@ -5,6 +5,7 @@ class LoadingData {
   late Account account;
   late Cards baseCards;
   late Fruits fruits;
+  late Map<int, ComboHint> comboHints;
   late Map<int, BaseHeroItem> baseHeroItems;
   LoadingData();
 
@@ -12,5 +13,6 @@ class LoadingData {
     fruits = Fruits()..init(data['fruits']);
     baseCards = Cards()..init(data['cards'], args: fruits);
     baseHeroItems = BaseHeroItem.init(data['heroItems']);
+    comboHints = ComboHint.init(data["comboItems"]);
   }
 }

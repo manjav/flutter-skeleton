@@ -254,3 +254,31 @@ class BaseHeroItem {
     return result;
   }
 }
+
+class ComboHint {
+  int id = 0,
+      fruit = 0,
+      benefit = 0,
+      type = 0,
+      cost = 0,
+      level = 0,
+      count = 0,
+      power = 0;
+  String icon = "";
+  static Map<int, ComboHint> init(List<dynamic> data) {
+    var result = <int, ComboHint>{};
+    for (var item in data) {
+      result[item["id"]] = ComboHint()
+        ..id = item["id"]
+        ..fruit = item["fruit"]
+        ..benefit = item["benefit"]
+        ..type = item["type"]
+        ..cost = item["cost"]
+        ..level = item["level"]
+        ..count = item["count"]
+        ..power = item["power"]
+        ..icon = item["smallImage"];
+    }
+    return result;
+  }
+}
