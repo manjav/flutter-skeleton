@@ -7,9 +7,10 @@ import 'popups/card_details_popup.dart';
 import 'popups/card_enhance_popup.dart';
 import 'popups/card_merge_popup.dart';
 import 'popups/card_select_popup.dart';
+import 'popups/combo_popup.dart';
+import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
-import 'popups/league_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
@@ -39,6 +40,7 @@ enum Routes {
   popupSupportiveBuilding,
   popupMineBuilding,
   popupTreasuryBuilding,
+  popupCombo,
 }
 
 extension RouteProvider on Routes {
@@ -59,6 +61,7 @@ extension RouteProvider on Routes {
       "/popupSupportiveBuilding" => SupportiveBuildingPopup(args: args ?? {}),
       "/popupMineBuilding" => MineBuildingPopup(args: args ?? {}),
       "/popupTreasuryBuilding" => TreasuryBuildingPopup(args: args ?? {}),
+      "/popupCombo" => ComboPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }

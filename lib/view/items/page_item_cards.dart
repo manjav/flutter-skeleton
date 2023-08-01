@@ -34,6 +34,13 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
                 crossAxisSpacing: gap,
                 mainAxisSpacing: gap),
             itemBuilder: (c, i) => cardItemBuilder(c, i, cards[i], itemSize)),
+        Positioned(
+            top: 48.d,
+            left: 48.d,
+            child: Widgets.skinnedButton(
+                label: "   C   ",
+                onPressed: () =>
+                    Navigator.pushNamed(context, Routes.popupCombo.routeName))),
       ]);
     });
   }
