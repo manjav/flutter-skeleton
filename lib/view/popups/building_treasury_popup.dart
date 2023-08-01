@@ -61,8 +61,7 @@ class _TreasuryBuildingPopupState
                   gold > 0,
                   [
                     Asset.load<Image>("icon_gold", height: 64.d),
-                    SizedBox(width: 8.d),
-                    SkinnedText("-${step.compact()}".l())
+                    SkinnedText(" - ${step.compact()}".l())
                   ],
                   () => _transaction(state.account, RpcId.witdraw, step)),
               SizedBox(width: 40.d),
@@ -70,9 +69,8 @@ class _TreasuryBuildingPopupState
                   ButtonColor.green,
                   gold < building.benefit,
                   [
-                    Asset.load<Image>("ui_down", height: 36.d),
-                    SizedBox(width: 16.d),
-                    SkinnedText("building_treasury_deposit".l())
+                    Asset.load<Image>("icon_gold", height: 64.d),
+                    SkinnedText(" + ${step.compact()}".l())
                   ],
                   () => _transaction(state.account, RpcId.deposit, step)),
             ],
