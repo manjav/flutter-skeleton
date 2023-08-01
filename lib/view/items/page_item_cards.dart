@@ -41,6 +41,13 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
                 label: "   C   ",
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupCombo.routeName))),
+        Positioned(
+            top: 48.d,
+            left: 148.d,
+            child: Widgets.skinnedButton(
+                label: "   H   ",
+                onPressed: () =>
+                    Navigator.pushNamed(context, Routes.popupHero.routeName)))
       ]);
     });
   }

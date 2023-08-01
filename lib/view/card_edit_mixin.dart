@@ -81,7 +81,8 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
         padding: EdgeInsets.zero,
         onPressed: () => onSelectCard(index, card),
         child: Stack(children: [
-          MinimalCardItem(card, size: itemSize, showTitle: showCardTitle),
+          MinimalCardItem(card,
+              size: itemSize, showTitle: showCardTitle, key: card.key),
           selectedCards.value.contains(card)
               ? Positioned(
                   top: 2.d,
