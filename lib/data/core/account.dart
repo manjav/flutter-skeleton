@@ -146,13 +146,13 @@ class Account extends StringMap<dynamic> {
 
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
-    var loadData = args as LoadingData;
+    loadingData = args as LoadingData;
     super.init(data);
     map['delta_time'] = map['now'] - DateTime.now().secondsSinceEpoch;
 
     var accountCards = <int, AccountCard>{};
     for (var card in map['cards']) {
-      accountCards[card['id']] = AccountCard(this, card, loadData.baseCards);
+      accountCards[card['id']] = AccountCard(this, card, loadingData.baseCards);
     }
     map['cards'] = accountCards;
 
@@ -177,7 +177,7 @@ class Account extends StringMap<dynamic> {
     }
 
     // Heroes
-    map['base_heroitems'] = loadData.baseHeroItems;
+    map['base_heroitems'] = loadingData.baseHeroItems;
 
     var heroes = <int, HeroCard>{};
     if (map['hero_id_set'] != null) {
@@ -186,7 +186,7 @@ class Account extends StringMap<dynamic> {
         for (var item in v['items']) {
           items.add(HeroItem(
               item['id'],
-              loadData.baseHeroItems[item['base_heroitem_id']]!,
+              loadingData.baseHeroItems[item['base_heroitem_id']]!,
               item['state'],
               item['position']));
         }
