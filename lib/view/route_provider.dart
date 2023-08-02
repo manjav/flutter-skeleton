@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/view/popups/potion_popup.dart';
 
+import '../../view/popups/potion_popup.dart';
 import 'popups/building_mine_popup.dart';
 import 'popups/building_supportive_popup.dart';
 import 'popups/building_treasury_popup.dart';

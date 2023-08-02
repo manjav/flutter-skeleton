@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/data/core/card.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
+import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';

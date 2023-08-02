@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/utils/ilogger.dart';
-import 'package:flutter_skeleton/view/route_provider.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -9,7 +7,9 @@ import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
+import '../../utils/ilogger.dart';
 import '../../utils/utils.dart';
+import '../../view/route_provider.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../widgets.dart';
 
@@ -68,7 +68,8 @@ class _IndicatorState extends State<Indicator>
                       log("Go to shop");
                       break;
                     case AccountField.potion_number:
-                      Navigator.pushNamed(context, Routes.popupPotion.routeName);
+                      Navigator.pushNamed(
+                          context, Routes.popupPotion.routeName);
                       break;
                     default:
                       break;
