@@ -25,15 +25,12 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> {
   }
 
   @override
-  Widget innerChromeFactory() {
-    return Positioned(
-        left: 0,
-        right: 0,
-        bottom: 32.d,
-        top: 700.d,
-        child: Asset.load<Image>("ui_popup_bottom",
-            centerSlice: ImageCenterSliceDate(
-                200, 114, const Rect.fromLTWH(99, 4, 3, 3))));
+  List<Widget> appBarElements() {
+    return [
+      Indicator(widget.type.name, AccountField.potion_number,
+          hasPlusIcon: true, width: 290.d),
+      Indicator(widget.type.name, AccountField.gold, hasPlusIcon: true),
+    ];
   }
 
   @override
