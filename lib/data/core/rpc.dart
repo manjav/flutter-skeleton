@@ -2,6 +2,9 @@
 
 enum RpcId {
   playerLoad,
+  fillPotion,
+  deposit,
+  witdraw,
 // Card
   coolOff,
   assignCard,
@@ -17,8 +20,6 @@ enum RpcId {
 
   // Building
   upgrade,
-  deposit,
-  witdraw,
 
   // Ranking
   rankingGlobal,
@@ -41,9 +42,10 @@ extension RpcIdEx on RpcId {
       RpcId.battle => "battle/battle",
       RpcId.getOpponents => "battle/getopponents",
       RpcId.playerLoad => "player/load",
-      RpcId.upgrade => "tribe/upgrade",
       RpcId.deposit => "player/deposittobank",
       RpcId.witdraw => "player/withdrawfrombank",
+      RpcId.fillPotion => "player/fillpotion",
+      RpcId.upgrade => "tribe/upgrade",
       RpcId.rankingGlobal => "ranking/global",
       RpcId.rankingExpertTribes => "ranking/tribe",
       RpcId.rankingTopTribes => "ranking/tribebasedonseed",

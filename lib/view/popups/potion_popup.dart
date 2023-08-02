@@ -101,5 +101,14 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
   }
 
   _fill(Account account, double amount) async {
+    try {
+      var data = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.fillPotion,
+              params: {RpcParams.amount.name: amount});
+      account.update(data);
+      if (!mounted) return;
+      BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+    } finally {}
   }
 }
