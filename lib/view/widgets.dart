@@ -233,7 +233,7 @@ class Widgets {
       Color? borderColor,
       double? padding,
       Color? backgroundColor,
-      Color? progressColor}) {
+      Color progressColor = TColors.green}) {
     var w = width ?? 760.d;
     var h = height ?? 104.d;
     var p = padding ?? 9.d;
@@ -249,9 +249,13 @@ class Widgets {
         rect(
             margin: EdgeInsets.only(
                 top: p, left: p, bottom: p, right: r * w + (1 - r) * p),
-            gradient: const LinearGradient(
-              colors: [Color(0xFFA1EE24), Color(0xFF41CB3E), Color(0xFF7EE12D)],
-              stops: [0.3, 0.8, 1],
+            gradient: LinearGradient(
+              colors: [
+                progressColor,
+                progressColor.withAlpha(180),
+                progressColor.withAlpha(220),
+              ],
+              stops: const [0.3, 0.85, 1],
               begin: FractionalOffset.topCenter,
               end: FractionalOffset.bottomCenter,
             ),
