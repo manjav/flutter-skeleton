@@ -68,7 +68,7 @@ class _IndicatorState extends State<Indicator>
                       log("Go to shop");
                       break;
                     case AccountField.potion_number:
-                      Navigator.pushNamed(context, Routes.popupNectar.routeName);
+                      Navigator.pushNamed(context, Routes.popupPotion.routeName);
                       break;
                     default:
                       break;

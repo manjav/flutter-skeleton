@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/view/popups/potion_popup.dart';
 
 import 'popups/building_mine_popup.dart';
 import 'popups/building_supportive_popup.dart';
@@ -41,6 +42,7 @@ enum Routes {
   popupSupportiveBuilding,
   popupMineBuilding,
   popupTreasuryBuilding,
+  popupPotion,
   popupCombo,
   popupHero,
 }
@@ -63,6 +65,7 @@ extension RouteProvider on Routes {
       "/popupSupportiveBuilding" => SupportiveBuildingPopup(args: args ?? {}),
       "/popupMineBuilding" => MineBuildingPopup(args: args ?? {}),
       "/popupTreasuryBuilding" => TreasuryBuildingPopup(args: args ?? {}),
+      "/popupPotion" => PotionPopup(args: args ?? {}),
       "/popupCombo" => ComboPopup(args: args ?? {}),
       "/popupHero" => HeroPopup(args: args ?? {}),
       _ => LoadingScreen(),
@@ -81,6 +84,9 @@ extension RouteProvider on Routes {
       "/popupOpponents" ||
       "/popupSupportiveBuilding" ||
       "/popupTreasuryBuilding" ||
+      "/popupPotion" ||
+      "/popupCombo" ||
+      "/popupHero" ||
       "/popupMineBuilding" =>
         false,
       _ => true,
