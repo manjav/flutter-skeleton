@@ -194,6 +194,10 @@ class Account extends StringMap<dynamic> {
       }
     }
     map['heroes'] = heroes;
+
+    for (var id in map["available_combo_id_set"]) {
+      loadingData.comboHints[id].isAvailable = true;
+    }
   }
 
   T get<T>(AccountField fieldName) => map[fieldName.name] as T;
