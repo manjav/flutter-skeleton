@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/utils/ilogger.dart';
+import 'package:flutter_skeleton/view/route_provider.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -34,7 +36,8 @@ class Indicator extends StatefulWidget {
   createState() => _IndicatorState();
 }
 
-class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
+class _IndicatorState extends State<Indicator>
+    with TickerProviderStateMixin, ILogger {
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();
@@ -56,15 +59,25 @@ class _IndicatorState extends State<Indicator> with TickerProviderStateMixin {
                     : _getElements(height, widget.value!, widget.data as int),
               ),
               onTap: () {
+                if (widget.onTap != null) {
+                  widget.onTap?.call();
+                } else {
+                  switch (widget.itemType) {
+                    case AccountField.gold:
+                    case AccountField.nectar:
+                      log("Go to shop");
+                      break;
+                    case AccountField.potion_number:
+                      Navigator.pushNamed(context, Routes.popupNectar.routeName);
+                      break;
+                    default:
+                      break;
+                  }
+                }
                 // widget.services.get<Analytics>().funnle("shopclicks");
                 // widget.services
                 //     .get<Analytics>()
                 //     .design('guiClick:shop:${widget.source}');
-                if (widget.onTap != null) {
-                  widget.onTap?.call();
-                } else {
-                  // Navigator.pushNamed(context, Screens.shop.routeName);
-                }
               }),
         ));
   }
