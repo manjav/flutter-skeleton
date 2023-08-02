@@ -15,7 +15,6 @@ import '../../view/popups/ipopup.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../building_mixin.dart';
-import '../building_supportive_mixin.dart';
 import '../route_provider.dart';
 
 class TreasuryBuildingPopup extends AbstractPopup {
@@ -28,7 +27,7 @@ class TreasuryBuildingPopup extends AbstractPopup {
 
 class _TreasuryBuildingPopupState
     extends AbstractPopupState<TreasuryBuildingPopup>
-    with BuildingPopupMixin, SupportiveBuildingPopupMixin {
+    with BuildingPopupMixin {
   @override
   contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
