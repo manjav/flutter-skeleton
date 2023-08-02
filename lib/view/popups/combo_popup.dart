@@ -58,13 +58,24 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> {
                 SkinnedText(" x${combo.cost}")
               ]),
               SizedBox(height: 24.d),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                SkinnedText("combo_suit_level".l(), style: style),
+                SkinnedText("combo_suit_${combo.level}".l(), style: style2),
+                SizedBox(width: 32.d),
+                SkinnedText("combo_suit_power".l(), style: style),
+                SkinnedText("combo_suit_${combo.power}".l(), style: style2),
+                SizedBox(width: 32.d),
+                SkinnedText("combo_suit_fruit".l(), style: style),
+                SkinnedText("combo_suit_${combo.fruit}".l(), style: style2),
+              ]),
+              SizedBox(height: 24.d),
               Text("combo_${value}_description".l(),
                   style: TStyles.medium.copyWith(height: 1)),
               const Expanded(child: SizedBox()),
-        Wrap(
-          alignment: WrapAlignment.center,
-          runSpacing: 16.d,
-          spacing: 16.d,
+              Wrap(
+                  alignment: WrapAlignment.center,
+                  runSpacing: 16.d,
+                  spacing: 16.d,
                   children: [
                     for (var i = 1;
                         i < _account.loadingData.comboHints.length;
@@ -95,4 +106,40 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> {
         ]),
         onPressed: () => setState(() => _selectedIndex.value = index));
   }
+
+// local function findAvailableCombo(rowIndexOfComboTable)
+
+//     local comboId = getsIdOfCombo(rowIndexOfComboTable)
+//     local comboSettings
+//     --If combo isn’t discovered
+//     if comboId == 0 then
+//         comboSettings = {
+//             count = ComboData[rowIndexOfComboTable].count,
+//             description = ComboDataLang["Combo"..ComboData[rowIndexOfComboTable].id.." unlock description"],
+//             discovered = false
+//         }
+
+//         return comboSettings
+
+//     else --If combo is discovered
+
+//         ComboData[comboId].text = ComboDataLang["Combo"..ComboData[comboId].id]
+//         ComboData[comboId].description = ComboDataLang["Combo"..ComboData[comboId].id.." description"]
+//         ComboData[comboId].discovered = true
+
+//         return ComboData[comboId]
+//     end
+
+// end
+
+// --Boost
+// BOOST_MULTIPLIERS = {
+//     ["18"] = 1.5,
+//     ["19"] = 2,
+//     ["20"] = 3,
+//     ["21"] = 5,
+//     ["22"] = 1.05,
+//     ["23"] = 1.1,
+//     ["24"] = 1.2,
+// }
 }
