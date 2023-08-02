@@ -5,7 +5,7 @@ class LoadingData {
   late Account account;
   late Cards baseCards;
   late Fruits fruits;
-  late Map<int, ComboHint> comboHints;
+  late List<ComboHint> comboHints;
   late Map<int, BaseHeroItem> baseHeroItems;
   LoadingData();
 

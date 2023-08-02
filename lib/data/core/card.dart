@@ -265,10 +265,11 @@ class ComboHint {
       count = 0,
       power = 0;
   String icon = "";
-  static Map<int, ComboHint> init(List<dynamic> data) {
-    var result = <int, ComboHint>{};
+  bool isAvailable = false;
+  static List<ComboHint> init(List<dynamic> data) {
+    var result = <ComboHint>[ComboHint()];
     for (var item in data) {
-      result[item["id"]] = ComboHint()
+      result.add(ComboHint()
         ..id = item["id"]
         ..fruit = item["fruit"]
         ..benefit = item["benefit"]
@@ -277,7 +278,7 @@ class ComboHint {
         ..level = item["level"]
         ..count = item["count"]
         ..power = item["power"]
-        ..icon = item["smallImage"];
+        ..icon = item["smallImage"]);
     }
     return result;
   }
