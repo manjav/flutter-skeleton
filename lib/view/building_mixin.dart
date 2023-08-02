@@ -37,15 +37,6 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
             level: building.get<int>(BuildingField.level)));
   }
 
-  Widget dualColorText(String whiteText, String coloredText,
-      {TextStyle? style}) {
-    style = style ?? TStyles.large;
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      SkinnedText(whiteText, style: style),
-      SizedBox(width: 18.d),
-      SkinnedText(coloredText, style: style.copyWith(color: TColors.orange))
-    ]);
-  }
 
   upgtadeButton(Account account, Building building) {
     var bgCenterSlice = ImageCenterSliceDate(42, 42);

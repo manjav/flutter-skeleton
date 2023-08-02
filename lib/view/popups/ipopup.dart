@@ -112,6 +112,16 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   Widget contentFactory() => Widgets.rect(
       height: 480.d, width: 880.d, color: TColors.green.withAlpha(133));
 
+  Widget dualColorText(String whiteText, String coloredText,
+      {TextStyle? style}) {
+    style = style ?? TStyles.large;
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      SkinnedText(whiteText, style: style),
+      SizedBox(width: 18.d),
+      SkinnedText(coloredText, style: style.copyWith(color: TColors.orange))
+    ]);
+  }
+
   void toast(String message) =>
       Overlays.insert(context, OverlayType.toast, args: message);
 }
