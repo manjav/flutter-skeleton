@@ -127,6 +127,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
     return Widgets.skinnedButton(
         width: 460.d,
+        height: 200.d,
         color: color,
         isEnable: isEnable,
         padding: EdgeInsets.fromLTRB(30.d, 16.d, 14.d, 29.d),

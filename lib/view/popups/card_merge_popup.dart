@@ -140,7 +140,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
                 style: TStyles.large.copyWith(height: 3.d)),
             SizedBox(width: 24.d),
             Widgets.rect(
-              padding: EdgeInsets.symmetric(horizontal: 12.d),
+              padding: EdgeInsets.only(right: 12.d),
               decoration: BoxDecoration(
                   image: DecorationImage(
                       fit: BoxFit.fill,
