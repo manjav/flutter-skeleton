@@ -39,20 +39,22 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
           Text("potion_description".l(),
               style: TStyles.medium.copyWith(height: 2.7.d)),
           Widgets.divider(margin: 36.d, width: 700.d),
-          Widgets.slider(0, potion.toDouble(), capacity,
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Asset.load<Image>("icon_potion_number", height: 64.d),
-                SizedBox(width: 12.d),
-                SkinnedText("$potion/${capacity.floor()}", style: TStyles.large)
-              ]),
-              width: 600.d,
+          Widgets.slider(
+            0,
+            potion.toDouble(),
+            capacity,
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Asset.load<Image>("icon_potion_number", height: 64.d),
+              SizedBox(width: 12.d),
+              SkinnedText("$potion/${capacity.floor()}", style: TStyles.large)
+            ]),
+            width: 600.d,
           ),
           SizedBox(height: 50.d),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _fillButton(ButtonColor.green, potion < capacity, "+1", price,
+              _fillButton(ButtonColor.teal, potion < capacity, "+1", price,
                   () => _fill(state.account, 1)),
               SizedBox(width: 10.d),
               _fillButton(

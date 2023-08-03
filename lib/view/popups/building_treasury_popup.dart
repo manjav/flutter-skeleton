@@ -26,8 +26,7 @@ class TreasuryBuildingPopup extends AbstractPopup {
 }
 
 class _TreasuryBuildingPopupState
-    extends AbstractPopupState<TreasuryBuildingPopup>
-    with BuildingPopupMixin {
+    extends AbstractPopupState<TreasuryBuildingPopup> with BuildingPopupMixin {
   @override
   contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
@@ -60,8 +59,9 @@ class _TreasuryBuildingPopupState
                   ButtonColor.teal,
                   gold > 0,
                   [
-                    Asset.load<Image>("icon_gold", height: 64.d),
-                    SkinnedText(" - ${step.compact()}".l())
+                    Asset.load<Image>("icon_gold", height: 80.d),
+                    SkinnedText(" - ${step.compact()}".l(),
+                        style: TStyles.large)
                   ],
                   () => _transaction(state.account, RpcId.witdraw, step)),
               SizedBox(width: 40.d),
@@ -69,8 +69,9 @@ class _TreasuryBuildingPopupState
                   ButtonColor.green,
                   gold < building.benefit,
                   [
-                    Asset.load<Image>("icon_gold", height: 64.d),
-                    SkinnedText(" + ${step.compact()}".l())
+                    Asset.load<Image>("icon_gold", height: 80.d),
+                    SkinnedText(" + ${step.compact()}".l(),
+                        style: TStyles.large)
                   ],
                   () => _transaction(state.account, RpcId.deposit, step)),
             ],
