@@ -47,7 +47,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
                 SkinnedText("$potion/${capacity.floor()}", style: TStyles.large)
               ]),
               width: 600.d,
-              progressColor: const Color(0xFF00F2FF)),
+          ),
           SizedBox(height: 50.d),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

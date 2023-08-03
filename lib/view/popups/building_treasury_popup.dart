@@ -50,7 +50,8 @@ class _TreasuryBuildingPopupState
                 Asset.load<Image>("icon_gold", height: 64.d),
                 SkinnedText("${gold.compact()}/${building.benefit.compact()}",
                     style: TStyles.large),
-              ])),
+              ]),
+              progressColor: TColors.orange),
           SizedBox(height: 32.d),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

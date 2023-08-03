@@ -18,7 +18,7 @@ class TColors {
   static const primary20 = Color(0xFF77513A);
   static const primary10 = Color(0xFF66432E);
   static const gray = Color(0xFFA4A4A4);
-  static const green = Color(0xFFA1EE24);
+  static const green = Color(0xFF82EE24);
   static const orange = Color(0xFFFF8B21);
   static const teal = Color(0xFF59AFC2);
   static const transparent = Color(0x00000000);
