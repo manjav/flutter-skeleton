@@ -20,6 +20,7 @@ import '../iservices.dart';
 class HttpConnection extends IService {
   static String baseURL = '';
   LoadingData loadData = LoadingData();
+  Map<String, dynamic> _config = {};
 
   @override
   initialize({List<Object>? args}) async {
@@ -65,10 +66,10 @@ class HttpConnection extends IService {
       }
     }
     if (response!.statusCode == 200) {
-      var config = json.decode(response.body);
-      baseURL = config['server'];
-      LoaderWidget.baseURL = config['assetsServer'];
-      LoaderWidget.hashMap = Map.castFrom(config['files']);
+      _config = json.decode(response.body);
+      baseURL = "http://${_config['ip']}";
+      LoaderWidget.baseURL = _config['assetsServer'];
+      LoaderWidget.hashMap = Map.castFrom(_config['files']);
       log("Config loaded.");
     } else {
       throw RpcException(
@@ -148,6 +149,7 @@ class HttpConnection extends IService {
     headers = headers ?? {};
 
     headers["Content-Type"] = "application/x-www-form-urlencoded";
+    headers["Host"] = _config["host"];
     var cookies = Pref.cookies.getString();
     // for (var entry in cookies.entries) {
     //   if (headers["Cookie"] == null) {
