@@ -165,6 +165,124 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   }
 
   _itemListBottomSheet(int index) {
+    var isWeapons = index > 1;
+    var items = isWeapons ? _weapons : _minions;
+    return Widgets.rect(
+        decoration: BoxDecoration(
+          color: TColors.primary90,
+          border: Border.all(color: TColors.clay, width: 8.d),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(80.d)),
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 20.d),
+            SkinnedText(isWeapons ? "weapons_l".l() : "minions_l".l(),
+                style: TStyles.large),
+            Expanded(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(100.d)),
+                    child: ListView.builder(
+                        padding: EdgeInsets.all(12.d),
+                        itemExtent: 240.d,
+                        itemBuilder: (c, i) => _itemBuilder(items[i], index),
+                        itemCount: items.length))),
+          ],
+        ));
+  }
+
+  Widget? _itemBuilder(BaseHeroItem item, int position) {
+    var host = item.getHost(_heroes);
+    var heroItem = item.getUsage(_account
+        .get<Map<int, HeroItem>>(AccountField.heroitems)
+        .values
+        .toList());
+    var isActive = host == null || heroItem != null;
+    return Widgets.button(
+        radius: 44.d,
+        color: TColors.primary80,
+        margin: EdgeInsets.all(12.d),
+        padding: EdgeInsets.all(12.d),
+        child: Row(children: [
+          Opacity(
+              opacity: isActive ? 1 : 0.5,
+              child: Asset.load<Image>("heroitem_${item.image}",
+                  width: 180.d, height: 180.d)),
+          SizedBox(width: 24.d),
+          Expanded(
+              child: Opacity(
+                  opacity: isActive ? 1 : 0.6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SkinnedText("heroitem_${item.id}".l()),
+                      Expanded(
+                          child: Text("heroitem_${item.id}_description".l(),
+                              style: TStyles.small.copyWith(height: 1))),
+                      Row(
+                        children: [
+                          _itemAttributeBuilder("power", item.powerAmount),
+                          _itemAttributeBuilder("cooldown", item.wisdomAmount),
+                          _itemAttributeBuilder("gold", item.blessingAmount),
+                        ],
+                      )
+                    ],
+                  ))),
+          SizedBox(width: 12.d),
+          Widgets.rect(
+              alignment: Alignment.center,
+              width: 200.d,
+              child: IgnorePointer(
+                  ignoring: true,
+                  child: _itemActionBuilder(item, heroItem != null, host))),
+        ]),
+        onPressed: () => _setItem(item, position, heroItem, host));
+  }
+
+  Widget _itemAttributeBuilder(String attribute, int value) {
+    return Row(children: [
+      Asset.load<Image>("benefit_$attribute", width: 56.d),
+      Text(" +$value   "),
+    ]);
+  }
+
+  _itemActionBuilder(BaseHeroItem item, bool isAvailable, HeroCard? host) {
+    if (isAvailable) {
+      if (host != null) {
+        return _lockItem(
+            "icon_used",
+            "${host.card.base.get<FruitData>(CardFields.fruit).get<String>(FriutFields.name)}_t"
+                .l());
+      }
+      return Widgets.skinnedButton(
+          label: "use_l".l(),
+          color: ButtonColor.green,
+          width: 320.d,
+          height: 116.d);
+    }
+
+    if (item.unlockLevel > _account.get<int>(AccountField.hero_max_rarity)) {
+      return _lockItem("icon_locked", "level_l".l([item.unlockLevel]));
+    }
+    return Widgets.skinnedButton(
+        color: ButtonColor.teal,
+        padding: EdgeInsets.fromLTRB(22.d, 12.d, 12.d, 26.d),
+        child: Row(children: [
+          Asset.load<Image>("icon_nectar", width: 70.d),
+          SkinnedText("${item.cost}", style: TStyles.large)
+        ]));
+  }
+
+  Widget _lockItem(String icon, String text) {
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Asset.load<Image>(icon, height: 60.d),
+      SizedBox(height: 12.d),
+      Widgets.rect(
+          padding: EdgeInsets.symmetric(horizontal: 8.d),
+          radius: 12.d,
+          color: TColors.primary10,
+          child: Text(text, style: TStyles.smallInvert))
+    ]);
   }
 
   Widget _attributesBuilder(HeroCard hero) {
@@ -191,16 +309,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     ]);
   }
 
-  _itemsListBuilder(List<BaseHeroItem> items) {
-    return Widgets.rect(
-        height: 200.d,
-        width: 900.d,
-        child: ListView.builder(
-          itemExtent: 200.d,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (c, i) => _itemBuilder(i, items[i]),
-          itemCount: items.length,
-        ));
+  _setItem(
   }
 
   Widget? _itemBuilder(int index, BaseHeroItem item) {
