@@ -43,8 +43,8 @@ class HttpConnection extends IService {
       RpcParams.os_version.name: "13.4.1", //DeviceInfo.osVersion,
       RpcParams.model.name: "GA02099", //DeviceInfo.model,
       RpcParams.store_type.name: "google",
-      RpcParams.restore_key.name: "keep3oil11",
-      RpcParams.name.name: "ArMaN"
+      RpcParams.restore_key.name: "hello69582879",
+      // RpcParams.name.name: "ملعون"
     };
     var data = await rpc(RpcId.playerLoad, params: params);
     loadData.account = Account()..init(data, args: loadData);
@@ -60,8 +60,7 @@ class HttpConnection extends IService {
           .get(Uri.parse('https://8ball.turnedondigital.com/fc/configs.json'));
     } catch (e) {
       var error = '$e';
-      if (error.contains("No host specified in URI") ||
-          error.contains("Failed host lookup")) {
+      if (_isDisconnected(error)) {
         throw RpcException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
       }
     }
@@ -110,8 +109,7 @@ class HttpConnection extends IService {
       }
     } catch (e) {
       var error = '$e';
-      if (error.contains("No host specified in URI") ||
-          error.contains("Failed host lookup")) {
+      if (_isDisconnected(error)) {
         throw RpcException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
       }
     }
@@ -161,6 +159,12 @@ class HttpConnection extends IService {
       headers["Cookie"] = cookies;
     }
     return headers;
+  }
+
+  bool _isDisconnected(String error) {
+    return error.contains("No host specified in URI") ||
+        error.contains("Connection refused") ||
+        error.contains("Failed host lookup");
   }
 }
 
