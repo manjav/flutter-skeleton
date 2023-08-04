@@ -179,18 +179,27 @@ class Account extends StringMap<dynamic> {
     // Heroes
     map['base_heroitems'] = loadingData.baseHeroItems;
 
+    var heroitems = <int, HeroItem>{};
+    for (var item in map["heroitems"]) {
+      var heroitem = HeroItem(item['id'],
+          loadingData.baseHeroItems[item['base_heroitem_id']]!, item['state']);
+      heroitem.position = item['position'];
+      heroitems[item['id']] = heroitem;
+    }
+    map["heroitems"] = heroitems;
+
     var heroes = <int, HeroCard>{};
     if (map['hero_id_set'] != null) {
-      for (var v in map['hero_id_set']) {
-        var items = <HeroItem>[];
-        for (var item in v['items']) {
-          items.add(HeroItem(
-              item['id'],
-              loadingData.baseHeroItems[item['base_heroitem_id']]!,
-              item['state'],
-              item['position']));
+      for (var h in map['hero_id_set']) {
+        var hero = HeroCard(accountCards[h['id']]!, h['potion']);
+        hero.items = <HeroItem>[];
+        for (var item in h['items']) {
+          var heroItem = heroitems[item["id"]! as int];
+          if (heroItem != null) {
+            hero.items.add(heroItem);
+          }
         }
-        heroes[v['id']] = HeroCard(accountCards[v['id']]!, v['potion'], items);
+        heroes[h['id']] = hero;
       }
     }
     map['heroes'] = heroes;

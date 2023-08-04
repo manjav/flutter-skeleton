@@ -181,8 +181,8 @@ class HeroCard {
 
   final int potion;
   final AccountCard card;
-  final List<HeroItem> items;
-  HeroCard(this.card, this.potion, this.items);
+  List<HeroItem> items = [];
+  HeroCard(this.card, this.potion);
 
   // returns the gained attributes by hero based on its equipped items.
   // @param baseId, the base id of hero
@@ -218,10 +218,10 @@ class HeroCard {
 }
 
 class HeroItem {
-  final int id, state, position; //, usedCount;
+  final int id, state;
   final BaseHeroItem base;
-  HeroItem(
-      this.id, this.base, this.state, this.position /* , this.usedCount */);
+  int position = 0;
+  HeroItem(this.id, this.base, this.state);
 }
 
 class BaseHeroItem {
@@ -235,7 +235,6 @@ class BaseHeroItem {
       compatibility = 0,
       category = 0;
   String image = "";
-
   static Map<int, BaseHeroItem> init(List<dynamic> data) {
     var result = <int, BaseHeroItem>{};
     for (var item in data) {
