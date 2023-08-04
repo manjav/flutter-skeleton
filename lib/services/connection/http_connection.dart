@@ -28,7 +28,7 @@ class HttpConnection extends IService {
     var loader = Loader();
     await loader.load(
         "data.json.zip", "${LoaderWidget.baseURL}/texts/data.json.zip",
-        hash: LoaderWidget.hashMap["data.json.zip"]);
+        hash: LoaderWidget.hashMap["data.json"]);
     var jsonData = utf8.decode(loader.bytes!);
     loadData.init(jsonDecode(jsonData));
 

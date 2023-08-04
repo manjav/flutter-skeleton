@@ -43,13 +43,13 @@ class Loader with ILogger {
       bytes = <int>[];
       await _readResponse(response, onProgress);
 
-      if (!isHashMatch(bytes!, hash, path)) {
-        log("$path md5 is invalid!");
-        return null;
-      }
       if (ext == 'zip') {
         Archive archive = ZipDecoder().decodeBytes(bytes!);
         bytes = archive.first.content as List<int>;
+      }
+      if (!isHashMatch(bytes!, hash, path)) {
+        log("$path md5 is invalid!");
+        return null;
       }
       await file!.writeAsBytes(bytes!);
       log("Complete downloading $url");
