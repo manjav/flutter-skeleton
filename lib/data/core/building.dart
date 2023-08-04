@@ -395,7 +395,7 @@ class Building extends StringMap<dynamic> {
       // adds benefit(blessing items + base blessing) of each assigned hero
       for (var e in heroCardBenefits.entries) {
         blessingBenefit +=
-            e.value['bassing']! + e.key.get<int>(CardFields.blessingAttribute);
+            e.value['blessing']! + e.key.get<int>(CardFields.blessingAttribute);
       }
 
       // modifies the final blessing benefit with related modifiers.

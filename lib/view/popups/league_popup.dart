@@ -197,7 +197,8 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
           SizedBox(
               width: 200.d,
               child: Text(record.tribeName,
-                  style: TStyles.small, textAlign: TextAlign.center)),
+                  style: TStyles.small.copyWith(height: 1),
+                  textAlign: TextAlign.center)),
           SizedBox(width: 100.d),
           Text(record.weeklyScore.compact(), style: TStyles.small),
         ]),
