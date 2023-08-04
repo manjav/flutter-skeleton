@@ -52,9 +52,9 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
     if (widget.result["attacker_hero_benefits_info"].length > 0) {
       var benefits = widget.result["attacker_hero_benefits_info"];
       var map = <String, int>{
-        "benefit_gold": benefits['gold_benefit'],
-        "benefit_power": benefits['power_benefit'],
-        "benefit_cooldown": benefits['cooldown_benefit']
+        "benefit_gold": benefits['gold_benefit'] ?? 0,
+        "benefit_power": benefits['power_benefit'] ?? 0,
+        "benefit_cooldown": benefits['cooldown_benefit'] ?? 0
       };
       _heroBenefits = map.entries.toList();
     }
