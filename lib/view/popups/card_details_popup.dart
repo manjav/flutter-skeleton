@@ -38,6 +38,8 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         .account!
         .getReadyCards()
         .where((c) => c.base == _card.base);
+    var mergable = _card.base.get<int>(CardFields.rarity) <
+        _fruit.get<int>(FriutFields.maxLevel);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -60,11 +62,15 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 ),
                 SizedBox(height: 16.d),
                 Widgets.skinnedButton(
-                  isEnable: siblings.length > 1,
+                  isEnable: siblings.length > 1 && mergable,
                   label: "popupcardmerge".l(),
                   width: 370.d,
                   onPressed: () => _onButtonsTap(Routes.popupCardMerge),
-                  onDisablePressed: () => toast("card_no_sibling".l()),
+                  onDisablePressed: () {
+                    toast(mergable
+                        ? "card_no_sibling".l()
+                        : "max_level".l(["${_name}_t".l()]));
+                  },
                 ),
               ],
             ),
