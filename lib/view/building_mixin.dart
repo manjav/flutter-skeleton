@@ -37,7 +37,6 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
             level: building.get<int>(BuildingField.level)));
   }
 
-
   upgtadeButton(Account account, Building building) {
     var bgCenterSlice = ImageCenterSliceDate(42, 42);
     return Row(
@@ -75,8 +74,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
             ),
             onPressed: () => _upgrade(account, building),
             onDisablePressed: () => Overlays.insert(context, OverlayType.toast,
-                args: "building_max_level"
-                    .l(["building_${building.type.name}_t".l()])),
+                args: "max_level".l(["building_${building.type.name}_t".l()])),
           )
         ]);
   }

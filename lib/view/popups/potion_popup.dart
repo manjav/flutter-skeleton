@@ -78,7 +78,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
         isEnable: isEnable,
         width: 420.d,
         height: 150.d,
-        onDisablePressed: () => toast("building_max_level".l([titleBuilder()])),
+        onDisablePressed: () => toast("max_level".l([titleBuilder()])),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Asset.load<Image>("icon_potion_number", height: 80.d),
           SizedBox(width: 6.d),
