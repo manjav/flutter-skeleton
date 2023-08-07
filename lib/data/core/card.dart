@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 //         -=-=-=-    Fruit    -=-=-=-
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/utils.dart';
@@ -215,6 +216,15 @@ class HeroCard {
     }
     return values;
   }
+
+  HeroCard clone() => HeroCard(card, potion)..items = List.from(items);
+  Map<String, dynamic> getResult() {
+    var items = [];
+    for (var item in this.items) {
+      items.add({"base_heroitem_id": item.base.id, "position": item.position});
+    }
+    return {"hero_id": card.base.get<int>(CardFields.id), "items": items};
+  }
 }
 
 class HeroItem {
@@ -251,6 +261,18 @@ class BaseHeroItem {
         ..image = item["image"];
     }
     return result;
+  }
+
+  HeroItem? getUsage(Iterable<HeroItem> items) =>
+      items.firstWhereOrNull((item) => item.base.id == id);
+
+  HeroCard? getHost(List<HeroCard> heroes) {
+    for (var hero in heroes) {
+      for (var item in hero.items) {
+        if (item.base.id == id) return hero;
+      }
+    }
+    return null;
   }
 }
 

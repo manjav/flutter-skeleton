@@ -84,32 +84,32 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
             }
 
             return Column(children: [
-        SkinnedText("${name}_t".l()),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Widgets.button(
-                padding: EdgeInsets.all(22.d),
-                width: 120.d,
-                height: 120.d,
-                onPressed: () => _setIndex(-1),
-                child: Asset.load<Image>('arrow_left')),
-            Stack(alignment: Alignment.center, children: [
-              Asset.load<Image>("card_frame_hero_edit", width: 420.d),
-              LoaderWidget(AssetType.image, name,
+              SkinnedText("${name}_t".l()),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Widgets.button(
+                      padding: EdgeInsets.all(22.d),
+                      width: 120.d,
+                      height: 120.d,
+                      onPressed: () => _setIndex(-1),
+                      child: Asset.load<Image>('arrow_left')),
+                  Stack(alignment: Alignment.center, children: [
+                    Asset.load<Image>("card_frame_hero_edit", width: 420.d),
+                    LoaderWidget(AssetType.image, name,
                         subFolder: "cards", width: 320.d, key: _keys[value]),
                     for (var i = 0; i < 4; i++) _itemHolder(i, items[i])
-            ]),
-            Widgets.button(
-                padding: EdgeInsets.all(22.d),
-                width: 120.d,
-                height: 120.d,
-                onPressed: () => _setIndex(1),
-                child: Asset.load<Image>('arrow_right')),
-          ],
-        ),
-        SizedBox(height: 24.d),
-        _attributesBuilder(hero),
+                  ]),
+                  Widgets.button(
+                      padding: EdgeInsets.all(22.d),
+                      width: 120.d,
+                      height: 120.d,
+                      onPressed: () => _setIndex(1),
+                      child: Asset.load<Image>('arrow_right')),
+                ],
+              ),
+              SizedBox(height: 24.d),
+              _attributesBuilder(hero),
               SizedBox(height: 40.d),
               SizedBox(
                   height: 132.d,
@@ -163,10 +163,10 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                 return;
               }
               showModalBottomSheet<void>(
-                context: context,
-                backgroundColor: TColors.transparent,
-                barrierColor: TColors.transparent,
-                builder: (BuildContext context) =>
+                  context: context,
+                  backgroundColor: TColors.transparent,
+                  barrierColor: TColors.transparent,
+                  builder: (BuildContext context) =>
                       _itemListBottomSheet(index));
             }));
   }
@@ -322,6 +322,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       if (item.unlockLevel > _account.get<int>(AccountField.hero_max_rarity)) {
         toast("heroitem_locked".l([item.unlockLevel]));
       } else {
+        _buyItem(item);
       }
       return;
     }
@@ -358,6 +359,18 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     } finally {}
   }
 
+  _buyItem(BaseHeroItem item) async {
+    try {
+      var result =
+          await _tryRPC(RpcId.buyHeroItem, {RpcParams.id.name: item.id});
+      int id = result["heroitem_id"];
+      _account.map["heroitems"][id] = HeroItem(id, item, 0);
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } finally {}
+  }
+
   _tryRPC(RpcId id, Map<String, dynamic> params) async {
     try {
       var data = await BlocProvider.of<Services>(context)
@@ -367,6 +380,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       if (!mounted) return;
       BlocProvider.of<AccountBloc>(context).add(SetAccount(account: _account));
       setState(() {});
+      return data;
     } catch (e) {
       rethrow;
     }

@@ -11,8 +11,9 @@ enum RpcId {
   enhanceCard,
   enhanceMax,
   evolveCard,
+  equipHeroitems,
 
-// Battle
+  // Battle
   getOpponents,
   scout,
   quest,
@@ -27,6 +28,9 @@ enum RpcId {
   rankingTopTribes,
   league,
   leagueHistory,
+
+  // Shop
+  buyHeroItem,
 }
 
 extension RpcIdEx on RpcId {
@@ -37,6 +41,7 @@ extension RpcIdEx on RpcId {
       RpcId.enhanceCard => "cards/enhance",
       RpcId.enhanceMax => "cards/nectarify",
       RpcId.evolveCard => "cards/evolve",
+      RpcId.equipHeroitems => "cards/equipheroitems",
       RpcId.scout => "battle/scout",
       RpcId.quest => "battle/quest",
       RpcId.battle => "battle/battle",
@@ -51,6 +56,7 @@ extension RpcIdEx on RpcId {
       RpcId.rankingTopTribes => "ranking/tribebasedonseed",
       RpcId.league => "ranking/league",
       RpcId.leagueHistory => "ranking/leaguehistory",
+      RpcId.buyHeroItem => "store/buyheroitem",
     };
   }
 
@@ -94,5 +100,7 @@ enum RpcParams {
   tribe_id,
   amount,
   // League
-  rounds
+  rounds,
+  // Shop
+  id,
 }
