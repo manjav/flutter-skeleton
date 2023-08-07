@@ -83,7 +83,9 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
         onPressed: () => onSelectCard(index, card),
         child: Stack(children: [
           MinimalCardItem(card,
-              size: itemSize, showTitle: showCardTitle, key: card.key),
+              size: itemSize,
+              showTitle: showCardTitle,
+              key: getGlobalKey(card.id)),
           selectedCards.value.contains(card)
               ? Positioned(
                   top: 2.d,
@@ -111,8 +113,9 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
   selectedForeground() {
     return Widgets.rect(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(24.d)),
-            border: Border.all(color: TColors.primary10, width: 10.d)));
+            borderRadius: BorderRadius.all(Radius.circular(20.d)),
+            border: Border.all(
+                color: TColors.black, width: 12.d, strokeAlign: 0.6)));
   }
 
   onSelectCard(int index, AccountCard card) => selectedCards.addCard(card);
