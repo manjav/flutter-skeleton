@@ -20,6 +20,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/screens/iscreen.dart';
 import '../../view/widgets/card_holder.dart';
+import '../../view/widgets/indicator.dart';
 import '../../view/widgets/level_indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
@@ -39,6 +40,15 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     with KeyProvider {
   final SelectedCards _selectedCards =
       SelectedCards(List.generate(5, (i) => null));
+
+  @override
+  List<Widget> appBarElementsRight() {
+    return <Widget>[
+      Indicator(widget.type.name, AccountField.gold),
+      Indicator(widget.type.name, AccountField.nectar, width: 280.d),
+      Indicator(widget.type.name, AccountField.potion_number, width: 256.d),
+    ];
+  }
 
   @override
   Widget contentFactory() {
