@@ -35,9 +35,8 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> {
   @override
   List<Widget> appBarElements() {
     return [
-      Indicator(widget.type.name, AccountField.potion_number,
-          hasPlusIcon: true, width: 290.d),
-      Indicator(widget.type.name, AccountField.gold, hasPlusIcon: true),
+      Indicator(widget.type.name, AccountField.potion_number, width: 290.d),
+      Indicator(widget.type.name, AccountField.gold),
     ];
   }
 

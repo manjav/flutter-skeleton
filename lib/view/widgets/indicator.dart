@@ -30,7 +30,7 @@ class Indicator extends StatefulWidget {
     this.width,
     this.onTap,
     this.data,
-    this.hasPlusIcon = false,
+    this.hasPlusIcon = true,
   }) : super(key: key);
   @override
   createState() => _IndicatorState();
@@ -43,7 +43,7 @@ class _IndicatorState extends State<Indicator>
     // if (Pref.tutorMode.value == 0) return const SizedBox();
     var height = 110.d;
     return SizedBox(
-        width: widget.width ?? (widget.hasPlusIcon ? 340.d : 260.d),
+        width: widget.width ?? (widget.hasPlusIcon ? 330.d : 250.d),
         height: height,
         child: Hero(
           tag: widget.itemType.name,
@@ -86,7 +86,7 @@ class _IndicatorState extends State<Indicator>
   _getElements(double height, int value, int league) {
     var left = height * 0.65;
     var right = widget.hasPlusIcon ? height - 30.d : 0.0;
-    var sliceData = ImageCenterSliceDate(128, 69);
+    var sliceData = ImageCenterSliceDate(104, 69);
     return Stack(alignment: Alignment.centerLeft, children: [
       Positioned(
           right: right,

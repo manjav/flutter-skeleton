@@ -131,9 +131,9 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                                   ])),
                               SizedBox(width: 16.d),
                               Indicator(
+                                  widget.type.name, AccountField.league_rank,
                                   width: 240.d,
-                                  widget.type.name,
-                                  AccountField.league_rank,
+                                  hasPlusIcon: false,
                                   data: value.leagueId,
                                   value: _selectedOpponent.value.leagueRank)
                             ],

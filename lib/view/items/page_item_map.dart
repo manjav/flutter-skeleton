@@ -35,12 +35,14 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
             top: 240.d,
             left: 32.d,
             child: Indicator("home", AccountField.league_rank,
+                hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupLeague.routeName))),
         Positioned(
             top: 380.d,
             left: 32.d,
             child: Indicator("home", AccountField.rank,
+                hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupRanking.routeName))),
         // _building(buildings[Buildings.cards]!, 167, 560),
