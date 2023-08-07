@@ -13,8 +13,13 @@ class MinimalCardItem extends StatefulWidget {
   final double size;
   final int extraPower;
   final bool showTitle;
+  final String? heroTag;
   const MinimalCardItem(this.card,
-      {this.size = 400, this.showTitle = true, this.extraPower = 0, super.key});
+      {this.size = 400,
+      this.showTitle = true,
+      this.extraPower = 0,
+      this.heroTag,
+      super.key});
 
   @override
   State<MinimalCardItem> createState() => _MinimalCardItemState();
@@ -34,7 +39,7 @@ class _MinimalCardItemState extends State<MinimalCardItem> {
     _style = TStyles.medium.copyWith(fontSize: 32 * s);
 
     return Hero(
-      tag: widget.card.id,
+      tag: widget.heroTag ?? widget.card.id,
       child: Stack(alignment: Alignment.center, children: [
         Asset.load<Image>('card_frame_${_getCardBg(level)}'),
         LoaderWidget(AssetType.image,
