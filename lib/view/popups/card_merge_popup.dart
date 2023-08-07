@@ -124,7 +124,9 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
 
   _getCardView(AccountCard card, double size) {
     card = account.getCards()[card.id] ?? card;
-    return SizedBox(width: size, child: MinimalCardItem(card, size: size));
+    return SizedBox(
+        width: size,
+        child: MinimalCardItem(card, size: size, heroTag: "_${card.id}"));
   }
 
   _submitButton() {
