@@ -62,7 +62,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
           cards = getCards(account);
           return SizedBox(
               width: 980.d,
-              height: DeviceInfo.size.height - 450.d,
+              height: DeviceInfo.size.height - 550.d,
               child: Stack(
                   clipBehavior: Clip.none,
                   alignment: Alignment.topCenter,
