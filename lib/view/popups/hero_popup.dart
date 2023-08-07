@@ -156,12 +156,19 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
             child: item == null
                 ? const SizedBox()
                 : Asset.load<Image>("heroitem_${item.base.image}"),
-            onPressed: () => showModalBottomSheet<void>(
+            onPressed: () {
+              if (item != null) {
+                _heroes[_selectedIndex.value].items.remove(item);
+                setState(() {});
+                return;
+              }
+              showModalBottomSheet<void>(
                 context: context,
                 backgroundColor: TColors.transparent,
                 barrierColor: TColors.transparent,
                 builder: (BuildContext context) =>
-                    _itemListBottomSheet(index))));
+                      _itemListBottomSheet(index));
+            }));
   }
 
   _itemListBottomSheet(int index) {
@@ -310,12 +317,48 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   }
 
   _setItem(
+      BaseHeroItem item, int position, HeroItem? heroItem, HeroCard? host) {
+    if (heroItem == null) {
+      if (item.unlockLevel > _account.get<int>(AccountField.hero_max_rarity)) {
+        toast("heroitem_locked".l([item.unlockLevel]));
+      } else {
+      }
+      return;
+    }
+
+    if (host != null) {
+      toast("heroitem_used".l([
+        "${host.card.base.get<FruitData>(CardFields.fruit).get<String>(FriutFields.name)}_t"
+            .l()
+      ]));
+      return;
+    }
+
+    heroItem.position = (position % 2) == 0 ? 1 : -1;
+    _heroes[_selectedIndex.value].items.add(heroItem);
+    setState(() {});
+    Navigator.pop(context);
   }
 
-  Widget? _itemBuilder(int index, BaseHeroItem item) {
-    return Widgets.button(
-        color: TColors.accent,
-        margin: EdgeInsets.all(12.d),
-        child: Asset.load<Image>("heroitem_${item.image}"));
+  _saveChanges() {
+    var params = {"default_hero_id": _account.get(AccountField.base_hero_id)};
+    var heroDetails = [];
+    for (var h in _heroes) {
+      heroDetails.add(h.getResult());
+    }
+    params["hero_details"] = jsonEncode(heroDetails);
+    _tryRPC(RpcId.equipHeroitems, params);
+  }
+
+  _tryRPC(RpcId id, Map<String, dynamic> params) async {
+    try {
+      var data = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, id, params: params);
+      _account.update(data);
+      if (!mounted) return;
+      BlocProvider.of<AccountBloc>(context).add(SetAccount(account: _account));
+      setState(() {});
+    } finally {}
   }
 }
