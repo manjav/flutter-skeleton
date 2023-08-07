@@ -340,14 +340,22 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     Navigator.pop(context);
   }
 
-  _saveChanges() {
+  _saveChanges() async {
     var params = {"default_hero_id": _account.get(AccountField.base_hero_id)};
     var heroDetails = [];
-    for (var h in _heroes) {
-      heroDetails.add(h.getResult());
+    for (var hero in _heroes) {
+      heroDetails.add(hero.getResult());
     }
     params["hero_details"] = jsonEncode(heroDetails);
-    _tryRPC(RpcId.equipHeroitems, params);
+    try {
+      await _tryRPC(RpcId.equipHeroitems, params);
+      for (var hero in _heroes) {
+        _account.map["heroes"][hero.card.id] = hero;
+      }
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } finally {}
   }
 
   _tryRPC(RpcId id, Map<String, dynamic> params) async {
@@ -359,6 +367,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       if (!mounted) return;
       BlocProvider.of<AccountBloc>(context).add(SetAccount(account: _account));
       setState(() {});
-    } finally {}
+    } catch (e) {
+      rethrow;
+    }
   }
 }
