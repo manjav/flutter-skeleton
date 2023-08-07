@@ -11,15 +11,19 @@ import 'loaderwidget.dart';
 
 class CardHolder extends StatefulWidget {
   final AccountCard? card;
-  final Function()? onTap;
   final bool heroMode;
   final bool showPower;
-  const CardHolder(
-      {this.card,
-      this.heroMode = false,
-      this.onTap,
-      super.key,
-      this.showPower = true});
+  final bool isLocked;
+  final Function()? onTap;
+
+  const CardHolder({
+    this.card,
+    this.heroMode = false,
+    this.showPower = true,
+    this.isLocked = false,
+    this.onTap,
+    super.key,
+  });
 
   @override
   State<CardHolder> createState() => _CardHolderState();
@@ -64,10 +68,15 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
   }
 
   Widget _emptyCard() {
+    var inside = "card";
+    if (widget.isLocked) {
+      inside = "lock";
+    } else if (widget.heroMode) {
+      inside = "hero";
+    }
     return Padding(
         padding: EdgeInsets.all(24.d),
-        child: Asset.load<Image>(
-            "deck_placeholder_${widget.heroMode ? 'hero' : 'card'}"));
+        child: Asset.load<Image>("deck_placeholder_$inside"));
   }
 
   Widget _filledCard() {

@@ -352,6 +352,16 @@ class Building extends StringMap<dynamic> {
     return values[type]![(values[type]!.length - 1).max(level)];
   }
 
+  int isAvailableCardHolder(int index) {
+    if (type == Buildings.offense || type == Buildings.defense) {
+      return switch (level) { < 1 => 1, < 2 => 3, < 3 => 6, _ => 10 };
+    }
+    if (type == Buildings.mine) {
+      return index + 1;
+    }
+    return 1;
+  }
+
   int get maxCards {
     if (type == Buildings.offense || type == Buildings.defense) {
       return switch (level) { < 1 => 0, < 3 => 1, < 6 => 2, < 10 => 3, _ => 4 };

@@ -41,6 +41,7 @@
     "card_enhance_min": "Select sacrifice cadrs!",
     "card_max_power": "Max Power reached!",
     "card_no_sibling": "There are no siblings!",
+    "card_holder_unavailable": "Available at '%s Lvl%s'",
     "tribe_name": "Tribe Name",
     "league_bonus_current": "Current League Bonus",
     "league_bonus_next": "Next League Bonus",

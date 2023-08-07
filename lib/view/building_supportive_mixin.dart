@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../services/localization.dart';
 import '../blocs/account_bloc.dart';
 import '../blocs/services.dart';
 import '../data/core/account.dart';
@@ -9,6 +10,7 @@ import '../data/core/building.dart';
 import '../data/core/card.dart';
 import '../data/core/rpc.dart';
 import '../services/connection/http_connection.dart';
+import 'overlays/ioverlay.dart';
 import 'popups/ipopup.dart';
 import 'route_provider.dart';
 import 'widgets/card_holder.dart';
@@ -23,11 +25,20 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
             CardHolder(
                 showPower: showPower,
                 card: building.cards[i],
+                isLocked: i > building.maxCards,
                 onTap: () => onSelectCard(i, building))
         ]);
   }
 
   onSelectCard(int index, Building building) async {
+    if (index >= building.maxCards) {
+      Overlays.insert(context, OverlayType.toast,
+          args: "card_holder_unavailable".l([
+            "building_${building.type.name}_t".l(),
+            building.isAvailableCardHolder(index)
+          ]));
+      return;
+    }
     var returnValue = await Navigator.pushNamed(
         context, Routes.popupCardSelect.routeName,
         arguments: {'building': building});
