@@ -5,6 +5,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
+import '../key_provider_mixin.dart';
 import '../widgets.dart';
 import 'loaderwidget.dart';
 
@@ -24,8 +25,7 @@ class CardHolder extends StatefulWidget {
   State<CardHolder> createState() => _CardHolderState();
 }
 
-class _CardHolderState extends State<CardHolder> {
-  final Map<int, GlobalKey> _keys = {};
+class _CardHolderState extends State<CardHolder> with KeyProvider {
   @override
   Widget build(BuildContext context) {
     var balloonData =
@@ -72,15 +72,13 @@ class _CardHolderState extends State<CardHolder> {
 
   Widget _filledCard() {
     var card = widget.card!;
-    var key = _keys.containsKey(card.id)
-        ? _keys[card.id]
-        : _keys[card.id] = GlobalKey();
     var name = card.isHero
         ? card.base
             .get<FruitData>(CardFields.fruit)
             .get<String>(FriutFields.name)
         : card.base.get<String>(CardFields.name);
-    return LoaderWidget(AssetType.image, name, subFolder: "cards", key: key);
+    return LoaderWidget(AssetType.image, name,
+        subFolder: "cards", key: getGlobalKey(card.id));
   }
 }
 

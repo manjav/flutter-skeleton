@@ -18,6 +18,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
   late AccountCard card;
   bool submitAvailable = false;
   List<AccountCard> cards = [];
+  final Map<int, GlobalKey> _keys = {};
   final selectedCards = SelectedCards([]);
 
   @override
@@ -139,4 +140,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
     if (!mounted) return;
     BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
   }
+
+  GlobalKey getGlobalKey(int key) =>
+      _keys.containsKey(key) ? _keys[key]! : _keys[key] = GlobalKey();
 }

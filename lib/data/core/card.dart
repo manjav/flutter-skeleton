@@ -2,7 +2,6 @@
 
 //         -=-=-=-    Fruit    -=-=-=-
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 
 import '../../utils/utils.dart';
 import 'account.dart';
@@ -105,13 +104,11 @@ class AccountCard {
   late CardData base;
   late int lastUsedAt;
   final Account account;
-  late GlobalKey key;
   AccountCard(this.account, Map map, Cards cards) {
     id = map['id'] ?? -1;
     power = map['power'];
     base = cards.get("${map['base_card_id']}");
     lastUsedAt = map['last_used_at'] ?? 0;
-    key = GlobalKey();
   }
 
   int getRemainingCooldown() {

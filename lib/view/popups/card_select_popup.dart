@@ -8,6 +8,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../items/card_item.dart';
+import '../key_provider_mixin.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/card_holder.dart';
@@ -21,7 +22,8 @@ class CardSelectPopup extends AbstractPopup {
   createState() => _CardSelectPopupState();
 }
 
-class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup> {
+class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
+    with KeyProvider {
   final _selectedCards = SelectedCards([]);
   late Building _building;
 
@@ -109,7 +111,8 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup> {
               border: Border.all(color: TColors.primary10, width: 10.d))
           : null,
       onPressed: () => _selectedCards.setCard(card),
-      child: CardItem(card, inDeck: true, size: itemSize, key: card.key),
+      child: CardItem(card,
+          inDeck: true, size: itemSize, key: getGlobalKey(card.id)),
     );
   }
 }

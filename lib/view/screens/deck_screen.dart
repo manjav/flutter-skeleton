@@ -23,6 +23,7 @@ import '../../view/widgets/card_holder.dart';
 import '../../view/widgets/level_indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
+import '../key_provider_mixin.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
@@ -34,7 +35,8 @@ class DeckScreen extends AbstractScreen {
   createState() => _DeckScreenState();
 }
 
-class _DeckScreenState extends AbstractScreenState<DeckScreen> {
+class _DeckScreenState extends AbstractScreenState<DeckScreen>
+    with KeyProvider {
   final SelectedCards _selectedCards =
       SelectedCards(List.generate(5, (i) => null));
 
@@ -116,7 +118,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen> {
           }
         }
       },
-      child: CardItem(card, inDeck: true, size: itemSize, key: card.key),
+      child: CardItem(card,
+          inDeck: true, size: itemSize, key: getGlobalKey(card.id)),
     );
   }
 

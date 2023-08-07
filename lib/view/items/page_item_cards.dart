@@ -6,6 +6,7 @@ import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/items/page_item.dart';
 import '../../view/route_provider.dart';
+import '../key_provider_mixin.dart';
 import '../widgets.dart';
 import 'card_item.dart';
 
@@ -15,7 +16,8 @@ class CardsPageItem extends AbstractPageItem {
   createState() => _MainMapItemState();
 }
 
-class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
+class _MainMapItemState extends AbstractPageItemState<AbstractPageItem>
+    with KeyProvider {
   @override
   Widget build(BuildContext context) {
     var gap = 10.d;
@@ -58,7 +60,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
       onTap: () => Navigator.pushNamed(
           context, Routes.popupCardDetails.routeName,
           arguments: {'card': card}),
-      child: CardItem(card, size: itemSize, key: card.key),
+      child: CardItem(card, size: itemSize, key: getGlobalKey(card.id)),
     );
   }
 }
