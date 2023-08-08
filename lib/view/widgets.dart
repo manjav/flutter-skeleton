@@ -186,9 +186,9 @@ class Widgets {
         width: width,
         height: height,
         buttonId: buttonId,
-        alignment: alignment,
+        alignment: alignment ?? Alignment.center,
         constraints: constraints,
-        padding: padding ?? EdgeInsets.only(bottom: 16.d),
+        padding: padding ?? EdgeInsets.fromLTRB(28.d, 25.d, 28.d, 40.d),
         decoration: BoxDecoration(
             image: DecorationImage(
                 fit: BoxFit.fill,

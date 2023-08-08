@@ -47,10 +47,10 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
             height: 160.d,
             isEnable: building.level < building.maxLevel,
             color: ButtonColor.green,
-            padding: EdgeInsets.fromLTRB(44.d, 10.d, 32.d, 30.d),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                SizedBox(width: 8.d),
                 SkinnedText("upgrade_l".l(),
                     style: TStyles.large.copyWith(height: 3.d)),
                 SizedBox(width: 24.d),

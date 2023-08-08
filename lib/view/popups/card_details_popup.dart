@@ -53,8 +53,9 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
             Column(
               children: [
                 Widgets.skinnedButton(
-                  label: "popupcardenhance".l(),
                   width: 370.d,
+                  label: "popupcardenhance".l(),
+                  padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
                   isEnable:
                       _card.power < _card.base.get<int>(CardFields.powerLimit),
                   onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
@@ -62,6 +63,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 ),
                 SizedBox(height: 16.d),
                 Widgets.skinnedButton(
+                  padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
                   isEnable: siblings.length > 1 && mergable,
                   label: "popupcardmerge".l(),
                   width: 370.d,
@@ -77,10 +79,11 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
             Widgets.divider(
                 height: 140.d, margin: 48.d, direction: Axis.vertical),
             Widgets.skinnedButton(
+              width: 370.d,
               isEnable: false,
               label: "card_sell".l(),
               color: ButtonColor.green,
-              width: 370.d,
+              padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
               onPressed: () => _onButtonsTap(Routes.popupCardMerge),
               onDisablePressed: () => toast("coming_soon".l()),
             ),

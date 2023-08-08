@@ -120,12 +120,14 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                         Widgets.skinnedButton(
                             label: "×",
                             width: 140.d,
+                            padding: EdgeInsets.only(bottom: 12.d),
                             onPressed: () => Navigator.pop(context)),
                         SizedBox(width: 12.d),
                         Widgets.skinnedButton(
                             label: "Save",
                             width: 320.d,
                             color: ButtonColor.green,
+                            padding: EdgeInsets.only(bottom: 16.d),
                             onPressed: _saveChanges),
                       ])),
             ]);
@@ -262,22 +264,24 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                 .l());
       }
       return Widgets.skinnedButton(
-          label: "use_l".l(),
-          color: ButtonColor.green,
-          width: 320.d,
-          height: 116.d);
+        width: 320.d,
+        height: 120.d,
+        label: "use_l".l(),
+        color: ButtonColor.green,
+        padding: EdgeInsets.only(bottom: 16.d),
+      );
     }
 
     if (item.unlockLevel > _account.get<int>(AccountField.hero_max_rarity)) {
       return _lockItem("icon_locked", "level_l".l([item.unlockLevel]));
     }
     return Widgets.skinnedButton(
-        color: ButtonColor.teal,
-        padding: EdgeInsets.fromLTRB(22.d, 12.d, 12.d, 26.d),
-        child: Row(children: [
-          Asset.load<Image>("icon_nectar", width: 70.d),
-          SkinnedText("${item.cost}", style: TStyles.large)
-        ]));
+      height: 120.d,
+      icon: "icon_nectar",
+      label: "${item.cost}",
+      color: ButtonColor.teal,
+      padding: EdgeInsets.only(right: 16.d, bottom: 16.d),
+    );
   }
 
   Widget _lockItem(String icon, String text) {

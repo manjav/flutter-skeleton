@@ -29,7 +29,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem>
       return Stack(children: [
         GridView.builder(
             itemCount: cards.length,
-            padding: EdgeInsets.fromLTRB(gap, 300.d, gap, 210.d),
+            padding: EdgeInsets.fromLTRB(gap, 200.d, gap, 210.d),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 childAspectRatio: 0.74,
                 crossAxisCount: 4,
@@ -41,6 +41,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem>
             left: 48.d,
             child: Widgets.skinnedButton(
                 label: "   C   ",
+                padding: EdgeInsets.only(bottom: 16.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupCombo.routeName))),
         Positioned(
@@ -48,6 +49,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem>
             left: 148.d,
             child: Widgets.skinnedButton(
                 label: "   H   ",
+                padding: EdgeInsets.only(bottom: 16.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupHero.routeName)))
       ]);

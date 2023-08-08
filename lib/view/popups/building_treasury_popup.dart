@@ -86,7 +86,7 @@ class _TreasuryBuildingPopupState
     return Widgets.skinnedButton(
         color: color,
         isEnable: isEnable,
-        height: 140.d,
+        height: 150.d,
         width: 360.d,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center, children: children),
