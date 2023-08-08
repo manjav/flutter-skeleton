@@ -160,6 +160,7 @@ class Widgets {
 
   static skinnedButton({
     String? label,
+    String? icon,
     ButtonColor color = ButtonColor.yellow,
     ButtonSize size = ButtonSize.small,
     Widget? child,
@@ -199,8 +200,16 @@ class Widgets {
                 ).image)),
         child: Opacity(
             opacity: isEnable ? 1 : 0.7,
-            child: label != null
-                ? SkinnedText(label, style: TStyles.large)
+            child: label != null || icon != null
+                ? Row(mainAxisSize: MainAxisSize.min, children: [
+                    icon == null
+                        ? const SizedBox()
+                        : Asset.load<Image>(icon, height: 68.d),
+                    SizedBox(width: (label != null && icon != null) ? 16.d : 0),
+                    label == null
+                        ? const SizedBox()
+                        : SkinnedText(label, style: TStyles.large),
+                  ])
                 : child!));
   }
 
