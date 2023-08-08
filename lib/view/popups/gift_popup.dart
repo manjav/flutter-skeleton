@@ -14,15 +14,15 @@ import '../../view/popups/ipopup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
-class RewardPopup extends AbstractPopup {
-  const RewardPopup({super.key, required super.args})
-      : super(Routes.popupReward);
+class RedeemGiftPopup extends AbstractPopup {
+  const RedeemGiftPopup({super.key, required super.args})
+      : super(Routes.popupRedeemGift);
 
   @override
   createState() => _RewardPopupState();
 }
 
-class _RewardPopupState extends AbstractPopupState<RewardPopup> {
+class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
   late Account _account;
   late TextEditingController _textController;
 
@@ -34,7 +34,7 @@ class _RewardPopupState extends AbstractPopupState<RewardPopup> {
   }
 
   @override
-  String titleBuilder() => "settings_reward".l();
+  String titleBuilder() => "settings_gift".l();
 
   @override
   contentFactory() {
@@ -44,17 +44,17 @@ class _RewardPopupState extends AbstractPopupState<RewardPopup> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(height: 30.d),
-        Text("settings_restore_set".l(), style: style),
+        Text("settings_gift_set".l(), style: style),
         SizedBox(height: 50.d),
         Widgets.skinnedInput(
             controller: _textController,
-            hintText: "settings_reward_hint".l(),
+            hintText: "settings_gift_hint".l(),
             onChanged: (t) => setState(() {})),
         SizedBox(height: 40.d),
         Widgets.skinnedButton(
             width: 540.d,
-            icon: "icon_reward",
-            label: "settings_reward".l(),
+            icon: "icon_gift",
+            label: "settings_gift".l(),
             isEnable: _textController.text.isNotEmpty,
             onPressed: _redeemGift),
       ],

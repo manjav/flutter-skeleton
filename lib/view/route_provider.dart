@@ -9,6 +9,7 @@ import 'popups/card_enhance_popup.dart';
 import 'popups/card_merge_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/combo_popup.dart';
+import 'popups/gift_popup.dart';
 import 'popups/hero_popup.dart';
 import 'popups/invite_popup.dart';
 import 'popups/league_popup.dart';
@@ -16,7 +17,6 @@ import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
-import 'popups/reward_popup.dart';
 import 'popups/settings_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
@@ -51,7 +51,7 @@ enum Routes {
   popupSettings,
   popupRestore,
   popupInvite,
-  popupReward,
+  popupRedeemGift,
 }
 
 extension RouteProvider on Routes {
@@ -78,7 +78,7 @@ extension RouteProvider on Routes {
       "/popupSettings" => SettingsPopup(args: args ?? {}),
       "/popupRestore" => RestorePopup(args: args ?? {}),
       "/popupInvite" => InvitePopup(args: args ?? {}),
-      "/popupReward" => RewardPopup(args: args ?? {}),
+      "/popupRedeemGift" => RedeemGiftPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }
@@ -101,7 +101,7 @@ extension RouteProvider on Routes {
       "/popupSettings" ||
       "/popupRestore" ||
       "/popupInvite" ||
-      "/popupReward" ||
+      "/popupRedeemGift" ||
       "/popupMineBuilding" =>
         false,
       _ => true,

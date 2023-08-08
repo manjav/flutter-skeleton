@@ -64,7 +64,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
             SizedBox(height: 16.d),
             _button("restore", color: ButtonColor.green, width: 660.d),
             _button("invite", color: ButtonColor.green, width: 660.d),
-            _button("reward", color: ButtonColor.yellow, width: 660.d),
+        _button("gift", color: ButtonColor.yellow, width: 660.d),
             Widgets.divider(width: 120.d, margin: 30.d),
             _buttons(["feedback", "credits"]),
             _buttons(["web", "instagram"]),
