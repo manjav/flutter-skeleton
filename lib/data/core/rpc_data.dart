@@ -2,6 +2,7 @@ import 'account.dart';
 import 'card.dart';
 
 class LoadingData {
+  static String? restoreKey;
   late Account account;
   late Cards baseCards;
   late Fruits fruits;

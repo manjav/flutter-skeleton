@@ -105,7 +105,9 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                     ),
                     SizedBox(height: 48.d),
                     Widgets.skinnedButton(
-                        padding: EdgeInsets.fromLTRB(68.d, 32.d, 68.d, 56.d),
+                        width: 440.d,
+                        height: 160.d,
+                        padding: EdgeInsets.only(bottom: 16.d),
                         label: 'Retry',
                         buttonId: -1,
                         onPressed: () {

@@ -120,6 +120,9 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
             .add(ServicesEvent(ServicesInitState.initialize, null));
       }
     } on RpcException catch (e) {
+      if (e.statusCode == StatusCode.C154_INVALID_RESTORE_KEY) {
+        LoadingData.restoreKey = null;
+      }
       if (context.mounted) {
         BlocProvider.of<Services>(context)
             .add(ServicesEvent(ServicesInitState.error, e));
