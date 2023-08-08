@@ -16,6 +16,7 @@ import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
+import 'popups/reward_popup.dart';
 import 'popups/settings_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
@@ -77,7 +78,7 @@ extension RouteProvider on Routes {
       "/popupSettings" => SettingsPopup(args: args ?? {}),
       "/popupRestore" => RestorePopup(args: args ?? {}),
       "/popupInvite" => InvitePopup(args: args ?? {}),
-      // "/popupReward" => RewardPopup(args: args ?? {}),
+      "/popupReward" => RewardPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }

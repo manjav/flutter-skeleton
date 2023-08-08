@@ -286,5 +286,10 @@ class Account extends StringMap<dynamic> {
     if (data.containsKey("player_gold")) map["gold"] = data["player_gold"];
     var tribe = getBuilding(Buildings.tribe);
     if (tribe != null) tribe.map["gold"] = data["tribe_gold"];
+
+    map["gold"] = map["gold"] + (data["added_gold"] ?? 0);
+    map["nectar"] = map["nectar"] + (data["added_nectar"] ?? 0);
+    map["potion_number"] = map["potion_number"] + (data["added_potion"] ?? 0);
+    map["potion_number"] = data["potion"] ?? 0;
   }
 }

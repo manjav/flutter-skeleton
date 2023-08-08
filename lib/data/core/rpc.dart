@@ -2,9 +2,11 @@
 
 enum RpcId {
   playerLoad,
-  fillPotion,
   deposit,
   witdraw,
+  fillPotion,
+  redeemGift,
+
 // Card
   coolOff,
   assignCard,
@@ -50,6 +52,7 @@ extension RpcIdEx on RpcId {
       RpcId.deposit => "player/deposittobank",
       RpcId.witdraw => "player/withdrawfrombank",
       RpcId.fillPotion => "player/fillpotion",
+      RpcId.redeemGift => "player/redeemgift",
       RpcId.upgrade => "tribe/upgrade",
       RpcId.rankingGlobal => "ranking/global",
       RpcId.rankingExpertTribes => "ranking/tribe",
@@ -86,6 +89,7 @@ enum RpcParams {
   restore_key,
   store_type,
   udid,
+  code,
   // Quest - Battle
   cards,
   hero_id,
