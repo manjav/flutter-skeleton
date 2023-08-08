@@ -14,6 +14,7 @@ import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/ranking_popup.dart';
+import 'popups/restore_popup.dart';
 import 'popups/settings_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
@@ -46,6 +47,9 @@ enum Routes {
   popupCombo,
   popupHero,
   popupSettings,
+  popupRestore,
+  popupInvite,
+  popupReward,
 }
 
 extension RouteProvider on Routes {
@@ -70,6 +74,9 @@ extension RouteProvider on Routes {
       "/popupCombo" => ComboPopup(args: args ?? {}),
       "/popupHero" => HeroPopup(args: args ?? {}),
       "/popupSettings" => SettingsPopup(args: args ?? {}),
+      "/popupRestore" => RestorePopup(args: args ?? {}),
+      // "/popupInvite" => InvitePopup(args: args ?? {}),
+      // "/popupReward" => RewardPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }
@@ -90,6 +97,9 @@ extension RouteProvider on Routes {
       "/popupCombo" ||
       "/popupHero" ||
       "/popupSettings" ||
+      "/popupRestore" ||
+      "/popupInvite" ||
+      "/popupReward" ||
       "/popupMineBuilding" =>
         false,
       _ => true,
@@ -100,7 +110,6 @@ extension RouteProvider on Routes {
 class MaterialTransparentRoute<T> extends PageRoute<T>
     with MaterialRouteTransitionMixin<T> {
   final bool isOpaque;
-
   MaterialTransparentRoute({
     required this.builder,
     required RouteSettings settings,

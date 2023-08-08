@@ -62,7 +62,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               height: 110.d,
               padding: EdgeInsets.all(16.d),
               child: Asset.load<Image>('ui_settings'),
-              onPressed: () => toast("comong_soon".l()))),
+              onPressed: () => Navigator.pushNamed(
+                  context, Routes.popupSettings.routeName))),
       ];
     }
     return super.appBarElementsRight();
