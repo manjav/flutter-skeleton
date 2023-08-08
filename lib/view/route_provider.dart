@@ -14,6 +14,7 @@ import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/ranking_popup.dart';
+import 'popups/settings_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
 import 'screens/home_screen.dart';
@@ -27,7 +28,6 @@ enum Routes {
   home,
   loading,
   profile,
-  settings,
   shop,
 
   popupNone,
@@ -45,6 +45,7 @@ enum Routes {
   popupPotion,
   popupCombo,
   popupHero,
+  popupSettings,
 }
 
 extension RouteProvider on Routes {
@@ -68,6 +69,7 @@ extension RouteProvider on Routes {
       "/popupPotion" => PotionPopup(args: args ?? {}),
       "/popupCombo" => ComboPopup(args: args ?? {}),
       "/popupHero" => HeroPopup(args: args ?? {}),
+      "/popupSettings" => SettingsPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
   }
@@ -87,6 +89,7 @@ extension RouteProvider on Routes {
       "/popupPotion" ||
       "/popupCombo" ||
       "/popupHero" ||
+      "/popupSettings" ||
       "/popupMineBuilding" =>
         false,
       _ => true,
