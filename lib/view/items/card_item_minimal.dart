@@ -23,6 +23,19 @@ class MinimalCardItem extends StatefulWidget {
 
   @override
   State<MinimalCardItem> createState() => _MinimalCardItemState();
+
+  static Image getCardBackground(CardData card) {
+    var frameName = card.get<int>(CardFields.rarity).toString();
+    if (card.isHero) frameName = "hero";
+    if (card.isMonster) frameName = "monster";
+    return Asset.load<Image>('card_frame_$frameName');
+  }
+
+  static getCardImage(CardData card, double size, {Key? key}) {
+    return LoaderWidget(AssetType.image,
+        card.isHero ? card.name : card.get<String>(CardFields.name),
+        key: key, subFolder: "cards", width: size);
+  }
 }
 
 class _MinimalCardItemState extends State<MinimalCardItem> {
@@ -32,26 +45,21 @@ class _MinimalCardItemState extends State<MinimalCardItem> {
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
     var level = baseCard.get<int>(CardFields.rarity).toString();
-    var name =
-        baseCard.get<FruitData>(CardFields.fruit).get<String>(FriutFields.name);
-
     var s = widget.size / 256;
     _style = TStyles.medium.copyWith(fontSize: 32 * s);
 
     return Hero(
       tag: widget.heroTag ?? widget.card.id,
       child: Stack(alignment: Alignment.center, children: [
-        Asset.load<Image>('card_frame_${_getCardBg(level)}'),
-        LoaderWidget(AssetType.image,
-            widget.card.isHero ? name : baseCard.get<String>(CardFields.name),
-            key: _imageKey, subFolder: "cards", width: 216 * s),
+        MinimalCardItem.getCardBackground(baseCard),
+        MinimalCardItem.getCardImage(baseCard, 216 * s, key: _imageKey),
         widget.showTitle
             ? Positioned(
                 top: 4 * s,
                 left: 22 * s,
                 height: 48 * s,
-                child: SkinnedText("${name}_t".l(),
-                    style: _style!.autoSize(name.length, 12, 32 * s)))
+                child: SkinnedText("${baseCard.name}_t".l(),
+                    style: _style!.autoSize(baseCard.name.length, 12, 32 * s)))
             : const SizedBox(),
         Positioned(
             top: 6 * s,
@@ -72,11 +80,5 @@ class _MinimalCardItemState extends State<MinimalCardItem> {
         )
       ]),
     );
-  }
-
-  _getCardBg(String level) {
-    if (widget.card.isHero) return "hero";
-    if (widget.card.isMonster) return "monster";
-    return level;
   }
 }

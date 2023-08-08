@@ -9,8 +9,8 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/loaderwidget.dart';
 import '../widgets/skinnedtext.dart';
+import 'card_item_minimal.dart';
 
 class CardItem extends StatefulWidget {
   final double size;
@@ -33,8 +33,6 @@ class _CardItemState extends State<CardItem> {
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
     var level = baseCard.get<int>(CardFields.rarity).toString();
-    var name =
-        baseCard.get<FruitData>(CardFields.fruit).get<String>(FriutFields.name);
     var cooldown = baseCard.get<int>(CardFields.cooldown);
     if (widget.inDeck) {
       _remainingCooldown.value = widget.card.getRemainingCooldown();
@@ -55,16 +53,14 @@ class _CardItemState extends State<CardItem> {
     return Hero(
       tag: widget.card.id,
       child: Stack(alignment: Alignment.center, children: [
-        Asset.load<Image>('card_frame_${_getCardBg(level)}'),
-        LoaderWidget(AssetType.image,
-            widget.card.isHero ? name : baseCard.get<String>(CardFields.name),
-            key: _imageKey, subFolder: "cards", width: 216 * s),
+        MinimalCardItem.getCardBackground(baseCard),
+        MinimalCardItem.getCardImage(baseCard, 216 * s, key: _imageKey),
         Positioned(
             top: 6 * s,
             left: 22 * s,
             height: 52 * s,
-            child: SkinnedText("${name}_t".l(),
-                style: _small!.autoSize(name.length, 8, 36 * s))),
+            child: SkinnedText("${baseCard.name}_t".l(),
+                style: _small!.autoSize(baseCard.name.length, 8, 36 * s))),
         Positioned(
             top: 1 * s,
             right: 23 * s,
@@ -124,11 +120,5 @@ class _CardItemState extends State<CardItem> {
   void dispose() {
     _cooldownTimer?.cancel();
     super.dispose();
-  }
-
-  _getCardBg(String level) {
-    if (widget.card.isHero) return "hero";
-    if (widget.card.isMonster) return "monster";
-    return level;
   }
 }
