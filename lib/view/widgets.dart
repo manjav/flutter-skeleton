@@ -170,6 +170,7 @@ class Widgets {
     double? height,
     bool isEnable = true,
     Alignment? alignment,
+    EdgeInsets? margin,
     EdgeInsets? padding,
     Function()? onPressed,
     Function()? onDisablePressed,
@@ -190,6 +191,7 @@ class Widgets {
         buttonId: buttonId,
         alignment: alignment ?? Alignment.center,
         constraints: constraints,
+        margin: margin,
         padding: padding ?? EdgeInsets.fromLTRB(28.d, 25.d, 28.d, 40.d),
         decoration: BoxDecoration(
             image: DecorationImage(
