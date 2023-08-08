@@ -19,6 +19,7 @@ enum FriutFields {
 }
 
 class FruitData extends StringMap<dynamic> {
+  List<CardData> cards = [];
   T get<T>(FriutFields field) => map[field.name] as T;
 }
 
@@ -59,6 +60,8 @@ class CardData extends StringMap<dynamic> {
   static const cooldownIncreaseModifier = 0.2;
   static const veteranCooldownModifier = 0.1;
 
+  String get name => map["fruit"].map["name"];
+
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
     super.init(data);
@@ -90,10 +93,11 @@ class Cards extends StringMap<CardData> {
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
     var fruits = args as Fruits;
-    data.forEach((key, value) {
-      map[key] = CardData()
-        ..init(value, args: fruits.get("${value['fruitId']}"));
-    });
+    for (var entry in data.entries) {
+      var fruit = fruits.get("${entry.value['fruitId']}");
+      map[entry.key] = CardData()..init(entry.value, args: fruit);
+      fruit.cards.add(map[entry.key]!);
+    }
   }
 
   CardData get(String key) => map[key]!;
