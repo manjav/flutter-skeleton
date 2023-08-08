@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
-import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
@@ -23,12 +20,9 @@ class SettingsPopup extends AbstractPopup {
 }
 
 class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
-  late Account _account;
-
   @override
   void initState() {
     contentPadding = EdgeInsets.fromLTRB(60.d, 200.d, 60.d, 80.d);
-    _account = BlocProvider.of<AccountBloc>(context).account!;
     super.initState();
   }
 
