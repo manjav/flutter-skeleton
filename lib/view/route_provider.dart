@@ -10,6 +10,7 @@ import 'popups/card_merge_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/combo_popup.dart';
 import 'popups/hero_popup.dart';
+import 'popups/invite_popup.dart';
 import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
@@ -75,7 +76,7 @@ extension RouteProvider on Routes {
       "/popupHero" => HeroPopup(args: args ?? {}),
       "/popupSettings" => SettingsPopup(args: args ?? {}),
       "/popupRestore" => RestorePopup(args: args ?? {}),
-      // "/popupInvite" => InvitePopup(args: args ?? {}),
+      "/popupInvite" => InvitePopup(args: args ?? {}),
       // "/popupReward" => RewardPopup(args: args ?? {}),
       _ => LoadingScreen(),
     };
