@@ -83,7 +83,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            card.isHero || card.isMonster
+                            card.base.isHero || card.isMonster
                                 ? _enhanceButton(
                                     ButtonColor.teal,
                                     "card_enhance_max".l(),

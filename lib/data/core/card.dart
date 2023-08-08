@@ -81,6 +81,7 @@ class CardData extends StringMap<dynamic> {
         .floor();
   }
 
+  bool get isHero => get(CardFields.isHero);
   bool get isMonster =>
       get<FruitData>(CardFields.fruit).get<int>(FriutFields.category) == 2;
 }
@@ -132,8 +133,6 @@ class AccountCard {
     }
     return false;
   }
-
-  bool get isHero => base.get(CardFields.isHero);
 
 /* returns the gold cost for purchasing the cooldown of this card, takes into
      account the bonuses that the player's tribe might include and also the number of

@@ -81,7 +81,7 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
 
   Widget _filledCard() {
     var card = widget.card!;
-    var name = card.isHero
+    var name = card.base.isHero
         ? card.base
             .get<FruitData>(CardFields.fruit)
             .get<String>(FriutFields.name)

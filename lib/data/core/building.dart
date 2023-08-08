@@ -393,7 +393,7 @@ class Building extends StringMap<dynamic> {
       totalPower += card.power;
 
       // stores the gained attributes of items for hero cards.
-      if (card.isHero) {
+      if (card.base.isHero) {
         heroCardBenefits[card.base] =
             heros[card.id]!.getGainedAttributesByItems();
       }

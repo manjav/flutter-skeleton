@@ -260,7 +260,7 @@ class Account extends StringMap<dynamic> {
       return (removeCooldowns && card.getRemainingCooldown() > 0);
     });
     cards.sort((AccountCard a, AccountCard b) =>
-        a.power * (b.isHero ? 1 : -1) - b.power * (a.isHero ? 1 : -1));
+        a.power * (b.base.isHero ? 1 : -1) - b.power * (a.base.isHero ? 1 : -1));
     return cards;
   }
 

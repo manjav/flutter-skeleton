@@ -121,7 +121,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         if (card.getRemainingCooldown() > 0) {
           _coolOff(account, card);
         } else {
-          if (card.isHero) {
+          if (card.base.isHero) {
             _selectedCards.setAtCard(2, card);
           } else {
             _selectedCards.setCard(card, exception: 2);
