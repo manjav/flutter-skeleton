@@ -148,7 +148,7 @@
     "settings_restore_get": "You can play Fruitcraft on your other devices too, simply enter the code shown below in your other devices.",
     "settings_restore_yours": "Your restore code:",
     "settings_restore_set": "You can play your game on all of your mobile devices simply by entering the restore code. The restore code can be found in the setting page.",
-    "settings_restore_prompt": "Enter the restore code",
+    "settings_restore_hint": "Enter the restore code",
     "Almond_d": "Sly nut\nEverything shiny makes him crazy! He's always planning challenging heists. When will he stop his craziness? Most likely never :)",
     "Grape_t": "Grape",
     "Coconut_t": "Coconut",
