@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../view/widgets/skinnedtext.dart';
 import '../services/deviceinfo.dart';
@@ -300,6 +301,21 @@ class Widgets {
             )));
   }
 
+  static Widget clipboardGetter(String text, {double? width, double? height}) {
+    return button(
+        width: width ?? 720.d,
+        height: height ?? 120.d,
+        margin: EdgeInsets.all(8.d),
+        padding: EdgeInsets.symmetric(horizontal: 30.d),
+        color: TColors.primary80,
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          SkinnedText(text),
+          SizedBox(width: 16.d),
+          Asset.load<Image>("icon_copy", width: 44.d)
+        ]),
+        onPressed: () => Clipboard.setData(ClipboardData(text: text)));
+  }
 }
 
 enum ButtonColor { gray, green, teal, yellow }
