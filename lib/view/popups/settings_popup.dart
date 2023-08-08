@@ -28,48 +28,45 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
   @override
   contentFactory() {
-    return SizedBox(
-        height: 1240.d,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _row(
-                Pref.music,
-                CupertinoSwitch(value: Pref.music.getBool(), onChanged: (b) {}),
-                _onRowPressed),
-            _row(
-                Pref.sfx,
-                CupertinoSwitch(value: Pref.sfx.getBool(), onChanged: (b) {}),
-                _onRowPressed),
-            _row(
-                Pref.language,
-                IgnorePointer(
-                    ignoring: true,
-                    child: DropdownButton<String>(
-                      value: Pref.language.getString(),
-                      style: TStyles.medium,
-                      icon: Asset.load<Image>("icon_chevron", width: 44.d),
-                      onChanged: (String? value) =>
-                          setState(() => Pref.language.setString(value!)),
-                      items: ['en', 'fa']
-                          .map<DropdownMenuItem<String>>((String value) =>
-                              DropdownMenuItem<String>(
-                                  value: value,
-                                  child: SkinnedText(
-                                      "${"settings_$value".l()}  ")))
-                          .toList(),
-                    )),
-                _onRowPressed),
-            Widgets.divider(width: 120.d, margin: 20.d),
-            SizedBox(height: 16.d),
-            _button("restore", color: ButtonColor.green, width: 660.d),
-            _button("invite", color: ButtonColor.green, width: 660.d),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _row(
+            Pref.music,
+            CupertinoSwitch(value: Pref.music.getBool(), onChanged: (b) {}),
+            _onRowPressed),
+        _row(
+            Pref.sfx,
+            CupertinoSwitch(value: Pref.sfx.getBool(), onChanged: (b) {}),
+            _onRowPressed),
+        _row(
+            Pref.language,
+            IgnorePointer(
+                ignoring: true,
+                child: DropdownButton<String>(
+                  value: Pref.language.getString(),
+                  style: TStyles.medium,
+                  icon: Asset.load<Image>("icon_chevron", width: 44.d),
+                  onChanged: (String? value) =>
+                      setState(() => Pref.language.setString(value!)),
+                  items: ['en', 'fa']
+                      .map<DropdownMenuItem<String>>((String value) =>
+                          DropdownMenuItem<String>(
+                              value: value,
+                              child: SkinnedText("${"settings_$value".l()}  ")))
+                      .toList(),
+                )),
+            _onRowPressed),
+        Widgets.divider(width: 120.d, margin: 20.d),
+        SizedBox(height: 16.d),
+        _button("restore", color: ButtonColor.green, width: 660.d),
+        _button("invite", color: ButtonColor.green, width: 660.d),
         _button("gift", color: ButtonColor.yellow, width: 660.d),
-            Widgets.divider(width: 120.d, margin: 30.d),
-            _buttons(["feedback", "credits"]),
-            _buttons(["web", "instagram"]),
-          ],
-        ));
+        Widgets.divider(width: 120.d, margin: 30.d),
+        _buttons(["feedback", "credits"]),
+        _buttons(["web", "instagram"]),
+      ],
+    );
   }
 
   _row(Pref setting, Widget action, Function(Pref) onPressed) {
@@ -98,9 +95,10 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
   _button(String title, {ButtonColor color = ButtonColor.teal, double? width}) {
     return Widgets.skinnedButton(
         width: width,
-        label: "settings_$title".l(),
-        icon: "icon_$title",
         color: color,
+        icon: "icon_$title",
+        label: "settings_$title".l(),
+        margin: EdgeInsets.all(4.d),
         onPressed: () => _onButtonPressed(title));
   }
 
@@ -113,15 +111,16 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
   _onButtonPressed(String title) {
     if (title == 'feedback' ||
-        title == 'creadits' ||
+        title == 'credits' ||
         title == 'web' ||
         title == 'instagram') {
+      toast("coming_soon".l());
       return;
     }
     var route = switch (title) {
       "restore" => Routes.popupRestore,
       "invite" => Routes.popupInvite,
-      _ => Routes.popupReward,
+      _ => Routes.popupRedeemGift,
     };
     Navigator.pushNamed(context, route.routeName);
   }
