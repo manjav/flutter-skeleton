@@ -273,6 +273,33 @@ class Widgets {
       ]),
     );
   }
+
+  static Widget skinnedInput(
+      {bool autofocus = false,
+      String? hintText,
+      Widget? suffixIcon,
+      double? width,
+      double? height,
+      TextEditingController? controller,
+      Function(String)? onChanged}) {
+    return SizedBox(
+        width: width ?? 720.d,
+        height: height,
+        child: TextField(
+            autofocus: autofocus,
+            controller: controller,
+            textAlign: TextAlign.center,
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: TStyles.medium,
+              contentPadding: EdgeInsets.zero,
+              suffixIcon: suffixIcon,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.d))),
+            )));
+  }
+
 }
 
 enum ButtonColor { gray, green, teal, yellow }
