@@ -57,6 +57,9 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   }
 
   @override
+  List<Widget> appBarElements() => [];
+
+  @override
   Widget contentFactory() {
     return ValueListenableBuilder<FruitData>(
         valueListenable: _selectedFruit,
@@ -64,13 +67,14 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
           return Stack(alignment: Alignment.center, children: [
             _cardsListBuilder(value),
             Positioned(
-                top: 20.d,
+                top: 4.d,
                 child: Widgets.rect(
                     radius: 16.d,
                     color: TColors.primary70,
                     padding: EdgeInsets.symmetric(horizontal: 30.d),
                     child: SkinnedText(
-                        "${value.get<String>(FriutFields.name)}_t".l()))),
+                        "${value.get<String>(FriutFields.name)}_t".l(),
+                        style: TStyles.large))),
             _fruitsListBuilder(),
           ]);
         });
