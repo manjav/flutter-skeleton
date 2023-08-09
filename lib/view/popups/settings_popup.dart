@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/services.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
+import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/popups/ipopup.dart';
@@ -27,7 +30,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
   }
 
   @override
-  contentFactory() {
+  Widget contentFactory() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -89,6 +92,16 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
       return;
     }
     setting.setBool(!setting.getBool());
+
+    // Handle music toggle switch
+    if (setting == Pref.music) {
+      var sounds = BlocProvider.of<Services>(context).get<Sounds>();
+      if (setting.getBool()) {
+        sounds.playMusic();
+      } else {
+        sounds.stopAll();
+      }
+    }
     setState(() {});
   }
 
