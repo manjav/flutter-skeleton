@@ -79,7 +79,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
         });
   }
 
-  _cardsListBuilder(FruitData fruit) {
+  Widget _cardsListBuilder(FruitData fruit) {
     var gap = 12.d;
     var aspectRatio = 0.74;
     var len = fruit.cards[0].isHero ? 1 : fruit.cards.length;
@@ -123,7 +123,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
     ]);
   }
 
-  _fruitsListBuilder({int crossAxisCount = 5}) {
+  Widget _fruitsListBuilder({int crossAxisCount = 5}) {
     return Positioned(
         top: 720.d,
         left: 12.d,
@@ -139,7 +139,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
         ));
   }
 
-  _fruitItemBuilder(int index, FruitData fruit) {
+  Widget _fruitItemBuilder(int index, FruitData fruit) {
     var selected = _selectedFruit.value == fruit;
 
     return Widgets.button(

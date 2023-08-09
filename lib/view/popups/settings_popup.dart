@@ -69,7 +69,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
     );
   }
 
-  _row(Pref setting, Widget action, Function(Pref) onPressed) {
+  Widget _row(Pref setting, Widget action, Function(Pref) onPressed) {
     return Widgets.button(
         height: 120.d,
         padding: EdgeInsets.all(30.d),
@@ -83,7 +83,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
         onPressed: () => onPressed(setting));
   }
 
-  _onRowPressed(Pref setting) {
+  void _onRowPressed(Pref setting) {
     if (setting == Pref.language) {
       toast("coming_soon".l());
       return;
@@ -92,7 +92,8 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
     setState(() {});
   }
 
-  _button(String title, {ButtonColor color = ButtonColor.teal, double? width}) {
+  Widget _button(String title,
+      {ButtonColor color = ButtonColor.teal, double? width}) {
     return Widgets.skinnedButton(
         width: width,
         color: color,
@@ -102,14 +103,14 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
         onPressed: () => _onButtonPressed(title));
   }
 
-  _buttons(List<String> titles) {
+  Widget _buttons(List<String> titles) {
     return Row(children: [
       _button(titles[0], color: ButtonColor.teal),
       Expanded(child: _button(titles[1], color: ButtonColor.teal)),
     ]);
   }
 
-  _onButtonPressed(String title) {
+  void _onButtonPressed(String title) {
     if (title == 'feedback' ||
         title == 'credits' ||
         title == 'web' ||
