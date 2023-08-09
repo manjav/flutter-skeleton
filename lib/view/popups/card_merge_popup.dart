@@ -29,27 +29,25 @@ class CardMergePopup extends AbstractPopup {
 
 class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     with CardEditMixin {
-  List<AccountCard> _persistReadyCards = [];
   @override
   void initState() {
     selectedCards.addCard(widget.args['card']);
     contentPadding = EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
-    _persistReadyCards =
-        BlocProvider.of<AccountBloc>(context).account!.getReadyCards();
     super.initState();
   }
 
+  List<AccountCard> get allReadyCards => BlocProvider.of<AccountBloc>(context)
+      .account!
+      .getReadyCards(removeMaxLevels: true);
   @override
   getCards(Account account) {
+    var all = allReadyCards;
     if (selectedCards.value.isNotEmpty) {
-      return _persistReadyCards
-          .where((c) => c.base == selectedCards.value[0]!.base)
-          .toList();
+      return all.where((c) => c.base == selectedCards.value[0]!.base).toList();
     }
-    return _persistReadyCards
-        .where((c) => _persistReadyCards
-            .where((c1) => c.base == c1.base && c != c1)
-            .isNotEmpty)
+    return all
+        .where(
+            (c) => all.where((c1) => c.base == c1.base && c != c1).isNotEmpty)
         .toList();
   }
 

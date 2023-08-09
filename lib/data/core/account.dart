@@ -242,7 +242,9 @@ class Account extends StringMap<dynamic> {
   }
 
   List<AccountCard> getReadyCards(
-      {List<Buildings>? exceptions, bool removeCooldowns = false}) {
+      {List<Buildings>? exceptions,
+      bool removeCooldowns = false,
+      bool removeMaxLevels = false}) {
     exceptions = exceptions ??
         [
           Buildings.defense,
@@ -257,10 +259,12 @@ class Account extends StringMap<dynamic> {
       for (var exception in exceptions!) {
         if (getBuilding(exception)!.cards.contains(card)) return true;
       }
-      return (removeCooldowns && card.getRemainingCooldown() > 0);
+      if (removeCooldowns && card.getRemainingCooldown() > 0) return true;
+      return removeMaxLevels && !card.isUpgradable;
     });
     cards.sort((AccountCard a, AccountCard b) =>
-        a.power * (b.base.isHero ? 1 : -1) - b.power * (a.base.isHero ? 1 : -1));
+        a.power * (b.base.isHero ? 1 : -1) -
+        b.power * (a.base.isHero ? 1 : -1));
     return cards;
   }
 
