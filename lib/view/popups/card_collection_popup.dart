@@ -13,7 +13,6 @@ import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item_minimal.dart';
 import '../route_provider.dart';
-import '../widgets/loaderwidget.dart';
 import 'ipopup.dart';
 
 class CollectionPopup extends AbstractPopup {
@@ -94,13 +93,13 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
           child: SizedBox(
               width: itemSize * crossAxisCount + gap * crossAxisCount + 1,
               height: itemSize / aspectRatio * rows + (rows + 1) * gap,
-        child: GridView.builder(
+              child: GridView.builder(
                 itemCount: len,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: aspectRatio,
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: gap,
-              mainAxisSpacing: gap),
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: gap,
+                    mainAxisSpacing: gap),
                 itemBuilder: (c, i) =>
                     _cardItemBuilder(i, fruit.cards[i], itemSize),
               )),
@@ -108,10 +107,13 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   }
 
   Widget? _cardItemBuilder(int index, CardData card, double itemSize) {
+    var id = card.get<int>(CardFields.id);
     return Stack(alignment: Alignment.center, children: [
       MinimalCardItem.getCardBackground(card),
-      MinimalCardItem.getCardImage(card, itemSize * 0.9,
-          key: getGlobalKey(card.get(CardFields.id))),
+      _avaibledCards.contains(id)
+          ? MinimalCardItem.getCardImage(card, itemSize * 0.9,
+              key: getGlobalKey(card.get(CardFields.id)))
+          : Asset.load<Image>("deck_placeholder_card", width: itemSize * 0.6),
       Positioned(
           top: itemSize * 0.01,
           right: itemSize * 0.1,
@@ -139,9 +141,6 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
 
   _fruitItemBuilder(int index, FruitData fruit) {
     var selected = _selectedFruit.value == fruit;
-    var id = fruit.get<int>(FriutFields.id);
-    var name = fruit.get<String>(FriutFields.name);
-    if (fruit.get<int>(FriutFields.category) < 4) name += " 1";
 
     return Widgets.button(
         margin: EdgeInsets.all(10.d),
@@ -150,12 +149,10 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
             borderRadius: BorderRadius.all(Radius.circular(48.d)),
             color: selected ? TColors.orange : TColors.primary90,
             border: selected
-                ? Border.all(color: TColors.black, width: 8.d, strokeAlign: 0.6)
+                ? Border.all(
+                    color: TColors.primary30, width: 8.d, strokeAlign: 0.6)
                 : null),
-        child: _avaibledCards.contains(id)
-            ? LoaderWidget(AssetType.image, name,
-                subFolder: "cards", width: 98.d)
-            : Asset.load("deck_placeholder_card"),
+        child: MinimalCardItem.getCardImage(fruit.cards[0], 98.d),
         onPressed: () => _selectedFruit.value = fruit);
   }
 }
