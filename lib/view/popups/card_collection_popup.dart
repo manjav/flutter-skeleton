@@ -82,21 +82,28 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
 
   _cardsListBuilder(FruitData fruit) {
     var gap = 12.d;
-    var width = 920.d;
-    var crossAxisCount = 4;
-    var itemSize = (width - gap * (crossAxisCount + 1)) / crossAxisCount;
+    var aspectRatio = 0.74;
+    var len = fruit.cards[0].isHero ? 1 : fruit.cards.length;
+    var crossAxisCount = len < 4 ? len % 4 : 4;
+    var rows = (len / crossAxisCount).ceil();
+    var itemSize = len < 4 ? 330.d : 220.d;
     return Positioned(
         top: 100.d,
-        width: width,
         height: 620.d,
+        child: Center(
+          child: SizedBox(
+              width: itemSize * crossAxisCount + gap * crossAxisCount + 1,
+              height: itemSize / aspectRatio * rows + (rows + 1) * gap,
         child: GridView.builder(
-          itemCount: fruit.cards.length,
+                itemCount: len,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: 0.74,
+                    childAspectRatio: aspectRatio,
               crossAxisCount: crossAxisCount,
               crossAxisSpacing: gap,
               mainAxisSpacing: gap),
-          itemBuilder: (c, i) => _cardItemBuilder(i, fruit.cards[i], itemSize),
+                itemBuilder: (c, i) =>
+                    _cardItemBuilder(i, fruit.cards[i], itemSize),
+              )),
         ));
   }
 
@@ -106,9 +113,11 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
       MinimalCardItem.getCardImage(card, itemSize * 0.9,
           key: getGlobalKey(card.get(CardFields.id))),
       Positioned(
-          top: 1.d,
-          right: 20.d,
-          child: SkinnedText(card.get<int>(CardFields.rarity).toString()))
+          top: itemSize * 0.01,
+          right: itemSize * 0.1,
+          width: itemSize * 0.1,
+          child: SkinnedText(card.get<int>(CardFields.rarity).toString(),
+              style: TStyles.large.copyWith(fontSize: itemSize * 0.18)))
     ]);
   }
 
