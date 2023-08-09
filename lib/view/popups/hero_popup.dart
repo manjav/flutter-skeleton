@@ -258,10 +258,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   _itemActionBuilder(BaseHeroItem item, bool isAvailable, HeroCard? host) {
     if (isAvailable) {
       if (host != null) {
-        return _lockItem(
-            "icon_used",
-            "${host.card.base.get<FruitData>(CardFields.fruit).get<String>(FriutFields.name)}_t"
-                .l());
+        return _lockItem("icon_used",
+            "${host.card.fruit.get<String>(FriutFields.name)}_t".l());
       }
       return Widgets.skinnedButton(
         width: 320.d,
@@ -332,10 +330,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     }
 
     if (host != null) {
-      toast("heroitem_used".l([
-        "${host.card.base.get<FruitData>(CardFields.fruit).get<String>(FriutFields.name)}_t"
-            .l()
-      ]));
+      toast("heroitem_used"
+          .l(["${host.card.fruit.get<String>(FriutFields.name)}_t".l()]));
       return;
     }
 

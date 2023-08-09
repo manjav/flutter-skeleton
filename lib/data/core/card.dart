@@ -128,6 +128,10 @@ class AccountCard {
     return (cooldownTime - delta).ceil().min(0);
   }
 
+  FruitData get fruit => base.get<FruitData>(CardFields.fruit);
+  bool get isUpgradable =>
+      base.get<int>(CardFields.rarity) < fruit.get<int>(FriutFields.maxLevel);
+
   bool get isMonster {
     var baseId = base.get(CardFields.id);
     if ((baseId >= 310 && baseId <= 319) ||

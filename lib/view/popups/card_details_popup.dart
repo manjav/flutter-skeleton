@@ -21,14 +21,12 @@ class CardDetailsPopup extends AbstractPopup {
 
 class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   late AccountCard _card;
-  late FruitData _fruit;
   late String _name;
 
   @override
   void initState() {
     _card = widget.args['card'];
-    _fruit = _card.base.get<FruitData>(CardFields.fruit);
-    _name = _fruit.get<String>(FriutFields.name);
+    _name = _card.fruit.get<String>(FriutFields.name);
     super.initState();
   }
 
@@ -38,8 +36,6 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         .account!
         .getReadyCards()
         .where((c) => c.base == _card.base);
-    var mergable = _card.base.get<int>(CardFields.rarity) <
-        _fruit.get<int>(FriutFields.maxLevel);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -64,12 +60,12 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 SizedBox(height: 16.d),
                 Widgets.skinnedButton(
                   padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
-                  isEnable: siblings.length > 1 && mergable,
+                  isEnable: siblings.length > 1 && _card.isUpgradable,
                   label: "popupcardmerge".l(),
                   width: 370.d,
                   onPressed: () => _onButtonsTap(Routes.popupCardMerge),
                   onDisablePressed: () {
-                    toast(mergable
+                    toast(_card.isUpgradable
                         ? "card_no_sibling".l()
                         : "max_level".l(["${_name}_t".l()]));
                   },
