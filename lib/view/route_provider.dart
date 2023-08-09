@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../view/popups/potion_popup.dart';
 import 'popups/building_mine_popup.dart';
 import 'popups/building_supportive_popup.dart';
 import 'popups/building_treasury_popup.dart';
+import 'popups/card_collection_popup.dart';
 import 'popups/card_details_popup.dart';
 import 'popups/card_enhance_popup.dart';
 import 'popups/card_merge_popup.dart';
@@ -15,6 +15,7 @@ import 'popups/invite_popup.dart';
 import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
+import 'popups/potion_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
 import 'popups/settings_popup.dart';
@@ -37,6 +38,7 @@ enum Routes {
   popupCardDetails,
   popupCardEnhance,
   popupCardMerge,
+  popupCollection,
   popupCardSelect,
   popupMessage,
   popupLeague,
@@ -64,6 +66,7 @@ extension RouteProvider on Routes {
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
       "/popupCardMerge" => CardMergePopup(args: args ?? {}),
+      "/popupCollection" => CollectionPopup(args: args ?? {}),
       "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
       "/popupLeague" => LeaguePopup(args: args ?? {}),

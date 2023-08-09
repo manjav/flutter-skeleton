@@ -40,13 +40,21 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem>
             top: 48.d,
             left: 48.d,
             child: Widgets.skinnedButton(
+                label: "   CC   ",
+                padding: EdgeInsets.only(bottom: 16.d),
+                onPressed: () => Navigator.pushNamed(
+                    context, Routes.popupCollection.routeName))),
+        Positioned(
+            top: 48.d,
+            left: 186.d,
+            child: Widgets.skinnedButton(
                 label: "   C   ",
                 padding: EdgeInsets.only(bottom: 16.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupCombo.routeName))),
         Positioned(
             top: 48.d,
-            left: 148.d,
+            left: 296.d,
             child: Widgets.skinnedButton(
                 label: "   H   ",
                 padding: EdgeInsets.only(bottom: 16.d),
