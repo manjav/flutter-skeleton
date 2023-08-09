@@ -240,16 +240,20 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
           .get<HttpConnection>()
           .tryRpc(context, RpcId.evolveCard, params: params);
       updateAccount(result);
-      cards = getCards(account);
-      if (cards.length < 2) {
-        setState(() {});
-        await Future.delayed(const Duration(milliseconds: 100));
-        if (mounted) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-        }
-      } else {
-        selectedCards.clear();
-      }
     } finally {}
+    cards = getCards(account);
+    if (cards.length < 2) {
+      // Show other mergable cards
+      selectedCards.clear();
+      await Future.delayed(const Duration(milliseconds: 50));
+      // Close if mergable cards not available
+      if (mounted && cards.length < 2) {
+        Navigator.popUntil(context, (route) => route.isFirst);
+      }
+    } else {
+      // Add onother same-type mergable card
+      selectedCards.value.clear();
+      selectedCards.addCard(cards[0]);
+    }
   }
 }
