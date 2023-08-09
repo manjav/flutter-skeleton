@@ -37,27 +37,27 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem>
                 mainAxisSpacing: gap),
             itemBuilder: (c, i) => cardItemBuilder(c, i, cards[i], itemSize)),
         Positioned(
-            top: 48.d,
-            left: 48.d,
+            left: 12.d,
+            top: 28.d,
+            width: 132.d,
             child: Widgets.skinnedButton(
-                label: "   CC   ",
-                padding: EdgeInsets.only(bottom: 16.d),
+                icon: "icon_collection",
                 onPressed: () => Navigator.pushNamed(
                     context, Routes.popupCollection.routeName))),
         Positioned(
-            top: 48.d,
-            left: 186.d,
+            left: 144.d,
+            top: 28.d,
+            width: 132.d,
             child: Widgets.skinnedButton(
-                label: "   C   ",
-                padding: EdgeInsets.only(bottom: 16.d),
+                icon: "icon_combo",
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupCombo.routeName))),
         Positioned(
-            top: 48.d,
-            left: 296.d,
+            left: 276.d,
+            top: 28.d,
+            width: 132.d,
             child: Widgets.skinnedButton(
-                label: "   H   ",
-                padding: EdgeInsets.only(bottom: 16.d),
+                icon: "icon_hero",
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupHero.routeName)))
       ]);
