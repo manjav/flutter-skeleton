@@ -28,6 +28,7 @@ class MinimalCardItem extends StatefulWidget {
     var frameName = card.get<int>(CardFields.rarity).toString();
     if (card.isHero) frameName = "hero";
     if (card.isMonster) frameName = "monster";
+    if (card.isCrystal) frameName = "crystal";
     return Asset.load<Image>('card_frame_$frameName');
   }
 
