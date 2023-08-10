@@ -13,10 +13,10 @@ import 'card_item.dart';
 class CardsPageItem extends AbstractPageItem {
   const CardsPageItem({super.key}) : super("cards");
   @override
-  createState() => _MainMapItemState();
+  createState() => _CardsPageItemState();
 }
 
-class _MainMapItemState extends AbstractPageItemState<AbstractPageItem>
+class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
     with KeyProvider {
   @override
   Widget build(BuildContext context) {
