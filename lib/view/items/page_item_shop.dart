@@ -117,10 +117,57 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         onPressed: () => _onItemPressed(item));
   }
 
+  double _getShopMultiplier() {
+    const goldMultiplier = 3;
+    const veteranGoldDivider = 20;
+    const veteranGoldMultiplier = 80;
+    var level = _account.get<int>(AccountField.level);
+    return switch (level) {
+      < 10 => 1.0,
+      < 20 => 2.5,
+      < 30 => 4.5,
+      < 40 => 7.0,
+      < 50 => 10.0,
+      < 60 => 12.5,
+      < 70 => 16.0,
+      < 80 => 20.0,
+      < 90 => 25.0,
+      < 100 => 30.0,
+      < 300 => 30.0 + (((level - 90) / 10).floor() * goldMultiplier).floor(),
+      _ => 93.0 +
+          (((level - 300) / veteranGoldDivider).floor() * veteranGoldMultiplier)
+              .floor(),
+    };
+  }
+
   int _getBoostPackPrice(int price) {
+    // Converts gold multiplier to nectar for boost packs
+    var boostNectarMultiplier =
+        _getShopMultiplier() / _account.get<int>(AccountField.nectar_price);
+    if (price == 10) {
+      return (30000 * boostNectarMultiplier).round();
+    }
+    if (price == 20) {
+      return (90000 * boostNectarMultiplier).round();
+    }
+    if (price == 50) {
+      return (300000 * boostNectarMultiplier).round();
+    }
+    if (price == 100) {
+      return (1000000 * boostNectarMultiplier).round();
+    }
     return price;
   }
 
   _onItemPressed(ShopItem item) async {
+    var params = {RpcParams.type.name: item.id};
+    try {
+      var result = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.buyCardPack, params: params);
+      result["achieveCards"] = result['cards'];
+      result.remove('cards');
+      _account.update(result);
+    } finally {}
   }
 }
