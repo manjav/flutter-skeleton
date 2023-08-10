@@ -38,6 +38,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           children: [
             _header("shop_packs".l()),
             _grid(1),
+            _header("shop_boosts".l()),
+            _grid(3)
           ],
         ));
   }
@@ -76,6 +78,18 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         index, title, item, Expanded(child: Asset.load<Image>(title)));
   }
 
+  _itemBoostBuilder(int index, ShopItem item) {
+    var title = item.id < 22 ? "shop_xp" : "shop_power";
+    return _baseItemBilder(
+        index,
+        title,
+        item,
+        Expanded(
+            child: Stack(alignment: const Alignment(0, 0.44), children: [
+          Asset.load<Image>(title),
+          SkinnedText("${((item.boost - 1) * 100).round()}%"),
+        ])));
+  }
 
   Widget _baseItemBilder(int index, String title, ShopItem item, Widget child) {
     return Widgets.button(
