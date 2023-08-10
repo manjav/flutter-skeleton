@@ -11,6 +11,7 @@ import '../../utils/utils.dart';
 import '../../view/items/page_item.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
+import '../items/page_item_shop.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/level_indicator.dart';
@@ -98,6 +99,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     return switch (name) {
       "cards" => const CardsPageItem(),
       "battle" => const MainMapPageItem(),
+      "shop" => const ShopPageItem(),
       _ => AbstractPageItem(name)
     };
   }
