@@ -75,7 +75,7 @@ class CardData extends StringMap<dynamic> {
   }
 
   T get<T>(CardFields field) => map[field.name] as T;
-
+  FruitData get fruit => get<FruitData>(CardFields.fruit);
   int get cost {
     const maxEnhanceModifier = 45;
     const priceModifier = 100;
@@ -85,8 +85,8 @@ class CardData extends StringMap<dynamic> {
   }
 
   bool get isHero => get(CardFields.isHero);
-  bool get isMonster =>
-      get<FruitData>(CardFields.fruit).get<int>(FriutFields.category) == 2;
+  bool get isMonster => fruit.get<int>(FriutFields.category) == 2;
+  bool get isCrystal => fruit.get<int>(FriutFields.category) == 3;
 }
 
 class Cards extends StringMap<CardData> {
