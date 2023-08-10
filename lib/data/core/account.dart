@@ -295,5 +295,11 @@ class Account extends StringMap<dynamic> {
     map["nectar"] = map["nectar"] + (data["added_nectar"] ?? 0);
     map["potion_number"] = map["potion_number"] + (data["added_potion"] ?? 0);
     map["potion_number"] = data["potion"] ?? 0;
+
+    if (data.containsKey("achieveCards")) {
+      for (var card in data["achieveCards"]) {
+        getCards()[card['id']] = AccountCard(this, card, loadingData.baseCards);
+      }
+    }
   }
 }

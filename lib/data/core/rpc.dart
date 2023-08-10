@@ -33,6 +33,7 @@ enum RpcId {
 
   // Shop
   buyHeroItem,
+  buyCardPack,
 }
 
 extension RpcIdEx on RpcId {
@@ -60,6 +61,7 @@ extension RpcIdEx on RpcId {
       RpcId.league => "ranking/league",
       RpcId.leagueHistory => "ranking/leaguehistory",
       RpcId.buyHeroItem => "store/buyheroitem",
+      RpcId.buyCardPack => "store/buycardpack",
     };
   }
 
