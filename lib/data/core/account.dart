@@ -341,6 +341,12 @@ class Account extends StringMap<dynamic> {
     deadlines.add(Deadline(deadline, boost));
     map["deadlines"] = deadlines;
 
+    if (id == AccountField.pwboost_id) {
+      var cards = getCards().entries;
+      for (var card in cards) {
+        card.value.power = (card.value.power * boost.boost).round();
+      }
+    }
   }
 }
 
