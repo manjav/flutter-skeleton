@@ -78,10 +78,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           alignment: Alignment.bottomCenter,
           children: [
             PageView.builder(
+              controller: _pageController,
               itemCount: _tabInputs.length,
               itemBuilder: _pageItemBuilder,
+              physics: const ClampingScrollPhysics(),
               onPageChanged: (value) => _selectTap(value, pageChange: false),
-              controller: _pageController,
             ),
             SizedBox(
                 height: _navbarHeight,
