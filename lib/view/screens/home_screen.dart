@@ -14,7 +14,7 @@ import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/level_indicator.dart';
+import '../widgets/indicator_level.dart';
 import '../widgets/loaderwidget.dart';
 import '../widgets/skinnedtext.dart';
 import 'iscreen.dart';

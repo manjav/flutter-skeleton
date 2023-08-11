@@ -6,7 +6,7 @@ import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/items/page_item.dart';
 import '../../view/route_provider.dart';
-import '../key_provider_mixin.dart';
+import '../key_provider.dart';
 import '../widgets.dart';
 import 'card_item.dart';
 

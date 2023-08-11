@@ -117,8 +117,6 @@ class AccountCard {
   }
 
   int getRemainingCooldown() {
-    var currentTime = DateTime.now().secondsSinceEpoch +
-        account.get<int>(AccountField.delta_time);
     var tribe = account.getBuilding(Buildings.tribe);
     var benefit = tribe != null
         ? account.getBuilding(Buildings.cards)!.getBenefit()

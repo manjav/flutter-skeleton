@@ -8,7 +8,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/key_provider_mixin.dart';
+import '../key_provider.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item_minimal.dart';

@@ -9,6 +9,7 @@ import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../../view/items/page_item.dart';
 import '../../view/widgets/indicator.dart';
+import '../../view/widgets/indicator_dedline.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../map_elements/building_widget.dart';

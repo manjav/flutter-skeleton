@@ -21,12 +21,12 @@ import '../../utils/utils.dart';
 import '../../view/screens/iscreen.dart';
 import '../../view/widgets/card_holder.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/level_indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
-import '../key_provider_mixin.dart';
+import '../key_provider.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/indicator_level.dart';
 import '../widgets/loaderwidget.dart';
 
 class DeckScreen extends AbstractScreen {
