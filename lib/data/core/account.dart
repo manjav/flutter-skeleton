@@ -131,7 +131,12 @@ enum AccountField {
   modules_version,
   emergency_message,
   update_message,
-  delta_time
+  delta_time,
+  xpboost_created_at,
+  pwboost_created_at,
+  xpboost_id,
+  pwboost_id,
+  deadlines,
 }
 
 class Account extends StringMap<dynamic> {
@@ -162,6 +167,8 @@ class Account extends StringMap<dynamic> {
     _parse(AccountField.pwboost_id);
     _parse(AccountField.xpboost_created_at);
     _parse(AccountField.pwboost_created_at);
+    _addDeadline(map, AccountField.xpboost_created_at, AccountField.xpboost_id);
+    _addDeadline(map, AccountField.pwboost_created_at, AccountField.pwboost_id);
 
     map['buildings'] = <Buildings, Building>{};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
@@ -170,6 +177,7 @@ class Account extends StringMap<dynamic> {
     _addBuilding(Buildings.defense, map['tribe']?['defense_building_level'],
         map['defense_building_assigned_cards']);
     _addBuilding(Buildings.message);
+    map['buildings'][Buildings.mine] = Mine();
     _addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
     _addBuilding(Buildings.offense, map['tribe']?['offense_building_level'],
@@ -283,9 +291,11 @@ class Account extends StringMap<dynamic> {
   void _addBuilding(Buildings type, [int? level, List? cards]) {
     level = level ?? 0;
     cards = cards ?? [];
-    map['buildings'][type] = Building()
-      ..init({"type": type, "level": level},
-          args: {"account": this, "cards": cards});
+    if (!map['buildings'].containsKey(type)) {
+      map['buildings'][type] = Building();
+    }
+    map['buildings'][type].init({"type": type, "level": level},
+        args: {"account": this, "cards": cards});
   }
 
   void update(Map<String, dynamic> data) {
@@ -299,10 +309,10 @@ class Account extends StringMap<dynamic> {
         getCards()[attackCard['id']]?.lastUsedAt = attackCard["last_used_at"];
       }
     }
-    if (data.containsKey("player_gold")) map["gold"] = data["player_gold"];
     var tribe = getBuilding(Buildings.tribe);
     if (tribe != null) tribe.map["gold"] = data["tribe_gold"];
 
+    map["gold"] = data["player_gold"] ?? map["gold"];
     map["gold"] = map["gold"] + (data["added_gold"] ?? 0);
     map["nectar"] = map["nectar"] + (data["added_nectar"] ?? 0);
     map["potion_number"] = map["potion_number"] + (data["added_potion"] ?? 0);
@@ -313,5 +323,29 @@ class Account extends StringMap<dynamic> {
         getCards()[card['id']] = AccountCard(this, card, loadingData.baseCards);
       }
     }
+    _addDeadline(
+        data, AccountField.xpboost_created_at, AccountField.xpboost_id);
+    _addDeadline(
+        data, AccountField.pwboost_created_at, AccountField.pwboost_id);
   }
+
+  void _addDeadline(
+      Map<String, dynamic> data, AccountField startAt, AccountField id) {
+    if (!data.containsKey(startAt.name)) return;
+    var deadline = get<int>(startAt) + ShopData.boostDeadline;
+    if (deadline <= now) return;
+
+    List<Deadline> deadlines = map["deadlines"] ?? [];
+    var boost =
+        loadingData.shopItems.firstWhere((item) => item.id == get<int>(id));
+    deadlines.add(Deadline(deadline, boost));
+    map["deadlines"] = deadlines;
+
+  }
+}
+
+class Deadline {
+  final int time;
+  final ShopItem boost;
+  Deadline(this.time, this.boost);
 }
