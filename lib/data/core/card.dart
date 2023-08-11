@@ -123,7 +123,7 @@ class AccountCard {
     var benefit = tribe != null
         ? account.getBuilding(Buildings.cards)!.getBenefit()
         : 1.0;
-    var delta = currentTime - lastUsedAt;
+    var delta = account.now - lastUsedAt;
     var cooldownTime = base.get<int>(CardFields.cooldown) * benefit;
     return (cooldownTime - delta).ceil().min(0);
   }

@@ -143,6 +143,7 @@ class Account extends StringMap<dynamic> {
 
   Building? getBuilding(Buildings type) => map['buildings'][type] as Building;
   Map<int, AccountCard> getCards() => map['cards'];
+  int get now => DateTime.now().secondsSinceEpoch + map['delta_time'] as int;
 
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
