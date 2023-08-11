@@ -8,6 +8,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../../view/items/page_item.dart';
+import '../../view/widgets/building_balloon.dart';
 import '../../view/widgets/indicator.dart';
 import '../../view/widgets/indicator_dedline.dart';
 import '../../view/widgets/loaderwidget.dart';
@@ -29,6 +30,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var buildings =
           state.account.get<Map<Buildings, Building>>(AccountField.buildings);
+      List<Deadline> deadlines = state.account.map["deadlines"] ?? [];
       return Stack(alignment: Alignment.topLeft, children: [
         const LoaderWidget(AssetType.animation, "map_home",
             fit: BoxFit.fitWidth),
@@ -62,6 +64,12 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
                 Navigator.pushNamed(context, Routes.popupOpponents.routeName)),
         _button("quest", "quest_l", 620, 270, 310,
             () => Navigator.pushNamed(context, Routes.deck.routeName)),
+        if (state.account.contains(AccountField.deadlines))
+          for (var i = 0; i < deadlines.length; i++)
+            Positioned(
+                right: 32.d,
+                top: 200.d + i * 180.d,
+                child: DeadlineIndicator(deadlines[i])),
       ]);
     });
   }
@@ -100,13 +108,16 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _building(Account account, Building building, double x, double y) {
+    Widget child = building.type == Buildings.mine
+        ? BuildingBalloon(building)
+        : const SizedBox();
     return Positioned(
         left: x.d,
         top: y.d,
         width: 280.d,
         height: 300.d,
         child: BuildingWidget(building,
-            child: SizedBox(), onTap: () => _onBuildingTap(account, building)));
+            child: child, onTap: () => _onBuildingTap(account, building)));
   }
 
   _onBuildingTap(Account account, Building building) {
