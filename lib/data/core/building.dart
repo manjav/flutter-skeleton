@@ -450,3 +450,21 @@ class Building extends StringMap<dynamic> {
     }
   }
 }
+
+class Mine extends Building {
+  int collectableGold(Account account) {
+    var goldPerdSec = getCardsBenefit(account) / 3600;
+    return ((account.now -
+                account.get<int>(AccountField.last_gold_collect_at)) *
+            goldPerdSec)
+        .clamp(0, benefit)
+        .floor();
+  }
+
+  bool isCollectable(Account account) {
+    print(account.now -
+        account.get<int>(AccountField.gold_collection_allowed_at));
+    return account.now >=
+        account.get<int>(AccountField.gold_collection_allowed_at);
+  }
+}

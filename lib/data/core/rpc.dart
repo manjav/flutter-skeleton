@@ -7,13 +7,14 @@ enum RpcId {
   fillPotion,
   redeemGift,
 
-// Card
+  // Card
   coolOff,
   assignCard,
   enhanceCard,
   enhanceMax,
   evolveCard,
   equipHeroitems,
+  collectGold,
 
   // Battle
   getOpponents,
@@ -45,6 +46,7 @@ extension RpcIdEx on RpcId {
       RpcId.enhanceMax => "cards/nectarify",
       RpcId.evolveCard => "cards/evolve",
       RpcId.equipHeroitems => "cards/equipheroitems",
+      RpcId.collectGold => "cards/collectgold",
       RpcId.scout => "battle/scout",
       RpcId.quest => "battle/quest",
       RpcId.battle => "battle/battle",
@@ -101,6 +103,7 @@ enum RpcParams {
   // Cards
   card_id,
   sacrifices,
+  client,
   // Buildings
   type,
   tribe_id,
