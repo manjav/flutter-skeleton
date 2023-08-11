@@ -74,6 +74,7 @@ class CardData extends StringMap<dynamic> {
     setDefault('potion_limit', data, 0);
   }
 
+  bool contains(CardFields field) => map.containsKey(field.name);
   T get<T>(CardFields field) => map[field.name] as T;
   FruitData get fruit => get<FruitData>(CardFields.fruit);
   int get cost {

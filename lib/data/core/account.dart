@@ -210,7 +210,9 @@ class Account extends StringMap<dynamic> {
     }
   }
 
-  T get<T>(AccountField fieldName) => map[fieldName.name] as T;
+
+  bool contains(AccountField field) => map.containsKey(field.name);
+  T get<T>(AccountField field) => map[field.name] as T;
 
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
  @param player Player whose cards you are evaluating
