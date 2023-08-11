@@ -157,6 +157,12 @@ class Account extends StringMap<dynamic> {
     }
     map['cards'] = accountCards;
 
+    // Organize deadlines
+    _parse(AccountField.xpboost_id);
+    _parse(AccountField.pwboost_id);
+    _parse(AccountField.xpboost_created_at);
+    _parse(AccountField.pwboost_created_at);
+
     map['buildings'] = <Buildings, Building>{};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
     _addBuilding(Buildings.base, map['tribe']?['mainhall_building_level']);
@@ -210,6 +216,9 @@ class Account extends StringMap<dynamic> {
     }
   }
 
+  void _parse(AccountField key) {
+    if (map.containsKey(key.name)) map[key.name] = int.parse(map[key.name]);
+  }
 
   bool contains(AccountField field) => map.containsKey(field.name);
   T get<T>(AccountField field) => map[field.name] as T;
