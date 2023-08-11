@@ -31,10 +31,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
   String titleBuilder() => "building_${building.type.name}_t".l();
   String descriptionBuilder() => "building_${building.type.name}_d".l();
   getBuildingIcon() {
-    return SizedBox(
-        width: 360.d,
-        child: BuildingWidget(building.type,
-            level: building.get<int>(BuildingField.level)));
+    return SizedBox(width: 360.d, child: BuildingWidget(building));
   }
 
   upgtadeButton(Account account, Building building) {

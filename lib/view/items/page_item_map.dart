@@ -46,16 +46,12 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupRanking.routeName))),
-        // _building(buildings[Buildings.cards]!, 167, 560),
-        _building(buildings[Buildings.defense]!, 400, 300),
-        _building(buildings[Buildings.offense]!, 95, 670),
-        _building(buildings[Buildings.tribe]!, 725, 630),
-        _building(buildings[Buildings.base]!, 400, 840),
-        _building(buildings[Buildings.treasury]!, 130, 1140),
-        _building(buildings[Buildings.mine]!, 754, 1140),
-        // _building(buildings[Buildings.shop]!, 773, 1040),
-        // _building(buildings[Buildings.quest]!, 169, 1244),
-        // _building(buildings[Buildings.message]!, 532, 1268),
+        _building(state.account, buildings[Buildings.defense]!, 400, 300),
+        _building(state.account, buildings[Buildings.offense]!, 95, 670),
+        _building(state.account, buildings[Buildings.tribe]!, 725, 630),
+        _building(state.account, buildings[Buildings.base]!, 400, 840),
+        _building(state.account, buildings[Buildings.treasury]!, 130, 1140),
+        _building(state.account, buildings[Buildings.mine]!, 754, 1140),
         _button(
             "battle",
             "battle_l",
@@ -103,17 +99,17 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
         ));
   }
 
-  Widget _building(Building building, double x, double y) {
+  Widget _building(Account account, Building building, double x, double y) {
     return Positioned(
         left: x.d,
         top: y.d,
         width: 280.d,
         height: 300.d,
-        child: BuildingWidget(building.type,
-            level: building.level, onTap: () => _onBuildingTap(building)));
+        child: BuildingWidget(building,
+            child: SizedBox(), onTap: () => _onBuildingTap(account, building)));
   }
 
-  _onBuildingTap(Building building) {
+  _onBuildingTap(Account account, Building building) {
     var type = switch (building.type) {
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
