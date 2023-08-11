@@ -101,7 +101,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         child: Column(children: [
           SkinnedText(title.l([index + 1])),
           child,
-          Text("${title}_desc".l(),
+          Text("${title}_desc".l([ShopData.boostDeadline.toRemainingTime()]),
               style: TStyles.small.copyWith(height: 0.9),
               textAlign: TextAlign.center),
           SizedBox(height: 21.d),

@@ -21,6 +21,7 @@ class LoadingData {
 }
 
 class ShopData {
+  static const boostDeadline = 18000;
   static List<ShopItem> init(List shopItems) {
     var list = <ShopItem>[];
     for (var shopItem in shopItems) {
