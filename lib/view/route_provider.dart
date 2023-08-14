@@ -23,6 +23,7 @@ import 'screens/deck_screen.dart';
 import 'screens/fight_outcome_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
+import 'screens/screen_livebattle.dart';
 import 'screens/screen_open_pack.dart';
 
 enum Routes {
