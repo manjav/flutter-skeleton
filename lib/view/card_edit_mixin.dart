@@ -41,7 +41,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
   }
 
   List<AccountCard> getCards(Account account) =>
-      (account.getReadyCards()..remove(card)).reversed.toList();
+      (account.getReadyCards(removeHeroes: true)..remove(card)).reversed.toList();
 
   cardsListBuilder(Account account,
       {int crossAxisCount = 4, bool showCardTitle = false}) {
