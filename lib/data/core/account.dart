@@ -298,7 +298,7 @@ class Account extends StringMap<dynamic> {
         args: {"account": this, "cards": cards});
   }
 
-  void update(Map<String, dynamic> data) {
+  Map<String, dynamic> update(Map<String, dynamic> data) {
     for (var field in AccountField.values) {
       if (data[field.name] != null) {
         map[field.name] = data[field.name];
@@ -318,15 +318,21 @@ class Account extends StringMap<dynamic> {
     map["potion_number"] = map["potion_number"] + (data["added_potion"] ?? 0);
     map["potion_number"] = data["potion"] ?? 0;
 
+    var cards = <AccountCard>[];
     if (data.containsKey("achieveCards")) {
       for (var card in data["achieveCards"]) {
-        getCards()[card['id']] = AccountCard(this, card, loadingData.baseCards);
+        var accountCard = AccountCard(this, card, loadingData.baseCards);
+        getCards()[card['id']] = accountCard;
+        cards.add(accountCard);
       }
     }
+    data["achieveCards"] = cards;
+
     _addDeadline(
         data, AccountField.xpboost_created_at, AccountField.xpboost_id);
     _addDeadline(
         data, AccountField.pwboost_created_at, AccountField.pwboost_id);
+    return data;
   }
 
   void _addDeadline(
