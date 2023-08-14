@@ -14,6 +14,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/page_item.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../route_provider.dart';
 import '../widgets.dart';
 
 class ShopPageItem extends AbstractPageItem {
@@ -168,6 +169,10 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       result["achieveCards"] = result['cards'];
       result.remove('cards');
       _account.update(result);
+      if (mounted) {
+        Navigator.pushNamed(context, Routes.openPack.routeName,
+            arguments: result);
+      }
     } finally {}
   }
 }
