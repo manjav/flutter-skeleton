@@ -31,10 +31,10 @@ class Sounds extends ISounds {
   Future<void> play(String name, {String? channel}) async {
     AudioPlayer player;
     if (channel == null) {
-      if (!Prefs.getBool("settings_sfx")) return;
+      if (!Pref.sfx.getBool()) return;
       player = _findPlayer();
     } else {
-      if (channel == "music" && !Prefs.getBool("settings_music")) return;
+      if (channel == "music" && !Pref.music.getBool()) return;
       if (!_players.containsKey(channel)) {
         _players[channel] = AudioPlayer();
       }
