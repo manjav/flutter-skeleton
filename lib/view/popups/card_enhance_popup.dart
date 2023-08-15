@@ -15,8 +15,8 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/card_edit_mixin.dart';
-import '../../view/items/card_item_minimal.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../items/card_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import 'ipopup.dart';
@@ -63,8 +63,10 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                 children: [
                   Widgets.rect(
                     width: 340.d,
-                    child: MinimalCardItem(card,
-                        size: 340.d, extraPower: _getSacrificesPower()),
+                    child: CardItem(card,
+                        size: 340.d,
+                        showCooldown: false,
+                        extraPower: _getSacrificesPower()),
                   ),
                   cardsListBuilder(account, crossAxisCount: 5),
                   _isSacrificeAvailable || selectedCards.value.isEmpty

@@ -14,7 +14,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/card_edit_mixin.dart';
 import '../../view/widgets/skinnedtext.dart';
-import '../items/card_item_minimal.dart';
+import '../items/card_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import 'ipopup.dart';
@@ -124,7 +124,8 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     card = account.getCards()[card.id] ?? card;
     return SizedBox(
         width: size,
-        child: MinimalCardItem(card, size: size, heroTag: "_${card.id}"));
+        child: CardItem(card,
+            size: size, showCooldown: false, heroTag: "_${card.id}"));
   }
 
   _submitButton() {

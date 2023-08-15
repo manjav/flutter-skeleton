@@ -112,7 +112,10 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
           : null,
       onPressed: () => _selectedCards.setCard(card),
       child: CardItem(card,
-          inDeck: true, size: itemSize, key: getGlobalKey(card.id)),
+          size: itemSize,
+          showCooloff: true,
+          showCooldown: false,
+          key: getGlobalKey(card.id)),
     );
   }
 }

@@ -8,10 +8,10 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../key_provider.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
-import '../items/card_item_minimal.dart';
+import '../items/card_item.dart';
+import '../key_provider.dart';
 import '../route_provider.dart';
 import 'ipopup.dart';
 
@@ -109,9 +109,9 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   Widget? _cardItemBuilder(int index, CardData card, double itemSize) {
     var id = card.get<int>(CardFields.id);
     return Stack(alignment: Alignment.center, children: [
-      MinimalCardItem.getCardBackground(card),
+      CardItem.getCardBackground(card),
       _avaibledCards.contains(id)
-          ? MinimalCardItem.getCardImage(card, itemSize * 0.9,
+          ? CardItem.getCardImage(card, itemSize * 0.9,
               key: getGlobalKey(card.get(CardFields.id)))
           : Asset.load<Image>("deck_placeholder_card", width: itemSize * 0.6),
       Positioned(
@@ -152,7 +152,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
                 ? Border.all(
                     color: TColors.primary30, width: 8.d, strokeAlign: 0.6)
                 : null),
-        child: MinimalCardItem.getCardImage(fruit.cards[0], 98.d),
+        child: CardItem.getCardImage(fruit.cards[0], 98.d),
         onPressed: () => _selectedFruit.value = fruit);
   }
 }

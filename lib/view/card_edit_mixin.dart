@@ -7,7 +7,7 @@ import '../blocs/account_bloc.dart';
 import '../data/core/card.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';
-import 'items/card_item_minimal.dart';
+import 'items/card_item.dart';
 import 'popups/ipopup.dart';
 import 'widgets.dart';
 import 'widgets/card_holder.dart';
@@ -41,7 +41,9 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
   }
 
   List<AccountCard> getCards(Account account) =>
-      (account.getReadyCards(removeHeroes: true)..remove(card)).reversed.toList();
+      (account.getReadyCards(removeHeroes: true)..remove(card))
+          .reversed
+          .toList();
 
   cardsListBuilder(Account account,
       {int crossAxisCount = 4, bool showCardTitle = false}) {
@@ -82,8 +84,9 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
         padding: EdgeInsets.zero,
         onPressed: () => onSelectCard(index, card),
         child: Stack(children: [
-          MinimalCardItem(card,
+          CardItem(card,
               size: itemSize,
+              showCooldown: false,
               showTitle: showCardTitle,
               key: getGlobalKey(card.id)),
           selectedCards.value.contains(card)

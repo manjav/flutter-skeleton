@@ -129,7 +129,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         }
       },
       child: CardItem(card,
-          inDeck: true, size: itemSize, key: getGlobalKey(card.id)),
+          showCooloff: true, size: itemSize, key: getGlobalKey(card.id)),
     );
   }
 
