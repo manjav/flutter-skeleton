@@ -64,7 +64,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                 Navigator.pushReplacementNamed(context, Routes.home.routeName);
               }
             } else if (state.initState == ServicesInitState.error) {
-              _exception = state.exception;
+              _exception = state.data as RpcException;
               setState(() {});
             }
           },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/blocs/services.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -65,6 +66,10 @@ class _IndicatorState extends State<Indicator>
                   switch (widget.itemType) {
                     case AccountField.gold:
                     case AccountField.nectar:
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                      BlocProvider.of<Services>(context)
+                          .add(ServicesEvent(ServicesInitState.changeTab, 0));
+
                       log("Go to shop");
                       break;
                     case AccountField.potion_number:

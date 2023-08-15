@@ -21,6 +21,7 @@ enum ServicesInitState {
   none,
   initialize,
   complete,
+  changeTab,
   error,
 }
 
@@ -40,16 +41,16 @@ enum ServiceType {
 
 class ServicesEvent {
   final ServicesInitState initState;
-  final RpcException? exception;
-  ServicesEvent(this.initState, this.exception);
+  final dynamic data;
+  ServicesEvent(this.initState, this.data);
 }
 
 //--------------------------------------------------------
 
 abstract class ServicesState {
   final ServicesInitState initState;
-  final RpcException? exception;
-  ServicesState(this.initState, this.exception);
+  final dynamic data;
+  ServicesState(this.initState, this.data);
 }
 
 class ServicesInit extends ServicesState {
@@ -84,7 +85,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
   }
 
   updateService(ServicesEvent event, Emitter<ServicesState> emit) {
-    emit(ServicesUpdate(event.initState, event.exception));
+    emit(ServicesUpdate(event.initState, event.data));
   }
 
   Services({required this.firebaseAnalytics})
@@ -137,7 +138,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
   }
 
   _onAdsServicesUpdate(Placement? placement) {
-    if (Prefs.getBool("settings_music")) {
+    if (Pref.music.getBool()) {
       if (placement!.state == AdState.show) {
         get<Sounds>().stopAll();
       } else if (placement.state == AdState.closed ||
