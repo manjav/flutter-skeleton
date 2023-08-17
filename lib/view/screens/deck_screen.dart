@@ -119,7 +119,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       padding: EdgeInsets.zero,
       onPressed: () {
         if (card.getRemainingCooldown() > 0) {
-          _coolOff(account, card);
+          card.coolOff(context);
         } else {
           if (card.base.isHero) {
             _selectedCards.setAtCard(2, card);
@@ -283,19 +283,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
         Navigator.pop(context);
         Navigator.pushNamed(context, route.routeName, arguments: data);
-      }
-    } finally {}
-  }
-
-  _coolOff(Account account, AccountCard card) async {
-    var bloc = BlocProvider.of<Services>(context);
-    try {
-      var data = await bloc.get<HttpConnection>().tryRpc(context, RpcId.coolOff,
-          params: {RpcParams.card_id.name: card.id});
-      card.lastUsedAt = 0;
-      account.update(data);
-      if (mounted) {
-        BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
       }
     } finally {}
   }

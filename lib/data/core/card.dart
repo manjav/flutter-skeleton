@@ -2,7 +2,13 @@
 
 //         -=-=-=-    Fruit    -=-=-=-
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/account_bloc.dart';
+import '../../blocs/services.dart';
+import '../../data/core/rpc.dart';
+import '../../services/connection/http_connection.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
 import 'building.dart';
@@ -170,6 +176,19 @@ class AccountCard {
     return time *
         (cooldownsBoughtToday * CardData.cooldownIncreaseModifier).ceil() *
         CardData.cooldownCostModifier;
+  }
+
+  Future<void> coolOff(BuildContext context) async {
+    try {
+      var data = await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.coolOff, params: {RpcParams.card_id.name: id});
+      lastUsedAt = 0;
+      account.update(data);
+      if (context.mounted) {
+        BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+      }
+    } finally {}
   }
 }
 
