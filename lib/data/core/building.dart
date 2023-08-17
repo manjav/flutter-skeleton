@@ -462,8 +462,6 @@ class Mine extends Building {
   }
 
   bool isCollectable(Account account) {
-    print(account.now -
-        account.get<int>(AccountField.gold_collection_allowed_at));
     return account.now >=
         account.get<int>(AccountField.gold_collection_allowed_at);
   }
