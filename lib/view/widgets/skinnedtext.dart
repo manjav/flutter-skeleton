@@ -24,10 +24,11 @@ class SkinnedText extends StatelessWidget {
   Widget build(BuildContext context) {
     var style = this.style ?? TStyles.medium;
     return Stack(alignment: alignment, children: [
+      // Positioned.fill(child: Widgets.rect(color: TColors.green.withAlpha(31))),
       Text(text,
           overflow: overflow,
           style: style.copyWith(
-              // height: 0.82,
+              // backgroundColor: TColors.accent,
               foreground: Paint()
                 ..strokeWidth = strokeWidth ?? 9.d
                 ..color = strokeColor
@@ -36,12 +37,10 @@ class SkinnedText extends StatelessWidget {
       Text(text,
           overflow: overflow,
           style: style.copyWith(
-            // height: 0.9,
             color: style.color == TColors.primary10
                 ? TColors.primary
                 : style.color,
           )),
-      // SizedBox(height: style.fontSize! * 0.32)
     ]);
   }
 
