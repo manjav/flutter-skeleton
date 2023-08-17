@@ -31,7 +31,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             itemCount: cards.length,
             padding: EdgeInsets.fromLTRB(gap, 200.d, gap, 210.d),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 0.74,
+                childAspectRatio: CardItem.aspectRatio,
                 crossAxisCount: 4,
                 crossAxisSpacing: gap,
                 mainAxisSpacing: gap),

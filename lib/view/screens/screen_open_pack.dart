@@ -31,7 +31,6 @@ class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen> {
   @override
   Widget contentFactory() {
     var gap = 8.d;
-    var aspectRatio = 0.74;
     var len = _cards.length;
     var crossAxisCount = len < 4 ? len % 4 : 4;
     var mainAxisCount = (len / crossAxisCount).ceil();
@@ -45,12 +44,12 @@ class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen> {
         alignment: Alignment.center,
         child: SizedBox(
             width: itemSize * crossAxisCount + gap * crossAxisCount + 1,
-            height: itemSize / aspectRatio * mainAxisCount +
+            height: itemSize / CardItem.aspectRatio * mainAxisCount +
                 (mainAxisCount + 1) * gap,
             child: GridView.builder(
               itemCount: _cards.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: aspectRatio,
+                  childAspectRatio: CardItem.aspectRatio,
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: gap,
                   mainAxisSpacing: gap),

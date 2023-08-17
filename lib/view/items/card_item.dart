@@ -13,6 +13,7 @@ import '../widgets/loaderwidget.dart';
 import '../widgets/skinnedtext.dart';
 
 class CardItem extends StatefulWidget {
+  static const aspectRatio = 0.74;
   final double size;
   final bool showCooloff;
   final bool showCooldown;

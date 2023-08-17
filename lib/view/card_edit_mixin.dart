@@ -65,7 +65,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
                 itemCount: cards.length,
                 padding: EdgeInsets.fromLTRB(28.d, 32.d, 28.d, 220.d),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.74,
+                    childAspectRatio: CardItem.aspectRatio,
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: gap,
                     mainAxisSpacing: gap),

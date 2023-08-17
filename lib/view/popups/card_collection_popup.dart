@@ -81,7 +81,6 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
 
   Widget _cardsListBuilder(FruitData fruit) {
     var gap = 12.d;
-    var aspectRatio = 0.74;
     var len = fruit.cards[0].isHero ? 1 : fruit.cards.length;
     var crossAxisCount = len < 4 ? len % 4 : 4;
     var rows = (len / crossAxisCount).ceil();
@@ -92,11 +91,11 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
         child: Center(
           child: SizedBox(
               width: itemSize * crossAxisCount + gap * crossAxisCount + 1,
-              height: itemSize / aspectRatio * rows + (rows + 1) * gap,
+              height: itemSize / CardItem.aspectRatio * rows + (rows + 1) * gap,
               child: GridView.builder(
                 itemCount: len,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: aspectRatio,
+                    childAspectRatio: CardItem.aspectRatio,
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: gap,
                     mainAxisSpacing: gap),

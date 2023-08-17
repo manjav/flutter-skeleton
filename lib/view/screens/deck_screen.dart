@@ -73,7 +73,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                     padding: EdgeInsets.fromLTRB(gap, gap, gap, 270.d),
                     itemCount: cards.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: 0.74,
+                        childAspectRatio: CardItem.aspectRatio,
                         crossAxisCount: crossAxisCount,
                         crossAxisSpacing: gap,
                         mainAxisSpacing: gap),
