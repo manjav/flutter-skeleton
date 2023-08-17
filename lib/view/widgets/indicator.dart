@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/blocs/services.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../blocs/services.dart';
 import '../../data/core/account.dart';
 import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';

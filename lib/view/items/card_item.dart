@@ -84,7 +84,7 @@ class _CardItemState extends State<CardItem> {
       Positioned(
           top: 1 * s,
           right: 23 * s,
-          width: 27 * s,
+          width: 36 * s,
           child: SkinnedText(level, style: _medium))
     ];
     if (widget.showTitle) {

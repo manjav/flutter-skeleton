@@ -71,7 +71,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
                           itemCount: cards.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 0.74,
+                                  childAspectRatio: CardItem.aspectRatio,
                                   crossAxisCount: crossAxisCount,
                                   crossAxisSpacing: gap,
                                   mainAxisSpacing: gap),
