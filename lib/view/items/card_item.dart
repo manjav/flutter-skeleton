@@ -62,8 +62,8 @@ class _CardItemState extends State<CardItem> {
     var baseCard = widget.card.base;
     var level = baseCard.get<int>(CardFields.rarity).toString();
     var cooldown = baseCard.get<int>(CardFields.cooldown);
-    if (widget.showCooloff) {
       _remainingCooldown.value = widget.card.getRemainingCooldown();
+    if (widget.showCooloff && _remainingCooldown.value > 0) {
       _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _remainingCooldown.value = widget.card.getRemainingCooldown();
         if (_remainingCooldown.value <= 0) {
