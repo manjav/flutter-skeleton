@@ -115,13 +115,16 @@ class _CardItemState extends State<CardItem> {
           ])));
     }
     if (widget.showCooloff && _remainingCooldown.value > 0) {
-      items.add(ValueListenableBuilder<int>(
-          valueListenable: _remainingCooldown,
-          builder: (context, value, child) => Positioned(
-              child: Widgets.rect(
-                  radius: 20.d,
+      items.add(Positioned(
+          top: 1 * s,
+          left: 6 * s,
+          bottom: 8 * s,
+          right: 6 * s,
+          child: ValueListenableBuilder<int>(
+              valueListenable: _remainingCooldown,
+              builder: (context, value, child) => Widgets.rect(
+                  radius: 23 * s,
                   color: TColors.white50,
-                  padding: EdgeInsets.zero,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -130,21 +133,14 @@ class _CardItemState extends State<CardItem> {
                         IgnorePointer(
                             ignoring: true,
                             child: Widgets.skinnedButton(
-                                width: 230.d,
                                 height: 128.d,
                                 color: ButtonColor.teal,
                                 padding: EdgeInsets.only(bottom: 12.d),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Asset.load<Image>("icon_gold",
-                                          height: 56.d),
-                                      SizedBox(width: 2.d),
-                                      SkinnedText(widget.card
-                                          .cooldownTimeToCost(
-                                              _remainingCooldown.value)
-                                          .compact())
-                                    ])))
+                                label: widget.card
+                                    .cooldownTimeToCost(
+                                        _remainingCooldown.value)
+                                    .compact(),
+                                icon: "icon_gold"))
                       ])))));
     }
 
