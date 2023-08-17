@@ -34,12 +34,13 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
             _deckItemBuilder(1, -0.3, 0.21, -0.1),
             _deckItemBuilder(2, 0.3, 0.21, 0.1),
             _deckItemBuilder(3, 0.85, 0.25, 0.2),
+            LiveDeck(_pageController, _readyCards, _onCardFocusChanged),
         ));
   }
 
   _deckItemBuilder(int index, double alignX, double alignY, double rotation) {
     return Align(
-        alignment: Alignment(alignX, alignY),
+        alignment: Alignment(alignX + 0.05, alignY),
         child: Transform.rotate(
             angle: rotation + Random().nextDouble() * 0.16 - 0.08,
             child: Asset.load<Image>(
@@ -47,4 +48,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
                 width: 200.d)));
   }
   
+  void _onCardFocusChanged(int index, AccountCard focusedCard) {
+    print(index);
+  }
 }
