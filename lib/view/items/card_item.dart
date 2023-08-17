@@ -73,7 +73,7 @@ class _CardItemState extends State<CardItem> {
     }
     var s = widget.size / 256;
     if (_tiny == null) {
-      _medium = TStyles.medium.copyWith(fontSize: 42 * s);
+      _medium = TStyles.medium.copyWith(fontSize: 41 * s);
       _small = TStyles.medium.copyWith(fontSize: 33 * s);
       _tiny = TStyles.medium.copyWith(fontSize: 28 * s);
     }
@@ -83,8 +83,8 @@ class _CardItemState extends State<CardItem> {
       CardItem.getCardImage(baseCard, 216 * s, key: _imageKey),
       Positioned(
           top: 1 * s,
-          right: 23 * s,
-          width: 36 * s,
+          right: 13 * s,
+          width: 48 * s,
           child: SkinnedText(level, style: _medium))
     ];
     if (widget.showTitle) {
