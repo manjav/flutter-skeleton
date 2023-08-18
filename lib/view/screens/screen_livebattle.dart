@@ -67,14 +67,14 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
                     valueListenable: _powerBalance,
                     builder: (context, value, child) =>
                         Powerbalance(value, _maxPower))),
-            DeployHolder(0, -0.85, -0.25, 0.2, _enemyDeployedCards),
-            DeployHolder(1, -0.3, -0.21, 0.1, _enemyDeployedCards),
-            DeployHolder(2, 0.3, -0.21, -0.1, _enemyDeployedCards),
-            DeployHolder(3, 0.85, -0.25, -0.2, _enemyDeployedCards),
-            DeployHolder(0, -0.85, 0.25, -0.2, _myDeloyedCards),
-            DeployHolder(1, -0.3, 0.21, -0.1, _myDeloyedCards),
-            DeployHolder(2, 0.3, 0.21, 0.1, _myDeloyedCards),
-            DeployHolder(3, 0.85, 0.25, 0.2, _myDeloyedCards),
+            DeployHolder(0, -0.75, -0.20, 0.2, _enemyDeployedCards),
+            DeployHolder(1, -0.26, -0.17, 0.1, _enemyDeployedCards),
+            DeployHolder(3, 0.26, -0.17, -0.1, _enemyDeployedCards),
+            DeployHolder(4, 0.75, -0.20, -0.2, _enemyDeployedCards),
+            DeployHolder(0, -0.75, 0.20, -0.2, _myDeloyedCards),
+            DeployHolder(1, -0.26, 0.17, -0.1, _myDeloyedCards),
+            DeployHolder(3, 0.26, 0.17, 0.1, _myDeloyedCards),
+            DeployHolder(4, 0.75, 0.20, 0.2, _myDeloyedCards),
             LiveDeck(_pageController, _cards, _onCardFocusChanged),
         ));
   }

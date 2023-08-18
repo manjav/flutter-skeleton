@@ -20,7 +20,7 @@ class DeployHolder extends StatelessWidget with KeyProvider {
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: deployedCards,
         builder: (context, value, child) {
-          var size = 180.d;
+          var size = 190.d;
           Widget? card;
           if (value[index] != null) {
             if (value[index]!.id == -1) {
