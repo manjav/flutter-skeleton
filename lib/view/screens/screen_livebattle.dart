@@ -100,5 +100,13 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   void _onDeckSelect(int index, AccountCard focusedCard) {
+    if (_myDeloyedCards.value[4] != null) return;
+    if (focusedCard.base.isHero) {
+      _isHeroDeployed = true;
+      _deckCards.removeWhere((card) => card!.base.isHero);
+    } else {
+      _readySlotIndex += _readySlotIndex == 1 ? 2 : 1;
+      _deckCards.remove(focusedCard);
+    }
   }
 }

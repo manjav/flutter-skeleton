@@ -180,6 +180,8 @@ class LeagueData {
   }
 }
 
+enum OpponentMode { allise, axis }
+
 class Opponent extends Player {
   static int scoutCost = 0;
   static Map<String, dynamic> _attackLogs = {};

@@ -145,4 +145,9 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
     value.remove(card);
     notifyListeners();
   }
+
+  void removeWhere(bool Function(AccountCard?) test) {
+    value.removeWhere(test);
+    notifyListeners();
+  }
 }
