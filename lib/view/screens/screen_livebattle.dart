@@ -94,10 +94,8 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
       if (!_isHeroDeployed) {
         _myDeloyedCards.setAtCard(2, null);
     }
-    var powerBalance = 0;
-    for (var card in _myDeloyedCards.value) {
-      powerBalance += card != null ? card.power : 0;
     }
+    var powerBalance = _account.calculatePower(_myDeloyedCards.value);
     _powerBalance.value = powerBalance;
   }
 
