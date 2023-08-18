@@ -4,11 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/widgets/card_holder.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/live_battle/live_deck.dart';
+import '../widgets/live_battle/live_hero.dart';
 import '../widgets/live_battle/livebattle_deploy_holder.dart';
 import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
@@ -23,9 +25,10 @@ class LiveBattleScreen extends AbstractScreen {
 class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   late Account _account;
   late PageController _pageController;
-  final SelectedCards _myDeloyedCards = SelectedCards([null, null, null, null]);
+  final SelectedCards _myDeloyedCards =
+      SelectedCards([null, null, null, null, null]);
   final SelectedCards _enemyDeployedCards =
-      SelectedCards([null, null, null, null]);
+      SelectedCards([null, null, null, null, null]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   int _maxPower = 0;
   final SelectedCards _deckCards = SelectedCards([]);
@@ -75,7 +78,8 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
             DeployHolder(1, -0.26, 0.17, -0.1, _myDeloyedCards),
             DeployHolder(3, 0.26, 0.17, 0.1, _myDeloyedCards),
             DeployHolder(4, 0.75, 0.20, 0.2, _myDeloyedCards),
-            LiveDeck(_pageController, _cards, _onCardFocusChanged),
+            DeployHero(_account, OpponentMode.axis, _enemyDeployedCards),
+            DeployHero(_account, OpponentMode.allise, _myDeloyedCards),
         ));
   }
   
