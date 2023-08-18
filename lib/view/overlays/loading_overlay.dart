@@ -40,12 +40,11 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
       body: Stack(alignment: Alignment.center, children: [
         Asset.load<RiveAnimation>('loading', onRiveInit: (Artboard artboard) {
           final controller = StateMachineController.fromArtboard(
-            artboard,
-            'Loading',
-            onStateChange: (state, animation) {
-              if (animation == "closed") close();
-            },
-          );
+              artboard, 'Loading', onStateChange: (state, animation) {
+            if (animation == "closed") {
+              close();
+            }
+          });
           _closeInput = controller!.findInput<bool>('close') as SMIBool;
           artboard.addController(controller);
         }, fit: BoxFit.fitWidth),
@@ -122,10 +121,5 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   void _reload() {
     close();
     MyApp.restartApp(context);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
