@@ -1,35 +1,41 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../../../data/core/card.dart';
 import '../../../services/deviceinfo.dart';
+import '../../../view/key_provider.dart';
 import '../../items/card_item.dart';
 import '../../widgets.dart';
+import '../card_holder.dart';
 
-class LiveDeck extends StatelessWidget {
-  final List<AccountCard> items;
+class LiveDeck extends StatelessWidget with KeyProvider {
+  final SelectedCards items;
   final PageController pageController;
-  final Function(int, AccountCard) onPageChanged;
-  const LiveDeck(this.pageController, this.items, this.onPageChanged,
+  final Function(int, AccountCard) onFocus;
+  final Function(int, AccountCard) onSelect;
+
+  LiveDeck(this.pageController, this.items, this.onFocus, this.onSelect,
       {super.key});
 
   @override
   Widget build(BuildContext context) {
     var size = pageController.viewportFraction * DeviceInfo.size.width;
     return Positioned(
-        bottom: 200.d,
-        left: 0,
-        right: 0,
-        height: size / CardItem.aspectRatio,
-        child: PageView.builder(
-          clipBehavior: Clip.none,
-          onPageChanged: (index) => onPageChanged(index, items[index]),
-          controller: pageController,
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) =>
-              _cardBuilder(context, index, size),
-        ));
+      bottom: 200.d,
+      left: 0,
+      right: 0,
+      height: size / CardItem.aspectRatio,
+      child: ValueListenableBuilder<List<AccountCard?>>(
+          valueListenable: items,
+          builder: (context, value, child) {
+            return PageView.builder(
+                clipBehavior: Clip.none,
+                onPageChanged: (index) => onFocus(index, items.value[index]!),
+                controller: pageController,
+                itemCount: items.value.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    _cardBuilder(context, index, size));
+          }),
+    );
   }
 
   _cardBuilder(BuildContext context, int index, double size) {
@@ -62,9 +68,12 @@ class LiveDeck extends StatelessWidget {
                   opacity: 1 - normal,
                   child: Widgets.button(
                       padding: EdgeInsets.zero,
-                      onPressed: () => _onCardTap(context, index),
-                      child: CardItem(items[index],
-                          size: size, showCooldown: false, showCooloff: true)),
+                      onPressed: () => _onCardTap(context, index, item),
+                      child: CardItem(item,
+                          size: size,
+                          key: getGlobalKey(item.id),
+                          showCooldown: false,
+                          showCooloff: true)),
                 ),
               ),
             ),
@@ -72,12 +81,13 @@ class LiveDeck extends StatelessWidget {
         });
   }
 
-  _onCardTap(BuildContext context, int index) {
+  _onCardTap(BuildContext context, int index, AccountCard item) {
     if (pageController.page == index) {
-      if (items[index].getRemainingCooldown() > 0) {
-        items[index].coolOff(context);
+      if (item.getRemainingCooldown() > 0) {
+        item.coolOff(context);
+      } else {
+        onSelect(index, item);
       }
-      return;
     }
     pageController.animateToPage(index,
         duration: const Duration(milliseconds: 400), curve: Curves.easeOut);

@@ -32,8 +32,8 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   int _maxPower = 0;
   final SelectedCards _deckCards = SelectedCards([]);
-
-  int get _readySlotIndex => 0;
+  bool _isHeroDeployed = false;
+  int _readySlotIndex = 0;
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -43,9 +43,9 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    _cards = _account.getReadyCards();
+    _deckCards.value = _account.getReadyCards();
     _maxPower = _account.get<int>(AccountField.def_power);
-    _pageController = PageController(viewportFraction: 0.3, keepPage: true);
+    _pageController = PageController(viewportFraction: 0.25);
     super.initState();
     WidgetsBinding.instance
         .addPostFrameCallback((d) => _pageController.jumpToPage(4));
@@ -80,19 +80,27 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
             DeployHolder(4, 0.75, 0.20, 0.2, _myDeloyedCards),
             DeployHero(_account, OpponentMode.axis, _enemyDeployedCards),
             DeployHero(_account, OpponentMode.allise, _myDeloyedCards),
+            LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
         ));
   }
   
-  void _onCardFocusChanged(int index, AccountCard focusedCard) {
+  void _onDeckFocus(int index, AccountCard focusedCard) {
+    if (_myDeloyedCards.value[4] != null) return;
     if (focusedCard.base.isHero) {
       _myDeloyedCards.setAtCard(_readySlotIndex, null);
+      _myDeloyedCards.setAtCard(2, focusedCard);
     } else {
       _myDeloyedCards.setAtCard(_readySlotIndex, focusedCard);
+      if (!_isHeroDeployed) {
+        _myDeloyedCards.setAtCard(2, null);
     }
     var powerBalance = 0;
     for (var card in _myDeloyedCards.value) {
       powerBalance += card != null ? card.power : 0;
     }
     _powerBalance.value = powerBalance;
+  }
+
+  void _onDeckSelect(int index, AccountCard focusedCard) {
   }
 }
