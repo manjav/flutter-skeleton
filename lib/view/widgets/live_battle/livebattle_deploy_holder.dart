@@ -34,11 +34,20 @@ class DeployHolder extends StatelessWidget with KeyProvider {
           } else {
             card = Asset.load<Image>("deck_live_empty");
           }
+          var offset = 0.0;
           return Align(
               alignment: Alignment(alignX, alignY),
+          var duration = const Duration(milliseconds: 500);
+          const curve = Curves.easeInOutExpo;
+          return AnimatedAlign(
+              duration: duration,
+              curve: curve,
+              alignment: Alignment(alignX + offset, alignY),
               child: Transform.rotate(
                   angle: rotation,
-                  child: SizedBox(
+                  child: AnimatedContainer(
+                      duration: duration,
+                      curve: curve,
                       width: size,
                       height: size / CardItem.aspectRatio,
                       child: card)));
