@@ -33,17 +33,25 @@ class LiveDeck extends StatelessWidget {
   }
 
   _cardBuilder(BuildContext context, int index, double size) {
-    var delta = 1.0, angle = 0.0, scale = 1.0, deltaX = 0.0, deltaY = 0.0;
+    var delta = 1.0,
+        normal = 1.0,
+        angle = 0.0,
+        scale = 1.0,
+        deltaX = 0.0,
+        deltaY = 0.0;
     return AnimatedBuilder(
         animation: pageController,
         builder: (context, child) {
           if (pageController.position.haveDimensions) {
             delta = (pageController.page! - index);
             angle = delta / -10;
-            scale = 0.2 + (0.6 / delta).abs().clamp(0, 0.8);
-            deltaX = math.pow(delta, 3) * 8;
-            deltaY = delta.abs() * 32;
+            normal = (delta.abs() / 3).clamp(0, 1);
+            scale = 1 - Curves.easeInCirc.transform(normal);
+            deltaX = Curves.easeInSine.transform(normal) *
+                (delta > 0 ? 190.d : -190.d);
+            deltaY = Curves.easeInExpo.transform(normal) * 820.d;
           }
+          var item = items.value[index]!;
           return Transform.translate(
             offset: Offset(deltaX, deltaY),
             child: Transform.rotate(
@@ -51,7 +59,7 @@ class LiveDeck extends StatelessWidget {
               child: Transform.scale(
                 scale: scale,
                 child: Opacity(
-                  opacity: scale,
+                  opacity: 1 - normal,
                   child: Widgets.button(
                       padding: EdgeInsets.zero,
                       onPressed: () => _onCardTap(context, index),
