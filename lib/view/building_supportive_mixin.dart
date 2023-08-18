@@ -54,9 +54,11 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
       RpcParams.cards.name: "[$cardIds]",
       RpcParams.type.name: building.type.id
     };
-    await BlocProvider.of<Services>(context)
-        .get<HttpConnection>()
-        .tryRpc(context, RpcId.assignCard, params: params);
+    if (context.mounted) {
+      await BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.assignCard, params: params);
+    }
     for (var i = 0; i < selectedCards.length; i++) {
       building.cards[i] = selectedCards[i];
     }
