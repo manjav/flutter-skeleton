@@ -28,7 +28,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
       SelectedCards([null, null, null, null]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   int _maxPower = 0;
-  List<AccountCard> _cards = [];
+  final SelectedCards _deckCards = SelectedCards([]);
 
   int get _readySlotIndex => 0;
 
