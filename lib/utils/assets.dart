@@ -35,7 +35,7 @@ class Asset {
     };
   }
 
-  static AssetType _getType(Type type) {
+  static AssetType _getType(dynamic type) {
     return switch (type) {
       RiveAnimation => AssetType.animation,
       Image => AssetType.image,
