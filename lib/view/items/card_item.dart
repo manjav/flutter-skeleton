@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 
+import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -48,6 +50,33 @@ class CardItem extends StatefulWidget {
         card.isHero ? card.name : card.get<String>(CardFields.name),
         key: key, subFolder: "cards", width: size);
   }
+
+  static getHeroAnimation(AccountCard card, double size, {Key? key}) {
+    var hero =
+        card.account.get<Map<int, HeroCard>>(AccountField.heroes)[card.id]!;
+
+    var items = <String, HeroItem>{};
+    for (var item in hero.items) {
+      if (item.base.category == 1) {
+        items[item.position == 1 ? "minion_left" : "minion_right"] = item;
+      } else {
+        items[item.position == 1 ? "weapon_left" : "weapon_right"] = item;
+      }
+    }
+
+    return LoaderWidget(AssetType.animation, "heroes",
+        width: size, height: size, onRiveInit: (Artboard artboard) {
+      final controller =
+          StateMachineController.fromArtboard(artboard, 'Heroes')!;
+      controller.findInput<double>('hero')?.value =
+          hero.card.base.get(CardFields.id).toDouble();
+      for (var item in items.entries) {
+        controller.findInput<double>(item.key)?.value =
+            item.value.base.id.toDouble();
+      }
+      artboard.addController(controller);
+    }, key: key);
+  }
 }
 
 class _CardItemState extends State<CardItem> {
@@ -62,7 +91,7 @@ class _CardItemState extends State<CardItem> {
     var baseCard = widget.card.base;
     var level = baseCard.get<int>(CardFields.rarity).toString();
     var cooldown = baseCard.get<int>(CardFields.cooldown);
-      _remainingCooldown.value = widget.card.getRemainingCooldown();
+    _remainingCooldown.value = widget.card.getRemainingCooldown();
     if (widget.showCooloff && _remainingCooldown.value > 0) {
       _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _remainingCooldown.value = widget.card.getRemainingCooldown();
@@ -80,7 +109,9 @@ class _CardItemState extends State<CardItem> {
 
     var items = <Widget>[
       CardItem.getCardBackground(baseCard),
-      CardItem.getCardImage(baseCard, 216 * s, key: _imageKey),
+      widget.card.base.isHero
+          ? CardItem.getHeroAnimation(widget.card, 320 * s)
+          : CardItem.getCardImage(baseCard, 216 * s, key: _imageKey),
       Positioned(
           top: 1 * s,
           right: 13 * s,
