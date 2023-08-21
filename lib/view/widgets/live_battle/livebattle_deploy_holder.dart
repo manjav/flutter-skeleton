@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
-import '../../../services/deviceinfo.dart';
 
 import '../../../data/core/card.dart';
+import '../../../data/core/infra.dart';
+import '../../../services/deviceinfo.dart';
+import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
+import '../../../view/widgets/skinnedtext.dart';
 import '../../items/card_item.dart';
 import '../../key_provider.dart';
+import '../../widgets.dart';
 import '../card_holder.dart';
 
 class DeployHolder extends StatelessWidget with KeyProvider {
   final int index;
   final double alignX, alignY, rotation;
   final SelectedCards deployedCards;
+  final ValueNotifier<IntVec2d> currentIndex;
 
-  DeployHolder(
-      this.index, this.alignX, this.alignY, this.rotation, this.deployedCards,
+  DeployHolder(this.index, this.alignX, this.alignY, this.rotation,
+      this.currentIndex, this.deployedCards,
       {super.key});
   @override
   Widget build(BuildContext context) {
@@ -58,7 +63,21 @@ class DeployHolder extends StatelessWidget with KeyProvider {
                       curve: curve,
                       width: size,
                       height: size / CardItem.aspectRatio,
-                      child: card)));
+                      child: _deadlineSlider(card))));
+        });
+  }
+
+  _deadlineSlider(Widget card) {
+    return ValueListenableBuilder<IntVec2d>(
+        valueListenable: currentIndex,
+        builder: (context, value, child) {
+          var visible = index == value.i && alignY > 0;
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              card,
+            ],
+          );
         });
   }
 }

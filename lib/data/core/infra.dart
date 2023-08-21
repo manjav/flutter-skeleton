@@ -27,3 +27,8 @@ class StringMap<T> {
     map[name] = data[name] ?? defaultValue;
   }
 }
+
+class IntVec2d {
+  final int i, j;
+  IntVec2d(this.i, this.j);
+}
