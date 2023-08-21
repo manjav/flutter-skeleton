@@ -31,4 +31,6 @@ class StringMap<T> {
 class IntVec2d {
   final int i, j;
   IntVec2d(this.i, this.j);
+  @override
+  String toString() => "$i, $j";
 }
