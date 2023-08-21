@@ -11,13 +11,13 @@ import '../../key_provider.dart';
 import '../../widgets.dart';
 import '../card_holder.dart';
 
-class DeployHolder extends StatelessWidget with KeyProvider {
+class LiveSlot extends StatelessWidget with KeyProvider {
   final int index;
   final double alignX, alignY, rotation;
   final SelectedCards deployedCards;
   final ValueNotifier<IntVec2d> currentIndex;
 
-  DeployHolder(this.index, this.alignX, this.alignY, this.rotation,
+  LiveSlot(this.index, this.alignX, this.alignY, this.rotation,
       this.currentIndex, this.deployedCards,
       {super.key});
   @override

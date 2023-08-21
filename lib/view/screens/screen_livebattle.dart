@@ -12,7 +12,7 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/live_battle/live_deck.dart';
 import '../widgets/live_battle/live_hero.dart';
-import '../widgets/live_battle/livebattle_deploy_holder.dart';
+import '../widgets/live_battle/live_slot.dart';
 import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
 
@@ -26,8 +26,8 @@ class LiveBattleScreen extends AbstractScreen {
 class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   late Account _account;
   late PageController _pageController;
-  final SelectedCards _myCards = SelectedCards([null, null, null, null, null]);
-  final SelectedCards _enemyCards =
+  final SelectedCards _mySlots = SelectedCards([null, null, null, null, null]);
+  final SelectedCards _enemySlots =
       SelectedCards([null, null, null, null, null]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   int _maxPower = 0;
@@ -64,47 +64,45 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
                     valueListenable: _powerBalance,
                     builder: (context, value, child) =>
                         Powerbalance(value, _maxPower))),
-            DeployHolder(0, -0.75, -0.20, 0.2, _currentHolder, _enemyCards),
-            DeployHolder(1, -0.26, -0.17, 0.1, _currentHolder, _enemyCards),
-            DeployHolder(3, 0.26, -0.17, -0.1, _currentHolder, _enemyCards),
-            DeployHolder(4, 0.75, -0.20, -0.2, _currentHolder, _enemyCards),
-            DeployHolder(0, -0.75, 0.20, -0.2, _currentHolder, _myCards),
-            DeployHolder(1, -0.26, 0.17, -0.1, _currentHolder, _myCards),
-            DeployHolder(3, 0.26, 0.17, 0.1, _currentHolder, _myCards),
-            DeployHolder(4, 0.75, 0.20, 0.2, _currentHolder, _myCards),
-            DeployHero(_account, OpponentMode.axis, _enemyCards),
-            DeployHero(_account, OpponentMode.allise, _myCards),
+            LiveSlot(0, -0.75, -0.20, 0.20, _slotState, _enemySlots),
+            LiveSlot(1, -0.26, -0.17, 0.07, _slotState, _enemySlots),
+            LiveSlot(3, 0.26, -0.17, -0.07, _slotState, _enemySlots),
+            LiveSlot(4, 0.75, -0.20, -0.20, _slotState, _enemySlots),
+            LiveSlot(0, -0.75, 0.20, -0.20, _slotState, _mySlots),
+            LiveSlot(1, -0.26, 0.17, -0.07, _slotState, _mySlots),
+            LiveSlot(3, 0.26, 0.17, 0.07, _slotState, _mySlots),
+            LiveSlot(4, 0.75, 0.20, 0.20, _slotState, _mySlots),
+            LiveHero(_account, OpponentMode.axis, _enemySlots),
+            LiveHero(_account, OpponentMode.allise, _mySlots),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
           ],
         ));
   }
   
   void _onDeckFocus(int index, AccountCard focusedCard) {
-    var holder = _currentHolder.value;
-    if (holder.i == 5) return;
+    var slot = _slotState.value;
+    if (slot.i == 5) return;
     if (focusedCard.base.isHero) {
-      _myCards.setAtCard(holder.i, null);
-      _myCards.setAtCard(2, focusedCard);
+      _mySlots.setAtCard(slot.i, null);
+      _mySlots.setAtCard(2, focusedCard);
     } else {
-      _myCards.setAtCard(holder.i, focusedCard);
+      _mySlots.setAtCard(slot.i, focusedCard);
       if (!_isHeroDeployed) {
-        _myCards.setAtCard(2, null);
+        _mySlots.setAtCard(2, null);
     }
     }
-    var powerBalance = _account.calculatePower(_myCards.value);
+    var powerBalance = _account.calculatePower(_mySlots.value);
     _powerBalance.value = powerBalance;
   }
 
-  void _onDeckSelect(int index, AccountCard focusedCard) {
-    var holder = _currentHolder.value;
-    if (holder.i == 5) return;
-    if (focusedCard.base.isHero) {
+  void _onDeckSelect(int index, AccountCard selectedCard) {
+    var slot = _slotState.value;
+    if (slot.i == 5) return;
+    if (selectedCard.base.isHero) {
       _isHeroDeployed = true;
       _deckCards.removeWhere((card) => card!.base.isHero);
     } else {
-      _deckCards.remove(focusedCard);
-      _currentHolder.value =
-          IntVec2d(holder.i + (holder.i == 1 ? 2 : 1), holder.j);
+      _deckCards.remove(selectedCard);
     }
     _onDeckFocus(index, _deckCards.value[index]!);
   }

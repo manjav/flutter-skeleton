@@ -7,11 +7,11 @@ import '../../../services/deviceinfo.dart';
 import '../../items/card_item.dart';
 import '../../key_provider.dart';
 
-class DeployHero extends StatelessWidget with KeyProvider {
+class LiveHero extends StatelessWidget with KeyProvider {
   final Account account;
   final OpponentMode opponentMode;
   final ValueNotifier<List<AccountCard?>> deployedCards;
-  DeployHero(this.account, this.opponentMode, this.deployedCards, {super.key});
+  LiveHero(this.account, this.opponentMode, this.deployedCards, {super.key});
 
   @override
   Widget build(BuildContext context) {
