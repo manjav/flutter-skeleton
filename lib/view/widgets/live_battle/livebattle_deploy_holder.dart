@@ -41,12 +41,12 @@ class DeployHolder extends StatelessWidget with KeyProvider {
           }
           var offset = 0.0;
           if (deployedCards.value[2] != null) {
-            size = 172.d;
+            size = 180.d;
             offset = switch (index) {
-              0 => -0.16,
-              1 => -0.24,
-              3 => 0.26,
-              4 => 0.18,
+              0 => -0.15,
+              1 => -0.20,
+              3 => 0.20,
+              4 => 0.15,
               _ => 0,
             };
           }

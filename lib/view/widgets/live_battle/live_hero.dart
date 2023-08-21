@@ -22,8 +22,8 @@ class DeployHero extends StatelessWidget with KeyProvider {
             return const SizedBox();
           }
           return Align(
-            alignment:
-                Alignment(0, opponentMode == OpponentMode.allise ? 0.40 : -0.4),
+            alignment: Alignment(
+                0, opponentMode == OpponentMode.allise ? 0.30 : -0.35),
             child: CardItem.getHeroAnimation(deployedCards.value[2]!, 320.d,
                 key: getGlobalKey(deployedCards.value[2]!.id)),
           );
