@@ -53,8 +53,8 @@ class LiveSlot extends StatelessWidget with KeyProvider {
           var duration = const Duration(milliseconds: 500);
           const curve = Curves.easeInOutExpo;
           return AnimatedAlign(
-              duration: duration,
               curve: curve,
+              duration: duration,
               alignment: Alignment(alignX + offset, alignY),
               child: Transform.rotate(
                   angle: rotation,
@@ -67,15 +67,26 @@ class LiveSlot extends StatelessWidget with KeyProvider {
         });
   }
 
-  _deadlineSlider(Widget card) {
+  Widget _deadlineSlider(Widget card) {
+    var turns = 0.0;
     return ValueListenableBuilder<IntVec2d>(
         valueListenable: currentIndex,
         builder: (context, value, child) {
           var visible = index == value.i && alignY > 0;
+          var duration = const Duration(milliseconds: 800);
+          if (visible) {
+            if (turns == 0.0) turns = 0.01;
+            turns *= -1.0;
+          }
           return Stack(
             alignment: Alignment.center,
             children: [
-              card,
+              AnimatedRotation(
+                turns: turns,
+                duration: duration,
+                curve: Curves.easeInOutSine,
+                child: card,
+              ),
               visible
                   ? Widgets.rect(
                       color: TColors.green.withOpacity(0.8),
