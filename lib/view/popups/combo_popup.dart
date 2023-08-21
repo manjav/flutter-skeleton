@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -8,11 +9,13 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
+import '../../view/key_provider.dart';
 import '../../view/popups/ipopup.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
+import '../widgets/loaderwidget.dart';
 
 class ComboPopup extends AbstractPopup {
   const ComboPopup({super.key, required super.args}) : super(Routes.popupCombo);
@@ -21,7 +24,7 @@ class ComboPopup extends AbstractPopup {
   createState() => _ComboPopupState();
 }
 
-class _ComboPopupState extends AbstractPopupState<ComboPopup> {
+class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
   late Account _account;
   final ValueNotifier<int> _selectedIndex = ValueNotifier(1);
 
@@ -52,7 +55,17 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> {
           valueListenable: _selectedIndex,
           builder: (context, value, child) {
             var combo = _account.loadingData.comboHints[value];
-            var items = <Widget>[SizedBox(height: 444.d)];
+            var items = <Widget>[
+              LoaderWidget(AssetType.animation, "combo",
+                  key: getGlobalKey(value),
+                  height: 440.d, onRiveInit: (Artboard artboard) {
+                final controller =
+                    StateMachineController.fromArtboard(artboard, 'Combo')!;
+                var index = combo.isAvailable ? value.toDouble() : 0.0;
+                controller.findInput<double>('combo')?.value = index;
+                artboard.addController(controller);
+              })
+            ];
             items.addAll(_revealedItemsBuilder(combo, style, style2));
             items.add(const Expanded(child: SizedBox()));
             items.add(Wrap(
