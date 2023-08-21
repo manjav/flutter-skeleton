@@ -76,6 +76,22 @@ class DeployHolder extends StatelessWidget with KeyProvider {
             alignment: Alignment.center,
             children: [
               card,
+              visible
+                  ? Widgets.rect(
+                      color: TColors.green.withOpacity(0.8),
+                      width: 122.d,
+                      height: 122.d,
+                      radius: 66.d,
+                      child: SkinnedText("${value.j}"))
+                  : const SizedBox(),
+              visible
+                  ? CircularProgressIndicator(
+                      value: 0.95,
+                      strokeWidth: 12.d,
+                      backgroundColor: TColors.black.withOpacity(0.3),
+                      color: TColors.primary10,
+                    )
+                  : const SizedBox(),
             ],
           );
         });
