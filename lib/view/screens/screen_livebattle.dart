@@ -52,12 +52,6 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget contentFactory() {
     return Widgets.rect(
         color: const Color(0xffAA9A45),
@@ -81,6 +75,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
             DeployHero(_account, OpponentMode.axis, _enemyDeployedCards),
             DeployHero(_account, OpponentMode.allise, _myDeloyedCards),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
+          ],
         ));
   }
   
@@ -108,5 +103,11 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
       _readySlotIndex += _readySlotIndex == 1 ? 2 : 1;
       _deckCards.remove(focusedCard);
     }
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 }

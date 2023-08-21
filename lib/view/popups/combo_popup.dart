@@ -113,11 +113,11 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> {
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Opacity(
               opacity: combo.isAvailable ? 1 : 0.4,
-              child: Asset.load<Image>("icon_gold", width: 72.d)),
+              child: Asset.load<Image>("combo_${combo.count}", width: 72.d)),
           SizedBox(width: 12.d),
           SkinnedText("combo_$index".l()),
         ]),
-        onPressed: () => setState(() => _selectedIndex.value = index));
+        onPressed: () => _selectedIndex.value = index);
   }
 
 // local function findAvailableCombo(rowIndexOfComboTable)
