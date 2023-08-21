@@ -29,11 +29,14 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   final SelectedCards _mySlots = SelectedCards([null, null, null, null, null]);
   final SelectedCards _enemySlots =
       SelectedCards([null, null, null, null, null]);
-  final ValueNotifier<int> _powerBalance = ValueNotifier(0);
-  int _maxPower = 0;
   final SelectedCards _deckCards = SelectedCards([]);
+  final ValueNotifier<int> _powerBalance = ValueNotifier(0);
+  final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));
+  final List<int> _deadlines = [27, 10, 0, 10, 10, 1];
+  late Timer _timer;
   bool _isHeroDeployed = false;
-  final ValueNotifier<IntVec2d> _currentHolder = ValueNotifier(IntVec2d(0, 0));
+  int _seconds = 0;
+  int _maxPower = 0;
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -47,8 +50,12 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
     _maxPower = _account.get<int>(AccountField.def_power);
     _pageController = PageController(viewportFraction: 0.25);
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((d) => _pageController.jumpToPage(4));
+    _setSlotTime(0);
+    WidgetsBinding.instance.addPostFrameCallback((d) {
+      _timer = Timer.periodic(
+          const Duration(seconds: 1), (t) => _setSlotTime(++_seconds));
+      _pageController.jumpToPage(4);
+    });
   }
 
   @override
@@ -100,15 +107,43 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
     if (slot.i == 5) return;
     if (selectedCard.base.isHero) {
       _isHeroDeployed = true;
+      --_seconds;
       _deckCards.removeWhere((card) => card!.base.isHero);
     } else {
       _deckCards.remove(selectedCard);
+      var i = slot.i + (slot.i == 1 ? 2 : 1);
+      var sum = 0;
+      for (var d = 0; d < i; d++) {
+        sum += _deadlines[d];
+      }
+      _seconds = sum;
+      _setSlot(i, slot.j);
+      _setSlotTime(_seconds);
     }
     _onDeckFocus(index, _deckCards.value[index]!);
+  }
+  }
+
+  void _setSlotTime(int tick) {
+    // const helpTimeout = 37;
+    var sum = 0;
+    for (var i = 0; i < _deadlines.length; i++) {
+      sum += _deadlines[i];
+      if (tick < sum) {
+        if (i > _slotState.value.i) {
+          var index = _pageController.page!.round();
+          _onDeckSelect(index, _deckCards.value[index]!);
+        }
+        _setSlot(i, sum - tick);
+        return;
+      }
+    }
+    _timer.cancel();
   }
 
   @override
   void dispose() {
+    _timer.cancel();
     _pageController.dispose();
     super.dispose();
   }
