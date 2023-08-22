@@ -93,8 +93,8 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
 
 class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   SelectedCards(super.value);
-  setAtCard(int index, AccountCard? card) {
-    value[index] = value[index] == card ? null : card;
+  setAtCard(int index, AccountCard? card, {bool toggleMode = true}) {
+    value[index] = toggleMode && value[index] == card ? null : card;
     notifyListeners();
   }
 
