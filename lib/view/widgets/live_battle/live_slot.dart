@@ -8,6 +8,7 @@ import '../../../utils/assets.dart';
 import '../../../view/widgets/skinnedtext.dart';
 import '../../items/card_item.dart';
 import '../../key_provider.dart';
+import '../../screens/screen_livebattle.dart';
 import '../../widgets.dart';
 import '../card_holder.dart';
 
@@ -73,9 +74,9 @@ class LiveSlot extends StatelessWidget with KeyProvider {
         valueListenable: currentIndex,
         builder: (context, value, child) {
           var visible = index == value.i && alignY > 0;
-          var duration = const Duration(milliseconds: 800);
+          var duration = const Duration(milliseconds: 500);
           if (visible) {
-            if (turns == 0.0) turns = 0.01;
+            if (turns == 0.0) turns = 0.008;
             turns *= -1.0;
           }
           return Stack(
@@ -84,25 +85,32 @@ class LiveSlot extends StatelessWidget with KeyProvider {
               AnimatedRotation(
                 turns: turns,
                 duration: duration,
-                curve: Curves.easeInOutSine,
+                curve: Curves.easeInOutQuad,
                 child: card,
               ),
               visible
                   ? Widgets.rect(
-                      color: TColors.green.withOpacity(0.8),
-                      width: 122.d,
-                      height: 122.d,
-                      radius: 66.d,
-                      child: SkinnedText("${value.j}"))
+                      color: TColors.primary10.withOpacity(0.8),
+                      width: 128.d,
+                      height: 128.d,
+                      radius: 66.d)
                   : const SizedBox(),
               visible
                   ? CircularProgressIndicator(
+                      strokeWidth: 8.d,
+                      strokeAlign: 0.9,
                       value: value.j / LiveBattleScreen.deadlines[index],
-                      strokeWidth: 12.d,
-                      backgroundColor: TColors.black.withOpacity(0.3),
-                      color: TColors.primary10,
+                      color: TColors.green,
                     )
                   : const SizedBox(),
+              visible
+                  ? Widgets.rect(
+                      color: TColors.green,
+                      width: 72.d,
+                      height: 72.d,
+                      radius: 66.d,
+                      child: SkinnedText("${value.j}"))
+                  : const SizedBox()
             ],
           );
         });
