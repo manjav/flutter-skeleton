@@ -19,7 +19,7 @@ import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
 
 class LiveBattleScreen extends AbstractScreen {
-  static final List<int> deadlines = [27, 10, 0, 10, 10, 1];
+  static List<double> deadlines = [27, 10, 0, 10, 10, 1];
   LiveBattleScreen({super.key}) : super(Routes.livebattle);
 
   @override
@@ -46,6 +46,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   void initState() {
+    LiveBattleScreen.deadlines = [27, 10, 0, 10, 10, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _deckCards.value = _account.getReadyCards();
     for (var card in _deckCards.value) {
@@ -115,12 +116,17 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
       _mySlots.setAtCard(2, selectedCard, toggleMode: false);
     } else {
       _deckCards.remove(selectedCard);
+
+      // Save remaining time to next slot
       var i = slot.i + (slot.i == 1 ? 2 : 1);
-      var sum = 0;
+      var sum = 0.0;
       for (var d = 0; d < i; d++) {
         sum += LiveBattleScreen.deadlines[d];
       }
-      _seconds = sum.toDouble();
+      sum -= _seconds - 1;
+      LiveBattleScreen.deadlines[slot.i] -= sum;
+      LiveBattleScreen.deadlines[i] += sum;
+
       _setSlot(i, slot.j);
       _setSlotTime(_seconds.round());
     }
@@ -136,7 +142,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
 
   void _setSlotTime(int tick) {
     // const helpTimeout = 37;
-    var sum = 0;
+    var sum = 0.0;
     for (var i = 0; i < LiveBattleScreen.deadlines.length; i++) {
       sum += LiveBattleScreen.deadlines[i];
       if (tick < sum) {
@@ -144,7 +150,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
           var index = _pageController.page!.round();
           _onDeckSelect(index, _deckCards.value[index]!);
         }
-        _setSlot(i, sum - tick);
+        _setSlot(i, (sum - tick).round());
         return;
       }
     }
