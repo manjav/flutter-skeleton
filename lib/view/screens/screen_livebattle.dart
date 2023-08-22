@@ -19,6 +19,7 @@ import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
 
 class LiveBattleScreen extends AbstractScreen {
+  static final List<int> deadlines = [27, 10, 0, 10, 10, 1];
   LiveBattleScreen({super.key}) : super(Routes.livebattle);
 
   @override
@@ -97,7 +98,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
       _mySlots.setAtCard(2, focusedCard);
     } else {
       _mySlots.setAtCard(slot.i, focusedCard);
-      if (!_isHeroDeployed) {
+      if (_mySlots.value[2] != null && !_mySlots.value[2]!.isDeployed) {
         _mySlots.setAtCard(2, null);
     }
     }
@@ -111,26 +112,30 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
     selectedCard.isDeployed = true;
     if (selectedCard.base.isHero) {
       _deckCards.removeWhere((card) => card!.base.isHero);
+      _mySlots.setAtCard(2, selectedCard, toggleMode: false);
     } else {
       _deckCards.remove(selectedCard);
       var i = slot.i + (slot.i == 1 ? 2 : 1);
       var sum = 0;
       for (var d = 0; d < i; d++) {
-        sum += _deadlines[d];
+        sum += LiveBattleScreen.deadlines[d];
       }
-      _seconds = sum;
+      _seconds = sum.toDouble();
       _setSlot(i, slot.j);
-      _setSlotTime(_seconds);
+      _setSlotTime(_seconds.round());
     }
     _onDeckFocus(index, _deckCards.value[index]!);
   }
+
+  void _setSlot(int i, int j) {
+    _slotState.value = IntVec2d(i, j);
   }
 
   void _setSlotTime(int tick) {
     // const helpTimeout = 37;
     var sum = 0;
-    for (var i = 0; i < _deadlines.length; i++) {
-      sum += _deadlines[i];
+    for (var i = 0; i < LiveBattleScreen.deadlines.length; i++) {
+      sum += LiveBattleScreen.deadlines[i];
       if (tick < sum) {
         if (i > _slotState.value.i) {
           var index = _pageController.page!.round();
