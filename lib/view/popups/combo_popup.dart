@@ -61,7 +61,8 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
                   height: 440.d, onRiveInit: (Artboard artboard) {
                 final controller =
                     StateMachineController.fromArtboard(artboard, 'Combo')!;
-                var index = combo.isAvailable ? value.toDouble() : 0.0;
+                var index =
+                    (combo.isAvailable ? value : -combo.count).toDouble();
                 controller.findInput<double>('combo')?.value = index;
                 artboard.addController(controller);
               })
