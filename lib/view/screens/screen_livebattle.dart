@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,8 +7,8 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/infra.dart';
-import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';
+import '../../utils/utils.dart';
 import '../../view/widgets/card_holder.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
@@ -34,8 +36,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));
   final List<int> _deadlines = [27, 10, 0, 10, 10, 1];
   late Timer _timer;
-  bool _isHeroDeployed = false;
-  int _seconds = 0;
+  double _seconds = 0;
   int _maxPower = 0;
 
   @override
@@ -55,8 +56,8 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
     super.initState();
     _setSlotTime(0);
     WidgetsBinding.instance.addPostFrameCallback((d) {
-      _timer = Timer.periodic(
-          const Duration(seconds: 1), (t) => _setSlotTime(++_seconds));
+      _timer = Timer.periodic(const Duration(milliseconds: 334),
+          (t) => _setSlotTime((_seconds += 0.334).round()));
       _pageController.jumpToPage(4);
     });
   }
@@ -108,9 +109,8 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   void _onDeckSelect(int index, AccountCard selectedCard) {
     var slot = _slotState.value;
     if (slot.i == 5) return;
+    selectedCard.isDeployed = true;
     if (selectedCard.base.isHero) {
-      _isHeroDeployed = true;
-      --_seconds;
       _deckCards.removeWhere((card) => card!.base.isHero);
     } else {
       _deckCards.remove(selectedCard);
