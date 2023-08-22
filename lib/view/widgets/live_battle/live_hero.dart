@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../../data/core/account.dart';
 import '../../../data/core/card.dart';
-import '../../../data/core/ranking.dart';
 import '../../../services/deviceinfo.dart';
 import '../../items/card_item.dart';
 import '../../key_provider.dart';
 
 class LiveHero extends StatelessWidget with KeyProvider {
   final Account account;
-  final OpponentMode opponentMode;
+  final double alignment;
   final ValueNotifier<List<AccountCard?>> deployedCards;
-  LiveHero(this.account, this.opponentMode, this.deployedCards, {super.key});
+  LiveHero(this.account, this.alignment, this.deployedCards, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +20,10 @@ class LiveHero extends StatelessWidget with KeyProvider {
           if (deployedCards.value[2] == null) {
             return const SizedBox();
           }
-          return Align(
-            alignment: Alignment(
-                0, opponentMode == OpponentMode.allise ? 0.30 : -0.35),
+          var vAlign = value[2]!.isDeployed ? alignment - 0.1 : alignment;
+          return AnimatedAlign(
+            alignment: Alignment(0, vAlign),
+            duration: const Duration(milliseconds: 700),
             child: CardItem.getHeroAnimation(deployedCards.value[2]!, 320.d,
                 key: getGlobalKey(deployedCards.value[2]!.id)),
           );

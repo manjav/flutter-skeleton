@@ -82,8 +82,8 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
             LiveSlot(1, -0.26, 0.17, -0.07, _slotState, _mySlots),
             LiveSlot(3, 0.26, 0.17, 0.07, _slotState, _mySlots),
             LiveSlot(4, 0.75, 0.20, 0.20, _slotState, _mySlots),
-            LiveHero(_account, OpponentMode.axis, _enemySlots),
-            LiveHero(_account, OpponentMode.allise, _mySlots),
+            LiveHero(_account, -0.35, _enemySlots),
+            LiveHero(_account, 0.45, _mySlots),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
           ],
         ));
