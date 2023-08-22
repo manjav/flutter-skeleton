@@ -34,7 +34,6 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   final SelectedCards _deckCards = SelectedCards([]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));
-  final List<int> _deadlines = [27, 10, 0, 10, 10, 1];
   late Timer _timer;
   double _seconds = 0;
   int _maxPower = 0;

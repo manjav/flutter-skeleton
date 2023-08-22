@@ -97,7 +97,7 @@ class LiveSlot extends StatelessWidget with KeyProvider {
                   : const SizedBox(),
               visible
                   ? CircularProgressIndicator(
-                      value: 0.95,
+                      value: value.j / LiveBattleScreen.deadlines[index],
                       strokeWidth: 12.d,
                       backgroundColor: TColors.black.withOpacity(0.3),
                       color: TColors.primary10,
