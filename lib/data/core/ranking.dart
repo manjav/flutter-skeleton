@@ -131,11 +131,11 @@ class LeagueData {
   ];
   int leagueRank = 0,
       id = 0,
-      rewardAvgCardPower = 0,
       risingRank = 0,
       fallingRank = 0,
       currentBonus = 0,
       nextBonus = 0;
+  double rewardAvgCardPower = 0.0;
 
   List<List<int>> winnerRanges = [];
   List<LeagueRank> list = [];
@@ -144,11 +144,11 @@ class LeagueData {
     var w = map["winner_ranges"];
     id = w["league_id"];
     leagueRank = map["league_rank"] ?? 0;
-    rewardAvgCardPower = map["reward_avg_card_power"] ?? 0;
     risingRank = map["league_rising_rank"] ?? 0;
     fallingRank = map["league_falling_rank"] ?? 0;
     currentBonus = map["current_league_bonus"] ?? 0;
     nextBonus = map["next_league_bonus"] ?? 0;
+    rewardAvgCardPower = map["reward_avg_card_power"] ?? 0.0;
 
     winnerRanges = [];
     winnerRanges.add(_getTops(1, w["second_min"] - 1));
