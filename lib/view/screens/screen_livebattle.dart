@@ -124,6 +124,9 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
       _setSlot(i, slot.j);
       _setSlotTime(_seconds.round());
     }
+
+    // Focus to the nearest card for the next slot
+    index = index.max(_deckCards.value.length - 1);
     _onDeckFocus(index, _deckCards.value[index]!);
   }
 
