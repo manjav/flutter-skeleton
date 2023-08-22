@@ -47,6 +47,9 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _deckCards.value = _account.getReadyCards();
+    for (var card in _deckCards.value) {
+      card!.isDeployed = false;
+    }
     _maxPower = _account.get<int>(AccountField.def_power);
     _pageController = PageController(viewportFraction: 0.25);
     super.initState();

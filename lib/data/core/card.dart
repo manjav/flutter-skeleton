@@ -116,6 +116,7 @@ class AccountCard {
   late CardData base;
   late int lastUsedAt;
   final Account account;
+  bool isDeployed = false;
   AccountCard(this.account, Map map, Cards cards) {
     id = map['id'] ?? -1;
     power = map['power'];

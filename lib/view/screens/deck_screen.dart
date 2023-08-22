@@ -52,14 +52,17 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   @override
   Widget contentFactory() {
+    var gap = 10.d;
     var paddingTop = 172.d;
     var headerSize = 509.d;
-    var gap = 10.d;
     var crossAxisCount = 4;
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var cards = state.account.getReadyCards();
+      for (var card in cards) {
+        card.isDeployed = false;
+      }
       return Stack(alignment: Alignment.bottomCenter, children: [
         Positioned(
           top: paddingTop + headerSize,
