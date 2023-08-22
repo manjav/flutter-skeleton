@@ -157,7 +157,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
           ]),
           Row(mainAxisSize: MainAxisSize.min, children: [
             Asset.load<Image>("icon_power", height: 46.d),
-            SkinnedText("+${_leagueData!.rewardAvgCardPower.compact()}",
+            SkinnedText("+${_leagueData!.rewardAvgCardPower.round().compact()}",
                 style: TStyles.small)
           ]),
           SizedBox(height: 30.d),

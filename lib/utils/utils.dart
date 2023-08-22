@@ -26,19 +26,29 @@ extension IntExt on int {
     return "$hs : $ms : $ss";
   }
 
-  String toRemainingTime() {
+  String toRemainingTime({bool complete = false}) {
     if (this < 60) return "${this}s";
 
     var seconds = this % 60;
     var minutes = (this / 60).round();
     if (minutes < 60) {
-      if (seconds > 0) return "${minutes}m${seconds}s";
+      if (seconds > 0) {
+        if (complete) {
+          return "${minutes}m${seconds}s";
+        }
+        return "${minutes}m";
+      }
       return "${minutes}m";
     }
     var hours = (minutes / 60).floor();
     minutes = minutes % 60;
     if (hours < 24) {
-      if (minutes > 0) return "${hours}h${minutes}m";
+      if (minutes > 0) {
+        if (complete) {
+          return "${hours}h${minutes}m";
+        }
+        return "${hours}h";
+      }
       return "${hours}h";
     }
 
