@@ -66,7 +66,8 @@ class HttpConnection extends IService {
     if (response!.statusCode == 200) {
       _config = json.decode(response.body);
       LoadingData.baseURL = "http://${_config['ip']}";
-      baseURL = "http://${_config['ip']}";
+      LoadingData.chatIp = _config['chatIp'];
+      LoadingData.chatPort = _config['chatPort'];
       LoaderWidget.baseURL = _config['assetsServer'];
       LoaderWidget.hashMap = Map.castFrom(_config['files']);
       log("Config loaded.");
