@@ -39,6 +39,7 @@ dependencies:
   rive: ^0.11.14
   shared_preferences: ^2.2.0
   square_percent_indicater: ^0.1.0
+  tcp_socket_connection: ^0.3.1  
   unity_ads_plugin: ^0.3.7
   xor_cipher: ^1.0.0+1
 

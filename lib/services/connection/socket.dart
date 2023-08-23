@@ -6,9 +6,19 @@ import 'package:flutter_skeleton/services/iservices.dart';
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 
 import '../../utils/utils.dart';
+
 class NoobSocket extends IService {
+  late TcpSocketConnection _socketConnection;
+  String get _secret => "floatint201412bool23string";
+
   @override
   initialize({List<Object>? args}) async {
     super.initialize(args: args);
     var account = args![0] as Account;
+
+    _socketConnection =
+        TcpSocketConnection(LoadingData.chatIp, LoadingData.chatPort);
+    // _socketConnection.enableConsolePrint(true);
+    await _socketConnection.connect(500, _messageReceived, attempts: 3);
+  }
   }
