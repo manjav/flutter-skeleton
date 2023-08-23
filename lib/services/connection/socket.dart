@@ -21,4 +21,15 @@ class NoobSocket extends IService {
     // _socketConnection.enableConsolePrint(true);
     await _socketConnection.connect(500, _messageReceived, attempts: 3);
   }
+
+  void _messageReceived(String message) {
+    var startIndex = message.indexOf("__JSON__START__");
+    var endIndex = message.indexOf("__JSON__END__");
+    if (startIndex < 0 || endIndex < 0) {
+      return;
+    }
+    var b64 = utf8.fuse(base64);
+    message = message.substring(startIndex + 15, endIndex);
+    message = b64.decode(message.xorDecrypt(secret: _secret));
+  }
   }
