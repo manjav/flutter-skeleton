@@ -7,6 +7,13 @@ import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 
 import '../../utils/utils.dart';
 
+enum NoobCommand { subscribe, unsubscribe }
+
+extension NoobCommandExtension on NoobCommand {
+  String get value => name.toUpperCase();
+}
+
+
 class NoobSocket extends IService {
   late TcpSocketConnection _socketConnection;
   String get _secret => "floatint201412bool23string";
@@ -32,20 +39,17 @@ class NoobSocket extends IService {
     var b64 = utf8.fuse(base64);
     message = message.substring(startIndex + 15, endIndex);
     message = b64.decode(message.xorDecrypt(secret: _secret));
+    log(message);
   }
 
-  void _operate(String operation, String message ) {
+  void _run(NoobCommand command, String message) {
     var b64 = utf8.fuse(base64);
-    var sendMessage =
-        "__$operation${b64.encode(message).xorEncrypt(secret: _secret)}==__END$operation";
-    _socketConnection.sendMessage(sendMessage);
+    var cmdMessage =
+        "__${command.value}__${b64.encode(message).xorEncrypt(secret: _secret)}__END${command.value}__";
+    log(cmdMessage);
+    _socketConnection.sendMessage(cmdMessage);
   }
   
-  void subscribe(String channel) {
-    _operate("SUBSCRIBE", channel);
-  }  
-  
-  void unsubscribe(String channel) {
-    _operate("UNSUBSCRIBE", channel);
-  }
+  void subscribe(String channel) => _run(NoobCommand.subscribe, channel);
+  void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
 }
