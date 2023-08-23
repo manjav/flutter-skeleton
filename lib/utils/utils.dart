@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:xor_cipher/xor_cipher.dart';
 
 import '../services/deviceinfo.dart';
 import '../services/localization.dart';
@@ -87,14 +87,17 @@ extension StringExt on String {
 
   String xorEncrypt({String? secret}) {
     var secretKey = secret ?? _getDefaultSecret();
-    final encrypted = XOR.encrypt(this, secretKey, urlEncode: false);
-    var encodeddd = encrypted;
-    return encodeddd.replaceAll('-', '+');
+    var result = "";
+    for (var i = 0; i < length; i++) {
+      result += String.fromCharCode(
+          codeUnitAt(i) ^ secretKey.codeUnitAt(i % secretKey.length));
+    }
+    return utf8.fuse(base64).encode(result);
   }
 
   String xorDecrypt({String? secret}) {
-    var secretKey = secret ?? _getDefaultSecret();
-    return XOR.decrypt(this, secretKey, urlDecode: false);
+    var b64 = utf8.fuse(base64);
+    return b64.decode(b64.decode(this).xorEncrypt(secret: secret));
   }
 
   String _getDefaultSecret() {
