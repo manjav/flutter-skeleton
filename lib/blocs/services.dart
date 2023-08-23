@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/core/rpc_data.dart';
+import '../../services/connection/socket.dart';
 import '../data/core/result.dart';
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
@@ -37,6 +38,7 @@ enum ServiceType {
   settings,
   themes,
   trackers,
+  socket,
 }
 
 class ServicesEvent {
@@ -80,6 +82,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
       Sounds => ServiceType.sounds,
       Trackers => ServiceType.trackers,
       Theme => ServiceType.themes,
+      NoobSocket => ServiceType.socket,
       _ => ServiceType.none
     };
   }
@@ -95,6 +98,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.ads] = Ads();
     _map[ServiceType.games] = Games();
     _map[ServiceType.connection] = HttpConnection();
+    _map[ServiceType.socket] = NoobSocket();
     _map[ServiceType.device] = DeviceInfo();
     _map[ServiceType.localization] = Localization();
     _map[ServiceType.prefs] = Prefs();
@@ -120,6 +124,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
         BlocProvider.of<Services>(context)
             .add(ServicesEvent(ServicesInitState.initialize, null));
       }
+      _map[ServiceType.socket]!.initialize(args: [data.account]);
     } on RpcException catch (e) {
       if (e.statusCode == StatusCode.C154_INVALID_RESTORE_KEY) {
         LoadingData.restoreKey = null;
