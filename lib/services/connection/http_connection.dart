@@ -18,7 +18,6 @@ import '../../view/widgets/loaderwidget.dart';
 import '../iservices.dart';
 
 class HttpConnection extends IService {
-  static String baseURL = '';
   LoadingData loadData = LoadingData();
   Map<String, dynamic> _config = {};
 
@@ -66,6 +65,7 @@ class HttpConnection extends IService {
     }
     if (response!.statusCode == 200) {
       _config = json.decode(response.body);
+      LoadingData.baseURL = "http://${_config['ip']}";
       baseURL = "http://${_config['ip']}";
       LoaderWidget.baseURL = _config['assetsServer'];
       LoaderWidget.hashMap = Map.castFrom(_config['files']);
@@ -102,7 +102,7 @@ class HttpConnection extends IService {
       //     '{"game_version":"","device_name":"Ali MacBook Pro","os_version":"13.0.0","model":"KFJWI","udid":"e6ac281eae92abd4581116b380da33a8","store_type":"parsian","os_type":2}';
       var json = jsonEncode(params);
       data = id.needsEncryption ? {'edata': json.xorEncrypt()} : params;
-      final url = Uri.parse('$baseURL/${id.value}');
+      final url = Uri.parse('${LoadingData.baseURL}/${id.value}');
       log("${url.toString()} $json");
       if (id.requestType == HttpRequestType.get) {
         response = await http.get(url, headers: headers);
