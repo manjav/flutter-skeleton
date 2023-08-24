@@ -15,8 +15,7 @@ import '../route_provider.dart';
 import '../widgets.dart';
 
 class RedeemGiftPopup extends AbstractPopup {
-  const RedeemGiftPopup({super.key, required super.args})
-      : super(Routes.popupRedeemGift);
+  RedeemGiftPopup({super.key}) : super(Routes.popupRedeemGift, args: {});
 
   @override
   createState() => _RewardPopupState();

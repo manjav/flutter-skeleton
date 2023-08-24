@@ -16,8 +16,7 @@ import '../route_provider.dart';
 import 'ipopup.dart';
 
 class CollectionPopup extends AbstractPopup {
-  const CollectionPopup({super.key, required super.args})
-      : super(Routes.popupCollection);
+  CollectionPopup({super.key}) : super(Routes.popupCollection, args: {});
 
   @override
   createState() => _CollectionPopupState();

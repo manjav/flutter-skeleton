@@ -24,8 +24,7 @@ import '../widgets/loaderwidget.dart';
 import '../widgets/skinnedtext.dart';
 
 class OpponentsPopup extends AbstractPopup {
-  const OpponentsPopup({super.key, required super.args})
-      : super(Routes.popupOpponents);
+  OpponentsPopup({super.key}) : super(Routes.popupOpponents, args: {});
 
   @override
   createState() => _OpponentsPopupState();

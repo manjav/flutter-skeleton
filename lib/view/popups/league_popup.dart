@@ -20,8 +20,7 @@ import '../widgets.dart';
 import '../widgets/skinnedtext.dart';
 
 class LeaguePopup extends AbstractPopup {
-  const LeaguePopup({super.key, required super.args})
-      : super(Routes.popupLeague);
+  LeaguePopup({super.key}) : super(Routes.popupLeague, args: {});
 
   @override
   createState() => _LeaguePopupState();

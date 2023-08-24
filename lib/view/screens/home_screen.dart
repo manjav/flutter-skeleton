@@ -20,7 +20,7 @@ import '../widgets/skinnedtext.dart';
 import 'iscreen.dart';
 
 class HomeScreen extends AbstractScreen {
-  HomeScreen({super.key}) : super(Routes.home);
+  HomeScreen({super.key}) : super(Routes.home, args: {});
 
   @override
   createState() => _HomeScreenState();

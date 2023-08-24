@@ -21,8 +21,7 @@ import 'iscreen.dart';
 enum FightMode { quest, battle }
 
 class FightOutcomeScreen extends AbstractScreen {
-  final Map<String, dynamic> result;
-  FightOutcomeScreen(super.mode, this.result, {super.key});
+  FightOutcomeScreen(super.mode, {required super.args, super.key});
   @override
   createState() => _FightOutcomeScreenState();
 }

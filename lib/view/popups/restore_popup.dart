@@ -15,8 +15,7 @@ import '../widgets.dart';
 import '../widgets/skinnedtext.dart';
 
 class RestorePopup extends AbstractPopup {
-  const RestorePopup({super.key, required super.args})
-      : super(Routes.popupRestore);
+  RestorePopup({super.key}) : super(Routes.popupRestore, args: {});
 
   @override
   createState() => _RestorePopupState();

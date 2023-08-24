@@ -20,7 +20,7 @@ import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
 
 class HeroPopup extends AbstractPopup {
-  const HeroPopup({super.key, required super.args}) : super(Routes.popupHero);
+  HeroPopup({super.key}) : super(Routes.popupHero, args: {});
 
   @override
   createState() => _HeroPopupState();

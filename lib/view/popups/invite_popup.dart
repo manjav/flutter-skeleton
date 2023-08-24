@@ -13,8 +13,7 @@ import '../widgets.dart';
 import '../widgets/skinnedtext.dart';
 
 class InvitePopup extends AbstractPopup {
-  const InvitePopup({super.key, required super.args})
-      : super(Routes.popupInvite);
+  InvitePopup({super.key}) : super(Routes.popupInvite, args: {});
 
   @override
   createState() => _InvitePopupState();

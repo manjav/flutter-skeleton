@@ -18,8 +18,8 @@ import '../building_mixin.dart';
 import '../route_provider.dart';
 
 class TreasuryBuildingPopup extends AbstractPopup {
-  const TreasuryBuildingPopup({super.key, required super.args})
-      : super(Routes.popupTreasuryBuilding);
+  TreasuryBuildingPopup({super.key})
+      : super(Routes.popupTreasuryBuilding, args: {});
 
   @override
   createState() => _TreasuryBuildingPopupState();

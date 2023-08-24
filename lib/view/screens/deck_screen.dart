@@ -31,7 +31,7 @@ import '../widgets/loaderwidget.dart';
 
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;
-  DeckScreen({this.opponent, super.key}) : super(Routes.deck);
+  DeckScreen({this.opponent, super.key}) : super(Routes.deck, args: {});
   @override
   createState() => _DeckScreenState();
 }

@@ -7,7 +7,7 @@ import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 
 class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Routes.home);
+  LoadingScreen({super.key}) : super(Routes.home, args: {});
 
   @override
   createState() => _LoadingScreenState();

@@ -19,8 +19,7 @@ import '../route_provider.dart';
 import '../widgets.dart';
 
 class RankingPopup extends AbstractPopup {
-  const RankingPopup({super.key, required super.args})
-      : super(Routes.popupRanking);
+  RankingPopup({super.key}) : super(Routes.popupRanking, args: {});
 
   @override
   createState() => _RankingPopupState();

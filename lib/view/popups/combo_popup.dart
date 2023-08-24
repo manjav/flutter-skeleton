@@ -18,7 +18,7 @@ import '../widgets/indicator.dart';
 import '../widgets/loaderwidget.dart';
 
 class ComboPopup extends AbstractPopup {
-  const ComboPopup({super.key, required super.args}) : super(Routes.popupCombo);
+  ComboPopup({super.key}) : super(Routes.popupCombo, args: {});
 
   @override
   createState() => _ComboPopupState();

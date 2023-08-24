@@ -11,9 +11,11 @@ import '../route_provider.dart';
 
 class AbstractScreen extends StatefulWidget {
   final Routes type;
+  final Map<String, dynamic> args;
   final String? sfx;
   AbstractScreen(
     this.type, {
+    required this.args,
     Key? key,
     this.sfx,
   }) : super(key: key ??= Key(type.name));

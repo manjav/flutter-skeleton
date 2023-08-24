@@ -15,8 +15,7 @@ import '../widgets.dart';
 import '../widgets/skinnedtext.dart';
 
 class SettingsPopup extends AbstractPopup {
-  const SettingsPopup({super.key, required super.args})
-      : super(Routes.popupSettings);
+  SettingsPopup({super.key}) : super(Routes.popupSettings, args: {});
 
   @override
   createState() => _SettingsPopupState();

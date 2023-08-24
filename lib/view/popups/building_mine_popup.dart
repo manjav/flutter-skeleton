@@ -14,8 +14,7 @@ import '../building_supportive_mixin.dart';
 import '../route_provider.dart';
 
 class MineBuildingPopup extends AbstractPopup {
-  const MineBuildingPopup({super.key, required super.args})
-      : super(Routes.popupMineBuilding);
+  MineBuildingPopup({super.key}) : super(Routes.popupMineBuilding, args: {});
 
   @override
   createState() => _MineBuildingPopupState();

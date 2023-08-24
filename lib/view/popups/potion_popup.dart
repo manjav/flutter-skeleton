@@ -17,8 +17,7 @@ import '../widgets.dart';
 import '../widgets/skinnedtext.dart';
 
 class PotionPopup extends AbstractPopup {
-  const PotionPopup({super.key, required super.args})
-      : super(Routes.popupPotion);
+  PotionPopup({super.key}) : super(Routes.popupPotion, args: {});
 
   @override
   createState() => _PotionPopupState();

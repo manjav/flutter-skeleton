@@ -24,8 +24,7 @@ import 'iscreen.dart';
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [27, 10, 0, 10, 10, 1];
-  final Map<String, dynamic>? args;
-  LiveBattleScreen({super.key, this.args}) : super(Routes.livebattle);
+  LiveBattleScreen({required super.args, super.key}) : super(Routes.livebattle);
 
   @override
   createState() => _LiveBattleScreenState();
@@ -53,7 +52,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   @override
   void initState() {
     // ,{"battle_id":42224570,"help_cost":5464}
-    _battleId = widget.args != null ? widget.args!["battle_id"] ?? 0 : 0;
+    _battleId = widget.args["battle_id"] ?? 0;
     LiveBattleScreen.deadlines = [27, 10, 0, 10, 10, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _deckCards.value = _account.getReadyCards();

@@ -8,8 +8,7 @@ import '../widgets.dart';
 import 'iscreen.dart';
 
 class OpenPackScreen extends AbstractScreen {
-  final Map<String, dynamic> args;
-  OpenPackScreen(this.args, {super.key}) : super(Routes.openPack);
+  OpenPackScreen({required super.args, super.key}) : super(Routes.openPack);
 
   @override
   createState() => _OpenPackScreenState();
