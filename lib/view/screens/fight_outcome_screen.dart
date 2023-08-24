@@ -5,6 +5,7 @@ import 'package:rive/rive.dart';
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
+import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -219,6 +220,10 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
   }
 
   Widget? _prizeItemBuilder(String type, int value) {
+    if (type == "league_bonus") {
+      type =
+          "league_${LeagueData.getIndices(_account.get(AccountField.league_id)).$1}";
+    }
     return Opacity(
         opacity: (_animationController.value - 1.2).clamp(0, 1),
         child: Row(children: [
