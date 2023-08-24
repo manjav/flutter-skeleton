@@ -42,6 +42,10 @@ class NoobSocket extends IService {
     var b64 = utf8.fuse(base64);
     message = message.substring(startIndex + 15, endIndex);
     message = b64.decode(message.xorDecrypt(secret: _secret));
+    // if (!message.contains("player_status")) print(message);
+    // var nm = NoobMessage(jsonDecode(message));
+    // var o = Opponent.list.where((o) => o.id == nm.playerId);
+    // log("${o.length}");
     onMessageReceive
         ?.call(NoobMessage.getProperMessage(_account, jsonDecode(message)));
   }
@@ -53,7 +57,7 @@ class NoobSocket extends IService {
     log(cmdMessage);
     _socketConnection.sendMessage(cmdMessage);
   }
-  
+
   void subscribe(String channel) => _run(NoobCommand.subscribe, channel);
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
 }

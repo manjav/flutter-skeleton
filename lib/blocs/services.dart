@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/core/rpc_data.dart';
-import '../../services/connection/socket.dart';
 import '../data/core/result.dart';
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
 import '../services/connection/http_connection.dart';
+import '../services/connection/noob_socket.dart';
 import '../services/deviceinfo.dart';
 import '../services/games.dart';
 import '../services/iservices.dart';

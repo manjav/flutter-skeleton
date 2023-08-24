@@ -10,7 +10,7 @@ import '../../data/core/card.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
-import '../../services/connection/socket.dart';
+import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/card_holder.dart';
