@@ -21,6 +21,10 @@ enum RpcId {
   scout,
   quest,
   battle,
+  battleLive,
+  battleHelp,
+  battleSetCard,
+  triggerAbility,
 
   // Building
   upgrade,
@@ -51,6 +55,10 @@ extension RpcIdEx on RpcId {
       RpcId.quest => "battle/quest",
       RpcId.battle => "battle/battle",
       RpcId.getOpponents => "battle/getopponents",
+      RpcId.battleLive => "live-battle/livebattle",
+      RpcId.battleHelp => "live-battle/help",
+      RpcId.battleSetCard => "live-battle/setcardforlivebattle",
+      RpcId.triggerAbility => "live-battle/triggerability",
       RpcId.playerLoad => "player/load",
       RpcId.deposit => "player/deposittobank",
       RpcId.witdraw => "player/withdrawfrombank",
@@ -112,4 +120,8 @@ enum RpcParams {
   rounds,
   // Shop
   id,
+  // Battle
+  battle_id,
+  card,
+  round,
 }
