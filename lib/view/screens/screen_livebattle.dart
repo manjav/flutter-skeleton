@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../blocs/services.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/infra.dart';
+import '../../data/core/rpc.dart';
+import '../../services/connection/http_connection.dart';
+import '../../services/connection/socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/card_holder.dart';
@@ -20,13 +24,14 @@ import 'iscreen.dart';
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [27, 10, 0, 10, 10, 1];
-  LiveBattleScreen({super.key}) : super(Routes.livebattle);
+  final Map<String, dynamic>? args;
+  LiveBattleScreen({super.key, this.args}) : super(Routes.livebattle);
 
   @override
   createState() => _LiveBattleScreenState();
 }
 
-class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
+class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   late Account _account;
   late PageController _pageController;
   final SelectedCards _mySlots = SelectedCards([null, null, null, null, null]);
@@ -37,6 +42,7 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
   final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));
   late Timer _timer;
   double _seconds = 0;
+  int _battleId = 0;
   int _maxPower = 0;
 
   @override
@@ -46,6 +52,8 @@ class _LiveBattleScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   void initState() {
+    // ,{"battle_id":42224570,"help_cost":5464}
+    _battleId = widget.args != null ? widget.args!["battle_id"] ?? 0 : 0;
     LiveBattleScreen.deadlines = [27, 10, 0, 10, 10, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _deckCards.value = _account.getReadyCards();

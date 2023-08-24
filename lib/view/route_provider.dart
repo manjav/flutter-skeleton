@@ -66,7 +66,7 @@ extension RouteProvider on Routes {
       "/questOutcome" => FightOutcomeScreen(Routes.questOutcome, args ?? {}),
       "/battleOutcome" => FightOutcomeScreen(Routes.battleOutcome, args ?? {}),
       "/openPack" => OpenPackScreen(args ?? {}),
-      "/livebattle" => LiveBattleScreen(),
+      "/livebattle" => LiveBattleScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
       "/popupCardMerge" => CardMergePopup(args: args ?? {}),
