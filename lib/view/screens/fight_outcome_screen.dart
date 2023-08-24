@@ -20,13 +20,13 @@ import 'iscreen.dart';
 
 enum FightMode { quest, battle }
 
-class FightOutcomeScreen extends AbstractScreen {
-  FightOutcomeScreen(super.mode, {required super.args, super.key});
+class AttackOutScreen extends AbstractScreen {
+  AttackOutScreen(super.mode, {required super.args, super.key});
   @override
-  createState() => _FightOutcomeScreenState();
+  createState() => _AttackOutScreenState();
 }
 
-class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
+class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
   bool _isWin = false;
   String _color = "green";
 
@@ -47,10 +47,10 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
     _animationController.forward();
 
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    _isWin = widget.result['outcome'];
+    _isWin = widget.args['outcome'];
     _color = _isWin ? "green" : "red";
-    if (widget.result["attacker_hero_benefits_info"].length > 0) {
-      var benefits = widget.result["attacker_hero_benefits_info"];
+    if (widget.args["attacker_hero_benefits_info"].length > 0) {
+      var benefits = widget.args["attacker_hero_benefits_info"];
       var map = <String, int>{
         "benefit_gold": benefits['gold_benefit'] ?? 0,
         "benefit_power": benefits['power_benefit'] ?? 0,
@@ -59,12 +59,12 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
       _heroBenefits = map.entries.toList();
     }
     _prizes = [
-      MapEntry("gold", widget.result['gold_added'] ?? 0),
-      MapEntry("xp", widget.result['xp_added'] ?? 0),
+      MapEntry("gold", widget.args['gold_added'] ?? 0),
+      MapEntry("xp", widget.args['xp_added'] ?? 0),
     ];
-    if (widget.type == Routes.battleOutcome) {
-      _prizes.add(MapEntry("league_bonus", widget.result['league_bonus'] ?? 0));
-      _prizes.add(MapEntry("seed", widget.result['seed_added'] ?? 0));
+    if (widget.type == Routes.battleOut) {
+      _prizes.add(MapEntry("league_bonus", widget.args['league_bonus'] ?? 0));
+      _prizes.add(MapEntry("seed", widget.args['seed_added'] ?? 0));
     }
     super.initState();
   }
@@ -165,7 +165,7 @@ class _FightOutcomeScreenState extends AbstractScreenState<FightOutcomeScreen> {
                   ],
                 ),
                 onPressed: () {
-                  if (widget.type == Routes.battleOutcome) {
+                  if (widget.type == Routes.battleOut) {
                     Navigator.pop(context);
                   } else {
                     Navigator.pushReplacementNamed(

@@ -266,9 +266,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
           .convert(utf8.encode("${account.get<int>(AccountField.q)}"))
           .toString()
     };
-    var route =
-        widget.opponent == null ? Routes.questOutcome : Routes.battleOutcome;
-    if (route == Routes.battleOutcome) {
+    var route = widget.opponent == null ? Routes.questOut : Routes.battleOut;
+    if (route == Routes.battleOut) {
       params[RpcParams.opponent_id.name] = widget.opponent!.id;
       params[RpcParams.attacks_in_today.name] =
           widget.opponent!.todayAttacksCount;

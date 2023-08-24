@@ -29,8 +29,8 @@ import 'screens/screen_open_pack.dart';
 enum Routes {
   none,
   deck,
-  questOutcome,
-  battleOutcome,
+  questOut,
+  battleOut,
   home,
   loading,
   livebattle,
@@ -63,10 +63,8 @@ extension RouteProvider on Routes {
     return switch (routeName) {
       "/home" => HomeScreen(),
       "/deck" => DeckScreen(opponent: args?['opponent']),
-      "/questOutcome" =>
-        FightOutcomeScreen(Routes.questOutcome, args: args ?? {}),
-      "/battleOutcome" =>
-        FightOutcomeScreen(Routes.battleOutcome, args: args ?? {}),
+      "/questOut" => AttackOutScreen(Routes.questOut, args: args ?? {}),
+      "/battleOut" => AttackOutScreen(Routes.battleOut, args: args ?? {}),
       "/openPack" => OpenPackScreen(args: args ?? {}),
       "/livebattle" => LiveBattleScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
