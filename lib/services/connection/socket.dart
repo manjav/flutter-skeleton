@@ -15,6 +15,7 @@ extension NoobCommandExtension on NoobCommand {
 }
 
 class NoobSocket extends IService {
+  Function(NoobMessage)? onMessageReceive;
   late TcpSocketConnection _socketConnection;
 
   late Account _account;
@@ -41,7 +42,8 @@ class NoobSocket extends IService {
     var b64 = utf8.fuse(base64);
     message = message.substring(startIndex + 15, endIndex);
     message = b64.decode(message.xorDecrypt(secret: _secret));
-    log(message);
+    onMessageReceive
+        ?.call(NoobMessage.getProperMessage(_account, jsonDecode(message)));
   }
 
   void _run(NoobCommand command, String message) {
@@ -54,4 +56,41 @@ class NoobSocket extends IService {
   
   void subscribe(String channel) => _run(NoobCommand.subscribe, channel);
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
+}
+
+enum NoobMessages { playerStatus, battleUpdate }
+
+class NoobMessage {
+  static NoobMessage getProperMessage(
+      Account account, Map<String, dynamic> map) {
+    return switch (map["push_message_type"] ?? "") {
+      "battle_update" => NoobBattleMessage(account, map),
+      _ => NoobStatusMessage(account, map),
+    };
+  }
+
+  late NoobMessages type;
+  NoobMessage();
+}
+
+class NoobStatusMessage extends NoobMessage {
+  late int playerId, status;
+  NoobStatusMessage(Account account, Map<String, dynamic> map) {
+    type = NoobMessages.playerStatus;
+    var id = map["player_id"];
+    playerId = (id is String) ? int.parse(id) : id;
+    status = map["status"];
+  }
+}
+
+class NoobBattleMessage extends NoobMessage {
+  late int id, round, ownerTeamId;
+  AccountCard? card;
+  NoobBattleMessage(Account account, Map<String, dynamic> map) {
+    type = NoobMessages.battleUpdate;
+    id = map["id"];
+    round = map["round"];
+    ownerTeamId = map["owner_team_id"];
+    card = map["card"] == null ? null : AccountCard(account, map["card"]);
+  }
 }
