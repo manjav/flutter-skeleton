@@ -158,7 +158,7 @@ class Account extends StringMap<dynamic> {
 
     var accountCards = <int, AccountCard>{};
     for (var card in map['cards']) {
-      accountCards[card['id']] = AccountCard(this, card, loadingData.baseCards);
+      accountCards[card['id']] = AccountCard(this, card);
     }
     map['cards'] = accountCards;
 
@@ -324,7 +324,7 @@ class Account extends StringMap<dynamic> {
     var cards = <AccountCard>[];
     if (data.containsKey("achieveCards")) {
       for (var card in data["achieveCards"]) {
-        var accountCard = AccountCard(this, card, loadingData.baseCards);
+        var accountCard = AccountCard(this, card);
         getCards()[card['id']] = accountCard;
         cards.add(accountCard);
       }

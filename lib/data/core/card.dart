@@ -111,16 +111,15 @@ class Cards extends StringMap<CardData> {
 }
 
 class AccountCard {
-  late int id;
-  late int power;
   late CardData base;
-  late int lastUsedAt;
   final Account account;
   bool isDeployed = false;
-  AccountCard(this.account, Map map, Cards cards) {
+  late int id, power, lastUsedAt, ownerId;
+  AccountCard(this.account, Map map, {int? ownerId}) {
     id = map['id'] ?? -1;
     power = map['power'];
-    base = cards.get("${map['base_card_id']}");
+    this.ownerId = ownerId ?? account.get(AccountField.id);
+    base = account.loadingData.baseCards.get("${map['base_card_id']}");
     lastUsedAt = map['last_used_at'] ?? 0;
   }
 

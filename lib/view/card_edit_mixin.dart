@@ -133,7 +133,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
       var oldCard = account.getCards()[newCard["id"]];
       if (oldCard == null) {
         account.map['cards'][newCard["id"]] =
-            AccountCard(account, newCard, account.loadingData.baseCards);
+            AccountCard(account, newCard);
       } else {
         oldCard.power = newCard["power"];
         oldCard.lastUsedAt = newCard["last_used_at"];

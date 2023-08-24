@@ -99,13 +99,10 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
       if (selectedCards.value.length >= 2) {
         var card = selectedCards.value[0]!;
         var nextBaseCard = _findNextLevel(card.base);
-        var nextCard = AccountCard(
-            account,
-            {
-              "power": _getMergePower(card, selectedCards.value[1]!),
-              "base_card_id": nextBaseCard!.get(CardFields.id)
-            },
-            account.loadingData.baseCards);
+        var nextCard = AccountCard(account, {
+          "power": _getMergePower(card, selectedCards.value[1]!),
+          "base_card_id": nextBaseCard!.get(CardFields.id)
+        });
         return _getCardView(nextCard, size);
       }
       return Asset.load<Image>("card_placeholder", width: size);
