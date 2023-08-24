@@ -183,6 +183,7 @@ class LeagueData {
 enum OpponentMode { allise, axis }
 
 class Opponent extends Player {
+  static List<Opponent> list = [];
   static int scoutCost = 0;
   static Map<String, dynamic> _attackLogs = {};
   int gold = 0,
