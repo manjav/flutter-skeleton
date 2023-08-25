@@ -53,6 +53,9 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void initState() {
     // ,{"battle_id":42224570,"help_cost":5464}
     _battleId = widget.args["battle_id"] ?? 0;
+    BlocProvider.of<Services>(context).get<NoobSocket>().onMessageReceive =
+        _onNoobMessageReceive;
+
     LiveBattleScreen.deadlines = [27, 10, 0, 10, 10, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _deckCards.value = _account.getReadyCards();
@@ -94,10 +97,16 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             LiveHero(_account, -0.35, _enemySlots),
             LiveHero(_account, 0.45, _mySlots),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
+            Positioned(
+                width: 440.d,
+                bottom: 4.d,
+                height: 60,
+                child: Widgets.skinnedButton(
+                    label: ">", onPressed: () => Navigator.pop(context)))
           ],
         ));
   }
-  
+
   void _onDeckFocus(int index, AccountCard focusedCard) {
     var slot = _slotState.value;
     if (slot.i == 5) return;
@@ -108,13 +117,27 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       _mySlots.setAtCard(slot.i, focusedCard);
       if (_mySlots.value[2] != null && !_mySlots.value[2]!.isDeployed) {
         _mySlots.setAtCard(2, null);
-    }
+      }
     }
     var powerBalance = _account.calculatePower(_mySlots.value);
     _powerBalance.value = powerBalance;
   }
 
   void _onDeckSelect(int index, AccountCard selectedCard) {
+    try {
+      var params = {
+        RpcParams.battle_id.name: _battleId,
+        RpcParams.card.name: selectedCard.id,
+        RpcParams.round.name:
+            selectedCard.base.isHero ? 5 : _slotState.value.i + 1,
+      };
+      BlocProvider.of<Services>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.battleSetCard, params: params);
+    } finally {}
+  }
+
+  _deployCard(int index, AccountCard selectedCard) {
     var slot = _slotState.value;
     if (slot.i == 5) return;
     selectedCard.isDeployed = true;
@@ -167,6 +190,16 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   _onNoobMessageReceive(NoobMessage message) {
     if (message.type != NoobMessages.battleUpdate) {
       return;
+    }
+    var battleMessage = message as NoobBattleMessage;
+    var slotIndex = battleMessage.round == 5 ? 2 : battleMessage.round - 1;
+    if (battleMessage.ownerTeamId == _account.get(AccountField.id)) {
+      var index =
+          _deckCards.value.indexWhere((c) => c!.id == battleMessage.card!.id);
+      _deckCards.value[index]!.lastUsedAt = battleMessage.card!.lastUsedAt;
+      _deployCard(index, _deckCards.value[index]!);
+    } else {
+      _mySlots.setAtCard(slotIndex, battleMessage.card);
     }
   }
 
