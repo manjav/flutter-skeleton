@@ -164,10 +164,18 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _timer.cancel();
   }
 
+  _onNoobMessageReceive(NoobMessage message) {
+    if (message.type != NoobMessages.battleUpdate) {
+      return;
+    }
+  }
+
   @override
   void dispose() {
     _timer.cancel();
     _pageController.dispose();
+    BlocProvider.of<Services>(context).get<NoobSocket>().onMessageReceive =
+        null;
     super.dispose();
   }
 }
