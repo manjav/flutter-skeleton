@@ -135,7 +135,7 @@ class LeagueData {
       fallingRank = 0,
       currentBonus = 0,
       nextBonus = 0;
-  double rewardAvgCardPower = 0.0;
+  num rewardAvgCardPower = 0.0;
 
   List<List<int>> winnerRanges = [];
   List<LeagueRank> list = [];
