@@ -125,7 +125,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
-      Buildings.base => Routes.livebattle,
+      // Buildings.base => Routes.livebattle,
       _ => Routes.none,
     };
     if (type == Routes.none) {
