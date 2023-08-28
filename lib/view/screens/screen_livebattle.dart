@@ -192,14 +192,17 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       return;
     }
     var battleMessage = message as NoobBattleMessage;
+    if (battleMessage.id != _battleId) {
+      return;
+    }
     var slotIndex = battleMessage.round == 5 ? 2 : battleMessage.round - 1;
-    if (battleMessage.ownerTeamId == _account.get(AccountField.id)) {
+    if (battleMessage.card!.ownerId == _account.get(AccountField.id)) {
       var index =
           _deckCards.value.indexWhere((c) => c!.id == battleMessage.card!.id);
       _deckCards.value[index]!.lastUsedAt = battleMessage.card!.lastUsedAt;
       _deployCard(index, _deckCards.value[index]!);
     } else {
-      _mySlots.setAtCard(slotIndex, battleMessage.card);
+      _enemySlots.setAtCard(slotIndex, battleMessage.card);
     }
   }
 
