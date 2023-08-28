@@ -309,9 +309,23 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     } finally {}
   }
 
-  _attack() {
-    _selectedOpponent.value.increaseAttacksCount();
+  _attack() async {
+    var opponent = _selectedOpponent.value;
+    if (_selectedOpponent.value.status == 1) {
+      try {
+        var result = await BlocProvider.of<ServicesBloc>(context)
+            .get<HttpConnection>()
+            .tryRpc(context, RpcId.battleLive,
+                params: {RpcParams.opponent_id.name: opponent.id});
+        if (mounted) {
+          Navigator.pushNamed(context, Routes.livebattle.routeName,
+              arguments: result);
+        }
+      } finally {}
+      return;
+    }
+    opponent.increaseAttacksCount();
     Navigator.pushNamed(context, Routes.deck.routeName,
-        arguments: {"opponent": _selectedOpponent.value});
+        arguments: {"opponent": opponent});
   }
 }
