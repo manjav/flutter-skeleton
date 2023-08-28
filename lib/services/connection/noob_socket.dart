@@ -46,12 +46,10 @@ class NoobSocket extends IService {
     var b64 = utf8.fuse(base64);
     message = message.substring(startIndex + 15, endIndex);
     message = b64.decode(message.xorDecrypt(secret: _secret));
-    // if (!message.contains("player_status")) print(message);
-    // var nm = NoobMessage(jsonDecode(message));
-    // var o = Opponent.list.where((o) => o.id == nm.playerId);
-    // log("${o.length}");
-    onMessageReceive
-        ?.call(NoobMessage.getProperMessage(_account, jsonDecode(message)));
+    var noobMessage =
+        NoobMessage.getProperMessage(_account, jsonDecode(message));
+    _updateStatus(noobMessage);
+    onMessageReceive?.call(noobMessage);
   }
 
   void _run(NoobCommand command, String message) {
@@ -64,6 +62,21 @@ class NoobSocket extends IService {
 
   void subscribe(String channel) => _run(NoobCommand.subscribe, channel);
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
+
+  void _updateStatus(NoobMessage noobMessage) {
+    if (noobMessage.type != NoobMessages.playerStatus) {
+      return;
+    }
+    var statusMessage = noobMessage as NoobStatusMessage;
+
+    var index =
+        _opponents.list!.indexWhere((o) => o.id == statusMessage.playerId);
+    if (index > -1) {
+      _opponents.list![index].status = statusMessage.status;
+      _opponents.add(SetOpponents(list: _opponents.list!));
+      log("${noobMessage.playerId} ==>  ${noobMessage.status}");
+    }
+  }
 }
 
 enum NoobMessages { none, playerStatus, battleUpdate, battleFinished }
