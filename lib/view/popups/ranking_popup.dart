@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
@@ -95,7 +95,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
   _loadRanking(RpcId api) async {
     if (Ranks.lists[api] != null) return;
     try {
-      var data = await BlocProvider.of<Services>(context)
+      var data = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, api);
       if (api == RpcId.rankingGlobal) {

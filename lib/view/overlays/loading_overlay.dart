@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/result.dart';
 import '../../main.dart';
 import '../../services/deviceinfo.dart';
@@ -48,7 +48,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
           _closeInput = controller!.findInput<bool>('close') as SMIBool;
           artboard.addController(controller);
         }, fit: BoxFit.fitWidth),
-        BlocConsumer<Services, ServicesState>(
+        BlocConsumer<ServicesBloc, ServicesState>(
           builder: (context, state) => const SizedBox(),
           listener: (context, state) async {
             if (state.initState == ServicesInitState.complete) {

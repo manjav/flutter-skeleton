@@ -5,7 +5,7 @@ import '../../services/deviceinfo.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
 import '../blocs/account_bloc.dart';
-import '../blocs/services.dart';
+import '../blocs/services_bloc.dart';
 import '../data/core/account.dart';
 import '../data/core/building.dart';
 import '../data/core/rpc.dart';
@@ -83,7 +83,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
       params[RpcParams.tribe_id.name] = tribe.get<int>(BuildingField.id);
     }
     try {
-      var data = await BlocProvider.of<Services>(context)
+      var data = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.upgrade, params: params);
       if (!mounted) return;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';
@@ -67,7 +67,7 @@ class _IndicatorState extends State<Indicator>
                     case AccountField.gold:
                     case AccountField.nectar:
                       Navigator.popUntil(context, (route) => route.isFirst);
-                      BlocProvider.of<Services>(context)
+                      BlocProvider.of<ServicesBloc>(context)
                           .add(ServicesEvent(ServicesInitState.changeTab, 0));
 
                       log("Go to shop");

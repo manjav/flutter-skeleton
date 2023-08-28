@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/infra.dart';
@@ -53,7 +53,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void initState() {
     // ,{"battle_id":42224570,"help_cost":5464}
     _battleId = widget.args["battle_id"] ?? 0;
-    BlocProvider.of<Services>(context).get<NoobSocket>().onMessageReceive =
+    BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onMessageReceive =
         _onNoobMessageReceive;
 
     LiveBattleScreen.deadlines = [27, 10, 0, 10, 10, 1];

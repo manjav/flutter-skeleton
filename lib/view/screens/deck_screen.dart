@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/ranking.dart';
@@ -259,7 +259,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       ((account.get<int>(AccountField.total_quests) / 10) % 1 == 0);
 
   _attack(Account account) async {
-    var bloc = BlocProvider.of<Services>(context);
+    var bloc = BlocProvider.of<ServicesBloc>(context);
     var params = <String, dynamic>{
       RpcParams.cards.name: _selectedCards.getIds(),
       RpcParams.check.name: md5

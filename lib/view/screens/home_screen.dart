@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -41,7 +41,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
-    var bloc = BlocProvider.of<Services>(context);
+    var bloc = BlocProvider.of<ServicesBloc>(context);
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
@@ -94,7 +94,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
     // Handle music toggle switch
     if (setting == Pref.music) {
-      var sounds = BlocProvider.of<Services>(context).get<Sounds>();
+      var sounds = BlocProvider.of<ServicesBloc>(context).get<Sounds>();
       if (setting.getBool()) {
         sounds.playMusic();
       } else {

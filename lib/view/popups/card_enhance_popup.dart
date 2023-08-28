@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
@@ -161,7 +161,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
       RpcParams.sacrifices.name: selectedCards.getIds()
     };
     try {
-      var result = await BlocProvider.of<Services>(context)
+      var result = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.enhanceCard, params: params);
       updateAccount(result);
@@ -245,7 +245,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   _enhanceMax() async {
     try {
-      var result = await BlocProvider.of<Services>(context)
+      var result = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.enhanceMax,
               params: {RpcParams.card_id.name: card.id});

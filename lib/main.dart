@@ -8,7 +8,7 @@ import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/sounds.dart';
 import 'blocs/account_bloc.dart';
-import 'blocs/services.dart';
+import 'blocs/services_bloc.dart';
 import 'services/theme.dart';
 import 'view/route_provider.dart';
 import 'view/widgets/loaderwidget.dart';
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         state == AppLifecycleState.inactive) {
       // BlocProvider.of<Services>(context).get<Sounds>().stopAll();
     } else if (state == AppLifecycleState.resumed) {
-      BlocProvider.of<Services>(context).get<Sounds>().playMusic();
+      BlocProvider.of<ServicesBloc>(context).get<Sounds>().playMusic();
     }
   }
 
@@ -74,9 +74,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                  create: (context) =>
-                      Services(firebaseAnalytics: MyApp._firebaseAnalytics)),
-              BlocProvider(create: (context) => AccountBloc())
+                  create: (context) => ServicesBloc(
+                      firebaseAnalytics: MyApp._firebaseAnalytics)),
+              BlocProvider(create: (context) => AccountBloc()),
             ],
             child: MaterialApp(
                 navigatorObservers: [MyApp._observer],

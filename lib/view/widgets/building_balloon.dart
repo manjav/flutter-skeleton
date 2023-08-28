@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
@@ -50,7 +50,7 @@ class _BuildingBalloonState extends State<BuildingBalloon> {
     }
     var params = {RpcParams.client.name: Platform.operatingSystem};
     try {
-      var result = await BlocProvider.of<Services>(context)
+      var result = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.collectGold, params: params);
       if (result is List) return;

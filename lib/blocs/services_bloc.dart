@@ -17,6 +17,7 @@ import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
 import 'account_bloc.dart';
+import 'opponents_bloc.dart';
 
 enum ServicesInitState {
   none,
@@ -65,7 +66,7 @@ class ServicesUpdate extends ServicesState {
 
 //--------------------------------------------------------
 
-class Services extends Bloc<ServicesEvent, ServicesState> {
+class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   FirebaseAnalytics firebaseAnalytics;
   final Map<ServiceType, IService> _map = {};
 
@@ -91,7 +92,7 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     emit(ServicesUpdate(event.initState, event.data));
   }
 
-  Services({required this.firebaseAnalytics})
+  ServicesBloc({required this.firebaseAnalytics})
       : super(ServicesInit(ServicesInitState.none, null)) {
     on<ServicesEvent>(updateService);
 
@@ -116,21 +117,21 @@ class Services extends Bloc<ServicesEvent, ServicesState> {
     await _map[ServiceType.trackers]!.initialize();
 
     try {
+      // Load server data
       var data =
           await _map[ServiceType.connection]!.initialize() as LoadingData;
       if (context.mounted) {
         BlocProvider.of<AccountBloc>(context)
             .add(SetAccount(account: data.account));
-        BlocProvider.of<Services>(context)
+        BlocProvider.of<ServicesBloc>(context)
             .add(ServicesEvent(ServicesInitState.initialize, null));
       }
-      _map[ServiceType.socket]!.initialize(args: [data.account]);
     } on RpcException catch (e) {
       if (e.statusCode == StatusCode.C154_INVALID_RESTORE_KEY) {
         LoadingData.restoreKey = null;
       }
       if (context.mounted) {
-        BlocProvider.of<Services>(context)
+        BlocProvider.of<ServicesBloc>(context)
             .add(ServicesEvent(ServicesInitState.error, e));
       }
     }

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/localization.dart';
 import '../blocs/account_bloc.dart';
-import '../blocs/services.dart';
+import '../blocs/services_bloc.dart';
 import '../data/core/account.dart';
 import '../data/core/building.dart';
 import '../data/core/card.dart';
@@ -55,7 +55,7 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
       RpcParams.type.name: building.type.id
     };
     if (context.mounted) {
-      await BlocProvider.of<Services>(context)
+      await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.assignCard, params: params);
     }

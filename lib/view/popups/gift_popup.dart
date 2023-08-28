@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
@@ -62,7 +62,7 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
 
   _redeemGift() async {
     try {
-      var data = await BlocProvider.of<Services>(context)
+      var data = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.redeemGift,
               params: {RpcParams.code.name: _textController.text});

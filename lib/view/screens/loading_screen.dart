@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/services.dart';
+import '../../blocs/services_bloc.dart';
 import '../../view/screens/iscreen.dart';
 import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
@@ -17,7 +17,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void onRender(Duration timeStamp) {
     Overlays.insert(context, OverlayType.loading);
-    BlocProvider.of<Services>(context).initialize(context);
+    BlocProvider.of<ServicesBloc>(context).initialize(context);
   }
 
   @override
