@@ -95,6 +95,9 @@ class NoobBattleMessage extends NoobMessage {
     id = map["id"];
     round = map["round"];
     ownerTeamId = map["owner_team_id"];
-    card = map["card"] == null ? null : AccountCard(account, map["card"]);
+    card = map["card"] == null
+        ? null
+        : AccountCard(account, map["card"],
+            ownerId: map["card"]!["player_id"]!);
   }
 }
