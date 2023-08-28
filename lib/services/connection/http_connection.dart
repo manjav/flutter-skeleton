@@ -141,12 +141,10 @@ class HttpConnection extends IService {
     }
   }
 
-  Map<String, String>? _getDefaultHeader(
-      {Map<String, String>? headers, bool showLogs = true}) {
+  Map<String, String>? _getDefaultHeader({Map<String, String>? headers}) {
     if (!Platform.isAndroid && !Platform.isWindows /*&& buildType!="debug"*/) {
       return null;
     }
-    if (showLogs) log("getting default headers");
     headers = headers ?? {};
 
     headers["Content-Type"] = "application/x-www-form-urlencoded";
