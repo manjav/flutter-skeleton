@@ -66,25 +66,27 @@ class NoobSocket extends IService {
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
 }
 
-enum NoobMessages { playerStatus, battleUpdate }
+enum NoobMessages { none, playerStatus, battleUpdate, battleFinished }
 
 class NoobMessage {
   static NoobMessage getProperMessage(
       Account account, Map<String, dynamic> map) {
     return switch (map["push_message_type"] ?? "") {
       "battle_update" => NoobBattleMessage(account, map),
-      _ => NoobStatusMessage(account, map),
+      "player_status" => NoobStatusMessage(account, map),
+      "battle_finished" => NoobMessage(NoobMessages.battleFinished),
+      _ => NoobMessage(NoobMessages.none),
     };
   }
 
-  late NoobMessages type;
-  NoobMessage();
+  final NoobMessages type;
+  NoobMessage(this.type);
 }
 
 class NoobStatusMessage extends NoobMessage {
   late int playerId, status;
-  NoobStatusMessage(Account account, Map<String, dynamic> map) {
-    type = NoobMessages.playerStatus;
+  NoobStatusMessage(Account account, Map<String, dynamic> map)
+      : super(NoobMessages.playerStatus) {
     var id = map["player_id"];
     playerId = (id is String) ? int.parse(id) : id;
     status = map["status"];
@@ -94,8 +96,8 @@ class NoobStatusMessage extends NoobMessage {
 class NoobBattleMessage extends NoobMessage {
   late int id, round, ownerTeamId;
   AccountCard? card;
-  NoobBattleMessage(Account account, Map<String, dynamic> map) {
-    type = NoobMessages.battleUpdate;
+  NoobBattleMessage(Account account, Map<String, dynamic> map)
+      : super(NoobMessages.battleUpdate) {
     id = map["id"];
     round = map["round"];
     ownerTeamId = map["owner_team_id"];
