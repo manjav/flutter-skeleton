@@ -131,7 +131,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         RpcParams.round.name:
             selectedCard.base.isHero ? 5 : _slotState.value.i + 1,
       };
-      BlocProvider.of<Services>(context)
+      BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.battleSetCard, params: params);
     } finally {}

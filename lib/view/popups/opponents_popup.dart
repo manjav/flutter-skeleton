@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../blocs/opponents_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/ranking.dart';
@@ -61,15 +62,20 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   _findOpponents() async {
     var deltaTime = _account.now - _fetchAt;
-    if ((deltaTime > 60 && _requestsCount % 10 == 0) || deltaTime > 180) {
-    var data = await BlocProvider.of<Services>(context)
+    // if ((deltaTime > 60 && _requestsCount % 10 == 0) || deltaTime > 180) {
+    var data = await BlocProvider.of<ServicesBloc>(context)
         .get<HttpConnection>()
         .tryRpc(context, RpcId.getOpponents);
-    Opponent.list = Opponent.fromMap(data);
-    _fetchAt = _account.now;
+
+    var opponents = Opponent.fromMap(data);
+    if (mounted) {
+      BlocProvider.of<OpponentsBloc>(context)
+          .add(SetOpponents(list: opponents));
     }
+    _fetchAt = _account.now;
+    // }
     ++_requestsCount;
-    _selectedOpponent.value = Opponent.list[0];
+    _selectedOpponent.value = opponents[0];
     if (mounted) setState(() {});
   }
 
@@ -78,12 +84,15 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   @override
   contentFactory() {
+    return BlocBuilder<OpponentsBloc, OpponentsState>(
+        builder: (BuildContext context, OpponentsState state) {
     return Column(
         mainAxisSize: MainAxisSize.min,
-        children: [_maps(), _groups(), _buttons()]);
+          children: [_maps(state.list), _groups(), _buttons(state.list)]);
+    });
   }
 
-  _maps() {
+  _maps(List<Opponent> opponents) {
     return ClipRRect(
         borderRadius: BorderRadius.circular(32.d),
         child: SizedBox(
@@ -93,9 +102,9 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
               children: [
                 PageView.builder(
                     itemBuilder: _pageItemBuilder,
-                    itemCount: Opponent.list.length,
+                    itemCount: opponents.length,
                     onPageChanged: (value) =>
-                        _selectMap(value + 0.0, pageChange: false),
+                        _selectMap(opponents, value + 0.0, pageChange: false),
                     controller: _pageController),
                 ValueListenableBuilder<Opponent>(
                     valueListenable: _selectedOpponent,
@@ -236,7 +245,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             ])));
   }
 
-  _buttons() {
+  _buttons(List<Opponent> opponents) {
     return ValueListenableBuilder<Opponent>(
         valueListenable: _selectedOpponent,
         builder: (context, value, child) {
@@ -251,7 +260,8 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                     color: ButtonColor.green,
                     isEnable: value.index > 0,
                     child: Asset.load<Image>("ui_arrow_back", width: 68.d),
-                    onPressed: () => _selectMap(_pageController.page! - 1)),
+                    onPressed: () =>
+                        _selectMap(opponents, _pageController.page! - 1)),
                 SizedBox(width: 8.d),
                 Expanded(
                     child: Widgets.skinnedButton(
@@ -272,25 +282,26 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                     alignment: Alignment.center,
                     size: ButtonSize.medium,
                     color: ButtonColor.green,
-                    isEnable: value.index < Opponent.list.length - 1,
+                    isEnable: value.index < opponents.length - 1,
                     child: Asset.load<Image>("ui_arrow_forward", width: 68.d),
-                    onPressed: () => _selectMap(_pageController.page! + 1)),
+                    onPressed: () =>
+                        _selectMap(opponents, _pageController.page! + 1)),
               ]));
         });
   }
 
-  _selectMap(double page, {bool pageChange = true}) {
-    var index = page.clamp(0, Opponent.list.length - 1).round();
+  _selectMap(List<Opponent> opponents, double page, {bool pageChange = true}) {
+    var index = page.clamp(0, opponents.length - 1).round();
     if (pageChange) {
       _pageController.animateToPage(index,
           duration: const Duration(milliseconds: 700), curve: Curves.ease);
     }
-    _selectedOpponent.value = Opponent.list[index];
+    _selectedOpponent.value = opponents[index];
   }
 
   _scout() async {
     try {
-      await BlocProvider.of<Services>(context)
+      await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc<List>(context, RpcId.scout);
       _selectedOpponent.value.isRevealed = true;

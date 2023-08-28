@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 
+import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc_data.dart';
@@ -19,12 +20,15 @@ class NoobSocket extends IService {
   late TcpSocketConnection _socketConnection;
 
   late Account _account;
+  late OpponentsBloc _opponents;
+
   String get _secret => "floatint201412bool23string";
 
   @override
   initialize({List<Object>? args}) async {
     super.initialize(args: args);
     _account = args![0] as Account;
+    _opponents = args[1] as OpponentsBloc;
 
     _socketConnection =
         TcpSocketConnection(LoadingData.chatIp, LoadingData.chatPort);
