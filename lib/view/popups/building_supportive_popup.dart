@@ -14,8 +14,8 @@ import '../building_mixin.dart';
 import '../route_provider.dart';
 
 class SupportiveBuildingPopup extends AbstractPopup {
-  SupportiveBuildingPopup({super.key})
-      : super(Routes.popupSupportiveBuilding, args: {});
+  const SupportiveBuildingPopup({required super.args, super.key})
+      : super(Routes.popupSupportiveBuilding);
 
   @override
   createState() => _SupportiveBuildingPopupState();
