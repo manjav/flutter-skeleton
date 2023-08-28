@@ -13,11 +13,13 @@ class AbstractScreen extends StatefulWidget {
   final Routes type;
   final Map<String, dynamic> args;
   final String? sfx;
+  final bool closable;
   AbstractScreen(
     this.type, {
     required this.args,
     Key? key,
     this.sfx,
+    this.closable = true,
   }) : super(key: key ??= Key(type.name));
   @override
   createState() => AbstractScreenState();
@@ -46,20 +48,24 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     appBarElements.add(const Expanded(child: SizedBox()));
     appBarElements.addAll(appBarElementsRight());
     return SafeArea(
-        child: Scaffold(
-      body: Stack(children: [
-        Positioned(
-            top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
-        Positioned(
-            top: 32.d,
-            left: 54.d,
-            right: 32.d,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: appBarElements)),
-      ]),
-    ));
+      child: Scaffold(
+        body: WillPopScope(
+          onWillPop: () async => widget.closable,
+          child: Stack(children: [
+            Positioned(
+                top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
+            Positioned(
+                top: 32.d,
+                left: 54.d,
+                right: 32.d,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: appBarElements)),
+          ]),
+        ),
+      ),
+    );
   }
 
   List<Widget> appBarElementsLeft() {

@@ -24,7 +24,8 @@ import 'iscreen.dart';
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [27, 10, 0, 10, 10, 1];
-  LiveBattleScreen({required super.args, super.key}) : super(Routes.livebattle);
+  LiveBattleScreen({required super.args, super.key})
+      : super(Routes.livebattle, closable: false);
 
   @override
   createState() => _LiveBattleScreenState();
@@ -101,8 +102,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
                 width: 440.d,
                 bottom: 4.d,
                 height: 60,
-                child: Widgets.skinnedButton(
-                    label: ">", onPressed: () => Navigator.pop(context)))
+                child: Widgets.skinnedButton(label: ">", onPressed: _close))
           ],
         ));
   }
@@ -203,12 +203,11 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
   }
 
-  @override
-  void dispose() {
+  void _close() {
+    BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onMessageReceive =
+        null;
     _timer.cancel();
     _pageController.dispose();
-    BlocProvider.of<Services>(context).get<NoobSocket>().onMessageReceive =
-        null;
-    super.dispose();
+    Navigator.pop(context);
   }
 }
