@@ -81,7 +81,12 @@ class NoobSocket extends IService {
   }
 }
 
-enum NoobMessages { none, playerStatus, deployCard, battleFinished }
+enum NoobMessages {
+  none,
+  playerStatus,
+  deployCard,
+  battleFinished,
+}
 
 class NoobMessage {
   int id = 0;
@@ -90,7 +95,7 @@ class NoobMessage {
     return switch (map["push_message_type"] ?? "") {
       "battle_update" => NoobCardMessage(account, map),
       "player_status" => NoobStatusMessage(map),
-      "battle_finished" => NoobMessage(NoobMessages.battleFinished),
+      "battle_finished" => NoobFineMessage(map),
       _ => NoobMessage(NoobMessages.none, map),
     };
   }
@@ -123,4 +128,44 @@ class NoobCardMessage extends NoobMessage {
         : AccountCard(account, map["card"],
             ownerId: map["card"]!["player_id"]!);
   }
+}
+class NoobFineMessage extends NoobMessage {
+  List<OpponentResult> winners = [];
+  List<OpponentResult> loosers = [];
+  NoobFineMessage(Map<String, dynamic> map)
+      : super(NoobMessages.battleFinished, map) {
+    print(jsonEncode(map));
+    for (var entry in map["players_info"].entries) {
+      if (entry.value["owner_team_id"] == map["result"]["winner_id"]) {
+        winners.add(OpponentResult()..init(entry.value));
+      } else {
+        loosers.add(OpponentResult()..init(entry.value));
+      }
+    }
+  }
+}
+
+class OpponentResult extends StringMap {
+  T get<T>(OppoResultFields field) => map[field.name] as T;
+}
+
+enum OppoResultFields {
+  power,
+  cooldown,
+  hero_power_benefit,
+  hero_wisdom_benefit,
+  hero_blessing_multiplier,
+  won_battle_num,
+  lost_battle_num,
+  id,
+  name,
+  added_xp,
+  added_gold,
+  gold,
+  xp,
+  level,
+  league_rank,
+  rank,
+  owner_team_id,
+  hero_benefits_info
 }
