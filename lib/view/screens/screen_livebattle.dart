@@ -48,6 +48,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   double _seconds = 0;
   int _battleId = 0;
   int _maxPower = 0;
+  bool _isDeckActive = true;
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -143,18 +144,20 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _powerBalance.value = powerBalance;
   }
 
-  void _onDeckSelect(int index, AccountCard selectedCard) {
+  Future<void> _onDeckSelect(int index, AccountCard selectedCard) async {
+    if (!_isDeckActive) return;
     try {
+      _isDeckActive = false;
       var params = {
         RpcParams.battle_id.name: _battleId,
         RpcParams.card.name: selectedCard.id,
-        RpcParams.round.name:
-            selectedCard.base.isHero ? 5 : _slotState.value.i + 1,
+        RpcParams.round.name: _slotState.value.i + 1,
       };
-      BlocProvider.of<ServicesBloc>(context)
+      await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.battleSetCard, params: params);
     } finally {}
+    _isDeckActive = true;
   }
 
   _deployCard(int index, AccountCard selectedCard) {

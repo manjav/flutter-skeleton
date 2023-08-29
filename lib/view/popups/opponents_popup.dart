@@ -86,8 +86,8 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   contentFactory() {
     return BlocBuilder<OpponentsBloc, OpponentsState>(
         builder: (BuildContext context, OpponentsState state) {
-    return Column(
-        mainAxisSize: MainAxisSize.min,
+      return Column(
+          mainAxisSize: MainAxisSize.min,
           children: [_maps(state.list), _groups(), _buttons(state.list)]);
     });
   }
@@ -318,6 +318,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             .tryRpc(context, RpcId.battleLive,
                 params: {RpcParams.opponent_id.name: opponent.id});
         if (mounted) {
+          result["opponent"] = opponent;
           Navigator.pushNamed(context, Routes.livebattle.routeName,
               arguments: result);
         }

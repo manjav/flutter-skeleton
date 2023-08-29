@@ -57,13 +57,13 @@ class CardItem extends StatefulWidget {
 
     var items = <String, HeroItem>{};
     if (hero != null) {
-    for (var item in hero.items) {
-      if (item.base.category == 1) {
-        items[item.position == 1 ? "minion_left" : "minion_right"] = item;
-      } else {
-        items[item.position == 1 ? "weapon_left" : "weapon_right"] = item;
+      for (var item in hero.items) {
+        if (item.base.category == 1) {
+          items[item.position == 1 ? "minion_left" : "minion_right"] = item;
+        } else {
+          items[item.position == 1 ? "weapon_left" : "weapon_right"] = item;
+        }
       }
-    }
     }
 
     return LoaderWidget(AssetType.animation, "heroes",
