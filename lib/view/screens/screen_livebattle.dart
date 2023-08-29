@@ -167,22 +167,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     selectedCard.isDeployed = true;
     if (selectedCard.base.isHero) {
       _deckCards.removeWhere((card) => card!.base.isHero);
-      _mySlots.setAtCard(2, selectedCard, toggleMode: false);
+      mySlots.setAtCard(4, selectedCard, toggleMode: false);
     } else {
       _deckCards.remove(selectedCard);
-
-      // Save remaining time to next slot
-      var i = slot.i + (slot.i == 1 ? 2 : 1);
-      var sum = 0.0;
-      for (var d = 0; d < i; d++) {
-        sum += LiveBattleScreen.deadlines[d];
-      }
-      sum -= _seconds - 1;
-      LiveBattleScreen.deadlines[slot.i] -= sum;
-      LiveBattleScreen.deadlines[i] += sum;
-
-      _setSlot(i, slot.j);
-      _setSlotTime(_seconds.round());
+      _gotoNextSlot(index, slot);
     }
 
     // Focus to the nearest card for the next slot
@@ -202,7 +190,9 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       if (tick < sum) {
         if (i > _slotState.value.i) {
           var index = _pageController.page!.round();
-          _onDeckSelect(index, _deckCards.value[index]!);
+          if (_deckCards.value[index]!.getRemainingCooldown() <= 0) {
+            _gotoNextSlot(index, _slotState.value);
+          }
         }
         _setSlot(i, (sum - tick).round());
         return;
@@ -211,22 +201,45 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _timer.cancel();
   }
 
+  void _gotoNextSlot(int index, IntVec2d slot) {
+    // Save remaining time to next slot
+    var i = slot.i + 1;
+    var sum = 0.0;
+    for (var d = 0; d < i; d++) {
+      sum += LiveBattleScreen.deadlines[d];
+    }
+    sum -= _seconds - 1;
+    LiveBattleScreen.deadlines[slot.i] -= sum;
+    LiveBattleScreen.deadlines[i] += sum;
+
+    _setSlot(i, slot.j);
+    _setSlotTime(_seconds.round());
+  }
+
   void _onNoobReceive(NoobMessage message) {
-    if (message.type != NoobMessages.battleUpdate) {
+    if (message.id != _battleId) {
       return;
     }
-    var battleMessage = message as NoobBattleMessage;
-    if (battleMessage.id != _battleId) {
-      return;
+    return switch (message.type) {
+      NoobMessages.deployCard => _handleCardMessage(message as NoobCardMessage),
+      _ => print("sdfs")
+    };
     }
-    var slotIndex = battleMessage.round == 5 ? 2 : battleMessage.round - 1;
-    if (battleMessage.card!.ownerId == _account.get(AccountField.id)) {
-      var index =
-          _deckCards.value.indexWhere((c) => c!.id == battleMessage.card!.id);
-      _deckCards.value[index]!.lastUsedAt = battleMessage.card!.lastUsedAt;
+
+  void _handleCardMessage(NoobCardMessage message) {
+    var cardOwnerId = message.card!.ownerId;
+    if (cardOwnerId == _account.get(AccountField.id)) {
+      var index = _deckCards.value.indexWhere((c) => c!.id == message.card!.id);
+      _deckCards.value[index]!.lastUsedAt = message.card!.lastUsedAt;
       _deployCard(index, _deckCards.value[index]!);
     } else {
+      if (_slots.containsKey(cardOwnerId)) {
+        _slots[cardOwnerId] = LiveCardsData(cardOwnerId, message.teamOwnerId);
+      }
+      _slots[cardOwnerId]!.setAtCard(message.round - 1, message.card);
+    }
       _enemySlots.setAtCard(slotIndex, battleMessage.card);
+
     }
   }
 

@@ -10,12 +10,11 @@ import '../../items/card_item.dart';
 import '../../key_provider.dart';
 import '../../screens/screen_livebattle.dart';
 import '../../widgets.dart';
-import '../card_holder.dart';
 
 class LiveSlot extends StatelessWidget with KeyProvider {
   final int index;
   final double alignX, alignY, rotation;
-  final SelectedCards deployedCards;
+  final LiveCardsData deployedCards;
   final ValueNotifier<IntVec2d> currentIndex;
 
   LiveSlot(this.index, this.alignX, this.alignY, this.rotation,
@@ -46,8 +45,8 @@ class LiveSlot extends StatelessWidget with KeyProvider {
             offset = switch (index) {
               0 => -0.15,
               1 => -0.20,
-              3 => 0.20,
-              4 => 0.15,
+              2 => 0.20,
+              3 => 0.15,
               _ => 0,
             };
           }

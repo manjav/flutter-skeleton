@@ -9,10 +9,12 @@ import '../../../services/deviceinfo.dart';
 import '../../../services/theme.dart';
 import '../../items/card_item.dart';
 import '../../key_provider.dart';
+import '../../screens/screen_livebattle.dart';
 
-class LiveHero extends StatelessWidget with KeyProvider {
-  final Account account;
+class LiveHero extends StatefulWidget {
+  final int battleId;
   final double alignment;
+  final LiveCardsData deployedCards;
 
   const LiveHero(this.battleId, this.alignment, this.deployedCards, {super.key});
 
@@ -28,7 +30,7 @@ class _LiveHeroState extends State<LiveHero>
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: widget.deployedCards,
         builder: (context, value, child) {
-          if (deployedCards.value[2] == null) {
+          if (value[4] == null) {
             return const SizedBox();
           }
           var vAlign = value[2]!.isDeployed ? alignment - 0.1 : alignment;
