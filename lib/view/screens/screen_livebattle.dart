@@ -22,6 +22,12 @@ import '../widgets/live_battle/live_slot.dart';
 import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
 
+class LiveCardsData extends SelectedCards {
+  final int ownerId, teamOwnerId;
+  LiveCardsData(this.ownerId, this.teamOwnerId)
+      : super([null, null, null, null, null]);
+}
+
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [27, 10, 0, 10, 10, 1];
   LiveBattleScreen({required super.args, super.key})
@@ -34,9 +40,7 @@ class LiveBattleScreen extends AbstractScreen {
 class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   late Account _account;
   late PageController _pageController;
-  final SelectedCards _mySlots = SelectedCards([null, null, null, null, null]);
-  final SelectedCards _enemySlots =
-      SelectedCards([null, null, null, null, null]);
+  final Map<int, LiveCardsData> _slots = {};
   final SelectedCards _deckCards = SelectedCards([]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));
@@ -59,6 +63,11 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
     LiveBattleScreen.deadlines = [27, 10, 0, 10, 10, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
+    var mId = _account.get<int>(AccountField.id);
+    var oId = widget.args["opponent"]["id"];
+    _slots[mId] = LiveCardsData(mId, mId);
+    _slots[oId] = LiveCardsData(oId, oId);
+
     _deckCards.value = _account.getReadyCards();
     for (var card in _deckCards.value) {
       card!.isDeployed = false;
@@ -76,6 +85,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   @override
   Widget contentFactory() {
+    var mId = _account.get<int>(AccountField.id);
+    var oId = widget.args["opponent"]["id"];
     return Widgets.rect(
         color: const Color(0xffAA9A45),
         child: Stack(
@@ -87,16 +98,16 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
                     valueListenable: _powerBalance,
                     builder: (context, value, child) =>
                         Powerbalance(value, _maxPower))),
-            LiveSlot(0, -0.75, -0.20, 0.20, _slotState, _enemySlots),
-            LiveSlot(1, -0.26, -0.17, 0.07, _slotState, _enemySlots),
-            LiveSlot(3, 0.26, -0.17, -0.07, _slotState, _enemySlots),
-            LiveSlot(4, 0.75, -0.20, -0.20, _slotState, _enemySlots),
-            LiveSlot(0, -0.75, 0.20, -0.20, _slotState, _mySlots),
-            LiveSlot(1, -0.26, 0.17, -0.07, _slotState, _mySlots),
-            LiveSlot(3, 0.26, 0.17, 0.07, _slotState, _mySlots),
-            LiveSlot(4, 0.75, 0.20, 0.20, _slotState, _mySlots),
-            LiveHero(_account, -0.35, _enemySlots),
-            LiveHero(_account, 0.45, _mySlots),
+            LiveSlot(0, -0.75, -0.20, 0.20, _slotState, _slots[oId]!),
+            LiveSlot(1, -0.26, -0.17, 0.07, _slotState, _slots[oId]!),
+            LiveSlot(2, 0.26, -0.17, -0.07, _slotState, _slots[oId]!),
+            LiveSlot(3, 0.75, -0.20, -0.20, _slotState, _slots[oId]!),
+            LiveSlot(0, -0.75, 0.20, -0.20, _slotState, _slots[mId]!),
+            LiveSlot(1, -0.26, 0.17, -0.07, _slotState, _slots[mId]!),
+            LiveSlot(2, 0.26, 0.17, 0.07, _slotState, _slots[mId]!),
+            LiveSlot(3, 0.75, 0.20, 0.20, _slotState, _slots[mId]!),
+            LiveHero(_battleId, -0.35, _slots[oId]!),
+            LiveHero(_battleId, 0.45, _slots[mId]!),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
             Positioned(
                 width: 440.d,
@@ -110,16 +121,25 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void _onDeckFocus(int index, AccountCard focusedCard) {
     var slot = _slotState.value;
     if (slot.i == 5) return;
+    var mId = _account.get<int>(AccountField.id);
+    var mySlots = _slots[mId]!;
     if (focusedCard.base.isHero) {
-      _mySlots.setAtCard(slot.i, null);
-      _mySlots.setAtCard(2, focusedCard);
+      mySlots.setAtCard(slot.i, null);
+      mySlots.setAtCard(4, focusedCard);
     } else {
-      _mySlots.setAtCard(slot.i, focusedCard);
-      if (_mySlots.value[2] != null && !_mySlots.value[2]!.isDeployed) {
-        _mySlots.setAtCard(2, null);
+      mySlots.setAtCard(slot.i, focusedCard);
+      if (mySlots.value[4] != null && !mySlots.value[4]!.isDeployed) {
+        mySlots.setAtCard(4, null);
       }
     }
-    var powerBalance = _account.calculatePower(_mySlots.value);
+
+    var powerBalance = 0; // _account.calculatePower(_mySlots.value);
+    for (var slot in _slots.values) {
+      var coef = slot.teamOwnerId == mId ? 1 : -1;
+      for (var card in slot.value) {
+        if (card != null) powerBalance += card.power * coef;
+      }
+    }
     _powerBalance.value = powerBalance;
   }
 
@@ -140,6 +160,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   _deployCard(int index, AccountCard selectedCard) {
     var slot = _slotState.value;
     if (slot.i == 5) return;
+    var mySlots = _slots[_account.get<int>(AccountField.id)]!;
     selectedCard.isDeployed = true;
     if (selectedCard.base.isHero) {
       _deckCards.removeWhere((card) => card!.base.isHero);
@@ -207,8 +228,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _close() {
-    BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onMessageReceive =
-        null;
+    BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onReceive = null;
     _timer.cancel();
     _pageController.dispose();
     Navigator.pop(context);
