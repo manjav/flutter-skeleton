@@ -53,9 +53,10 @@ class CardItem extends StatefulWidget {
 
   static getHeroAnimation(AccountCard card, double size, {Key? key}) {
     var hero =
-        card.account.get<Map<int, HeroCard>>(AccountField.heroes)[card.id]!;
+        card.account.get<Map<int, HeroCard>>(AccountField.heroes)[card.id];
 
     var items = <String, HeroItem>{};
+    if (hero != null) {
     for (var item in hero.items) {
       if (item.base.category == 1) {
         items[item.position == 1 ? "minion_left" : "minion_right"] = item;
@@ -63,13 +64,14 @@ class CardItem extends StatefulWidget {
         items[item.position == 1 ? "weapon_left" : "weapon_right"] = item;
       }
     }
+    }
 
     return LoaderWidget(AssetType.animation, "heroes",
         width: size, height: size, onRiveInit: (Artboard artboard) {
       final controller =
           StateMachineController.fromArtboard(artboard, 'Heroes')!;
       controller.findInput<double>('hero')?.value =
-          hero.card.base.get(CardFields.id).toDouble();
+          card.base.get(CardFields.id).toDouble();
       for (var item in items.entries) {
         controller.findInput<double>(item.key)?.value =
             item.value.base.id.toDouble();
