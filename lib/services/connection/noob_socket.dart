@@ -86,6 +86,7 @@ enum NoobMessages {
   playerStatus,
   deployCard,
   battleFinished,
+  heroAbility,
 }
 
 class NoobMessage {
@@ -93,8 +94,9 @@ class NoobMessage {
   static NoobMessage getProperMessage(
       Account account, Map<String, dynamic> map) {
     return switch (map["push_message_type"] ?? "") {
-      "battle_update" => NoobCardMessage(account, map),
       "player_status" => NoobStatusMessage(map),
+      "battle_update" => NoobCardMessage(account, map),
+      "battle_hero_ability" => NoobAbilityMessage(map),
       "battle_finished" => NoobFineMessage(map),
       _ => NoobMessage(NoobMessages.none, map),
     };
@@ -127,6 +129,25 @@ class NoobCardMessage extends NoobMessage {
         ? null
         : AccountCard(account, map["card"],
             ownerId: map["card"]!["player_id"]!);
+  }
+}
+
+enum Abilities { none, power, last_used_at, blessing }
+
+class NoobAbilityMessage extends NoobMessage {
+  late int teamOwnerId, ownerId, benefit, heroId;
+  Abilities ability = Abilities.none;
+  Map<String, int> cards = {};
+  NoobAbilityMessage(Map<String, dynamic> map)
+      : super(NoobMessages.heroAbility, map) {
+    heroId = map["hero_id"];
+    ownerId = map["hero_owner_id"];
+    teamOwnerId = map["owner_team_id"];
+    benefit = map["power_benefit"];
+    ability = Abilities.values[map["ability_type"]];
+    for (var card in map["hero_benefits_info"]["cards"]) {
+      cards[card[id]] = card[ability.name];
+    }
   }
 }
 class NoobFineMessage extends NoobMessage {
