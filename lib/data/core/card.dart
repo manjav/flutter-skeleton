@@ -117,7 +117,7 @@ class AccountCard {
   late int id, power, lastUsedAt, ownerId;
   AccountCard(this.account, Map map, {int? ownerId}) {
     id = map['id'] ?? -1;
-    power = map['power'] ?? 0;
+    power = map['power'].round() ?? 0;
     this.ownerId = ownerId ?? account.get(AccountField.id);
     base = account.loadingData.baseCards.get("${map['base_card_id']}");
     lastUsedAt = map['last_used_at'] ?? 0;
