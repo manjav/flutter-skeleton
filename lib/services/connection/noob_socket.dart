@@ -5,6 +5,7 @@ import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/infra.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/iservices.dart';
 import '../../utils/utils.dart';
@@ -64,7 +65,8 @@ class NoobSocket extends IService {
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
 
   void _updateStatus(NoobMessage noobMessage) {
-    if (noobMessage.type != NoobMessages.playerStatus) {
+    if (noobMessage.type != NoobMessages.playerStatus ||
+        _opponents.list == null) {
       return;
     }
     var statusMessage = noobMessage as NoobStatusMessage;
