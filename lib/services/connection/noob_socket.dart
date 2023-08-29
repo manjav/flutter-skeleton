@@ -79,14 +79,14 @@ class NoobSocket extends IService {
   }
 }
 
-enum NoobMessages { none, playerStatus, battleUpdate, battleFinished }
+enum NoobMessages { none, playerStatus, deployCard, battleFinished }
 
 class NoobMessage {
   int id = 0;
   static NoobMessage getProperMessage(
       Account account, Map<String, dynamic> map) {
     return switch (map["push_message_type"] ?? "") {
-      "battle_update" => NoobBattleMessage(account, map),
+      "battle_update" => NoobCardMessage(account, map),
       "player_status" => NoobStatusMessage(map),
       "battle_finished" => NoobMessage(NoobMessages.battleFinished),
       _ => NoobMessage(NoobMessages.none, map),
@@ -109,14 +109,13 @@ class NoobStatusMessage extends NoobMessage {
   }
 }
 
-
 class NoobCardMessage extends NoobMessage {
-  late int round, ownerTeamId;
+  late int round, teamOwnerId;
   AccountCard? card;
   NoobCardMessage(Account account, Map<String, dynamic> map)
       : super(NoobMessages.deployCard, map) {
     round = map["round"];
-    ownerTeamId = map["owner_team_id"];
+    teamOwnerId = map["owner_team_id"];
     card = map["card"] == null
         ? null
         : AccountCard(account, map["card"],
