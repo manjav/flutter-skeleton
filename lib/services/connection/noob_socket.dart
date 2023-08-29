@@ -16,7 +16,7 @@ extension NoobCommandExtension on NoobCommand {
 }
 
 class NoobSocket extends IService {
-  Function(NoobMessage)? onMessageReceive;
+  Function(NoobMessage)? onReceive;
   late TcpSocketConnection _socketConnection;
 
   late Account _account;
@@ -49,7 +49,7 @@ class NoobSocket extends IService {
     var noobMessage =
         NoobMessage.getProperMessage(_account, jsonDecode(message));
     _updateStatus(noobMessage);
-    onMessageReceive?.call(noobMessage);
+    onReceive?.call(noobMessage);
   }
 
   void _run(NoobCommand command, String message) {

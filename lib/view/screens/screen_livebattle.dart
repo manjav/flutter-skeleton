@@ -54,8 +54,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void initState() {
     // ,{"battle_id":42224570,"help_cost":5464}
     _battleId = widget.args["battle_id"] ?? 0;
-    BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onMessageReceive =
-        _onNoobMessageReceive;
+    BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onReceive =
+        _onNoobReceive;
 
     LiveBattleScreen.deadlines = [27, 10, 0, 10, 10, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
@@ -187,7 +187,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _timer.cancel();
   }
 
-  _onNoobMessageReceive(NoobMessage message) {
+  void _onNoobReceive(NoobMessage message) {
     if (message.type != NoobMessages.battleUpdate) {
       return;
     }
