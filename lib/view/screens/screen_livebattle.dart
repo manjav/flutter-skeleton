@@ -222,9 +222,11 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
     return switch (message.type) {
       NoobMessages.deployCard => _handleCardMessage(message as NoobCardMessage),
+      NoobMessages.heroAbility =>
+        _handleAbilityMessage(message as NoobAbilityMessage),
       _ => print("sdfs")
     };
-    }
+  }
 
   void _handleCardMessage(NoobCardMessage message) {
     var cardOwnerId = message.card!.ownerId;
@@ -238,8 +240,22 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       }
       _slots[cardOwnerId]!.setAtCard(message.round - 1, message.card);
     }
-      _enemySlots.setAtCard(slotIndex, battleMessage.card);
+  }
 
+  void _handleAbilityMessage(NoobAbilityMessage message) {
+    for (var entry in message.cards.entries) {
+      var index = _slots[message.ownerId]!
+          .value
+          .indexWhere((c) => "${c!.id}" == entry.key);
+      if (index > -1) {
+        var card = _slots[message.ownerId]!.value[index]!;
+        if (message.ability == Abilities.power) {
+          card.power = entry.value;
+        } else {
+          card.lastUsedAt = entry.value;
+        }
+        _slots[message.ownerId]!.setAtCard(index, card, toggleMode: false);
+      }
     }
   }
 

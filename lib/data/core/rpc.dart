@@ -124,4 +124,5 @@ enum RpcParams {
   battle_id,
   card,
   round,
+  ability_type,
 }
