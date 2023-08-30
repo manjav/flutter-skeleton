@@ -44,7 +44,7 @@ class _IndicatorState extends State<Indicator>
     // if (Pref.tutorMode.value == 0) return const SizedBox();
     var height = 110.d;
     return SizedBox(
-        width: widget.width ?? (widget.hasPlusIcon ? 330.d : 250.d),
+        width: widget.width ?? (widget.hasPlusIcon ? 320.d : 250.d),
         height: height,
         child: Hero(
           tag: widget.itemType.name,
