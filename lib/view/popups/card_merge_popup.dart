@@ -98,9 +98,9 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     if (index == -1) {
       if (selectedCards.value.length >= 2) {
         var card = selectedCards.value[0]!;
-        var nextBaseCard = _findNextLevel(card.base);
+        var nextBaseCard = card.findNextLevel();
         var nextCard = AccountCard(account, {
-          "power": _getMergePower(card, selectedCards.value[1]!),
+          "power": card.getNextLevelPower(selectedCards.value[1]),
           "base_card_id": nextBaseCard!.get(CardFields.id)
         });
         return _getCardView(nextCard, size);
@@ -156,33 +156,6 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     );
   }
 
-  int _getMergePower(AccountCard first, AccountCard second) {
-    const evolveEnhancePowerModifier = 1;
-    const monsterEvolveMinRarity = 5;
-    const monsterEvolveMaxPower = 300000000;
-    const monsterEvolvePowerModifier = 100000000;
-
-    var nextLevelCard = _findNextLevel(first.base);
-    if (nextLevelCard != null) {
-      var basePower = first.base.get<int>(CardFields.power);
-      var nextPower = nextLevelCard.get<int>(CardFields.power);
-      var diffs = first.power + second.power - basePower * 2;
-      diffs = evolveEnhancePowerModifier * diffs;
-      var finalPower = nextPower + diffs;
-
-      // Soften Monster's power after adding 6th level of monsters
-      if (first.base.isMonster) {
-        if (first.base.get<int>(CardFields.rarity) >= monsterEvolveMinRarity) {
-          if (finalPower > monsterEvolveMaxPower) {
-            finalPower -= monsterEvolvePowerModifier;
-          }
-        }
-      }
-      return finalPower;
-    }
-    return 0;
-  }
-
   int _getMergeCost() {
     const evolveCostModifier = 1;
     const vetEvolveCostModifier = 2;
@@ -191,13 +164,13 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     const monsterEvolveMinCost = 400000000;
 
     if (selectedCards.value.length < 2) return 0;
-    var first = selectedCards.value.first!.base;
+    var first = selectedCards.value.first!;
     var goldPrice = 0;
     for (var card in selectedCards.value) {
       goldPrice += card!.base.cost;
     }
-    var nextCardPrice = _findNextLevel(first)!.cost;
-    var veteranLevel = first.get<int>(CardFields.veteran_level);
+    var nextCardPrice = first.findNextLevel()!.cost;
+    var veteranLevel = first.base.get<int>(CardFields.veteran_level);
     if (veteranLevel == 0) {
       goldPrice = ((nextCardPrice - goldPrice) * evolveCostModifier).floor();
       if (goldPrice < 0) {
@@ -205,7 +178,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
       }
 
       // Soften Monster's evolve cost after adding 6th level of monsters
-      var level = first.get<int>(CardFields.rarity);
+      var level = first.base.get<int>(CardFields.rarity);
       if (first.isMonster && level >= monsterEvolveMinRarity) {
         goldPrice =
             monsterEvolveMinCost * (level - (monsterEvolveMinRarity - 1));
@@ -216,18 +189,6 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
               .floor();
     }
     return goldPrice;
-  }
-
-  CardData? _findNextLevel(CardData base) {
-    var nextLevel = base.get<int>(CardFields.rarity) + 1;
-    for (var e in account.loadingData.baseCards.map.entries) {
-      if (e.value.get<int>(CardFields.fruitId) ==
-              base.get<int>(CardFields.fruitId) &&
-          e.value.get<int>(CardFields.rarity) == nextLevel) {
-        return e.value;
-      }
-    }
-    return null;
   }
 
   _merge() async {

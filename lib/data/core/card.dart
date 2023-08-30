@@ -190,6 +190,48 @@ class AccountCard {
       }
     } finally {}
   }
+
+  CardData? findNextLevel() {
+    var nextLevel = base.get<int>(CardFields.rarity) + 1;
+    for (var e in account.loadingData.baseCards.map.entries) {
+      if (e.value.get<int>(CardFields.fruitId) ==
+              base.get<int>(CardFields.fruitId) &&
+          e.value.get<int>(CardFields.rarity) == nextLevel) {
+        return e.value;
+      }
+    }
+    return null;
+  }
+
+  int getNextLevelPower([AccountCard? second]) {
+    const evolveEnhancePowerModifier = 1;
+    const monsterEvolveMinRarity = 5;
+    const monsterEvolveMaxPower = 300000000;
+    const monsterEvolvePowerModifier = 100000000;
+
+    var nextLevelCard = findNextLevel();
+    if (nextLevelCard != null) {
+      var secondPower = second != null ? second.power : 0;
+      var firstBasePower = base.get<int>(CardFields.power);
+      var secondBasePower =
+          second != null ? second.base.get<int>(CardFields.power) : 0;
+      var nextPower = nextLevelCard.get<int>(CardFields.power);
+      var diffs = (power - firstBasePower) + (secondPower - secondBasePower);
+      diffs *= evolveEnhancePowerModifier;
+      var finalPower = nextPower + diffs;
+
+      // Soften Monster's power after adding 6th level of monsters
+      if (base.isMonster) {
+        if (base.get<int>(CardFields.rarity) >= monsterEvolveMinRarity) {
+          if (finalPower > monsterEvolveMaxPower) {
+            finalPower -= monsterEvolvePowerModifier;
+          }
+        }
+      }
+      return finalPower;
+    }
+    return 0;
+  }
 }
 
 class HeroCard {
