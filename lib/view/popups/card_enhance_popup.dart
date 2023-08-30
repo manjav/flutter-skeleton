@@ -22,7 +22,8 @@ import '../widgets.dart';
 import 'ipopup.dart';
 
 class CardEnhancePopup extends AbstractPopup {
-  CardEnhancePopup({super.key}) : super(Routes.popupCardEnhance, args: {});
+  const CardEnhancePopup({super.key, required super.args})
+      : super(Routes.popupCardEnhance);
 
   @override
   createState() => _CardEnhancePopupState();
