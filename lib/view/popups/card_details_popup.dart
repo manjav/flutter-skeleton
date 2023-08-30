@@ -36,6 +36,8 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         .account!
         .getReadyCards()
         .where((c) => c.base == _card.base);
+    var isUpgradable =
+        (siblings.length > 1 || _card.base.isHero) && _card.isUpgradable;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -60,10 +62,13 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 SizedBox(height: 16.d),
                 Widgets.skinnedButton(
                   padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
-                  isEnable: siblings.length > 1 && _card.isUpgradable,
-                  label: "popupcardmerge".l(),
+                  isEnable: isUpgradable,
+                  label:
+                      "popupcard${_card.base.isHero ? "upgrade" : "merge"}".l(),
                   width: 370.d,
-                  onPressed: () => _onButtonsTap(Routes.popupCardMerge),
+                  onPressed: () => _onButtonsTap(_card.base.isHero
+                      ? Routes.popupCardUpgrade
+                      : Routes.popupCardMerge),
                   onDisablePressed: () {
                     toast(_card.isUpgradable
                         ? "card_no_sibling".l()
