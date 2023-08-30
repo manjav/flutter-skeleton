@@ -346,6 +346,19 @@ class Account extends StringMap<dynamic> {
     }
     data["achieveCards"] = cards;
 
+    if (data.containsKey("card")) {
+      var newCard = data["card"];
+      var card = getCards()[newCard["id"]];
+      if (card == null) {
+        map['cards'][newCard["id"]] = card = AccountCard(this, newCard);
+      } else {
+        card.power = newCard["power"];
+        card.lastUsedAt = newCard["last_used_at"];
+        card.base = loadingData.baseCards.get("${newCard['base_card_id']}");
+      }
+      data["card"] = card;
+    }
+
     _addDeadline(
         data, AccountField.xpboost_created_at, AccountField.xpboost_id);
     _addDeadline(
