@@ -71,7 +71,7 @@ class CardItem extends StatefulWidget {
       final controller =
           StateMachineController.fromArtboard(artboard, 'Heroes')!;
       controller.findInput<double>('hero')?.value =
-          card.base.get(CardFields.id).toDouble();
+          card.fruit.get(FriutFields.id).toDouble();
       for (var item in items.entries) {
         controller.findInput<double>(item.key)?.value =
             item.value.base.id.toDouble();
