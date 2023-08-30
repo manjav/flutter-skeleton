@@ -104,7 +104,7 @@ class NoobMessage {
 
   final NoobMessages type;
   NoobMessage(this.type, Map<String, dynamic> map) {
-    id = map["id"];
+    id = map["id"] ?? 0;
   }
 }
 

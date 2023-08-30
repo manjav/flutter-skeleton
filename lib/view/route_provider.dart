@@ -68,7 +68,7 @@ extension RouteProvider on Routes {
       "/openPack" => OpenPackScreen(args: args ?? {}),
       "/livebattle" => LiveBattleScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
-      "/popupCardEnhance" => CardEnhancePopup(),
+      "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
       "/popupCardMerge" => CardMergePopup(args: args ?? {}),
       "/popupCollection" => CollectionPopup(),
       "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
