@@ -302,8 +302,17 @@ class Account extends StringMap<dynamic> {
   }
 
   Map<String, dynamic> update(Map<String, dynamic> data) {
+    if (data.containsKey("player_gold")) {
+      data["gold"] = data["player_gold"];
+    }
+    if (data.containsKey("player_potion")) {
+      data["potion_number"] = data["player_potion"];
+    }
+    if (data.containsKey("potion")) {
+      data["potion_number"] = data["potion"];
+    }
     for (var field in AccountField.values) {
-      if (data[field.name] != null) {
+      if (data.containsKey(field.name)) {
         map[field.name] = data[field.name];
       }
     }
@@ -315,11 +324,17 @@ class Account extends StringMap<dynamic> {
     var tribe = getBuilding(Buildings.tribe);
     if (tribe != null) tribe.map["gold"] = data["tribe_gold"];
 
-    map["gold"] = data["player_gold"] ?? map["gold"];
+    if (!data.containsKey("gold")) {
     map["gold"] = map["gold"] + (data["added_gold"] ?? 0);
+    }
+
+    if (!data.containsKey("nectar")) {
     map["nectar"] = map["nectar"] + (data["added_nectar"] ?? 0);
+    }
+
+    if (!data.containsKey("potion_number")) {
     map["potion_number"] = map["potion_number"] + (data["added_potion"] ?? 0);
-    map["potion_number"] = data["potion"] ?? 0;
+    }
 
     var cards = <AccountCard>[];
     if (data.containsKey("achieveCards")) {
