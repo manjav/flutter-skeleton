@@ -24,6 +24,35 @@ class HeroPopup extends AbstractPopup {
 
   @override
   createState() => _HeroPopupState();
+
+  static Widget attributesBuilder(HeroCard hero, Map<String, int> attributes) {
+    return Widgets.rect(
+        radius: 32.d,
+        width: 700.d,
+        color: TColors.primary90,
+        padding: EdgeInsets.all(16.d),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              for (var attribute in attributes.entries)
+                _attributeBuilder(hero, attribute)
+            ]));
+  }
+
+  static Widget _attributeBuilder(
+      HeroCard hero, MapEntry<String, int> attribute) {
+    var benefits = {
+      "blessing": "benefit_gold",
+      "power": "benefit_power",
+      "wisdom": "benefit_cooldown"
+    };
+    return Row(children: [
+      Asset.load<Image>(benefits[attribute.key]!, width: 56.d),
+      SkinnedText(" ${hero.card.base.map['${attribute.key}Attribute']}"),
+      SkinnedText(" + ${attribute.value}",
+          style: TStyles.medium.copyWith(color: TColors.green)),
+    ]);
+  }
 }
 
 class _HeroPopupState extends AbstractPopupState<HeroPopup> {
@@ -33,11 +62,6 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   late List<GlobalKey> _keys;
   final List<BaseHeroItem> _minions = [];
   final List<BaseHeroItem> _weapons = [];
-  Map<String, String> benefits = {
-    "blessing": "benefit_gold",
-    "power": "benefit_power",
-    "wisdom": "benefit_cooldown"
-  };
 
   @override
   void initState() {
@@ -109,7 +133,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                 ],
               ),
               SizedBox(height: 24.d),
-              _attributesBuilder(hero),
+              HeroPopup.attributesBuilder(
+                  hero, hero.getGainedAttributesByItems()),
               SizedBox(height: 40.d),
               SizedBox(
                   height: 132.d,
@@ -291,30 +316,6 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
           radius: 12.d,
           color: TColors.primary10,
           child: Text(text, style: TStyles.smallInvert))
-    ]);
-  }
-
-  Widget _attributesBuilder(HeroCard hero) {
-    var attributes = hero.getGainedAttributesByItems();
-    return Widgets.rect(
-        radius: 32.d,
-        width: 700.d,
-        color: TColors.primary90,
-        padding: EdgeInsets.all(16.d),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              for (var attribute in attributes.entries)
-                _attributeBuilder(hero, attribute)
-            ]));
-  }
-
-  Widget _attributeBuilder(HeroCard hero, MapEntry<String, int> attribute) {
-    return Row(children: [
-      Asset.load<Image>(benefits[attribute.key]!, width: 56.d),
-      SkinnedText(" ${hero.card.base.map['${attribute.key}Attribute']}"),
-      SkinnedText(" + ${attribute.value}",
-          style: TStyles.medium.copyWith(color: TColors.green)),
     ]);
   }
 
