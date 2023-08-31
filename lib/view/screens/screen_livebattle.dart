@@ -145,6 +145,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   Future<void> _onDeckSelect(int index, AccountCard selectedCard) async {
+    if (_battleId == 0) {
+      _deployCard(index, selectedCard);
+      return;
+    }
     if (!_isDeckActive) return;
     try {
       _isDeckActive = false;

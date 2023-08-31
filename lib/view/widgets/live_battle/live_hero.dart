@@ -29,7 +29,7 @@ class _LiveHeroState extends State<LiveHero>
     with TickerProviderStateMixin, KeyProvider {
   final List<bool> _enables = [true, true, true, true];
   late AnimationController _animationController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -91,48 +91,50 @@ class _LiveHeroState extends State<LiveHero>
           padding: EdgeInsets.all(4.d),
           width: 100.d,
           height: 100.d,
-              child: Stack(
+          child: Stack(
             alignment: Alignment.center,
-                children: [
+            children: [
               Opacity(
                 opacity: isEnable ? 1 : 0.6,
                 child: Asset.load<Image>("benefit_$type",
                     width: _enables[index] ? 100.d : 80.d),
               ),
-                  AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
+              AnimatedBuilder(
+                animation: _animationController,
+                builder: (context, child) {
                   if (!_enables[index] || _animationController.value >= 1) {
                     return const SizedBox();
-                      }
-                      return CircularProgressIndicator(
-                          strokeWidth: 8.d,
+                  }
+                  return CircularProgressIndicator(
+                      strokeWidth: 8.d,
                       strokeAlign: -0.9,
                       color: TColors.primary10,
-                          value: _animationController.value);
-                    },
-                  )
-                ],
+                      value: _animationController.value);
+                },
+              )
+            ],
           ),
           onPressed: () => _onPressed(context, hero, index)),
     );
   }
 
   _onPressed(BuildContext context, AccountCard hero, int index) async {
-    try {
-      var params = {
-        RpcParams.battle_id.name: widget.battleId,
-        RpcParams.hero_id.name: hero.id,
-        RpcParams.ability_type.name: index + 1,
-      };
-       await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.battleSetCard, params: params);
-      _enables[index] = false;
-      _enables[3] = false;
+    if (widget.battleId != 0) {
+      try {
+        var params = {
+          RpcParams.battle_id.name: widget.battleId,
+          RpcParams.hero_id.name: hero.id,
+          RpcParams.ability_type.name: index + 1,
+        };
+        await BlocProvider.of<ServicesBloc>(context)
+            .get<HttpConnection>()
+            .tryRpc(context, RpcId.battleSetCard, params: params);
+      } finally {}
+    }
+    _enables[index] = false;
+    _enables[3] = false;
     setState(() {});
-      _animationController.value = 0;
-      _animationController.animateTo(1, curve: Curves.easeInOut);
-    } finally {}
+    _animationController.value = 0;
+    _animationController.animateTo(1, curve: Curves.easeInOut);
   }
 }
