@@ -41,6 +41,23 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
               ),
               SizedBox(height: 32.d),
               HeroPopup.attributesBuilder(hero, hero.getNextLevelAttributes()),
+              SizedBox(height: 32.d),
+              Text("hero_upgrade_description".l(),
+                  style: TStyles.medium.copyWith(height: 1.2)),
+              Widgets.divider(margin: 36.d, width: 700.d),
+              Widgets.slider(
+                0,
+                hero.potion.toDouble(),
+                capacity.toDouble(),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Asset.load<Image>("icon_potion_number", height: 64.d),
+                  SizedBox(width: 12.d),
+                  SkinnedText("${hero.potion.round()}/${capacity.round()}")
+                ]),
+                width: 700.d,
+              ),
+              SizedBox(height: 50.d),
           ));
     });
   }
