@@ -281,6 +281,41 @@ class HeroCard {
     return values;
   }
 
+  Map<String, int> getNextLevelAttributes() {
+    // setups a table for containing the each value.
+    var values = <String, int>{};
+    values['power'] = 0;
+    values['wisdom'] = 0;
+    values['blessing'] = 0;
+    var nextLevel = card.findNextLevel();
+    if (nextLevel == null) {
+      return values;
+    }
+
+    diff(CardFields f) => nextLevel.get<int>(f) - card.base.get<int>(f);
+    values['power'] = diff(CardFields.powerAttribute);
+    values['wisdom'] = diff(CardFields.wisdomAttribute);
+    values['blessing'] = diff(CardFields.blessingAttribute);
+    return values;
+  }
+
+  fillPotion(BuildContext context, int value) async {
+    var params = {RpcParams.hero_id.name: card.base.get(CardFields.id)};
+    if (value > 0) {
+      params[RpcParams.potion.name] = value;
+    }
+    try {
+      var data = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.potionize, params: params);
+      if (!context.mounted) return;
+      data["hero_id"] = card.id;
+      var accountBloc = BlocProvider.of<AccountBloc>(context);
+      accountBloc.account!.update(data);
+      accountBloc.add(SetAccount(account: accountBloc.account!));
+    } finally {}
+  }
+
   HeroCard clone() => HeroCard(card, potion)..items = List.from(items);
   Map<String, dynamic> getResult() {
     var items = [];

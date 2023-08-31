@@ -8,6 +8,7 @@ import 'popups/card_details_popup.dart';
 import 'popups/card_enhance_popup.dart';
 import 'popups/card_merge_popup.dart';
 import 'popups/card_select_popup.dart';
+import 'popups/card_upgrade_popup.dart';
 import 'popups/combo_popup.dart';
 import 'popups/gift_popup.dart';
 import 'popups/hero_popup.dart';
@@ -39,6 +40,7 @@ enum Routes {
   popupNone,
   popupCardDetails,
   popupCardEnhance,
+  popupCardUpgrade,
   popupCardMerge,
   popupCollection,
   popupCardSelect,
@@ -70,6 +72,7 @@ extension RouteProvider on Routes {
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
       "/popupCardMerge" => CardMergePopup(args: args ?? {}),
+      "/popupCardUpgrade" => CardUpgradePopup(args: args ?? {}),
       "/popupCollection" => CollectionPopup(),
       "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
