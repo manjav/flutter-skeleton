@@ -244,7 +244,7 @@ class HeroCard {
   static const fakePowerModifier = 0.016666667;
   static const benefitDecreaseModifier = 3.0;
 
-  final int potion;
+  int potion = 0;
   final AccountCard card;
   List<HeroItem> items = [];
   HeroCard(this.card, this.potion);

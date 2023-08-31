@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../data/core/account.dart';
+import '../../data/core/card.dart';
+import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
+import '../../services/theme.dart';
+import '../../utils/assets.dart';
+import '../../utils/utils.dart';
+import '../../view/popups/hero_popup.dart';
+import '../items/card_item.dart';
+import '../route_provider.dart';
+import '../widgets.dart';
+import '../widgets/indicator.dart';
+import '../widgets/skinnedtext.dart';
 import 'ipopup.dart';
 
 class CardUpgradePopup extends AbstractPopup {
@@ -62,5 +76,50 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
     });
   }
 
+  _buttons(Account account, HeroCard hero, int capacity) {
+    var bgCenterSlice = ImageCenterSliceDate(42, 42);
+    int price = ((capacity - hero.potion) * HeroCard.evolveBaseNectar).round();
+    var step = 50;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Widgets.skinnedButton(
+            color: ButtonColor.yellow,
+            label: "+$step",
+            icon: "icon_potion_number",
+            onPressed: () => _fill(account, hero, step)),
+        SizedBox(width: 10.d),
+        Widgets.skinnedButton(
+            color: ButtonColor.teal,
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SkinnedText("fillout_l".l(), style: TStyles.large),
+              SizedBox(width: 16.d),
+              Widgets.rect(
+                padding: EdgeInsets.only(right: 12.d),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.fill,
+                        centerSlice: bgCenterSlice.centerSlice,
+                        image: Asset.load<Image>('ui_frame_inside',
+                                centerSlice: bgCenterSlice)
+                            .image)),
+                child: Row(children: [
+                  Asset.load<Image>("icon_nectar", height: 72.d),
+                  SkinnedText(price.compact(), style: TStyles.large),
+                ]),
+              )
+            ]),
+            onPressed: () => _fill(account, hero, 0)),
+      ],
+    );
+  }
+
+  void _fill(Account account, HeroCard hero, int step) {
+    if (account.get<int>(AccountField.potion_number) < step) {
+      Navigator.pushNamed(context, Routes.popupPotion.routeName);
+    } else {
+      hero.fillPotion(context, step);
+    }
   }
 }

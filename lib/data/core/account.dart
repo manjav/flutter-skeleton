@@ -325,15 +325,22 @@ class Account extends StringMap<dynamic> {
     if (tribe != null) tribe.map["gold"] = data["tribe_gold"];
 
     if (!data.containsKey("gold")) {
-    map["gold"] = map["gold"] + (data["added_gold"] ?? 0);
+      map["gold"] = map["gold"] + (data["added_gold"] ?? 0);
     }
 
     if (!data.containsKey("nectar")) {
-    map["nectar"] = map["nectar"] + (data["added_nectar"] ?? 0);
+      map["nectar"] = map["nectar"] + (data["added_nectar"] ?? 0);
     }
 
     if (!data.containsKey("potion_number")) {
-    map["potion_number"] = map["potion_number"] + (data["added_potion"] ?? 0);
+      map["potion_number"] = map["potion_number"] + (data["added_potion"] ?? 0);
+    }
+
+    if (data.containsKey("hero_potion")) {
+      var heroes = get<Map<int, HeroCard>>(AccountField.heroes);
+      if (heroes.containsKey(data["hero_id"])) {
+        heroes[data["hero_id"]]!.potion = data["hero_potion"];
+      }
     }
 
     var cards = <AccountCard>[];

@@ -15,6 +15,7 @@ enum RpcId {
   evolveCard,
   equipHeroitems,
   collectGold,
+  potionize,
 
   // Battle
   getOpponents,
@@ -51,6 +52,7 @@ extension RpcIdEx on RpcId {
       RpcId.evolveCard => "cards/evolve",
       RpcId.equipHeroitems => "cards/equipheroitems",
       RpcId.collectGold => "cards/collectgold",
+      RpcId.potionize => "cards/potionize",
       RpcId.scout => "battle/scout",
       RpcId.quest => "battle/quest",
       RpcId.battle => "battle/battle",
@@ -124,5 +126,5 @@ enum RpcParams {
   battle_id,
   card,
   round,
-  ability_type,
+  ability_type, potion,
 }
