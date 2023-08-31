@@ -250,7 +250,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     for (var entry in message.cards.entries) {
       var index = _slots[message.ownerId]!
           .value
-          .indexWhere((c) => "${c!.id}" == entry.key);
+          .indexWhere((c) => c != null && "${c.id}" == entry.key);
       if (index > -1) {
         var card = _slots[message.ownerId]!.value[index]!;
         if (message.ability == Abilities.power) {

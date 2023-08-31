@@ -135,7 +135,7 @@ class NoobCardMessage extends NoobMessage {
 enum Abilities { none, power, last_used_at, blessing }
 
 class NoobAbilityMessage extends NoobMessage {
-  late int teamOwnerId, ownerId, benefit, heroId;
+  late int teamOwnerId, ownerId, heroId;
   Abilities ability = Abilities.none;
   Map<String, int> cards = {};
   NoobAbilityMessage(Map<String, dynamic> map)
@@ -143,10 +143,9 @@ class NoobAbilityMessage extends NoobMessage {
     heroId = map["hero_id"];
     ownerId = map["hero_owner_id"];
     teamOwnerId = map["owner_team_id"];
-    benefit = map["power_benefit"];
     ability = Abilities.values[map["ability_type"]];
     for (var card in map["hero_benefits_info"]["cards"]) {
-      cards[card[id]] = card[ability.name];
+      cards[card["id"]] = card[ability.name];
     }
   }
 }
