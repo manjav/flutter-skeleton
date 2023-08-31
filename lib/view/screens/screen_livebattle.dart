@@ -29,7 +29,7 @@ class LiveCardsData extends SelectedCards {
 }
 
 class LiveBattleScreen extends AbstractScreen {
-  static List<double> deadlines = [27, 10, 0, 10, 10, 1];
+  static List<double> deadlines = [];
   LiveBattleScreen({required super.args, super.key})
       : super(Routes.livebattle, closable: false);
 
@@ -57,12 +57,11 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   @override
   void initState() {
-    // ,{"battle_id":42224570,"help_cost":5464}
     _battleId = widget.args["battle_id"] ?? 0;
     BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onReceive =
         _onNoobReceive;
 
-    LiveBattleScreen.deadlines = [27, 10, 0, 10, 10, 1];
+    LiveBattleScreen.deadlines = [27, 10, 10, 10, 0, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
     var mId = _account.get<int>(AccountField.id);
     var oId = widget.args["opponent"]["id"];
