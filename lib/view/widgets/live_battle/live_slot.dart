@@ -37,7 +37,7 @@ class LiveSlot extends StatelessWidget with KeyProvider {
                 "deck_live_${currentIndex.value.i > index ? "missed" : "empty"}");
           }
           var offset = 0.0;
-          if (deployedCards.value[2] != null) {
+          if (deployedCards.value[4] != null) {
             size = 180.d;
             offset = switch (index) {
               0 => -0.15,
