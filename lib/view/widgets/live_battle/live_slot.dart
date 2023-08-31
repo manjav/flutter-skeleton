@@ -45,7 +45,7 @@ class LiveSlot extends StatelessWidget with KeyProvider {
                 key: getGlobalKey(value[index]!.id));
           } else {
             card = Asset.load<Image>(
-                "deck_live_${currentIndex.value.i > index ? "missed" : "empty"}");
+                "deck_live_${index < slotIndex ? "missed" : "empty"}");
           }
           var offset = 0.0;
           if (deployedCards.value[4] != null) {
