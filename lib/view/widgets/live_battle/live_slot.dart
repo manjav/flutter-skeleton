@@ -15,16 +15,27 @@ class LiveSlot extends StatelessWidget with KeyProvider {
   final int index;
   final double alignX, alignY, rotation;
   final LiveCardsData deployedCards;
-  final ValueNotifier<IntVec2d> currentIndex;
+  final ValueNotifier<IntVec2d>? currentState;
 
   LiveSlot(this.index, this.alignX, this.alignY, this.rotation,
-      this.currentIndex, this.deployedCards,
+      this.currentState, this.deployedCards,
       {super.key});
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: deployedCards,
         builder: (context, value, child) {
+          var slotIndex = 0;
+          if (currentState == null) {
+            for (var i = value.length - 1; i >= 0; i--) {
+              if (value[i] != null) {
+                slotIndex = i;
+                break;
+              }
+            }
+          } else {
+            slotIndex = currentState!.value.i;
+          }
           var size = 190.d;
           Widget? card;
           if (value[index] != null) {
@@ -66,8 +77,11 @@ class LiveSlot extends StatelessWidget with KeyProvider {
 
   Widget _deadlineSlider(Widget card) {
     var turns = 0.0;
+    if (currentState == null) {
+      return const SizedBox();
+    }
     return ValueListenableBuilder<IntVec2d>(
-        valueListenable: currentIndex,
+        valueListenable: currentState!,
         builder: (context, value, child) {
           var visible = index == value.i && alignY > 0;
           var duration = const Duration(milliseconds: 500);
