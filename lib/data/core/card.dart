@@ -232,6 +232,18 @@ class AccountCard {
     }
     return 0;
   }
+
+  AccountCard clone() {
+    return AccountCard(
+        account,
+        {
+          "id": id,
+          "power": power,
+          "last_used_at": lastUsedAt,
+          "base_card_id": base.get<int>(CardFields.id),
+        },
+        ownerId: ownerId);
+  }
 }
 
 class HeroCard {
