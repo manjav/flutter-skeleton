@@ -18,7 +18,8 @@ class LiveHero extends StatefulWidget {
   final double alignment;
   final LiveCardsData deployedCards;
 
-  const LiveHero(this.battleId, this.alignment, this.deployedCards, {super.key});
+  const LiveHero(this.battleId, this.alignment, this.deployedCards,
+      {super.key});
 
   @override
   State<LiveHero> createState() => _LiveHeroState();

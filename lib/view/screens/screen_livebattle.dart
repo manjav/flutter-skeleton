@@ -189,11 +189,11 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       sum += LiveBattleScreen.deadlines[i];
       if (tick < sum) {
         if (i > _slotState.value.i) {
+          var mySlots = _slots[_account.get<int>(AccountField.id)]!;
+          mySlots.setAtCard(_slotState.value.i, null, toggleMode: false);
           var index = _pageController.page!.round();
-          if (_deckCards.value[index]!.getRemainingCooldown() <= 0) {
             _gotoNextSlot(index, _slotState.value);
           }
-        }
         _setSlot(i, (sum - tick).round());
         return;
       }
@@ -202,12 +202,12 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _gotoNextSlot(int index, IntVec2d slot) {
-    // Save remaining time to next slot
     var i = slot.i + 1;
     var sum = 0.0;
     for (var d = 0; d < i; d++) {
       sum += LiveBattleScreen.deadlines[d];
     }
+    // Save remaining time to next slot
     sum -= _seconds - 1;
     LiveBattleScreen.deadlines[slot.i] -= sum;
     LiveBattleScreen.deadlines[i] += sum;
