@@ -68,7 +68,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     for (var card in _deckCards.value) {
       card!.isDeployed = false;
     }
-    _maxPower = _account.get<int>(AccountField.def_power);
+    _maxPower = _account.calculateMaxPower();
     _pageController = PageController(viewportFraction: 0.25);
     super.initState();
     _setSlotTime(0);
@@ -133,15 +133,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         mySlots.setAtCard(4, null);
       }
     }
-
-    var powerBalance = 0; // _account.calculatePower(_mySlots.value);
-    for (var slot in _slots.values) {
-      var coef = slot.teamOwnerId == mId ? 1 : -1;
-      for (var card in slot.value) {
-        if (card != null) powerBalance += card.power * coef;
-      }
-    }
-    _powerBalance.value = powerBalance;
+    _updatePowerBalance();
   }
 
   Future<void> _onDeckSelect(int index, AccountCard selectedCard) async {
@@ -244,6 +236,21 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       }
       _slots[cardOwnerId]!.setAtCard(message.round - 1, message.card);
     }
+    _updatePowerBalance();
+  }
+
+  void _updatePowerBalance() {
+    var powerBalance = 0; // _account.calculatePower(_mySlots.value);
+    for (var slot in _slots.values) {
+      var coef = slot.teamOwnerId == _teamOwnerId ? 1 : -1;
+      for (var card in slot.value) {
+        if (card != null) powerBalance += card.power * coef;
+      }
+    }
+
+    var max = (powerBalance.abs() * (1 + Random().nextDouble() * 0.2)).round();
+    if (_maxPower < max) _maxPower = max;
+    _powerBalance.value = powerBalance;
   }
 
   void _handleAbilityMessage(NoobAbilityMessage message) {
@@ -260,6 +267,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           _account.getCards()[card.id]!.lastUsedAt = card.lastUsedAt;
         }
         _slots[message.ownerId]!.setAtCard(index, card, toggleMode: false);
+        _updatePowerBalance();
       }
     }
   }
