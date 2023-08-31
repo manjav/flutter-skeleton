@@ -49,6 +49,7 @@ class NoobSocket extends IService {
     message = b64.decode(message.xorDecrypt(secret: _secret));
     var noobMessage =
         NoobMessage.getProperMessage(_account, jsonDecode(message));
+    if (noobMessage.type != NoobMessages.playerStatus) log(message);
     _updateStatus(noobMessage);
     onReceive?.call(noobMessage);
   }
@@ -154,7 +155,6 @@ class NoobFineMessage extends NoobMessage {
   List<OpponentResult> loosers = [];
   NoobFineMessage(Map<String, dynamic> map)
       : super(NoobMessages.battleFinished, map) {
-    print(jsonEncode(map));
     for (var entry in map["players_info"].entries) {
       if (entry.value["owner_team_id"] == map["result"]["winner_id"]) {
         winners.add(OpponentResult()..init(entry.value));
