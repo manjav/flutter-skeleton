@@ -49,6 +49,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   int _battleId = 0;
   int _maxPower = 0;
   bool _isDeckActive = true;
+  int _teamOwnerId = 0;
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -88,6 +89,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       _slots[mId] = LiveCardsData(mId, mId);
       _slots[oId] = LiveCardsData(oId, oId);
     }
+    _teamOwnerId = mId;
+
     return Widgets.rect(
         color: const Color(0xffAA9A45),
         child: Stack(
@@ -231,7 +234,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       _deckCards.value[index]!.lastUsedAt = message.card!.lastUsedAt;
       _deployCard(index, _deckCards.value[index]!);
     } else {
-      if (_slots.containsKey(cardOwnerId)) {
+      if (!_slots.containsKey(cardOwnerId)) {
         _slots[cardOwnerId] = LiveCardsData(cardOwnerId, message.teamOwnerId);
       }
       _slots[cardOwnerId]!.setAtCard(message.round - 1, message.card);

@@ -128,7 +128,7 @@ class _LiveHeroState extends State<LiveHero>
         };
         await BlocProvider.of<ServicesBloc>(context)
             .get<HttpConnection>()
-            .tryRpc(context, RpcId.battleSetCard, params: params);
+            .tryRpc(context, RpcId.triggerAbility, params: params);
       } finally {}
     }
     _enables[index] = false;
