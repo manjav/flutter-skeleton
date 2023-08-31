@@ -266,7 +266,9 @@ class Account extends StringMap<dynamic> {
     bool removeCooldowns = false,
     bool removeMaxLevels = false,
     bool removeHeroes = false,
+    bool isClone = false,
   }) {
+    getCard(AccountCard card) => isClone ? card.clone() : card;
     exceptions = exceptions ??
         [
           Buildings.defense,
@@ -276,15 +278,17 @@ class Account extends StringMap<dynamic> {
           Buildings.cards,
           Buildings.base
         ];
-    var cards = getCards().values.toList();
-    cards.removeWhere((card) {
-      for (var exception in exceptions!) {
-        if (getBuilding(exception)!.cards.contains(card)) return true;
+    var origin = getCards().values.toList();
+    var cards = <AccountCard>[];
+    for (var card in origin) {
+      if (removeHeroes && card.base.isHero) continue;
+      if (removeMaxLevels && !card.isUpgradable) continue;
+      if (removeCooldowns && card.getRemainingCooldown() > 0) continue;
+      for (var exception in exceptions) {
+        if (getBuilding(exception)!.cards.contains(card)) continue;
       }
-      if (removeHeroes && card.base.isHero) return true;
-      if (removeCooldowns && card.getRemainingCooldown() > 0) return true;
-      return removeMaxLevels && !card.isUpgradable;
-    });
+      cards.add(getCard(card));
+    }
     cards.sort((AccountCard a, AccountCard b) =>
         a.power * (b.base.isHero ? 1 : -1) -
         b.power * (a.base.isHero ? 1 : -1));

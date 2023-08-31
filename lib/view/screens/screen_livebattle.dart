@@ -64,7 +64,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     LiveBattleScreen.deadlines = [27, 10, 10, 10, 0, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
 
-    _deckCards.value = _account.getReadyCards();
+    _deckCards.value = _account.getReadyCards(isClone: true);
     for (var card in _deckCards.value) {
       card!.isDeployed = false;
     }
@@ -257,6 +257,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           card.power = entry.value;
         } else {
           card.lastUsedAt = entry.value;
+          _account.getCards()[card.id]!.lastUsedAt = card.lastUsedAt;
         }
         _slots[message.ownerId]!.setAtCard(index, card, toggleMode: false);
       }
