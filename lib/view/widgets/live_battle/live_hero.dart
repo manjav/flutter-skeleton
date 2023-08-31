@@ -34,7 +34,12 @@ class _LiveHeroState extends State<LiveHero>
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(seconds: 5));
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() => _enables[3] = true);
+      }
+    });
   }
 
   @override
@@ -53,11 +58,14 @@ class _LiveHeroState extends State<LiveHero>
             duration: const Duration(milliseconds: 700),
             child: Stack(
               children: [
+                SizedBox(height: 360.d),
                 CardItem.getHeroAnimation(hero, 320.d,
                     key: getGlobalKey(hero.id)),
                 Positioned(
                   bottom: 0,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: hero.isDeployed
                         ? [
@@ -78,30 +86,34 @@ class _LiveHeroState extends State<LiveHero>
       BuildContext context, AccountCard hero, int index, String type) {
     var isEnable = _enables[index] && _enables[3];
     return IgnorePointer(
-      ignoring: isEnable,
+      ignoring: !isEnable,
       child: Widgets.button(
-          padding: EdgeInsets.all(12.d),
-          height: 120.d,
-          child: Opacity(
-              opacity: isEnable ? 1 : 0.5,
+          padding: EdgeInsets.all(4.d),
+          width: 100.d,
+          height: 100.d,
               child: Stack(
+            alignment: Alignment.center,
                 children: [
-                  Asset.load<Image>("benefit_$type"),
+              Opacity(
+                opacity: isEnable ? 1 : 0.6,
+                child: Asset.load<Image>("benefit_$type",
+                    width: _enables[index] ? 100.d : 80.d),
+              ),
                   AnimatedBuilder(
                     animation: _animationController,
                     builder: (context, child) {
-                      if (_animationController.value >= 1) {
-                        setState(() => _enables[3] = true);
+                  if (!_enables[index] || _animationController.value >= 1) {
+                    return const SizedBox();
                       }
                       return CircularProgressIndicator(
                           strokeWidth: 8.d,
-                          strokeAlign: 0.9,
-                          color: TColors.green,
+                      strokeAlign: -0.9,
+                      color: TColors.primary10,
                           value: _animationController.value);
                     },
                   )
                 ],
-              )),
+          ),
           onPressed: () => _onPressed(context, hero, index)),
     );
   }
@@ -118,6 +130,7 @@ class _LiveHeroState extends State<LiveHero>
           .tryRpc(context, RpcId.battleSetCard, params: params);
       _enables[index] = false;
       _enables[3] = false;
+    setState(() {});
       _animationController.value = 0;
       _animationController.animateTo(1, curve: Curves.easeInOut);
     } finally {}
