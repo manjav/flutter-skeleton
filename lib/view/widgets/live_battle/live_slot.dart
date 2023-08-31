@@ -28,10 +28,10 @@ class LiveSlot extends StatelessWidget with KeyProvider {
           var size = 190.d;
           Widget? card;
           if (value[index] != null) {
-              card = CardItem(value[index]!,
-                  size: size,
-                  showCooldown: false,
-                  key: getGlobalKey(value[index]!.id));
+            card = CardItem(value[index]!,
+                size: size,
+                showCooldown: false,
+                key: getGlobalKey(value[index]!.id));
           } else {
             card = Asset.load<Image>(
                 "deck_live_${currentIndex.value.i > index ? "missed" : "empty"}");

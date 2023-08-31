@@ -63,10 +63,6 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
     LiveBattleScreen.deadlines = [27, 10, 10, 10, 0, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    var mId = _account.get<int>(AccountField.id);
-    var oId = widget.args["opponent"]["id"];
-    _slots[mId] = LiveCardsData(mId, mId);
-    _slots[oId] = LiveCardsData(oId, oId);
 
     _deckCards.value = _account.getReadyCards();
     for (var card in _deckCards.value) {
@@ -85,8 +81,13 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   @override
   Widget contentFactory() {
+    var opponent = widget.args["opponent"];
     var mId = _account.get<int>(AccountField.id);
-    var oId = widget.args["opponent"]["id"];
+    var oId = opponent == null ? 0 : widget.args["opponent"].id;
+    if (_slots.isEmpty) {
+      _slots[mId] = LiveCardsData(mId, mId);
+      _slots[oId] = LiveCardsData(oId, oId);
+    }
     return Widgets.rect(
         color: const Color(0xffAA9A45),
         child: Stack(
