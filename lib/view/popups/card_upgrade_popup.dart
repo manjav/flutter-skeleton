@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/account_bloc.dart';
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/rpc.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -72,6 +76,8 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
                 width: 700.d,
               ),
               SizedBox(height: 50.d),
+              _buttons(state.account, hero, capacity)
+            ],
           ));
     });
   }
@@ -81,6 +87,13 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
     int price = ((capacity - hero.potion) * HeroCard.evolveBaseNectar).round();
     var step = 50;
 
+    if (hero.potion >= capacity) {
+      return Widgets.skinnedButton(
+          width: 500.d,
+          color: ButtonColor.green,
+          label: titleBuilder(),
+          onPressed: () => _upgrade(account, hero));
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -121,5 +134,29 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
     } else {
       hero.fillPotion(context, step);
     }
+  }
+
+  _upgrade(Account account, HeroCard hero) async {
+    try {
+      var result = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.evolveCard,
+              params: {RpcParams.sacrifices.name: "[${hero.card.id}]"});
+      account.getCards().remove(hero.card.id);
+      account.update(result);
+
+      // Replace hero
+      var heroes = account.get<Map<int, HeroCard>>(AccountField.heroes);
+      AccountCard card = result["card"];
+      var newHero = HeroCard(card, 0);
+      newHero.items = hero.items;
+      heroes[card.id] = newHero;
+      heroes.remove(hero.card.id);
+
+      if (mounted) {
+        BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+        Navigator.popUntil(context, (route) => route.isFirst);
+      }
+    } finally {}
   }
 }
