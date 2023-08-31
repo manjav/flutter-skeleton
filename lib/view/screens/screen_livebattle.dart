@@ -182,6 +182,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _setSlotTime(int tick) {
+    if (_slotState.value.i == 5) return;
     // const helpTimeout = 37;
     var sum = 0.0;
     for (var i = 0; i < LiveBattleScreen.deadlines.length; i++) {
@@ -201,6 +202,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _gotoNextSlot(int index, IntVec2d slot) {
+    if (slot.i >= 3) {
+      _setSlot(5, slot.j);
+      return;
+    }
     var i = slot.i + 1;
     var sum = 0.0;
     for (var d = 0; d < i; d++) {
@@ -223,7 +228,9 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       NoobMessages.deployCard => _handleCardMessage(message as NoobCardMessage),
       NoobMessages.heroAbility =>
         _handleAbilityMessage(message as NoobAbilityMessage),
-      _ => print("sdfs")
+      NoobMessages.battleFinished =>
+        _handleFineMessage(message as NoobFineMessage),
+      _ => print("")
     };
   }
 
@@ -274,6 +281,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       }
     }
   }
+
+  void _handleFineMessage(NoobFineMessage message) {}
 
   void _close() {
     BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onReceive = null;
