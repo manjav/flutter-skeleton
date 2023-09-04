@@ -114,4 +114,54 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
           ],
         ));
   }
+
+  _titleBuilder(String fraction, OpponentResult opponent) {
+    return SizedBox(
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+      Widgets.rect(
+          radius: 24.d,
+          padding: EdgeInsets.all(6.d),
+          color: TColors.black.withOpacity(0.3),
+          child: LoaderWidget(AssetType.image, "avatar_${Random().nextInt(10)}",
+              width: 100.d, height: 100.d, subFolder: "avatars")),
+      SizedBox(width: 12.d),
+      Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _usedCards(fraction, opponent),
+            SkinnedText("ˢ${opponent.power.compact()}", style: TStyles.small)
+          ])
+    ]));
+  }
+
+  Widget _usedCards(String fraction, OpponentResult opponent) {
+    var slots = _result.slots[opponent.id]!.value;
+    return SizedBox(
+        width: 128.d,
+        height: 56.d,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            _usedCard(fraction, slots[0], -0.15, 0, 2.d),
+            _usedCard(fraction, slots[1], -0.05, 16.d, 0),
+            _usedCard(fraction, slots[4], 0.05, 37.d, 0),
+            _usedCard(fraction, slots[2], 0.15, 60.d, 1.d),
+            _usedCard(fraction, slots[3], 0.25, 86.d, 5.d),
+          ],
+        ));
+  }
+
+  Widget _usedCard(String fraction, AccountCard? card, double angle,
+      double left, double top) {
+    return Positioned(
+        top: top,
+        left: left,
+        width: 36.d,
+        child: Transform.rotate(
+            angle: angle,
+            child: Asset.load<Image>(
+                "liveout_card_${card == null ? "missed" : fraction}")));
+  }
+
   }

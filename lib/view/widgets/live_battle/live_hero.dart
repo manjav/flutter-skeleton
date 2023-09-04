@@ -10,8 +10,8 @@ import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
 import '../../items/card_item.dart';
 import '../../key_provider.dart';
-import '../../screens/screen_livebattle.dart';
 import '../../widgets.dart';
+import '../card_holder.dart';
 
 class LiveHero extends StatefulWidget {
   final int battleId;
