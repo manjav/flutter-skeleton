@@ -66,7 +66,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                     child: CardItem(card,
                         size: 340.d,
                         showCooldown: false,
-                        extraPower: _getSacrificesPower()),
+                        extraPower: _getSacrificesPower(),
+                        heroTag: "hero_${card.id}"),
                   ),
                   cardsListBuilder(account, crossAxisCount: 5),
                   _isSacrificeAvailable || selectedCards.value.isEmpty

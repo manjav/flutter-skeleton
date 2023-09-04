@@ -122,7 +122,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     return SizedBox(
         width: size,
         child: CardItem(card,
-            size: size, showCooldown: false, heroTag: "_${card.id}"));
+            size: size, showCooldown: false, heroTag: "hero_${card.id}"));
   }
 
   _submitButton() {

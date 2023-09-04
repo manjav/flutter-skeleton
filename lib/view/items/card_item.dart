@@ -177,9 +177,13 @@ class _CardItemState extends State<CardItem> {
                       ])))));
     }
 
-    return Hero(
-        tag: widget.heroTag ?? widget.card.id,
-        child: Stack(alignment: Alignment.center, children: items));
+    var stack = Stack(alignment: Alignment.center, children: items);
+    if (widget.heroTag != null) {
+      return Hero(
+          tag: widget.heroTag!,
+          child: Material(type: MaterialType.transparency, child: stack));
+    }
+    return stack;
   }
 
   @override

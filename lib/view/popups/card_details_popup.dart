@@ -41,7 +41,9 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(width: 360.d, child: CardItem(_card, size: 360.d)),
+        SizedBox(
+            width: 360.d,
+            child: CardItem(_card, size: 360.d, heroTag: "hero_${_card.id}")),
         SizedBox(height: 24.d),
         Text("${_name}_d".l(), style: TStyles.medium.copyWith(height: 2.7.d)),
         SizedBox(height: 48.d),

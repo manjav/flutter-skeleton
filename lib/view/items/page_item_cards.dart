@@ -70,7 +70,10 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
       onTap: () => Navigator.pushNamed(
           context, Routes.popupCardDetails.routeName,
           arguments: {'card': card}),
-      child: CardItem(card, size: itemSize, key: getGlobalKey(card.id)),
+      child: CardItem(card,
+          size: itemSize,
+          key: getGlobalKey(card.id),
+          heroTag: "hero_${card.id}"),
     );
   }
 }
