@@ -21,6 +21,7 @@ class LiveOutScreen extends AbstractScreen {
 }
 
 class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
+  // late AnimationController _animationController;
   late NoobFineMessage _result;
 
   @override
@@ -31,6 +32,10 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   @override
   void initState() {
     _result = widget.args["result"] as NoobFineMessage;
+    // _animationController = AnimationController(
+    //     vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
+    // _animationController.forward();
+
     super.initState();
   }
 
@@ -108,7 +113,11 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            _titleBuilder(fraction, opponent),
             SizedBox(height: 10.d),
+            _rewardItemBuilder("icon_seed", opponent.score, "power", opponent),
+            _rewardItemBuilder("icon_gold", opponent.gold, "gold", opponent),
+            _rewardItemBuilder("icon_xp", opponent.xp, "cooldown", opponent),
             const Expanded(child: SizedBox()),
             SkinnedText(opponent.name)
           ],
@@ -164,4 +173,20 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
                 "liveout_card_${card == null ? "missed" : fraction}")));
   }
 
+  Widget _rewardItemBuilder(
+      String icon, int value, String benefit, OpponentResult opponent) {
+    space(s) => SizedBox(width: s);
+    format(int v) => benefit == "cooldown" ? v.toRemainingTime() : v.compact();
+
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      Asset.load<Image>(icon, width: 70.d, height: 78.d),
+      space(10.d),
+      SkinnedText(value.compact(), style: TStyles.small),
+      const Expanded(child: SizedBox()),
+      SkinnedText(format(opponent.heroBenefits[benefit]!),
+          style: TStyles.small.copyWith(color: TColors.orange)),
+      space(10.d),
+      Asset.load<Image>("benefit_$benefit", width: 56.d)
+    ]);
   }
+}
