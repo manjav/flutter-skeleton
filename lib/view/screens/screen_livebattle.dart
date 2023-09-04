@@ -10,6 +10,7 @@ import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/infra.dart';
+import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
@@ -21,6 +22,7 @@ import '../widgets.dart';
 import '../widgets/live_battle/live_deck.dart';
 import '../widgets/live_battle/live_hero.dart';
 import '../widgets/live_battle/live_slot.dart';
+import '../widgets/live_battle/live_tribe.dart';
 import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
 
@@ -36,7 +38,7 @@ class LiveBattleScreen extends AbstractScreen {
 class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   late Account _account;
   late PageController _pageController;
-  final Map<int, LiveCardsData> _slots = {};
+  final Map<int, LiveOpponent> _opponents = {};
   final SelectedCards _deckCards = SelectedCards([]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));
@@ -59,12 +61,14 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
     LiveBattleScreen.deadlines = [27, 10, 10, 10, 0, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    var opponent = widget.args["opponent"];
+    var opponent = widget.args["opponent"] as Opponent?;
     _alliseId = _account.get<int>(AccountField.id);
-    _axisId = opponent == null ? 0 : widget.args["opponent"].id;
-    if (_slots.isEmpty) {
-      _slots[_alliseId] = LiveCardsData(_alliseId, _alliseId);
-      _slots[_axisId] = LiveCardsData(_axisId, _axisId);
+    _axisId = opponent == null ? 0 : opponent.id;
+    if (_opponents.isEmpty) {
+      _opponents[_alliseId] = LiveOpponent(
+          _alliseId, _alliseId, _account.get<String>(AccountField.name));
+      _opponents[_axisId] = LiveOpponent(
+          _axisId, _axisId, opponent == null ? "Test" : opponent.name);
     }
 
     _deckCards.value = _account.getReadyCards(isClone: true);
@@ -84,6 +88,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   @override
   Widget contentFactory() {
+    var alliseCards = _opponents[_alliseId]!.cards;
+    var axisCards = _opponents[_axisId]!.cards;
     return Widgets.rect(
         color: const Color(0xffAA9A45),
         child: Stack(
@@ -95,16 +101,16 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
                     valueListenable: _powerBalance,
                     builder: (context, value, child) =>
                         Powerbalance(value, _maxPower))),
-            LiveSlot(0, -0.75, -0.20, 0.20, _slotState, _slots[_axisId]!),
-            LiveSlot(1, -0.26, -0.17, 0.07, _slotState, _slots[_axisId]!),
-            LiveSlot(2, 0.26, -0.17, -0.07, _slotState, _slots[_axisId]!),
-            LiveSlot(3, 0.75, -0.20, -0.20, _slotState, _slots[_axisId]!),
-            LiveSlot(0, -0.75, 0.20, -0.20, _slotState, _slots[_alliseId]!),
-            LiveSlot(1, -0.26, 0.17, -0.07, _slotState, _slots[_alliseId]!),
-            LiveSlot(2, 0.26, 0.17, 0.07, _slotState, _slots[_alliseId]!),
-            LiveSlot(3, 0.75, 0.20, 0.20, _slotState, _slots[_alliseId]!),
-            LiveHero(_battleId, -0.35, _slots[_axisId]!),
-            LiveHero(_battleId, 0.45, _slots[_alliseId]!),
+            LiveSlot(0, -0.75, -0.20, 0.20, _slotState, axisCards),
+            LiveSlot(1, -0.26, -0.17, 0.07, _slotState, axisCards),
+            LiveSlot(2, 0.26, -0.17, -0.07, _slotState, axisCards),
+            LiveSlot(3, 0.75, -0.20, -0.20, _slotState, axisCards),
+            LiveSlot(0, -0.75, 0.20, -0.20, _slotState, alliseCards),
+            LiveSlot(1, -0.26, 0.17, -0.07, _slotState, alliseCards),
+            LiveSlot(2, 0.26, 0.17, 0.07, _slotState, alliseCards),
+            LiveSlot(3, 0.75, 0.20, 0.20, _slotState, alliseCards),
+            LiveHero(_battleId, -0.35, axisCards),
+            LiveHero(_battleId, 0.45, alliseCards),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
             Positioned(
                 width: 440.d,
@@ -119,7 +125,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     var slot = _slotState.value;
     if (slot.i == 5) return;
     var mId = _account.get<int>(AccountField.id);
-    var mySlots = _slots[mId]!;
+    var mySlots = _opponents[mId]!.cards;
     if (focusedCard.base.isHero) {
       mySlots.setAtCard(slot.i, null);
       mySlots.setAtCard(4, focusedCard);
@@ -155,7 +161,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   _deployCard(int index, AccountCard selectedCard) {
     var slot = _slotState.value;
     if (slot.i == 5) return;
-    var mySlots = _slots[_account.get<int>(AccountField.id)]!;
+    var mySlots = _opponents[_alliseId]!.cards;
     selectedCard.isDeployed = true;
     if (selectedCard.base.isHero) {
       _deckCards.removeWhere((card) => card!.base.isHero);
@@ -182,7 +188,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       sum += LiveBattleScreen.deadlines[i];
       if (tick < sum) {
         if (i > _slotState.value.i) {
-          var mySlots = _slots[_account.get<int>(AccountField.id)]!;
+          var mySlots = _opponents[_alliseId]!.cards;
           mySlots.setAtCard(_slotState.value.i, null, toggleMode: false);
           var index = _pageController.page!.round();
             _gotoNextSlot(index, _slotState.value);
@@ -234,19 +240,20 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       _deckCards.value[index]!.lastUsedAt = message.card!.lastUsedAt;
       _deployCard(index, _deckCards.value[index]!);
     } else {
-      if (!_slots.containsKey(cardOwnerId)) {
-        _slots[cardOwnerId] = LiveCardsData(cardOwnerId, message.teamOwnerId);
+      if (!_opponents.containsKey(cardOwnerId)) {
+        _opponents[cardOwnerId] =
+            LiveOpponent(cardOwnerId, message.teamOwnerId, message.ownerName);
       }
-      _slots[cardOwnerId]!.setAtCard(message.round - 1, message.card);
+      _opponents[cardOwnerId]!.cards.setAtCard(message.round - 1, message.card);
     }
     _updatePowerBalance();
   }
 
   void _updatePowerBalance() {
     var powerBalance = 0; // _account.calculatePower(_mySlots.value);
-    for (var slot in _slots.values) {
-      var coef = slot.teamOwnerId == _alliseId ? 1 : -1;
-      for (var card in slot.value) {
+    for (var opponent in _opponents.values) {
+      var coef = opponent.teamOwnerId == _alliseId ? 1 : -1;
+      for (var card in opponent.cards.value) {
         if (card != null) powerBalance += card.power * coef;
       }
     }
@@ -258,27 +265,51 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   void _handleAbilityMessage(NoobAbilityMessage message) {
     for (var entry in message.cards.entries) {
-      var index = _slots[message.ownerId]!
+      var index = _opponents[message.ownerId]!
+          .cards
           .value
           .indexWhere((c) => c != null && "${c.id}" == entry.key);
       if (index > -1) {
-        var card = _slots[message.ownerId]!.value[index]!;
+        var card = _opponents[message.ownerId]!.cards.value[index]!;
         if (message.ability == Abilities.power) {
           card.power = entry.value;
         } else {
           card.lastUsedAt = entry.value;
           _account.getCards()[card.id]!.lastUsedAt = card.lastUsedAt;
         }
-        _slots[message.ownerId]!.setAtCard(index, card, toggleMode: false);
+        _opponents[message.ownerId]!
+            .cards
+            .setAtCard(index, card, toggleMode: false);
         _updatePowerBalance();
       }
     }
   }
 
   void _handleFineMessage(NoobFineMessage message) {
-    message.addBattleData(_alliseId, _axisId, _slots);
-    Navigator.pushNamed(context, Routes.livebattleOut.routeName,
-        arguments: {"result": message});
+    for (var info in message.opponentsInfo) {
+      var oppo = _opponents[info["id"]]!;
+      oppo.addResult(info);
+      oppo.won = oppo.id == message.winnerId;
+      if (oppo.teamOwnerId == _alliseId) {
+        if (oppo.id == _alliseId) {
+          oppo.score = oppo.won ? message.winnerScore : message.loserScore;
+        }
+        oppo.tribeName = oppo.won ? message.winnerTribe : message.loserTribe;
+      } else {
+        oppo.fraction = OpponentSide.axis;
+        if (oppo.id == _axisId) {
+          oppo.score = oppo.won ? message.winnerScore : message.loserScore;
+        }
+        oppo.tribeName = oppo.won ? message.winnerTribe : message.loserTribe;
+      }
+    }
+
+    // message.addBattleData(_alliseId, _axisId, _opponents);
+    Navigator.pushNamed(context, Routes.livebattleOut.routeName, arguments: {
+      "alliseId": _alliseId,
+      "axisId": _axisId,
+      "opponents": _opponents.values.toList()
+    });
   }
 
   void _close() {

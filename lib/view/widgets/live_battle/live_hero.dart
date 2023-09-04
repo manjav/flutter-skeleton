@@ -16,7 +16,7 @@ import '../card_holder.dart';
 class LiveHero extends StatefulWidget {
   final int battleId;
   final double alignment;
-  final LiveCardsData deployedCards;
+  final SelectedCards deployedCards;
 
   const LiveHero(this.battleId, this.alignment, this.deployedCards,
       {super.key});

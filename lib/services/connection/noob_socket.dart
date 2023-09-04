@@ -121,12 +121,14 @@ class NoobStatusMessage extends NoobMessage {
 }
 
 class NoobCardMessage extends NoobMessage {
-  late int round, teamOwnerId;
   AccountCard? card;
+  String ownerName = "";
+  int round = 0, teamOwnerId = 0;
   NoobCardMessage(Account account, Map<String, dynamic> map)
       : super(NoobMessages.deployCard, map) {
     round = map["round"];
     teamOwnerId = map["owner_team_id"];
+    ownerName = map["card_owner_name"];
     card = map["card"] == null
         ? null
         : AccountCard(account, map["card"],
@@ -152,19 +154,11 @@ class NoobAbilityMessage extends NoobMessage {
   }
 }
 class NoobFineMessage extends NoobMessage {
-  List<OpponentResult> opponents = [];
   int winnerScore = 0, loserScore = 0, winnerId = 0, loserId = 0;
   String winnerTribe = "", loserTribe = "";
-
-  late Map<int, LiveCardsData> slots;
-  late OpponentResult alliseOwner, axisOwner;
-  List<OpponentResult> allies = [], axis = [];
-  bool get won => alliseOwner.id == winnerId;
+  List<dynamic> opponentsInfo = [];
   NoobFineMessage(Map<String, dynamic> map)
       : super(NoobMessages.battleFinished, map) {
-    for (var entry in map["players_info"].entries) {
-      opponents.add(OpponentResult(entry.value));
-    }
     var result = map["result"];
     winnerScore = result["winner_added_score"];
     loserScore = result["loser_added_score"];
@@ -172,49 +166,30 @@ class NoobFineMessage extends NoobMessage {
     loserId = result["loser_id"];
     winnerTribe = result["winner_tribe_name"];
     loserTribe = result["loser_tribe_name"];
-  }
-
-  void addBattleData(int alliseId, int axisId, Map<int, LiveCardsData> slots) {
-    this.slots = slots;
-    for (var opponent in opponents) {
-      opponent.won = opponent.id == winnerId;
-      if (opponent.ownerTeamId == alliseId) {
-        if (opponent.id == alliseId) {
-          opponent.score = opponent.won ? winnerScore : loserScore;
-          opponent.tribeName = opponent.won ? winnerTribe : loserTribe;
-          alliseOwner = opponent;
-        } else {
-          allies.add(opponent);
-        }
-      } else {
-        opponent.fraction = OpponentSide.axis;
-        if (opponent.id == axisId) {
-          opponent.score = opponent.won ? winnerScore : loserScore;
-          opponent.tribeName = opponent.won ? winnerTribe : loserTribe;
-          axisOwner = opponent;
-        } else {
-          axis.add(opponent);
-        }
-      }
-    }
+    opponentsInfo = map["players_info"].values.toList();
   }
 }
 
-class OpponentResult {
-  String name = "", tribeName = "";
-  final Map<String, dynamic> map;
+class LiveOpponent {
+  final String name;
+  final int id, teamOwnerId;
+  late final SelectedCards cards;
+  String tribeName = "";
+  Map<String, dynamic> map = {};
   OpponentSide fraction = OpponentSide.allise;
-  int id = 0, gold = 0, xp = 0, power = 0, ownerTeamId = 0, score = 0;
+  int gold = 0, xp = 0, power = 0, score = 0;
   Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
   bool won = false;
 
-  OpponentResult(this.map) {
-    ownerTeamId = map["owner_team_id"];
-    id = map["id"];
-    name = map["name"];
+  LiveOpponent(this.id, this.teamOwnerId, this.name) {
+    cards = SelectedCards([null, null, null, null, null]);
+  }
+
+  void addResult(Map<String, dynamic> map) {
+    this.map = map;
     xp = map["added_xp"];
-    gold = map["added_gold"];
     power = map["power"];
+    gold = map["added_gold"];
     var benefits = map["hero_benefits_info"];
     if (benefits.length > 0) {
       heroBenefits["power"] = benefits["power_benefit"] ?? 0;

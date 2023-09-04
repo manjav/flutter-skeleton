@@ -151,9 +151,3 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
     notifyListeners();
   }
 }
-
-class LiveCardsData extends SelectedCards {
-  final int ownerId, teamOwnerId;
-  LiveCardsData(this.ownerId, this.teamOwnerId)
-      : super([null, null, null, null, null]);
-}

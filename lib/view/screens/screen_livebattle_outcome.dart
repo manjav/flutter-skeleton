@@ -24,7 +24,8 @@ class LiveOutScreen extends AbstractScreen {
 
 class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   // late AnimationController _animationController;
-  late NoobFineMessage _result;
+  late LiveOpponent _alliseOwner, _axisOwner;
+  final List<LiveOpponent> _allise = [], _axis = [];
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -33,7 +34,23 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   void initState() {
-    _result = widget.args["result"] as NoobFineMessage;
+    var opponents = widget.args["opponents"] as List<LiveOpponent>;
+    for (var opponent in opponents) {
+      if (opponent.teamOwnerId == widget.args["alliseId"]) {
+        if (opponent.id == widget.args["alliseId"]) {
+          _alliseOwner = opponent;
+        } else {
+          _allise.add(opponent);
+        }
+      } else {
+        if (opponent.id == widget.args["axisId"]) {
+          _axisOwner = opponent;
+        } else {
+          _axis.add(opponent);
+        }
+      }
+    }
+
     // _animationController = AnimationController(
     //     vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
     // _animationController.forward();
@@ -43,18 +60,18 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   Widget contentFactory() {
-    var color = _result.alliseOwner.won ? "green" : "red";
+    var color = _alliseOwner.won ? "green" : "red";
     return Widgets.button(
         padding: EdgeInsets.all(32.d),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _fractionBuilder(_result.axisOwner, _result.axis),
+              _fractionBuilder(_axisOwner, _axis),
               SizedBox(height: 40.d),
               _vsBuilder(),
               SizedBox(height: 40.d),
-              _fractionBuilder(_result.alliseOwner, _result.allies),
+              _fractionBuilder(_alliseOwner, _allise),
               Widgets.rect(
                   margin: EdgeInsets.all(44.d),
                   height: 130.d,
@@ -83,7 +100,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         ]);
   }
 
-  Widget _fractionBuilder(OpponentResult opponent, List<OpponentResult> team) {
+  Widget _fractionBuilder(LiveOpponent opponent, List<LiveOpponent> team) {
     var sliceData = ImageCenterSliceDate(201, 158);
     return Widgets.rect(
         padding: EdgeInsets.fromLTRB(80.d, 90.d, 80.d, 60.d),
@@ -130,7 +147,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
                 style: TStyles.medium.copyWith(height: 1))));
   }
 
-  Widget _helpersBuilder(List<OpponentResult> team) {
+  Widget _helpersBuilder(List<LiveOpponent> team) {
     return Expanded(
         child: GridView.builder(
       scrollDirection: Axis.horizontal,
@@ -173,7 +190,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
             crossAxisAlignment: CrossAxisAlignment.center, children: items));
   }
 
-  _titleBuilder(OpponentResult opponent) {
+  Widget _titleBuilder(LiveOpponent opponent) {
     return SizedBox(
         child: Row(mainAxisSize: MainAxisSize.min, children: [
       Widgets.rect(
@@ -194,7 +211,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   }
 
   Widget _usedCards(OpponentResult opponent) {
-    var slots = _result.slots[opponent.id]!.value;
+    var cards = opponent.cards.value;
     return SizedBox(
         width: 128.d,
         height: 56.d,
@@ -223,7 +240,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   }
 
   Widget _rewardItemBuilder(
-      String icon, int value, String benefit, OpponentResult opponent) {
+      String icon, int value, String benefit, LiveOpponent opponent) {
     space(s) => SizedBox(width: s);
     format(int v) => benefit == "cooldown" ? v.toRemainingTime() : v.compact();
 

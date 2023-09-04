@@ -15,7 +15,7 @@ import '../card_holder.dart';
 class LiveSlot extends StatelessWidget with KeyProvider {
   final int index;
   final double alignX, alignY, rotation;
-  final LiveCardsData deployedCards;
+  final SelectedCards deployedCards;
   final ValueNotifier<IntVec2d>? currentState;
 
   LiveSlot(this.index, this.alignX, this.alignY, this.rotation,
