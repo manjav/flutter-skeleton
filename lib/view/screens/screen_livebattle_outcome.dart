@@ -130,7 +130,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         ));
   }
 
-  Widget _headerBuilder(OpponentResult opponent) {
+  Widget _headerBuilder(LiveOpponent opponent) {
     var sliceData = ImageCenterSliceDate(64, 59);
     return Positioned(
         top: -80.d,
@@ -160,7 +160,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
     ));
   }
 
-  Widget _ownerBuilder(OpponentResult opponent, {bool isExpanded = false}) {
+  Widget _ownerBuilder(LiveOpponent opponent, {bool isExpanded = false}) {
     var sliceData =
         ImageCenterSliceDate(68, 92, const Rect.fromLTWH(32, 34, 4, 4));
     var items = <Widget>[_titleBuilder(opponent)];
@@ -197,7 +197,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
           radius: 24.d,
           padding: EdgeInsets.all(6.d),
           color: TColors.black.withOpacity(0.3),
-          child: LoaderWidget(AssetType.image, "avatar_${Random().nextInt(10)}",
+          child: LoaderWidget(AssetType.image, "avatar_${opponent.avatarId}",
               width: 92.d, height: 92.d, subFolder: "avatars")),
       SizedBox(width: 12.d),
       Column(
@@ -210,7 +210,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
     ]));
   }
 
-  Widget _usedCards(OpponentResult opponent) {
+  Widget _usedCards(LiveOpponent opponent) {
     var cards = opponent.cards.value;
     return SizedBox(
         width: 128.d,
@@ -218,13 +218,14 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            _usedCard(opponent.fraction, slots[0], -0.15, 0, 2.d),
-            _usedCard(opponent.fraction, slots[1], -0.05, 16.d, 0),
-            _usedCard(opponent.fraction, slots[4], 0.05, 37.d, 0),
-            _usedCard(opponent.fraction, slots[2], 0.15, 60.d, 1.d),
-            _usedCard(opponent.fraction, slots[3], 0.25, 86.d, 5.d),
+          _usedCard(opponent.fraction, cards[0], -0.15, 0, 2.d),
+          _usedCard(opponent.fraction, cards[1], -0.05, 16.d, 0),
+          _usedCard(opponent.fraction, cards[4], 0.05, 37.d, 0),
+          _usedCard(opponent.fraction, cards[2], 0.15, 60.d, 1.d),
+          _usedCard(opponent.fraction, cards[3], 0.25, 86.d, 5.d),
           ],
-        ));
+      ),
+    );
   }
 
   Widget _usedCard(OpponentSide fraction, AccountCard? card, double angle,

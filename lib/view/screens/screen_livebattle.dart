@@ -66,9 +66,17 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _axisId = opponent == null ? 0 : opponent.id;
     if (_opponents.isEmpty) {
       _opponents[_alliseId] = LiveOpponent(
-          _alliseId, _alliseId, _account.get<String>(AccountField.name));
-      _opponents[_axisId] = LiveOpponent(
-          _axisId, _axisId, opponent == null ? "Test" : opponent.name);
+        _alliseId,
+        _alliseId,
+        _account.get<int>(AccountField.avatar_id),
+        _account.get<String>(AccountField.name),
+      );
+      if (opponent == null) {
+        _opponents[_axisId] = LiveOpponent(_axisId, _axisId, 1, "Test");
+      } else {
+        _opponents[_axisId] =
+            LiveOpponent(_axisId, _axisId, opponent.avatarId, opponent.name);
+      }
     }
 
     _deckCards.value = _account.getReadyCards(isClone: true);
@@ -241,8 +249,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       _deployCard(index, _deckCards.value[index]!);
     } else {
       if (!_opponents.containsKey(cardOwnerId)) {
-        _opponents[cardOwnerId] =
-            LiveOpponent(cardOwnerId, message.teamOwnerId, message.ownerName);
+        _opponents[cardOwnerId] = LiveOpponent(cardOwnerId, message.teamOwnerId,
+            Random().nextInt(10) + 1, message.ownerName);
       }
       _opponents[cardOwnerId]!.cards.setAtCard(message.round - 1, message.card);
     }

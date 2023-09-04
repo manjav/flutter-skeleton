@@ -172,7 +172,7 @@ class NoobFineMessage extends NoobMessage {
 
 class LiveOpponent {
   final String name;
-  final int id, teamOwnerId;
+  final int id, teamOwnerId, avatarId;
   late final SelectedCards cards;
   String tribeName = "";
   Map<String, dynamic> map = {};
@@ -181,7 +181,7 @@ class LiveOpponent {
   Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
   bool won = false;
 
-  LiveOpponent(this.id, this.teamOwnerId, this.name) {
+  LiveOpponent(this.id, this.teamOwnerId, this.avatarId, this.name) {
     cards = SelectedCards([null, null, null, null, null]);
   }
 
