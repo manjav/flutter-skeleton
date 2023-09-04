@@ -46,6 +46,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
             SizedBox(height: 40.d),
             _vsBuilder(),
             SizedBox(height: 40.d),
+            _fractionBuilder("allise", _result.alliseOwner, _result.allies),
           ]),
     );
   }
@@ -65,5 +66,52 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
               child: Asset.load<Image>("liveout_vs_line",
                   centerSlice: sliceData, height: 12.d)),
         ]);
+  }
+
+  Widget _fractionBuilder(
+      String fraction, OpponentResult opponent, List<OpponentResult> team) {
+    var sliceData = ImageCenterSliceDate(201, 158);
+    return Widgets.rect(
+        alignment: Alignment.center,
+        padding: EdgeInsets.fromLTRB(80.d, 50.d, 0, 10.d),
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: Asset.load<Image>("liveout_bg_$fraction",
+                        centerSlice: sliceData)
+                    .image,
+                centerSlice: sliceData.centerSlice)),
+        height: 580.d,
+        child: SingleChildScrollView(
+            child: SizedBox(
+                width: 400.d,
+                height: 440.d,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [_ownerBuilder(fraction, opponent)],
+                ))));
+  }
+
+  Widget _ownerBuilder(String fraction, OpponentResult opponent) {
+    var sliceData =
+        ImageCenterSliceDate(68, 92, const Rect.fromLTWH(32, 34, 4, 4));
+
+    return Widgets.rect(
+        alignment: Alignment.center,
+        padding: EdgeInsets.fromLTRB(24.d, 16.d, 24.d, 0),
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image:
+                    Asset.load<Image>("liveout_frame", centerSlice: sliceData)
+                        .image,
+                centerSlice: sliceData.centerSlice)),
+        width: 400.d,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 10.d),
+            const Expanded(child: SizedBox()),
+            SkinnedText(opponent.name)
+          ],
+        ));
   }
   }

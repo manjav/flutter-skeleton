@@ -5,10 +5,10 @@ import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
-import '../../data/core/infra.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/iservices.dart';
 import '../../utils/utils.dart';
+import '../../view/widgets/card_holder.dart';
 
 enum NoobCommand { subscribe, unsubscribe }
 
@@ -151,41 +151,72 @@ class NoobAbilityMessage extends NoobMessage {
   }
 }
 class NoobFineMessage extends NoobMessage {
-  List<OpponentResult> winners = [];
-  List<OpponentResult> loosers = [];
+  List<OpponentResult> opponents = [];
+  int winnerScore = 0, loserScore = 0, winnerId = 0, loserId = 0;
+  String winnerTribe = "", loserTribe = "";
+
+  late Map<int, LiveCardsData> slots;
+  late OpponentResult alliseOwner, axisOwner;
+  List<OpponentResult> allies = [], axis = [];
+  bool get won => alliseOwner.id == winnerId;
   NoobFineMessage(Map<String, dynamic> map)
       : super(NoobMessages.battleFinished, map) {
     for (var entry in map["players_info"].entries) {
-      if (entry.value["owner_team_id"] == map["result"]["winner_id"]) {
-        winners.add(OpponentResult()..init(entry.value));
+      opponents.add(OpponentResult(entry.value));
+    }
+    var result = map["result"];
+    winnerScore = result["winner_added_score"];
+    loserScore = result["loser_added_score"];
+    winnerId = result["winner_id"];
+    loserId = result["loser_id"];
+    winnerTribe = result["winner_tribe_name"];
+    loserTribe = result["loser_tribe_name"];
+  }
+
+  void addBattleData(int alliseId, int axisId, Map<int, LiveCardsData> slots) {
+    this.slots = slots;
+    for (var opponent in opponents) {
+      if (opponent.ownerTeamId == alliseId) {
+        if (opponent.id == alliseId) {
+          opponent.score = opponent.id == winnerId ? winnerScore : loserScore;
+          alliseOwner = opponent;
+        } else {
+          allies.add(opponent);
+        }
       } else {
-        loosers.add(OpponentResult()..init(entry.value));
+        if (opponent.id == axisId) {
+          opponent.score = opponent.id == winnerId ? winnerScore : loserScore;
+          axisOwner = opponent;
+        } else {
+          axis.add(opponent);
+        }
       }
     }
   }
 }
 
-class OpponentResult extends StringMap {
-  T get<T>(OppoResultFields field) => map[field.name] as T;
-}
+class OpponentResult {
+  int score = 0;
+  String name = "";
+  final Map<String, dynamic> map;
+  late int power, cooldown, id, gold, xp, level, leagueRank, ownerTeamId;
+  Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
 
-enum OppoResultFields {
-  power,
-  cooldown,
-  hero_power_benefit,
-  hero_wisdom_benefit,
-  hero_blessing_multiplier,
-  won_battle_num,
-  lost_battle_num,
-  id,
-  name,
-  added_xp,
-  added_gold,
-  gold,
-  xp,
-  level,
-  league_rank,
-  rank,
-  owner_team_id,
-  hero_benefits_info
+  OpponentResult(this.map) {
+    ownerTeamId = map["owner_team_id"];
+    id = map["id"];
+    name = map["name"];
+    level = map["level"];
+    power = map["power"];
+    cooldown = map["cooldown"];
+    leagueRank = map["league_rank"];
+    xp = map["added_xp"];
+    gold = map["added_gold"];
+    var benefits = map["hero_benefits_info"];
+    if (benefits.length > 0) {
+      heroBenefits["power"] = benefits["power_benefit"] ?? 0;
+      heroBenefits["gold"] = benefits["gold_benefit"] ?? 0;
+      heroBenefits["cooldown"] = benefits["cooldown_benefit"] ?? 0;
+    }
+}
 }
