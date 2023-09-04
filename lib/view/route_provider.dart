@@ -25,6 +25,7 @@ import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/screen_attack_outcome.dart';
 import 'screens/screen_livebattle.dart';
+import 'screens/screen_livebattle_outcome.dart';
 import 'screens/screen_open_pack.dart';
 
 enum Routes {
@@ -32,6 +33,7 @@ enum Routes {
   deck,
   questOut,
   battleOut,
+  livebattleOut,
   home,
   loading,
   livebattle,
@@ -67,6 +69,7 @@ extension RouteProvider on Routes {
       "/deck" => DeckScreen(opponent: args?['opponent']),
       "/questOut" => AttackOutScreen(Routes.questOut, args: args ?? {}),
       "/battleOut" => AttackOutScreen(Routes.battleOut, args: args ?? {}),
+      "/livebattleOut" => LiveOutScreen(args: args ?? {}),
       "/livebattle" => LiveBattleScreen(args: args ?? {}),
       "/openPack" => OpenPackScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),

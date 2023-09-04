@@ -275,7 +275,11 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
   }
 
-  void _handleFineMessage(NoobFineMessage message) {}
+  void _handleFineMessage(NoobFineMessage message) {
+    message.addBattleData(_alliseId, _axisId, _slots);
+    Navigator.pushNamed(context, Routes.livebattleOut.routeName,
+        arguments: {"result": message});
+  }
 
   void _close() {
     BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onReceive = null;
