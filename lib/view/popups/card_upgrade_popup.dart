@@ -71,7 +71,8 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Asset.load<Image>("icon_potion_number", height: 64.d),
                   SizedBox(width: 12.d),
-                  SkinnedText("${hero.potion.round()}/${capacity.round()}")
+                  SkinnedText(
+                      "${hero.potion.compact()} / ${capacity.compact()}")
                 ]),
                 width: 700.d,
               ),
