@@ -5,6 +5,7 @@ import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/ranking.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/iservices.dart';
 import '../../utils/utils.dart';
@@ -177,6 +178,7 @@ class NoobFineMessage extends NoobMessage {
     this.slots = slots;
     for (var opponent in opponents) {
       if (opponent.ownerTeamId == alliseId) {
+        opponent.won = opponent.id == winnerId;
         if (opponent.id == alliseId) {
           opponent.score = opponent.id == winnerId ? winnerScore : loserScore;
           alliseOwner = opponent;
@@ -184,6 +186,8 @@ class NoobFineMessage extends NoobMessage {
           allies.add(opponent);
         }
       } else {
+        opponent.fraction = OpponentSide.axis;
+        opponent.won = opponent.id == winnerId;
         if (opponent.id == axisId) {
           opponent.score = opponent.id == winnerId ? winnerScore : loserScore;
           axisOwner = opponent;
@@ -196,22 +200,20 @@ class NoobFineMessage extends NoobMessage {
 }
 
 class OpponentResult {
-  int score = 0;
   String name = "";
   final Map<String, dynamic> map;
-  late int power, cooldown, id, gold, xp, level, leagueRank, ownerTeamId;
+  OpponentSide fraction = OpponentSide.allise;
+  int id = 0, gold = 0, xp = 0, power = 0, ownerTeamId = 0, score = 0;
   Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
+  bool won = false;
 
   OpponentResult(this.map) {
     ownerTeamId = map["owner_team_id"];
     id = map["id"];
     name = map["name"];
-    level = map["level"];
-    power = map["power"];
-    cooldown = map["cooldown"];
-    leagueRank = map["league_rank"];
     xp = map["added_xp"];
     gold = map["added_gold"];
+    power = map["power"];
     var benefits = map["hero_benefits_info"];
     if (benefits.length > 0) {
       heroBenefits["power"] = benefits["power_benefit"] ?? 0;

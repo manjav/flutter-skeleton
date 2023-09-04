@@ -180,7 +180,7 @@ class LeagueData {
   }
 }
 
-enum OpponentMode { allise, axis }
+enum OpponentSide { allise, axis }
 
 class Opponent extends Player {
   static int scoutCost = 0;
