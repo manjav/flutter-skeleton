@@ -310,7 +310,12 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   _attack() async {
+    if (_selectedOpponent.value.status == 2) {
+      toast("error_139".l());
+      return;
+    }
     var opponent = _selectedOpponent.value;
+    opponent.increaseAttacksCount();
     if (_selectedOpponent.value.status == 1) {
       try {
         var result = await BlocProvider.of<ServicesBloc>(context)
@@ -325,7 +330,6 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
       } finally {}
       return;
     }
-    opponent.increaseAttacksCount();
     Navigator.pushNamed(context, Routes.deck.routeName,
         arguments: {"opponent": opponent});
   }
