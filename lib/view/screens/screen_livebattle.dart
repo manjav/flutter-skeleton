@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,12 +23,6 @@ import '../widgets/live_battle/live_hero.dart';
 import '../widgets/live_battle/live_slot.dart';
 import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
-
-class LiveCardsData extends SelectedCards {
-  final int ownerId, teamOwnerId;
-  LiveCardsData(this.ownerId, this.teamOwnerId)
-      : super([null, null, null, null, null]);
-}
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [];

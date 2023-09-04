@@ -10,6 +10,7 @@ import '../../items/card_item.dart';
 import '../../key_provider.dart';
 import '../../screens/screen_livebattle.dart';
 import '../../widgets.dart';
+import '../card_holder.dart';
 
 class LiveSlot extends StatelessWidget with KeyProvider {
   final int index;
