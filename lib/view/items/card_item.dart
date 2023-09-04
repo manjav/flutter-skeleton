@@ -91,7 +91,7 @@ class _CardItemState extends State<CardItem> {
   @override
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
-    var level = baseCard.get<int>(CardFields.rarity).toString();
+    var level = baseCard.get<int>(CardFields.rarity);
     var cooldown = baseCard.get<int>(CardFields.cooldown);
     _remainingCooldown.value = widget.card.getRemainingCooldown();
     if (widget.showCooloff && _remainingCooldown.value > 0) {
@@ -115,10 +115,11 @@ class _CardItemState extends State<CardItem> {
           ? CardItem.getHeroAnimation(widget.card, 320 * s)
           : CardItem.getCardImage(baseCard, 216 * s, key: _imageKey),
       Positioned(
-          top: 1 * s,
+          top: (level > 9 ? 8 : 2) * s,
           right: 13 * s,
           width: 48 * s,
-          child: SkinnedText(level, style: _medium))
+          child: SkinnedText(level.toString(),
+              style: level > 9 ? _small : _medium))
     ];
     if (widget.showTitle) {
       items.add(Positioned(
