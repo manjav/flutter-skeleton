@@ -21,9 +21,9 @@ import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
 import 'popups/settings_popup.dart';
 import 'screens/deck_screen.dart';
-import 'screens/fight_outcome_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
+import 'screens/screen_attack_outcome.dart';
 import 'screens/screen_livebattle.dart';
 import 'screens/screen_open_pack.dart';
 
@@ -67,8 +67,8 @@ extension RouteProvider on Routes {
       "/deck" => DeckScreen(opponent: args?['opponent']),
       "/questOut" => AttackOutScreen(Routes.questOut, args: args ?? {}),
       "/battleOut" => AttackOutScreen(Routes.battleOut, args: args ?? {}),
-      "/openPack" => OpenPackScreen(args: args ?? {}),
       "/livebattle" => LiveBattleScreen(args: args ?? {}),
+      "/openPack" => OpenPackScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
       "/popupCardMerge" => CardMergePopup(args: args ?? {}),
