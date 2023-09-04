@@ -86,7 +86,6 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   Widget _fractionBuilder(OpponentResult opponent, List<OpponentResult> team) {
     var sliceData = ImageCenterSliceDate(201, 158);
     return Widgets.rect(
-        alignment: Alignment.center,
         padding: EdgeInsets.fromLTRB(80.d, 90.d, 80.d, 60.d),
         decoration: BoxDecoration(
             image: DecorationImage(
@@ -95,16 +94,40 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
                     .image,
                 centerSlice: sliceData.centerSlice)),
         height: 680.d,
-        child: team.isEmpty
-            ? _ownerBuilder(opponent, isExpanded: true)
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _ownerBuilder(opponent, isExpanded: true),
-                  SizedBox(width: 20.d),
-                  _helpersBuilder(team),
-                ],
-              ));
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            team.isEmpty
+                ? _ownerBuilder(opponent, isExpanded: true)
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _ownerBuilder(opponent, isExpanded: true),
+                      SizedBox(width: 20.d),
+                      _helpersBuilder(team),
+                    ],
+                  ),
+            _headerBuilder(opponent),
+          ],
+        ));
+  }
+
+  Widget _headerBuilder(OpponentResult opponent) {
+    var sliceData = ImageCenterSliceDate(64, 59);
+    return Positioned(
+        top: -80.d,
+        height: 70.d,
+        child: Widgets.rect(
+            padding: EdgeInsets.fromLTRB(64.d, 0, 64.d, 12.d),
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: Asset.load<Image>("liveout_bg_header",
+                            centerSlice: sliceData)
+                        .image,
+                    centerSlice: sliceData.centerSlice)),
+            child: SkinnedText(opponent.tribeName,
+                style: TStyles.medium.copyWith(height: 1))));
   }
 
   Widget _helpersBuilder(List<OpponentResult> team) {

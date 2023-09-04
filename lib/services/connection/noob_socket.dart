@@ -177,19 +177,20 @@ class NoobFineMessage extends NoobMessage {
   void addBattleData(int alliseId, int axisId, Map<int, LiveCardsData> slots) {
     this.slots = slots;
     for (var opponent in opponents) {
+      opponent.won = opponent.id == winnerId;
       if (opponent.ownerTeamId == alliseId) {
-        opponent.won = opponent.id == winnerId;
         if (opponent.id == alliseId) {
-          opponent.score = opponent.id == winnerId ? winnerScore : loserScore;
+          opponent.score = opponent.won ? winnerScore : loserScore;
+          opponent.tribeName = opponent.won ? winnerTribe : loserTribe;
           alliseOwner = opponent;
         } else {
           allies.add(opponent);
         }
       } else {
         opponent.fraction = OpponentSide.axis;
-        opponent.won = opponent.id == winnerId;
         if (opponent.id == axisId) {
-          opponent.score = opponent.id == winnerId ? winnerScore : loserScore;
+          opponent.score = opponent.won ? winnerScore : loserScore;
+          opponent.tribeName = opponent.won ? winnerTribe : loserTribe;
           axisOwner = opponent;
         } else {
           axis.add(opponent);
@@ -200,7 +201,7 @@ class NoobFineMessage extends NoobMessage {
 }
 
 class OpponentResult {
-  String name = "";
+  String name = "", tribeName = "";
   final Map<String, dynamic> map;
   OpponentSide fraction = OpponentSide.allise;
   int id = 0, gold = 0, xp = 0, power = 0, ownerTeamId = 0, score = 0;
