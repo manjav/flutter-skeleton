@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../data/core/card.dart';
+import '../../data/core/ranking.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
@@ -41,19 +43,27 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   Widget contentFactory() {
-    return Padding(
-      padding: EdgeInsets.all(32.d),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _fractionBuilder("axis", _result.axisOwner, _result.axis),
-            SizedBox(height: 40.d),
-            _vsBuilder(),
-            SizedBox(height: 40.d),
-            _fractionBuilder("allise", _result.alliseOwner, _result.allies),
-          ]),
-    );
+    var color = _result.alliseOwner.won ? "green" : "red";
+    return Widgets.button(
+        padding: EdgeInsets.all(32.d),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _fractionBuilder(_result.axisOwner, _result.axis),
+              SizedBox(height: 40.d),
+              _vsBuilder(),
+              SizedBox(height: 40.d),
+              _fractionBuilder(_result.alliseOwner, _result.allies),
+              Widgets.rect(
+                  margin: EdgeInsets.all(44.d),
+                  height: 130.d,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: Asset.load<Image>("ui_ribbon_$color").image)),
+                  child: SkinnedText("fight_lebel_$color".l()))
+            ]),
+        onPressed: () => Navigator.popUntil(context, (route) => route.isFirst));
   }
 
   Widget _vsBuilder() {
@@ -88,7 +98,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         child: team.isEmpty
             ? _ownerBuilder(opponent, isExpanded: true)
             : Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _ownerBuilder(opponent, isExpanded: true),
                   SizedBox(width: 20.d),
