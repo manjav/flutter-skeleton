@@ -126,7 +126,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
   }
 
   _submitButton() {
-    var bgCenterSlice = ImageCenterSliceDate(42, 42);
+    var bgCenterSlice = ImageCenterSliceData(42, 42);
     return Positioned(
       bottom: 40.d,
       height: 170.d,

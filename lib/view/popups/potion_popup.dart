@@ -71,7 +71,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
 
   Widget _fillButton(ButtonColor color, bool isEnable, String label, int cost,
       Function() onTap) {
-    var bgCenterSlice = ImageCenterSliceDate(42, 42);
+    var bgCenterSlice = ImageCenterSliceData(42, 42);
     return Widgets.skinnedButton(
         color: color,
         isEnable: isEnable,

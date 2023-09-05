@@ -46,7 +46,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
       right: 0,
       height: 800.d,
       child: Asset.load<Image>('popup_header',
-          centerSlice: ImageCenterSliceDate(
+          centerSlice: ImageCenterSliceData(
             220,
             120,
             const Rect.fromLTWH(106, 110, 4, 4),

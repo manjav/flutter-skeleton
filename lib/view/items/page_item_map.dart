@@ -76,7 +76,7 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
 
   _button(String icon, String text, double x, double bottom, double width,
       [Function()? onPressed]) {
-    var bgCenterSlice = ImageCenterSliceDate(
+    var bgCenterSlice = ImageCenterSliceData(
         422, 202, const Rect.fromLTWH(85, 85, 422 - 85 * 2, 202 - 85 * 2));
     return Positioned(
         left: x.d,

@@ -80,7 +80,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   Widget _vsBuilder() {
     var sliceData =
-        ImageCenterSliceDate(86, 10, const Rect.fromLTWH(8, 2, 70, 2));
+        ImageCenterSliceData(86, 10, const Rect.fromLTWH(8, 2, 70, 2));
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -96,7 +96,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   }
 
   Widget _fractionBuilder(LiveOpponent opponent, List<LiveOpponent> team) {
-    var sliceData = ImageCenterSliceDate(201, 158);
+    var sliceData = ImageCenterSliceData(201, 158);
     return Widgets.rect(
         padding: EdgeInsets.fromLTRB(80.d, 90.d, 80.d, 60.d),
         decoration: BoxDecoration(
@@ -126,7 +126,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   }
 
   Widget _headerBuilder(LiveOpponent opponent) {
-    var sliceData = ImageCenterSliceDate(64, 59);
+    var sliceData = ImageCenterSliceData(64, 59);
     return Positioned(
         top: -80.d,
         height: 70.d,

@@ -137,7 +137,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   }
 
   Widget _header(Account account) {
-    var slicingData = ImageCenterSliceDate(117, 509);
+    var slicingData = ImageCenterSliceData(117, 509);
     return Widgets.rect(
         decoration: BoxDecoration(
             image: DecorationImage(

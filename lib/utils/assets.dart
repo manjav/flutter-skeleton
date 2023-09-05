@@ -11,7 +11,7 @@ class Asset {
     BoxFit? fit,
     double? width,
     double? height,
-    ImageCenterSliceDate? centerSlice,
+    ImageCenterSliceData? centerSlice,
     ImageRepeat imageRepeat = ImageRepeat.noRepeat,
     Function(Artboard)? onRiveInit,
   }) {
@@ -46,11 +46,11 @@ class Asset {
   }
 }
 
-class ImageCenterSliceDate {
+class ImageCenterSliceData {
   late int width;
   late int height;
   late Rect centerSlice;
-  ImageCenterSliceDate(int width, int height, [Rect? centerSlice]) {
+  ImageCenterSliceData(int width, int height, [Rect? centerSlice]) {
     this.width = (width * DeviceInfo.ratio).round();
     this.height = (height * DeviceInfo.ratio).round();
     var rect =

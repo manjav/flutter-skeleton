@@ -33,8 +33,8 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
   @override
   Widget build(BuildContext context) {
     var balloonData =
-        ImageCenterSliceDate(50, 57, const Rect.fromLTWH(11, 11, 2, 2));
-    var slicingData = ImageCenterSliceDate(117, 117);
+        ImageCenterSliceData(50, 57, const Rect.fromLTWH(11, 11, 2, 2));
+    var slicingData = ImageCenterSliceData(117, 117);
     return Column(children: [
       widget.card == null || !widget.showPower
           ? const SizedBox()

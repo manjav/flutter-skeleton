@@ -18,7 +18,7 @@ class LiveOpponentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var sliceData =
-        ImageCenterSliceDate(68, 92, const Rect.fromLTWH(32, 34, 4, 4));
+        ImageCenterSliceData(68, 92, const Rect.fromLTWH(32, 34, 4, 4));
     var items = <Widget>[_titleBuilder(opponent)];
     if (isExpanded) {
       items.addAll([

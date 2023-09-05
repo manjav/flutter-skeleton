@@ -28,7 +28,7 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
       right: 0,
       height: 225.d,
       child: Asset.load<Image>('popup_header',
-          centerSlice: ImageCenterSliceDate(
+          centerSlice: ImageCenterSliceData(
             220,
             120,
             const Rect.fromLTWH(106, 110, 4, 4),
@@ -48,7 +48,7 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
 
   Widget _tabItemBuilder(int index, TabData data) {
     var imageName = index == selectedTabIndex ? 'selected' : 'normal';
-    var slicingData = ImageCenterSliceDate(68, 42);
+    var slicingData = ImageCenterSliceData(68, 42);
     return Expanded(
       child: Widgets.button(
           margin: EdgeInsets.symmetric(horizontal: 6.d),

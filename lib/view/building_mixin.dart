@@ -35,7 +35,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
   }
 
   upgtadeButton(Account account, Building building) {
-    var bgCenterSlice = ImageCenterSliceDate(42, 42);
+    var bgCenterSlice = ImageCenterSliceData(42, 42);
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,

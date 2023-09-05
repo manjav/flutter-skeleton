@@ -62,7 +62,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   }
 
   _elementsBuilder() {
-    var bgSliceCenter = ImageCenterSliceDate(134, 134);
+    var bgSliceCenter = ImageCenterSliceData(134, 134);
     return Widgets.button(
       width: widget.size,
       height: widget.size + 5.d,

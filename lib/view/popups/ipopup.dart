@@ -32,7 +32,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   @override
   Widget build(BuildContext context) {
-    var chromeCenterSlice = ImageCenterSliceDate(410, 460);
+    var chromeCenterSlice = ImageCenterSliceData(410, 460);
     return SafeArea(
         child: Scaffold(
       backgroundColor: TColors.black80,
@@ -77,7 +77,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   String titleBuilder() => widget.type.name.toLowerCase().l();
 
   Widget titleTextFactory() {
-    var centerSlice = ImageCenterSliceDate(562, 130);
+    var centerSlice = ImageCenterSliceData(562, 130);
     return Widgets.rect(
         width: 562.d,
         height: 130.d,

@@ -84,7 +84,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
   }
 
   _buttons(Account account, HeroCard hero, int capacity) {
-    var bgCenterSlice = ImageCenterSliceDate(42, 42);
+    var bgCenterSlice = ImageCenterSliceData(42, 42);
     int price = ((capacity - hero.potion) * HeroCard.evolveBaseNectar).round();
     var step = 50;
 

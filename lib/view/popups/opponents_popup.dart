@@ -226,7 +226,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   _group(String title, Widget child) {
-    var bgCenterSlice = ImageCenterSliceDate(144, 144);
+    var bgCenterSlice = ImageCenterSliceData(144, 144);
     return Expanded(
         child: Widgets.rect(
             alignment: Alignment.center,

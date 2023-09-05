@@ -178,8 +178,8 @@ class Widgets {
   }) {
     var slicingData = switch (size) {
       ButtonSize.small =>
-        ImageCenterSliceDate(102, 106, const Rect.fromLTWH(50, 30, 2, 46)),
-      _ => ImageCenterSliceDate(130, 158, const Rect.fromLTWH(64, 50, 2, 58)),
+        ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 2, 46)),
+      _ => ImageCenterSliceData(130, 158, const Rect.fromLTWH(64, 50, 2, 58)),
     };
     if (!isEnable) {
       color = ButtonColor.gray;
@@ -222,7 +222,7 @@ class Widgets {
       double margin = 0,
       Axis direction = Axis.horizontal}) {
     var v = direction == Axis.vertical;
-    var slicingData = ImageCenterSliceDate(v ? 16 : 38, v ? 38 : 16);
+    var slicingData = ImageCenterSliceData(v ? 16 : 38, v ? 38 : 16);
     return rect(
         width: width ?? 16.d,
         height: height ?? 16.d,

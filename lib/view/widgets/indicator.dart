@@ -91,7 +91,7 @@ class _IndicatorState extends State<Indicator>
   _getElements(double height, int value, int league) {
     var left = height * 0.65;
     var right = widget.hasPlusIcon ? height - 30.d : 0.0;
-    var sliceData = ImageCenterSliceDate(104, 69);
+    var sliceData = ImageCenterSliceData(104, 69);
     return Stack(alignment: Alignment.centerLeft, children: [
       Positioned(
           right: right,
