@@ -35,7 +35,6 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
   }
 
   upgtadeButton(Account account, Building building) {
-    var bgCenterSlice = ImageCenterSliceData(42, 42);
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -54,13 +53,8 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
                 Widgets.rect(
                   padding:
                       EdgeInsets.symmetric(vertical: 6.d, horizontal: 12.d),
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          centerSlice: bgCenterSlice.centerSlice,
-                          image: Asset.load<Image>('ui_frame_inside',
-                                  centerSlice: bgCenterSlice)
-                              .image)),
+                  decoration: Widgets.imageDecore(
+                      "ui_frame_inside", ImageCenterSliceData(42, 42)),
                   child: Row(children: [
                     Asset.load<Image>("icon_gold", height: 76.d),
                     SkinnedText(building.upgradeCost.compact(),

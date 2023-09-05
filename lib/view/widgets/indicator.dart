@@ -91,7 +91,6 @@ class _IndicatorState extends State<Indicator>
   _getElements(double height, int value, int league) {
     var left = height * 0.65;
     var right = widget.hasPlusIcon ? height - 30.d : 0.0;
-    var sliceData = ImageCenterSliceData(104, 69);
     return Stack(alignment: Alignment.centerLeft, children: [
       Positioned(
           right: right,
@@ -100,12 +99,8 @@ class _IndicatorState extends State<Indicator>
           child: Widgets.rect(
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 8.d, left: height * 0.1),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    centerSlice: sliceData.centerSlice,
-                    image: Asset.load<Image>('ui_indicator_bg',
-                            centerSlice: sliceData)
-                        .image)),
+            decoration: Widgets.imageDecore(
+                "ui_indicator_bg", ImageCenterSliceData(104, 69)),
             child: _getText(value, left, right),
           )),
       Asset.load<Image>(_getIcon(league)),

@@ -32,7 +32,6 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   @override
   Widget build(BuildContext context) {
-    var chromeCenterSlice = ImageCenterSliceData(410, 460);
     return SafeArea(
         child: Scaffold(
       backgroundColor: TColors.black80,
@@ -43,14 +42,8 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
             child: Widgets.rect(
               margin: EdgeInsets.fromLTRB(24.d, 100.d, 24.d, 0),
               padding: EdgeInsets.symmetric(horizontal: 24.d),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      centerSlice: chromeCenterSlice.centerSlice,
-                      image: Asset.load<Image>(
-                        'popup_chrome',
-                        centerSlice: chromeCenterSlice,
-                      ).image)),
+              decoration: Widgets.imageDecore(
+                  "popup_chrome", ImageCenterSliceData(410, 460)),
               child: Stack(
                   alignment: Alignment.topCenter,
                   fit: StackFit.loose,
@@ -77,18 +70,12 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   String titleBuilder() => widget.type.name.toLowerCase().l();
 
   Widget titleTextFactory() {
-    var centerSlice = ImageCenterSliceData(562, 130);
     return Widgets.rect(
         width: 562.d,
         height: 130.d,
         padding: EdgeInsets.only(bottom: 14.d),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                centerSlice: centerSlice.centerSlice,
-                image: Asset.load<Image>(
-                  'popup_title',
-                  centerSlice: centerSlice,
-                ).image)),
+        decoration:
+            Widgets.imageDecore("popup_title", ImageCenterSliceData(562, 130)),
         child: SkinnedText(titleBuilder(), style: TStyles.large));
   }
 

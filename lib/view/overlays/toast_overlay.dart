@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
-import '../../utils/assets.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
 import 'ioverlay.dart';
@@ -66,11 +65,7 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
                               child: Widgets.rect(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 40.d),
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: Asset.load<Image>('ui_shadow')
-                                              .image)),
+                                  decoration: Widgets.imageDecore("ui_shadow"),
                                   child: SkinnedText(widget.message,
                                       style: TStyles.large))),
                         ));

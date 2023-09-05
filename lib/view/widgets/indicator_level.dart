@@ -62,19 +62,12 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   }
 
   _elementsBuilder() {
-    var bgSliceCenter = ImageCenterSliceData(134, 134);
     return Widgets.button(
       width: widget.size,
       height: widget.size + 5.d,
       padding: EdgeInsets.fromLTRB(22.d, 20.d, 22.d, 26.d),
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              fit: BoxFit.fill,
-              centerSlice: bgSliceCenter.centerSlice,
-              image: Asset.load<Image>(
-                'ui_frame_wood_big',
-                centerSlice: bgSliceCenter,
-              ).image)),
+      decoration: Widgets.imageDecore(
+          "ui_frame_wood_big", ImageCenterSliceData(134, 134)),
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,

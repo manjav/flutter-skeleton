@@ -71,7 +71,6 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
 
   Widget _fillButton(ButtonColor color, bool isEnable, String label, int cost,
       Function() onTap) {
-    var bgCenterSlice = ImageCenterSliceData(42, 42);
     return Widgets.skinnedButton(
         color: color,
         isEnable: isEnable,
@@ -85,13 +84,8 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
           SizedBox(width: 16.d),
           Widgets.rect(
             padding: EdgeInsets.only(right: 12.d),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.fill,
-                    centerSlice: bgCenterSlice.centerSlice,
-                    image: Asset.load<Image>('ui_frame_inside',
-                            centerSlice: bgCenterSlice)
-                        .image)),
+            decoration: Widgets.imageDecore(
+                "ui_frame_inside", ImageCenterSliceData(42, 42)),
             child: Row(children: [
               Asset.load<Image>("icon_gold", height: 66.d),
               SkinnedText(cost.compact()),

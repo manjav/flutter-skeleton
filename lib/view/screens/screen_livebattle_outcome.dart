@@ -70,9 +70,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
               Widgets.rect(
                   margin: EdgeInsets.all(44.d),
                   height: 130.d,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: Asset.load<Image>("ui_ribbon_$color").image)),
+                  decoration: Widgets.imageDecore("ui_ribbon_$color"),
                   child: SkinnedText("fight_lebel_$color".l()))
             ]),
         onPressed: () => Navigator.popUntil(context, (route) => route.isFirst));
@@ -96,15 +94,10 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   }
 
   Widget _fractionBuilder(LiveOpponent opponent, List<LiveOpponent> team) {
-    var sliceData = ImageCenterSliceData(201, 158);
     return Widgets.rect(
         padding: EdgeInsets.fromLTRB(80.d, 90.d, 80.d, 60.d),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: Asset.load<Image>("liveout_bg_${opponent.fraction.name}",
-                        centerSlice: sliceData)
-                    .image,
-                centerSlice: sliceData.centerSlice)),
+        decoration: Widgets.imageDecore("liveout_bg_${opponent.fraction.name}",
+            ImageCenterSliceData(201, 158)),
         height: 580.d,
         child: Stack(
           alignment: Alignment.center,
@@ -126,18 +119,13 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   }
 
   Widget _headerBuilder(LiveOpponent opponent) {
-    var sliceData = ImageCenterSliceData(64, 59);
     return Positioned(
         top: -80.d,
         height: 70.d,
         child: Widgets.rect(
             padding: EdgeInsets.fromLTRB(64.d, 0, 64.d, 12.d),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: Asset.load<Image>("liveout_bg_header",
-                            centerSlice: sliceData)
-                        .image,
-                    centerSlice: sliceData.centerSlice)),
+            decoration: Widgets.imageDecore(
+                "liveout_bg_header", ImageCenterSliceData(64, 59)),
             child: SkinnedText(opponent.tribeName,
                 style: TStyles.medium.copyWith(height: 1))));
   }

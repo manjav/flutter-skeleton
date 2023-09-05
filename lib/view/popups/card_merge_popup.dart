@@ -126,7 +126,6 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
   }
 
   _submitButton() {
-    var bgCenterSlice = ImageCenterSliceData(42, 42);
     return Positioned(
       bottom: 40.d,
       height: 170.d,
@@ -139,13 +138,8 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
             SizedBox(width: 24.d),
             Widgets.rect(
               padding: EdgeInsets.only(right: 12.d),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      centerSlice: bgCenterSlice.centerSlice,
-                      image: Asset.load<Image>('ui_frame_inside',
-                              centerSlice: bgCenterSlice)
-                          .image)),
+              decoration: Widgets.imageDecore(
+                  "ui_frame_inside", ImageCenterSliceData(42, 42)),
               child: Row(children: [
                 Asset.load<Image>("icon_gold", height: 76.d),
                 SkinnedText(_getMergeCost().compact(), style: TStyles.large),

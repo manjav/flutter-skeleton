@@ -137,16 +137,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   }
 
   Widget _header(Account account) {
-    var slicingData = ImageCenterSliceData(117, 509);
     return Widgets.rect(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                centerSlice: slicingData.centerSlice,
-                image: Asset.load<Image>(
-                  "deck_header",
-                  centerSlice: slicingData,
-                ).image)),
+        decoration:
+            Widgets.imageDecore("deck_header", ImageCenterSliceData(117, 509)),
         padding: EdgeInsets.fromLTRB(28.d, 12.d, 28.d, 32.d),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

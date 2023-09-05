@@ -76,8 +76,6 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
 
   _button(String icon, String text, double x, double bottom, double width,
       [Function()? onPressed]) {
-    var bgCenterSlice = ImageCenterSliceData(
-        422, 202, const Rect.fromLTWH(85, 85, 422 - 85 * 2, 202 - 85 * 2));
     return Positioned(
         left: x.d,
         bottom: bottom.d,
@@ -85,14 +83,10 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
         height: 202.d,
         child: Widgets.button(
           onPressed: onPressed,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  centerSlice: bgCenterSlice.centerSlice,
-                  image: Asset.load<Image>(
-                    'ui_button_map',
-                    centerSlice: bgCenterSlice,
-                  ).image)),
+          decoration: Widgets.imageDecore(
+              "ui_button_map",
+              ImageCenterSliceData(422, 202,
+                  const Rect.fromLTWH(85, 85, 422 - 85 * 2, 202 - 85 * 2))),
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.center,

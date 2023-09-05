@@ -32,22 +32,15 @@ class CardHolder extends StatefulWidget {
 class _CardHolderState extends State<CardHolder> with KeyProvider {
   @override
   Widget build(BuildContext context) {
-    var balloonData =
-        ImageCenterSliceData(50, 57, const Rect.fromLTWH(11, 11, 2, 2));
-    var slicingData = ImageCenterSliceData(117, 117);
     return Column(children: [
       widget.card == null || !widget.showPower
           ? const SizedBox()
           : Widgets.rect(
               padding: EdgeInsets.all(12.d),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      centerSlice: balloonData.centerSlice,
-                      image: Asset.load<Image>(
-                        "deck_balloon",
-                        centerSlice: balloonData,
-                      ).image)),
+              decoration: Widgets.imageDecore(
+                  "deck_balloon",
+                  ImageCenterSliceData(
+                      50, 57, const Rect.fromLTWH(11, 11, 2, 2))),
               child: Text(widget.card!.power.compact(),
                   style: TStyles.mediumInvert)),
       Widgets.button(
@@ -55,14 +48,8 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
           width: widget.heroMode ? 202.d : 184.d,
           height: widget.heroMode ? 202.d : 184.d,
           padding: EdgeInsets.all(12.d),
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  centerSlice: slicingData.centerSlice,
-                  image: Asset.load<Image>(
-                    "deck_placeholder",
-                    centerSlice: slicingData,
-                  ).image)),
+          decoration: Widgets.imageDecore(
+              "deck_placeholder", ImageCenterSliceData(117, 117)),
           child: widget.card == null ? _emptyCard() : _filledCard())
     ]);
   }

@@ -48,20 +48,13 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
 
   Widget _tabItemBuilder(int index, TabData data) {
     var imageName = index == selectedTabIndex ? 'selected' : 'normal';
-    var slicingData = ImageCenterSliceData(68, 42);
     return Expanded(
       child: Widgets.button(
           margin: EdgeInsets.symmetric(horizontal: 6.d),
           padding: EdgeInsets.zero,
           height: 118.d,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  centerSlice: slicingData.centerSlice,
-                  image: Asset.load<Image>(
-                    'popup_tab_$imageName',
-                    centerSlice: slicingData,
-                  ).image)),
+          decoration: Widgets.imageDecore(
+              "popup_tab_$imageName", ImageCenterSliceData(68, 42)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -17,8 +17,6 @@ class LiveOpponentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var sliceData =
-        ImageCenterSliceData(68, 92, const Rect.fromLTWH(32, 34, 4, 4));
     var items = <Widget>[_titleBuilder(opponent)];
     if (isExpanded) {
       items.addAll([
@@ -33,15 +31,11 @@ class LiveOpponentView extends StatelessWidget {
       SkinnedText(opponent.base.name),
     ]);
     return Widgets.rect(
+        width: 400.d,
         alignment: Alignment.center,
         padding: EdgeInsets.fromLTRB(12.d, 12.d, 12.d, 0),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image:
-                    Asset.load<Image>("liveout_frame", centerSlice: sliceData)
-                        .image,
-                centerSlice: sliceData.centerSlice)),
-        width: 400.d,
+        decoration: Widgets.imageDecore("liveout_frame",
+            ImageCenterSliceData(68, 92, const Rect.fromLTWH(32, 34, 4, 4))),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center, children: items));
   }

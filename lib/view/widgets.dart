@@ -159,6 +159,15 @@ class Widgets {
         ));
   }
 
+  static BoxDecoration imageDecore(String path,
+      [ImageCenterSliceData? sliceData]) {
+    return BoxDecoration(
+        image: DecorationImage(
+            fit: BoxFit.fill,
+            image: Asset.load<Image>(path, centerSlice: sliceData).image,
+            centerSlice: sliceData?.centerSlice));
+  }
+
   static skinnedButton({
     String? label,
     String? icon,
@@ -193,14 +202,8 @@ class Widgets {
         constraints: constraints,
         margin: margin,
         padding: padding ?? EdgeInsets.fromLTRB(28.d, 25.d, 28.d, 40.d),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                centerSlice: slicingData.centerSlice,
-                image: Asset.load<Image>(
-                  "ui_button_${size.name}_${color.name}",
-                  centerSlice: slicingData,
-                ).image)),
+        decoration:
+            imageDecore("ui_button_${size.name}_${color.name}", slicingData),
         child: Opacity(
             opacity: isEnable ? 1 : 0.7,
             child: label != null || icon != null
@@ -227,14 +230,7 @@ class Widgets {
         width: width ?? 16.d,
         height: height ?? 16.d,
         margin: EdgeInsets.all(margin),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                centerSlice: slicingData.centerSlice,
-                image: Asset.load<Image>(
-                  "ui_divider_${v ? 'v' : 'h'}",
-                  centerSlice: slicingData,
-                ).image)));
+        decoration: imageDecore("ui_divider_${v ? 'v' : 'h'}", slicingData));
   }
 
   static slider(double min, double value, double max,

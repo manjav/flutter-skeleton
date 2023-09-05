@@ -226,18 +226,11 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   _group(String title, Widget child) {
-    var bgCenterSlice = ImageCenterSliceData(144, 144);
     return Expanded(
         child: Widgets.rect(
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.fill,
-                    centerSlice: bgCenterSlice.centerSlice,
-                    image: Asset.load<Image>(
-                      'ui_popup_group',
-                      centerSlice: bgCenterSlice,
-                    ).image)),
+            decoration: Widgets.imageDecore(
+                "ui_popup_group", ImageCenterSliceData(144, 144)),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               SkinnedText(title),

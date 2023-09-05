@@ -84,7 +84,6 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
   }
 
   _buttons(Account account, HeroCard hero, int capacity) {
-    var bgCenterSlice = ImageCenterSliceData(42, 42);
     int price = ((capacity - hero.potion) * HeroCard.evolveBaseNectar).round();
     var step = 50;
 
@@ -111,13 +110,8 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
               SizedBox(width: 16.d),
               Widgets.rect(
                 padding: EdgeInsets.only(right: 12.d),
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        centerSlice: bgCenterSlice.centerSlice,
-                        image: Asset.load<Image>('ui_frame_inside',
-                                centerSlice: bgCenterSlice)
-                            .image)),
+                decoration: Widgets.imageDecore(
+                    "ui_frame_inside", ImageCenterSliceData(42, 42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_nectar", height: 72.d),
                   SkinnedText(price.compact(), style: TStyles.large),

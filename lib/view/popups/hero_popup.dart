@@ -175,11 +175,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
             width: 144.d,
             height: 144.d,
             padding: EdgeInsets.all(12.d),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: Asset.load<Image>(
-                            "rect_${item == null ? "add" : "remove"}")
-                        .image)),
+            decoration:
+                Widgets.imageDecore("rect_${item == null ? "add" : "remove"}"),
             child: item == null
                 ? const SizedBox()
                 : Asset.load<Image>("heroitem_${item.base.image}"),

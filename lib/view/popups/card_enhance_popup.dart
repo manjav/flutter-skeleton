@@ -127,7 +127,6 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   Widget _enhanceButton(ButtonColor color, String text, List<Widget> children,
       bool isEnable, Function() onTap) {
-    var bgCenterSlice = ImageCenterSliceData(42, 42);
     return Widgets.skinnedButton(
         width: 460.d,
         height: 200.d,
@@ -140,13 +139,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
           SizedBox(width: 12.d),
           Widgets.rect(
               padding: EdgeInsets.all(12.d),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      centerSlice: bgCenterSlice.centerSlice,
-                      image: Asset.load<Image>('ui_frame_inside',
-                              centerSlice: bgCenterSlice)
-                          .image)),
+              decoration: Widgets.imageDecore(
+                  "ui_frame_inside", ImageCenterSliceData(42, 42)),
               child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
