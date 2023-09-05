@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -22,7 +21,6 @@ import '../widgets.dart';
 import '../widgets/live_battle/live_deck.dart';
 import '../widgets/live_battle/live_hero.dart';
 import '../widgets/live_battle/live_slot.dart';
-import '../widgets/live_battle/live_tribe.dart';
 import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
 
@@ -92,8 +90,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   @override
   Widget contentFactory() {
-    var alliseCards = _opponents[_alliseId]!.cards;
-    var axisCards = _opponents[_axisId]!.cards;
+    var alliseCards = _opponents[_allies.id]!.cards;
+    var axisCards = _opponents[_axis.id]!.cards;
     return Widgets.rect(
         color: const Color(0xffAA9A45),
         child: Stack(
@@ -195,8 +193,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           var mySlots = _opponents[_allies.id]!.cards;
           mySlots.setAtCard(_slotState.value.i, null, toggleMode: false);
           var index = _pageController.page!.round();
-            _gotoNextSlot(index, _slotState.value);
-          }
+          _gotoNextSlot(index, _slotState.value);
+        }
         _setSlot(i, (sum - tick).round());
         return;
       }

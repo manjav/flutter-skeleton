@@ -91,7 +91,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     itemBuilder: _tabItemBuilder,
                     scrollDirection: Axis.horizontal,
                     itemCount: _tabInputs.length)),
-            BlocConsumer<Services, ServicesState>(
+            BlocConsumer<ServicesBloc, ServicesState>(
                 builder: (context, state) => const SizedBox(),
                 listener: (context, state) => _selectTap(state.data as int))
           ],
