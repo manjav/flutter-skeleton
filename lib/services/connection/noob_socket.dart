@@ -5,11 +5,9 @@ import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
-import '../../data/core/ranking.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/iservices.dart';
 import '../../utils/utils.dart';
-import '../../view/widgets/card_holder.dart';
 
 enum NoobCommand { subscribe, unsubscribe }
 
@@ -170,31 +168,3 @@ class NoobFineMessage extends NoobMessage {
   }
 }
 
-class LiveOpponent {
-  final String name;
-  final int id, teamOwnerId, avatarId;
-  late final SelectedCards cards;
-  String tribeName = "";
-  Map<String, dynamic> map = {};
-  OpponentSide fraction = OpponentSide.allise;
-  int gold = 0, xp = 0, power = 0, score = 0;
-  Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
-  bool won = false;
-
-  LiveOpponent(this.id, this.teamOwnerId, this.avatarId, this.name) {
-    cards = SelectedCards([null, null, null, null, null]);
-  }
-
-  void addResult(Map<String, dynamic> map) {
-    this.map = map;
-    xp = map["added_xp"];
-    power = map["power"];
-    gold = map["added_gold"];
-    var benefits = map["hero_benefits_info"];
-    if (benefits.length > 0) {
-      heroBenefits["power"] = benefits["power_benefit"] ?? 0;
-      heroBenefits["gold"] = benefits["gold_benefit"] ?? 0;
-      heroBenefits["cooldown"] = benefits["cooldown_benefit"] ?? 0;
-    }
-}
-}

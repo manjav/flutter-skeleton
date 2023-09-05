@@ -7,6 +7,7 @@ import '../../utils/utils.dart';
 import 'building.dart';
 import 'card.dart';
 import 'infra.dart';
+import 'ranking.dart';
 
 enum AccountField {
   id,
@@ -395,6 +396,10 @@ class Account extends StringMap<dynamic> {
         card.value.power = (card.value.power * boost.boost).round();
       }
     }
+  }
+
+  Opponent toOpponent() {
+    return Opponent.init(map, map["id"]);
   }
 }
 

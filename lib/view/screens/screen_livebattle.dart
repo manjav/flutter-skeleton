@@ -46,7 +46,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   double _seconds = 0;
   int _maxPower = 0;
   bool _isDeckActive = true;
-  int _battleId = 0, _alliseId = 0, _axisId = 0;
+  int _battleId = 0;
+  late Opponent _allies, _axis;
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -61,22 +62,17 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
     LiveBattleScreen.deadlines = [27, 10, 10, 10, 0, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    var opponent = widget.args["opponent"] as Opponent?;
-    _alliseId = _account.get<int>(AccountField.id);
-    _axisId = opponent == null ? 0 : opponent.id;
+    _allies = _account.toOpponent();
+    _axis = (widget.args["opponent"] as Opponent?) ??
+        Opponent.init(
+            {"level": 10, "xp": 1200, "name": "Test", "tribe_name": "tribe"},
+            _allies.id);
+
     if (_opponents.isEmpty) {
-      _opponents[_alliseId] = LiveOpponent(
-        _alliseId,
-        _alliseId,
-        _account.get<int>(AccountField.avatar_id),
-        _account.get<String>(AccountField.name),
-      );
-      if (opponent == null) {
-        _opponents[_axisId] = LiveOpponent(_axisId, _axisId, 1, "Test");
-      } else {
-        _opponents[_axisId] =
-            LiveOpponent(_axisId, _axisId, opponent.avatarId, opponent.name);
-      }
+      _opponents[_allies.id] = LiveOpponent(_allies.id, _allies.id, _allies);
+      _opponents[_axis.id] = LiveOpponent(_axis.id, _axis.id, _axis);
+
+      _opponents[1] = LiveOpponent(1, _axis.id, _axis);
     }
 
     _deckCards.value = _account.getReadyCards(isClone: true);
@@ -169,7 +165,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   _deployCard(int index, AccountCard selectedCard) {
     var slot = _slotState.value;
     if (slot.i == 5) return;
-    var mySlots = _opponents[_alliseId]!.cards;
+    var mySlots = _opponents[_allies.id]!.cards;
     selectedCard.isDeployed = true;
     if (selectedCard.base.isHero) {
       _deckCards.removeWhere((card) => card!.base.isHero);
@@ -196,7 +192,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       sum += LiveBattleScreen.deadlines[i];
       if (tick < sum) {
         if (i > _slotState.value.i) {
-          var mySlots = _opponents[_alliseId]!.cards;
+          var mySlots = _opponents[_allies.id]!.cards;
           mySlots.setAtCard(_slotState.value.i, null, toggleMode: false);
           var index = _pageController.page!.round();
             _gotoNextSlot(index, _slotState.value);
@@ -250,7 +246,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     } else {
       if (!_opponents.containsKey(cardOwnerId)) {
         _opponents[cardOwnerId] = LiveOpponent(cardOwnerId, message.teamOwnerId,
-            Random().nextInt(10) + 1, message.ownerName);
+            Opponent.init({"name": message.ownerName}, _allies.id));
       }
       _opponents[cardOwnerId]!.cards.setAtCard(message.round - 1, message.card);
     }
@@ -260,7 +256,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void _updatePowerBalance() {
     var powerBalance = 0; // _account.calculatePower(_mySlots.value);
     for (var opponent in _opponents.values) {
-      var coef = opponent.teamOwnerId == _alliseId ? 1 : -1;
+      var coef = opponent.teamOwnerId == _allies.id ? 1 : -1;
       for (var card in opponent.cards.value) {
         if (card != null) powerBalance += card.power * coef;
       }
@@ -298,24 +294,23 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       var oppo = _opponents[info["id"]]!;
       oppo.addResult(info);
       oppo.won = oppo.id == message.winnerId;
-      if (oppo.teamOwnerId == _alliseId) {
-        if (oppo.id == _alliseId) {
+      if (oppo.teamOwnerId == _allies.id) {
+        if (oppo.id == _allies.id) {
           oppo.score = oppo.won ? message.winnerScore : message.loserScore;
         }
         oppo.tribeName = oppo.won ? message.winnerTribe : message.loserTribe;
       } else {
         oppo.fraction = OpponentSide.axis;
-        if (oppo.id == _axisId) {
+        if (oppo.id == _axis.id) {
           oppo.score = oppo.won ? message.winnerScore : message.loserScore;
         }
         oppo.tribeName = oppo.won ? message.winnerTribe : message.loserTribe;
       }
     }
 
-    // message.addBattleData(_alliseId, _axisId, _opponents);
     Navigator.pushNamed(context, Routes.livebattleOut.routeName, arguments: {
-      "alliseId": _alliseId,
-      "axisId": _axisId,
+      "alliseId": _allies.id,
+      "axisId": _axis.id,
       "opponents": _opponents.values.toList()
     });
   }

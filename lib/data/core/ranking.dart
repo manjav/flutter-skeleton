@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../services/prefs.dart';
 import '../../utils/utils.dart';
+import '../../view/widgets/card_holder.dart';
 import 'rpc.dart';
 
 class Ranks {
@@ -76,7 +77,7 @@ class TribeRank extends Rank {
 
 class Player extends Rank {
   String tribeName = "";
-  int level = 0, tribeId = 0, avatarId = 0;
+  int level = 0, tribeId = 0, avatarId = 1;
   Player.init(Map<String, dynamic>? map, int ownerId)
       : super.init(map, ownerId) {
     if (map == null) return;
@@ -84,7 +85,7 @@ class Player extends Rank {
     level = map["level"] ?? 0;
     tribeId = map["tribe_id"] ?? 0;
     tribeName = map["tribe_name"] ?? "";
-    avatarId = map["avatar_id"] ?? 0;
+    avatarId = map["avatar_id"] ?? 1;
   }
 }
 
@@ -180,7 +181,7 @@ class LeagueData {
   }
 }
 
-enum OpponentSide { allise, axis }
+enum OpponentSide { allies, axis }
 
 class Opponent extends Player {
   static int scoutCost = 0;
@@ -242,5 +243,34 @@ class Opponent extends Player {
     if (goldRate < 500 * accountLevel) return 2;
     if (goldRate < 1000 * accountLevel) return 3;
     return 4;
+  }
+}
+
+class LiveOpponent {
+  final Opponent base;
+  final int id, teamOwnerId;
+  late final SelectedCards cards;
+  String tribeName = "";
+  Map<String, dynamic> map = {};
+  OpponentSide fraction = OpponentSide.allies;
+  int gold = 0, xp = 0, power = 0, score = 0;
+  Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
+  bool won = false;
+
+  LiveOpponent(this.id, this.teamOwnerId, this.base) {
+    cards = SelectedCards([null, null, null, null, null]);
+  }
+
+  void addResult(Map<String, dynamic> map) {
+    this.map = map;
+    xp = map["added_xp"];
+    power = map["power"];
+    gold = map["added_gold"];
+    var benefits = map["hero_benefits_info"];
+    if (benefits.length > 0) {
+      heroBenefits["power"] = benefits["power_benefit"] ?? 0;
+      heroBenefits["gold"] = benefits["gold_benefit"] ?? 0;
+      heroBenefits["cooldown"] = benefits["cooldown_benefit"] ?? 0;
+    }
   }
 }
