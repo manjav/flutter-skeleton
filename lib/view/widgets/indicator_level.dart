@@ -76,7 +76,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
             progress: (_xp - _minXp) / (_maxXp - _minXp),
             shadowWidth: 16.d,
             progressWidth: 8.d,
-            borderRadius: 36.d,
+            borderRadius: widget.size * 0.2,
             startAngle: StartAngle.topRight,
             shadowColor: TColors.primary20,
             progressColor: TColors.green,

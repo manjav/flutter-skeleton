@@ -240,6 +240,7 @@ class Widgets {
       double? border,
       Color? borderColor,
       double? padding,
+      double? radius,
       Color? backgroundColor,
       Color progressColor = TColors.green}) {
     var w = width ?? 760.d;
@@ -251,7 +252,7 @@ class Widgets {
       height: h,
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(56.d)),
+          borderRadius: BorderRadius.all(Radius.circular(radius ?? 24.d)),
           color: backgroundColor ?? TColors.primary10),
       child: Stack(alignment: Alignment.center, children: [
         rect(
@@ -267,7 +268,7 @@ class Widgets {
               begin: FractionalOffset.topCenter,
               end: FractionalOffset.bottomCenter,
             ),
-            radius: 44.d),
+            radius: radius != null ? radius - 8.d : 16.d),
         child ?? const SizedBox()
       ]),
     );
