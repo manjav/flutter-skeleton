@@ -45,7 +45,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   double _seconds = 0;
   int _maxPower = 0;
   bool _isDeckActive = true;
-  int _battleId = 0;
+  int _battleId = 0, _helpCost = 0;
   late Opponent _allies, _axis;
 
   @override
@@ -56,10 +56,11 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   @override
   void initState() {
     _battleId = widget.args["battle_id"] ?? 0;
+    _helpCost = widget.args["help_cost"] ?? 1550;
     BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onReceive =
         _onNoobReceive;
 
-    LiveBattleScreen.deadlines = [27, 10, 10, 10, 0, 1];
+    LiveBattleScreen.deadlines = [28, 10, 10, 10, 0, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _allies = _account.toOpponent();
     _axis = (widget.args["opponent"] as Opponent?) ??
@@ -115,8 +116,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             LiveHero(_battleId, -0.35, axisCards),
             LiveHero(_battleId, 0.45, alliseCards),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
-            LiveTribe(_axis.id, _opponents, _helpCost),
-            LiveTribe(_allies.id, _opponents, _helpCost),
+            LiveTribe(_axis.id, _battleId, _helpCost, _opponents),
+            LiveTribe(_allies.id, _battleId, _helpCost, _opponents),
             Positioned(
                 width: 440.d,
                 bottom: 4.d,

@@ -1,21 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_skeleton/utils/utils.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../blocs/services_bloc.dart';
 import '../../../data/core/ranking.dart';
+import '../../../data/core/rpc.dart';
+import '../../../services/connection/http_connection.dart';
 import '../../../services/deviceinfo.dart';
 import '../../../utils/assets.dart';
+import '../../../utils/utils.dart';
 import '../../../view/widgets/indicator_level.dart';
 import '../../../view/widgets/live_battle/live_opponent.dart';
 import '../../../view/widgets/skinnedtext.dart';
 import '../../widgets.dart';
 
 class LiveTribe extends StatefulWidget {
-  final int ownerId, helpCost;
+  final int ownerId, battleId, helpCost;
   final Map<int, LiveOpponent> opponents;
 
-  const LiveTribe(this.ownerId, this.opponents, this.helpCost, {super.key});
+  const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.opponents,
+      {super.key});
 
   @override
   State<LiveTribe> createState() => _LiveTribeState();
@@ -115,9 +120,17 @@ class _LiveTribeState extends State<LiveTribe> with TickerProviderStateMixin {
         onPressed: _help);
   }
 
-  _help() {
+  _help() async {
     if (!_timer.isActive) return;
-    _timer.cancel();
     _requestSent = true;
+    try {
+      await BlocProvider.of<ServicesBloc>(context).get<HttpConnection>().tryRpc(
+          context, RpcId.battleHelp,
+          params: {RpcParams.battle_id.name: widget.battleId});
+      _timer.cancel();
+    } catch (e) {
+      _requestSent = false;
+    }
+    setState(() {});
   }
 }
