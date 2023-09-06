@@ -56,7 +56,7 @@ class _MineBuildingPopupState extends AbstractPopupState<MineBuildingPopup>
           Text(descriptionBuilder(),
               style: TStyles.medium.copyWith(height: 2.7.d)),
           SizedBox(height: 48.d),
-          upgtadeButton(state.account, building),
+          upgradeButton(state.account, building),
           Widgets.divider(margin: 36.d, width: 700.d),
           cardHolder(building),
           SizedBox(height: 48.d)

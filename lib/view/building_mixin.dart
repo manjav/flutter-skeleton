@@ -34,7 +34,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
     return SizedBox(width: 360.d, child: BuildingWidget(building));
   }
 
-  upgtadeButton(Account account, Building building) {
+  upgradeButton(Account account, Building building) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
