@@ -67,10 +67,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             _allies.id);
 
     if (_opponents.isEmpty) {
-      _opponents[_allies.id] = LiveOpponent(_allies.id, _allies.id, _allies);
-      _opponents[_axis.id] = LiveOpponent(_axis.id, _axis.id, _axis);
-
-      _opponents[1] = LiveOpponent(1, _axis.id, _axis);
+      _opponents[_allies.id] =
+          LiveOpponent(OpponentSide.allies, _allies.id, _allies.id, _allies);
+      _opponents[_axis.id] =
+          LiveOpponent(OpponentSide.axis, _axis.id, _axis.id, _axis);
     }
 
     _deckCards.value = _account.getReadyCards(isClone: true);
@@ -184,7 +184,6 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   void _setSlotTime(int tick) {
     if (_slotState.value.i == 5) return;
-    // const helpTimeout = 37;
     var sum = 0.0;
     for (var i = 0; i < LiveBattleScreen.deadlines.length; i++) {
       sum += LiveBattleScreen.deadlines[i];
@@ -237,13 +236,19 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   void _handleCardMessage(NoobCardMessage message) {
     var cardOwnerId = message.card!.ownerId;
+    var fraction = message.teamOwnerId == _allies.id
+        ? OpponentSide.allies
+        : OpponentSide.axis;
     if (cardOwnerId == _account.get(AccountField.id)) {
       var index = _deckCards.value.indexWhere((c) => c!.id == message.card!.id);
       _deckCards.value[index]!.lastUsedAt = message.card!.lastUsedAt;
       _deployCard(index, _deckCards.value[index]!);
     } else {
       if (!_opponents.containsKey(cardOwnerId)) {
-        _opponents[cardOwnerId] = LiveOpponent(cardOwnerId, message.teamOwnerId,
+        _opponents[cardOwnerId] = LiveOpponent(
+            fraction,
+            cardOwnerId,
+            message.teamOwnerId,
             Opponent.init({"name": message.ownerName}, _allies.id));
       }
       _opponents[cardOwnerId]!.cards.setAtCard(message.round - 1, message.card);
@@ -298,7 +303,6 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         }
         oppo.tribeName = oppo.won ? message.winnerTribe : message.loserTribe;
       } else {
-        oppo.fraction = OpponentSide.axis;
         if (oppo.id == _axis.id) {
           oppo.score = oppo.won ? message.winnerScore : message.loserScore;
         }

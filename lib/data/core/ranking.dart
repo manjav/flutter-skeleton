@@ -249,15 +249,15 @@ class Opponent extends Player {
 class LiveOpponent {
   final Opponent base;
   final int id, teamOwnerId;
+  final OpponentSide fraction;
   late final SelectedCards cards;
   String tribeName = "";
   Map<String, dynamic> map = {};
-  OpponentSide fraction = OpponentSide.allies;
   int gold = 0, xp = 0, power = 0, score = 0;
   Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
   bool won = false;
 
-  LiveOpponent(this.id, this.teamOwnerId, this.base) {
+  LiveOpponent(this.fraction, this.id, this.teamOwnerId, this.base) {
     cards = SelectedCards([null, null, null, null, null]);
   }
 

@@ -113,11 +113,13 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                       var color = switch (value.status) {
                         1 => TColors.green,
                         2 => TColors.accent,
-                        _ => TColors.white
+                        _ => TColors.black
                       };
+                      var raduis = Radius.circular(32.d);
                       return Widgets.rect(
-                          radius: 32.d,
-                          color: color.withOpacity(0.6),
+                          borderRadius: BorderRadius.only(
+                              topLeft: raduis, topRight: raduis),
+                          color: color.withOpacity(0.3),
                           padding: EdgeInsets.all(16.d),
                           height: 200.d,
                           child: Row(
