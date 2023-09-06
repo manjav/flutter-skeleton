@@ -15,6 +15,7 @@ import '../../utils/loader.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';
 import '../../view/widgets/loaderwidget.dart';
+import '../deviceinfo.dart';
 import '../iservices.dart';
 
 class HttpConnection extends IService {
@@ -34,17 +35,19 @@ class HttpConnection extends IService {
 
     // Load account data
     var params = <String, dynamic>{
-      RpcParams.udid.name:
-          '5675748eb59ad8cb1bd14eaa5f8ea043', //DeviceInfo.adId,
+      RpcParams.udid.name: DeviceInfo.adId,
       RpcParams.device_name.name: "Mansours MacBook Pro", //DeviceInfo.model,
       RpcParams.game_version.name: 'app_version'.l(),
       RpcParams.os_type.name: 2,
       RpcParams.os_version.name: "13.4.1", //DeviceInfo.osVersion,
       RpcParams.model.name: "GA02099", //DeviceInfo.model,
       RpcParams.store_type.name: "google",
-      RpcParams.restore_key.name: LoadingData.restoreKey ?? "hello69582879",
       // RpcParams.name.name: "ملعون"
+      // RpcParams.restore_key.name: LoadingData.restoreKey ?? "hello69582879",
     };
+    if (LoadingData.restoreKey != null) {
+      params[RpcParams.restore_key.name] = LoadingData.restoreKey;
+    }
     var data = await rpc(RpcId.playerLoad, params: params);
     loadData.account = Account()..init(data, args: loadData);
     LoadingData.restoreKey = null;
@@ -125,7 +128,7 @@ class HttpConnection extends IService {
     _proccessResponseHeaders(response.headers);
     // log(response.body);
     var body = id.needsEncryption ? response.body.xorDecrypt() : response.body;
-    log(body);
+    // log(body);
 
     var responseData = jsonDecode(body);
     if (!responseData['status']) {
