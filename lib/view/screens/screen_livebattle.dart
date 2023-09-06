@@ -21,6 +21,7 @@ import '../widgets.dart';
 import '../widgets/live_battle/live_deck.dart';
 import '../widgets/live_battle/live_hero.dart';
 import '../widgets/live_battle/live_slot.dart';
+import '../widgets/live_battle/live_tribe.dart';
 import '../widgets/live_battle/power_balance.dart';
 import 'iscreen.dart';
 
@@ -114,6 +115,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             LiveHero(_battleId, -0.35, axisCards),
             LiveHero(_battleId, 0.45, alliseCards),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
+            LiveTribe(_axis.id, _opponents, _helpCost),
+            LiveTribe(_allies.id, _opponents, _helpCost),
             Positioned(
                 width: 440.d,
                 bottom: 4.d,
