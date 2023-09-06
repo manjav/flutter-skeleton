@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_skeleton/utils/utils.dart';
 
@@ -9,24 +11,49 @@ import '../../../view/widgets/live_battle/live_opponent.dart';
 import '../../../view/widgets/skinnedtext.dart';
 import '../../widgets.dart';
 
-class LiveTribe extends StatelessWidget {
+class LiveTribe extends StatefulWidget {
   final int ownerId, helpCost;
-  final double _helpTimeout = 37;
   final Map<int, LiveOpponent> opponents;
 
   const LiveTribe(this.ownerId, this.opponents, this.helpCost, {super.key});
 
   @override
+  State<LiveTribe> createState() => _LiveTribeState();
+}
+
+class _LiveTribeState extends State<LiveTribe> with TickerProviderStateMixin {
+  final double _helpTimeout = 38;
+  late Timer _timer;
+  late AnimationController _animationControler;
+  bool _requestSent = false;
+
+  @override
+  void initState() {
+    _animationControler = AnimationController(
+        vsync: this, upperBound: _helpTimeout, value: _helpTimeout);
+    const duration = Duration(seconds: 1);
+    _timer = Timer.periodic(duration, (t) {
+      if (t.tick > _helpTimeout) {
+        t.cancel();
+        setState(() {});
+      }
+      _animationControler.animateTo(_helpTimeout - t.tick.toDouble(),
+          curve: Curves.easeInOutSine, duration: duration);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var side = opponents[ownerId]!.fraction;
-    var team = opponents.values
-        .where((o) => o.fraction == side && o != opponents[ownerId]!);
+    var side = widget.opponents[widget.ownerId]!.fraction;
+    var team = widget.opponents.values.where(
+        (o) => o.fraction == side && o != widget.opponents[widget.ownerId]!);
     var items = <Widget>[
       LevelIndicator(
           size: 150.d,
-          level: opponents.values.first.base.level,
-          xp: opponents.values.first.base.score,
-          avatarId: opponents.values.first.base.avatarId),
+          level: widget.opponents.values.first.base.level,
+          xp: widget.opponents.values.first.base.score,
+          avatarId: widget.opponents.values.first.base.avatarId),
       Widgets.divider(margin: 16.d, height: 56.d, direction: Axis.vertical)
     ];
     if (team.isEmpty && side == OpponentSide.allies) {
@@ -52,9 +79,13 @@ class LiveTribe extends StatelessWidget {
   }
 
   Widget _hornButton() {
+    if (_requestSent) {
+      return const SizedBox();
+    }
     return Widgets.skinnedButton(
         width: 320.d,
         height: 150.d,
+        isEnable: _timer.isActive,
         color: ButtonColor.teal,
         padding: EdgeInsets.fromLTRB(20.d, 0.d, 20.d, 8.d),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -67,15 +98,26 @@ class LiveTribe extends StatelessWidget {
                     "ui_frame_inside", ImageCenterSliceData(42, 42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_gold", height: 76.d),
-                  SkinnedText(helpCost.compact()),
+                  SkinnedText(widget.helpCost.compact()),
                 ]))
           ]),
           SizedBox(height: 12.d),
-          Widgets.slider(0, 13.0, _helpTimeout,
-              width: 270.d, height: 22.d, border: 2, radius: 10.d, padding: 4.d)
+          AnimatedBuilder(
+              animation: _animationControler,
+              builder: (context, child) => Widgets.slider(
+                  0, _animationControler.value, _helpTimeout,
+                  width: 270.d,
+                  height: 22.d,
+                  border: 2,
+                  radius: 10.d,
+                  padding: 4.d))
         ]),
         onPressed: _help);
   }
 
-  _help() {}
+  _help() {
+    if (!_timer.isActive) return;
+    _timer.cancel();
+    _requestSent = true;
+  }
 }
