@@ -29,6 +29,7 @@ class CardMergePopup extends AbstractPopup {
 
 class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     with CardEditMixin {
+  final bool _hackMode = false;
   @override
   void initState() {
     selectedCards.addCard(widget.args['card']);
@@ -198,15 +199,22 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     if (cards.length < 2) {
       // Show other mergable cards
       selectedCards.clear();
+      selectedCards.addCard(cards[0]);
       await Future.delayed(const Duration(milliseconds: 50));
       // Close if mergable cards not available
       if (mounted && cards.length < 2) {
         Navigator.popUntil(context, (route) => route.isFirst);
+        return;
       }
     } else {
       // Add onother same-type mergable card
       selectedCards.value.clear();
       selectedCards.addCard(cards[0]);
+    }
+    if (_hackMode) {
+      selectedCards.addCard(cards[1]);
+      await Future.delayed(const Duration(milliseconds: 1800));
+      if (mounted) _merge();
     }
   }
 }

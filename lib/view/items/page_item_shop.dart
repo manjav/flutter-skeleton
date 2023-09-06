@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,6 +27,7 @@ class ShopPageItem extends AbstractPageItem {
 
 class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   late Account _account;
+  final bool _hackMode = false;
   @override
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
@@ -170,8 +173,13 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       result.remove('cards');
       _account.update(result);
       if (mounted) {
-        Navigator.pushNamed(context, Routes.openPack.routeName,
-            arguments: result);
+        if (_hackMode) {
+          await Future.delayed(const Duration(milliseconds: 1750));
+          if (mounted) _onItemPressed(item);
+        } else {
+          Navigator.pushNamed(context, Routes.openPack.routeName,
+              arguments: result);
+        }
       }
     } finally {}
   }
