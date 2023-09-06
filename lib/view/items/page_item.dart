@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../services/localization.dart';
+import '../../services/theme.dart';
 import '../../utils/ilogger.dart';
+import '../../view/widgets/skinnedtext.dart';
 
 class AbstractPageItem extends StatefulWidget {
   final String name;
@@ -14,6 +17,6 @@ class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
     with ILogger {
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text(widget.name));
+    return Center(child: SkinnedText("coming_soon".l(), style: TStyles.large));
   }
 }
