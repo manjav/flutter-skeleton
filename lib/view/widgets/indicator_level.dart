@@ -62,41 +62,40 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   }
 
   _elementsBuilder() {
+    var s = widget.size / 200;
     return Widgets.button(
+      radius: 54 * s,
+      color: TColors.clay,
       width: widget.size,
-      height: widget.size + 5.d,
-      padding: EdgeInsets.fromLTRB(22.d, 20.d, 22.d, 26.d),
-      decoration: Widgets.imageDecore(
-          "ui_frame_wood_big", ImageCenterSliceData(134, 134)),
+      height: widget.size,
+      padding: EdgeInsets.all(12 * s),
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
           SquarePercentIndicator(
             progress: (_xp - _minXp) / (_maxXp - _minXp),
-            shadowWidth: 16.d,
-            progressWidth: 8.d,
+            // shadowWidth: 16 * s,
+            // progressWidth: 6 * s,
             borderRadius: widget.size * 0.2,
             startAngle: StartAngle.topRight,
             shadowColor: TColors.primary20,
             progressColor: TColors.green,
           ),
-          Positioned(
-              top: -24.d,
-              left: widget.align == TextAlign.left ? widget.size - 56.d : null,
-              right:
-                  widget.align == TextAlign.right ? widget.size - 56.d : null,
-              child: SkinnedText(
-                _level.toString(),
-                style: TStyles.medium,
-              )),
           Widgets.rect(
-              margin: EdgeInsets.all(14.d),
-              padding: EdgeInsets.all(4.d),
-              color: TColors.primary20,
-              radius: 20.d,
+              margin: EdgeInsets.all(4 * s),
+              // padding: EdgeInsets.all(4.d),
+              // color: TColors.primary20,
+              radius: 20 * s,
               child: LoaderWidget(AssetType.image, 'avatar_$_avatarId',
                   subFolder: 'avatars')),
+          Positioned(
+              top: -24 * s,
+              left:
+                  widget.align == TextAlign.left ? widget.size - 56 * s : null,
+              right:
+                  widget.align == TextAlign.right ? widget.size - 56 * s : null,
+              child: SkinnedText(_level.toString())),
         ],
       ),
     );
