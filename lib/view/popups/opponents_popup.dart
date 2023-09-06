@@ -106,55 +106,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                     onPageChanged: (value) =>
                         _selectMap(opponents, value + 0.0, pageChange: false),
                     controller: _pageController),
-                ValueListenableBuilder<Opponent>(
-                    valueListenable: _selectedOpponent,
-                    builder: (context, value, child) {
-                      if (value.id == 0) return const SizedBox();
-                      var color = switch (value.status) {
-                        1 => TColors.green,
-                        2 => TColors.accent,
-                        _ => TColors.black
-                      };
-                      var raduis = Radius.circular(32.d);
-                      return Widgets.rect(
-                          borderRadius: BorderRadius.only(
-                              topLeft: raduis, topRight: raduis),
-                          color: color.withOpacity(0.3),
-                          padding: EdgeInsets.all(16.d),
-                          height: 200.d,
-                          child: Row(
-                            children: [
-                              LevelIndicator(
-                                  size: 170.d,
-                                  level: value.level,
-                                  xp: value.score,
-                                  avatarId: value.avatarId),
-                              SizedBox(width: 16.d),
-                              Expanded(
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                    SizedBox(height: 36.d),
-                                    SkinnedText(
-                                      value.name,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SkinnedText(value.tribeName,
-                                        style: TStyles.small),
-                                  ])),
-                              SizedBox(width: 16.d),
-                              Indicator(
-                                  widget.type.name, AccountField.league_rank,
-                                  width: 240.d,
-                                  hasPlusIcon: false,
-                                  data: value.leagueId,
-                                  value: _selectedOpponent.value.leagueRank)
-                            ],
-                          ));
-                    }),
+                _headerBuilder()
               ],
             )));
   }
@@ -182,7 +134,54 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         ));
   }
 
-  _groups() {
+  Widget _headerBuilder() {
+    return ValueListenableBuilder<Opponent>(
+        valueListenable: _selectedOpponent,
+        builder: (context, value, child) {
+          if (value.id == 0) return const SizedBox();
+          var color = switch (value.status) {
+            1 => TColors.green,
+            2 => TColors.accent,
+            _ => TColors.black
+          };
+          var tribeStyle = TStyles.small.copyWith(height: 1);
+          var raduis = Radius.circular(32.d);
+          return Widgets.rect(
+              borderRadius:
+                  BorderRadius.only(topLeft: raduis, topRight: raduis),
+              color: color.withOpacity(0.3),
+              padding: EdgeInsets.all(16.d),
+              height: 200.d,
+              child: Row(
+                children: [
+                  LevelIndicator(
+                      size: 170.d,
+                      level: value.level,
+                      xp: value.score,
+                      avatarId: value.avatarId),
+                  SizedBox(width: 16.d),
+                  Expanded(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                        SizedBox(height: 24.d),
+                        SkinnedText(value.name,
+                            overflow: TextOverflow.ellipsis),
+                        SkinnedText(value.tribeName, style: tribeStyle),
+                      ])),
+                  SizedBox(width: 16.d),
+                  Indicator(widget.type.name, AccountField.league_rank,
+                      width: 240.d,
+                      hasPlusIcon: false,
+                      data: value.leagueId,
+                      value: _selectedOpponent.value.leagueRank)
+                ],
+              ));
+        });
+  }
+
+  Widget _groups() {
     return Widgets.rect(
       padding: EdgeInsets.all(28.d),
       height: 280.d,
@@ -227,7 +226,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     );
   }
 
-  _group(String title, Widget child) {
+  Widget _group(String title, Widget child) {
     return Expanded(
         child: Widgets.rect(
             alignment: Alignment.center,
@@ -240,7 +239,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             ])));
   }
 
-  _buttons(List<Opponent> opponents) {
+  Widget _buttons(List<Opponent> opponents) {
     return ValueListenableBuilder<Opponent>(
         valueListenable: _selectedOpponent,
         builder: (context, value, child) {
@@ -285,7 +284,8 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         });
   }
 
-  _selectMap(List<Opponent> opponents, double page, {bool pageChange = true}) {
+  void _selectMap(List<Opponent> opponents, double page,
+      {bool pageChange = true}) {
     var index = page.clamp(0, opponents.length - 1).round();
     if (pageChange) {
       _pageController.animateToPage(index,
@@ -294,7 +294,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     _selectedOpponent.value = opponents[index];
   }
 
-  _scout() async {
+  void _scout() async {
     try {
       await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
@@ -304,7 +304,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     } finally {}
   }
 
-  _attack() async {
+  void _attack() async {
     if (_selectedOpponent.value.status == 2) {
       toast("error_139".l());
       return;
