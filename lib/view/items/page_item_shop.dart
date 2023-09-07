@@ -42,9 +42,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         child: Column(
           children: [
             _header("shop_packs".l()),
-            _grid(1),
+            _grid(ShopSections.card),
             _header("shop_boosts".l()),
-            _grid(3)
+            _grid(ShopSections.boost)
           ],
         ));
   }
@@ -54,10 +54,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         height: 140.d, child: SkinnedText(title, style: TStyles.large));
   }
 
-  _grid(int itemType) {
-    var items = _account.loadingData.shopItems
-        .where((item) => item.type == itemType)
-        .toList();
+  Widget _grid(ShopSections section) {
+    var items = _account.loadingData.shopItems[section]!;
     var crossAxisCount = 3;
     var ratio = 0.65;
     return SizedBox(
