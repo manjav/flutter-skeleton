@@ -322,7 +322,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _close() {
-    BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onReceive = null;
+    BlocProvider.of<ServicesBloc>(context)
+        .get<NoobSocket>()
+        .onReceive
+        .remove(_onNoobReceive);
     _timer.cancel();
     _pageController.dispose();
     Navigator.pop(context);

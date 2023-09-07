@@ -16,7 +16,7 @@ extension NoobCommandExtension on NoobCommand {
 }
 
 class NoobSocket extends IService {
-  Function(NoobMessage)? onReceive;
+  List<Function(NoobMessage)> onReceive = [];
   late TcpSocketConnection _socketConnection;
 
   late Account _account;
@@ -48,9 +48,10 @@ class NoobSocket extends IService {
     message = b64.decode(message.xorDecrypt(secret: _secret));
     var noobMessage =
         NoobMessage.getProperMessage(_account, jsonDecode(message));
-    if (noobMessage.type != NoobMessages.playerStatus) log(message);
     _updateStatus(noobMessage);
-    onReceive?.call(noobMessage);
+    for (var method in onReceive) {
+      method.call(noobMessage);
+    }
   }
 
   void _run(NoobCommand command, String message) {
@@ -167,4 +168,3 @@ class NoobFineMessage extends NoobMessage {
     opponentsInfo = map["players_info"].values.toList();
   }
 }
-
