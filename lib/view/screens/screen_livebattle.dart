@@ -169,6 +169,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   _deployCard(int index, AccountCard selectedCard) {
+    _account.getCards()[selectedCard.id]?.lastUsedAt = selectedCard.lastUsedAt;
+
     var slot = _slotState.value;
     if (slot.i == 5) return;
     var mySlots = _opponents[_allies.id]!.cards;
@@ -247,10 +249,12 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     var fraction = message.teamOwnerId == _allies.id
         ? OpponentSide.allies
         : OpponentSide.axis;
-    if (cardOwnerId == _account.get(AccountField.id)) {
+    if (cardOwnerId == _allies.id) {
       var index = _deckCards.value.indexWhere((c) => c!.id == message.card!.id);
-      _deckCards.value[index]!.lastUsedAt = message.card!.lastUsedAt;
+      if (index > -1) {
+        _deckCards.value[index]?.lastUsedAt = message.card!.lastUsedAt;
       _deployCard(index, _deckCards.value[index]!);
+      }
     } else {
       if (!_opponents.containsKey(cardOwnerId)) {
         _opponents[cardOwnerId] = LiveOpponent(
@@ -259,7 +263,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             message.teamOwnerId,
             Opponent.init({"name": message.ownerName}, _allies.id));
       }
-      _opponents[cardOwnerId]!.cards.setAtCard(message.round - 1, message.card);
+      _opponents[cardOwnerId]?.cards.setAtCard(message.round - 1, message.card);
     }
     _updatePowerBalance();
   }
@@ -290,7 +294,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           card.power = entry.value;
         } else {
           card.lastUsedAt = entry.value;
-          _account.getCards()[card.id]!.lastUsedAt = card.lastUsedAt;
+          _account.getCards()[card.id]?.lastUsedAt = card.lastUsedAt;
         }
         _opponents[message.ownerId]!
             .cards
