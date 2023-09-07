@@ -13,6 +13,7 @@ import '../../utils/utils.dart';
 import 'account.dart';
 import 'building.dart';
 import 'infra.dart';
+import 'result.dart';
 
 enum FriutFields {
   id,
@@ -188,7 +189,11 @@ class AccountCard {
       if (context.mounted) {
         BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
       }
-    } finally {}
+    } on RpcException catch (e) {
+      if (e.statusCode == StatusCode.C178_COOL_ENOUGH) {
+        lastUsedAt = 0;
+      }
+    }
   }
 
   CardData? findNextLevel() {
