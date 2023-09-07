@@ -28,10 +28,12 @@ class ShopPageItem extends AbstractPageItem {
 
 class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   late Account _account;
-  final bool _hackMode = false;
+  final bool _hackMode = true;
+
   @override
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
+    _fetchData();
     super.initState();
   }
 
@@ -41,17 +43,52 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         padding: EdgeInsets.fromLTRB(0, 160.d, 0, 220.d),
         child: Column(
           children: [
-            _header("shop_packs".l()),
+            _header(ShopSections.gold),
+            _grid(ShopSections.gold),
+            _header(ShopSections.nectar),
+            _grid(ShopSections.nectar),
+            _header(ShopSections.card),
             _grid(ShopSections.card),
-            _header("shop_boosts".l()),
+            _header(ShopSections.boost),
             _grid(ShopSections.boost)
           ],
         ));
   }
 
-  _header(String title) {
-    return SizedBox(
-        height: 140.d, child: SkinnedText(title, style: TStyles.large));
+  Widget _header(ShopSections section) {
+    return Container(
+        clipBehavior: Clip.none,
+        decoration: Widgets.imageDecore("shop_header_${section.name}",
+            ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 56, 2, 2))),
+        width: 1000.d,
+        height: 188.d,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(width: 30.d),
+            Widgets.rect(
+                transform: Matrix4.rotationZ(-0.15),
+                width: 170.d,
+                height: 170.d,
+                child: section == ShopSections.gold
+                    ? Widgets.rect(
+                        // height: 144.d,
+                        decoration: Widgets.imageDecore("icon_star"),
+                        child: SkinnedText("x${_getShopMultiplier().toInt()}"))
+                    : null),
+            SizedBox(width: 130.d),
+            const Expanded(child: SizedBox()),
+            Asset.load<Image>("icon_${section.name}", width: 64.d),
+            SizedBox(width: 10.d),
+            SkinnedText("shop_${section.name}".l()),
+            const Expanded(child: SizedBox()),
+            SizedBox(
+                width: 330.d,
+                child: section == ShopSections.gold
+                    ? SkinnedText("ˣ${81231.toRemainingTime(complete: true)}")
+                    : null),
+          ],
+        ));
   }
 
   Widget _grid(ShopSections section) {
@@ -187,6 +224,15 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
               arguments: result);
         }
       }
+    } finally {}
+  }
+
+  Future<void> _fetchData() async {
+    try {
+      var result = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.getShopitems);
+      print(result);
     } finally {}
   }
 }
