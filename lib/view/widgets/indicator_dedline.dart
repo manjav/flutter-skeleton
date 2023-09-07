@@ -57,7 +57,7 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator> {
                   Align(
                       alignment: const Alignment(0, 0.3),
                       child: Text(
-                          "${((widget.deadline.boost.boost - 1) * 100).round()}%")),
+                          "${((widget.deadline.boost.ratio - 1) * 100).round()}%")),
                   SkinnedText(remaining.toRemainingTime()),
                 ],
               ));
