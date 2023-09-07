@@ -27,8 +27,8 @@ class LiveTribe extends StatefulWidget {
 }
 
 class _LiveTribeState extends State<LiveTribe> with TickerProviderStateMixin {
-  final double _helpTimeout = 38;
   late Timer _timer;
+  final double _helpTimeout = 38;
   late AnimationController _animationControler;
   bool _requestSent = false;
 
@@ -132,5 +132,11 @@ class _LiveTribeState extends State<LiveTribe> with TickerProviderStateMixin {
       _requestSent = false;
     }
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 }
