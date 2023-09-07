@@ -21,15 +21,21 @@ class NoobSocket extends IService {
 
   late Account _account;
   late OpponentsBloc _opponents;
+  int _lastMessageReceiveTime = 0;
 
   String get _secret => "floatint201412bool23string";
+  bool get isConnected =>
+      DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 100;
 
   @override
   initialize({List<Object>? args}) async {
     super.initialize(args: args);
     _account = args![0] as Account;
     _opponents = args[1] as OpponentsBloc;
+    connect();
+  }
 
+  connect() async {
     _socketConnection =
         TcpSocketConnection(LoadingData.chatIp, LoadingData.chatPort);
     // _socketConnection.enableConsolePrint(true);
@@ -38,6 +44,7 @@ class NoobSocket extends IService {
   }
 
   void _messageReceived(String message) {
+    _lastMessageReceiveTime = DateTime.now().secondsSinceEpoch;
     var startIndex = message.indexOf("__JSON__START__");
     var endIndex = message.indexOf("__JSON__END__");
     if (startIndex < 0 || endIndex < 0) {

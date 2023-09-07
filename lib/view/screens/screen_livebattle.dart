@@ -57,8 +57,12 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void initState() {
     _battleId = widget.args["battle_id"] ?? 0;
     _helpCost = widget.args["help_cost"] ?? 1550;
-    BlocProvider.of<ServicesBloc>(context).get<NoobSocket>().onReceive =
-        _onNoobReceive;
+
+    var socket = BlocProvider.of<ServicesBloc>(context).get<NoobSocket>();
+    if (!socket.isConnected) {
+      socket.connect();
+    }
+    socket.onReceive.add(_onNoobReceive);
 
     LiveBattleScreen.deadlines = [28, 10, 10, 10, 0, 1];
     _account = BlocProvider.of<AccountBloc>(context).account!;
