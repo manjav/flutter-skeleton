@@ -72,13 +72,16 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 childAspectRatio: ratio, crossAxisCount: crossAxisCount),
             itemBuilder: (c, i) {
-              if (itemType == 3) return _itemBoostBuilder(i, items[i]);
-              return _itemPackBuilder(i, items[i]);
+              return switch (section) {
+                ShopSections.card => _itemCardBuilder(i, items[i]),
+                ShopSections.boost => _itemBoostBuilder(i, items[i]),
+                _ => const SizedBox()
+              };
             }));
   }
 
-  _itemPackBuilder(int index, ShopItem item) {
-    var title = "shop_${item.type}_${item.id}";
+  Widget _itemCardBuilder(int index, ShopItem item) {
+    var title = "shop_${item.section.name}_${item.id}";
     return _baseItemBilder(
         index,
         title,
@@ -87,8 +90,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             child: LoaderWidget(AssetType.image, title, subFolder: 'shop')));
   }
 
-  _itemBoostBuilder(int index, ShopItem item) {
-    var title = item.id < 22 ? "shop_xp" : "shop_power";
+  Widget _itemBoostBuilder(int index, ShopItem item) {
+    var title = item.id < 22 ? "shop_boost_xp" : "shop_boost_power";
     return _baseItemBilder(
         index,
         title,
@@ -96,7 +99,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         Expanded(
             child: Stack(alignment: const Alignment(0, 0.44), children: [
           LoaderWidget(AssetType.image, title, subFolder: 'shop'),
-          SkinnedText("${((item.boost - 1) * 100).round()}%"),
+          SkinnedText("${((item.ratio - 1) * 100).round()}%"),
         ])));
   }
 

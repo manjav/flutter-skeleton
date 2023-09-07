@@ -11,8 +11,8 @@ class LoadingData {
   late Cards baseCards;
   late Fruits fruits;
   late List<ComboHint> comboHints;
-  late List<ShopItem> shopItems;
   late Map<int, BaseHeroItem> baseHeroItems;
+  late Map<ShopSections, List<ShopItem>> shopItems;
   LoadingData();
 
   void init(data) {
@@ -24,28 +24,45 @@ class LoadingData {
   }
 }
 
+enum ShopSections { none, card, gold, boost, nectar, subscription }
+
+extension ShopSectionsExtrension on ShopSections {
+  String getCurrecy() {
+    return switch (this) {
+      ShopSections.gold ||
+      ShopSections.nectar ||
+      ShopSections.subscription =>
+        "real",
+      _ => "nectar"
+    };
+  }
+}
+
 class ShopData {
   static const boostDeadline = 18000;
-  static List<ShopItem> init(List shopItems) {
-    var list = <ShopItem>[];
-    for (var shopItem in shopItems) {
-      list.add(ShopItem(shopItem));
+  static Map<ShopSections, List<ShopItem>> init(Map shopItems) {
+    var map = <ShopSections, List<ShopItem>>{};
+    for (var entry in shopItems.entries) {
+      var section = ShopSections.values[int.parse(entry.key)];
+      map[section] = [];
+      for (var shopItem in entry.value) {
+        map[section]!.add(ShopItem(section, shopItem));
+      }
     }
-    return list;
+    return map;
   }
 }
 
 class ShopItem {
-  int id = 0, type = 0, minLevel = 1, price = 0, level = 1;
-  double boost = 1.0;
+  int id = 0, price = 0, level = 1;
+  double ratio = 1.0;
   String currency = "nectar";
-  ShopItem(Map data) {
+  final ShopSections section;
+  ShopItem(this.section, Map data) {
     id = data["id"];
-    type = data["type"];
-    minLevel = data["minLevel"] ?? 1;
     price = data["price"] ?? 0;
-    currency = data["currency"] ?? "nectar";
     level = data["level"] ?? 1;
-    boost = data["boost"] ?? 1.0;
+    ratio = data["ratio"] ?? 1.0;
+    currency = data["currency"] ?? section.getCurrecy();
   }
 }

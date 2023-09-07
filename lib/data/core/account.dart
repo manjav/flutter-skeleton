@@ -385,15 +385,15 @@ class Account extends StringMap<dynamic> {
     if (deadline <= now) return;
 
     List<Deadline> deadlines = map["deadlines"] ?? [];
-    var boost =
-        loadingData.shopItems.firstWhere((item) => item.id == get<int>(id));
+    var boost = loadingData.shopItems[ShopSections.boost]!
+        .firstWhere((item) => item.id == get<int>(id));
     deadlines.add(Deadline(deadline, boost));
     map["deadlines"] = deadlines;
 
     if (id == AccountField.pwboost_id) {
       var cards = getCards().entries;
       for (var card in cards) {
-        card.value.power = (card.value.power * boost.boost).round();
+        card.value.power = (card.value.power * boost.ratio).round();
       }
     }
   }
