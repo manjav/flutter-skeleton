@@ -15,6 +15,7 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/page_item.dart';
+import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
@@ -79,7 +80,11 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   _itemPackBuilder(int index, ShopItem item) {
     var title = "shop_${item.type}_${item.id}";
     return _baseItemBilder(
-        index, title, item, Expanded(child: Asset.load<Image>(title)));
+        index,
+        title,
+        item,
+        Expanded(
+            child: LoaderWidget(AssetType.image, title, subFolder: 'shop')));
   }
 
   _itemBoostBuilder(int index, ShopItem item) {
@@ -90,7 +95,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         item,
         Expanded(
             child: Stack(alignment: const Alignment(0, 0.44), children: [
-          Asset.load<Image>(title),
+          LoaderWidget(AssetType.image, title, subFolder: 'shop'),
           SkinnedText("${((item.boost - 1) * 100).round()}%"),
         ])));
   }
