@@ -151,7 +151,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
         width: 150.d,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Row(mainAxisSize: MainAxisSize.min, children: [
-            Asset.load<Image>("icon_cards", height: 46.d),
+            Asset.load<Image>("icon_card", height: 46.d),
             SkinnedText(" ${3 - index}")
           ]),
           Row(mainAxisSize: MainAxisSize.min, children: [

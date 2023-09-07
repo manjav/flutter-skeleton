@@ -28,7 +28,7 @@ class LiveOpponentView extends StatelessWidget {
     }
     items.addAll([
       const Expanded(child: SizedBox()),
-      SkinnedText(opponent.base.name),
+      SkinnedText(opponent.base.name, overflow: TextOverflow.ellipsis),
     ]);
     return Widgets.rect(
         width: 400.d,
