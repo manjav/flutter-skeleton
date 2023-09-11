@@ -155,12 +155,26 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             }));
   }
 
-  Widget _itemCardBuilder(int index, ShopItem item) {
-    var title = "shop_${item.section.name}_${item.id}";
+  Widget _itemNectarBuilder(int index, ShopItemVM item) {
+    var title = _getTitle(item.base);
     return _baseItemBilder(
         index,
         title,
+        "",
         item,
+        Stack(alignment: Alignment.center, children: [
+          LoaderWidget(AssetType.image, title, subFolder: 'shop'),
+          Align(
+              alignment: const Alignment(0, 1),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Asset.load<Image>("icon_nectar", width: 76.d),
+                SkinnedText(item.base.value.compact(), style: TStyles.large)
+              ])),
+          _percentageBadge(item.base.ratio),
+          _rewardBadge(item.base.reward),
+        ]));
+  }
+
   Widget _itemCardBuilder(int index, ShopItemVM item) {
     var title = _getTitle(item.base);
     return _baseItemBilder(index, title, title, item,
