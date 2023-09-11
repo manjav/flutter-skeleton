@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,7 +29,8 @@ class ShopPageItem extends AbstractPageItem {
 
 class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   late Account _account;
-  final bool _hackMode = true;
+  Map<ShopSections, List<ShopItemVM>> _items = {};
+  final bool _hackMode = false;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     _fetchData();
     super.initState();
   }
+
   _fetchData() async {
     if (_account.loadingData.shopProceedItems != null) {
       _items = _account.loadingData.shopProceedItems!;
@@ -103,14 +106,13 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(width: 30.d),
+            SizedBox(width: 20.d),
             Widgets.rect(
                 transform: Matrix4.rotationZ(-0.15),
                 width: 170.d,
                 height: 170.d,
                 child: section == ShopSections.gold
                     ? Widgets.rect(
-                        // height: 144.d,
                         decoration: Widgets.imageDecore("icon_star"),
                         child: SkinnedText("x${_getShopMultiplier().toInt()}"))
                     : null),
@@ -118,10 +120,10 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             const Expanded(child: SizedBox()),
             Asset.load<Image>("icon_${section.name}", width: 64.d),
             SizedBox(width: 10.d),
-            SkinnedText("shop_${section.name}".l()),
+            SkinnedText("shop_${section.name}".l(), style: TStyles.large),
             const Expanded(child: SizedBox()),
             SizedBox(
-                width: 330.d,
+                width: 320.d,
                 child: section == ShopSections.gold
                     ? SkinnedText("ˣ${81231.toRemainingTime(complete: true)}")
                     : null),
