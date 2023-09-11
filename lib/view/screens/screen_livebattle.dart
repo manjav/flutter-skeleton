@@ -161,9 +161,12 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         RpcParams.card.name: selectedCard.id,
         RpcParams.round.name: _slotState.value.i + 1,
       };
-      await BlocProvider.of<ServicesBloc>(context)
+      var result = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.battleSetCard, params: params);
+
+      selectedCard.lastUsedAt = result["last_used_at"];
+      _deployCard(index, selectedCard);
     } finally {}
     _isDeckActive = true;
   }
@@ -249,13 +252,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     var fraction = message.teamOwnerId == _allies.id
         ? OpponentSide.allies
         : OpponentSide.axis;
-    if (cardOwnerId == _allies.id) {
-      var index = _deckCards.value.indexWhere((c) => c!.id == message.card!.id);
-      if (index > -1) {
-        _deckCards.value[index]?.lastUsedAt = message.card!.lastUsedAt;
-      _deployCard(index, _deckCards.value[index]!);
-      }
-    } else {
+    if (cardOwnerId != _allies.id) {
       if (!_opponents.containsKey(cardOwnerId)) {
         _opponents[cardOwnerId] = LiveOpponent(
             fraction,
