@@ -178,7 +178,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         ])));
   }
 
-  Widget _baseItemBilder(int index, String title, ShopItem item, Widget child) {
+  Widget _baseItemBilder(int index, String title, String description,
+      ShopItemVM item, Widget child) {
     return Widgets.button(
         color: TColors.primary90,
         radius: 30.d,
@@ -207,8 +208,32 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                   label: _getBoostPackPrice(item.base.value).compact(),
                   height: 120.d))
         ]),
-        onPressed: () => _onItemPressed(item));
+        onPressed: () => _onItemPressed(item.base));
   }
+
+  Widget _percentageBadge(double ratio) {
+    if (ratio == 0) return const SizedBox();
+    return Align(
+        alignment: const Alignment(0.9, 0.2),
+        child: Widgets.rect(
+          width: 100.d,
+          height: 100.d,
+          transform: Matrix4.rotationZ(-0.15),
+          decoration: Widgets.imageDecore("badge_ribbon"),
+          child: SkinnedText("+${(ratio * 100).round()}%", style: TStyles.tiny),
+        ));
+  }
+
+  Widget _rewardBadge(String reward) {
+    if (reward.isEmpty) return const SizedBox();
+    return Align(
+        alignment: const Alignment(-0.9, -0.95),
+        child: Transform.rotate(
+            angle: -0.15,
+            child: Asset.load<Image>("reward_$reward", width: 76.d)));
+  }
+
+  String _getTitle(ShopItem item) => "shop_${item.section.name}_${item.id}";
 
   double _getShopMultiplier() {
     const goldMultiplier = 3;
