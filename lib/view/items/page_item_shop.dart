@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
@@ -132,26 +133,22 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _grid(ShopSections section) {
-    var items = _account.loadingData.shopItems[section]!;
-    var crossAxisCount = 3;
-    var ratio = 0.65;
-    return SizedBox(
-        height: (items.length / crossAxisCount).ceil() *
-            DeviceInfo.size.width /
-            ratio /
-            crossAxisCount,
-        child: GridView.builder(
-            shrinkWrap: true,
-            itemCount: items.length,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: ratio, crossAxisCount: crossAxisCount),
-            itemBuilder: (c, i) {
-              return switch (section) {
-                ShopSections.card => _itemCardBuilder(i, items[i]),
-                ShopSections.boost => _itemBoostBuilder(i, items[i]),
-                _ => const SizedBox()
-              };
+    var items = _items[section]!;
+    return StaggeredGrid.count(crossAxisCount: 24, children: [
+      for (var i = 0; i < items.length; i++)
+        StaggeredGridTile.count(
+            crossAxisCellCount: items[i].mainCells,
+            mainAxisCellCount: items[i].crossCells,
+            child: switch (items[i].base.section) {
+              ShopSections.gold => _itemGoldBuilder(i, items[i]),
+              ShopSections.nectar => _itemNectarBuilder(i, items[i]),
+              ShopSections.card => _itemCardBuilder(i, items[i]),
+              ShopSections.boost => _itemBoostBuilder(i, items[i]),
+              _ => const SizedBox(),
+            })
+    ]);
+  }
+
   Widget _itemGoldBuilder(int index, ShopItemVM item) {
     var title = _getTitle(item.base);
     return _baseItemBilder(
@@ -235,8 +232,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
               : Text(
                   "${description}_desc"
                       .l([ShopData.boostDeadline.toRemainingTime()]),
-              style: TStyles.small.copyWith(height: 0.9),
-              textAlign: TextAlign.center),
+                  style: TStyles.small.copyWith(height: 0.9),
+                  textAlign: TextAlign.center),
           SizedBox(height: description.isEmpty ? 0 : 20.d),
           IgnorePointer(
               ignoring: true,
