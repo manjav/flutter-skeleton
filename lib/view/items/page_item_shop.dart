@@ -152,7 +152,32 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                 ShopSections.boost => _itemBoostBuilder(i, items[i]),
                 _ => const SizedBox()
               };
-            }));
+  Widget _itemGoldBuilder(int index, ShopItemVM item) {
+    var title = _getTitle(item.base);
+    return _baseItemBilder(
+        index,
+        title,
+        "",
+        item,
+        Stack(alignment: Alignment.center, children: [
+          LoaderWidget(AssetType.image, title, subFolder: 'shop'),
+          Align(
+              alignment: const Alignment(0, 0.52),
+              child: Stack(alignment: Alignment.center, children: [
+                SkinnedText(item.base.value.compact(), style: TStyles.medium),
+                Asset.load<Image>("text_line", width: 160.d)
+              ])),
+          Align(
+              alignment: const Alignment(0, 1),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Asset.load<Image>("icon_gold", width: 76.d),
+                SkinnedText(
+                    (item.base.value * _getShopMultiplier()).round().compact(),
+                    style: TStyles.large.copyWith(color: TColors.orange))
+              ])),
+          _percentageBadge(item.base.ratio),
+          _rewardBadge(item.base.reward),
+        ]));
   }
 
   Widget _itemNectarBuilder(int index, ShopItemVM item) {
