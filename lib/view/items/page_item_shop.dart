@@ -185,18 +185,24 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         padding: EdgeInsets.fromLTRB(6.d, 12.d, 6.d, 1.d),
         child: Column(children: [
           SkinnedText(title.l([index + 1])),
-          child,
-          Text("${title}_desc".l([ShopData.boostDeadline.toRemainingTime()]),
+          Expanded(child: child),
+          description.isEmpty
+              ? const SizedBox()
+              : Text(
+                  "${description}_desc"
+                      .l([ShopData.boostDeadline.toRemainingTime()]),
               style: TStyles.small.copyWith(height: 0.9),
               textAlign: TextAlign.center),
-          SizedBox(height: 21.d),
+          SizedBox(height: description.isEmpty ? 0 : 20.d),
           IgnorePointer(
               ignoring: true,
               child: Widgets.skinnedButton(
                   color: ButtonColor.green,
                   padding: EdgeInsets.only(bottom: 10.d),
-                  icon: "icon_${item.currency}",
-                  label: _getBoostPackPrice(item.price).compact(),
+                  icon: item.base.currency == "real"
+                      ? null
+                      : "icon_${item.base.currency}",
+                  label: _getBoostPackPrice(item.base.value).compact(),
                   height: 120.d))
         ]),
         onPressed: () => _onItemPressed(item));
