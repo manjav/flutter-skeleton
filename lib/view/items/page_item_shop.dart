@@ -161,21 +161,23 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         index,
         title,
         item,
-        Expanded(
-            child: LoaderWidget(AssetType.image, title, subFolder: 'shop')));
+  Widget _itemCardBuilder(int index, ShopItemVM item) {
+    var title = _getTitle(item.base);
+    return _baseItemBilder(index, title, title, item,
+        LoaderWidget(AssetType.image, title, subFolder: 'shop'));
   }
 
-  Widget _itemBoostBuilder(int index, ShopItem item) {
-    var title = item.id < 22 ? "shop_boost_xp" : "shop_boost_power";
+  Widget _itemBoostBuilder(int index, ShopItemVM item) {
+    var title = item.base.id < 22 ? "shop_boost_xp" : "shop_boost_power";
     return _baseItemBilder(
         index,
         title,
+        title,
         item,
-        Expanded(
-            child: Stack(alignment: const Alignment(0, 0.44), children: [
+        Stack(alignment: const Alignment(0, 0.44), children: [
           LoaderWidget(AssetType.image, title, subFolder: 'shop'),
-          SkinnedText("${((item.ratio - 1) * 100).round()}%"),
-        ])));
+          SkinnedText("${((item.base.ratio - 1) * 100).round()}%"),
+        ]));
   }
 
   Widget _baseItemBilder(int index, String title, String description,
