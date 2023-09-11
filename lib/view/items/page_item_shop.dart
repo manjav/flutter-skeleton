@@ -36,9 +36,47 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     _fetchData();
     super.initState();
   }
+  _fetchData() async {
+    if (_account.loadingData.shopProceedItems != null) {
+      _items = _account.loadingData.shopProceedItems!;
+      setState(() {});
+      return;
+    }
+    try {
+      var result = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.getShopitems);
+      for (var entry in _account.loadingData.shopItems.entries) {
+        var section = entry.key;
+        _items[section] = [];
+        for (var i = 0; i < entry.value.length; i++) {
+          if (section == ShopSections.gold &&
+              !result.containsKey(entry.value[i].id.toString())) continue;
+          _items[section]!.add(ShopItemVM(
+            entry.value[i],
+            0,
+            i > _items.length - 2 && section == ShopSections.nectar ? 10 : 8,
+            section == ShopSections.nectar ? 11 : 12,
+          ));
+        }
+        if (section == ShopSections.nectar) {
+          _items[section]!
+              .add(ShopItemVM(ShopItem(ShopSections.none, {}), 0, 2, 10));
+        }
+        if (section == ShopSections.gold || section == ShopSections.nectar) {
+          _items[section]!.reverseRange(0, _items[section]!.length);
+        }
+        _account.loadingData.shopProceedItems = _items;
+        setState(() {});
+      }
+    } finally {}
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_items.isEmpty) {
+      return SkinnedText("waiting_l".l());
+    }
     return SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(0, 160.d, 0, 220.d),
         child: Column(
@@ -224,15 +262,6 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
               arguments: result);
         }
       }
-    } finally {}
-  }
-
-  Future<void> _fetchData() async {
-    try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.getShopitems);
-      print(result);
     } finally {}
   }
 }

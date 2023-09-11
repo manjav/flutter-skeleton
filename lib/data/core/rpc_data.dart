@@ -13,6 +13,8 @@ class LoadingData {
   late List<ComboHint> comboHints;
   late Map<int, BaseHeroItem> baseHeroItems;
   late Map<ShopSections, List<ShopItem>> shopItems;
+  Map<ShopSections, List<ShopItemVM>>? shopProceedItems;
+
   LoadingData();
 
   void init(data) {
@@ -54,15 +56,24 @@ class ShopData {
 }
 
 class ShopItem {
-  int id = 0, price = 0, level = 1;
   double ratio = 1.0;
-  String currency = "nectar";
-  final ShopSections section;
+  bool isPopular = false;
+  String currency = "", reward = "";
+  int id = 0, value = 0, level = 1;
+  late ShopSections section;
   ShopItem(this.section, Map data) {
-    id = data["id"];
-    price = data["price"] ?? 0;
+    id = data["id"] ?? 0;
+    value = data["value"] ?? 0;
     level = data["level"] ?? 1;
     ratio = data["ratio"] ?? 1.0;
+    reward = data["reward"] ?? "";
+    isPopular = data.containsKey("pop");
     currency = data["currency"] ?? section.getCurrecy();
   }
+}
+
+class ShopItemVM {
+  final int price, mainCells, crossCells;
+  final ShopItem base;
+  ShopItemVM(this.base, this.price, this.mainCells, this.crossCells);
 }
