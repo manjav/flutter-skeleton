@@ -95,6 +95,7 @@ enum NoobMessages {
   deployCard,
   battleFinished,
   heroAbility,
+  help,
 }
 
 class NoobMessage {
@@ -105,6 +106,7 @@ class NoobMessage {
       "player_status" => NoobStatusMessage(map),
       "battle_update" => NoobCardMessage(account, map),
       "battle_hero_ability" => NoobAbilityMessage(map),
+      "battle_help" => NoobHelpMessage(map),
       "battle_finished" => NoobFineMessage(map),
       _ => NoobMessage(NoobMessages.none, map),
     };
@@ -157,6 +159,19 @@ class NoobAbilityMessage extends NoobMessage {
     for (var card in map["hero_benefits_info"]["cards"]) {
       cards[card["id"]] = card[ability.name];
     }
+  }
+}
+
+class NoobHelpMessage extends NoobMessage {
+  int ownerId = 0, ownerTribeId = 0, attackerId = 0, defenderId = 0;
+  String attackerName = "", defenderName = "";
+  NoobHelpMessage(Map<String, dynamic> map) : super(NoobMessages.help, map) {
+    ownerId = map["help_owner_id"];
+    ownerTribeId = map["help_owner_tribe_id"];
+    attackerId = map["attacker_id"];
+    defenderId = map["defender_id"];
+    attackerName = map["attacker_name"];
+    defenderName = map["defender_name"];
   }
 }
 class NoobFineMessage extends NoobMessage {
