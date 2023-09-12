@@ -36,21 +36,19 @@ class HttpConnection extends IService {
     // Load account data
     var params = <String, dynamic>{
       RpcParams.udid.name: DeviceInfo.adId,
-      RpcParams.device_name.name: "Mansours MacBook Pro", //DeviceInfo.model,
+      RpcParams.device_name.name: DeviceInfo.model,
       RpcParams.game_version.name: 'app_version'.l(),
       RpcParams.os_type.name: 2,
-      RpcParams.os_version.name: "13.4.1", //DeviceInfo.osVersion,
-      RpcParams.model.name: "GA02099", //DeviceInfo.model,
+      RpcParams.os_version.name: DeviceInfo.osVersion,
+      RpcParams.model.name: DeviceInfo.model,
       RpcParams.store_type.name: "google",
-      // RpcParams.name.name: "ملعون"
-      // RpcParams.restore_key.name: LoadingData.restoreKey ?? "hello69582879",
+      // RpcParams.restore_key.name: "hello69582879",
     };
-    if (LoadingData.restoreKey != null) {
-      params[RpcParams.restore_key.name] = LoadingData.restoreKey;
+    if (Pref.restoreKey.getString().isNotEmpty) {
+      params[RpcParams.restore_key.name] = Pref.restoreKey.getString();
     }
     var data = await rpc(RpcId.playerLoad, params: params);
     loadData.account = Account()..init(data, args: loadData);
-    LoadingData.restoreKey = null;
     super.initialize();
     return loadData;
   }

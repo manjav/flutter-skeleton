@@ -2,7 +2,6 @@ import 'account.dart';
 import 'card.dart';
 
 class LoadingData {
-  static String? restoreKey;
   static String baseURL = '';
   static String chatIp = '';
   static int chatPort = 0;

@@ -13,17 +13,27 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    throw new GradleException("versionCode not found in local.properties")
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    throw new GradleException("versionName not found in local.properties")
 }
 
 def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion')
 if (flutterMinSdkVersion == null) {
-    flutterMinSdkVersion = 21
+    throw new GradleException("minSdkVersion not found in local.properties")
+}
+
+def flutterCompileSdkVersion = localProperties.getProperty('flutter.compileSdkVersion')
+if (flutterCompileSdkVersion == null) {
+    throw new GradleException("compileSdkVersion not found in local.properties")
+}
+
+def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion')
+if (flutterTargetSdkVersion == null) {
+    throw new GradleException("targetSdkVersion not found in local.properties")
 }
 
 def keystoreProperties = new Properties()
@@ -39,9 +49,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.tcg.fruitcraft.trading.card.game.battle"
-    compileSdkVersion flutter.compileSdkVersion
-    ndkVersion "25.1.8937393"
-
+    compileSdkVersion flutterCompileSdkVersion.toInteger()
+    ndkVersion "25.2.9519653"
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -56,13 +65,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.tcg.fruitcraft.trading.card.game.battle"
-        // multiDexEnabled true
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion flutterMinSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion flutterTargetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -75,7 +80,7 @@ android {
            storePassword keystoreProperties['storePassword']
        }
     }
-
+    
     buildTypes {
         release {
             minifyEnabled true
@@ -94,9 +99,4 @@ flutter {
     source '../..'
 }
 
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // implementation 'com.android.support:multidex:1.0.3'
-    // api 'com.google.android.gms:play-services-games:22.0.1'
-    // api 'com.google.android.gms:play-services-auth:20.2.0'
-}
+dependencies {}

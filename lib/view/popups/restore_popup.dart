@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
-import '../../data/core/rpc_data.dart';
 import '../../main.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/prefs.dart';
 import '../../services/theme.dart';
 import '../../view/popups/ipopup.dart';
 import '../route_provider.dart';
@@ -69,7 +69,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
   }
 
   _restoreAccount() {
-    LoadingData.restoreKey = _textController.text;
+    Pref.restoreKey.setString(_textController.text);
     MyApp.restartApp(context);
   }
 }
