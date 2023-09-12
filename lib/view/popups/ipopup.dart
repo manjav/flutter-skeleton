@@ -44,7 +44,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         Align(
             alignment: alignment,
             child: Widgets.rect(
-              margin: EdgeInsets.fromLTRB(24.d, 100.d, 24.d, 0),
+              margin: chromeMargin,
               padding: EdgeInsets.symmetric(horizontal: 24.d),
               decoration: Widgets.imageDecore(
                   "popup_chrome", ImageCenterSliceData(410, 460)),
@@ -73,6 +73,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   Color get backgroundColor => TColors.black80;
   String titleBuilder() => widget.type.name.toLowerCase().l();
+  EdgeInsets get chromeMargin => EdgeInsets.fromLTRB(24.d, 100.d, 24.d, 0);
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 92.d);
 
   Widget titleTextFactory() {
