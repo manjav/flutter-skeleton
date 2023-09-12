@@ -31,12 +31,14 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
   void initState() {
     _building = widget.args['building'];
     _selectedCards.value = [..._building.cards];
-    contentPadding = EdgeInsets.fromLTRB(40.d, 210.d, 40.d, 88.d);
     super.initState();
   }
 
   @override
-  titleBuilder() => "card_select".l();
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(40.d, 210.d, 40.d, 88.d);
+
+  @override
+  String titleBuilder() => "card_select".l();
 
   @override
   Widget contentFactory() {

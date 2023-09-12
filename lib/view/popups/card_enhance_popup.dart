@@ -34,10 +34,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   bool _isSacrificeAvailable = false;
 
   @override
-  void initState() {
-    contentPadding = EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
-    super.initState();
-  }
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
 
   @override
   selectedForeground() {

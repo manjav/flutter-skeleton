@@ -60,6 +60,7 @@ enum Routes {
   popupRestore,
   popupInvite,
   popupRedeemGift,
+  popupTribeSearch,
 }
 
 extension RouteProvider on Routes {
