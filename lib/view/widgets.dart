@@ -283,7 +283,7 @@ class Widgets {
       TextEditingController? controller,
       Function(String)? onChanged}) {
     return SizedBox(
-        width: width ?? 720.d,
+        width: width ?? 520.d,
         height: height,
         child: TextField(
             autofocus: autofocus,
