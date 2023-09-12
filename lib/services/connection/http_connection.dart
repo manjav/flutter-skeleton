@@ -84,10 +84,10 @@ class HttpConnection extends IService {
       result = await rpc(id, params: params);
     } on RpcException catch (e) {
       if (context.mounted) {
-      Navigator.pushNamed(context, Routes.popupMessage.routeName, arguments: {
-        "title": "Error",
-        "message": "error_${e.statusCode.value}".l()
-      });
+        Navigator.pushNamed(context, Routes.popupMessage.routeName, arguments: {
+          "title": "Error",
+          "message": "error_${e.statusCode.value}".l()
+        });
       }
       rethrow;
     }

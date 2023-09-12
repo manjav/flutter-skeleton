@@ -133,9 +133,6 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
         _map[ServiceType.socket]!.initialize(args: [data.account, opponents]);
       }
     } on RpcException catch (e) {
-      if (e.statusCode == StatusCode.C154_INVALID_RESTORE_KEY) {
-        LoadingData.restoreKey = null;
-      }
       if (context.mounted) {
         BlocProvider.of<ServicesBloc>(context)
             .add(ServicesEvent(ServicesInitState.error, e));
