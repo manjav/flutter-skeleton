@@ -32,7 +32,6 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
   @override
   void initState() {
     selectedTabIndex = 0;
-    contentPadding = EdgeInsets.only(top: 192.d, bottom: 32.d);
     _account = BlocProvider.of<AccountBloc>(context).account!;
     if (Ranks.lists.isEmpty) {
       Ranks.lists.addAll({
@@ -43,6 +42,9 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
     }
     super.initState();
   }
+
+  @override
+  EdgeInsets get contentPadding => EdgeInsets.only(top: 192.d, bottom: 32.d);
 
   @override
   contentFactory() {

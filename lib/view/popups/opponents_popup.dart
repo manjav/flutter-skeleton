@@ -56,9 +56,11 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _findOpponents();
-    contentPadding = EdgeInsets.fromLTRB(12.d, 210.d, 12.d, 64.d);
     super.initState();
   }
+
+  @override
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(12.d, 210.d, 12.d, 64.d);
 
   _findOpponents() async {
     var deltaTime = _account.now - _fetchAt;

@@ -23,10 +23,7 @@ class SettingsPopup extends AbstractPopup {
 
 class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
   @override
-  void initState() {
-    contentPadding = EdgeInsets.fromLTRB(60.d, 200.d, 60.d, 80.d);
-    super.initState();
-  }
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(60.d, 200.d, 60.d, 80.d);
 
   @override
   Widget contentFactory() {

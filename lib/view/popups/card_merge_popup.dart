@@ -33,9 +33,11 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
   @override
   void initState() {
     selectedCards.addCard(widget.args['card']);
-    contentPadding = EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
     super.initState();
   }
+
+  @override
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
 
   List<AccountCard> get allReadyCards => BlocProvider.of<AccountBloc>(context)
       .account!

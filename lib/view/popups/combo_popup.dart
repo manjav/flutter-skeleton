@@ -30,10 +30,12 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
 
   @override
   void initState() {
-    contentPadding = EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 72.d);
     super.initState();
     _account = BlocProvider.of<AccountBloc>(context).account!;
   }
+
+  @override
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 72.d);
 
   @override
   List<Widget> appBarElements() {

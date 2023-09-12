@@ -66,7 +66,6 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   @override
   void initState() {
     alignment = const Alignment(0, -0.8);
-    contentPadding = EdgeInsets.fromLTRB(48.d, 132.d, 48.d, 80.d);
     super.initState();
     _account = BlocProvider.of<AccountBloc>(context).account!;
     var heroes =
@@ -82,6 +81,9 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       }
     }
   }
+
+  @override
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 132.d, 48.d, 80.d);
 
   @override
   Widget closeButtonFactory() => const SizedBox();

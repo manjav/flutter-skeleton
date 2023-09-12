@@ -34,11 +34,13 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
 
   @override
   void initState() {
-    contentPadding = EdgeInsets.fromLTRB(0, 176.d, 0, 32.d);
     _account = BlocProvider.of<AccountBloc>(context).account!;
     selectedTabIndex = 0;
     super.initState();
   }
+
+  @override
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0, 176.d, 0, 32.d);
 
   @override
   Widget contentFactory() {

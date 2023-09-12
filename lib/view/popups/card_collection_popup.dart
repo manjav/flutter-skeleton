@@ -34,9 +34,11 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
     _fruits = account.loadingData.fruits.map.values.toList();
     _avaibledCards = Set<int>.from(account.get(AccountField.collection));
     _selectedFruit = ValueNotifier(_fruits[0]);
-    contentPadding = EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
     super.initState();
   }
+
+  @override
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
 
   @override
   Widget innerChromeFactory() {
