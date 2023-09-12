@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -92,6 +93,26 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           (t) => _setSlotTime((_seconds += 0.334).round()));
       _pageController.jumpToPage(4);
     });
+    if (_battleId == 0) {
+      _opponents[1] = LiveOpponent(OpponentSide.axis, 1, _axis.id, _axis);
+      var cards = _account.getReadyCards(removeHeroes: true);
+      Timer.periodic(const Duration(seconds: 4), (timer) {
+        var index = timer.tick - 1;
+        if (index < 4) {
+          _opponents[0]!.cards.setAtCard(index, cards[index]);
+          _updatePowerBalance();
+        }
+        if (index == 5) {
+          var noobMessage = NoobMessage.getProperMessage(
+              _account,
+              jsonDecode(
+                '{"id":0,"players_info":{"254512":{"power":3741051,"cooldown":2697,"hero_power_benefit":0,"hero_wisdom_benefit":"5267","hero_blessing_multiplier":0.26666666666667,"won_battle_num":13,"lost_battle_num":34,"id":254512,"name":"yasamanjoon","added_xp":244,"added_gold":3358,"league_bonus":766.8385059161094,"gold":9739107481,"xp":32531,"league_rank":61,"level":43,"rank":161056,"levelup_gold_added":0,"gift_card":null,"owner_team_id":254512,"q":4258,"hero_benefits_info":{"gold_benefit":707,"cooldown_benefit":5267}},"0":{"power":62416,"cooldown":1995,"hero_power_benefit":0,"hero_wisdom_benefit":0,"hero_blessing_multiplier":0,"won_battle_num":259,"lost_battle_num":99,"is_ignored":true,"id":0,"name":"a.h.alavii","added_xp":0,"added_gold":0,"gold":6752,"xp":242935,"level":90,"league_rank":13010,"rank":64400,"owner_team_id":0,"hero_benefits_info":[]},"1":{"power":62416,"cooldown":1995,"hero_power_benefit":0,"hero_wisdom_benefit":0,"hero_blessing_multiplier":0,"won_battle_num":259,"lost_battle_num":99,"is_ignored":true,"id":1,"name":"a.h.alavii","added_xp":0,"added_gold":0,"gold":6752,"xp":242935,"level":90,"league_rank":13010,"rank":64400,"owner_team_id":0,"hero_benefits_info":[]}},"result":{"winner_added_score":20,"loser_added_score":-20,"winner_tribe_rank":10240,"loser_tribe_rank":1635,"winner_tribe_name":"سالوادور🫀","loser_tribe_name":"بزرگان مشهد","winner_id":254512,"loser_id":0},"push_message_type":"battle_finished"}',
+              ));
+          _onNoobReceive(noobMessage);
+          timer.cancel();
+        }
+      });
+    }
   }
 
   @override
@@ -123,10 +144,9 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             LiveTribe(_axis.id, _battleId, _helpCost, _opponents),
             LiveTribe(_allies.id, _battleId, _helpCost, _opponents),
             Positioned(
-                width: 440.d,
-                bottom: 4.d,
-                height: 60,
-                child: Widgets.skinnedButton(label: ">", onPressed: _close))
+                width: 120.d,
+                right: 40.d,
+                child: Widgets.skinnedButton(label: "x", onPressed: _close))
           ],
         ));
   }
@@ -171,7 +191,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _isDeckActive = true;
   }
 
-  _deployCard(int index, AccountCard selectedCard) {
+  void _deployCard(int index, AccountCard selectedCard) {
     _account.getCards()[selectedCard.id]?.lastUsedAt = selectedCard.lastUsedAt;
 
     var slot = _slotState.value;
@@ -243,7 +263,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         _handleAbilityMessage(message as NoobAbilityMessage),
       NoobMessages.battleFinished =>
         _handleFineMessage(message as NoobFineMessage),
-      _ => print("")
+      _ => debugPrint(message.type.toString())
     };
   }
 
