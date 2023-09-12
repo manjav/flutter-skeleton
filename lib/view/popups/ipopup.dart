@@ -15,10 +15,12 @@ import '../widgets.dart';
 class AbstractPopup extends StatefulWidget {
   final Routes type;
   final Map<String, dynamic> args;
+  final bool barrierDismissible;
 
   const AbstractPopup(
     this.type, {
     required this.args,
+    this.barrierDismissible = true,
     super.key,
   });
   @override
@@ -36,7 +38,10 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         child: Scaffold(
       backgroundColor: TColors.black80,
       body: Stack(children: [
-        Widgets.touchable(onTap: () => Navigator.pop(context)),
+        Widgets.touchable(
+            onTap: widget.barrierDismissible
+                ? () => Navigator.pop(context)
+                : null),
         Align(
             alignment: alignment,
             child: Widgets.rect(
