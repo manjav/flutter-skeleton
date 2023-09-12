@@ -35,7 +35,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: TColors.black80,
+      backgroundColor: backgroundColor,
       body: Stack(children: [
         Widgets.touchable(
             onTap: widget.barrierDismissible
@@ -71,6 +71,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ));
   }
 
+  Color get backgroundColor => TColors.black80;
   String titleBuilder() => widget.type.name.toLowerCase().l();
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 92.d);
 
