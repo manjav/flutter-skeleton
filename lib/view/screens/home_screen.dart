@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services_bloc.dart';
+import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -43,6 +44,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     super.onRender(timeStamp);
     var bloc = BlocProvider.of<ServicesBloc>(context);
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
+    BlocProvider.of<ServicesBloc>(context)
+        .get<NoobSocket>()
+        .onReceive
+        .add(_onNoobReceive);
   }
 
   @override
@@ -149,5 +154,22 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       _pageController.animateToPage(index,
           duration: const Duration(milliseconds: 700), curve: Curves.ease);
     }
+  }
+
+  void _onNoobReceive(NoobMessage message) {
+    if (message.type == NoobMessages.help) {
+      if (ModalRoute.of(context)!.settings.name != Routes.home.routeName) {
+        return;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    BlocProvider.of<ServicesBloc>(context)
+        .get<NoobSocket>()
+        .onReceive
+        .remove(_onNoobReceive);
+    super.dispose();
   }
 }

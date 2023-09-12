@@ -261,6 +261,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       NoobMessages.deployCard => _handleCardMessage(message as NoobCardMessage),
       NoobMessages.heroAbility =>
         _handleAbilityMessage(message as NoobAbilityMessage),
+      NoobMessages.help => _handleHelpMessage(message as NoobHelpMessage),
       NoobMessages.battleFinished =>
         _handleFineMessage(message as NoobFineMessage),
       _ => debugPrint(message.type.toString())
@@ -319,6 +320,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         _updatePowerBalance();
       }
     }
+  }
+
+  void _handleHelpMessage(NoobHelpMessage message) {
+    debugPrint(message.toString());
   }
 
   void _handleFineMessage(NoobFineMessage message) {
