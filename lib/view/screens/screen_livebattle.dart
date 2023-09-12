@@ -309,7 +309,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       if (index > -1) {
         var card = _opponents[message.ownerId]!.cards.value[index]!;
         if (message.ability == Abilities.power) {
-          card.power = entry.value;
+          card.power += entry.value;
         } else {
           card.lastUsedAt = entry.value;
           _account.getCards()[card.id]?.lastUsedAt = card.lastUsedAt;
