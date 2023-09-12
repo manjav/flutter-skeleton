@@ -10,6 +10,7 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/page_item.dart';
+import '../../view/items/page_item_tribe.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
@@ -78,7 +79,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   Widget contentFactory() {
     return Widgets.rect(
-        color: const Color(0xffAA9A45),
+        color: TColors.cyan,
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
@@ -106,9 +107,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Widget? _pageItemBuilder(BuildContext context, int index) {
     var name = "home_tab_$index".l();
     return switch (name) {
+      "shop" => const ShopPageItem(),
       "cards" => const CardsPageItem(),
       "battle" => const MainMapPageItem(),
-      "shop" => const ShopPageItem(),
+      "tribe" => const TribePageItem(),
       _ => AbstractPageItem(name)
     };
   }
