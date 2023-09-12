@@ -14,7 +14,6 @@ import '../../view/widgets/indicator_dedline.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../map_elements/building_widget.dart';
-import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -24,7 +23,7 @@ class MainMapPageItem extends AbstractPageItem {
   createState() => _MainMapItemState();
 }
 
-class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
+class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
@@ -119,11 +118,14 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
-      // Buildings.base => Routes.livebattle,
+      Buildings.base => Routes.livebattle,
       _ => Routes.none,
     };
     if (type == Routes.none) {
-      Overlays.insert(context, OverlayType.toast, args: "coming_soon".l());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Hi, Flutter developers'),
+      ));
+      // Overlays.insert(context, OverlayType.toast, args: "coming_soon".l());
       return;
     }
     Navigator.pushNamed(context, type.routeName,
