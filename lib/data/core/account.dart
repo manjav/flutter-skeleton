@@ -190,9 +190,9 @@ class Account extends StringMap<dynamic> {
         map['gold_building_assigned_cards']);
     _addBuilding(Buildings.offense, tribe?.offenseLevel,
         map['offense_building_assigned_cards']);
-    _addBuilding(Buildings.shop);
+    // _addBuilding(Buildings.shop);
     _addBuilding(Buildings.treasury, map['bank_building_level']);
-    _addBuilding(Buildings.quest);
+    // _addBuilding(Buildings.quest);
     // _addBuilding(Buildings.tribe, 1);
     // if (map['tribe'] != null) {
     //   map['buildings'][Buildings.tribe]
