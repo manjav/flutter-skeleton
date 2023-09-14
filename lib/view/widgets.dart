@@ -317,6 +317,6 @@ class Widgets {
   }
 }
 
-enum ButtonColor { gray, green, teal, yellow }
+enum ButtonColor { gray, green, teal, yellow, wooden }
 
 enum ButtonSize { small, medium }
