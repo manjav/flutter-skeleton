@@ -16,7 +16,7 @@ enum Buildings {
   offense,
   shop,
   treasury,
-  tribe,
+  // tribe,
   quest,
   auction,
 }

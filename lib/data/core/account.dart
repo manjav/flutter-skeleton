@@ -8,6 +8,7 @@ import 'building.dart';
 import 'card.dart';
 import 'infra.dart';
 import 'ranking.dart';
+import 'tribe.dart';
 
 enum AccountField {
   id,
@@ -163,6 +164,12 @@ class Account extends StringMap<dynamic> {
     }
     map['cards'] = accountCards;
 
+    // Tribe
+    Tribe? tribe;
+    if (map.containsKey("tribe")) {
+      tribe = map['tribe'] = Tribe(map['tribe']);
+    }
+
     // Organize deadlines
     _parse(AccountField.xpboost_id);
     _parse(AccountField.pwboost_id);
@@ -173,24 +180,24 @@ class Account extends StringMap<dynamic> {
 
     map['buildings'] = <Buildings, Building>{};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
-    _addBuilding(Buildings.base, map['tribe']?['mainhall_building_level']);
-    _addBuilding(Buildings.cards, map['tribe']?['cooldown_building_level']);
-    _addBuilding(Buildings.defense, map['tribe']?['defense_building_level'],
+    _addBuilding(Buildings.base, tribe?.baseLevel);
+    _addBuilding(Buildings.cards, tribe?.cooldownLevel);
+    _addBuilding(Buildings.defense, tribe?.defenseLevel,
         map['defense_building_assigned_cards']);
     _addBuilding(Buildings.message);
     map['buildings'][Buildings.mine] = Mine();
     _addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
-    _addBuilding(Buildings.offense, map['tribe']?['offense_building_level'],
+    _addBuilding(Buildings.offense, tribe?.offenseLevel,
         map['offense_building_assigned_cards']);
     _addBuilding(Buildings.shop);
     _addBuilding(Buildings.treasury, map['bank_building_level']);
     _addBuilding(Buildings.quest);
-    _addBuilding(Buildings.tribe, 1);
-    if (map['tribe'] != null) {
-      map['buildings'][Buildings.tribe]
-          .init(map['tribe'], args: {'account': this, 'cards': []});
-    }
+    // _addBuilding(Buildings.tribe, 1);
+    // if (map['tribe'] != null) {
+    //   map['buildings'][Buildings.tribe]
+    //       .init(map['tribe'], args: {'account': this, 'cards': []});
+    // }
 
     // Heroes
     map['base_heroitems'] = loadingData.baseHeroItems;
@@ -326,8 +333,8 @@ class Account extends StringMap<dynamic> {
         getCards()[attackCard['id']]?.lastUsedAt = attackCard["last_used_at"];
       }
     }
-    var tribe = getBuilding(Buildings.tribe);
-    if (tribe != null) tribe.map["gold"] = data["tribe_gold"];
+    var tribe = get<Tribe?>(AccountField.tribe);
+    if (tribe != null) tribe.gold = data["tribe_gold"];
 
     if (!data.containsKey("gold")) {
       map["gold"] = map["gold"] + (data["added_gold"] ?? 0);

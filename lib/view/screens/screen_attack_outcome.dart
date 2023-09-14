@@ -4,8 +4,8 @@ import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
-import '../../data/core/building.dart';
 import '../../data/core/ranking.dart';
+import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -187,9 +187,9 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
             children: [
               SizedBox(height: 36.d),
               SkinnedText(_account.get<String>(AccountField.name)),
-              SkinnedText(_account
-                  .getBuilding(Buildings.tribe)!
-                  .get<String>(BuildingField.name)),
+              _account.contains(AccountField.tribe)
+                  ? SkinnedText(_account.get<Tribe>(AccountField.tribe).name)
+                  : const SizedBox(),
             ],
           ),
           hasBenefits ? const Expanded(child: SizedBox()) : const SizedBox(),

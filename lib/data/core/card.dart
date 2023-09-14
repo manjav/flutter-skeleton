@@ -14,6 +14,7 @@ import 'account.dart';
 import 'building.dart';
 import 'infra.dart';
 import 'result.dart';
+import 'tribe.dart';
 
 enum FriutFields {
   id,
@@ -125,7 +126,7 @@ class AccountCard {
   }
 
   int getRemainingCooldown() {
-    var tribe = account.getBuilding(Buildings.tribe);
+    var tribe = account.get<Tribe?>(AccountField.tribe);
     var benefit = tribe != null
         ? account.getBuilding(Buildings.cards)!.getBenefit()
         : 1.0;
@@ -156,7 +157,7 @@ class AccountCard {
     num cooldownPrice = 0;
     var veteranLevel = base.get<int>(CardFields.veteran_level);
     if (veteranLevel > 0) {
-      var tribe = account.getBuilding(Buildings.tribe);
+      var tribe = account.get<Tribe?>(AccountField.tribe);
       var benefit = tribe != null
           ? account.getBuilding(Buildings.cards)!.getBenefit()
           : 1.0;
