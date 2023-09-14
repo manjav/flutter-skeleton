@@ -41,6 +41,9 @@ enum RpcId {
   getShopitems,
   buyHeroItem,
   buyCardPack,
+
+  //Tribe
+  findTribe,
 }
 
 extension RpcIdEx on RpcId {
@@ -76,6 +79,7 @@ extension RpcIdEx on RpcId {
       RpcId.getShopitems => "store/getshopitems",
       RpcId.buyHeroItem => "store/buyheroitem",
       RpcId.buyCardPack => "store/buycardpack",
+      RpcId.findTribe => "tribe/find"
     };
   }
 
@@ -128,5 +132,7 @@ enum RpcParams {
   battle_id,
   card,
   round,
-  ability_type, potion,
+  ability_type,
+  potion,
+  query,
 }

@@ -9,6 +9,7 @@ import '../blocs/services_bloc.dart';
 import '../data/core/account.dart';
 import '../data/core/building.dart';
 import '../data/core/rpc.dart';
+import '../data/core/tribe.dart';
 import '../services/connection/http_connection.dart';
 import '../services/localization.dart';
 import '../services/theme.dart';
@@ -72,9 +73,9 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
 
   _upgrade(Account account, Building building) async {
     var params = {RpcParams.type.name: building.type.id};
-    var tribe = account.getBuilding(Buildings.tribe);
+    var tribe = account.get<Tribe?>(AccountField.tribe);
     if (tribe != null) {
-      params[RpcParams.tribe_id.name] = tribe.get<int>(BuildingField.id);
+      params[RpcParams.tribe_id.name] = tribe.id;
     }
     try {
       var data = await BlocProvider.of<ServicesBloc>(context)
