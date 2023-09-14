@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
+import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/theme.dart';
+import '../../utils/assets.dart';
+import '../../utils/utils.dart';
 import '../../view/popups/tribe_search_popup.dart';
+import '../../view/widgets/skinnedtext.dart';
+import '../route_provider.dart';
 import '../widgets.dart';
 import 'page_item.dart';
 
@@ -18,11 +27,11 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var tribe = state.account.get<Tribe?>(AccountField.tribe);
       if (tribe == null) {
-    return Column(children: [
-      Expanded(child: TribeSearchPopup()),
-      Widgets.skinnedButton(label: "tribe_new".l(), width: 380.d),
-      SizedBox(height: 200.d),
-    ]);
+        return Column(children: [
+          Expanded(child: TribeSearchPopup()),
+          Widgets.skinnedButton(label: "tribe_new".l(), width: 380.d),
+          SizedBox(height: 200.d),
+        ]);
       } //
       return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         SizedBox(height: 180.d),
@@ -77,6 +86,23 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                   top: 160.d,
                   child: SkinnedText(tribe.description,
                       alignment: Alignment.centerLeft)),
+              Positioned(
+                  bottom: -16.d,
+                  right: 76.d,
+                  left: 76.d,
+                  height: 96.d,
+                  child: Row(
+                    children: [
+                      _upgradable(ButtonColor.wooden, "tribe_offense", "tribe"),
+                      _upgradable(ButtonColor.wooden, "tribe_defense", "tribe"),
+                      _upgradable(
+                          ButtonColor.wooden, "tribe_cooldown", "tribe"),
+                      Expanded(
+                          child: _upgradable(ButtonColor.green, "tribe_upgrade",
+                              "upgrade_l".l()))
+                    ],
+                  ))
+            ]))
       ]);
     });
   }
@@ -94,5 +120,16 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           SkinnedText(label)
         ]));
   }
+
+  Widget _upgradable(ButtonColor color, String icon, String label) {
+    return Widgets.skinnedButton(
+        padding: EdgeInsets.fromLTRB(20.d, 0, 20.d, 20.d),
+        color: color,
+        size: ButtonSize.small,
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Asset.load<Image>(icon, width: 50.d),
+          SizedBox(width: 12.d),
+          SkinnedText(label),
+        ]));
   }
 }
