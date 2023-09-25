@@ -279,20 +279,24 @@ class Widgets {
       String? hintText,
       Widget? suffixIcon,
       double? width,
-      double? height,
+      int? maxLength,
+      int numLine = 1,
       TextEditingController? controller,
       Function(String)? onChanged}) {
+    var style = TStyles.medium.copyWith(height: 1.5);
     return SizedBox(
         width: width ?? 520.d,
-        height: height,
         child: TextField(
+            maxLines: numLine,
             autofocus: autofocus,
+            maxLength: maxLength,
             controller: controller,
+            style: style,
             textAlign: TextAlign.center,
             onChanged: onChanged,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TStyles.medium,
+              hintStyle: style,
               contentPadding: EdgeInsets.zero,
               suffixIcon: suffixIcon,
               border: OutlineInputBorder(
