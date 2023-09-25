@@ -100,7 +100,7 @@ class _LiveTribeState extends State<LiveTribe> with TickerProviderStateMixin {
             Widgets.rect(
                 padding: EdgeInsets.symmetric(horizontal: 8.d),
                 decoration: Widgets.imageDecore(
-                    "ui_frame_inside", ImageCenterSliceData(42, 42)),
+                    "ui_frame_inside", ImageCenterSliceData(42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_gold", height: 76.d),
                   SkinnedText(widget.helpCost.compact()),

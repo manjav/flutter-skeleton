@@ -50,11 +50,11 @@ class ImageCenterSliceData {
   late int width;
   late int height;
   late Rect centerSlice;
-  ImageCenterSliceData(int width, int height, [Rect? centerSlice]) {
+  ImageCenterSliceData(int width, [int? height, Rect? centerSlice]) {
     this.width = (width * DeviceInfo.ratio).round();
-    this.height = (height * DeviceInfo.ratio).round();
-    var rect =
-        centerSlice ?? Rect.fromLTWH(width * 0.5 - 3, height * 0.5 - 3, 6, 6);
+    this.height = ((height ?? width) * DeviceInfo.ratio).round();
+    var rect = centerSlice ??
+        Rect.fromLTWH(width * 0.5 - 3, (height ?? width) * 0.5 - 3, 6, 6);
     this.centerSlice =
         Rect.fromLTWH(rect.left.d, rect.top.d, rect.width.d, rect.height.d);
   }
