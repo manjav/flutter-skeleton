@@ -20,6 +20,7 @@ import 'popups/potion_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
 import 'popups/settings_popup.dart';
+import 'popups/tribe_edit_popup.dart';
 import 'popups/tribe_members_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/home_screen.dart';

@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
-import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/http_connection.dart';
@@ -27,15 +25,8 @@ class TribeSearchPopup extends AbstractPopup {
 }
 
 class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
-  late Account _account;
   List<Tribe> _tribes = [];
   final TextEditingController _inputController = TextEditingController();
-
-  @override
-  void initState() {
-    _account = BlocProvider.of<AccountBloc>(context).account!;
-    super.initState();
-  }
 
   @override
   List<Widget> appBarElements() => [];
@@ -76,7 +67,6 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
   Widget? _listItemBuilder(BuildContext context, int index) {
     var tribe = _tribes[index];
     return Widgets.button(
-        // height: 260.d,
         margin: EdgeInsets.all(4.d),
         padding: EdgeInsets.all(22.d),
         decoration:
@@ -133,12 +123,10 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
     try {
       var result = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
-          .rpc(RpcId.findTribe,
+          .rpc(RpcId.tribeSearch,
               params: {RpcParams.query.name: _inputController.text});
       _tribes = Tribe.initAll(result["tribes"]);
       setState(() {});
-    } catch (e) {
-      print("object");
-    }
+    } finally {}
   }
 }
