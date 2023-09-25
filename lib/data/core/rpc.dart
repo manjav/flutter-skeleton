@@ -43,7 +43,8 @@ enum RpcId {
   buyCardPack,
 
   //Tribe
-  findTribe,
+  tribeCreate,
+  tribeEdit,
 }
 
 extension RpcIdEx on RpcId {

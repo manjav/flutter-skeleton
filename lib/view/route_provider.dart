@@ -63,6 +63,7 @@ enum Routes {
   popupRedeemGift,
   popupTribeSearch,
   popupTribeMembers,
+  popupTribeEdit,
 }
 
 extension RouteProvider on Routes {
@@ -96,6 +97,7 @@ extension RouteProvider on Routes {
       "/popupInvite" => InvitePopup(),
       "/popupRedeemGift" => RedeemGiftPopup(),
       "/popupTribeMembers" => TribeMembersPopup(),
+      "/popupTribeEdit" => TribeEditPopup(),
       _ => LoadingScreen(),
     };
   }
@@ -121,6 +123,7 @@ extension RouteProvider on Routes {
       "/popupRedeemGift" ||
       "/popupMineBuilding" ||
       "/popupTribeMembers" ||
+      "/popupTribeEdit" ||
         false,
       _ => true,
     };
