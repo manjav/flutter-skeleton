@@ -107,8 +107,11 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     return Widgets.button(
       width: 260.d,
       padding: EdgeInsets.zero,
-      onPressed: () =>
-          Navigator.pushNamed(context, Routes.popupTribeMembers.routeName),
+      onPressed: () async {
+        await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
+            arguments: {"index": 0});
+        setState(() {});
+      },
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         _indicator(
             "icon_population", "${tribe.population}/${tribe.capacity}", 40.d),
@@ -157,6 +160,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           Asset.load<Image>(icon, width: 50.d),
           SizedBox(width: 12.d),
           SkinnedText(label),
-        ]));
+      ]),
+      onPressed: () async {
+        await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
+            arguments: {"index": 1});
+        setState(() {});
+      },
+    );
   }
 }

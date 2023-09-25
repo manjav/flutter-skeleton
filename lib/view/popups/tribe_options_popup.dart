@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/view/tab_provider.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
+import '../../data/core/building.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
@@ -19,40 +21,42 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
 
-class TribeMembersPopup extends AbstractPopup {
-  TribeMembersPopup({super.key}) : super(Routes.popupTribeMembers, args: {});
+class TribeOptionsPopup extends AbstractPopup {
+  const TribeOptionsPopup({required super.args, super.key})
+      : super(Routes.popupTribeOptions);
 
   @override
   createState() => _TribeMembersPopupState();
 }
 
-class _TribeMembersPopupState extends AbstractPopupState<TribeMembersPopup> {
-  late Account _account;
+class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
+    with TabProviderMixin {
   Member? _member;
+  late Account _account;
   List<Member> _members = [];
-
   @override
   void initState() {
+    selectedTabIndex = widget.args["index"] ?? 0;
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    _loadMembers();
-    var index = _members.indexWhere((member) => member.itsMe);
-    if (index > -1) {
-      _member = _members[index];
-    } else {
-      var id = _account.get<int>(AccountField.id);
-      _member = Member.init({"id": id}, id);
-    }
 
     super.initState();
   }
 
   _loadMembers() async {
+    if (_members.isNotEmpty) return;
     try {
       var result = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
       _members =
           Member.initAll(result["members"], _account.get<int>(AccountField.id));
+      var index = _members.indexWhere((member) => member.itsMe);
+      if (index > -1) {
+        _member = _members[index];
+      } else {
+        var id = _account.get<int>(AccountField.id);
+        _member = Member.init({"id": id}, id);
+      }
       setState(() {});
     } finally {}
   }
@@ -60,40 +64,49 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeMembersPopup> {
   @override
   Widget contentFactory() {
     var tribe = _account.get<Tribe>(AccountField.tribe);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(height: 30.d),
-        Row(children: [
-          CupertinoSwitch(
-              value: _member!.status == 1, onChanged: _changeVisibility),
-          Asset.load<Image>("tribe_visibility", width: 44.d),
-          SizedBox(width: 12.d),
-          Text("tribe_visibility".l()),
-          const Expanded(child: SizedBox()),
-          _indicator(
-              "icon_population", "${tribe.population}/${tribe.capacity}", 40.d),
-        ]),
-        SizedBox(height: 20.d),
-        Widgets.skinnedButton(
-            color: ButtonColor.teal,
-            label: "tribe_invite".l(),
-            icon: "tribe_invite",
-            onPressed: () => Navigator.of(context)
-                .pushNamed(Routes.popupTribeInvite.routeName)),
-        SizedBox(height: 20.d),
-        _list()
-      ],
-    );
+    return SizedBox(
+        height: 1380.d,
+        child: Column(children: [
+          tabsBuilder(data: [
+            for (var i = 0; i < 2; i++) TabData("tribe_option_$i".l())
+          ]),
+          SizedBox(height: 30.d),
+          Expanded(child: _getSelectedPage(tribe))
+        ]));
   }
 
-  Widget _list() {
-    return SizedBox(
-        height: 1200.d,
-        child: _members.isEmpty
-            ? Center(child: SkinnedText("not_found".l()))
-            : ListView.builder(
-                itemCount: _members.length, itemBuilder: _listItemBuilder));
+  Widget _getSelectedPage(Tribe tribe) {
+    return switch (selectedTabIndex) {
+      0 => _membersBuilder(tribe),
+      _ => SizedBox()
+    };
+  }
+
+  Widget _membersBuilder(Tribe tribe) {
+    _loadMembers();
+    return Column(mainAxisSize: MainAxisSize.max, children: [
+      Row(children: [
+        CupertinoSwitch(
+            value: _member?.status == 1, onChanged: _changeVisibility),
+        Asset.load<Image>("tribe_visibility", width: 44.d),
+        SizedBox(width: 12.d),
+        Text("tribe_visibility".l()),
+        const Expanded(child: SizedBox()),
+        _indicator(
+            "icon_population", "${tribe.population}/${tribe.capacity}", 40.d),
+      ]),
+      SizedBox(height: 20.d),
+      Widgets.skinnedButton(
+          color: ButtonColor.teal,
+          label: "tribe_invite".l(),
+          icon: "tribe_invite",
+          onPressed: () => Navigator.of(context)
+              .pushNamed(Routes.popupTribeInvite.routeName)),
+      SizedBox(height: 20.d),
+      Expanded(
+          child: ListView.builder(
+              itemCount: _members.length, itemBuilder: _listItemBuilder)),
+    ]);
   }
 
   Widget? _listItemBuilder(BuildContext context, int index) {
