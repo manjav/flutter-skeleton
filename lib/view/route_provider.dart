@@ -21,6 +21,7 @@ import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
 import 'popups/settings_popup.dart';
 import 'popups/tribe_edit_popup.dart';
+import 'popups/tribe_invite_popup.dart';
 import 'popups/tribe_members_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/home_screen.dart';
@@ -64,6 +65,7 @@ enum Routes {
   popupRedeemGift,
   popupTribeSearch,
   popupTribeMembers,
+  popupTribeInvite,
   popupTribeEdit,
 }
 
@@ -98,6 +100,7 @@ extension RouteProvider on Routes {
       "/popupInvite" => InvitePopup(),
       "/popupRedeemGift" => RedeemGiftPopup(),
       "/popupTribeMembers" => TribeMembersPopup(),
+      "/popupTribeInvite" => TribeInvitePopup(),
       "/popupTribeEdit" => TribeEditPopup(),
       _ => LoadingScreen(),
     };
@@ -125,6 +128,7 @@ extension RouteProvider on Routes {
       "/popupMineBuilding" ||
       "/popupTribeMembers" ||
       "/popupTribeEdit" ||
+      "/popupTribeInvite" =>
         false,
       _ => true,
     };
