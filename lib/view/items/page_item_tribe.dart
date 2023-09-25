@@ -32,79 +32,106 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           Widgets.skinnedButton(label: "tribe_new".l(), width: 380.d),
           SizedBox(height: 200.d),
         ]);
-      } //
-      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        SizedBox(height: 180.d),
-        Widgets.button(
-            height: 368.d,
-            margin: EdgeInsets.all(12.d),
-            padding: EdgeInsets.fromLTRB(32.d, 22.d, 32.d, 0),
-            decoration: Widgets.imageDecore(
-                "tribe_header", ImageCenterSliceData(267, 256)),
-            child: Stack(clipBehavior: Clip.none, children: [
-              Asset.load<Image>("tribe_icon", width: 120.d),
-              Positioned(
-                  left: 150.d,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          SkinnedText(tribe.name, style: TStyles.large),
-                          SizedBox(width: 16.d),
-                          Widgets.rect(
-                              padding: EdgeInsets.all(10.d),
-                              decoration: Widgets.imageDecore(
-                                  "ui_frame_inside", ImageCenterSliceData(42)),
-                              child:
-                                  Asset.load<Image>("tribe_edit", width: 42.d))
-                        ]),
-                        Row(children: [
-                          _indicator("icon_score", tribe.weeklyRank.compact(),
-                              100.d, EdgeInsets.only(right: 16.d)),
-                          SizedBox(width: 16.d),
-                          _indicator("icon_gold", tribe.gold.compact(), 100.d,
-                              EdgeInsets.only(right: 16.d)),
-                        ]),
-                      ])),
-              Positioned(
-                  right: 0,
-                  width: 250.d,
-                  child: Widgets.touchable(
-                      onTap: () => Navigator.pushNamed(
-                          context, Routes.popupTribeMembers.routeName),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _indicator("icon_population",
-                                "${tribe.population}/${tribe.capacity}", 40.d),
-                            SizedBox(height: 8.d),
-                            _indicator("tribe_online", "2 onlines", 32.d),
-                          ]))),
-              Positioned(
-                  left: 40.d,
-                  right: 40.d,
-                  top: 160.d,
-                  child: SkinnedText(tribe.description,
-                      alignment: Alignment.centerLeft)),
-              Positioned(
-                  bottom: -16.d,
-                  right: 76.d,
-                  left: 76.d,
-                  height: 96.d,
-                  child: Row(
-                    children: [
-                      _upgradable(ButtonColor.wooden, "tribe_offense", "tribe"),
-                      _upgradable(ButtonColor.wooden, "tribe_defense", "tribe"),
-                      _upgradable(
-                          ButtonColor.wooden, "tribe_cooldown", "tribe"),
-                      Expanded(
-                          child: _upgradable(ButtonColor.green, "tribe_upgrade",
-                              "upgrade_l".l()))
-                    ],
-                  ))
-            ]))
-      ]);
+      }
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [SizedBox(height: 150.d), _headerBuilder(tribe)]);
     });
+  }
+
+  Widget _headerBuilder(Tribe tribe) {
+    var margin = 12.d;
+    return Stack(children: [
+      Positioned(
+          top: margin,
+          right: margin,
+          left: margin,
+          bottom: margin * 1.5,
+          child: Widgets.rect(
+              decoration: Widgets.imageDecore(
+                  "tribe_header", ImageCenterSliceData(267, 256)))),
+      Widgets.button(
+        onPressed: () async {
+          await Navigator.of(context)
+              .pushNamed(Routes.popupTribeEdit.routeName);
+          setState(() {});
+        },
+        padding: EdgeInsets.fromLTRB(48.d, 44.d, 48.d, 0),
+        child: Column(children: [
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Asset.load<Image>("tribe_icon", width: 120.d),
+            SizedBox(width: 16.d),
+            _informationBuilder(tribe),
+            const Expanded(child: SizedBox()),
+            _membersButtonBuilder(tribe),
+          ]),
+          SizedBox(height: 24.d),
+          SizedBox(
+              height: (tribe.description.length / 50).round() * 44.d,
+              child: SkinnedText(tribe.description,
+                  alignment: Alignment.centerLeft,
+                  style: TStyles.medium.copyWith(height: 1.1))),
+          SizedBox(height: 32.d),
+          _upgradeLineBuilder(tribe)
+        ]),
+      )
+    ]);
+  }
+
+  Widget _informationBuilder(Tribe tribe) {
+    var name = tribe.name.substring(0, tribe.name.length.max(18));
+    if (tribe.name.length > 18) {
+      name += " ...";
+    }
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        SkinnedText(name, style: TStyles.large),
+        SizedBox(width: 16.d),
+        Widgets.rect(
+            padding: EdgeInsets.all(10.d),
+            decoration: Widgets.imageDecore(
+                "ui_frame_inside", ImageCenterSliceData(42)),
+            child: Asset.load<Image>("tribe_edit", width: 42.d))
+      ]),
+      Row(children: [
+        _indicator("icon_score", tribe.weeklyRank.compact(), 100.d,
+            EdgeInsets.only(right: 16.d)),
+        SizedBox(width: 16.d),
+        _indicator("icon_gold", tribe.gold.compact(), 100.d,
+            EdgeInsets.only(right: 16.d)),
+      ]),
+    ]);
+  }
+
+  Widget _membersButtonBuilder(Tribe tribe) {
+    return Widgets.button(
+      width: 260.d,
+      padding: EdgeInsets.zero,
+      onPressed: () =>
+          Navigator.pushNamed(context, Routes.popupTribeMembers.routeName),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        _indicator(
+            "icon_population", "${tribe.population}/${tribe.capacity}", 40.d),
+        SizedBox(height: 8.d),
+        _indicator("tribe_online", "2 onlines", 32.d),
+      ]),
+    );
+  }
+
+  Widget _upgradeLineBuilder(Tribe tribe) {
+    return SizedBox(
+        width: 840.d,
+        height: 96.d,
+        child: Row(
+          children: [
+            _upgradable(ButtonColor.wooden, "tribe_offense", "tribe"),
+            _upgradable(ButtonColor.wooden, "tribe_defense", "tribe"),
+            _upgradable(ButtonColor.wooden, "tribe_cooldown", "tribe"),
+            Expanded(
+                child: _upgradable(
+                    ButtonColor.green, "tribe_upgrade", "upgrade_l".l()))
+          ],
+        ));
   }
 
   Widget _indicator(String icon, String label, double iconSize,
