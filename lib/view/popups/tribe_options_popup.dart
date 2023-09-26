@@ -130,7 +130,13 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
               // mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(children: [
+                  member.status == 1
+                      ? Asset.load<Image>("tribe_online", height: 32.d)
+                      : const SizedBox(),
+                  SizedBox(width: member.status == 1 ? 12.d : 0),
                 SkinnedText(member.name),
+                ]),
                 Text("tribe_degree_${member.degree}".l(), style: TStyles.small),
               ]),
           const Expanded(child: SizedBox()),
