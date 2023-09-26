@@ -61,6 +61,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   List<Widget> appBarElementsRight() {
+    if (_selectedTab == 3) {
+      return [];
+    }
     if (_selectedTab == 2) {
       return <Widget>[
         ...super.appBarElementsRight()
@@ -97,9 +100,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     itemBuilder: _tabItemBuilder,
                     scrollDirection: Axis.horizontal,
                     itemCount: _tabInputs.length)),
-            BlocConsumer<ServicesBloc, ServicesState>(
-                builder: (context, state) => const SizedBox(),
-                listener: (context, state) => _selectTap(state.data as int))
+            //   BlocConsumer<ServicesBloc, ServicesState>(
+            //       builder: (context, state) => const SizedBox(),
+            //       listener: (context, state) => _selectTap(state.data as int))
           ],
         ));
   }
