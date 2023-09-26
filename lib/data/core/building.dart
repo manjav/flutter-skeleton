@@ -14,10 +14,10 @@ enum Buildings {
   message,
   mine,
   offense,
-  shop,
+  // shop,
   treasury,
   // tribe,
-  quest,
+  // quest,
   auction,
 }
 
@@ -81,18 +81,11 @@ class Building extends StringMap<dynamic> {
     map['cards'] = cards;
   }
 
-  int get maxLevel {
-    return switch (type) {
-      Buildings.treasury => 7,
-      Buildings.mine => 8,
-      _ => 0
-    };
-  }
+  int get maxLevel => _upgradeCosts[type]!.length;
 
-  int get upgradeCost {
-    var values = <Buildings, List<int>>{};
-    values[Buildings.mine] = [0, 20, 40, 80, 300, 1500, 3500, 9000];
-    values[Buildings.offense] = [
+  static const Map<Buildings, List<int>> _upgradeCosts = {
+    Buildings.mine: [0, 20, 40, 80, 300, 1500, 3500, 9000],
+    Buildings.offense: [
       20,
       50,
       75,
@@ -137,8 +130,8 @@ class Building extends StringMap<dynamic> {
       10400000,
       11500000,
       13000000
-    ];
-    values[Buildings.defense] = [
+    ],
+    Buildings.defense: [
       0,
       40,
       60,
@@ -183,8 +176,8 @@ class Building extends StringMap<dynamic> {
       8400000,
       9200000,
       10000000
-    ];
-    values[Buildings.cards] = [
+    ],
+    Buildings.cards: [
       15,
       40,
       60,
@@ -225,11 +218,14 @@ class Building extends StringMap<dynamic> {
       4500000,
       9000000,
       12500000
-    ];
-    values[Buildings.base] = [0, 30, 80, 120, 180, 270, 400, 1350];
-    values[Buildings.treasury] = [0, 2, 5, 30, 100, 250, 1000];
+    ],
+    Buildings.base: [0, 30, 80, 120, 180, 270, 400, 1350],
+    Buildings.treasury: [0, 2, 5, 30, 100, 250, 1000]
+  };
 
-    return values[type]![(values[type]!.length - 1).max(level)] * 1000;
+  int get upgradeCost {
+    return _upgradeCosts[type]![(_upgradeCosts[type]!.length - 1).max(level)] *
+        1000;
   }
 
   int get benefit {
