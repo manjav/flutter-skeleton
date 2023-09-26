@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/data/core/building.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -113,8 +114,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         setState(() {});
       },
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        _indicator(
-            "icon_population", "${tribe.population}/${tribe.capacity}", 40.d),
+        _indicator("icon_population",
+            "${tribe.population}/${tribe.getOption(Buildings.base.id)}", 40.d),
         SizedBox(height: 8.d),
         _indicator("tribe_online", "2 onlines", 32.d),
       ]),
@@ -127,9 +128,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         height: 96.d,
         child: Row(
           children: [
-            _upgradable(ButtonColor.wooden, "tribe_offense", "tribe"),
-            _upgradable(ButtonColor.wooden, "tribe_defense", "tribe"),
-            _upgradable(ButtonColor.wooden, "tribe_cooldown", "tribe"),
+            _upgradable(ButtonColor.wooden, "tribe_upgrade_1002",
+                "${tribe.getOption(Buildings.offense.id)}%"),
+            _upgradable(ButtonColor.wooden, "tribe_upgrade_1003",
+                "${tribe.getOption(Buildings.defense.id)}%"),
+            _upgradable(ButtonColor.wooden, "tribe_upgrade_1004",
+                "${tribe.getOption(Buildings.cards.id)}%"),
             Expanded(
                 child: _upgradable(
                     ButtonColor.green, "tribe_upgrade", "upgrade_l".l()))
@@ -153,13 +157,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   Widget _upgradable(ButtonColor color, String icon, String label) {
     return Widgets.skinnedButton(
-        padding: EdgeInsets.fromLTRB(20.d, 0, 20.d, 20.d),
-        color: color,
-        size: ButtonSize.small,
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Asset.load<Image>(icon, width: 50.d),
-          SizedBox(width: 12.d),
-          SkinnedText(label),
+      padding: EdgeInsets.fromLTRB(24.d, 0, 28.d, 20.d),
+      color: color,
+      size: ButtonSize.small,
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Asset.load<Image>(icon, width: 50.d),
+        SizedBox(width: 8.d),
+        SkinnedText(label),
       ]),
       onPressed: () async {
         await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,

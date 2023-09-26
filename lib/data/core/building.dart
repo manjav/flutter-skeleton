@@ -21,6 +21,20 @@ enum Buildings {
   auction,
 }
 
+extension BuildingIntExtension on int {
+  Buildings toBuildings() {
+    return switch (this) {
+      1001 => Buildings.mine,
+      1002 => Buildings.offense,
+      1003 => Buildings.defense,
+      1004 => Buildings.cards,
+      1005 => Buildings.base,
+      1007 => Buildings.treasury,
+      _ => Buildings.none,
+    };
+  }
+}
+
 extension BuildingExtension on Buildings {
   int get id {
     return switch (this) {
@@ -63,26 +77,6 @@ class Building extends StringMap<dynamic> {
   static const offensePowerModifier = 0.1;
   static const defensePowerModifier = 0.1;
   static const maxLevels = 10;
-
-  int get level => map['level'];
-  Buildings get type => map['type'];
-  List<AccountCard?> get cards => map['cards'];
-  T get<T>(BuildingField fieldName) => map[fieldName.name] as T;
-
-  @override
-  void init(Map<String, dynamic> data, {args}) {
-    super.init(data, args: args);
-    var account = args['account']! as Account;
-    var cards = List.generate(
-        4,
-        (i) => i < args['cards'].length
-            ? account.getCards()[args['cards'][i]['id']]
-            : null);
-    map['cards'] = cards;
-  }
-
-  int get maxLevel => _upgradeCosts[type]!.length;
-
   static const Map<Buildings, List<int>> _upgradeCosts = {
     Buildings.mine: [0, 20, 40, 80, 300, 1500, 3500, 9000],
     Buildings.offense: [
@@ -222,31 +216,10 @@ class Building extends StringMap<dynamic> {
     Buildings.base: [0, 30, 80, 120, 180, 270, 400, 1350],
     Buildings.treasury: [0, 2, 5, 30, 100, 250, 1000]
   };
-
-  int get upgradeCost {
-    return _upgradeCosts[type]![(_upgradeCosts[type]!.length - 1).max(level)] *
-        1000;
-  }
-
-  int get benefit {
-    if (level == 0) return 0;
-    if (type == Buildings.base) {
-      return level.max(10) * 5 + 10;
-    }
-    var values = <Buildings, List<int>>{};
-
-    values[Buildings.mine] = [
-      0,
-      200,
-      1000,
-      3000,
-      10000,
-      40000,
-      100000,
-      300000,
-      500000
-    ];
-    values[Buildings.offense] = values[Buildings.defense] = [
+  static const Map<Buildings, List<int>> _benefits = {
+    Buildings.base: [0, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+    Buildings.mine: [0, 200, 1000, 3000, 10000, 40000, 100000, 300000, 500000],
+    Buildings.offense: [
       0,
       5,
       10,
@@ -291,8 +264,8 @@ class Building extends StringMap<dynamic> {
       107,
       108,
       110
-    ];
-    values[Buildings.cards] = [
+    ],
+    Buildings.cards: [
       0,
       5,
       9,
@@ -334,19 +307,40 @@ class Building extends StringMap<dynamic> {
       42,
       41,
       40
-    ];
-    values[Buildings.treasury] = [
-      0,
-      1000,
-      5000,
-      10000,
-      30000,
-      100000,
-      250000,
-      1000000
-    ];
-    return values[type]![(values[type]!.length - 1).max(level)];
+    ],
+    Buildings.treasury: [0, 1000, 5000, 10000, 30000, 100000, 250000, 1000000],
+  };
+
+  int get level => map['level'];
+  Buildings get type => map['type'];
+  List<AccountCard?> get cards => map['cards'];
+  T get<T>(BuildingField fieldName) => map[fieldName.name] as T;
+
+  @override
+  void init(Map<String, dynamic> data, {args}) {
+    super.init(data, args: args);
+    var account = args['account']! as Account;
+    var cards = List.generate(
+        4,
+        (i) => i < args['cards'].length
+            ? account.getCards()[args['cards'][i]['id']]
+            : null);
+    map['cards'] = cards;
   }
+
+  static int get_maxLevel(Buildings type) => _upgradeCosts[type]!.length;
+  int get maxLevel => get_maxLevel(type);
+
+  static int get_upgradeCost(Buildings type, int level) =>
+      _upgradeCosts[type]![(_upgradeCosts[type]!.length - 1).max(level)] * 1000;
+  int get upgradeCost => get_upgradeCost(type, level);
+
+  static int get_benefit(Buildings type, int level) {
+    if (type == Buildings.defense) type = Buildings.offense;
+    return _benefits[type]![(_benefits[type]!.length - 1).max(level)];
+  }
+
+  int get benefit => get_benefit(type, level);
 
   int isAvailableCardHolder(int index) {
     if (type == Buildings.offense || type == Buildings.defense) {

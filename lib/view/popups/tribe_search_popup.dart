@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/services_bloc.dart';
+import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/http_connection.dart';
@@ -99,7 +100,8 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Asset.load<Image>("icon_population", width: 50.d),
-                          SkinnedText(" ${tribe.population}/${tribe.capacity}")
+                          SkinnedText(
+                              " ${tribe.population}/${tribe.getOption(Buildings.base.id)}")
                         ]))
               ],
             ),

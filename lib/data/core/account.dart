@@ -180,15 +180,15 @@ class Account extends StringMap<dynamic> {
 
     map['buildings'] = <Buildings, Building>{};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
-    _addBuilding(Buildings.base, tribe?.baseLevel);
-    _addBuilding(Buildings.cards, tribe?.cooldownLevel);
-    _addBuilding(Buildings.defense, tribe?.defenseLevel,
+    _addBuilding(Buildings.base, tribe?.levels[Buildings.base.id]);
+    // _addBuilding(Buildings.cards, tribe?.levels[Options.cooldown.index]);
+    _addBuilding(Buildings.defense, tribe?.levels[Buildings.defense.id],
         map['defense_building_assigned_cards']);
     _addBuilding(Buildings.message);
     map['buildings'][Buildings.mine] = Mine();
     _addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
-    _addBuilding(Buildings.offense, tribe?.offenseLevel,
+    _addBuilding(Buildings.offense, tribe?.levels[Buildings.offense.id],
         map['offense_building_assigned_cards']);
     // _addBuilding(Buildings.shop);
     _addBuilding(Buildings.treasury, map['bank_building_level']);
