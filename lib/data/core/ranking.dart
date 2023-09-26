@@ -89,6 +89,35 @@ class Player extends Rank {
   }
 }
 
+class Member extends Rank {
+  int level = 0, xp = 0, gold = 0, status = 0, avatarId = 1;
+  int leagueId = 0, leagueRank = 0, defPower = 0, degree = 0;
+  bool pokeStatus = false;
+
+  Member.init(Map<String, dynamic>? map, int ownerId)
+      : super.init(map, ownerId) {
+    if (map == null) return;
+    xp = map["xp"] ?? 0;
+    gold = map["gold"] ?? 0;
+    degree = map["tribe_permission"] ?? 0;
+    level = map["level"] ?? 0;
+    defPower = map["def_power"] ?? 0;
+    status = map["status"] ?? 0;
+    leagueId = map["league_id"] ?? 0;
+    leagueRank = map["league_rank"] ?? 0;
+    avatarId = map["avatar_id"] ?? 0;
+    pokeStatus = map["poke_status"] ?? false;
+  }
+
+  static List<Member> initAll(List list, int ownerId) {
+    var result = <Member>[];
+    for (var map in list) {
+      result.add(Member.init(map, ownerId));
+    }
+    return result;
+  }
+}
+
 class LeagueRank extends Player {
   int weeklyScore = 0;
   LeagueRank.init(Map<String, dynamic>? map, int ownerId)
