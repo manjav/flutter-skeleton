@@ -186,4 +186,17 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
     ]);
   }
 
+
+  _donate(Tribe tribe) async {
+    try {
+      var result = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.tribeDonate, params: {
+        RpcParams.tribe_id.name: tribe.id,
+        RpcParams.gold.name: 10000,
+      });
+      _account.update(result);
+      setState(() {});
+    } finally {}
+  }
 }
