@@ -8,6 +8,7 @@ import '../../utils/utils.dart';
 import 'infra.dart';
 
 enum Buildings {
+  none,
   base,
   cards,
   defense,

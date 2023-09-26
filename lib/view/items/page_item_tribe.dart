@@ -36,7 +36,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       }
       return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [SizedBox(height: 150.d), _headerBuilder(tribe)]);
+          children: [SizedBox(height: 10.d), _headerBuilder(tribe)]);
     });
   }
 
@@ -53,8 +53,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                   "tribe_header", ImageCenterSliceData(267, 256)))),
       Widgets.button(
         onPressed: () async {
-          await Navigator.of(context)
-              .pushNamed(Routes.popupTribeEdit.routeName);
+          await Navigator.of(context).pushNamed(
+              Routes.popupTribeOptions.routeName,
+              arguments: {"index": 0});
           setState(() {});
         },
         padding: EdgeInsets.fromLTRB(48.d, 44.d, 48.d, 0),
@@ -84,35 +85,36 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     if (tribe.name.length > 18) {
       name += " ...";
     }
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        SkinnedText(name, style: TStyles.large),
-        SizedBox(width: 16.d),
-        Widgets.rect(
-            padding: EdgeInsets.all(10.d),
-            decoration: Widgets.imageDecore(
-                "ui_frame_inside", ImageCenterSliceData(42)),
-            child: Asset.load<Image>("tribe_edit", width: 42.d))
-      ]),
-      Row(children: [
-        _indicator("icon_score", tribe.weeklyRank.compact(), 100.d,
-            EdgeInsets.only(right: 16.d)),
-        SizedBox(width: 16.d),
-        _indicator("icon_gold", tribe.gold.compact(), 100.d,
-            EdgeInsets.only(right: 16.d)),
-      ]),
-    ]);
+    return Widgets.button(
+        padding: EdgeInsets.zero,
+        onPressed: () async {
+          await Navigator.pushNamed(context, Routes.popupTribeEdit.routeName);
+          setState(() {});
+        },
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            SkinnedText(name, style: TStyles.large),
+            SizedBox(width: 16.d),
+            Widgets.rect(
+                padding: EdgeInsets.all(10.d),
+                decoration: Widgets.imageDecore(
+                    "ui_frame_inside", ImageCenterSliceData(42)),
+                child: Asset.load<Image>("tribe_edit", width: 42.d))
+          ]),
+          Row(children: [
+            _indicator("icon_score", tribe.weeklyRank.compact(), 100.d,
+                EdgeInsets.only(right: 16.d)),
+            SizedBox(width: 16.d),
+            _indicator("icon_gold", tribe.gold.compact(), 100.d,
+                EdgeInsets.only(right: 16.d)),
+          ]),
+        ]));
   }
 
   Widget _membersButtonBuilder(Tribe tribe) {
-    return Widgets.button(
+    return Widgets.rect(
       width: 260.d,
       padding: EdgeInsets.zero,
-      onPressed: () async {
-        await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
-            arguments: {"index": 0});
-        setState(() {});
-      },
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         _indicator("icon_population",
             "${tribe.population}/${tribe.getOption(Buildings.base.id)}", 40.d),
@@ -157,19 +159,18 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   Widget _upgradable(ButtonColor color, String icon, String label) {
     return Widgets.skinnedButton(
-      padding: EdgeInsets.fromLTRB(24.d, 0, 28.d, 20.d),
-      color: color,
-      size: ButtonSize.small,
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        Asset.load<Image>(icon, width: 50.d),
-        SizedBox(width: 8.d),
-        SkinnedText(label),
-      ]),
-      onPressed: () async {
-        await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
-            arguments: {"index": 1});
-        setState(() {});
-      },
-    );
+        padding: EdgeInsets.fromLTRB(24.d, 0, 28.d, 20.d),
+        color: color,
+        size: ButtonSize.small,
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Asset.load<Image>(icon, width: 50.d),
+          SizedBox(width: 8.d),
+          SkinnedText(label),
+        ]),
+        onPressed: () async {
+          await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
+              arguments: {"index": 1});
+          setState(() {});
+        });
   }
 }

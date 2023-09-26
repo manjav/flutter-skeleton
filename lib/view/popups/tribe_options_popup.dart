@@ -154,7 +154,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
             Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Asset.load<Image>(icon, height: iconSize),
-          SizedBox(width: 12.d),
+          SizedBox(width: 2.d),
           SkinnedText(label)
         ]));
   }
