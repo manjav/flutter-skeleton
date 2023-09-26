@@ -140,8 +140,8 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
                 Text("tribe_degree_${member.degree}".l(), style: TStyles.small),
               ]),
           const Expanded(child: SizedBox()),
-          _indicator("icon_score", member.rank.compact(), 60.d,
-              EdgeInsets.only(right: 16.d))
+          _indicator("icon_xp", member.xp.compact(), 60.d,
+              EdgeInsets.only(right: 16.d)),
         ]));
   }
 
