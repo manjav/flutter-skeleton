@@ -78,7 +78,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
   Widget _getSelectedPage(Tribe tribe) {
     return switch (selectedTabIndex) {
       0 => _membersBuilder(tribe),
-      _ => SizedBox()
+      _ => _upgradeBuilder(tribe)
     };
   }
 
@@ -92,8 +92,8 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         SizedBox(width: 12.d),
         Text("tribe_visibility".l()),
         const Expanded(child: SizedBox()),
-        _indicator(
-            "icon_population", "${tribe.population}/${tribe.capacity}", 40.d),
+        _indicator("icon_population",
+            "${tribe.population}/${tribe.getOption(Buildings.base.id)}", 40.d),
       ]),
       SizedBox(height: 20.d),
       Widgets.skinnedButton(
@@ -162,4 +162,22 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
       setState(() => _member!.status = newStatus);
     } finally {}
   }
+
+  Widget _upgradeBuilder(Tribe tribe) {
+    return Column(children: [
+      Row(children: [
+        SkinnedText("tribe_gold".l(), style: TStyles.large),
+        SizedBox(width: 4.d),
+        Asset.load<Image>("icon_gold", width: 70.d),
+        SizedBox(width: 4.d),
+        SkinnedText(tribe.gold.compact(), style: TStyles.large),
+        const Expanded(child: SizedBox()),
+        Widgets.skinnedButton(
+            label: "tribe_donate".l(),
+            padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
+            onPressed: () => _donate(tribe)),
+      ]),
+    ]);
+  }
+
 }

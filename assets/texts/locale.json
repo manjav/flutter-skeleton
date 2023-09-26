@@ -229,6 +229,8 @@
     "tribe_upgrade_d_1005": "%sˡ capacity of your tribe",
     "tribe_new": "Create Tribe",
     "tribe_edit": "Edit Tribe",
+    "tribe_gold": "Tribe Gold:",
+    "tribe_donate": "Donate",
     "tribe_stats_0": "Public",
     "tribe_stats_1": "Invite Only",
     "tribe_stats_2": "Closed",
