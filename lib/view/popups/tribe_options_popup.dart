@@ -183,9 +183,83 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
             padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
             onPressed: () => _donate(tribe)),
       ]),
+      Widgets.divider(width: 900.d, margin: 8.d),
+      Expanded(
+          child: GridView.builder(
+              itemCount: 4,
+              padding: EdgeInsets.only(top: 50.d),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 0.86, crossAxisCount: 2),
+              itemBuilder: (c, i) => _upgradeItemBuilder(tribe, 1002 + i))),
     ]);
   }
 
+  Widget? _upgradeItemBuilder(Tribe tribe, int id) {
+    return Widgets.rect(
+      radius: 32.d,
+      color: TColors.primary90,
+      padding: EdgeInsets.all(10.d),
+      margin: EdgeInsets.symmetric(horizontal: 8.d, vertical: 40.d),
+      child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+                top: -80.d,
+                child: Asset.load<Image>("tribe_upgrade_$id",
+                    width: 220.d, height: 180.d)),
+            Positioned(
+                top: 90.d,
+                child: SkinnedText("tribe_upgrade_t_$id".l(),
+                    style: TStyles.large)),
+            Positioned(
+                top: 170.d,
+                width: 400.d,
+                child: Text("tribe_upgrade_d_$id".l([tribe.getOption(id)]),
+                    textAlign: TextAlign.center,
+                    style: TStyles.medium.copyWith(height: 1))),
+            Positioned(
+                bottom: 0,
+                right: 8.d,
+                left: 8.d,
+                child: _upgradeButton(tribe, id))
+          ]),
+    );
+  }
+
+  Widget _upgradeButton(Tribe tribe, int id) {
+    if (tribe.levels[id]! >= Building.get_maxLevel(id.toBuildings())) {
+      return SkinnedText("max_level".l(["tribe_upgrade_t_$id".l()]),
+          textAlign: TextAlign.center);
+    }
+    var cost = tribe.getOptionCost(id);
+    var newBenefit = tribe.getOption(id, tribe.levels[id]! + 1);
+    return Widgets.skinnedButton(
+      height: 150.d,
+      color: ButtonColor.green,
+      padding: EdgeInsets.fromLTRB(28.d, 18.d, 22.d, 28.d),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SkinnedText("tribe_upgarde".l(),
+              style: TStyles.small.copyWith(height: 3.d)),
+          SkinnedText("$newBenefit${id == Buildings.base.id ? "ˡ" : "%"}",
+              style: TStyles.large.copyWith(height: 3.5.d)),
+        ]),
+        SizedBox(width: 20.d),
+        Widgets.rect(
+          padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
+          decoration:
+              Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
+          child: Row(children: [
+            Asset.load<Image>("icon_gold", height: 76.d),
+            SkinnedText(cost.compact(),
+                style: TStyles.large.copyWith(height: 1)),
+          ]),
+        )
+      ]),
+      onPressed: () => _upgrade(id, tribe),
+    );
+  }
 
   _donate(Tribe tribe) async {
     try {
@@ -196,6 +270,21 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         RpcParams.gold.name: 10000,
       });
       _account.update(result);
+      setState(() {});
+    } finally {}
+  }
+
+  _upgrade(int id, Tribe tribe) async {
+    try {
+      var result = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.tribeUpgrade, params: {
+        RpcParams.tribe_id.name: tribe.id,
+        RpcParams.type.name: id,
+      });
+      _account.update(result);
+      _account.getBuilding(id.toBuildings())!.map['level']++;
+      tribe.levels[id] = tribe.levels[id]! + 1;
       setState(() {});
     } finally {}
   }
