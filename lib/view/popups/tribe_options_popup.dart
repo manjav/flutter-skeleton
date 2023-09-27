@@ -17,6 +17,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
@@ -135,7 +136,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
                       ? Asset.load<Image>("tribe_online", height: 32.d)
                       : const SizedBox(),
                   SizedBox(width: member.status == 1 ? 12.d : 0),
-                SkinnedText(member.name),
+                  SkinnedText(member.name),
                 ]),
                 Text("tribe_degree_${member.degree}".l(), style: TStyles.small),
               ]),
@@ -238,6 +239,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
       height: 150.d,
       color: ButtonColor.green,
       padding: EdgeInsets.fromLTRB(28.d, 18.d, 22.d, 28.d),
+      isEnable: cost <= tribe.gold,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SkinnedText("tribe_upgarde".l(),
@@ -258,6 +260,12 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         )
       ]),
       onPressed: () => _upgrade(id, tribe),
+      onDisablePressed: () {
+        var message = cost > tribe.gold
+            ? "error_227".l()
+            : "max_level".l(["tribe_upgrade_t_$id".l()]);
+        Overlays.insert(context, OverlayType.toast, args: message);
+      },
     );
   }
 
