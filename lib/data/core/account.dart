@@ -181,7 +181,7 @@ class Account extends StringMap<dynamic> {
     map['buildings'] = <Buildings, Building>{};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
     _addBuilding(Buildings.base, tribe?.levels[Buildings.base.id]);
-    // _addBuilding(Buildings.cards, tribe?.levels[Options.cooldown.index]);
+    _addBuilding(Buildings.cards, tribe?.levels[Buildings.cards.id]);
     _addBuilding(Buildings.defense, tribe?.levels[Buildings.defense.id],
         map['defense_building_assigned_cards']);
     _addBuilding(Buildings.message);
@@ -334,7 +334,9 @@ class Account extends StringMap<dynamic> {
       }
     }
     var tribe = get<Tribe?>(AccountField.tribe);
-    if (tribe != null) tribe.gold = data["tribe_gold"];
+    if (tribe != null && data.containsKey("tribe_gold")) {
+      tribe.gold = data["tribe_gold"];
+    }
 
     if (!data.containsKey("gold")) {
       map["gold"] = map["gold"] + (data["added_gold"] ?? 0);
