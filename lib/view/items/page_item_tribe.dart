@@ -30,7 +30,14 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       if (tribe == null || tribe.id <= 0) {
         return Column(children: [
           Expanded(child: TribeSearchPopup()),
-          Widgets.skinnedButton(label: "tribe_new".l(), width: 380.d),
+          Widgets.skinnedButton(
+              label: "tribe_new".l(),
+              width: 380.d,
+              onPressed: () async {
+                await Navigator.pushNamed(
+                    context, Routes.popupTribeEdit.routeName);
+                setState(() {});
+              }),
           SizedBox(height: 200.d),
         ]);
       }

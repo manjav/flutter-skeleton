@@ -27,17 +27,17 @@ class TribeEditPopup extends AbstractPopup {
 }
 
 class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
+  Tribe? _tribe;
   int status = -1;
+  late Account _account;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  Tribe? _tribe;
-
   @override
   void initState() {
-    _tribe = BlocProvider.of<AccountBloc>(context)
-        .account!
-        .get<Tribe?>(AccountField.tribe);
+    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _tribe = _account.get<Tribe?>(AccountField.tribe);
+    if (_tribe!.id < 0) _tribe = null;
     if (_tribe != null) {
       _nameController.text = _tribe!.name;
       _descriptionController.text = _tribe!.description;
@@ -94,6 +94,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
 
   Widget _submitButton() {
     var isNew = _tribe == null;
+    var cost = isNew ? 15000 : 0;
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -101,7 +102,8 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
           Widgets.skinnedButton(
               height: 160.d,
               isEnable: _nameController.text.isNotEmpty &&
-                  _descriptionController.text.isNotEmpty,
+                  _descriptionController.text.isNotEmpty &&
+                  cost <= _account.get<int>(AccountField.gold),
               color: ButtonColor.green,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,11 +126,12 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
                         : const SizedBox()
                   ]),
               onPressed: () => _submit(),
-              onDisablePressed: () => Overlays.insert(
-                    context,
-                    OverlayType.toast,
-                    args: "fill_requirements_l".l(),
-                  ))
+              onDisablePressed: () {
+                var message = cost > _account.get<int>(AccountField.gold)
+                    ? "error_183".l()
+                    : "fill_requirements_l".l();
+                Overlays.insert(context, OverlayType.toast, args: message);
+              })
         ]);
   }
 
