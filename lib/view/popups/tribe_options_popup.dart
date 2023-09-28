@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/view/tab_provider.dart';
+import '../../view/tab_provider.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
@@ -69,7 +69,9 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         height: 1380.d,
         child: Column(children: [
           tabsBuilder(data: [
-            for (var i = 0; i < 2; i++) TabData("tribe_option_$i".l())
+            for (var i = 0; i < 2; i++)
+              TabData("tribe_option_$i".l(),
+                  ["icon_population", "tribe_upgrade"][i])
           ]),
           SizedBox(height: 30.d),
           Expanded(child: _getSelectedPage(tribe))
