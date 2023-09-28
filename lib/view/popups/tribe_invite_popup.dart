@@ -1,10 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
+import '../../data/core/tribe.dart';
 
+import '../../blocs/services_bloc.dart';
+import '../../data/core/rpc.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../view/popups/ipopup.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -41,5 +49,21 @@ class _TribeInvitePopupState extends AbstractPopupState<TribeInvitePopup> {
     ]);
   }
 
-  _invite() {}
+  _invite() async {
+    try {
+      var tribe = BlocProvider.of<AccountBloc>(context)
+          .account!
+          .get<Tribe>(AccountField.tribe);
+      await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.tribeInvite, params: {
+        RpcParams.tribe_id.name: tribe.id,
+        RpcParams.invitee_name.name: _textController.text
+      });
+      if (mounted) {
+        Navigator.pop(context);
+        Overlays.insert(context, OverlayType.toast, args: "message");
+      }
+    } finally {}
+  }
 }
