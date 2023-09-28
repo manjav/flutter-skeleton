@@ -58,11 +58,11 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SkinnedText(data.title),
-              SizedBox(width: data.icon == null ? 0 : 32.d),
               data.icon == null
                   ? const SizedBox()
-                  : Asset.load<Image>(data.icon!, width: 64.d),
+                  : Asset.load<Image>(data.icon!, width: 56.d),
+              SizedBox(width: data.icon == null ? 0 : 32.d),
+              SkinnedText(data.title),
             ],
           ),
           onPressed: () {
