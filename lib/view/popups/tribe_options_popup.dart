@@ -115,22 +115,29 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
   Widget? _listItemBuilder(BuildContext context, int index) {
     var member = _members[index];
     return Widgets.button(
-        height: 160.d,
+        height: 120.d,
         margin: EdgeInsets.all(4.d),
-        padding: EdgeInsets.all(22.d),
-        decoration:
-            Widgets.imageDecore("tribe_item_bg", ImageCenterSliceData(56)),
-        child: Row(children: [
+        padding: EdgeInsets.fromLTRB(20.d, 0, 22.d, 10.d),
+        decoration: Widgets.imageDecore(
+            "tribe_member_bg${member.itsMe ? "_me" : ""}",
+            ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 32, 2, 2))),
+        child: Row(
+          children: [
+            SizedBox(width: 70.d, child: SkinnedText("${index + 1}")),
+            SizedBox(width: 12.d),
           Widgets.rect(
-              radius: 24.d,
+                radius: 48.d,
+                width: 90.d,
+                height: 90.d,
               padding: EdgeInsets.all(6.d),
               decoration: Widgets.imageDecore(
                   "ui_frame_inside", ImageCenterSliceData(42)),
-              child: LoaderWidget(AssetType.image, "avatar_${member.avatarId}",
-                  width: 88.d, height: 88.d, subFolder: "avatars")),
+                child: LoaderWidget(
+                    AssetType.image, "avatar_${member.avatarId}",
+                    width: 76.d, height: 76.d, subFolder: "avatars")),
           SizedBox(width: 20.d),
           Column(
-              // mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(children: [
@@ -138,14 +145,17 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
                       ? Asset.load<Image>("tribe_online", height: 32.d)
                       : const SizedBox(),
                   SizedBox(width: member.status == 1 ? 12.d : 0),
-                  SkinnedText(member.name),
+                    SkinnedText(member.name,
+                        style: TStyles.medium.copyWith(height: 1.1)),
                 ]),
-                Text("tribe_degree_${member.degree}".l(), style: TStyles.small),
+                  Text("tribe_degree_${member.degree}".l(),
+                      style: TStyles.small),
               ]),
           const Expanded(child: SizedBox()),
           _indicator("icon_xp", member.xp.compact(), 60.d,
               EdgeInsets.only(right: 16.d)),
-        ]));
+          ],
+        ),
   }
 
   Widget _indicator(String icon, String label, double iconSize,
