@@ -91,6 +91,12 @@ class _IndicatorState extends State<Indicator>
   _getElements(double height, int value, int league) {
     var left = height * 0.65;
     var right = widget.hasPlusIcon ? height - 30.d : 0.0;
+    if (widget.itemType == AccountField.league_rank &&
+        value == 0 &&
+        league == 0) {
+      return const SizedBox();
+    }
+
     return Stack(alignment: Alignment.centerLeft, children: [
       Positioned(
           right: right,

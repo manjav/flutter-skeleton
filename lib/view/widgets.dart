@@ -120,6 +120,7 @@ class Widgets {
 
   static Widget button({
     Function()? onPressed,
+    Function(TapUpDetails)? onTapUp,
     int buttonId = 30,
     Color? color,
     Alignment? alignment,
@@ -140,6 +141,7 @@ class Widgets {
     return touchable(
         id: buttonId,
         onTap: onPressed,
+        onTapUp: onTapUp,
         child: rect(
           width: width,
           height: height,
@@ -294,6 +296,7 @@ class Widgets {
             style: style,
             textAlign: TextAlign.center,
             onChanged: onChanged,
+            onSubmitted: onChanged,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: style,
