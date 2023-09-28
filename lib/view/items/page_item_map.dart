@@ -48,12 +48,12 @@ class _MainMapItemState extends AbstractPageItemState<AbstractPageItem> {
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupRanking.routeName))),
-        _building(state.account, buildings[Buildings.defense]!, 400, 300),
+        _building(state.account, buildings[Buildings.defense]!, 400, 445),
         _building(state.account, buildings[Buildings.offense]!, 95, 670),
         _building(state.account, buildings[Buildings.tribe]!, 725, 630),
         _building(state.account, buildings[Buildings.base]!, 400, 840),
         _building(state.account, buildings[Buildings.treasury]!, 130, 1140),
-        _building(state.account, buildings[Buildings.mine]!, 754, 1140),
+        _building(state.account, buildings[Buildings.mine]!, 700, 1100),
         _button(
             "battle",
             "battle_l",
