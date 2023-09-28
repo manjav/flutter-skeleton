@@ -17,7 +17,7 @@ import '../widgets.dart';
 import 'page_item.dart';
 
 class TribePageItem extends AbstractPageItem {
-  const TribePageItem({super.key}) : super("battle");
+  const TribePageItem({super.key}) : super("tribe");
   @override
   createState() => _TribePageItemState();
 }
@@ -27,7 +27,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var tribe = state.account.get<Tribe?>(AccountField.tribe);
-      if (tribe == null) {
+      if (tribe == null || tribe.id <= 0) {
         return Column(children: [
           Expanded(child: TribeSearchPopup()),
           Widgets.skinnedButton(label: "tribe_new".l(), width: 380.d),

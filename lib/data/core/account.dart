@@ -166,7 +166,7 @@ class Account extends StringMap<dynamic> {
 
     // Tribe
     Tribe? tribe;
-    if (map.containsKey("tribe")) {
+    if (map["tribe"] != null) {
       tribe = map['tribe'] = Tribe(map['tribe']);
     }
 
