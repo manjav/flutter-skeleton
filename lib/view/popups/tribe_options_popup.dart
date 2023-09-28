@@ -125,37 +125,44 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
           children: [
             SizedBox(width: 70.d, child: SkinnedText("${index + 1}")),
             SizedBox(width: 12.d),
-          Widgets.rect(
+            Widgets.rect(
                 radius: 48.d,
                 width: 90.d,
                 height: 90.d,
-              padding: EdgeInsets.all(6.d),
-              decoration: Widgets.imageDecore(
-                  "ui_frame_inside", ImageCenterSliceData(42)),
+                padding: EdgeInsets.all(6.d),
+                decoration: Widgets.imageDecore(
+                    "ui_frame_inside", ImageCenterSliceData(42)),
                 child: LoaderWidget(
                     AssetType.image, "avatar_${member.avatarId}",
                     width: 76.d, height: 76.d, subFolder: "avatars")),
-          SizedBox(width: 20.d),
-          Column(
+            SizedBox(width: 20.d),
+            Column(
                 mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: [
-                  member.status == 1
-                      ? Asset.load<Image>("tribe_online", height: 32.d)
-                      : const SizedBox(),
-                  SizedBox(width: member.status == 1 ? 12.d : 0),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [
+                    member.status == 1
+                        ? Asset.load<Image>("tribe_online", height: 32.d)
+                        : const SizedBox(),
+                    SizedBox(width: member.status == 1 ? 12.d : 0),
                     SkinnedText(member.name,
                         style: TStyles.medium.copyWith(height: 1.1)),
-                ]),
+                  ]),
                   Text("tribe_degree_${member.degree}".l(),
                       style: TStyles.small),
-              ]),
-          const Expanded(child: SizedBox()),
-          _indicator("icon_xp", member.xp.compact(), 60.d,
-              EdgeInsets.only(right: 16.d)),
+                ]),
+            const Expanded(child: SizedBox()),
+            _indicator("icon_xp", member.xp.compact(), 60.d,
+                EdgeInsets.only(right: 16.d)),
           ],
         ),
+        onTapUp: (details) {
+          Overlays.insert(context, OverlayType.member, args: [
+            member,
+            _members.firstWhere((m) => m.itsMe),
+            details.globalPosition.dy - 220.d
+          ]);
+        });
   }
 
   Widget _indicator(String icon, String label, double iconSize,

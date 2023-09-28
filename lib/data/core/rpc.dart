@@ -1,6 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
 enum RpcId {
+  none,
+
   playerLoad,
   deposit,
   witdraw,
@@ -51,11 +53,18 @@ enum RpcId {
   tribeVisibility,
   tribeDonate,
   tribeUpgrade,
+  tribePoke,
+  tribeJoin,
+  tribeLeave,
+  tribeKick,
+  tribePromote,
+  tribeDemote,
 }
 
 extension RpcIdEx on RpcId {
   String get value {
     return switch (this) {
+      RpcId.none => "",
       RpcId.coolOff => "cards/cooloff",
       RpcId.assignCard => "cards/assign",
       RpcId.enhanceCard => "cards/enhance",
@@ -94,6 +103,12 @@ extension RpcIdEx on RpcId {
       RpcId.tribeVisibility => "tribe/invisible",
       RpcId.tribeDonate => "tribe/donate",
       RpcId.tribeUpgrade => "tribe/upgrade",
+      RpcId.tribeJoin => "tribe/joinrequest",
+      RpcId.tribeLeave => "tribe/leave",
+      RpcId.tribeKick => "tribe/kick",
+      RpcId.tribePromote => "tribe/promote",
+      RpcId.tribeDemote => "tribe/demote",
+      RpcId.tribePoke => "tribe/poke",
     };
   }
 
@@ -152,4 +167,6 @@ enum RpcParams {
   status,
   description,
   gold,
+  invitee_name,
+  member_id,
 }
