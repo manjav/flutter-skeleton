@@ -43,8 +43,14 @@ enum RpcId {
   buyCardPack,
 
   //Tribe
+  tribeSearch,
   tribeCreate,
   tribeEdit,
+  tribeMembers,
+  tribeInvite,
+  tribeVisibility,
+  tribeDonate,
+  tribeUpgrade,
 }
 
 extension RpcIdEx on RpcId {
@@ -80,7 +86,14 @@ extension RpcIdEx on RpcId {
       RpcId.getShopitems => "store/getshopitems",
       RpcId.buyHeroItem => "store/buyheroitem",
       RpcId.buyCardPack => "store/buycardpack",
-      RpcId.findTribe => "tribe/find"
+      RpcId.tribeSearch => "tribe/find",
+      RpcId.tribeCreate => "tribe/create",
+      RpcId.tribeEdit => "tribe/edit",
+      RpcId.tribeMembers => "tribe/members",
+      RpcId.tribeInvite => "tribe/invite",
+      RpcId.tribeVisibility => "tribe/invisible",
+      RpcId.tribeDonate => "tribe/donate",
+      RpcId.tribeUpgrade => "tribe/upgrade",
     };
   }
 
@@ -136,4 +149,7 @@ enum RpcParams {
   ability_type,
   potion,
   query,
+  status,
+  description,
+  gold,
 }
