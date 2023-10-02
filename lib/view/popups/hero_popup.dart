@@ -83,7 +83,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   }
 
   @override
-  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 132.d, 48.d, 80.d);
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 132.d, 48.d, 72.d);
 
   @override
   Widget closeButtonFactory() => const SizedBox();
@@ -92,7 +92,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   contentFactory() {
     return SizedBox(
       width: 920.d,
-      height: DeviceInfo.size.height * 0.41,
+      height: DeviceInfo.size.height * 0.42,
       child: ValueListenableBuilder(
           valueListenable: _selectedIndex,
           builder: (context, value, child) {
@@ -139,7 +139,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                   hero, hero.getGainedAttributesByItems()),
               SizedBox(height: 40.d),
               SizedBox(
-                  height: 132.d,
+                  height: 128.d,
                   child: Row(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
