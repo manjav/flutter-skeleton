@@ -39,7 +39,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
     if (!member.itsMe && member.degree < widget.me.degree) {
       buttons[widget.me.degree - member.degree > 1
           ? RpcId.tribePromote
-          : RpcId.tribeDemote] = ButtonColor.teal;
+          : RpcId.tribeDemote] = ButtonColor.green;
       buttons[RpcId.tribeKick] = ButtonColor.yellow;
     }
     if (member.itsMe) {
@@ -53,33 +53,36 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
               Positioned(
                   top: widget.y,
                   left: 240.d,
-                  width: 640.d,
-                  height: 182.d + (items.length / 2).ceil() * 116.d,
+                  width: 680.d,
+                  height: 192.d + (items.length / 2).ceil() * 116.d,
                   child: Widgets.rect(
                     padding: EdgeInsets.fromLTRB(16.d, 16.d, 16.d, 32.d),
                     decoration: Widgets.imageDecore(
                         "tribe_item_bg", ImageCenterSliceData(56)),
                     child: Column(children: [
-                      Row(children: [
-                        LevelIndicator(
-                            size: 100.d,
-                            xp: member.xp,
-                            level: member.level,
-                            avatarId: member.avatarId),
-                        SizedBox(width: 16.d),
-                        SizedBox(
-                            width: 240.d,
-                            child: SkinnedText(member.name,
-                                overflow: TextOverflow.ellipsis)),
-                        const Expanded(child: SizedBox()),
-                        Transform.scale(
-                            scale: 0.7,
-                            child: Indicator("member", AccountField.league_rank,
-                                value: member.leagueRank,
-                                data: member.leagueId,
-                                hasPlusIcon: false,
-                                width: 240.d))
-                      ]),
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            LevelIndicator(
+                                size: 120.d,
+                                xp: member.xp,
+                                level: member.level,
+                                avatarId: member.avatarId),
+                            SizedBox(width: 16.d),
+                            SizedBox(
+                                width: 240.d,
+                                child: SkinnedText(member.name,
+                                    overflow: TextOverflow.ellipsis)),
+                            const Expanded(child: SizedBox()),
+                            Transform.scale(
+                                scale: 0.7,
+                                child: Indicator(
+                                    "member", AccountField.league_rank,
+                                    value: member.leagueRank,
+                                    data: member.leagueId,
+                                    hasPlusIcon: false,
+                                    width: 240.d))
+                          ]),
                       Expanded(
                           child: GridView.builder(
                               itemCount: items.length,

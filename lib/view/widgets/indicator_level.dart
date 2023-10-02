@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/services/deviceinfo.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
 
 import '../../blocs/account_bloc.dart';
@@ -64,28 +65,30 @@ class _LevelIndicatorState extends State<LevelIndicator> {
     var s = widget.size / 200;
     return Widgets.button(
       radius: 54 * s,
-      color: TColors.clay,
+      // color: TColors.clay,
+      //       height: widget.size + 5.d,
+      // padding: EdgeInsets.fromLTRB(22.d, 20.d, 22.d, 26.d),
+      decoration: Widgets.imageDecore("ui_frame_wood_big"),
+
       width: widget.size,
       height: widget.size,
-      padding: EdgeInsets.all(12 * s),
+      padding: EdgeInsets.all(28 * s),
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
           SquarePercentIndicator(
             progress: (_xp - _minXp) / (_maxXp - _minXp),
-            // shadowWidth: 16 * s,
-            // progressWidth: 6 * s,
-            borderRadius: widget.size * 0.2,
+            shadowWidth: 20 * s,
+            progressWidth: 8 * s,
+            borderRadius: 40 * s,
             startAngle: StartAngle.topRight,
             shadowColor: TColors.primary20,
             progressColor: TColors.green,
           ),
           Widgets.rect(
-              margin: EdgeInsets.all(4 * s),
-              // padding: EdgeInsets.all(4.d),
-              // color: TColors.primary20,
               radius: 20 * s,
+              margin: EdgeInsets.all(14 * s),
               child: LoaderWidget(AssetType.image, 'avatar_$_avatarId',
                   subFolder: 'avatars')),
           Positioned(

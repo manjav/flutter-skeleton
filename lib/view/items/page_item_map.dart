@@ -34,14 +34,14 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         const LoaderWidget(AssetType.animation, "map_home",
             fit: BoxFit.fitWidth),
         Positioned(
-            top: 240.d,
+            top: 380.d,
             left: 32.d,
             child: Indicator("home", AccountField.league_rank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupLeague.routeName))),
         Positioned(
-            top: 380.d,
+            top: 240.d,
             left: 32.d,
             child: Indicator("home", AccountField.rank,
                 hasPlusIcon: false,
