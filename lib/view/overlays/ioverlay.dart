@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 
 import '../../utils/ilogger.dart';
-import '../../view/overlays/loading_overlay.dart';
+import 'loading_overlay.dart';
+import 'member_details_overlay.dart';
 import 'toast_overlay.dart';
 
 enum OverlayType {
   none,
   loading,
+  member,
   outcome,
   toast,
+  waiting,
 }
 
 extension Overlays on OverlayType {
   static AbstractOverlay getWidget(String routeName, {dynamic args}) {
     return switch (routeName) {
       "/loading" => const LoadingOverlay(),
+      "/member" => MemberOverlay(args[0], args[1], args[2]),
       "/toast" => ToastOverlay(args as String),
+      "/waiting" => ToastOverlay(args as String),
       _ => const AbstractOverlay(),
     };
   }
