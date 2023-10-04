@@ -23,7 +23,7 @@ class CardItem extends StatefulWidget {
   final bool showTitle;
   final int extraPower;
   final String? heroTag;
-  final AccountCard card;
+  final AbstractCard card;
   const CardItem(this.card,
       {this.size = 400,
       this.showCooloff = false,
@@ -51,7 +51,7 @@ class CardItem extends StatefulWidget {
         key: key, subFolder: "cards", width: size);
   }
 
-  static getHeroAnimation(AccountCard card, double size, {Key? key}) {
+  static getHeroAnimation(AbstractCard card, double size, {Key? key}) {
     var hero =
         card.account.get<Map<int, HeroCard>>(AccountField.heroes)[card.id];
 

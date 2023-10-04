@@ -113,17 +113,15 @@ class Cards extends StringMap<CardData> {
   CardData get(String key) => map[key]!;
 }
 
-class AccountCard {
+class AbstractCard {
   late CardData base;
+  int id = 0, power = 0, ownerId = 0, lastUsedAt = 0;
+  final Map map;
   final Account account;
-  bool isDeployed = false;
-  late int id, power, lastUsedAt, ownerId;
-  AccountCard(this.account, Map map, {int? ownerId}) {
-    id = map['id'] ?? -1;
+
+  AbstractCard(this.account, this.map) {
     power = map['power'].round() ?? 0;
-    this.ownerId = ownerId ?? account.get(AccountField.id);
     base = account.loadingData.baseCards.get("${map['base_card_id']}");
-    lastUsedAt = map['last_used_at'] ?? 0;
   }
 
   int getRemainingCooldown() {
@@ -179,6 +177,15 @@ class AccountCard {
     return time *
         (cooldownsBoughtToday * CardData.cooldownIncreaseModifier).ceil() *
         CardData.cooldownCostModifier;
+  }
+}
+
+class AccountCard extends AbstractCard {
+  bool isDeployed = false;
+  AccountCard(super.account, super.map, {int? ownerId}) {
+    id = map['id'] ?? -1;
+    this.ownerId = ownerId ?? account.get(AccountField.id);
+    lastUsedAt = map['last_used_at'] ?? 0;
   }
 
   Future<void> coolOff(BuildContext context) async {
