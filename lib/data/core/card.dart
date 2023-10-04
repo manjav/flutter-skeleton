@@ -180,6 +180,37 @@ class AbstractCard {
   }
 }
 
+class AuctionCard extends AbstractCard {
+  int cardId = 0,
+      bidCount = 0,
+      maxBid = 0,
+      maxBidderId = 0,
+      createdAt = 0,
+      activityStatus = 0;
+  String ownerName = "", maxBidderName = "";
+  AuctionCard(super.account, super.map) {
+    id = map["id"];
+    ownerId = map["owner_id"];
+    cardId = map["card_id"];
+    bidCount = map["bid_count"];
+    maxBid = map["max_bid"];
+    maxBidderId = map["max_bidder_id"];
+    maxBidderName = map["max_bidder_name"];
+    ownerName = map["owner_name"];
+    createdAt = map["created_at"];
+    activityStatus = map["activity_status"];
+  }
+
+  static List<AuctionCard> getList(Account account, list) {
+    var result = <AuctionCard>[];
+    for (var map in list) {
+      result.add(AuctionCard(account, map));
+      print(map["base_card_id"]);
+    }
+    return result;
+  }
+}
+
 class AccountCard extends AbstractCard {
   bool isDeployed = false;
   AccountCard(super.account, super.map, {int? ownerId}) {
