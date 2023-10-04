@@ -35,14 +35,13 @@ class HttpConnection extends IService {
 
     // Load account data
     var params = <String, dynamic>{
+      RpcParams.os_type.name: 2,
       RpcParams.udid.name: DeviceInfo.adId,
+      RpcParams.model.name: DeviceInfo.model,
       RpcParams.device_name.name: DeviceInfo.model,
       RpcParams.game_version.name: 'app_version'.l(),
-      RpcParams.os_type.name: 2,
       RpcParams.os_version.name: DeviceInfo.osVersion,
-      RpcParams.model.name: DeviceInfo.model,
       RpcParams.store_type.name: "google",
-      // RpcParams.restore_key.name: "hello69582879",
     };
     if (Pref.restoreKey.getString().isNotEmpty) {
       params[RpcParams.restore_key.name] = Pref.restoreKey.getString();
