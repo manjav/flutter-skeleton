@@ -3,19 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/services_bloc.dart';
+import '../../data/core/account.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/items/page_item.dart';
+import '../../view/items/page_item_auction.dart';
 import '../../view/items/page_item_tribe.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/indicator.dart';
 import '../widgets/indicator_level.dart';
 import '../widgets/loaderwidget.dart';
 import '../widgets/skinnedtext.dart';
@@ -63,6 +65,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   List<Widget> appBarElementsRight() {
     if (_selectedTab == 3) {
       return [];
+    }
+    if (_selectedTab == 4) {
+      return [
+        Indicator(widget.type.name, AccountField.gold),
+      ];
     }
     if (_selectedTab == 2) {
       return <Widget>[
@@ -114,7 +121,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       "cards" => const CardsPageItem(),
       "battle" => const MainMapPageItem(),
       "tribe" => const TribePageItem(),
-      _ => AbstractPageItem(name)
+      _ => const AuctionPageItem()
     };
   }
 
