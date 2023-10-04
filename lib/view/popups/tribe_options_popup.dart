@@ -201,7 +201,11 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         Widgets.skinnedButton(
             label: "tribe_donate".l(),
             padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
-            onPressed: () => _donate(tribe)),
+            onPressed: () async {
+              await Navigator.pushNamed(
+                  context, Routes.popupTribeDonate.routeName);
+              setState(() {});
+            })
       ]),
       Widgets.divider(width: 900.d, margin: 8.d),
       Expanded(
@@ -286,19 +290,6 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         Overlays.insert(context, OverlayType.toast, args: message);
       },
     );
-  }
-
-  _donate(Tribe tribe) async {
-    try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.tribeDonate, params: {
-        RpcParams.tribe_id.name: tribe.id,
-        RpcParams.gold.name: 10000,
-      });
-      _account.update(result);
-      setState(() {});
-    } finally {}
   }
 
   _upgrade(int id, Tribe tribe) async {
