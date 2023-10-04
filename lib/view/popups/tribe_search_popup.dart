@@ -62,10 +62,8 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
 
   Widget _list() {
     return Expanded(
-        child: _tribes.isEmpty
-            ? Center(child: SkinnedText("not_found".l()))
-            : ListView.builder(
-                itemCount: _tribes.length, itemBuilder: _listItemBuilder));
+        child: ListView.builder(
+            itemCount: _tribes.length, itemBuilder: _listItemBuilder));
   }
 
   Widget? _listItemBuilder(BuildContext context, int index) {
