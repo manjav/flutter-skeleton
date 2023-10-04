@@ -90,6 +90,15 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
   }
 
   _selectTab(int index, String tabName) async {
+    dynamic result = 0;
+    if (index == 0) {
+      result =
+          await Navigator.pushNamed(context, Routes.popupSelectType.routeName);
+      if (result == null) return;
+    } else if (index == 3) {
+      return;
+    }
+    if (!mounted) return;
     try {
       var data = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
