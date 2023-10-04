@@ -29,6 +29,9 @@ enum FriutFields {
 class FruitData extends StringMap<dynamic> {
   List<CardData> cards = [];
   T get<T>(FriutFields field) => map[field.name] as T;
+  bool get isMonster => get<int>(FriutFields.category) == 2;
+  bool get isCrystal => get<int>(FriutFields.category) == 3;
+  bool get isHero => get<int>(FriutFields.category) == 4;
 }
 
 class Fruits extends StringMap<FruitData> {
@@ -93,9 +96,7 @@ class CardData extends StringMap<dynamic> {
         .floor();
   }
 
-  bool get isHero => get(CardFields.isHero);
-  bool get isMonster => fruit.get<int>(FriutFields.category) == 2;
-  bool get isCrystal => fruit.get<int>(FriutFields.category) == 3;
+  bool get isHero => fruit.isHero;
 }
 
 class Cards extends StringMap<CardData> {
@@ -227,7 +228,7 @@ class AccountCard {
       var finalPower = nextPower + diffs;
 
       // Soften Monster's power after adding 6th level of monsters
-      if (base.isMonster) {
+      if (base.fruit.isMonster) {
         if (base.get<int>(CardFields.rarity) >= monsterEvolveMinRarity) {
           if (finalPower > monsterEvolveMaxPower) {
             finalPower -= monsterEvolvePowerModifier;

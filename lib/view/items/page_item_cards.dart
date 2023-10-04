@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/account_bloc.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
-import '../../view/items/page_item.dart';
 import '../../view/route_provider.dart';
 import '../key_provider.dart';
 import '../widgets.dart';
 import 'card_item.dart';
+import 'page_item.dart';
 
 class CardsPageItem extends AbstractPageItem {
   const CardsPageItem({super.key}) : super("cards");

@@ -40,8 +40,8 @@ class CardItem extends StatefulWidget {
   static Image getCardBackground(CardData card) {
     var frameName = card.get<int>(CardFields.rarity).toString();
     if (card.isHero) frameName = "hero";
-    if (card.isMonster) frameName = "monster";
-    if (card.isCrystal) frameName = "crystal";
+    if (card.fruit.isMonster) frameName = "monster";
+    if (card.fruit.isCrystal) frameName = "crystal";
     return Asset.load<Image>('card_frame_$frameName');
   }
 
