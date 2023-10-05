@@ -144,7 +144,7 @@ class NoobCardMessage extends NoobMessage {
   }
 }
 
-enum Abilities { none, power, last_used_at, blessing }
+enum Abilities { none, power, lastUsedAt, blessing }
 
 class NoobAbilityMessage extends NoobMessage {
   late int teamOwnerId, ownerId, heroId;
