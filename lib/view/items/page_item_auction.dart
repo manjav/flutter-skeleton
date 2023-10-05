@@ -90,19 +90,24 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   _selectTab(int index, String tabName) async {
     dynamic result = 0;
-    if (index == 0) {
-      result =
-          await Navigator.pushNamed(context, Routes.popupSelectType.routeName);
+    if (index == 0 || index == 3) {
+      result = await Navigator.pushNamed(
+          context,
+          (index == 0
+                  ? Routes.popupCardSelectType
+                  : Routes.popupCardSelectCategory)
+              .routeName);
       if (result == null) return;
-    } else if (index == 3) {
-      return;
     }
     if (!mounted) return;
+    var params = {"base_card_id": result, "query_type": _tabs[tabName]};
+    if (index == 3) {
+      params.addAll(result);
+    }
     try {
       var data = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
-          .tryRpc(context, RpcId.auctionSearch,
-              params: {"base_card_id": result, "query_type": _tabs[tabName]});
+          .tryRpc(context, RpcId.auctionSearch, params: params);
       _selectedTab = index;
       _cards = AuctionCard.getList(_account, data);
       setState(() {});

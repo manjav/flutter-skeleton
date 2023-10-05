@@ -7,6 +7,7 @@ import 'popups/card_collection_popup.dart';
 import 'popups/card_details_popup.dart';
 import 'popups/card_enhance_popup.dart';
 import 'popups/card_merge_popup.dart';
+import 'popups/card_select_category_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/card_select_type_popup.dart';
 import 'popups/card_upgrade_popup.dart';
@@ -71,6 +72,7 @@ enum Routes {
   popupTribeEdit,
   popupTribeDonate,
   popupCardSelectType,
+  popupCardSelectCategory,
 }
 
 extension RouteProvider on Routes {
@@ -108,6 +110,7 @@ extension RouteProvider on Routes {
       "/popupTribeEdit" => TribeEditPopup(),
       "/popupTribeDonate" => TribeDonatePopup(),
       "/popupCardSelectType" => SelectCardTypePopup(),
+      "/popupCardSelectCategory" => SelectCardCategoryPopup(),
       _ => LoadingScreen(),
     };
   }
@@ -137,6 +140,7 @@ extension RouteProvider on Routes {
       "/popupTribeDonate" ||
       "/popupTribeInvite" ||
       "/popupCardSelectType" ||
+      "/popupCardSelectCategory" =>
         false,
       _ => true,
     };
