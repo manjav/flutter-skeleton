@@ -47,7 +47,6 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   @override
   Widget build(BuildContext context) {
-    var crossAxisCount = 2;
     var secondsOffset = 24 * 3600 - DateTime.now().secondsSinceEpoch;
     var tabsName = _tabs.keys.toList();
     return Column(children: [
@@ -69,8 +68,8 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
           child: GridView.builder(
               padding: EdgeInsets.only(bottom: 200.d),
               itemCount: _cards.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount, childAspectRatio: 1.4),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: 1.52),
               itemBuilder: (c, i) =>
                   _cardItemBuilder(_cards[i], secondsOffset)))
     ]);
@@ -113,15 +112,16 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
   }
 
   Widget _cardItemBuilder(AuctionCard card, int secondsOffset) {
-    var cardSize = 210.d;
+    var cardSize = 230.d;
     var radius = Radius.circular(36.d);
     return Widgets.button(
       radius: radius.x,
       padding: EdgeInsets.zero,
       margin: EdgeInsets.all(8.d),
       color: TColors.primary90,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Padding(
+      child: Row(children: [
+        Widgets.rect(
+            width: cardSize + 16.d,
             padding: EdgeInsets.all(8.d),
             child: CardItem(card,
                 size: cardSize,
@@ -143,20 +143,29 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                     color: TColors.primary70,
                     child: SkinnedText(
                         "ˣ${(card.createdAt + secondsOffset).toRemainingTime()}"))),
-            Column(mainAxisSize: MainAxisSize.min, children: [
-              Text("auction_bid".l()),
-              Row(mainAxisSize: MainAxisSize.min, children: [
-                Asset.load<Image>("icon_gold", width: 60.d),
-                SizedBox(width: 8.d),
-                SkinnedText(card.maxBid.compact(), style: TStyles.large)
-              ]),
-              SizedBox(height: 18.d),
-              Widgets.skinnedButton(
-                  padding: EdgeInsets.fromLTRB(8.d, 12.d, 8.d, 32.d),
-                  color: ButtonColor.green,
-                  label: "+456",
-                  icon: "icon_gold")
-            ]),
+            Positioned(
+                left: 0,
+                right: 8.d,
+                bottom: 8.d,
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Text("auction_bid".l(),
+                      style: TStyles.medium.copyWith(height: 1)),
+                  Row(mainAxisSize: MainAxisSize.min, children: [
+                    Asset.load<Image>("icon_gold", width: 60.d),
+                    SizedBox(width: 8.d),
+                    SkinnedText(card.maxBid.compact(), style: TStyles.large)
+                  ]),
+                  SizedBox(height: 8.d),
+                  Widgets.skinnedButton(
+                      padding: EdgeInsets.fromLTRB(0, 12.d, 8.d, 32.d),
+                      color: ButtonColor.green,
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Asset.load<Image>("icon_gold", width: 60.d),
+                        SizedBox(width: 4.d),
+                        SkinnedText("+${card.bidStep.compact()}",
+                            style: TStyles.large)
+                      ])),
+                ])),
           ],
         )),
       ]),
