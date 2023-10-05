@@ -44,11 +44,25 @@ class _SelectTypePopupState extends AbstractPopupState<SelectTypePopup>
       [Indicator(widget.type.name, AccountField.gold)];
 
   @override
+  Widget innerChromeFactory() {
+    return Positioned(
+      top: 68.d,
+      left: 0,
+      right: 0,
+      bottom: 464.d,
+      child: Asset.load<Image>('popup_header',
+          centerSlice: ImageCenterSliceData(
+              220, 120, const Rect.fromLTWH(106, 110, 4, 4))),
+    );
+  }
+
+  @override
   contentFactory() {
     var fruit = _fruits[_selectedCardIndex];
     return SizedBox(
         height: DeviceInfo.size.height * 0.7,
         child: Column(children: [
+          SizedBox(height: 20.d),
           Expanded(
               child: SingleChildScrollView(
                   child: Wrap(
@@ -81,7 +95,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectTypePopup>
         padding: EdgeInsets.only(right: 24.d, left: 8.d),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(32.d)),
-            color: selected ? TColors.orange : TColors.primary90,
+            color: selected ? TColors.orange : TColors.primary80,
             border: selected
                 ? Border.all(
                     color: TColors.primary10, width: 10.d, strokeAlign: 0.6)
