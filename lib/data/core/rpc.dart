@@ -59,6 +59,9 @@ enum RpcId {
   tribeKick,
   tribePromote,
   tribeDemote,
+
+  // Auction
+  auctionSearch,
 }
 
 extension RpcIdEx on RpcId {
@@ -109,6 +112,7 @@ extension RpcIdEx on RpcId {
       RpcId.tribePromote => "tribe/promote",
       RpcId.tribeDemote => "tribe/demote",
       RpcId.tribePoke => "tribe/poke",
+      RpcId.auctionSearch => "auction/search",
     };
   }
 

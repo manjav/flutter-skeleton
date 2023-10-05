@@ -120,7 +120,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         padding: EdgeInsets.fromLTRB(20.d, 0, 22.d, 10.d),
         decoration: Widgets.imageDecore(
             "tribe_member_bg${member.itsMe ? "_me" : ""}",
-            ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 32, 2, 2))),
+            ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
         child: Row(
           children: [
             SizedBox(width: 70.d, child: SkinnedText("${index + 1}")),
@@ -133,7 +133,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
                 decoration: Widgets.imageDecore(
                     "ui_frame_inside", ImageCenterSliceData(42)),
                 child: LoaderWidget(
-                    AssetType.image, "avatar_${member.avatarId}",
+                    AssetType.image, "avatar_${member.avatarId + 1}",
                     width: 76.d, height: 76.d, subFolder: "avatars")),
             SizedBox(width: 20.d),
             Column(
