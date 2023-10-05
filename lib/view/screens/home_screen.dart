@@ -5,6 +5,8 @@ import 'package:rive/rive.dart';
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
+import '../../data/core/building.dart';
+import '../../data/core/tribe.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -90,30 +92,29 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   Widget contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-    return Widgets.rect(
-        color: TColors.cyan,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            PageView.builder(
-              controller: _pageController,
-              itemCount: _tabInputs.length,
-              itemBuilder: _pageItemBuilder,
-              physics: const ClampingScrollPhysics(),
-              onPageChanged: (value) => _selectTap(value, pageChange: false),
-            ),
-            SizedBox(
-                height: _navbarHeight,
-                child: ListView.builder(
-                    itemExtent: DeviceInfo.size.width / _tabInputs.length,
-                    itemBuilder: _tabItemBuilder,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _tabInputs.length)),
-            //   BlocConsumer<ServicesBloc, ServicesState>(
-            //       builder: (context, state) => const SizedBox(),
-            //       listener: (context, state) => _selectTap(state.data as int))
-          ],
-        ));
+      return Widgets.rect(
+          color: TColors.cyan,
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              PageView.builder(
+                controller: _pageController,
+                itemCount: _tabInputs.length,
+                itemBuilder: _pageItemBuilder,
+                onPageChanged: (value) => _selectTap(value, pageChange: false),
+              ),
+              SizedBox(
+                  height: _navbarHeight,
+                  child: ListView.builder(
+                      itemExtent: DeviceInfo.size.width / _tabInputs.length,
+                      itemBuilder: (c, i) => _tabItemBuilder(state.account, i),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _tabInputs.length)),
+              //   BlocConsumer<ServicesBloc, ServicesState>(
+              //       builder: (context, state) => const SizedBox(),
+              //       listener: (context, state) => _selectTap(state.data as int))
+            ],
+          ));
     });
   }
 
@@ -128,7 +129,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     };
   }
 
-  Widget? _tabItemBuilder(BuildContext context, int index) {
+  Widget? _tabItemBuilder(Account account, int index) {
     var name = "home_tab_$index".l();
     return Widgets.touchable(
         onTap: () => _selectTap(index, tabsChange: false),
@@ -141,10 +142,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               fit: BoxFit.fitWidth,
               onRiveInit: (Artboard artboard) {
                 final controller =
-                    StateMachineController.fromArtboard(artboard, 'Tab');
+                    StateMachineController.fromArtboard(artboard, "Tab");
                 _tabInputs[index] =
-                    controller!.findInput<bool>('active') as SMIBool;
+                    controller!.findInput<bool>("active") as SMIBool;
                 _tabInputs[index]!.value = index == _pageController.initialPage;
+                if (index == 3) {
+                  var input =
+                      controller.findInput<double>("level") as SMINumber;
+                  input.value = account
+                      .get<Tribe>(AccountField.tribe)
+                      .levels[Buildings.base.id]!
+                      .toDouble();
+                }
                 artboard.addController(controller);
               },
             ),
