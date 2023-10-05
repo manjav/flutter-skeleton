@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
+import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../services/connection/noob_socket.dart';
@@ -78,7 +79,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               width: 110.d,
               height: 110.d,
               padding: EdgeInsets.all(16.d),
-              child: Asset.load<Image>('ui_settings'),
+              child: Asset.load<Image>("ui_settings"),
               onPressed: () => Navigator.pushNamed(
                   context, Routes.popupSettings.routeName))),
       ];
@@ -88,6 +89,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   Widget contentFactory() {
+    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
     return Widgets.rect(
         color: TColors.cyan,
         child: Stack(
@@ -112,6 +114,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             //       listener: (context, state) => _selectTap(state.data as int))
           ],
         ));
+    });
   }
 
   Widget? _pageItemBuilder(BuildContext context, int index) {
