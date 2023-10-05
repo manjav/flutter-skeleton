@@ -37,7 +37,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
     _tribe = _account.get<Tribe?>(AccountField.tribe);
-    if (_tribe!.id < 0) _tribe = null;
+    if (_tribe != null && _tribe!.id < 0) _tribe = null;
     if (_tribe != null) {
       _nameController.text = _tribe!.name;
       _descriptionController.text = _tribe!.description;
