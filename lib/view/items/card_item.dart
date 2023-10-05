@@ -37,12 +37,9 @@ class CardItem extends StatefulWidget {
   @override
   State<CardItem> createState() => _CardItemState();
 
-  static Image getCardBackground(CardData card) {
-    var frameName = card.get<int>(CardFields.rarity).toString();
-    if (card.isHero) frameName = "hero";
-    if (card.fruit.isMonster) frameName = "monster";
-    if (card.fruit.isCrystal) frameName = "crystal";
-    return Asset.load<Image>('card_frame_$frameName');
+  static Image getCardBackground(int category, int rarity) {
+    var lavel = category == 0 ? "_$rarity" : "";
+    return Asset.load<Image>("card_frame_$category$lavel");
   }
 
   static getCardImage(CardData card, double size, {Key? key}) {
@@ -110,7 +107,8 @@ class _CardItemState extends State<CardItem> {
     }
 
     var items = <Widget>[
-      CardItem.getCardBackground(baseCard),
+      CardItem.getCardBackground(baseCard.fruit.get<int>(FriutFields.category),
+          baseCard.get<int>(CardFields.rarity)),
       widget.card.base.isHero
           ? CardItem.getHeroAnimation(widget.card, 320 * s)
           : CardItem.getCardImage(baseCard, 216 * s, key: _imageKey),

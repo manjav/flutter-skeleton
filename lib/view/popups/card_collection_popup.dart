@@ -108,8 +108,10 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
 
   Widget? _cardItemBuilder(int index, CardData card, double itemSize) {
     var id = card.get<int>(CardFields.id);
+    var level = card.get<int>(CardFields.rarity);
     return Stack(alignment: Alignment.center, children: [
-      CardItem.getCardBackground(card),
+      CardItem.getCardBackground(
+          card.fruit.get<int>(FriutFields.category), level),
       _avaibledCards.contains(id)
           ? CardItem.getCardImage(card, itemSize * 0.9,
               key: getGlobalKey(card.get(CardFields.id)))
@@ -118,7 +120,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
           top: itemSize * 0.01,
           right: itemSize * 0.1,
           width: itemSize * 0.1,
-          child: SkinnedText(card.get<int>(CardFields.rarity).toString(),
+          child: SkinnedText(level.toString(),
               style: TStyles.large.copyWith(fontSize: itemSize * 0.18)))
     ]);
   }

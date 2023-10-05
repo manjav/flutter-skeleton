@@ -16,14 +16,15 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
 
-class SelectTypePopup extends AbstractPopup {
-  SelectTypePopup({super.key}) : super(Routes.popupSelectType, args: {});
+class SelectCardTypePopup extends AbstractPopup {
+  SelectCardTypePopup({super.key})
+      : super(Routes.popupCardSelectType, args: {});
 
   @override
   createState() => _SelectTypePopupState();
 }
 
-class _SelectTypePopupState extends AbstractPopupState<SelectTypePopup>
+class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
     with KeyProvider {
   late Account _account;
   int _selectedCardIndex = 0;
