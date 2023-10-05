@@ -96,6 +96,7 @@ enum NoobMessages {
   battleFinished,
   heroAbility,
   help,
+  chat,
 }
 
 class NoobMessage {
@@ -107,6 +108,7 @@ class NoobMessage {
       "battle_update" => NoobCardMessage(account, map),
       "battle_hero_ability" => NoobAbilityMessage(map),
       "battle_help" => NoobHelpMessage(map),
+      "tribe_player_status" => NoobMessage(NoobMessages.none, map),
       "battle_finished" => NoobFineMessage(map),
       _ => NoobMessage(NoobMessages.none, map),
     };
@@ -174,6 +176,13 @@ class NoobHelpMessage extends NoobMessage {
     defenderName = map["defender_name"];
   }
 }
+
+// battle_id = self.battle_id,
+// mainEnemy = mainEnemyID ,
+class NoobChatMessage extends NoobMessage {
+  NoobChatMessage(Map<String, dynamic> map) : super(NoobMessages.chat, map);
+}
+
 class NoobFineMessage extends NoobMessage {
   int winnerScore = 0, loserScore = 0, winnerId = 0, loserId = 0;
   String winnerTribe = "", loserTribe = "";

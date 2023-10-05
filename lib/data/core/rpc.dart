@@ -28,6 +28,7 @@ enum RpcId {
   battleHelp,
   battleSetCard,
   triggerAbility,
+  joinBattle,
 
   // Building
   upgrade,
@@ -84,6 +85,7 @@ extension RpcIdEx on RpcId {
       RpcId.battleHelp => "live-battle/help",
       RpcId.battleSetCard => "live-battle/setcardforlivebattle",
       RpcId.triggerAbility => "live-battle/triggerability",
+      RpcId.joinBattle => "live-battle/livebattlejoin",
       RpcId.playerLoad => "player/load",
       RpcId.deposit => "player/deposittobank",
       RpcId.witdraw => "player/withdrawfrombank",
