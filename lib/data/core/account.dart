@@ -288,13 +288,18 @@ class Account extends StringMap<dynamic> {
         ];
     var origin = getCards().values.toList();
     var cards = <AccountCard>[];
+    inBuilding(AccountCard card, List<Buildings> exceptions) {
+      for (var exception in exceptions) {
+        if (getBuilding(exception)!.cards.contains(card)) return true;
+      }
+      return false;
+    }
+
     for (var card in origin) {
       if (removeHeroes && card.base.isHero) continue;
       if (removeMaxLevels && !card.isUpgradable) continue;
       if (removeCooldowns && card.getRemainingCooldown() > 0) continue;
-      for (var exception in exceptions) {
-        if (getBuilding(exception)!.cards.contains(card)) continue;
-      }
+      if (inBuilding(card, exceptions)) continue;
       cards.add(getCard(card));
     }
     cards.sort((AccountCard a, AccountCard b) =>
