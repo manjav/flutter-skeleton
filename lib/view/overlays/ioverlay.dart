@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/services/localization.dart';
+import 'package:flutter_skeleton/view/overlays/confirm_overlay.dart';
 
 import '../../utils/ilogger.dart';
 import 'loading_overlay.dart';
@@ -8,6 +10,7 @@ import 'toast_overlay.dart';
 enum OverlayType {
   none,
   loading,
+  confirm,
   member,
   outcome,
   toast,
@@ -18,6 +21,11 @@ extension Overlays on OverlayType {
   static AbstractOverlay getWidget(String routeName, {dynamic args}) {
     return switch (routeName) {
       "/loading" => const LoadingOverlay(),
+      "/confirm" => ConfirmOverlay(
+          args["message"],
+          args["acceptLabel"] ?? "accept_l".l(),
+          args["declineLabel"] ?? "decline_l".l(),
+          args["onAccept"]),
       "/member" => MemberOverlay(args[0], args[1], args[2]),
       "/toast" => ToastOverlay(args as String),
       "/waiting" => ToastOverlay(args as String),

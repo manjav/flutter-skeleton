@@ -46,13 +46,13 @@ enum Routes {
   openPack,
 
   popupNone,
+  popupMessage,
   popupCardDetails,
   popupCardEnhance,
   popupCardUpgrade,
   popupCardMerge,
   popupCollection,
   popupCardSelect,
-  popupMessage,
   popupLeague,
   popupRanking,
   popupOpponents,
@@ -72,7 +72,7 @@ enum Routes {
   popupTribeEdit,
   popupTribeDonate,
   popupCardSelectType,
-  popupCardSelectCategory,
+  popupCardSelectCategory, 
 }
 
 extension RouteProvider on Routes {

@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+
+import '../../services/deviceinfo.dart';
+import '../../services/theme.dart';
+import '../../utils/assets.dart';
+import '../../view/widgets.dart';
+import 'ioverlay.dart';
+
+class ConfirmOverlay extends AbstractOverlay {
+  final String message, acceptLabel, declineLable;
+  final Function()? onAccept;
+
+  const ConfirmOverlay(
+      this.message, this.acceptLabel, this.declineLable, this.onAccept,
+      {super.key})
+      : super(type: OverlayType.confirm);
+
+  @override
+  createState() => _ConfirmOverlayState();
+}
+
+class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+        color: TColors.transparent,
+        child: Widgets.button(
+            padding: EdgeInsets.zero,
+            child: Stack(children: [
+              Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Widgets.rect(
+                      padding: EdgeInsets.fromLTRB(40.d, 16.d, 12.d, 16.d),
+                      decoration: Widgets.imageDecore(
+                          "tribe_item_bg", ImageCenterSliceData(56)),
+                      child: _contentFactory()))
+            ]),
+            onPressed: close));
+  }
+
+  Widget _contentFactory() {
+    return Row(children: [
+      Expanded(child: Text(widget.message)),
+      SizedBox(width: 24.d),
+      Column(children: [
+        _button(widget.declineLable, color: ButtonColor.yellow),
+        SizedBox(height: 12.d),
+        _button(widget.acceptLabel, onPressed: widget.onAccept),
+      ]),
+    ]);
+  }
+
+  Widget _button(String label,
+      {ButtonColor color = ButtonColor.green, Function()? onPressed}) {
+    return Widgets.skinnedButton(
+        color: color,
+        padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 32.d),
+        label: label,
+        onPressed: () {
+          onPressed?.call();
+          close();
+        });
+  }
+}
