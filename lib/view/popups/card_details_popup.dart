@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -20,36 +21,31 @@ class CardDetailsPopup extends AbstractPopup {
 }
 
 class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
-  late AccountCard _card;
   late String _name;
+  late Account _account;
+  late AccountCard _card;
 
   @override
   void initState() {
     _card = widget.args['card'];
     _name = _card.fruit.get<String>(FriutFields.name);
+    _account = BlocProvider.of<AccountBloc>(context).account!;
     super.initState();
   }
 
   @override
   contentFactory() {
-    var siblings = BlocProvider.of<AccountBloc>(context)
-        .account!
-        .getReadyCards()
-        .where((c) => c.base == _card.base);
+    var siblings = _account.getReadyCards().where((c) => c.base == _card.base);
     var isUpgradable =
         (siblings.length > 1 || _card.base.isHero) && _card.isUpgradable;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
+    return Column(mainAxisSize: MainAxisSize.min, children: [
         SizedBox(
             width: 360.d,
             child: CardItem(_card, size: 360.d, heroTag: "hero_${_card.id}")),
         SizedBox(height: 24.d),
         Text("${_name}_d".l(), style: TStyles.medium.copyWith(height: 2.7.d)),
         SizedBox(height: 48.d),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
+      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             Column(
               children: [
                 Widgets.skinnedButton(
@@ -65,8 +61,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 Widgets.skinnedButton(
                   padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
                   isEnable: isUpgradable,
-                  label:
-                      "popupcard${_card.base.isHero ? "upgrade" : "merge"}".l(),
+              label: "popupcard${_card.base.isHero ? "upgrade" : "merge"}".l(),
                   width: 370.d,
                   onPressed: () => _onButtonsTap(_card.base.isHero
                       ? Routes.popupCardUpgrade

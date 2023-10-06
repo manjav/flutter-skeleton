@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/localization.dart';
-import 'package:flutter_skeleton/view/overlays/confirm_overlay.dart';
 
+import '../../services/localization.dart';
 import '../../utils/ilogger.dart';
+import '../../view/overlays/confirm_overlay.dart';
 import 'loading_overlay.dart';
 import 'member_details_overlay.dart';
 import 'toast_overlay.dart';
