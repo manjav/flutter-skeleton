@@ -142,6 +142,16 @@ enum AccountField {
 }
 
 class Account extends StringMap<dynamic> {
+  static const Map<String, int> availablityLevels = {
+    'ads': 4,
+    'name': 4,
+    'bank': 5,
+    'tribe': 6,
+    'league': 8,
+    'liveBattle': 9,
+    'combo': 15,
+    'tribeChange': 150,
+  };
   static const levelMultiplier = 1.3;
   static const levelExpo = 2.7;
   late LoadingData loadingData;

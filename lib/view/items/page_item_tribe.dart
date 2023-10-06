@@ -26,6 +26,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+      // Show unavailable message
+      if (state.account.get<int>(AccountField.level) <
+          Account.availablityLevels["tribe"]!) {
+        return SkinnedText("unavailable_l"
+            .l(["tribe_l".l(), Account.availablityLevels["tribe"]]));
+      }
+
       var tribe = state.account.get<Tribe?>(AccountField.tribe);
       if (tribe == null || tribe.id <= 0) {
         return Column(children: [

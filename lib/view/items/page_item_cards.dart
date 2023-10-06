@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
 import '../../view/route_provider.dart';
 import '../key_provider.dart';
+import '../overlays/ioverlay.dart';
 import '../widgets.dart';
 import 'card_item.dart';
 import 'page_item.dart';
@@ -50,8 +53,19 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             width: 132.d,
             child: Widgets.skinnedButton(
                 icon: "icon_combo",
-                onPressed: () =>
-                    Navigator.pushNamed(context, Routes.popupCombo.routeName))),
+                onPressed: () {
+                  // Show unavailable message
+                  if (state.account.get<int>(AccountField.level) <
+                      Account.availablityLevels["tribe"]!) {
+                    Overlays.insert(context, OverlayType.toast,
+                        args: "unavailable_l".l([
+                          "popupcombo".l(),
+                          Account.availablityLevels["combo"]
+                        ]));
+                  } else {
+                    Navigator.pushNamed(context, Routes.popupCombo.routeName);
+                  }
+                })),
         Positioned(
             left: 276.d,
             top: 28.d,

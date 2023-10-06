@@ -29,6 +29,8 @@ enum FriutFields {
 class FruitData extends StringMap<dynamic> {
   List<CardData> cards = [];
   T get<T>(FriutFields field) => map[field.name] as T;
+  bool get isSalable => get<int>(FriutFields.category) < 3;
+  bool get isChristmas => get<int>(FriutFields.category) == 1;
   bool get isMonster => get<int>(FriutFields.category) == 2;
   bool get isCrystal => get<int>(FriutFields.category) == 3;
   bool get isHero => get<int>(FriutFields.category) == 4;
@@ -114,6 +116,11 @@ class Cards extends StringMap<CardData> {
 }
 
 class AbstractCard {
+  static double powerToGoldRatio = 8.0;
+  static double minPriceRatio = 0.75;
+  static double maxPriceRatio = 1.5;
+  static double bidStepRatio = 0.05;
+
   late CardData base;
   int id = 0, power = 0, ownerId = 0, lastUsedAt = 0;
   final Map map;
@@ -123,6 +130,9 @@ class AbstractCard {
     power = map['power'].round() ?? 0;
     base = account.loadingData.baseCards.get("${map['base_card_id']}");
   }
+  int get basePrice => (power * powerToGoldRatio * minPriceRatio).round();
+  int get bidStep => (power * powerToGoldRatio * bidStepRatio).round();
+  int get maxPrice => (power * powerToGoldRatio * maxPriceRatio).round();
 
   int getRemainingCooldown() {
     var tribe = account.get<Tribe?>(AccountField.tribe);
@@ -188,6 +198,7 @@ class AuctionCard extends AbstractCard {
       createdAt = 0,
       activityStatus = 0;
   String ownerName = "", maxBidderName = "";
+
   AuctionCard(super.account, super.map) {
     id = map["id"];
     ownerId = map["owner_id"];
@@ -201,11 +212,10 @@ class AuctionCard extends AbstractCard {
     activityStatus = map["activity_status"];
   }
 
-  static List<AuctionCard> getList(Account account, list) {
-    var result = <AuctionCard>[];
+  static Map<int, AuctionCard> getList(Account account, list) {
+    var result = <int, AuctionCard>{};
     for (var map in list) {
-      result.add(AuctionCard(account, map));
-      print(map["base_card_id"]);
+      result[map["id"]] = AuctionCard(account, map);
     }
     return result;
   }

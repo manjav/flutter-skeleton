@@ -13,6 +13,7 @@ import '../../view/widgets/indicator_dedline.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../map_elements/building_widget.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import 'page_item.dart';
@@ -52,14 +53,16 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         _building(state.account, buildings[Buildings.base]!, 400, 840),
         _building(state.account, buildings[Buildings.treasury]!, 130, 1140),
         _building(state.account, buildings[Buildings.mine]!, 754, 1140),
-        _button(
-            "battle",
-            "battle_l",
-            150,
-            270,
-            442,
-            () =>
-                Navigator.pushNamed(context, Routes.popupOpponents.routeName)),
+        _button("battle", "battle_l", 150, 270, 442, () {
+          if (state.account.get<int>(AccountField.level) <
+              Account.availablityLevels["liveBattle"]!) {
+            Overlays.insert(context, OverlayType.toast,
+                args: "unavailable_l".l(
+                    ["battle_l".l(), Account.availablityLevels["liveBattle"]]));
+          } else {
+            Navigator.pushNamed(context, Routes.popupOpponents.routeName);
+          }
+        }),
         _button("quest", "quest_l", 620, 270, 310,
             () => Navigator.pushNamed(context, Routes.deck.routeName)),
         if (state.account.contains(AccountField.deadlines))
@@ -113,6 +116,10 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   }
 
   _onBuildingTap(Account account, Building building) {
+    if (building.level < 1) {
+      Overlays.insert(context, OverlayType.toast, args: "coming_soon".l());
+      return;
+    }
     var type = switch (building.type) {
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
