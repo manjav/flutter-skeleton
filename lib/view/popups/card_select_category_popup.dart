@@ -29,6 +29,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
   late Account _account;
   int _selectedCategory = 0;
   int _selectedLevelIndex = 0;
+  int _cheapestMode = 0;
   List<FruitData> _fruits = [];
 
   @override
@@ -75,12 +76,16 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
         for (var i = 0; i < fruit.cards.length; i++) _levelItemBuilder(i, fruit)
       ]),
       SizedBox(height: 48.d),
+      Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [_checkbox("asc", 0), _checkbox("desc", 1)]),
+      SizedBox(height: 48.d),
       Widgets.skinnedButton(
-          label: "search_l".l(),
           width: 340.d,
+          label: "search_l".l(),
           onPressed: () => Navigator.pop(context, {
                 "category": _selectedCategory,
-                "cheapest": 1,
+                "cheapest": _cheapestMode,
                 "rarity": _selectedLevelIndex + 1
               })),
     ]));
@@ -119,5 +124,10 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
             "level_badge_${fruit.cards[index].get(CardFields.rarity)}",
             width: 100.d),
         onPressed: () => setState(() => _selectedLevelIndex = index));
+  }
+
+  _checkbox(String label, int mode) {
+    return Widgets.checkbox("auction_price_$label".l(), _cheapestMode == mode,
+        onSelect: () => setState(() => _cheapestMode = mode));
   }
 }

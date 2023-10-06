@@ -258,6 +258,8 @@
     "auction_power": "Power",
     "auction_time": "Time",
     "auction_price": "Price",
+    "auction_price_asc": "Lowest Price",
+    "auction_price_desc": "Highest Price",
     "popupcardselecttype": "Select Card",
     "popupcardselectcategory": "Select Category",
     "Almond_d": "Sly nut\nEverything shiny makes him crazy! He's always planning challenging heists. When will he stop his craziness? Most likely never :)",
