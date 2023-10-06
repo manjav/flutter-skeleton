@@ -62,7 +62,11 @@ enum RpcId {
   tribeDemote,
 
   // Auction
+  auctionSell,
   auctionSearch,
+  auctionBid,
+  auctionDeals,
+  auctionSells,
 }
 
 extension RpcIdEx on RpcId {
@@ -114,7 +118,11 @@ extension RpcIdEx on RpcId {
       RpcId.tribePromote => "tribe/promote",
       RpcId.tribeDemote => "tribe/demote",
       RpcId.tribePoke => "tribe/poke",
+      RpcId.auctionSell => "auction/setcardforauction",
       RpcId.auctionSearch => "auction/search",
+      RpcId.auctionBid => "auction/bid",
+      RpcId.auctionDeals => "auction/loadmyparticipatedauctions",
+      RpcId.auctionSells => "auction/loadmyauctions",
     };
   }
 
