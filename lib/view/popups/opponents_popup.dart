@@ -34,6 +34,7 @@ class OpponentsPopup extends AbstractPopup {
 class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   static int _fetchAt = 0;
   static int _requestsCount = 0;
+
   int get floatingCost {
     var scoutCostRelCoef = 0.05;
     var scoutCostMax = 20000;
@@ -64,20 +65,21 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   _findOpponents() async {
     var deltaTime = _account.now - _fetchAt;
-    // if ((deltaTime > 60 && _requestsCount % 10 == 0) || deltaTime > 180) {
-    var data = await BlocProvider.of<ServicesBloc>(context)
-        .get<HttpConnection>()
-        .tryRpc(context, RpcId.getOpponents);
+    var opponentBloc = BlocProvider.of<OpponentsBloc>(context);
+    if ((deltaTime > 60 && _requestsCount % 10 == 0) || deltaTime > 180) {
+      var data = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.getOpponents);
 
-    var opponents = Opponent.fromMap(data);
-    if (mounted) {
-      BlocProvider.of<OpponentsBloc>(context)
-          .add(SetOpponents(list: opponents));
+      var opponents = Opponent.fromMap(data);
+      if (mounted) {
+        BlocProvider.of<OpponentsBloc>(context)
+            .add(SetOpponents(list: opponents));
+      }
+      _fetchAt = _account.now;
     }
-    _fetchAt = _account.now;
-    // }
     ++_requestsCount;
-    _selectedOpponent.value = opponents[0];
+    _selectedOpponent.value = opponentBloc.list![0];
     if (mounted) setState(() {});
   }
 
