@@ -322,6 +322,17 @@ class Widgets {
         ]),
         onPressed: () => Clipboard.setData(ClipboardData(text: text)));
   }
+
+  static checkbox(String lebel, bool isSelected, {Function()? onSelect}) {
+    return button(
+        onPressed: onSelect,
+        child: Row(children: [
+          SkinnedText(lebel),
+          SizedBox(width: 12.d),
+          Asset.load<Image>("checkbox_${isSelected ? "on" : "off"}",
+              width: 64.d)
+        ]));
+  }
 }
 
 enum ButtonColor { gray, green, teal, yellow, wooden }
