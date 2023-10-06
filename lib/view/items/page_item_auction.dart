@@ -5,7 +5,6 @@ import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
-import '../../data/core/result.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
@@ -30,6 +29,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     with KeyProvider {
   late Account _account;
   List<AuctionCard> _cards = [];
+  int _selectedMainTab = -1;
   int _selectedTab = -1;
   final Map<String, int> _tabs = {
     "fruit": 2,
@@ -41,7 +41,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
   @override
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    _selectTab(1, "power");
+    _selectMainTab(0);
     super.initState();
   }
 
@@ -50,7 +50,13 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     var secondsOffset = 24 * 3600 - DateTime.now().secondsSinceEpoch;
     var tabsName = _tabs.keys.toList();
     return Column(children: [
-      SizedBox(height: 180.d),
+      SizedBox(
+          height: 180.d,
+          child: Row(children: [
+            _mainTabItemRenderer(0, "search"),
+            _mainTabItemRenderer(1, "deals"),
+            _mainTabItemRenderer(2, "sells"),
+          ])),
       Widgets.rect(
           radius: 132.d,
           height: 110.d,
@@ -73,6 +79,27 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
               itemBuilder: (c, i) =>
                   _cardItemBuilder(_cards[i], secondsOffset)))
     ]);
+  }
+
+  Widget _mainTabItemRenderer(int index, String name) {
+    return Widgets.button(
+        child: Asset.load<Image>("auction_$name"),
+        onPressed: () => _selectMainTab(index));
+  }
+
+  _selectMainTab(int index) async {
+    if (_selectedMainTab == index) return;
+    _selectedMainTab = index;
+    if (index == 0) {
+      _selectTab(1, "power");
+    } else {
+      try {
+        var data = await BlocProvider.of<ServicesBloc>(context)
+            .get<HttpConnection>()
+            .tryRpc(
+                context, index == 1 ? RpcId.auctionDeals : RpcId.auctionSells);
+      } finally {}
+    }
   }
 
   Widget _tabItemRenderer(int index, String tabName) {
@@ -111,9 +138,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       _selectedTab = index;
       _cards = AuctionCard.getList(_account, data);
       setState(() {});
-    } on RpcException catch (e) {
-      print(e.message);
-    }
+    } finally {}
   }
 
   Widget _cardItemBuilder(AuctionCard card, int secondsOffset) {
@@ -174,9 +199,16 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
           ],
         )),
       ]),
-      onPressed: () => Navigator.pushNamed(
-          context, Routes.popupCardDetails.routeName,
-          arguments: {'card': card}),
+      onPressed: () => _bid(card),
     );
+  }
+
+  _bid(AuctionCard card) async {
+    try {
+      var data = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.auctionBid, params: {"auction_id": card.id});
+      _account.update(data);
+    } finally {}
   }
 }

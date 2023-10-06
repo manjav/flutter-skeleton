@@ -126,7 +126,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
         onPressed: () => setState(() => _selectedLevelIndex = index));
   }
 
-  _checkbox(String label, int mode) {
+  Widget _checkbox(String label, int mode) {
     return Widgets.checkbox("auction_price_$label".l(), _cheapestMode == mode,
         onSelect: () => setState(() => _cheapestMode = mode));
   }
