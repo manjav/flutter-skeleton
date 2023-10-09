@@ -5,7 +5,9 @@ import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/ranking.dart';
 import '../../data/core/rpc_data.dart';
+import '../../data/core/tribe.dart';
 import '../../services/iservices.dart';
 import '../../utils/utils.dart';
 
@@ -19,6 +21,7 @@ class NoobSocket extends IService {
   List<Function(NoobMessage)> onReceive = [];
   late TcpSocketConnection _socketConnection;
 
+  Tribe? _tribe;
   late Account _account;
   late OpponentsBloc _opponents;
   int _lastMessageReceiveTime = 0;
@@ -32,6 +35,7 @@ class NoobSocket extends IService {
     super.initialize(args: args);
     _account = args![0] as Account;
     _opponents = args[1] as OpponentsBloc;
+    _tribe = _account.get<Tribe?>(AccountField.tribe);
     connect();
   }
 
@@ -77,14 +81,25 @@ class NoobSocket extends IService {
         _opponents.list == null) {
       return;
     }
-    var statusMessage = noobMessage as NoobStatusMessage;
 
-    var index =
-        _opponents.list!.indexWhere((o) => o.id == statusMessage.playerId);
+    var statusMessage = noobMessage as NoobStatusMessage;
+    loopPlayers(List<Rank> list) {
+      var index = list.indexWhere((o) => o.id == statusMessage.playerId);
     if (index > -1) {
-      _opponents.list![index].status = statusMessage.status;
+        list[index].status = statusMessage.status;
+        log("${noobMessage.playerId} ==>  ${noobMessage.status}");
+      }
+    }
+
+    // Update opponent status
+    if (_opponents.list != null) {
+      loopPlayers(_opponents.list!);
       _opponents.add(SetOpponents(list: _opponents.list!));
-      log("${noobMessage.playerId} ==>  ${noobMessage.status}");
+    }
+
+    // Update tribe members status
+    if (_tribe != null) {
+      loopPlayers(_tribe!.members);
     }
   }
 }

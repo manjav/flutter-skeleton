@@ -12,6 +12,7 @@ class Tribe {
       weeklyRank;
   late String name, description;
   final Map<int, int> levels = {};
+  List<Member> members = [];
 
   Tribe(Map? map) : super() {
     if (map == null) return;
