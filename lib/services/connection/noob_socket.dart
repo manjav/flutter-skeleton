@@ -45,6 +45,7 @@ class NoobSocket extends IService {
     // _socketConnection.enableConsolePrint(true);
     await _socketConnection.connect(500, _messageReceived, attempts: 3);
     subscribe("user${_account.get(AccountField.id)}");
+    subscribe("tribe${_account.get(AccountField.tribe).id}");
   }
 
   void _messageReceived(String message) {
@@ -129,6 +130,9 @@ class NoobMessage {
       "chat" => NoobChatMessage(map, account),
       _ => NoobMessage(NoobMessages.none, map),
     };
+    if (message.channel.startsWith("tribe")) {
+      tribe?.chat.add(message as NoobChatMessage);
+    }
     return message;
   }
 
@@ -198,7 +202,21 @@ class NoobHelpMessage extends NoobMessage {
 // battle_id = self.battle_id,
 // mainEnemy = mainEnemyID ,
 class NoobChatMessage extends NoobMessage {
-  NoobChatMessage(Map<String, dynamic> map) : super(NoobMessages.chat, map);
+  bool itsMe = false;
+  double timestamp = 0.0;
+  String sender = "", text = "";
+  int avatarId = 0, creationDate = 0, messageType = 1;
+  NoobChatMessage(Map<String, dynamic> map, Account account)
+      : super(NoobMessages.chat, map) {
+    text = map["text"] ?? "";
+    sender = map["sender"] ?? "";
+    channel = map["channel"] ?? "";
+    avatarId = Utils.toInt(map["avatar_id"]);
+    creationDate = Utils.toInt(map["creationDate"]);
+    timestamp = map["timestamp"] ?? 0.0;
+    messageType = Utils.toInt(map["messageType"]);
+    itsMe = sender == account.get(AccountField.name);
+  }
 }
 
 class NoobFineMessage extends NoobMessage {
