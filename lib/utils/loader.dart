@@ -28,7 +28,7 @@ class Loader with ILogger {
     if (exists && !forceUpdate) {
       bytes = await file!.readAsBytes();
       if (isHashMatch(bytes!, hash, path)) {
-        log("Complete loading $path");
+        // log("Complete loading $path");
         return file!;
       }
     }

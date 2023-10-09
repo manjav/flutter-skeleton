@@ -128,7 +128,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       _ => Routes.none,
     };
     if (type == Routes.none) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Hi, Flutter developers'),
       ));
       // Overlays.insert(context, OverlayType.toast, args: "coming_soon".l());
