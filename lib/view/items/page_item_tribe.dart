@@ -257,4 +257,34 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     ]);
   }
 
+
+  Widget _inputView(Account account, Tribe tribe) {
+    return Widgets.rect(
+        height: 136.d,
+        radius: 200.d,
+        margin: EdgeInsets.symmetric(horizontal: 32.d),
+        padding: EdgeInsets.all(12.d),
+        color: TColors.white,
+        child: Row(children: [
+          Expanded(
+              child: Widgets.skinnedInput(
+            controller: _inputController,
+            radius: 56.d,
+            onSubmit: (text) => _sendMessage(account, tribe),
+          )),
+          SizedBox(width: 12.d),
+          Widgets.button(
+              color: TColors.primary80,
+              radius: 200.d,
+              padding: EdgeInsets.all(30.d),
+              child: Asset.load<Image>("icon_send"),
+              onPressed: () => _sendMessage(account, tribe))
+        ]));
+  }
+
+  _sendMessage(Account account, Tribe tribe) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tribe.sendMessage(context, account, _inputController.text);
+    _inputController.text = "";
+  }
 }
