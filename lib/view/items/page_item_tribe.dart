@@ -198,4 +198,63 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       child: const Text("pin"),
     );
   }
+
+  _chatList(Tribe tribe) {
+    var titleStyle = TStyles.small.copyWith(color: TColors.primary70);
+    var now = DateTime.now().secondsSinceEpoch;
+    return ValueListenableBuilder<List<NoobChatMessage>>(
+      valueListenable: tribe.chat,
+      builder: (context, value, child) {
+        return Expanded(
+            child: ListView.builder(
+                padding: EdgeInsets.all(48.d),
+                itemCount: tribe.chat.length,
+                itemBuilder: (c, i) =>
+                    _chatItemRenderer(tribe.chat.value[i], titleStyle, now)));
+      },
+    );
+  }
+
+  _chatItemRenderer(NoobChatMessage message, TextStyle titleStyle, int now) {
+    var padding = 120.d;
+    var avatar = Widgets.rect(
+        width: padding,
+        height: padding,
+        radius: padding,
+        padding: EdgeInsets.all(6.d),
+        decoration:
+            Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
+        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId + 1}",
+            width: 76.d, height: 76.d, subFolder: "avatars"));
+    return Column(children: [
+      Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        message.itsMe ? SizedBox(width: padding) : avatar,
+        Expanded(
+            child: Widgets.rect(
+                padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 16.d),
+                decoration: Widgets.imageDecore(
+                    "chat_balloon_${message.itsMe ? "right" : "left"}",
+                    ImageCenterSliceData(
+                        80, 78, const Rect.fromLTWH(39, 13, 2, 2))),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(message.sender,
+                          style: titleStyle,
+                          textAlign:
+                              message.itsMe ? TextAlign.right : TextAlign.left),
+                      Text(message.text,
+                          textDirection: message.text.getDirection())
+                    ]))),
+        message.itsMe ? avatar : SizedBox(width: padding),
+      ]),
+      Row(children: [
+        SizedBox(width: padding + 24.d),
+        Text((now - message.creationDate).toElapsedTime(),
+            style: TStyles.smallInvert)
+      ]),
+      SizedBox(height: 20.d)
+    ]);
+  }
+
 }
