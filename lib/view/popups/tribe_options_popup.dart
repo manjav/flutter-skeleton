@@ -34,26 +34,24 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
     with TabProviderMixin {
   Member? _member;
   late Account _account;
-  List<Member> _members = [];
   @override
   void initState() {
     selectedTabIndex = widget.args["index"] ?? 0;
     _account = BlocProvider.of<AccountBloc>(context).account!;
-
     super.initState();
   }
 
-  _loadMembers() async {
-    if (_members.isNotEmpty) return;
+  _loadMembers(Tribe tribe) async {
+    if (tribe.members.isNotEmpty) return;
     try {
       var result = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
-      _members =
+      tribe.members =
           Member.initAll(result["members"], _account.get<int>(AccountField.id));
-      var index = _members.indexWhere((member) => member.itsMe);
+      var index = tribe.members.indexWhere((member) => member.itsMe);
       if (index > -1) {
-        _member = _members[index];
+        _member = tribe.members[index];
       } else {
         var id = _account.get<int>(AccountField.id);
         _member = Member.init({"id": id}, id);
@@ -86,7 +84,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
   }
 
   Widget _membersBuilder(Tribe tribe) {
-    _loadMembers();
+    _loadMembers(tribe);
     return Column(mainAxisSize: MainAxisSize.max, children: [
       Row(children: [
         CupertinoSwitch(
@@ -108,12 +106,13 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
       SizedBox(height: 20.d),
       Expanded(
           child: ListView.builder(
-              itemCount: _members.length, itemBuilder: _listItemBuilder)),
+              itemCount: tribe.members.length,
+              itemBuilder: (c, i) =>
+                  _listItemBuilder(tribe, tribe.members[i], i))),
     ]);
   }
 
-  Widget? _listItemBuilder(BuildContext context, int index) {
-    var member = _members[index];
+  Widget? _listItemBuilder(Tribe tribe, Member member, int index) {
     return Widgets.button(
         height: 120.d,
         margin: EdgeInsets.all(4.d),
@@ -159,7 +158,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         onTapUp: (details) {
           Overlays.insert(context, OverlayType.member, args: [
             member,
-            _members.firstWhere((m) => m.itsMe),
+            tribe.members.firstWhere((m) => m.itsMe),
             details.globalPosition.dy - 220.d
           ]);
         });
