@@ -276,14 +276,15 @@ class Widgets {
     );
   }
 
-  static Widget skinnedInput(
-      {bool autofocus = false,
-      String? hintText,
-      Widget? suffixIcon,
-      double? width,
-      int? maxLength,
-      int numLine = 1,
-      TextEditingController? controller,
+  static Widget skinnedInput({
+    bool autofocus = false,
+    String? hintText,
+    Widget? suffixIcon,
+    double? width,
+    int? maxLength,
+    int numLine = 1,
+    double radius = 8,
+    TextEditingController? controller,
     Function(String)? onChange,
     Function(String)? onSubmit,
   }) {
@@ -302,10 +303,10 @@ class Widgets {
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: style,
-              contentPadding: EdgeInsets.zero,
+              // contentPadding: EdgeInsets.zero,
               suffixIcon: suffixIcon,
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.d))),
+                  borderRadius: BorderRadius.all(Radius.circular(radius))),
             )));
   }
 
