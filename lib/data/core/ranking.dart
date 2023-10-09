@@ -49,7 +49,7 @@ class Ranks {
 }
 
 abstract class Rank {
-  int index = 0, id = 0, rank = 0, score = 0;
+  int index = 0, id = 0, rank = 0, score = 0, status = 0;
   String name = "";
   late final bool itsMe;
   Rank.init(Map<String, dynamic>? map, int ownerId) {
@@ -90,7 +90,7 @@ class Player extends Rank {
 }
 
 class Member extends Rank {
-  int level = 0, xp = 0, gold = 0, status = 0, avatarId = 1;
+  int level = 0, xp = 0, gold = 0, avatarId = 1;
   int leagueId = 0, leagueRank = 0, defPower = 0, degree = 0;
   bool pokeStatus = false;
 
@@ -218,7 +218,6 @@ class Opponent extends Player {
   int gold = 0,
       tribePermission = 0,
       defPower = 0,
-      status = 0,
       leagueId = 0,
       leagueRank = 0,
       powerRatio = 0;
