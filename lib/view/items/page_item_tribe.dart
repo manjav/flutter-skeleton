@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/core/building.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
+import '../../data/core/building.dart';
 import '../../data/core/tribe.dart';
+import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -14,6 +15,7 @@ import '../../view/popups/tribe_search_popup.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/loaderwidget.dart';
 import 'page_item.dart';
 
 class TribePageItem extends AbstractPageItem {
@@ -23,6 +25,9 @@ class TribePageItem extends AbstractPageItem {
 }
 
 class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _inputController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
@@ -52,6 +57,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         SizedBox(height: 10.d),
         _headerBuilder(tribe),
         _pinnedMessage(),
+        _chatList(tribe),
+        SizedBox(height: 32.d),
+        _inputView(state.account, tribe),
         SizedBox(height: 220.d)
       ]);
     });
@@ -205,8 +213,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     return ValueListenableBuilder<List<NoobChatMessage>>(
       valueListenable: tribe.chat,
       builder: (context, value, child) {
+        _scrollDown(delay: 100);
         return Expanded(
             child: ListView.builder(
+                controller: _scrollController,
                 padding: EdgeInsets.all(48.d),
                 itemCount: tribe.chat.length,
                 itemBuilder: (c, i) =>
@@ -257,6 +267,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     ]);
   }
 
+  _scrollDown({int duration = 500, int delay = 0}) async {
+    await Future.delayed(Duration(milliseconds: delay));
+    await _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: duration),
+        curve: Curves.fastOutSlowIn);
+  }
 
   Widget _inputView(Account account, Tribe tribe) {
     return Widgets.rect(
