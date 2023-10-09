@@ -50,20 +50,26 @@ class NoobSocket extends IService {
 
   void _messageReceived(String message) {
     _lastMessageReceiveTime = DateTime.now().secondsSinceEpoch;
+    _decodeMessage(message);
+  }
+
+  void _decodeMessage(String message) {
     var startIndex = message.indexOf("__JSON__START__");
     var endIndex = message.indexOf("__JSON__END__");
     if (startIndex < 0 || endIndex < 0) {
       return;
     }
     var b64 = utf8.fuse(base64);
-    message = message.substring(startIndex + 15, endIndex);
-    message = b64.decode(message.xorDecrypt(secret: _secret));
-    var noobMessage =
-        NoobMessage.getProperMessage(_account, jsonDecode(message));
+    var trimmedMessage = message.substring(startIndex + 15, endIndex);
+    trimmedMessage = b64.decode(trimmedMessage.xorDecrypt(secret: _secret));
+    print(trimmedMessage);
+    var noobMessage = NoobMessage.getProperMessage(
+        _account, jsonDecode(trimmedMessage), _tribe);
     _updateStatus(noobMessage);
     for (var method in onReceive) {
       method.call(noobMessage);
     }
+    _decodeMessage(message.substring(endIndex + 12));
   }
 
   void _run(NoobCommand command, String message) {
