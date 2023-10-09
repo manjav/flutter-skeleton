@@ -48,9 +48,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           SizedBox(height: 200.d),
         ]);
       }
-      return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [SizedBox(height: 10.d), _headerBuilder(tribe)]);
+      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        SizedBox(height: 10.d),
+        _headerBuilder(tribe),
+        _pinnedMessage(),
+        SizedBox(height: 220.d)
+      ]);
     });
   }
 
@@ -186,5 +189,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               arguments: {"index": 1});
           setState(() {});
         });
+  }
+
+  Widget _pinnedMessage() {
+    return Widgets.button(
+      color: TColors.accent,
+      onPressed: () {},
+      child: const Text("pin"),
+    );
   }
 }
