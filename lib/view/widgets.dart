@@ -284,7 +284,9 @@ class Widgets {
       int? maxLength,
       int numLine = 1,
       TextEditingController? controller,
-      Function(String)? onChanged}) {
+    Function(String)? onChange,
+    Function(String)? onSubmit,
+  }) {
     var style = TStyles.medium.copyWith(height: 1.5);
     return SizedBox(
         width: width ?? 520.d,
@@ -295,8 +297,8 @@ class Widgets {
             controller: controller,
             style: style,
             textAlign: TextAlign.center,
-            onChanged: onChanged,
-            onSubmitted: onChanged,
+            onChanged: onChange,
+            onSubmitted: onSubmit,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: style,

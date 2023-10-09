@@ -55,7 +55,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
             Widgets.skinnedInput(
                 controller: _textController,
                 hintText: "settings_restore_hint".l(),
-                onChanged: (t) => setState(() {})),
+                onSubmit: (t) => setState(() {})),
             SizedBox(height: 40.d),
             Widgets.skinnedButton(
                 width: 590.d,

@@ -47,7 +47,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
         Row(children: [
           Expanded(
               child: Widgets.skinnedInput(
-                  controller: _inputController, onChanged: (t) => _search())),
+                  controller: _inputController, onSubmit: (t) => _search())),
           SizedBox(width: 20.d),
           Widgets.skinnedButton(
               label: "search_l".l(),
