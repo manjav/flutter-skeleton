@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../../utils/ilogger.dart';
 import 'iservices.dart';
@@ -51,4 +52,8 @@ extension LocalizationExtension on String {
     }
     return result;
   }
+
+  TextDirection getDirection() => intl.Bidi.detectRtlDirectionality(this)
+      ? TextDirection.rtl
+      : TextDirection.ltr;
 }
