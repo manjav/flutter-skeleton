@@ -15,6 +15,7 @@ import 'view/route_provider.dart';
 import 'view/widgets/loaderwidget.dart';
 
 void main() async {
+  MyApp.startTime = DateTime.now();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
@@ -22,6 +23,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  static late final DateTime startTime;
   const MyApp({super.key});
 
   static final _firebaseAnalytics = FirebaseAnalytics.instance;
