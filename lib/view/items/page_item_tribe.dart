@@ -229,16 +229,16 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
     var now = DateTime.now().secondsSinceEpoch;
     return ValueListenableBuilder<List<NoobChatMessage>>(
-      valueListenable: tribe.chat,
-      builder: (context, value, child) {
-        _scrollDown(delay: 100);
-        return Expanded(
-            child: ListView.builder(
-                controller: _scrollController,
-                padding: EdgeInsets.all(48.d),
-                itemCount: tribe.chat.length,
-                itemBuilder: (c, i) => _chatItemRenderer(
-                    account, tribe, tribe.chat.value[i], titleStyle, now)));
+        valueListenable: tribe.chat,
+        builder: (context, value, child) {
+          _scrollDown(delay: 100);
+          return Expanded(
+              child: ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.all(48.d),
+                  itemCount: tribe.chat.length,
+                  itemBuilder: (c, i) => _chatItemRenderer(
+                      account, tribe, tribe.chat.value[i], titleStyle, now)));
         });
   }
 
@@ -304,6 +304,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         (ChatOptions option) {
           if (option == ChatOptions.pin) {
             tribe.pinMessage(context, account, message);
+          } else if (option == ChatOptions.reply) {
+            _inputController.text =
+                "@${message.sender}: ${message.text.truncate(16)}...\n";
+            setState(() {});
           }
         }
       ]);

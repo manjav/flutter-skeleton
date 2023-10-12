@@ -119,6 +119,9 @@ extension StringExt on String {
         secretParts[1] +
         secretParts[4];
   }
+
+  String truncate(int length, {String postfix = "..."}) =>
+      "${substring(0, this.length.max(length))}$postfix";
 }
 
 class Utils {
