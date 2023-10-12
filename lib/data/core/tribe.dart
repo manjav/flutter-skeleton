@@ -7,9 +7,11 @@ import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../main.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../utils/utils.dart';
 import 'ranking.dart';
+import 'rpc.dart';
 
 class Tribe {
   late int id,
@@ -56,6 +58,17 @@ class Tribe {
       result.add(Tribe(map));
     }
     return result;
+  }
+
+  loadMembers(BuildContext context, Account account) async {
+    if (members.isNotEmpty) return;
+    try {
+      var result = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
+      members =
+          Member.initAll(result["members"], account.get<int>(AccountField.id));
+    } finally {}
   }
 
   sendMessage(BuildContext context, Account account, String text) async {
