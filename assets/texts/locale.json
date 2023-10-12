@@ -263,6 +263,8 @@
     "chat_pin": "Pin",
     "chat_reply": "Reply",
     "auction_bid": "Last Bid:",
+    "auction_sells": "Sells",
+    "auction_deals": "Deals",
     "auction_fruit": "Fruit",
     "auction_power": "Power",
     "auction_time": "Time",

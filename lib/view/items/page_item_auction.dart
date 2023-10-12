@@ -42,7 +42,6 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
   @override
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    _selectMainTab(0);
     super.initState();
   }
 
@@ -51,32 +50,24 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     var secondsOffset = 24 * 3600 - DateTime.now().secondsSinceEpoch;
     var tabsName = _tabs.keys.toList();
     return Column(children: [
-      SizedBox(
-          height: 180.d,
-          child: Row(children: [
-            _mainTabItemRenderer(0, "search"),
-            _mainTabItemRenderer(1, "deals"),
-            _mainTabItemRenderer(2, "sells"),
-          ])),
-      _selectedMainTab == 0
-          ? Widgets.rect(
-              radius: 132.d,
-              height: 110.d,
-              color: TColors.black80,
-              child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (var i = 0; i < tabsName.length; i++)
-                      _tabItemRenderer(i, tabsName[i])
-                  ]))
-          : const SizedBox(),
+      SizedBox(height: 168.d),
+      Widgets.rect(
+          radius: 32.d,
+          height: 156.d,
+          color: TColors.black80,
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var i = 0; i < tabsName.length; i++)
+                  _tabItemRenderer(i, tabsName[i])
+              ])),
       SizedBox(height: 32.d),
       Expanded(
           child: GridView.builder(
-              padding: EdgeInsets.only(bottom: 200.d),
               itemCount: _cards.length,
+              padding: EdgeInsets.only(bottom: 200.d),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, childAspectRatio: 1.52),
               itemBuilder: (c, i) =>
@@ -84,38 +75,23 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     ]);
   }
 
-  Widget _mainTabItemRenderer(int index, String name) {
-    return Widgets.button(
-        child: Asset.load<Image>("auction_$name"),
-        onPressed: () => _selectMainTab(index));
-  }
-
-  _selectMainTab(int index) async {
-    if (_selectedMainTab == index) return;
-    _selectedMainTab = index;
-    if (index == 0) {
-      _selectTab(1, "power");
-    } else {
-      try {
-        var data = await BlocProvider.of<ServicesBloc>(context)
-            .get<HttpConnection>()
-            .tryRpc(
-                context, index == 1 ? RpcId.auctionDeals : RpcId.auctionSells);
-        _cards = AuctionCard.getList(_account, data).values.toList();
-        setState(() {});
-      } finally {}
-    }
-  }
-
   Widget _tabItemRenderer(int index, String tabName) {
     var isSelected = index == _selectedTab;
-    var title = "auction_$tabName".l();
+    var title = "auction_$tabName";
     return Widgets.button(
-        radius: 132.d,
+        radius: 20.d,
+        width: 148.d,
         alignment: Alignment.center,
-        margin: EdgeInsets.all(12.d),
-        padding: EdgeInsets.symmetric(horizontal: 50.d),
+        margin: EdgeInsets.all(14.d),
+        padding: EdgeInsets.zero,
         color: isSelected ? TColors.accent : TColors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Asset.load<Image>(title, height: isSelected ? 76.d : 56.d),
+            Text(title.l(), style: TStyles.mediumInvert.copyWith(height: 1.2)),
+          ],
+        ),
         onPressed: () => _selectTab(tabName, index));
   }
 
@@ -178,8 +154,8 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
               child: CardItem(card,
                   size: cardSize,
                   showCooldown: false,
-                  key: getGlobalKey(_selectedMainTab * 10000 + card.id),
-                  heroTag: "hero_${_selectedMainTab}_${card.id}")),
+                  key: getGlobalKey(_selectedTab * 10000 + card.id),
+                  heroTag: "hero_${_selectedTab}_${card.id}")),
           Expanded(
               child: Stack(
             alignment: Alignment.bottomCenter,
