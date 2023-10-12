@@ -12,8 +12,10 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
+import '../../view/overlays/chat_options_overlay.dart';
 import '../../view/popups/tribe_search_popup.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
@@ -54,11 +56,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           SizedBox(height: 200.d),
         ]);
       }
+      tribe.loadMembers(context, state.account);
       return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         SizedBox(height: 10.d),
         _headerBuilder(tribe),
         _pinnedMessage(),
-        _chatList(tribe),
+        _chatList(state.account, tribe),
         SizedBox(height: 32.d),
         _inputView(state.account, tribe),
         SizedBox(height: 220.d)
@@ -220,13 +223,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                 controller: _scrollController,
                 padding: EdgeInsets.all(48.d),
                 itemCount: tribe.chat.length,
-                itemBuilder: (c, i) =>
-                    _chatItemRenderer(tribe.chat.value[i], titleStyle, now)));
-      },
-    );
+                itemBuilder: (c, i) => _chatItemRenderer(
+                    account, tribe, tribe.chat.value[i], titleStyle, now)));
+        });
   }
 
-  _chatItemRenderer(NoobChatMessage message, TextStyle titleStyle, int now) {
+  _chatItemRenderer(Account account, Tribe tribe, NoobChatMessage message,
+      TextStyle titleStyle, int now) {
     var padding = 120.d;
     var avatar = Widgets.rect(
         width: padding,
@@ -241,7 +244,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
         message.itsMe ? SizedBox(width: padding) : avatar,
         Expanded(
-            child: Widgets.rect(
+            child: Widgets.button(
                 padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 16.d),
                 decoration: Widgets.imageDecore(
                     "chat_balloon_${message.itsMe ? "right" : "left"}",
@@ -256,7 +259,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                               message.itsMe ? TextAlign.right : TextAlign.left),
                       Text(message.text,
                           textDirection: message.text.getDirection())
-                    ]))),
+                    ]),
+                onTapUp: (details) =>
+                    _onChatItemTap(account, tribe, details, message))),
         message.itsMe ? avatar : SizedBox(width: padding),
       ]),
       Row(children: [
@@ -266,6 +271,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       ]),
       SizedBox(height: 20.d)
     ]);
+  }
+
+  void _onChatItemTap(Account account, Tribe tribe, TapUpDetails details,
+      NoobChatMessage message) {
   }
 
   _scrollDown({int duration = 500, int delay = 0}) async {
