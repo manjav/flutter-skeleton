@@ -28,7 +28,7 @@ class NoobSocket extends IService {
 
   String get _secret => "floatint201412bool23string";
   bool get isConnected =>
-      DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 100;
+      DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 500;
 
   @override
   initialize({List<Object>? args}) async {
@@ -82,6 +82,15 @@ class NoobSocket extends IService {
 
   void subscribe(String channel) => _run(NoobCommand.subscribe, channel);
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
+  publish(String message) async {
+    if (!_socketConnection.isConnected()) {
+      await connect();
+    }
+    var b64 = utf8.fuse(base64);
+    var cmdMessage =
+        "__JSON__START__${b64.encode(message).xorEncrypt(secret: _secret)}__JSON__END__";
+    _socketConnection.sendMessage(cmdMessage);
+  }
 
   void _updateStatus(NoobMessage noobMessage) {
     if (noobMessage.type != NoobMessages.playerStatus) {
@@ -91,7 +100,7 @@ class NoobSocket extends IService {
     var statusMessage = noobMessage as NoobStatusMessage;
     loopPlayers(List<Rank> list) {
       var index = list.indexWhere((o) => o.id == statusMessage.playerId);
-    if (index > -1) {
+      if (index > -1) {
         list[index].status = statusMessage.status;
         log("${noobMessage.playerId} ==>  ${noobMessage.status}");
       }
