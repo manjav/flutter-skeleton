@@ -89,17 +89,20 @@ class Player extends Rank {
   }
 }
 
+enum MemberDegree { none, member, elder, owner }
+
 class Member extends Rank {
   int level = 0, xp = 0, gold = 0, avatarId = 1;
-  int leagueId = 0, leagueRank = 0, defPower = 0, degree = 0;
+  int leagueId = 0, leagueRank = 0, defPower = 0;
   bool pokeStatus = false;
+  MemberDegree degree = MemberDegree.none;
 
   Member.init(Map<String, dynamic>? map, int ownerId)
       : super.init(map, ownerId) {
     if (map == null) return;
     xp = map["xp"] ?? 0;
     gold = map["gold"] ?? 0;
-    degree = map["tribe_permission"] ?? 0;
+    degree = MemberDegree.values[map["tribe_permission"] ?? 1];
     level = map["level"] ?? 0;
     defPower = map["def_power"] ?? 0;
     status = map["status"] ?? 0;

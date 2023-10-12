@@ -36,8 +36,8 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
     if (!member.itsMe) {
       buttons[RpcId.tribePoke] = ButtonColor.green;
     }
-    if (!member.itsMe && member.degree < widget.me.degree) {
-      buttons[widget.me.degree - member.degree > 1
+    if (!member.itsMe && member.degree.index < widget.me.degree.index) {
+      buttons[widget.me.degree.index - member.degree.index > 1
           ? RpcId.tribePromote
           : RpcId.tribeDemote] = ButtonColor.green;
       buttons[RpcId.tribeKick] = ButtonColor.yellow;
@@ -54,7 +54,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
                   top: widget.y,
                   left: 240.d,
                   width: 680.d,
-                  height: 192.d + (items.length / 2).ceil() * 116.d,
+                  height: 192.d + (items.length / 2).ceil() * 125.d,
                   child: Widgets.rect(
                     padding: EdgeInsets.fromLTRB(16.d, 16.d, 16.d, 32.d),
                     decoration: Widgets.imageDecore(
