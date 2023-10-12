@@ -16,11 +16,12 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/items/page_item.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import 'page_item.dart';
 
 class ShopPageItem extends AbstractPageItem {
   const ShopPageItem({super.key}) : super("cards");

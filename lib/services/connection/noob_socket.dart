@@ -84,8 +84,7 @@ class NoobSocket extends IService {
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
 
   void _updateStatus(NoobMessage noobMessage) {
-    if (noobMessage.type != NoobMessages.playerStatus ||
-        _opponents.list == null) {
+    if (noobMessage.type != NoobMessages.playerStatus) {
       return;
     }
 
