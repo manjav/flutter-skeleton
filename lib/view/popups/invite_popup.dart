@@ -34,7 +34,6 @@ class _InvitePopupState extends AbstractPopupState<InvitePopup> {
   @override
   contentFactory() {
     return SizedBox(
-        // height: 960.d,
         child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -46,9 +46,10 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
         Text("settings_gift_set".l(), style: style),
         SizedBox(height: 50.d),
         Widgets.skinnedInput(
+            maxLines: 1,
             controller: _textController,
             hintText: "settings_gift_hint".l(),
-            onSubmit: (t) => setState(() {})),
+            onChange: (t) => setState(() {})),
         SizedBox(height: 40.d),
         Widgets.skinnedButton(
             width: 540.d,

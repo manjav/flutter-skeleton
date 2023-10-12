@@ -282,7 +282,7 @@ class Widgets {
     Widget? suffixIcon,
     double? width,
     int? maxLength,
-    int numLine = 1,
+    int? maxLines,
     double radius = 8,
     TextEditingController? controller,
     Function(String)? onChange,
@@ -290,9 +290,9 @@ class Widgets {
   }) {
     var style = TStyles.medium.copyWith(height: 1.5);
     return SizedBox(
-        width: width ?? 520.d,
+        width: width ?? 570.d,
         child: TextField(
-            maxLines: numLine,
+            maxLines: maxLines,
             autofocus: autofocus,
             maxLength: maxLength,
             controller: controller,
@@ -301,9 +301,9 @@ class Widgets {
             onChanged: onChange,
             onSubmitted: onSubmit,
             decoration: InputDecoration(
-              hintText: hintText,
               hintStyle: style,
-              // contentPadding: EdgeInsets.zero,
+              hintText: hintText,
+              contentPadding: EdgeInsets.all(16.d),
               suffixIcon: suffixIcon,
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(radius))),

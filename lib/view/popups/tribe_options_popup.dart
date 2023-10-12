@@ -38,26 +38,16 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
   void initState() {
     selectedTabIndex = widget.args["index"] ?? 0;
     _account = BlocProvider.of<AccountBloc>(context).account!;
-    super.initState();
-  }
+    var tribe = _account.get<Tribe>(AccountField.tribe);
+    var index = tribe.members.indexWhere((member) => member.itsMe);
+    if (index > -1) {
+      _member = tribe.members[index];
+    } else {
+      var id = _account.get<int>(AccountField.id);
+      _member = Member.init({"id": id}, id);
+    }
 
-  _loadMembers(Tribe tribe) async {
-    if (tribe.members.isNotEmpty) return;
-    try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
-      tribe.members =
-          Member.initAll(result["members"], _account.get<int>(AccountField.id));
-      var index = tribe.members.indexWhere((member) => member.itsMe);
-      if (index > -1) {
-        _member = tribe.members[index];
-      } else {
-        var id = _account.get<int>(AccountField.id);
-        _member = Member.init({"id": id}, id);
-      }
-      setState(() {});
-    } finally {}
+    super.initState();
   }
 
   @override
@@ -84,7 +74,6 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
   }
 
   Widget _membersBuilder(Tribe tribe) {
-    _loadMembers(tribe);
     return Column(mainAxisSize: MainAxisSize.max, children: [
       Row(children: [
         CupertinoSwitch(
@@ -147,7 +136,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
                     SkinnedText(member.name,
                         style: TStyles.medium.copyWith(height: 1.1)),
                   ]),
-                  Text("tribe_degree_${member.degree}".l(),
+                  Text("tribe_degree_${member.degree.index}".l(),
                       style: TStyles.small),
                 ]),
             const Expanded(child: SizedBox()),

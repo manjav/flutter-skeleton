@@ -35,9 +35,10 @@ class _TribeInvitePopupState extends AbstractPopupState<TribeInvitePopup> {
       SizedBox(height: 50.d),
       Widgets.skinnedInput(
           width: 700.d,
-          controller: _textController,
+          maxLines: 1,
           hintText: "player_name".l(),
-          onSubmit: (t) => setState(() {})),
+          controller: _textController,
+          onChange: (t) => setState(() {})),
       SizedBox(height: 40.d),
       Widgets.skinnedButton(
           height: 160.d,
