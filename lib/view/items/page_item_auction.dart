@@ -29,12 +29,13 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     with KeyProvider {
   late Account _account;
   List<AuctionCard> _cards = [];
-  int _selectedMainTab = -1;
   int _selectedTab = -1;
   final Map<String, int> _tabs = {
-    "fruit": 2,
+    "sells": 0,
+    "deals": 0,
     "power": 1,
     "time": 3,
+    "fruit": 2,
     "price": 6
   };
 
@@ -115,30 +116,36 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
         margin: EdgeInsets.all(12.d),
         padding: EdgeInsets.symmetric(horizontal: 50.d),
         color: isSelected ? TColors.accent : TColors.transparent,
-        child: Text(title, style: TStyles.mediumInvert),
-        onPressed: () => _selectTab(index, tabName));
+        onPressed: () => _selectTab(tabName, index));
   }
 
-  _selectTab(int index, String tabName) async {
-    dynamic result = 0;
-    if (index == 0 || index == 3) {
-      result = await Navigator.pushNamed(
+  _selectTab(String tabName, int index) async {
+    var rpc = switch (tabName) {
+      "sells" => RpcId.auctionSells,
+      "deals" => RpcId.auctionDeals,
+      _ => RpcId.auctionSearch,
+    };
+    var params = {};
+    if (tabName == "fruit" || tabName == "price") {
+      dynamic result = await Navigator.pushNamed(
           context,
-          (index == 0
+          (tabName == "fruit"
                   ? Routes.popupCardSelectType
                   : Routes.popupCardSelectCategory)
               .routeName);
       if (result == null) return;
+      if (tabName == "price") {
+        params.addAll(result);
+      } else {
+        params["base_card_id"] = result;
+      }
     }
     if (!mounted) return;
-    var params = {"base_card_id": result, "query_type": _tabs[tabName]};
-    if (index == 3) {
-      params.addAll(result);
-    }
+    if (_tabs[tabName]! > 0) params["query_type"] = _tabs[tabName];
     try {
       var data = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
-          .tryRpc(context, RpcId.auctionSearch, params: params);
+          .tryRpc(context, rpc, params: params);
       _selectedTab = index;
       _cards = AuctionCard.getList(_account, data).values.toList();
       setState(() {});
