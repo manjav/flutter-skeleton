@@ -60,7 +60,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         SizedBox(height: 10.d),
         _headerBuilder(tribe),
-        _pinnedMessage(),
+        _pinnedMessage(state.account, tribe),
         _chatList(state.account, tribe),
         SizedBox(height: 32.d),
         _inputView(state.account, tribe),
@@ -203,16 +203,30 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         });
   }
 
-  Widget _pinnedMessage() {
-    return Widgets.button(
-      color: TColors.accent,
-      onPressed: () {},
-      child: const Text("pin"),
-    );
+  Widget _pinnedMessage(Account account, Tribe tribe) {
+    if (tribe.pinnedMessage.value == null) {
+      tribe.loadPinnedMessage(context, account);
+    }
+    return ValueListenableBuilder<NoobChatMessage?>(
+        valueListenable: tribe.pinnedMessage,
+        builder: (context, value, child) {
+          if (value == null) return const SizedBox();
+          return Widgets.rect(
+              margin: EdgeInsets.all(32.d),
+              padding: EdgeInsets.all(64.d),
+              decoration: Widgets.imageDecore(
+                  "ui_button_small_wooden",
+                  ImageCenterSliceData(
+                      102, 106, const Rect.fromLTWH(50, 30, 2, 46))),
+              child: Row(children: [
+                Expanded(child: Text(value.text)),
+                Asset.load<Image>("icon_pin", width: 50.d)
+              ]));
+        });
   }
 
-  _chatList(Tribe tribe) {
-    var titleStyle = TStyles.small.copyWith(color: TColors.primary70);
+  _chatList(Account account, Tribe tribe) {
+    var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
     var now = DateTime.now().secondsSinceEpoch;
     return ValueListenableBuilder<List<NoobChatMessage>>(
       valueListenable: tribe.chat,
@@ -288,6 +302,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         details.globalPosition.dy - 120.d,
         options,
         (ChatOptions option) {
+          if (option == ChatOptions.pin) {
+            tribe.pinMessage(context, account, message);
+          }
         }
       ]);
     }

@@ -27,6 +27,7 @@ class Tribe {
   final Map<int, int> levels = {};
   List<Member> members = [];
   ChatNotifier chat = ChatNotifier([]);
+  ValueNotifier<NoobChatMessage?> pinnedMessage = ValueNotifier(null);
 
   Tribe(Map? map) : super() {
     if (map == null) return;
@@ -90,6 +91,38 @@ class Tribe {
     };
     var noob = BlocProvider.of<ServicesBloc>(context).get<NoobSocket>();
     await noob.publish(jsonEncode(chat));
+  }
+
+  pinMessage(
+      BuildContext context, Account account, NoobChatMessage message) async {
+    try {
+      await BlocProvider.of<ServicesBloc>(context).get<HttpConnection>().tryRpc(
+          context, RpcId.tribePinMessage,
+          params: {"title": "", "message": message.text});
+      if (context.mounted) {
+        loadPinnedMessage(context, account);
+      }
+    } finally {}
+  }
+
+  loadPinnedMessage(BuildContext context, Account account) async {
+    try {
+      var data = await BlocProvider.of<ServicesBloc>(context)
+          .get<HttpConnection>()
+          .tryRpc(context, RpcId.tribeGetPinnedMessages);
+      if (data["messages"].isEmpty) return null;
+      var msg = data["messages"].first;
+      pinnedMessage.value = NoobChatMessage({
+        "id": msg["id"],
+        "text": msg["text_fa"],
+        "cannel": "pin",
+        "creationDate": msg["created_at"],
+        "messageType": msg["message_type"],
+        "timestamp": (DateTime.now().microsecondsSinceEpoch -
+                MyApp.startTime.microsecondsSinceEpoch) /
+            1000,
+      }, account);
+    } finally {}
   }
 }
 
