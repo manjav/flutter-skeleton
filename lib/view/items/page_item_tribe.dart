@@ -278,21 +278,22 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   Widget _inputView(Account account, Tribe tribe) {
     return Widgets.rect(
-        height: 136.d,
-        radius: 200.d,
+        radius: 70.d,
         margin: EdgeInsets.symmetric(horizontal: 32.d),
         padding: EdgeInsets.all(12.d),
         color: TColors.white,
         child: Row(children: [
           Expanded(
               child: Widgets.skinnedInput(
-            controller: _inputController,
             radius: 56.d,
+            maxLines: null,
+            controller: _inputController,
             onSubmit: (text) => _sendMessage(account, tribe),
           )),
           SizedBox(width: 12.d),
           Widgets.button(
               color: TColors.primary80,
+              height: 128.d,
               radius: 200.d,
               padding: EdgeInsets.all(30.d),
               child: Asset.load<Image>("icon_send"),
