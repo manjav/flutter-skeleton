@@ -275,6 +275,22 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   void _onChatItemTap(Account account, Tribe tribe, TapUpDetails details,
       NoobChatMessage message) {
+    var options = <ChatOptions>[];
+    if (tribe.members.firstWhere((m) => m.itsMe).degree.index >=
+        MemberDegree.owner.index) {
+      options.add(ChatOptions.pin);
+    }
+    if (!message.itsMe) {
+      options.add(ChatOptions.reply);
+    }
+    if (options.isNotEmpty) {
+      Overlays.insert(context, OverlayType.chatOptions, args: [
+        details.globalPosition.dy - 120.d,
+        options,
+        (ChatOptions option) {
+        }
+      ]);
+    }
   }
 
   _scrollDown({int duration = 500, int delay = 0}) async {

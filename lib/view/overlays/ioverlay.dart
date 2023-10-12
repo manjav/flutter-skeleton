@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../services/localization.dart';
 import '../../utils/ilogger.dart';
 import '../../view/overlays/confirm_overlay.dart';
+import 'chat_options_overlay.dart';
 import 'loading_overlay.dart';
 import 'member_details_overlay.dart';
 import 'toast_overlay.dart';
@@ -10,6 +11,7 @@ import 'toast_overlay.dart';
 enum OverlayType {
   none,
   loading,
+  chatOptions,
   confirm,
   member,
   outcome,
@@ -21,6 +23,8 @@ extension Overlays on OverlayType {
   static AbstractOverlay getWidget(String routeName, {dynamic args}) {
     return switch (routeName) {
       "/loading" => const LoadingOverlay(),
+      "/chatOptions" =>
+        ChatOptionsOverlay(y: args[0], options: args[1], onSelect: args[2]),
       "/confirm" => ConfirmOverlay(
           args["message"],
           args["acceptLabel"] ?? "accept_l".l(),
