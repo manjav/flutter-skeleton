@@ -135,11 +135,10 @@ class NoobMessage {
   static NoobMessage getProperMessage(
       Account account, Map<String, dynamic> map, Tribe? tribe) {
     var message = switch (map["push_message_type"] ?? "") {
-      "player_status" => NoobStatusMessage(map),
+      "player_status" || "tribe_player_status" => NoobStatusMessage(map),
       "battle_update" => NoobCardMessage(account, map),
       "battle_hero_ability" => NoobAbilityMessage(map),
       "battle_help" => NoobHelpMessage(map),
-      "tribe_player_status" => NoobMessage(NoobMessages.none, map),
       "battle_finished" => NoobFineMessage(map),
       "chat" => NoobChatMessage(map, account),
       _ => NoobMessage(Noobs.none, map),
