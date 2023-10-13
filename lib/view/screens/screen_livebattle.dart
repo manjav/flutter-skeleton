@@ -258,12 +258,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       return;
     }
     return switch (message.type) {
-      NoobMessages.deployCard => _handleCardMessage(message as NoobCardMessage),
-      NoobMessages.heroAbility =>
-        _handleAbilityMessage(message as NoobAbilityMessage),
-      NoobMessages.help => _handleHelpMessage(message as NoobHelpMessage),
-      NoobMessages.battleFinished =>
-        _handleFineMessage(message as NoobFineMessage),
+      Noobs.deployCard => _handleCardMessage(message as NoobCardMessage),
+      Noobs.heroAbility => _handleAbilityMessage(message as NoobAbilityMessage),
+      Noobs.help => _handleHelpMessage(message as NoobHelpMessage),
+      Noobs.battleFinished => _handleFineMessage(message as NoobFineMessage),
       _ => debugPrint(message.type.toString())
     };
   }

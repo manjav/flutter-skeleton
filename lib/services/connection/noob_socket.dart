@@ -93,7 +93,7 @@ class NoobSocket extends IService {
   }
 
   void _updateStatus(NoobMessage noobMessage) {
-    if (noobMessage.type != NoobMessages.playerStatus) {
+    if (noobMessage.type != Noobs.playerStatus) {
       return;
     }
 
@@ -119,7 +119,7 @@ class NoobSocket extends IService {
   }
 }
 
-enum NoobMessages {
+enum Noobs {
   none,
   playerStatus,
   deployCard,
@@ -142,7 +142,7 @@ class NoobMessage {
       "tribe_player_status" => NoobMessage(NoobMessages.none, map),
       "battle_finished" => NoobFineMessage(map),
       "chat" => NoobChatMessage(map, account),
-      _ => NoobMessage(NoobMessages.none, map),
+      _ => NoobMessage(Noobs.none, map),
     };
     if (message.channel.startsWith("tribe")) {
       tribe?.chat.add(message as NoobChatMessage);
@@ -150,16 +150,14 @@ class NoobMessage {
     return message;
   }
 
-  final NoobMessages type;
-  NoobMessage(this.type, Map<String, dynamic> map) {
+  final Noobs type;
     id = map["id"] ?? 0;
   }
 }
 
 class NoobStatusMessage extends NoobMessage {
   late int playerId, status;
-  NoobStatusMessage(Map<String, dynamic> map)
-      : super(NoobMessages.playerStatus, map) {
+  NoobStatusMessage(Map<String, dynamic> map) : super(Noobs.playerStatus, map) {
     var id = map["player_id"];
     playerId = (id is String) ? int.parse(id) : id;
     status = map["status"];
@@ -171,7 +169,7 @@ class NoobCardMessage extends NoobMessage {
   String ownerName = "";
   int round = 0, teamOwnerId = 0;
   NoobCardMessage(Account account, Map<String, dynamic> map)
-      : super(NoobMessages.deployCard, map) {
+      : super(Noobs.deployCard, map) {
     round = map["round"];
     teamOwnerId = map["owner_team_id"];
     ownerName = map["card_owner_name"];
@@ -188,8 +186,7 @@ class NoobAbilityMessage extends NoobMessage {
   late int teamOwnerId, ownerId, heroId;
   Abilities ability = Abilities.none;
   Map<String, int> cards = {};
-  NoobAbilityMessage(Map<String, dynamic> map)
-      : super(NoobMessages.heroAbility, map) {
+  NoobAbilityMessage(Map<String, dynamic> map) : super(Noobs.heroAbility, map) {
     heroId = map["hero_id"];
     ownerId = map["hero_owner_id"];
     teamOwnerId = map["owner_team_id"];
@@ -203,7 +200,7 @@ class NoobAbilityMessage extends NoobMessage {
 class NoobHelpMessage extends NoobMessage {
   int ownerId = 0, ownerTribeId = 0, attackerId = 0, defenderId = 0;
   String attackerName = "", defenderName = "";
-  NoobHelpMessage(Map<String, dynamic> map) : super(NoobMessages.help, map) {
+  NoobHelpMessage(Map<String, dynamic> map) : super(Noobs.help, map) {
     ownerId = map["help_owner_id"];
     ownerTribeId = map["help_owner_tribe_id"];
     attackerId = map["attacker_id"];
@@ -221,7 +218,7 @@ class NoobChatMessage extends NoobMessage {
   String sender = "", text = "";
   int avatarId = 0, creationDate = 0, messageType = 1;
   NoobChatMessage(Map<String, dynamic> map, Account account)
-      : super(NoobMessages.chat, map) {
+      : super(Noobs.chat, map) {
     text = map["text"] ?? "";
     sender = map["sender"] ?? "";
     channel = map["channel"] ?? "";
@@ -237,8 +234,7 @@ class NoobFineMessage extends NoobMessage {
   int winnerScore = 0, loserScore = 0, winnerId = 0, loserId = 0;
   String winnerTribe = "", loserTribe = "";
   List<dynamic> opponentsInfo = [];
-  NoobFineMessage(Map<String, dynamic> map)
-      : super(NoobMessages.battleFinished, map) {
+  NoobFineMessage(Map<String, dynamic> map) : super(Noobs.battleFinished, map) {
     var result = map["result"];
     winnerScore = result["winner_added_score"];
     loserScore = result["loser_added_score"];
