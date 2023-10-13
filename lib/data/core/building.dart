@@ -12,7 +12,7 @@ enum Buildings {
   base,
   cards,
   defense,
-  message,
+  // message,
   mine,
   offense,
   // shop,

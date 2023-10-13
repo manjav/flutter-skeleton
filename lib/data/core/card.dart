@@ -196,8 +196,11 @@ class AuctionCard extends AbstractCard {
       maxBid = 0,
       maxBidderId = 0,
       createdAt = 0,
-      activityStatus = 0;
+      activityStatus = 0,
+      lastBidderId = 0,
+      lastBidderGold = 0;
   String ownerName = "", maxBidderName = "";
+  bool ownerIsMe = false, winnerIsMe = false, loserIsMe = false;
 
   AuctionCard(super.account, super.map) {
     id = map["id"];
@@ -205,11 +208,16 @@ class AuctionCard extends AbstractCard {
     cardId = map["card_id"];
     bidCount = map["bid_count"];
     maxBid = map["max_bid"];
-    maxBidderId = map["max_bidder_id"];
+    maxBidderId = Utils.toInt(map["max_bidder_id"]);
     maxBidderName = map["max_bidder_name"];
     ownerName = map["owner_name"];
     createdAt = map["created_at"];
     activityStatus = map["activity_status"];
+    lastBidderId = Utils.toInt(map["last_bidder_id"]);
+    lastBidderGold = Utils.toInt(map["last_bidder_gold"]);
+    ownerIsMe = account.get(AccountField.id) == ownerId;
+    winnerIsMe = account.get(AccountField.id) == maxBidderId;
+    loserIsMe = account.get(AccountField.id) == lastBidderId;
   }
 
   static Map<int, AuctionCard> getList(Account account, list) {
