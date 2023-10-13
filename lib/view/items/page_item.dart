@@ -4,6 +4,7 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/ilogger.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../overlays/ioverlay.dart';
 
 class AbstractPageItem extends StatefulWidget {
   final String name;
@@ -19,4 +20,7 @@ class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
   Widget build(BuildContext context) {
     return Center(child: SkinnedText("coming_soon".l(), style: TStyles.large));
   }
+
+  void toast(String message) =>
+      Overlays.insert(context, OverlayType.toast, args: message);
 }
