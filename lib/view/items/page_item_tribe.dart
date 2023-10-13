@@ -231,19 +231,25 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     return ValueListenableBuilder<List<NoobChatMessage>>(
         valueListenable: tribe.chat,
         builder: (context, value, child) {
-          _scrollDown(delay: 100);
+          _scrollDown(delay: 10);
           return Expanded(
               child: ListView.builder(
+                  reverse: true,
                   controller: _scrollController,
                   padding: EdgeInsets.all(48.d),
                   itemCount: tribe.chat.length,
                   itemBuilder: (c, i) => _chatItemRenderer(
-                      account, tribe, tribe.chat.value[i], titleStyle, now)));
+                      account,
+                      tribe,
+                      tribe.chat.value[tribe.chat.length - i - 1],
+                      i,
+                      titleStyle,
+                      now)));
         });
   }
 
   _chatItemRenderer(Account account, Tribe tribe, NoobChatMessage message,
-      TextStyle titleStyle, int now) {
+      int index, TextStyle titleStyle, int now) {
     var padding = 120.d;
     var avatar = Widgets.rect(
         width: padding,
@@ -315,9 +321,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   }
 
   _scrollDown({int duration = 500, int delay = 0}) async {
+    if (!_scrollController.position.hasPixels ||
+        _scrollController.position.pixels <= 0) return;
     await Future.delayed(Duration(milliseconds: delay));
-    await _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
+    await _scrollController.animateTo(0,
         duration: Duration(milliseconds: duration),
         curve: Curves.fastOutSlowIn);
   }
