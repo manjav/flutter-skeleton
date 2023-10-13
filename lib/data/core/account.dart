@@ -174,12 +174,6 @@ class Account extends StringMap<dynamic> {
     }
     map['cards'] = accountCards;
 
-    // Tribe
-    Tribe? tribe;
-    if (map["tribe"] != null) {
-      tribe = map['tribe'] = Tribe(map['tribe']);
-    }
-
     // Organize deadlines
     _parse(AccountField.xpboost_id);
     _parse(AccountField.pwboost_id);
@@ -190,24 +184,20 @@ class Account extends StringMap<dynamic> {
 
     map['buildings'] = <Buildings, Building>{};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
-    _addBuilding(Buildings.base, tribe?.levels[Buildings.base.id]);
-    _addBuilding(Buildings.cards, tribe?.levels[Buildings.cards.id]);
-    _addBuilding(Buildings.defense, tribe?.levels[Buildings.defense.id],
-        map['defense_building_assigned_cards']);
-    _addBuilding(Buildings.message);
+    _addBuilding(Buildings.base);
+    _addBuilding(Buildings.cards);
+    _addBuilding(Buildings.defense, 0, map['defense_building_assigned_cards']);
+    _addBuilding(Buildings.offense, 0, map['offense_building_assigned_cards']);
     map['buildings'][Buildings.mine] = Mine();
     _addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
-    _addBuilding(Buildings.offense, tribe?.levels[Buildings.offense.id],
-        map['offense_building_assigned_cards']);
-    // _addBuilding(Buildings.shop);
     _addBuilding(Buildings.treasury, map['bank_building_level']);
-    // _addBuilding(Buildings.quest);
-    // _addBuilding(Buildings.tribe, 1);
-    // if (map['tribe'] != null) {
-    //   map['buildings'][Buildings.tribe]
-    //       .init(map['tribe'], args: {'account': this, 'cards': []});
-    // }
+
+    // Tribe
+    if (map["tribe"] != null) {
+      map['tribe'] = Tribe(map['tribe']);
+      installTribe(map['tribe']);
+    }
 
     // Heroes
     map['base_heroitems'] = loadingData.baseHeroItems;
@@ -318,14 +308,25 @@ class Account extends StringMap<dynamic> {
     return cards;
   }
 
-  void _addBuilding(Buildings type, [int? level, List? cards]) {
-    level = level ?? 0;
+  void _addBuilding(Buildings type, [int level = 0, List? cards]) {
     cards = cards ?? [];
     if (!map['buildings'].containsKey(type)) {
       map['buildings'][type] = Building();
     }
     map['buildings'][type].init({"type": type, "level": level},
         args: {"account": this, "cards": cards});
+  }
+
+  void installTribe(Tribe tribe) {
+    var types = [
+      Buildings.base,
+      Buildings.cards,
+      Buildings.defense,
+      Buildings.offense
+    ];
+    for (var type in types) {
+      getBuilding(type)?.map['level'] = tribe.levels[type.id];
+    }
   }
 
   Map<String, dynamic> update(Map<String, dynamic> data) {
