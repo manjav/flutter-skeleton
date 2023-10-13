@@ -42,6 +42,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
   @override
   void initState() {
     _account = BlocProvider.of<AccountBloc>(context).account!;
+    _selectTab("power", 2);
     super.initState();
   }
 
@@ -206,7 +207,13 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       var data = await BlocProvider.of<ServicesBloc>(context)
           .get<HttpConnection>()
           .tryRpc(context, RpcId.auctionBid, params: {"auction_id": card.id});
+      var auction = AuctionCard(_account, data["auction"]);
+      var index = _cards.indexWhere((c) => c.id == auction.id);
+      if (index > -1) {
+        setState(() => _cards[index] = auction);
+      }
       _account.update(data);
+      toast("auction_added".l());
     } finally {}
   }
 }
