@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/service_provider.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
@@ -28,7 +29,7 @@ class AbstractPopup extends StatefulWidget {
 }
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
-    with ILogger {
+    with ILogger, ServiceProviderMixin {
   Alignment alignment = Alignment.center;
 
   @override

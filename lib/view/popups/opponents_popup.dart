@@ -6,11 +6,9 @@ import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/opponents_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -67,9 +65,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     var deltaTime = _account.now - _fetchAt;
     var opponentBloc = BlocProvider.of<OpponentsBloc>(context);
     if ((deltaTime > 60 && _requestsCount % 10 == 0) || deltaTime > 180) {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.getOpponents);
+      var data = await rpc(RpcId.getOpponents);
 
       var opponents = Opponent.fromMap(data);
       if (mounted) {
@@ -300,9 +296,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   void _scout() async {
     try {
-      await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc<List>(context, RpcId.scout);
+      await rpc(RpcId.scout);
       _selectedOpponent.value.isRevealed = true;
       setState(() {});
     } finally {}
@@ -317,10 +311,8 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     opponent.increaseAttacksCount();
     if (_selectedOpponent.value.status == 1) {
       try {
-        var result = await BlocProvider.of<ServicesBloc>(context)
-            .get<HttpConnection>()
-            .tryRpc(context, RpcId.battleLive,
-                params: {RpcParams.opponent_id.name: opponent.id});
+        var result = await rpc(RpcId.battleLive,
+            params: {RpcParams.opponent_id.name: opponent.id});
         if (mounted) {
           result["opponent"] = opponent;
           Navigator.pushNamed(context, Routes.livebattle.routeName,

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../blocs/services_bloc.dart';
 import '../../../data/core/card.dart';
 import '../../../data/core/rpc.dart';
-import '../../../services/connection/http_connection.dart';
 import '../../../services/deviceinfo.dart';
+import '../../../services/service_provider.dart';
 import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
 import '../../items/card_item.dart';
@@ -26,7 +24,7 @@ class LiveHero extends StatefulWidget {
 }
 
 class _LiveHeroState extends State<LiveHero>
-    with TickerProviderStateMixin, KeyProvider {
+    with TickerProviderStateMixin, KeyProvider, ServiceProviderMixin {
   final List<bool> _enables = [true, true, true, true];
   late AnimationController _animationController;
 
@@ -126,9 +124,7 @@ class _LiveHeroState extends State<LiveHero>
           RpcParams.hero_id.name: hero.id,
           RpcParams.ability_type.name: index + 1,
         };
-        await BlocProvider.of<ServicesBloc>(context)
-            .get<HttpConnection>()
-            .tryRpc(context, RpcId.triggerAbility, params: params);
+        await rpc(RpcId.triggerAbility, params: params);
       } finally {}
     }
     _enables[index] = false;

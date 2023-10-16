@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/account_bloc.dart';
 
-import '../../blocs/services_bloc.dart';
+import '../../blocs/account_bloc.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -128,10 +126,8 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
 
   _search() async {
     try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.tribeSearch,
-              params: {RpcParams.query.name: _inputController.text});
+      var result = await rpc(RpcId.tribeSearch,
+          params: {RpcParams.query.name: _inputController.text});
       _tribes = Tribe.initAll(result["tribes"]);
       setState(() {});
     } finally {}
@@ -139,10 +135,8 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
 
   _join(Tribe tribe) async {
     try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.tribeJoin,
-              params: {RpcParams.tribe_id.name: tribe.id});
+      var result = await rpc(RpcId.tribeJoin,
+          params: {RpcParams.tribe_id.name: tribe.id});
       if (mounted) {
         var bloc = BlocProvider.of<AccountBloc>(context);
         bloc.account!.map["tribe"] = Tribe(result["tribe"]);

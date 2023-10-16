@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -67,9 +65,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
 
   _loadLeagueData() async {
     try {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.league);
+      var data = await rpc(RpcId.league);
       _leagueData = LeagueData.init(data, _account.get<int>(AccountField.id));
       setState(() {});
     } finally {}
@@ -261,9 +257,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
 
   _loadLeagueHistory([int round = 1]) async {
     try {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.leagueHistory,
+      var data = await rpc(RpcId.leagueHistory,
               params: {RpcParams.rounds.name: "[$round]"});
       _leagueHistory =
           LeagueHistory.init(data, round, _account.get<int>(AccountField.id));

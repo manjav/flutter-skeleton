@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -97,7 +95,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
   }
 
   _selectTab(String tabName, int index) async {
-    var rpc = switch (tabName) {
+    var rpcId = switch (tabName) {
       "sells" => RpcId.auctionSells,
       "deals" => RpcId.auctionDeals,
       _ => RpcId.auctionSearch,
@@ -120,9 +118,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     if (!mounted) return;
     if (_tabs[tabName]! > 0) params["query_type"] = _tabs[tabName];
     try {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, rpc, params: params);
+      var data = await rpc(rpcId, params: params);
       _selectedTab = index;
       _cards = AuctionCard.getList(_account, data).values.toList();
       setState(() {});
@@ -204,9 +200,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   _bid(AuctionCard card) async {
     try {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.auctionBid, params: {"auction_id": card.id});
+      var data = await rpc(RpcId.auctionBid, params: {"auction_id": card.id});
       var auction = AuctionCard(_account, data["auction"]);
       var index = _cards.indexWhere((c) => c.id == auction.id);
       if (index > -1) {

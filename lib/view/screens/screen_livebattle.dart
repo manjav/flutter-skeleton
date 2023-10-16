@@ -6,13 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/utils.dart';
@@ -59,7 +57,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _battleId = widget.args["battle_id"] ?? 0;
     _helpCost = widget.args["help_cost"] ?? 1550;
 
-    var socket = BlocProvider.of<ServicesBloc>(context).get<NoobSocket>();
+    var socket = getService<NoobSocket>();
     if (!socket.isConnected) {
       socket.connect();
     }
@@ -181,9 +179,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         RpcParams.card.name: selectedCard.id,
         RpcParams.round.name: _slotState.value.i + 1,
       };
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.battleSetCard, params: params);
+      var result = await rpc(RpcId.battleSetCard, params: params);
 
       selectedCard.lastUsedAt = result["last_used_at"];
       _deployCard(index, selectedCard);
@@ -350,10 +346,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _close() {
-    BlocProvider.of<ServicesBloc>(context)
-        .get<NoobSocket>()
-        .onReceive
-        .remove(_onNoobReceive);
+    getService<NoobSocket>().onReceive.remove(_onNoobReceive);
     _timer.cancel();
     _pageController.dispose();
     Navigator.pop(context);

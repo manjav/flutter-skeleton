@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/service_provider.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
@@ -24,7 +23,8 @@ class BuildingBalloon extends StatefulWidget {
   State<BuildingBalloon> createState() => _BuildingBalloonState();
 }
 
-class _BuildingBalloonState extends State<BuildingBalloon> {
+class _BuildingBalloonState extends State<BuildingBalloon>
+    with ServiceProviderMixin {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
@@ -50,9 +50,7 @@ class _BuildingBalloonState extends State<BuildingBalloon> {
     }
     var params = {RpcParams.client.name: Platform.operatingSystem};
     try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.collectGold, params: params);
+      var result = await rpc(RpcId.collectGold, params: params);
       if (result is List) return;
       account.update(result);
       if (mounted) {

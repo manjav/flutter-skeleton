@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../blocs/services_bloc.dart';
 import '../../../data/core/ranking.dart';
 import '../../../data/core/rpc.dart';
 import '../../../services/connection/http_connection.dart';
 import '../../../services/deviceinfo.dart';
+import '../../../services/service_provider.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
 import '../../../view/widgets/indicator_level.dart';
@@ -26,7 +25,8 @@ class LiveTribe extends StatefulWidget {
   State<LiveTribe> createState() => _LiveTribeState();
 }
 
-class _LiveTribeState extends State<LiveTribe> with TickerProviderStateMixin {
+class _LiveTribeState extends State<LiveTribe>
+    with TickerProviderStateMixin, ServiceProviderMixin {
   late Timer _timer;
   final double _helpTimeout = 38;
   late AnimationController _animationControler;
@@ -124,8 +124,7 @@ class _LiveTribeState extends State<LiveTribe> with TickerProviderStateMixin {
     if (!_timer.isActive) return;
     _requestSent = true;
     try {
-      await BlocProvider.of<ServicesBloc>(context).get<HttpConnection>().tryRpc(
-          context, RpcId.battleHelp,
+      await getService<HttpConnection>().tryRpc(context, RpcId.battleHelp,
           params: {RpcParams.battle_id.name: widget.battleId});
       _timer.cancel();
     } catch (e) {

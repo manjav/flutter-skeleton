@@ -9,6 +9,7 @@ import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
+import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
 import 'building.dart';
@@ -115,7 +116,7 @@ class Cards extends StringMap<CardData> {
   CardData get(String key) => map[key]!;
 }
 
-class AbstractCard {
+class AbstractCard with ServiceProvider {
   static double powerToGoldRatio = 8.0;
   static double minPriceRatio = 0.75;
   static double maxPriceRatio = 1.5;
@@ -239,8 +240,7 @@ class AccountCard extends AbstractCard {
 
   Future<void> coolOff(BuildContext context) async {
     try {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
+      var data = await getService<HttpConnection>(context)
           .tryRpc(context, RpcId.coolOff, params: {RpcParams.card_id.name: id});
       lastUsedAt = 0;
       account.update(data);

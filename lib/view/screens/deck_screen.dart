@@ -7,12 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -252,7 +250,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       ((account.get<int>(AccountField.total_quests) / 10) % 1 == 0);
 
   _attack(Account account) async {
-    var bloc = BlocProvider.of<ServicesBloc>(context);
     var params = <String, dynamic>{
       RpcParams.cards.name: _selectedCards.getIds(),
       RpcParams.check.name: md5
@@ -270,9 +267,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     }
 
     try {
-      var data = await bloc
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.quest, params: params);
+      var data = await rpc(RpcId.quest, params: params);
       account.update(data);
       if (mounted) {
         BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));

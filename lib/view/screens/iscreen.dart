@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/service_provider.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
 import '../../view/widgets.dart';
@@ -26,7 +27,7 @@ class AbstractScreen extends StatefulWidget {
 }
 
 class AbstractScreenState<T extends AbstractScreen> extends State<T>
-    with ILogger, TickerProviderStateMixin {
+    with ILogger, TickerProviderStateMixin, ServiceProviderMixin {
   List<Widget> stepChildren = <Widget>[];
 
   @override

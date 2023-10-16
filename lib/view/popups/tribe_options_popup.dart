@@ -1,21 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../view/tab_provider.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
+import '../../view/tab_provider.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
@@ -170,9 +168,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
   void _changeVisibility(bool value) {
     var newStatus = value ? 1 : 3;
     try {
-      BlocProvider.of<ServicesBloc>(context).get<HttpConnection>().rpc(
-          RpcId.tribeVisibility,
-          params: {RpcParams.status.name: newStatus});
+      rpc(RpcId.tribeVisibility, params: {RpcParams.status.name: newStatus});
       setState(() => _member!.status = newStatus);
     } finally {}
   }
@@ -282,9 +278,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
 
   _upgrade(int id, Tribe tribe) async {
     try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.tribeUpgrade, params: {
+      var result = await rpc(RpcId.tribeUpgrade, params: {
         RpcParams.tribe_id.name: tribe.id,
         RpcParams.type.name: id,
       });

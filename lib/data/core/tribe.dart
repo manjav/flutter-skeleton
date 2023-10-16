@@ -1,19 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../main.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
+import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
 import 'ranking.dart';
 import 'rpc.dart';
 
-class Tribe {
+class Tribe with ServiceProvider {
   late int id,
       gold,
       status,
@@ -64,8 +63,7 @@ class Tribe {
   loadMembers(BuildContext context, Account account) async {
     if (members.isNotEmpty) return;
     try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
+      var result = await getService<HttpConnection>(context)
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
       members =
           Member.initAll(result["members"], account.get<int>(AccountField.id));
@@ -89,14 +87,13 @@ class Tribe {
               MyApp.startTime.microsecondsSinceEpoch) /
           1000
     };
-    var noob = BlocProvider.of<ServicesBloc>(context).get<NoobSocket>();
-    await noob.publish(jsonEncode(chat));
+    await getService<NoobSocket>(context).publish(jsonEncode(chat));
   }
 
   pinMessage(
       BuildContext context, Account account, NoobChatMessage message) async {
     try {
-      await BlocProvider.of<ServicesBloc>(context).get<HttpConnection>().tryRpc(
+      await getService<HttpConnection>(context).tryRpc(
           context, RpcId.tribePinMessage,
           params: {"title": "", "message": message.text});
       if (context.mounted) {
@@ -107,8 +104,7 @@ class Tribe {
 
   loadPinnedMessage(BuildContext context, Account account) async {
     try {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
+      var data = await getService<HttpConnection>(context)
           .tryRpc(context, RpcId.tribeGetPinnedMessages);
       if (data["messages"].isEmpty) return null;
       var msg = data["messages"].first;

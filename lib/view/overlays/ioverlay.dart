@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/localization.dart';
+import '../../services/service_provider.dart';
 import '../../utils/ilogger.dart';
 import '../../view/overlays/confirm_overlay.dart';
 import 'chat_options_overlay.dart';
@@ -65,7 +66,7 @@ class AbstractOverlay extends StatefulWidget {
 }
 
 class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
-    with ILogger {
+    with ILogger, ServiceProviderMixin {
   @override
   Widget build(BuildContext context) {
     return const SizedBox();

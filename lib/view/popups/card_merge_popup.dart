@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -192,9 +190,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     if (selectedCards.value.length < 2) return;
     var params = {RpcParams.sacrifices.name: selectedCards.getIds()};
     try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.evolveCard, params: params);
+      var result = await rpc(RpcId.evolveCard, params: params);
       updateAccount(result);
     } finally {}
     cards = getCards(account);

@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -116,9 +114,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
 
   _sell() async {
     try {
-      await BlocProvider.of<ServicesBloc>(context).get<HttpConnection>().tryRpc(
-          context, RpcId.auctionSell,
-          params: {RpcParams.card_id.name: _card.id});
+      await rpc(RpcId.auctionSell, params: {RpcParams.card_id.name: _card.id});
       _account.map["buildings"][Buildings.auction].map["cards"].add(_card);
       if (!mounted) return;
       BlocProvider.of<AccountBloc>(context).add(SetAccount(account: _account));

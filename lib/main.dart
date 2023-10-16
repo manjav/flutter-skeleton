@@ -3,8 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/opponents_bloc.dart';
+import '../../services/service_provider.dart';
 
+import '../../blocs/opponents_bloc.dart';
 import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/sounds.dart';
@@ -38,7 +39,8 @@ class MyApp extends StatefulWidget {
   }
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends State<MyApp>
+    with WidgetsBindingObserver, ServiceProvider {
   late UniqueKey key;
 
   @override
@@ -52,9 +54,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      // BlocProvider.of<Services>(context).get<Sounds>().stopAll();
+      // getService<Sounds>(context).stopAll();
     } else if (state == AppLifecycleState.resumed) {
-      BlocProvider.of<ServicesBloc>(context).get<Sounds>().playMusic();
+      getService<Sounds>(context).playMusic();
     }
   }
 

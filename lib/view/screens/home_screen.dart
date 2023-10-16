@@ -6,6 +6,7 @@ import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
+import '../../data/core/card.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
@@ -18,6 +19,7 @@ import '../../view/items/page_item_tribe.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
@@ -50,10 +52,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     super.onRender(timeStamp);
     var bloc = BlocProvider.of<ServicesBloc>(context);
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
-    BlocProvider.of<ServicesBloc>(context)
-        .get<NoobSocket>()
-        .onReceive
-        .add(_onNoobReceive);
+    bloc.get<NoobSocket>().onReceive.add(_onNoobReceive);
   }
 
   @override
@@ -181,19 +180,44 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   void _onNoobReceive(NoobMessage message) {
-    if (message.type == NoobMessages.help) {
+    if (message.type == Noobs.help) {
       if (ModalRoute.of(context)!.settings.name != Routes.home.routeName) {
         return;
+      }
+    }
+    if (message.type == Noobs.auctionBid) {
+      var bid = message as NoobAuctionMessage;
+      if (bid.card.ownerIsMe && bid.card.loserIsMe) {
+        var text =
+            bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deals";
+        if (bid.card.loserIsMe) {
+          var bloc = BlocProvider.of<AccountBloc>(context);
+          bloc.account!.map["gold"] = bid.card.lastBidderGold;
+          bloc.add(SetAccount(account: bloc.account!));
+        }
+        Overlays.insert(context, OverlayType.confirm, args: {
+          "message": text.l([bid.card.maxBidderName]),
+          "acceptLabel": "go_l".l(),
+          "onAccept": () => _selectTap(4)
+        });
+      }
+      if (message.type == Noobs.auctionSold) {
+        var bloc = BlocProvider.of<AccountBloc>(context);
+        if (bid.card.loserIsMe) {
+          bloc.account!.map["gold"] = bid.card.lastBidderGold;
+        } else if (bid.card.ownerIsMe) {
+          var card = AccountCard(bloc.account!, bid.card.map);
+          card.id = bid.card.cardId;
+          bloc.account!.map["cards"][card.id] = card;
+        }
+        bloc.add(SetAccount(account: bloc.account!));
       }
     }
   }
 
   @override
   void dispose() {
-    BlocProvider.of<ServicesBloc>(context)
-        .get<NoobSocket>()
-        .onReceive
-        .remove(_onNoobReceive);
+    getService<NoobSocket>().onReceive.remove(_onNoobReceive);
     super.dispose();
   }
 }
