@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/ranking.dart';
