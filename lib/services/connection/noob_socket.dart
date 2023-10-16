@@ -159,6 +159,8 @@ class NoobMessage {
   }
 
   final Noobs type;
+  final Map<String, dynamic> map;
+  NoobMessage(this.type, this.map) {
     id = map["id"] ?? 0;
   }
 }

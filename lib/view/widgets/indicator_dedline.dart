@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/service_provider.dart';
 
 import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/service_provider.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/skinnedtext.dart';
