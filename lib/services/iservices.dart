@@ -5,6 +5,6 @@ abstract class IService with ILogger, ServiceProvider {
   bool isInitialized = false;
   initialize({List<Object>? args}) {
     isInitialized = true;
-    log("initialized.");
+    log("=> Service $runtimeType initialized.");
   }
 }
