@@ -5,6 +5,7 @@ import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/message.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc_data.dart';
 import '../../data/core/tribe.dart';
@@ -223,7 +224,8 @@ class NoobChatMessage extends NoobMessage {
   bool itsMe = false;
   double timestamp = 0.0;
   String sender = "", text = "";
-  int avatarId = 0, creationDate = 0, messageType = 1;
+  int avatarId = 0, creationDate = 0;
+  Messages messageType = Messages.none;
   NoobChatMessage(Map<String, dynamic> map, Account account)
       : super(Noobs.chat, map) {
     text = map["text"] ?? "";
@@ -232,7 +234,7 @@ class NoobChatMessage extends NoobMessage {
     avatarId = Utils.toInt(map["avatar_id"]);
     creationDate = Utils.toInt(map["creationDate"]);
     timestamp = map["timestamp"] ?? 0.0;
-    messageType = Utils.toInt(map["messageType"]);
+    messageType = Messages.values[Utils.toInt(map["messageType"], 1)];
     itsMe = sender == account.get(AccountField.name);
   }
 }
