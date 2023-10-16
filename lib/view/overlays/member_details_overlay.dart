@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -108,7 +107,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
   }
 
   _onButtonsPressed(RpcId id) async {
-    var bloc = BlocProvider.of<AccountBloc>(context);
+    var bloc = accountBloc;
     var tribe = bloc.account!.get<Tribe>(AccountField.tribe);
     try {
       await rpc(id, params: {

@@ -187,11 +187,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     }
     if (message.type == Noobs.auctionBid) {
       var bid = message as NoobAuctionMessage;
+      var bloc = accountBloc;
       if (bid.card.ownerIsMe && bid.card.loserIsMe) {
         var text =
             bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deals";
         if (bid.card.loserIsMe) {
-          var bloc = BlocProvider.of<AccountBloc>(context);
           bloc.account!.map["gold"] = bid.card.lastBidderGold;
           bloc.add(SetAccount(account: bloc.account!));
         }
@@ -202,7 +202,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         });
       }
       if (message.type == Noobs.auctionSold) {
-        var bloc = BlocProvider.of<AccountBloc>(context);
         if (bid.card.loserIsMe) {
           bloc.account!.map["gold"] = bid.card.lastBidderGold;
         } else if (bid.card.ownerIsMe) {

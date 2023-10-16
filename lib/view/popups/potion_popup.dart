@@ -99,7 +99,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
           await rpc(RpcId.fillPotion, params: {RpcParams.amount.name: amount});
       account.update(data);
       if (!mounted) return;
-      BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+      accountBloc.add(SetAccount(account: account));
     } finally {}
   }
 }

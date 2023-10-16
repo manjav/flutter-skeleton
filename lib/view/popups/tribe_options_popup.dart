@@ -35,7 +35,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
   @override
   void initState() {
     selectedTabIndex = widget.args["index"] ?? 0;
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     var tribe = _account.get<Tribe>(AccountField.tribe);
     var index = tribe.members.indexWhere((member) => member.itsMe);
     if (index > -1) {

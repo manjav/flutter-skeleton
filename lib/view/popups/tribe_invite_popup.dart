@@ -50,9 +50,7 @@ class _TribeInvitePopupState extends AbstractPopupState<TribeInvitePopup> {
 
   _invite() async {
     try {
-      var tribe = BlocProvider.of<AccountBloc>(context)
-          .account!
-          .get<Tribe>(AccountField.tribe);
+      var tribe = accountBloc.account!.get<Tribe>(AccountField.tribe);
       await rpc(RpcId.tribeInvite, params: {
         RpcParams.tribe_id.name: tribe.id,
         RpcParams.invitee_name.name: _textController.text

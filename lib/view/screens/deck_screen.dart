@@ -270,7 +270,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       var data = await rpc(RpcId.quest, params: params);
       account.update(data);
       if (mounted) {
-        BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+        accountBloc.add(SetAccount(account: account));
         Navigator.pop(context);
         Navigator.pushNamed(context, route.routeName, arguments: data);
       }

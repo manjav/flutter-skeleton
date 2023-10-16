@@ -96,7 +96,7 @@ class _TreasuryBuildingPopupState
       var data = await rpc(id, params: {RpcParams.amount.name: amount});
       account.update(data);
       if (!mounted) return;
-      BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+      accountBloc.add(SetAccount(account: account));
     } finally {}
   }
 }

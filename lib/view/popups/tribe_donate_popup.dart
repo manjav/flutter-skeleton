@@ -85,7 +85,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
   }
 
   _donate() async {
-    var account = BlocProvider.of<AccountBloc>(context).account!;
+    var account = accountBloc.account!;
     try {
       var result = await rpc(RpcId.tribeDonate, params: {
         RpcParams.tribe_id.name: account.get<Tribe>(AccountField.tribe).id,

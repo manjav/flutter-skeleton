@@ -64,7 +64,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     socket.onReceive.add(_onNoobReceive);
 
     LiveBattleScreen.deadlines = [28, 10, 10, 10, 0, 1];
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     _allies = _account.toOpponent();
     _axis = (widget.args["opponent"] as Opponent?) ??
         Opponent.init(

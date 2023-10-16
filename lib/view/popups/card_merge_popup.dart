@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
@@ -37,9 +35,8 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
 
-  List<AccountCard> get allReadyCards => BlocProvider.of<AccountBloc>(context)
-      .account!
-      .getReadyCards(removeMaxLevels: true);
+  List<AccountCard> get allReadyCards =>
+      accountBloc.account!.getReadyCards(removeMaxLevels: true);
   @override
   getCards(Account account) {
     var all = allReadyCards;
@@ -54,7 +51,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
 
   @override
   Widget contentFactory() {
-    var account = BlocProvider.of<AccountBloc>(context).account!;
+    var account = accountBloc.account!;
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: selectedCards,
         builder: (context, value, child) {

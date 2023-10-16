@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/building.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
@@ -52,9 +50,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
       Buildings.auction,
       Buildings.offense
     ]..remove(_building.type);
-    var cards = BlocProvider.of<AccountBloc>(context)
-        .account!
-        .getReadyCards(exceptions: exceptions);
+    var cards = accountBloc.account!.getReadyCards(exceptions: exceptions);
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: _selectedCards,
         builder: (context, value, child) {

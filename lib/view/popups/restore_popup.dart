@@ -28,7 +28,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
   @override
   void initState() {
     _textController = TextEditingController();
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     super.initState();
   }
 

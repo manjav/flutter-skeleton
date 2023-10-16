@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/services/service_provider.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../utils/assets.dart';
@@ -18,13 +17,12 @@ class DeadlineIndicator extends StatefulWidget {
   State<DeadlineIndicator> createState() => _DeadlineIndicatorState();
 }
 
-class _DeadlineIndicatorState extends State<DeadlineIndicator> {
+class _DeadlineIndicatorState extends State<DeadlineIndicator>
+    with ServiceProviderMixin {
   Timer? _timer;
-  late Account _account;
 
   @override
   void initState() {
-    _account = BlocProvider.of<AccountBloc>(context).account!;
     _timer =
         Timer.periodic(const Duration(seconds: 10), (timer) => setState(() {}));
     super.initState();
@@ -38,7 +36,7 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    var remaining = widget.deadline.time - _account.now;
+    var remaining = widget.deadline.time - accountBloc.account!.now;
     return SizedBox(
         width: 230.d,
         height: 230.d,

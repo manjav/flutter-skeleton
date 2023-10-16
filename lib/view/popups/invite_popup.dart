@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -24,7 +22,7 @@ class _InvitePopupState extends AbstractPopupState<InvitePopup> {
 
   @override
   void initState() {
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     super.initState();
   }
 

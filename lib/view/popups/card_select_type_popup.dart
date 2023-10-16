@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
@@ -34,7 +32,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
   @override
   void initState() {
     super.initState();
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     _fruits = _account.loadingData.fruits.map.values
         .where((f) => f.get<int>(FriutFields.category) < 3)
         .toList();

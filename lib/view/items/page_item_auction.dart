@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
@@ -39,7 +37,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   @override
   void initState() {
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     _selectTab("power", 2);
     super.initState();
   }

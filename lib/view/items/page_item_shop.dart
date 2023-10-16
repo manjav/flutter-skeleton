@@ -2,15 +2,11 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/rpc_data.dart';
-import '../../services/connection/http_connection.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -36,7 +32,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   @override
   void initState() {
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     _fetchData();
     super.initState();
   }
@@ -48,9 +44,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       return;
     }
     try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.getShopitems);
+      var result = await rpc(RpcId.getShopitems);
       for (var entry in _account.loadingData.shopItems.entries) {
         var section = entry.key;
         _items[section] = [];

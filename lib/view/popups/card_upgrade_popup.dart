@@ -145,7 +145,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
       heroes.remove(hero.card.id);
 
       if (mounted) {
-        BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+        accountBloc.add(SetAccount(account: account));
         Navigator.popUntil(context, (route) => route.isFirst);
       }
     } finally {}

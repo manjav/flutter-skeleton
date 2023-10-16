@@ -46,7 +46,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
         vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
     _animationController.forward();
 
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     _isWin = widget.args['outcome'];
     _color = _isWin ? "green" : "red";
     if (widget.args["attacker_hero_benefits_info"].length > 0) {

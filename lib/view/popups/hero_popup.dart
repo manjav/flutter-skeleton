@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -65,7 +64,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   void initState() {
     alignment = const Alignment(0, -0.8);
     super.initState();
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     var heroes =
         _account.get<Map<int, HeroCard>>(AccountField.heroes).values.toList();
     _heroes = List.generate(heroes.length, (index) => heroes[index].clone());
@@ -374,7 +373,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       var data = await rpc(id, params: params);
       _account.update(data);
       if (!mounted) return;
-      BlocProvider.of<AccountBloc>(context).add(SetAccount(account: _account));
+      accountBloc.add(SetAccount(account: _account));
       setState(() {});
       return data;
     } catch (e) {

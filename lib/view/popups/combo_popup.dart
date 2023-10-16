@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
@@ -31,7 +29,7 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
   @override
   void initState() {
     super.initState();
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
   }
 
   @override

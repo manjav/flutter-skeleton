@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
@@ -30,7 +28,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
 
   @override
   void initState() {
-    var account = BlocProvider.of<AccountBloc>(context).account!;
+    var account = accountBloc.account!;
     _fruits = account.loadingData.fruits.map.values.toList();
     _avaibledCards = Set<int>.from(account.get(AccountField.collection));
     _selectedFruit = ValueNotifier(_fruits[0]);

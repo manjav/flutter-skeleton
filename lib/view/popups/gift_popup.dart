@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -26,7 +25,7 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
   @override
   void initState() {
     _textController = TextEditingController();
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     super.initState();
   }
 
@@ -65,7 +64,7 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
           params: {RpcParams.code.name: _textController.text});
       _account.update(data);
       if (!mounted) return;
-      BlocProvider.of<AccountBloc>(context).add(SetAccount(account: _account));
+      accountBloc.add(SetAccount(account: _account));
     } finally {}
   }
 }

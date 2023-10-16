@@ -1,9 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
@@ -45,7 +43,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   @override
   Widget contentFactory() {
-    var account = BlocProvider.of<AccountBloc>(context).account!;
+    var account = accountBloc.account!;
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: selectedCards,
         builder: (context, value, child) {

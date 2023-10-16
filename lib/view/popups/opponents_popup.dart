@@ -53,7 +53,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   @override
   void initState() {
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     _findOpponents();
     super.initState();
   }

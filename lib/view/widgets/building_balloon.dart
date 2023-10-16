@@ -54,7 +54,7 @@ class _BuildingBalloonState extends State<BuildingBalloon>
       if (result is List) return;
       account.update(result);
       if (mounted) {
-        BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+        accountBloc.add(SetAccount(account: account));
       }
     } finally {}
   }

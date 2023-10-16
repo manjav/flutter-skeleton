@@ -138,7 +138,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
       var result = await rpc(RpcId.tribeJoin,
           params: {RpcParams.tribe_id.name: tribe.id});
       if (mounted) {
-        var bloc = BlocProvider.of<AccountBloc>(context);
+        var bloc = accountBloc;
         bloc.account!.map["tribe"] = Tribe(result["tribe"]);
         bloc.add(SetAccount(account: bloc.account!));
       }

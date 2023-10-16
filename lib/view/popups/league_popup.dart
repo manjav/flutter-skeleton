@@ -32,7 +32,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
 
   @override
   void initState() {
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     selectedTabIndex = 0;
     super.initState();
   }
@@ -258,7 +258,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
   _loadLeagueHistory([int round = 1]) async {
     try {
       var data = await rpc(RpcId.leagueHistory,
-              params: {RpcParams.rounds.name: "[$round]"});
+          params: {RpcParams.rounds.name: "[$round]"});
       _leagueHistory =
           LeagueHistory.init(data, round, _account.get<int>(AccountField.id));
       setState(() {});

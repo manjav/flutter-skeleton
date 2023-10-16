@@ -30,7 +30,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
   @override
   void initState() {
     selectedTabIndex = 0;
-    _account = BlocProvider.of<AccountBloc>(context).account!;
+    _account = accountBloc.account!;
     if (Ranks.lists.isEmpty) {
       Ranks.lists.addAll({
         RpcId.rankingGlobal: null,

@@ -3,10 +3,8 @@
 //         -=-=-=-    Fruit    -=-=-=-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/service_provider.dart';
@@ -245,7 +243,7 @@ class AccountCard extends AbstractCard {
       lastUsedAt = 0;
       account.update(data);
       if (context.mounted) {
-        BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+        getAccountBloc(context).add(SetAccount(account: account));
       }
     } on RpcException catch (e) {
       if (e.statusCode == StatusCode.C178_COOL_ENOUGH) {
@@ -309,7 +307,7 @@ class AccountCard extends AbstractCard {
   }
 }
 
-class HeroCard {
+class HeroCard with ServiceProvider {
   static const attributeMultiplier = 2;
   static const benefitModifier = 0.01;
   static const benefit_BlessingMaxMultiplier = 4.0;
@@ -380,12 +378,11 @@ class HeroCard {
       params[RpcParams.potion.name] = value;
     }
     try {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
+      var data = await getService<HttpConnection>(context)
           .tryRpc(context, RpcId.potionize, params: params);
       if (!context.mounted) return;
       data["hero_id"] = card.id;
-      var accountBloc = BlocProvider.of<AccountBloc>(context);
+      var accountBloc = getAccountBloc(context);
       accountBloc.account!.update(data);
       accountBloc.add(SetAccount(account: accountBloc.account!));
     } finally {}
