@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/core/rpc_data.dart';
+import '../../services/inbox.dart';
 import '../data/core/result.dart';
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
@@ -33,6 +34,7 @@ enum ServiceType {
   games,
   connection,
   device,
+  inbox,
   localization,
   prefs,
   sounds,
@@ -78,6 +80,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       Games => ServiceType.games,
       HttpConnection => ServiceType.connection,
       DeviceInfo => ServiceType.device,
+      Inbox => ServiceType.inbox,
       Localization => ServiceType.localization,
       Prefs => ServiceType.prefs,
       Sounds => ServiceType.sounds,
@@ -99,10 +102,11 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.ads] = Ads();
     _map[ServiceType.games] = Games();
     _map[ServiceType.connection] = HttpConnection();
-    _map[ServiceType.socket] = NoobSocket();
     _map[ServiceType.device] = DeviceInfo();
+    _map[ServiceType.inbox] = Inbox();
     _map[ServiceType.localization] = Localization();
     _map[ServiceType.prefs] = Prefs();
+    _map[ServiceType.socket] = NoobSocket();
     _map[ServiceType.sounds] = Sounds();
     _map[ServiceType.themes] = Themes();
     _map[ServiceType.trackers] = Trackers(firebaseAnalytics);
@@ -131,6 +135,11 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       if (context.mounted) {
         var opponents = BlocProvider.of<OpponentsBloc>(context);
         _map[ServiceType.socket]!.initialize(args: [data.account, opponents]);
+      }
+
+      // Initialize inbox
+      if (context.mounted) {
+        _map[ServiceType.inbox]!.initialize(args: [context, data.account]);
       }
     } on RpcException catch (e) {
       if (context.mounted) {

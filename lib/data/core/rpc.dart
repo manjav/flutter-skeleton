@@ -8,6 +8,7 @@ enum RpcId {
   witdraw,
   fillPotion,
   redeemGift,
+  messages,
 
   // Card
   coolOff,
@@ -30,9 +31,6 @@ enum RpcId {
   triggerAbility,
   joinBattle,
 
-  // Building
-  upgrade,
-
   // Ranking
   rankingGlobal,
   rankingExpertTribes,
@@ -46,6 +44,7 @@ enum RpcId {
   buyCardPack,
 
   //Tribe
+  upgrade,
   tribeSearch,
   tribeCreate,
   tribeEdit,
@@ -97,7 +96,7 @@ extension RpcIdEx on RpcId {
       RpcId.witdraw => "player/withdrawfrombank",
       RpcId.fillPotion => "player/fillpotion",
       RpcId.redeemGift => "player/redeemgift",
-      RpcId.upgrade => "tribe/upgrade",
+      RpcId.messages => "message/systemmessages",
       RpcId.rankingGlobal => "ranking/global",
       RpcId.rankingExpertTribes => "ranking/tribe",
       RpcId.rankingTopTribes => "ranking/tribebasedonseed",
@@ -108,6 +107,7 @@ extension RpcIdEx on RpcId {
       RpcId.buyCardPack => "store/buycardpack",
       RpcId.tribeSearch => "tribe/find",
       RpcId.tribeCreate => "tribe/create",
+      RpcId.upgrade => "tribe/upgrade",
       RpcId.tribeEdit => "tribe/edit",
       RpcId.tribeMembers => "tribe/members",
       RpcId.tribeInvite => "tribe/invite",
