@@ -25,6 +25,7 @@ class NoobSocket extends IService {
   late Account _account;
   late OpponentsBloc _opponents;
   int _lastMessageReceiveTime = 0;
+  String _messageStream = "";
 
   String get _secret => "floatint201412bool23string";
   bool get isConnected =>
@@ -50,26 +51,33 @@ class NoobSocket extends IService {
 
   void _messageReceived(String message) {
     _lastMessageReceiveTime = DateTime.now().secondsSinceEpoch;
-    _decodeMessage(message);
+    _messageStream += message;
+    _decodeMessage();
   }
 
-  void _decodeMessage(String message) {
-    var startIndex = message.indexOf("__JSON__START__");
-    var endIndex = message.indexOf("__JSON__END__");
+  void _decodeMessage() {
+    var startIndex = _messageStream.indexOf("__JSON__START__");
+    var endIndex = _messageStream.indexOf("__JSON__END__");
     if (startIndex < 0 || endIndex < 0) {
       return;
     }
+    try {
     var b64 = utf8.fuse(base64);
-    var trimmedMessage = message.substring(startIndex + 15, endIndex);
+      var trimmedMessage = _messageStream.substring(startIndex + 15, endIndex);
     trimmedMessage = b64.decode(trimmedMessage.xorDecrypt(secret: _secret));
-    print(trimmedMessage);
+
     var noobMessage = NoobMessage.getProperMessage(
         _account, jsonDecode(trimmedMessage), _tribe);
+      if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
     _updateStatus(noobMessage);
     for (var method in onReceive) {
       method.call(noobMessage);
     }
-    _decodeMessage(message.substring(endIndex + 12));
+      _messageStream = _messageStream.substring(endIndex + 12);
+      _decodeMessage();
+    } catch (e) {
+      log(e);
+    }
   }
 
   void _run(NoobCommand command, String message) {
