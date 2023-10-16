@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
+import '../../data/core/message.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/noob_socket.dart';
@@ -232,6 +233,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         valueListenable: tribe.chat,
         builder: (context, value, child) {
           _scrollDown(delay: 10);
+          tribe.chat.value.sort((a, b) => b.creationDate - a.creationDate);
           return Expanded(
               child: ListView.builder(
                   reverse: true,
@@ -249,6 +251,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   _chatItemRenderer(Account account, Tribe tribe, NoobChatMessage message,
       TextStyle titleStyle, int now) {
+    if (message.messageType != Messages.text) return _logItemRenderer(message);
     var padding = 120.d;
     var avatar = Widgets.rect(
         width: padding,
@@ -292,6 +295,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     ]);
   }
 
+  Widget _logItemRenderer(NoobChatMessage message) {
+    return Padding(
+        padding: EdgeInsets.only(bottom: 64.d),
+        child: SkinnedText(message.text));
+  }
+
   void _onChatItemTap(Account account, Tribe tribe, TapUpDetails details,
       NoobChatMessage message) {
     var options = <ChatOptions>[];
@@ -323,9 +332,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     if (!_scrollController.position.hasPixels ||
         _scrollController.position.pixels <= 0) return;
     await Future.delayed(Duration(milliseconds: delay));
-    await _scrollController.animateTo(0,
-        duration: Duration(milliseconds: duration),
-        curve: Curves.fastOutSlowIn);
+    // await _scrollController.animateTo(0,
+    // duration: Duration(milliseconds: duration),
+    // curve: Curves.fastOutSlowIn);
   }
 
   Widget _inputView(Account account, Tribe tribe) {

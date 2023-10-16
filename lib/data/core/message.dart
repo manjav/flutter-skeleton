@@ -1,3 +1,6 @@
+import '../../data/core/tribe.dart';
+import '../../services/connection/noob_socket.dart';
+import '../../services/localization.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
 
@@ -21,6 +24,20 @@ enum Messages {
   leagueWinMessage, //16
   attackLose2, //17
 }
+
+extension MessagesExtenstion on Messages {
+  bool get inTribe => switch (this) {
+        Messages.joinTribeRequest ||
+        Messages.promote ||
+        Messages.demote ||
+        Messages.newMember ||
+        Messages.donate ||
+        Messages.kick =>
+          true,
+        _ => false,
+      };
+}
+
 class Message {
   List<int> intData = [];
   Messages type = Messages.none;
@@ -36,6 +53,25 @@ class Message {
     metadata = map["strmetadata"];
     senderId = map["sender_id"];
     text = map["text"];
+    if (type.inTribe) {
+      var tribe = account.get<Tribe?>(AccountField.tribe);
+      if (tribe != null) {
+        map["messageType"] = map["message_type"];
+        map["creationDate"] = map["created_at"];
+        var chat = NoobChatMessage(map, account);
+        chat.text = switch (type) {
+          Messages.joinTribeRequest => "message_${type.index}".l([metadata]),
+          Messages.promote => "message_${type.index}".l([text, metadata]),
+          Messages.demote => "message_${type.index}".l([text, metadata]),
+          Messages.newMember => "message_${type.index}".l([metadata]),
+          Messages.donate =>
+            "message_${type.index}".l([metadata, intData[1].compact()]),
+          Messages.kick => "message_${type.index}".l([text, metadata]),
+          _ => "message_${type.index}".l(),
+        };
+        tribe.chat.add(chat);
+      }
+    }
   }
 
   static List<Message> initAll(List list, Account account) {
