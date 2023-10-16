@@ -242,14 +242,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                       account,
                       tribe,
                       tribe.chat.value[tribe.chat.length - i - 1],
-                      i,
                       titleStyle,
                       now)));
         });
   }
 
   _chatItemRenderer(Account account, Tribe tribe, NoobChatMessage message,
-      int index, TextStyle titleStyle, int now) {
+      TextStyle titleStyle, int now) {
     var padding = 120.d;
     var avatar = Widgets.rect(
         width: padding,
