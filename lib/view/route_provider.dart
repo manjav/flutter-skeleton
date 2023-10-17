@@ -14,6 +14,7 @@ import 'popups/card_upgrade_popup.dart';
 import 'popups/combo_popup.dart';
 import 'popups/gift_popup.dart';
 import 'popups/hero_popup.dart';
+import 'popups/inbox_popup.dart';
 import 'popups/invite_popup.dart';
 import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
@@ -62,6 +63,7 @@ enum Routes {
   popupPotion,
   popupCombo,
   popupHero,
+  popupInbox,
   popupSettings,
   popupRestore,
   popupInvite,
@@ -72,7 +74,7 @@ enum Routes {
   popupTribeEdit,
   popupTribeDonate,
   popupCardSelectType,
-  popupCardSelectCategory, 
+  popupCardSelectCategory,
 }
 
 extension RouteProvider on Routes {
@@ -101,6 +103,7 @@ extension RouteProvider on Routes {
       "/popupPotion" => PotionPopup(),
       "/popupCombo" => ComboPopup(),
       "/popupHero" => HeroPopup(),
+      "/popupInbox" => InboxPopup(),
       "/popupSettings" => SettingsPopup(),
       "/popupRestore" => RestorePopup(),
       "/popupInvite" => InvitePopup(),
@@ -130,6 +133,7 @@ extension RouteProvider on Routes {
       "/popupPotion" ||
       "/popupCombo" ||
       "/popupHero" ||
+      "/popupInbox" ||
       "/popupSettings" ||
       "/popupRestore" ||
       "/popupInvite" ||

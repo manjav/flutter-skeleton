@@ -284,6 +284,7 @@
     "message_5_0": "%s attacked you and you lost.",
     "message_5_1": "Terrible news! %s attacked you and your army was crushed!",
     "message_5_2": "No way! You just lost a battle against %s!",
+    "message_6": "%s  has poked you!",
     "message_10": "%s  promoted by  %s .",
     "message_11": "%s  demoted by  %s .",
     "message_13": "%s  has joined.",

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../../utils/ilogger.dart';
@@ -13,6 +14,9 @@ class Localization extends IService {
   var isRTL = false;
 
   Localization();
+
+  get columnAlign => isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+  get rowAlign => isRTL ? MainAxisAlignment.end : MainAxisAlignment.start;
 
   @override
   initialize({List<Object>? args}) async {

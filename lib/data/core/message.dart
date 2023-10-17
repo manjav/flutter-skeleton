@@ -28,16 +28,19 @@ enum Messages {
   kick, //15,
   leagueWinMessage, //16
   attackLose2, //17
+  pin, //18
 }
 
 extension MessagesExtenstion on Messages {
   bool get inTribe => switch (this) {
         Messages.joinTribeRequest ||
+        Messages.poke ||
         Messages.promote ||
         Messages.demote ||
         Messages.newMember ||
         Messages.donate ||
-        Messages.kick =>
+        Messages.kick ||
+        Messages.pin =>
           true,
         _ => false,
       };
