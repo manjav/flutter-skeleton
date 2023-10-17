@@ -53,26 +53,37 @@ class Message {
     intData.add(Utils.toInt(map["intmetadata2"]));
     metadata = map["strmetadata"];
     senderId = map["sender_id"];
-    text = map["text"];
-    if (type.inTribe) {
-      var tribe = account.get<Tribe?>(AccountField.tribe);
-      if (tribe != null) {
-        map["messageType"] = map["message_type"];
-        map["creationDate"] = map["created_at"];
-        var chat = NoobChatMessage(map, account);
-        tribe.chat.add(chat);
-      }
-    }
     text = map["text"].isNotEmpty ? map["text"] : map["text_fa"];
   }
 
   static List<Message> initAll(List list, Account account) {
     var result = <Message>[];
     for (var map in list) {
-      result.add(Message(map, account));
+      var message = Message(map, account);
+      if (message.type.inTribe) {
+        var tribe = account.get<Tribe?>(AccountField.tribe);
+        if (tribe != null) {
+          _addtoTribe(tribe, message, map, account);
+        }
+      } else {
+        result.add(message);
+      }
     }
     return result;
   }
+
+  static void _addtoTribe(
+      Tribe tribe, Message message, Map<String, dynamic> map, Account account) {
+    var index = tribe.chat.value.indexWhere((chat) => chat.id == map["id"]);
+    if (index >= 0) return;
+    map["messageType"] = map["message_type"];
+    map["creationDate"] = map["created_at"];
+    var chat = NoobChatMessage(map, account);
+    chat.text = message.getText();
+    chat.base = message;
+    tribe.chat.add(chat);
+  }
+
   String getText() {
     return switch (type) {
       Messages.text => text,
