@@ -1,8 +1,13 @@
+import 'package:flutter/material.dart';
+
 import '../../data/core/tribe.dart';
+import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/localization.dart';
+import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
+import 'rpc.dart';
 
 enum Messages {
   none,
@@ -36,9 +41,15 @@ extension MessagesExtenstion on Messages {
           true,
         _ => false,
       };
+  bool get isConfirm {
+    return switch (this) {
+      Messages.joinTribeRequest || Messages.inviteTribeRequest => true,
+      _ => false,
+    };
+  }
 }
 
-class Message {
+class Message with ServiceProvider {
   List<int> intData = [];
   Messages type = Messages.none;
   String text = "", metadata = "";
@@ -106,4 +117,19 @@ class Message {
     };
   }
 
+  dynamic decideTribeRequest(BuildContext context, int tribeId, bool isAccept,
+    try {
+      var params = {
+        "req_id": id,
+        "tribe_id": tribeId,
+        "decision": isAccept ? "approve" : "reject"
+      };
+      var data = await getService<HttpConnection>(context).tryRpc(context,
+          requesterId != null ? RpcId.tribeDecideJoin : RpcId.tribeDecideInvite,
+          params: params);
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
 }
