@@ -48,6 +48,13 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupRanking.routeName))),
+        Positioned(
+            top: 150.d,
+            right: 24.d,
+            child: Widgets.button(
+                child: Asset.load<Image>("icon_notifications", width: 60.d),
+                onPressed: () =>
+                    Navigator.pushNamed(context, Routes.popupInbox.routeName))),
         _building(state.account, buildings[Buildings.defense]!, 400, 300),
         _building(state.account, buildings[Buildings.offense]!, 95, 670),
         _building(state.account, buildings[Buildings.base]!, 400, 840),
