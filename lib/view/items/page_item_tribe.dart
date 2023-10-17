@@ -268,7 +268,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         padding: EdgeInsets.all(6.d),
         decoration:
             Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
-        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId + 1}",
+        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId}",
             width: 76.d, height: 76.d, subFolder: "avatars"));
     return Column(children: [
       Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
