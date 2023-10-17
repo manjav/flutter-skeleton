@@ -9,6 +9,7 @@ import '../../data/core/ranking.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/inbox.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
@@ -229,6 +230,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   _chatList(Account account, Tribe tribe) {
     var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
     var now = DateTime.now().secondsSinceEpoch;
+
+    // Initialize inbox
+    getService<Inbox>().initialize(args: [context, account]);
+
     return ValueListenableBuilder<List<NoobChatMessage>>(
         valueListenable: tribe.chat,
         builder: (context, value, child) {

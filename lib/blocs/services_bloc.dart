@@ -136,11 +136,6 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
         var opponents = BlocProvider.of<OpponentsBloc>(context);
         _map[ServiceType.socket]!.initialize(args: [data.account, opponents]);
       }
-
-      // Initialize inbox
-      if (context.mounted) {
-        _map[ServiceType.inbox]!.initialize(args: [context, data.account]);
-      }
     } on RpcException catch (e) {
       if (context.mounted) {
         BlocProvider.of<ServicesBloc>(context)
