@@ -230,7 +230,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         child: Widgets.rect(
             alignment: Alignment.center,
             decoration: Widgets.imageDecore(
-                "ui_popup_group", ImageCenterSliceData(144, 144)),
+                "ui_popup_group", ImageCenterSliceData(144)),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               SkinnedText(title),

@@ -294,7 +294,7 @@ class Widgets {
         child: TextField(
             maxLines: maxLines,
             autofocus: autofocus,
-            maxLength: maxLength,
+            maxLength: maxLength == 1 ? null : maxLength,
             controller: controller,
             style: style,
             textAlign: TextAlign.center,

@@ -53,14 +53,17 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         SkinnedText("name_l".l()),
         Widgets.skinnedInput(
-            maxLength: 30, controller: _nameController, width: 650.d),
+            maxLines: 1,
+            maxLength: 30,
+            controller: _nameController,
+            width: 650.d),
       ]),
       SizedBox(height: 20.d),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         SkinnedText("description_l".l()),
         Widgets.skinnedInput(
-            width: 650.d,
             maxLines: 4,
+            width: 650.d,
             maxLength: 155,
             controller: _descriptionController),
       ]),
