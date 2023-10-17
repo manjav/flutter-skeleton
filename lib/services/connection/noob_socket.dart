@@ -47,7 +47,7 @@ class NoobSocket extends IService {
     // _socketConnection.enableConsolePrint(true);
     await _socketConnection.connect(500, _messageReceived, attempts: 3);
     subscribe("user${_account.get(AccountField.id)}");
-    subscribe("tribe${_account.get(AccountField.tribe).id}");
+    if (_tribe != null) subscribe("tribe${_tribe?.id}");
   }
 
   void _messageReceived(String message) {
@@ -223,6 +223,7 @@ class NoobHelpMessage extends NoobMessage {
 // battle_id = self.battle_id,
 // mainEnemy = mainEnemyID ,
 class NoobChatMessage extends NoobMessage {
+  Message? base;
   bool itsMe = false;
   double timestamp = 0.0;
   String sender = "", text = "";
