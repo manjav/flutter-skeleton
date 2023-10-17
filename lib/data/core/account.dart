@@ -194,10 +194,7 @@ class Account extends StringMap<dynamic> {
     _addBuilding(Buildings.treasury, map['bank_building_level']);
 
     // Tribe
-    if (map["tribe"] != null) {
-      map['tribe'] = Tribe(map['tribe']);
-      installTribe(map['tribe']);
-    }
+    installTribe(map['tribe']);
 
     // Heroes
     map['base_heroitems'] = loadingData.baseHeroItems;
@@ -317,7 +314,9 @@ class Account extends StringMap<dynamic> {
         args: {"account": this, "cards": cards});
   }
 
-  void installTribe(Tribe tribe) {
+  void installTribe(dynamic data) {
+    if (data == null) return;
+    var tribe = map['tribe'] = Tribe(data);
     var types = [
       Buildings.base,
       Buildings.cards,

@@ -131,4 +131,9 @@ class ChatNotifier extends ValueNotifier<List<NoobChatMessage>> {
     value.add(message);
     notifyListeners();
   }
+
+  void remove(NoobChatMessage message) {
+    value.remove(message);
+    notifyListeners();
+  }
 }

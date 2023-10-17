@@ -256,6 +256,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   _chatItemRenderer(Account account, Tribe tribe, NoobChatMessage message,
       TextStyle titleStyle, int now) {
+    if (message.messageType.isConfirm) {
+      return _confirmItemRenderer(tribe, message);
+    }
     if (message.messageType != Messages.text) return _logItemRenderer(message);
     var padding = 120.d;
     var avatar = Widgets.rect(
@@ -298,6 +301,34 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       ]),
       SizedBox(height: 20.d)
     ]);
+  }
+
+  Widget _confirmItemRenderer(Tribe tribe, NoobChatMessage message) {
+    var padding = EdgeInsets.fromLTRB(32.d, 12.d, 32.d, 32.d);
+    return Widgets.rect(
+        margin: EdgeInsets.only(bottom: 48.d),
+        padding: EdgeInsets.fromLTRB(32.d, 26.d, 16.d, 16.d),
+        decoration:
+            Widgets.imageDecore("ui_popup_group", ImageCenterSliceData(144)),
+        child: Column(
+            crossAxisAlignment: getService<Localization>().columnAlign,
+            children: [
+              Text(message.text),
+              SizedBox(height: 16.d),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Widgets.skinnedButton(
+                    padding: padding,
+                    label: "reject_l".l(),
+                    color: ButtonColor.yellow,
+                    onPressed: () => _decide(tribe, message, false)),
+                SizedBox(width: 24.d),
+                Widgets.skinnedButton(
+                    padding: padding,
+                    label: "accept_l".l(),
+                    color: ButtonColor.green,
+                    onPressed: () => _decide(tribe, message, true)),
+              ])
+            ]));
   }
 
   Widget _logItemRenderer(NoobChatMessage message) {
@@ -371,5 +402,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     FocusManager.instance.primaryFocus?.unfocus();
     await tribe.sendMessage(context, account, _inputController.text);
     _inputController.text = "";
+  }
+
+  _decide(Tribe tribe, NoobChatMessage message, bool isAccept) async {
+    var data = await message.base?.decideTribeRequest(
+        context, message.base!.intData[0], isAccept, message.base!.intData[1]);
+    if (data != null) {
+      tribe.chat.remove(message);
+    }
   }
 }

@@ -29,6 +29,8 @@ enum Messages {
   leagueWinMessage, //16
   attackLose2, //17
   pin, //18
+  unknown2, //19
+  unknown3, //20
 }
 
 extension MessagesExtenstion on Messages {
@@ -121,12 +123,14 @@ class Message with ServiceProvider {
   }
 
   dynamic decideTribeRequest(BuildContext context, int tribeId, bool isAccept,
+      [int? requesterId]) async {
     try {
       var params = {
         "req_id": id,
         "tribe_id": tribeId,
         "decision": isAccept ? "approve" : "reject"
       };
+      if (requesterId != null) params["new_member_id"] = requesterId;
       var data = await getService<HttpConnection>(context).tryRpc(context,
           requesterId != null ? RpcId.tribeDecideJoin : RpcId.tribeDecideInvite,
           params: params);
