@@ -148,10 +148,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                 if (index == 3) {
                   var input =
                       controller.findInput<double>("level") as SMINumber;
-                  input.value = account
-                      .get<Tribe>(AccountField.tribe)
-                      .levels[Buildings.base.id]!
-                      .toDouble();
+                  var tribe = account.get<Tribe?>(AccountField.tribe);
+                  input.value = tribe != null
+                      ? tribe.levels[Buildings.base.id]!.toDouble()
+                      : 0.0;
                 }
                 artboard.addController(controller);
               },
