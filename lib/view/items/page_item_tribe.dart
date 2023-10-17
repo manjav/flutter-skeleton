@@ -238,7 +238,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         valueListenable: tribe.chat,
         builder: (context, value, child) {
           _scrollDown(delay: 10);
-          tribe.chat.value.sort((a, b) => b.creationDate - a.creationDate);
+          tribe.chat.value.sort((a, b) => a.creationDate - b.creationDate);
           return Expanded(
               child: ListView.builder(
                   reverse: true,
@@ -365,12 +365,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   }
 
   _scrollDown({int duration = 500, int delay = 0}) async {
-    if (!_scrollController.position.hasPixels ||
+    if (_scrollController.positions.isEmpty ||
         _scrollController.position.pixels <= 0) return;
     await Future.delayed(Duration(milliseconds: delay));
-    // await _scrollController.animateTo(0,
-    // duration: Duration(milliseconds: duration),
-    // curve: Curves.fastOutSlowIn);
+    await _scrollController.animateTo(0,
+        duration: Duration(milliseconds: duration),
+        curve: Curves.fastOutSlowIn);
   }
 
   Widget _inputView(Account account, Tribe tribe) {
