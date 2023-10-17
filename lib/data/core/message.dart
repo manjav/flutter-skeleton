@@ -46,6 +46,7 @@ class Message {
 
   Message(Map<String, dynamic> map, Account account) {
     id = map["id"];
+    senderId = map["sender_id"];
     createdAt = map["created_at"];
     type = Messages.values[map["message_type"]];
     intData.add(Utils.toInt(map["intmetadata1"]));
@@ -59,19 +60,10 @@ class Message {
         map["messageType"] = map["message_type"];
         map["creationDate"] = map["created_at"];
         var chat = NoobChatMessage(map, account);
-        chat.text = switch (type) {
-          Messages.joinTribeRequest => "message_${type.index}".l([metadata]),
-          Messages.promote => "message_${type.index}".l([text, metadata]),
-          Messages.demote => "message_${type.index}".l([text, metadata]),
-          Messages.newMember => "message_${type.index}".l([metadata]),
-          Messages.donate =>
-            "message_${type.index}".l([metadata, intData[1].compact()]),
-          Messages.kick => "message_${type.index}".l([text, metadata]),
-          _ => "message_${type.index}".l(),
-        };
         tribe.chat.add(chat);
       }
     }
+    text = map["text"].isNotEmpty ? map["text"] : map["text_fa"];
   }
 
   static List<Message> initAll(List list, Account account) {
@@ -81,4 +73,26 @@ class Message {
     }
     return result;
   }
+  String getText() {
+    return switch (type) {
+      Messages.text => text,
+      Messages.joinTribeRequest => "message_${type.index}".l([metadata]),
+      Messages.joinSucceed => "message_${type.index}".l([metadata]),
+      Messages.inviteTribeRequest => "message_${type.index}".l([metadata]),
+      Messages.attackLose ||
+      Messages.attackLose2 =>
+        "message_5_${id % 3}".l([metadata]),
+      Messages.poke => "message_${type.index}".l([metadata]),
+      Messages.promote => "message_${type.index}".l([text, metadata]),
+      Messages.demote => "message_${type.index}".l([text, metadata]),
+      Messages.inviteAcceptMessage => "message_${type.index}".l([metadata]),
+      Messages.newMember => "message_${type.index}".l([metadata]),
+      Messages.donate =>
+        "message_${type.index}".l([metadata, intData[1].compact()]),
+      Messages.kick => "message_${type.index}".l([text, metadata]),
+      Messages.pin => "message_${type.index}".l([text]),
+      _ => "message_${type.index}".l(),
+    };
+  }
+
 }
