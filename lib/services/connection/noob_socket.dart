@@ -132,7 +132,7 @@ enum Noobs {
   none,
   playerStatus,
   deployCard,
-  battleFinished,
+  battleEnd,
   heroAbility,
   help,
   chat,
@@ -148,7 +148,7 @@ class NoobMessage {
       "battle_update" => NoobCardMessage(account, map),
       "battle_hero_ability" => NoobAbilityMessage(map),
       "battle_help" => NoobHelpMessage(map),
-      "battle_finished" => NoobFineMessage(map),
+      "battle_finished" => NoobEndBattleMessage(map, account),
       "chat" => NoobChatMessage(map, account),
       _ => NoobMessage(Noobs.none, map),
     };
@@ -242,11 +242,12 @@ class NoobChatMessage extends NoobMessage {
   }
 }
 
-class NoobFineMessage extends NoobMessage {
+class NoobEndBattleMessage extends NoobMessage {
   int winnerScore = 0, loserScore = 0, winnerId = 0, loserId = 0;
   String winnerTribe = "", loserTribe = "";
   List<dynamic> opponentsInfo = [];
-  NoobFineMessage(Map<String, dynamic> map) : super(Noobs.battleFinished, map) {
+  NoobEndBattleMessage(Map<String, dynamic> map, Account account)
+      : super(Noobs.battleEnd, map) {
     var result = map["result"];
     winnerScore = result["winner_added_score"];
     loserScore = result["loser_added_score"];

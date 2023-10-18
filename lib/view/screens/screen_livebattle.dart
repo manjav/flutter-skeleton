@@ -256,7 +256,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       Noobs.deployCard => _handleCardMessage(message as NoobCardMessage),
       Noobs.heroAbility => _handleAbilityMessage(message as NoobAbilityMessage),
       Noobs.help => _handleHelpMessage(message as NoobHelpMessage),
-      Noobs.battleFinished => _handleFineMessage(message as NoobFineMessage),
+      Noobs.battleEnd => _handleEndingMessage(message as NoobEndBattleMessage),
       _ => debugPrint(message.type.toString())
     };
   }
@@ -319,7 +319,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     debugPrint(message.toString());
   }
 
-  void _handleFineMessage(NoobFineMessage message) {
+  void _handleEndingMessage(NoobEndBattleMessage message) {
     for (var info in message.opponentsInfo) {
       var oppo = _opponents[info["id"]]!;
       oppo.addResult(info);
