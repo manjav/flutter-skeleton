@@ -8,7 +8,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../../services/localization.dart';
+import '../data/core/account.dart';
+import '../services/iservices.dart';
+import '../services/localization.dart';
 import '../utils/ilogger.dart';
 
 class LocalNotification extends IService {
@@ -29,9 +31,7 @@ class LocalNotification extends IService {
     const navigationActionId = 'id_3';
     @pragma('vm:entry-point')
     void notificationTapBackground(NotificationResponse notificationResponse) {
-      log('notification(${notificationResponse.id}) action tapped: '
-          '${notificationResponse.actionId} with'
-          ' payload: ${notificationResponse.payload}');
+      log('notification(${notificationResponse.id}) action tapped:  ${notificationResponse.actionId} with payload: ${notificationResponse.payload}');
       if (notificationResponse.input?.isNotEmpty ?? false) {
         log('notification action tapped with input: ${notificationResponse.input}');
       }
@@ -93,7 +93,7 @@ class LocalNotification extends IService {
       // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
     await _requestPermissions();
-    _reminder();
+    skedule(args![0] as Account);
   }
 
   _requestPermissions() async {
@@ -124,7 +124,12 @@ class LocalNotification extends IService {
     }
   }
 
-  _reminder({bool record = false}) async {
+  void skedule(Account account) async {
+    int nextDailyGiftAt = 0, maxCooldown = 0;
+    var reward = account.get(AccountField.daily_reward);
+    if (reward != null) nextDailyGiftAt = reward["next_reward_at"];
+    maxCooldown = account.calculateMaxCooldown();
+
     tz.initializeTimeZones();
     // Set localation
     var now = DateTime.now();
@@ -157,6 +162,12 @@ class LocalNotification extends IService {
     }
     for (var d = 10; d < 22; d += 3) {
       messages.add(_MSG("${_r(d)}", _getTime(d * 24 * hourSeconds)));
+    }
+    if (maxCooldown > 0) {
+      messages.add(_MSG("cooldown", _getTime(maxCooldown)));
+    }
+    if (nextDailyGiftAt > 0) {
+      messages.add(_MSG("daily", _getTime(nextDailyGiftAt)));
     }
     if (sleep.millisecondsSinceEpoch > now.millisecondsSinceEpoch) {
       messages.add(_MSG("sleep", sleep));
