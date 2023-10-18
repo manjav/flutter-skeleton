@@ -187,11 +187,6 @@ class Widgets {
     Function()? onDisablePressed,
     BoxConstraints? constraints,
   }) {
-    var slicingData = switch (size) {
-      ButtonSize.small =>
-        ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 2, 46)),
-      _ => ImageCenterSliceData(130, 158, const Rect.fromLTWH(64, 50, 2, 58)),
-    };
     if (!isEnable) {
       color = ButtonColor.gray;
     }
@@ -204,8 +199,7 @@ class Widgets {
         constraints: constraints,
         margin: margin,
         padding: padding ?? EdgeInsets.fromLTRB(28.d, 25.d, 28.d, 40.d),
-        decoration:
-            imageDecore("ui_button_${size.name}_${color.name}", slicingData),
+        decoration: buttonDecore(color, size),
         child: Opacity(
             opacity: isEnable ? 1 : 0.7,
             child: label != null || icon != null
@@ -219,6 +213,15 @@ class Widgets {
                         : SkinnedText(label, style: TStyles.large),
                   ])
                 : child!));
+  }
+
+  static buttonDecore(ButtonColor color, ButtonSize size) {
+    var slicingData = switch (size) {
+      ButtonSize.small =>
+        ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 2, 46)),
+      _ => ImageCenterSliceData(130, 158, const Rect.fromLTWH(64, 50, 2, 58)),
+    };
+    return imageDecore("ui_button_${size.name}_${color.name}", slicingData);
   }
 
   static divider(

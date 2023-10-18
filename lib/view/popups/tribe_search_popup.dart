@@ -111,18 +111,16 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
                   textDirection: tribe.description.getDirection(),
                   style: TStyles.medium.copyWith(height: 1))),
           SizedBox(width: 12.d),
-          IgnorePointer(
-              ignoring: true,
-              child: Widgets.skinnedButton(
-                  height: 120.d,
-                  width: 210.d,
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 24.d),
-                  color:
-                      tribe.status == 1 ? ButtonColor.teal : ButtonColor.green,
-                  child: SkinnedText(
-                      textAlign: TextAlign.center,
-                      style: TStyles.medium.copyWith(height: 1),
-                      tribe.status == 1 ? "join_l".l() : "request_l".l())))
+          Widgets.rect(
+              height: 120.d,
+              width: 210.d,
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 24.d),
+              decoration: Widgets.buttonDecore(
+                  tribe.status == 1 ? ButtonColor.teal : ButtonColor.green),
+              child: SkinnedText(
+                  textAlign: TextAlign.center,
+                  style: TStyles.medium.copyWith(height: 1),
+                  tribe.status == 1 ? "join_l".l() : "request_l".l()))
         ]),
       ]),
       onPressed: () => _join(tribe),
