@@ -117,7 +117,7 @@ class Message with ServiceProvider {
       Messages.donate =>
         "message_${type.index}".l([metadata, intData[1].compact()]),
       Messages.kick => "message_${type.index}".l([text, metadata]),
-      Messages.pin => "message_${type.index}".l([text]),
+      Messages.pin => "message_${type.index}".l(["'${text.truncate(32)}'"]),
       _ => "message_${type.index}".l(),
     };
   }
