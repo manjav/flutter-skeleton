@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/data/core/account.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/core/message.dart';
 import '../../data/core/tribe.dart';
@@ -71,8 +72,15 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
   }
 
   _getConfirmButtons(Message message) {
-    if (!message.type.isConfirm) return SizedBox(height: 22.d);
     var padding = EdgeInsets.fromLTRB(32.d, 12.d, 32.d, 32.d);
+    if (message.type == Messages.text) {
+      return Widgets.skinnedButton(
+          padding: padding,
+          color: ButtonColor.yellow,
+          label: "go_l".l(),
+          onPressed: () => launchUrl(Uri.parse(message.metadata)));
+    }
+    if (!message.type.isConfirm) return SizedBox(height: 22.d);
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
       Widgets.skinnedButton(
           padding: padding,
