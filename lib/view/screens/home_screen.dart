@@ -118,18 +118,16 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget? _pageItemBuilder(BuildContext context, int index) {
-    var name = "home_tab_$index".l();
-    return switch (name) {
-      "shop" => const ShopPageItem(),
-      "cards" => const CardsPageItem(),
-      "battle" => const MainMapPageItem(),
-      "tribe" => const TribePageItem(),
+    return switch (index) {
+      0 => const ShopPageItem(),
+      1 => const CardsPageItem(),
+      2 => const MainMapPageItem(),
+      3 => const TribePageItem(),
       _ => const AuctionPageItem()
     };
   }
 
   Widget? _tabItemBuilder(Account account, int index) {
-    var name = "home_tab_$index".l();
     return Widgets.touchable(
         onTap: () => _selectTap(index, tabsChange: false),
         child: Stack(
@@ -137,7 +135,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           children: [
             LoaderWidget(
               AssetType.animation,
-              "tab_$name",
+              "tab_$index",
               fit: BoxFit.fitWidth,
               onRiveInit: (Artboard artboard) {
                 final controller =
@@ -159,8 +157,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             _selectedTab == index
                 ? Positioned(
                     bottom: 6.d,
-                    child:
-                        SkinnedText(name.toPascalCase(), style: TStyles.small))
+                    child: SkinnedText("home_tab_$index".l().toPascalCase(),
+                        style: TStyles.small))
                 : const SizedBox()
           ],
         ));
