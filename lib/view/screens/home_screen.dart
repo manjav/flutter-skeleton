@@ -59,7 +59,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   List<Widget> appBarElementsLeft() {
     if (_selectedTab != 2) return [];
     return [
-      SizedBox(width: 196.d, height: 200.d, child: const LevelIndicator())
+      SizedBox(
+        width: 196.d,
+        height: 200.d,
+        child: LevelIndicator(
+            onPressed: () =>
+                Navigator.pushNamed(context, Routes.popupProfile.routeName)),
+      )
     ];
   }
 

@@ -16,12 +16,14 @@ class LevelIndicator extends StatefulWidget {
   final int? avatarId;
   final TextAlign align;
   final double size;
+  final Function()? onPressed;
   const LevelIndicator({
     this.size = 75,
     this.xp,
     this.level,
     this.avatarId,
     this.align = TextAlign.left,
+    this.onPressed,
     super.key,
   });
 
@@ -64,11 +66,8 @@ class _LevelIndicatorState extends State<LevelIndicator> {
     var s = widget.size / 200;
     return Widgets.button(
       radius: 54 * s,
-      // color: TColors.clay,
-      //       height: widget.size + 5.d,
-      // padding: EdgeInsets.fromLTRB(22.d, 20.d, 22.d, 26.d),
+      onPressed: widget.onPressed,
       decoration: Widgets.imageDecore("ui_frame_wood_big"),
-
       width: widget.size,
       height: widget.size,
       padding: EdgeInsets.all(28 * s),

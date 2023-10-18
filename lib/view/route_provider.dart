@@ -20,6 +20,7 @@ import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/potion_popup.dart';
+import 'popups/profile_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
 import 'popups/settings_popup.dart';
@@ -64,6 +65,7 @@ enum Routes {
   popupCombo,
   popupHero,
   popupInbox,
+  popupProfile,
   popupSettings,
   popupRestore,
   popupInvite,
@@ -104,6 +106,7 @@ extension RouteProvider on Routes {
       "/popupCombo" => ComboPopup(),
       "/popupHero" => HeroPopup(),
       "/popupInbox" => InboxPopup(),
+      "/popupProfile" => ProfilePopup(),
       "/popupSettings" => SettingsPopup(),
       "/popupRestore" => RestorePopup(),
       "/popupInvite" => InvitePopup(),
