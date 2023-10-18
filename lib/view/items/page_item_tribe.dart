@@ -214,15 +214,16 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         builder: (context, value, child) {
           if (value == null) return const SizedBox();
           return Widgets.rect(
-              margin: EdgeInsets.all(32.d),
-              padding: EdgeInsets.all(64.d),
+              margin: EdgeInsets.fromLTRB(32.d, 16.d, 32.d, 0),
+              padding: EdgeInsets.fromLTRB(32.d, 32.d, 32.d, 44.d),
               decoration: Widgets.imageDecore(
-                  "ui_button_small_wooden",
+                  "tribe_member_bg_me",
                   ImageCenterSliceData(
-                      102, 106, const Rect.fromLTWH(50, 30, 2, 46))),
+                      132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
               child: Row(children: [
+                Asset.load<Image>("icon_pin", width: 50.d),
+                SizedBox(width: 32.d),
                 Expanded(child: Text(value.text)),
-                Asset.load<Image>("icon_pin", width: 50.d)
               ]));
         });
   }
