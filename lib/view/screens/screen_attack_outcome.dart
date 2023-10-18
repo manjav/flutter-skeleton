@@ -231,12 +231,12 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
         ]));
   }
 
-  Widget? _benefitItemBuilder(String type, dynamic value) {
+  Widget? _benefitItemBuilder(String type, int value) {
     return SizedBox(
         height: 76.d,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Asset.load<Image>(type, height: 62.d),
-          SkinnedText("  ${value > 0 ? '+' : ''}$value")
+          SkinnedText("  ${value > 0 ? '+' : ''}${value.compact()}")
         ]));
   }
 }
