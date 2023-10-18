@@ -549,5 +549,13 @@
     "BillingResponse.userCanceled": "User Canceled!",
     "error_unauthenticated": "Connection Timeout.",
     "error_not_found": "Service not found!",
-    "error_internal": "Internal Server Error!"
+    "error_internal": "Internal Server Error!",
+    "notif_0_head": "New Message!",
+    "notif_0_body": "We're being squished! Help!!!",
+    "notif_1_head": "New Message!",
+    "notif_1_body": "An Apple 🍎 a day keeps the doctor away",
+    "notif_2_head": "Play Time",
+    "notif_2_body": "Vitamin C boosts your immune system",
+    "notif_3_head": "Wana forget your troubles?",
+    "notif_3_body": "Welcome back to Fruitcraft!",
 }

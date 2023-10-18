@@ -2,9 +2,9 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_skeleton/services/iservices.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -149,14 +149,14 @@ class LocalNotification extends IService {
     var messages = <_MSG>[];
     const hourSeconds = 3600;
     for (var h = 1; h <= 3; h++) {
-      var title = h == 1 && record ? "record" : "default${_r(h)}";
+      var title = "${_r(h)}";
       messages.add(_MSG(title, _getTime(h * 8 * hourSeconds)));
     }
-    for (var d = 2; d < 7; d++) {
-      messages.add(_MSG("default${_r(d)}", _getTime(d * 24 * hourSeconds)));
+    for (var d = 1; d < 7; d++) {
+      messages.add(_MSG("${_r(d)}", _getTime(d * 24 * hourSeconds)));
     }
     for (var d = 10; d < 22; d += 3) {
-      messages.add(_MSG("default${_r(d)}", _getTime(d * 24 * hourSeconds)));
+      messages.add(_MSG("${_r(d)}", _getTime(d * 24 * hourSeconds)));
     }
     if (sleep.millisecondsSinceEpoch > now.millisecondsSinceEpoch) {
       messages.add(_MSG("sleep", sleep));
@@ -164,18 +164,18 @@ class LocalNotification extends IService {
     messages.add(_MSG("weekend", weekend));
 
     // Schedule
+    var index = 0;
     const details = AndroidNotificationDetails('reminder', 'Reminder');
     await _flutterLocalNotificationsPlugin.cancelAll();
-    var index = 0;
     for (var msg in messages) {
-      var title = "notif_${msg.key}_t".l();
-      var body = "notif_${msg.key}_b".l();
+      var title = "${"notif_${msg.key}_head".l()} ${_getRandomFruit()}";
+      var body = "notif_${msg.key}_body".l();
       await _flutterLocalNotificationsPlugin.zonedSchedule(index, title, body,
           msg.time, const NotificationDetails(android: details),
           // androidAllowWhileIdle: true,
           uiLocalNotificationDateInterpretation:
               UILocalNotificationDateInterpretation.absoluteTime);
-      log("Noti: $msg.key index $index title $title body: $body time ${msg.time}");
+      log("${msg.key} index $index title $title body: $body time ${msg.time}");
       ++index;
     }
   }
@@ -197,7 +197,53 @@ class LocalNotification extends IService {
     }
   }
 
-  static _r(int i) => (i % 6) + 1;
+  static _r(int i) => (i % 4);
+
+  String _getRandomFruit() {
+    var fruits = [
+      "🍓",
+      "🍒",
+      "🍎",
+      "🍉",
+      "🍑",
+      "🍊",
+      "🥭",
+      "🍍",
+      "🍌",
+      "🥥",
+      "🍇",
+      "🫐",
+      "🫒",
+      "🥝",
+      "🍐",
+      "🍏",
+      "🍈",
+      "🍋",
+      "🍅",
+      "🌶️",
+      "🫚",
+      "🥕",
+      "🍠",
+      "🧅",
+      "🌽",
+      "🥦",
+      "🥒",
+      "🌰",
+      "🫘",
+      "🥔",
+      "🧄",
+      "🍆",
+      "🥑",
+      "🫑",
+      "🫛",
+      "🥬"
+    ];
+    var string = "";
+    for (var i = 0; i < 3; i++) {
+      string += fruits[math.Random().nextInt(fruits.length)];
+    }
+    return string;
+  }
 }
 
 class _MSG {
