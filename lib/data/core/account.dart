@@ -266,6 +266,16 @@ class Account extends StringMap<dynamic> {
     return totalPower.floor();
   }
 
+  int calculateMaxCooldown() {
+    var cooldown = 0;
+    var origin = getCards().values.toList();
+    for (var card in origin) {
+      var c = card.getRemainingCooldown();
+      if (c > cooldown) cooldown = c;
+    }
+    return cooldown;
+  }
+
   List<AccountCard> getReadyCards({
     List<Buildings>? exceptions,
     bool removeCooldowns = false,
