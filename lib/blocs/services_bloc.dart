@@ -13,6 +13,7 @@ import '../services/deviceinfo.dart';
 import '../services/games.dart';
 import '../services/iservices.dart';
 import '../services/localization.dart';
+import '../services/local_notification.dart';
 import '../services/prefs.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
@@ -36,6 +37,7 @@ enum ServiceType {
   device,
   inbox,
   localization,
+  localNotification,
   prefs,
   sounds,
   settings,
@@ -82,6 +84,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       DeviceInfo => ServiceType.device,
       Inbox => ServiceType.inbox,
       Localization => ServiceType.localization,
+      LocalNotification() => ServiceType.localNotification,
       Prefs => ServiceType.prefs,
       Sounds => ServiceType.sounds,
       Trackers => ServiceType.trackers,
@@ -105,6 +108,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.device] = DeviceInfo();
     _map[ServiceType.inbox] = Inbox();
     _map[ServiceType.localization] = Localization();
+    _map[ServiceType.localNotification] = LocalNotification();
     _map[ServiceType.prefs] = Prefs();
     _map[ServiceType.socket] = NoobSocket();
     _map[ServiceType.sounds] = Sounds();
@@ -119,6 +123,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     await _map[ServiceType.prefs]!.initialize();
     await _map[ServiceType.localization]!.initialize();
     await _map[ServiceType.trackers]!.initialize();
+    _map[ServiceType.localNotification]!.initialize();
 
     try {
       // Load server data
