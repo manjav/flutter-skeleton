@@ -12,6 +12,7 @@ import '../../data/core/card.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/local_notification.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
@@ -269,6 +270,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     try {
       var data = await rpc(RpcId.quest, params: params);
       account.update(data);
+
+      // Reset reminder notifications ....
+      getService<LocalNotification>().skedule(account);
       if (mounted) {
         accountBloc.add(SetAccount(account: account));
         Navigator.pop(context);

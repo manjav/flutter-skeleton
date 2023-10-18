@@ -11,6 +11,7 @@ import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/local_notification.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/card_holder.dart';
 import '../route_provider.dart';
@@ -335,6 +336,9 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         oppo.tribeName = oppo.won ? message.winnerTribe : message.loserTribe;
       }
     }
+
+    // Reset reminder notifications ....
+    getService<LocalNotification>().skedule(accountBloc.account!);
 
     Navigator.pushNamed(context, Routes.livebattleOut.routeName, arguments: {
       "alliseId": _allies.id,
