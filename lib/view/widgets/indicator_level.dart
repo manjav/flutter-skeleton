@@ -14,16 +14,19 @@ class LevelIndicator extends StatefulWidget {
   final int? xp;
   final int? level;
   final int? avatarId;
+  final bool showLevel;
   final TextAlign align;
   final double size;
   final Function()? onPressed;
+
   const LevelIndicator({
-    this.size = 75,
     this.xp,
     this.level,
     this.avatarId,
-    this.align = TextAlign.left,
+    this.size = 75,
     this.onPressed,
+    this.showLevel = true,
+    this.align = TextAlign.left,
     super.key,
   });
 
@@ -89,13 +92,17 @@ class _LevelIndicatorState extends State<LevelIndicator> {
               margin: EdgeInsets.all(14 * s),
               child: LoaderWidget(AssetType.image, 'avatar_$_avatarId',
                   subFolder: 'avatars')),
-          Positioned(
-              top: -24 * s,
-              left:
-                  widget.align == TextAlign.left ? widget.size - 56 * s : null,
-              right:
-                  widget.align == TextAlign.right ? widget.size - 56 * s : null,
-              child: SkinnedText(_level.toString())),
+          widget.showLevel
+              ? Positioned(
+                  top: -24 * s,
+                  left: widget.align == TextAlign.left
+                      ? widget.size - 56 * s
+                      : null,
+                  right: widget.align == TextAlign.right
+                      ? widget.size - 56 * s
+                      : null,
+                  child: SkinnedText(_level.toString()))
+              : SizedBox(),
         ],
       ),
     );
