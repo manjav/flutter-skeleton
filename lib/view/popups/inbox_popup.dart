@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/data/core/account.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../data/core/account.dart';
 import '../../data/core/message.dart';
 import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';

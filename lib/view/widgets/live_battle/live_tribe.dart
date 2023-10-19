@@ -124,7 +124,7 @@ class _LiveTribeState extends State<LiveTribe>
     if (!_timer.isActive) return;
     _requestSent = true;
     try {
-      await getService<HttpConnection>().tryRpc(context, RpcId.battleHelp,
+      await rpc(RpcId.battleHelp,
           params: {RpcParams.battle_id.name: widget.battleId});
       _timer.cancel();
     } catch (e) {
@@ -135,7 +135,7 @@ class _LiveTribeState extends State<LiveTribe>
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
+    _timer.cancel();
   }
 }
