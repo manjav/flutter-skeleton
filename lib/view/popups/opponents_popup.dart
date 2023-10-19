@@ -66,10 +66,10 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     if ((deltaTime > 30 && _requestsCount % 5 == 0) || deltaTime > 120) {
       var data = await rpc(RpcId.getOpponents);
 
-      var opponents = Opponent.fromMap(data);
+      opponentBloc.list = Opponent.fromMap(data);
       if (mounted) {
         BlocProvider.of<OpponentsBloc>(context)
-            .add(SetOpponents(list: opponents));
+            .add(SetOpponents(list: opponentBloc.list!));
       }
       _fetchAt = _account.now;
     }
