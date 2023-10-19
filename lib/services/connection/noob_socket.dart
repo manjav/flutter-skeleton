@@ -192,6 +192,13 @@ class NoobCardMessage extends NoobMessage {
 
 enum Abilities { none, power, lastUsedAt, blessing }
 
+extension AbilitiesExtrension on Abilities {
+  String get value => switch (this) {
+        Abilities.lastUsedAt => "last_used_at",
+        _ => name,
+      };
+}
+
 class NoobAbilityMessage extends NoobMessage {
   late int teamOwnerId, ownerId, heroId;
   Abilities ability = Abilities.none;
@@ -202,7 +209,7 @@ class NoobAbilityMessage extends NoobMessage {
     teamOwnerId = map["owner_team_id"];
     ability = Abilities.values[map["ability_type"]];
     for (var card in map["hero_benefits_info"]["cards"]) {
-      cards[card["id"]] = card[ability.name];
+      cards[card["id"]] = card[ability.value];
     }
   }
 }
