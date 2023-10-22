@@ -136,6 +136,8 @@ enum Noobs {
   heroAbility,
   help,
   chat,
+  auctionBid,
+  auctionSold,
 }
 
 class NoobMessage {
@@ -150,6 +152,8 @@ class NoobMessage {
       "battle_help" => NoobHelpMessage(map),
       "battle_finished" => NoobEndBattleMessage(map, account),
       "chat" => NoobChatMessage(map, account),
+      "auction_bid" => NoobAuctionMessage(Noobs.auctionBid, map, account),
+      "auction_sold" => NoobAuctionMessage(Noobs.auctionSold, map, account),
       _ => NoobMessage(Noobs.none, map),
     };
     if (message.channel.startsWith("tribe")) {
