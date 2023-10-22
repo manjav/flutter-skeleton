@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../../data/core/ranking.dart';
 import '../../../data/core/rpc.dart';
-import '../../../services/connection/http_connection.dart';
 import '../../../services/deviceinfo.dart';
 import '../../../services/service_provider.dart';
 import '../../../utils/assets.dart';

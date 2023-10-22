@@ -313,9 +313,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   _onItemPressed(ShopItem item) async {
     var params = {RpcParams.type.name: item.id};
     try {
-      var result = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.buyCardPack, params: params);
+      var result = await rpc(RpcId.buyCardPack, params: params);
       result["achieveCards"] = result['cards'];
       result.remove('cards');
       _account.update(result);
