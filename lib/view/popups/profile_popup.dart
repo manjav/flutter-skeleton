@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/data/core/account.dart';
+import '../../view/widgets/indicator_level.dart';
+import '../../view/widgets/skinnedtext.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/message.dart';
+import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
-import '../../services/theme.dart';
-import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
@@ -32,14 +31,14 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
 
   @override
   contentFactory() {
-    var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
-    var now = DateTime.now().secondsSinceEpoch;
+    // var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
+    // var now = DateTime.now().secondsSinceEpoch;
 
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       return SizedBox(
           height: DeviceInfo.size.height * 0.7,
           child: Column(
-            children: [_headerBuilder(state.account)],
+            children: [SizedBox(height: 32.d), _headerBuilder(state.account)],
           ));
     });
   }
@@ -47,6 +46,14 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
   Widget _headerBuilder(Account account) {
     return Widgets.rect(
         decoration: Widgets.buttonDecore(ButtonColor.cream, ButtonSize.small),
-        height: 122);
+        width: 900.d,
+        height: 500.d,
+        child: Stack(clipBehavior: Clip.none, children: [
+          Positioned(
+              top: -48.d,
+              left: 24.d,
+              child: const LevelIndicator(showLevel: false)),
+          SkinnedText(account.get(field))
+        ]));
   }
 }
