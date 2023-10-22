@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../view/widgets/indicator_level.dart';
-import '../../view/widgets/skinnedtext.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/popups/ipopup.dart';
+import '../../view/widgets/indicator_level.dart';
+import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -53,7 +53,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
               top: -48.d,
               left: 24.d,
               child: const LevelIndicator(showLevel: false)),
-          SkinnedText(account.get(field))
+          SkinnedText(account.get(AccountField.name))
         ]));
   }
 }

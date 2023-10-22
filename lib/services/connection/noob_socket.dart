@@ -269,3 +269,11 @@ class NoobEndBattleMessage extends NoobMessage {
     opponentsInfo = map["players_info"].values.toList();
   }
 }
+
+class NoobAuctionMessage extends NoobMessage {
+  late AuctionCard card;
+  NoobAuctionMessage(super.type, super.map, Account account) {
+    card = AuctionCard(account, super.map);
+  }
+}
+

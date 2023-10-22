@@ -102,7 +102,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
                       ? widget.size - 56 * s
                       : null,
                   child: SkinnedText(_level.toString()))
-              : SizedBox(),
+              : const SizedBox(),
         ],
       ),
     );
