@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
@@ -45,33 +46,33 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
       var tribe = state.account.get<Tribe?>(AccountField.tribe);
       if (tribe == null || tribe.id <= 0) {
-        return Column(children: [
-          Expanded(child: TribeSearchPopup()),
-          Widgets.skinnedButton(
-              label: "tribe_new".l(),
-              width: 380.d,
-              onPressed: () async {
-                await Navigator.pushNamed(
-                    context, Routes.popupTribeEdit.routeName);
-                setState(() {});
-              }),
-          SizedBox(height: 200.d),
-        ]);
-      }
-      tribe.loadMembers(context, state.account);
-      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        SizedBox(height: 10.d),
-        _headerBuilder(tribe),
-        _pinnedMessage(state.account, tribe),
-        _chatList(state.account, tribe),
-        SizedBox(height: 32.d),
-        _inputView(state.account, tribe),
-        SizedBox(height: 220.d)
+      return Column(children: [
+        Expanded(child: TribeSearchPopup()),
+        Widgets.skinnedButton(
+            label: "tribe_new".l(),
+            width: 380.d,
+            onPressed: () async {
+              await Navigator.pushNamed(
+                  context, Routes.popupTribeEdit.routeName);
+              setState(() {});
+            }),
+        SizedBox(height: 200.d),
       ]);
+      }
+        tribe.loadMembers(context, state.account);
+        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          SizedBox(height: 10.d),
+          _headerBuilder(state.account, tribe),
+          _pinnedMessage(state.account, tribe),
+          _chatList(state.account, tribe),
+          SizedBox(height: 6.d),
+          _inputView(state.account, tribe),
+          SizedBox(height: 220.d)
+        ]);
     });
   }
 
-  Widget _headerBuilder(Tribe tribe) {
+  Widget _headerBuilder(Account account, Tribe tribe) {
     var margin = 12.d;
     return Stack(children: [
       Positioned(
@@ -92,7 +93,18 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         padding: EdgeInsets.fromLTRB(48.d, 44.d, 48.d, 0),
         child: Column(children: [
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Asset.load<Image>("tribe_icon", width: 120.d),
+            LoaderWidget(AssetType.animation, "tab_3", fit: BoxFit.fitWidth,
+                onRiveInit: (Artboard artboard) {
+              final controller =
+                  StateMachineController.fromArtboard(artboard, "Tab");
+              var input = controller?.findInput<double>("level") as SMINumber;
+              var tribe = account.get<Tribe?>(AccountField.tribe);
+              input.value = tribe != null
+                  ? tribe.levels[Buildings.base.id]!.toDouble()
+                  : 0.0;
+
+              artboard.addController(controller!);
+            }, width: 160.d, height: 160.d),
             SizedBox(width: 16.d),
             _informationBuilder(tribe),
             const Expanded(child: SizedBox()),
