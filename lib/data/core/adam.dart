@@ -34,11 +34,11 @@ class Ranks {
   /// Add factory functions for every Type and every constructor you want to make available to `make`
   static final _factories = <Type, Function>{
     Player: (Map<String, dynamic>? map, int ownerId) =>
-        Player.init(map, ownerId),
+        Player.initialize(map, ownerId),
     TribeRank: (Map<String, dynamic>? map, int ownerId) =>
-        TribeRank.init(map, ownerId),
+        TribeRank.initialize(map, ownerId),
     LeagueRank: (Map<String, dynamic>? map, int ownerId) =>
-        LeagueRank.init(map, ownerId),
+        LeagueRank.initialize(map, ownerId),
   };
 
   static T make<T extends Rank>(Map<String, dynamic>? map, int ownerId) {
@@ -49,10 +49,10 @@ class Ranks {
 }
 
 abstract class Rank {
-  int index = 0, id = 0, rank = 0, score = 0, status = 0;
   String name = "";
   late final bool itsMe;
-  Rank.init(Map<String, dynamic>? map, int ownerId) {
+  int index = 0, id = 0, rank = 0, score = 0, status = 0;
+  Rank.initialize(Map<String, dynamic>? map, int ownerId) {
     if (map == null) return;
     id = map["id"] ?? 0;
     name = map["name"] ?? "";
@@ -62,10 +62,10 @@ abstract class Rank {
 }
 
 class TribeRank extends Rank {
-  int memberCount = 0, weeklyScore = 0, weeklyRank = 0;
   String description = "";
-  TribeRank.init(Map<String, dynamic>? map, int ownerId)
-      : super.init(map, ownerId) {
+  int memberCount = 0, weeklyScore = 0, weeklyRank = 0;
+  TribeRank.initialize(Map<String, dynamic>? map, int ownerId)
+      : super.initialize(map, ownerId) {
     if (map == null) return;
     score = map["score"] ?? 0;
     description = map["description"] ?? "";
@@ -78,8 +78,8 @@ class TribeRank extends Rank {
 class Player extends Rank {
   String tribeName = "";
   int level = 0, tribeId = 0, avatarId = 1;
-  Player.init(Map<String, dynamic>? map, int ownerId)
-      : super.init(map, ownerId) {
+  Player.initialize(Map<String, dynamic>? map, int ownerId)
+      : super.initialize(map, ownerId) {
     if (map == null) return;
     score = map["xp"] ?? 0;
     level = map["level"] ?? 0;
@@ -97,8 +97,8 @@ class Member extends Rank {
   bool pokeStatus = false;
   MemberDegree degree = MemberDegree.none;
 
-  Member.init(Map<String, dynamic>? map, int ownerId)
-      : super.init(map, ownerId) {
+  Member.initialize(Map<String, dynamic>? map, int ownerId)
+      : super.initialize(map, ownerId) {
     if (map == null) return;
     xp = map["xp"] ?? 0;
     gold = map["gold"] ?? 0;
@@ -115,7 +115,7 @@ class Member extends Rank {
   static List<Member> initAll(List list, int ownerId) {
     var result = <Member>[];
     for (var map in list) {
-      result.add(Member.init(map, ownerId));
+      result.add(Member.initialize(map, ownerId));
     }
     return result;
   }
@@ -123,8 +123,8 @@ class Member extends Rank {
 
 class LeagueRank extends Player {
   int weeklyScore = 0;
-  LeagueRank.init(Map<String, dynamic>? map, int ownerId)
-      : super.init(map, ownerId) {
+  LeagueRank.initialize(Map<String, dynamic>? map, int ownerId)
+      : super.initialize(map, ownerId) {
     if (map == null) return;
     rank = map["league_rank"] ?? 0;
     score = map["overall_score"] ?? 0;
@@ -134,7 +134,7 @@ class LeagueRank extends Player {
 
 class LeagueHistory {
   Map<String, List<LeagueRank>> lists = {};
-  LeagueHistory.init(Map<String, dynamic>? map, int round, int ownerId) {
+  LeagueHistory.initialize(Map<String, dynamic>? map, int round, int ownerId) {
     for (var e in map!["player_ranking"]["$round"].entries) {
       lists[e.key] = [];
       var index = 0;
@@ -145,7 +145,7 @@ class LeagueHistory {
         r["id"] = r["player_id"];
         r["league_rank"] = r["rank"] = int.parse(r["rank"]);
         r["weekly_score"] = int.parse(r["weekly_score"]);
-        var rank = LeagueRank.init(r, ownerId);
+        var rank = LeagueRank.initialize(r, ownerId);
         rank.index = index++;
         lists[e.key]!.add(rank);
       }
@@ -172,7 +172,7 @@ class LeagueData {
 
   List<List<int>> winnerRanges = [];
   List<LeagueRank> list = [];
-  LeagueData.init(Map<String, dynamic>? map, int ownerId) {
+  LeagueData.initialize(Map<String, dynamic>? map, int ownerId) {
     if (map == null) return;
     var w = map["winner_ranges"];
     id = w["league_id"];
@@ -226,8 +226,8 @@ class Opponent extends Player {
       powerRatio = 0;
   bool isRevealed = false;
   int todayAttacksCount = 0;
-  Opponent.init(Map<String, dynamic>? map, int ownerId)
-      : super.init(map, ownerId) {
+  Opponent.initialize(Map<String, dynamic>? map, int ownerId)
+      : super.initialize(map, ownerId) {
     if (map == null) return;
     gold = map["gold"] ?? 0;
     status = map["status"] ?? 0;
@@ -245,7 +245,7 @@ class Opponent extends Player {
     var list = <Opponent>[];
     var index = 0;
     for (var player in map["players"]) {
-      var opponent = Opponent.init(player, 0);
+      var opponent = Opponent.initialize(player, 0);
       opponent.index = index++;
       opponent.todayAttacksCount = (_attackLogs["${opponent.id}"] ?? 0);
       list.add(opponent);

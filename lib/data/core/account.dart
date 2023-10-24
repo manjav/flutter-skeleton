@@ -10,7 +10,7 @@ import 'adam.dart';
 import 'rpc_data.dart';
 import 'tribe.dart';
 
-class Account extends DataModel {
+class Account {
   static const Map<String, int> availablityLevels = {
     'ads': 4,
     'name': 4,
@@ -154,10 +154,8 @@ class Account extends DataModel {
 
   int get now => DateTime.now().secondsSinceEpoch + delta_time;
 
-  @override
   void initialize(Map<String, dynamic> map, {dynamic args}) {
     loadingData = args as LoadingData;
-    super.initialize(map, args: args);
     delta_time = map['now'] - DateTime.now().secondsSinceEpoch;
 
     // Integers
@@ -514,7 +512,7 @@ class Account extends DataModel {
   }
 
   Opponent toOpponent() {
-    return Opponent.init({} /*map*/, id);
+    return Opponent.initialize({} /*map*/, id);
   }
 
   int getValue(Values type) => switch (type) {

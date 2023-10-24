@@ -28,10 +28,6 @@ class StringMap<T> {
   }
 }
 
-class DataModel {
-  void initialize(Map<String, dynamic> map, {dynamic args}) {}
-}
-
 enum Values {
   none,
   gold,

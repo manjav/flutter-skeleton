@@ -64,7 +64,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
   _loadLeagueData() async {
     try {
       var data = await rpc(RpcId.league);
-      _leagueData = LeagueData.init(data, _account.id);
+      _leagueData = LeagueData.initialize(data, _account.id);
       setState(() {});
     } finally {}
   }
@@ -256,7 +256,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
     try {
       var data = await rpc(RpcId.leagueHistory,
           params: {RpcParams.rounds.name: "[$round]"});
-      _leagueHistory = LeagueHistory.init(data, round, _account.id);
+      _leagueHistory = LeagueHistory.initialize(data, round, _account.id);
       setState(() {});
     } finally {}
   }

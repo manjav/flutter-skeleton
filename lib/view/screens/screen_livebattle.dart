@@ -66,7 +66,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _account = accountBloc.account!;
     _allies = _account.toOpponent();
     _axis = (widget.args["opponent"] as Opponent?) ??
-        Opponent.init(
+        Opponent.initialize(
             {"level": 10, "xp": 1200, "name": "Test", "tribe_name": "tribe"},
             _allies.id);
 
@@ -271,7 +271,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             fraction,
             cardOwnerId,
             message.teamOwnerId,
-            Opponent.init({"name": message.ownerName}, _allies.id));
+            Opponent.initialize({"name": message.ownerName}, _allies.id));
       }
       _opponents[cardOwnerId]?.cards.setAtCard(message.round - 1, message.card);
     }

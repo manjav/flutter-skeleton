@@ -38,7 +38,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
     if (index > -1) {
       _member = _account.tribe!.members[index];
     } else {
-      _member = Member.init({"id": _account.id}, _account.id);
+      _member = Member.initialize({"id": _account.id}, _account.id);
     }
 
     super.initState();

@@ -43,7 +43,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   final ValueNotifier<Opponent> _selectedOpponent =
-      ValueNotifier(Opponent.init(null, 0));
+      ValueNotifier(Opponent.initialize(null, 0));
   late Account _account;
 
   final _mapSize = 924.d;

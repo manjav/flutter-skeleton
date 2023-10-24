@@ -180,7 +180,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   Widget _opponentInfo(CrossAxisAlignment align, Account account) {
     var itsMe = align == CrossAxisAlignment.start;
     var opponent = widget.opponent ??
-        Opponent.init({
+        Opponent.initialize({
           "name": (itsMe ? "you_l" : "enemy_l").l(),
           "def_power": getQuestPower(account)[2]
         }, 0);
