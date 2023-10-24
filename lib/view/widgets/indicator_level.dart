@@ -54,9 +54,9 @@ class _LevelIndicatorState extends State<LevelIndicator> {
     if (widget.level == null) {
       return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
         _updateParams(
-          state.account.get<int>(AccountField.xp),
-          state.account.get<int>(AccountField.level),
-          state.account.get<int>(AccountField.avatar_id),
+          state.account.xp,
+          state.account.level,
+          state.account.avatar_id,
         );
         return _elementsBuilder();
       });

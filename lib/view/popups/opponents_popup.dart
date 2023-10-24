@@ -37,8 +37,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     var scoutCostRelCoef = 0.05;
     var scoutCostMax = 20000;
     var scoutCostBase = 80;
-    return ((_account.get<int>(AccountField.q) * scoutCostRelCoef)
-                .clamp(0, scoutCostMax) +
+    return ((_account.q * scoutCostRelCoef).clamp(0, scoutCostMax) +
             scoutCostBase)
         .floor();
   }
@@ -126,7 +125,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             controller.findInput<double>('weather')?.value = 0;
             controller.findInput<double>('money')?.value = _selectedOpponent
                 .value
-                .getGoldLevel(_account.get<int>(AccountField.level))
+                .getGoldLevel(_account.level)
                 .floorToDouble();
             controller.findInput<double>('building')?.value =
                 random.nextInt(4).floorToDouble();
@@ -190,7 +189,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         children: [
           _group(
               "my_max_power".l(),
-              SkinnedText(_account.get<int>(AccountField.def_power).compact(),
+              SkinnedText(_account.def_power.compact(),
                   style: TStyles.big.copyWith(
                       color: TColors.orange.withGreen(10700), height: 3.d))),
           SizedBox(width: 32.d),

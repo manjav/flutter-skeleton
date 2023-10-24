@@ -95,11 +95,10 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
     try {
       var data = await rpc(api);
       if (api == RpcId.rankingGlobal) {
-        Ranks.lists[api] =
-            Ranks.createList<Player>(data, _account.get<int>(AccountField.id));
+        Ranks.lists[api] = Ranks.createList<Player>(data, _account.id);
       } else {
         Ranks.lists[api] =
-            Ranks.createList<TribeRank>(data, _account.map["tribe"]["id"]);
+            Ranks.createList<TribeRank>(data, _account.tribe!.id);
       }
       setState(() {});
     } finally {}

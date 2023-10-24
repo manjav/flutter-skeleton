@@ -56,7 +56,7 @@ class _IndicatorState extends State<Indicator>
                         builder: (context, state) => _getElements(
                             height,
                             state.account.getValue(widget.type),
-                            state.account.get<int>(AccountField.league_id)))
+                            state.account.league_id))
                     : _getElements(height, widget.value!, widget.data as int),
               ),
               onTap: () {

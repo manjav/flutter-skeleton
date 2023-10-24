@@ -14,7 +14,6 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import 'page_item.dart';
@@ -272,8 +271,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     const goldMultiplier = 3;
     const veteranGoldDivider = 20;
     const veteranGoldMultiplier = 80;
-    var level = _account.get<int>(AccountField.level);
-    return switch (level) {
+    return switch (_account.level) {
       < 10 => 1.0,
       < 20 => 2.5,
       < 30 => 4.5,
@@ -284,9 +282,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       < 80 => 20.0,
       < 90 => 25.0,
       < 100 => 30.0,
-      < 300 => 30.0 + (((level - 90) / 10).floor() * goldMultiplier).floor(),
+      < 300 => 30.0 + (((_account.level - 90) / 10).floor() * goldMultiplier).floor(),
       _ => 93.0 +
-          (((level - 300) / veteranGoldDivider).floor() * veteranGoldMultiplier)
+          (((_account.level - 300) / veteranGoldDivider).floor() * veteranGoldMultiplier)
               .floor(),
     };
   }
@@ -294,7 +292,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   int _getBoostPackPrice(int price) {
     // Converts gold multiplier to nectar for boost packs
     var boostNectarMultiplier =
-        _getShopMultiplier() / _account.get<int>(AccountField.nectar_price);
+        _getShopMultiplier() / _account.nectar_price;
     if (price == 10) {
       return (30000 * boostNectarMultiplier).round();
     }

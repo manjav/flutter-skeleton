@@ -106,14 +106,13 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
 
   _onButtonsPressed(RpcId id) async {
     var bloc = accountBloc;
-    var tribe = bloc.account!.get<Tribe>(AccountField.tribe);
     try {
       await rpc(id, params: {
-        RpcParams.tribe_id.name: tribe.id,
+        RpcParams.tribe_id.name: bloc.account!.tribe!.id,
         RpcParams.member_id.name: widget.member.id,
       });
       if (mounted && id == RpcId.tribeLeave) {
-        bloc.account!.map["tribe"] = null;
+        bloc.account!.tribe = null;
         bloc.add(SetAccount(account: bloc.account!));
         Navigator.pop(context);
       }

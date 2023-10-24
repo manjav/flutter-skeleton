@@ -55,7 +55,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                 icon: "icon_combo",
                 onPressed: () {
                   // Show unavailable message
-                  if (state.account.get<int>(AccountField.level) <
+                  if (state.account.level <
                       Account.availablityLevels["tribe"]!) {
                     Overlays.insert(context, OverlayType.toast,
                         args: "unavailable_l".l([

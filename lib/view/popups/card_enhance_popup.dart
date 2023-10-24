@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
@@ -225,9 +224,9 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
         (priceModifier / maxEnhanceModifier));
     var enhancementCost =
         totalCardPrice * enhancementCostModifier + totalCardPrice;
-    return minimumNectarCostForEnhancement.min(
-        (enhancementCost / account.get<int>(AccountField.nectar_price))
-            .floor());
+    return minimumNectarCostForEnhancement
+        .min((enhancementCost / account.nectar_price).round())
+        .floor();
   }
 
   _enhanceMax() async {

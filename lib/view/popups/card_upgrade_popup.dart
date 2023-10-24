@@ -40,8 +40,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
   @override
   Widget contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var hero = state.account.get<Map<int, HeroCard>>(
-          AccountField.heroes)[(widget.args['card'] as AccountCard).id]!;
+      var hero = state.account.heroes[(widget.args['card'] as AccountCard).id]!;
       var capacity = hero.card.base.get<int>(CardFields.potion_limit);
       return SizedBox(
           width: 960.d,
@@ -68,7 +67,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
                 capacity.toDouble(),
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Asset.load<Image>("icon_potion_number", height: 64.d),
+                  Asset.load<Image>("icon_potion", height: 64.d),
                   SizedBox(width: 12.d),
                   SkinnedText(
                       "${hero.potion.compact()} / ${capacity.compact()}")
@@ -99,7 +98,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
         Widgets.skinnedButton(
             color: ButtonColor.yellow,
             label: "+$step",
-            icon: "icon_potion_number",
+            icon: "icon_potion",
             onPressed: () => _fill(account, hero, step)),
         SizedBox(width: 10.d),
         Widgets.skinnedButton(
@@ -123,7 +122,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
   }
 
   void _fill(Account account, HeroCard hero, int step) {
-    if (account.get<int>(AccountField.potion_number) < step) {
+    if (account.potion < step) {
       Navigator.pushNamed(context, Routes.popupPotion.routeName);
     } else {
       hero.fillPotion(context, step);
@@ -134,16 +133,14 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
     try {
       var result = await rpc(RpcId.evolveCard,
           params: {RpcParams.sacrifices.name: "[${hero.card.id}]"});
-      account.getCards().remove(hero.card.id);
+      account.cards.remove(hero.card.id);
       account.update(result);
 
       // Replace hero
-      var heroes = account.get<Map<int, HeroCard>>(AccountField.heroes);
       AccountCard card = result["card"];
       var newHero = HeroCard(card, 0);
       newHero.items = hero.items;
-      heroes[card.id] = newHero;
-      heroes.remove(hero.card.id);
+      account.heroes[card.id] = newHero;
 
       if (mounted) {
         accountBloc.add(SetAccount(account: account));

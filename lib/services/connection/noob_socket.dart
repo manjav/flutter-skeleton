@@ -21,8 +21,6 @@ extension NoobCommandExtension on NoobCommand {
 class NoobSocket extends IService {
   List<Function(NoobMessage)> onReceive = [];
   late TcpSocketConnection _socketConnection;
-
-  Tribe? _tribe;
   late Account _account;
   late OpponentsBloc _opponents;
   int _lastMessageReceiveTime = 0;
@@ -37,7 +35,6 @@ class NoobSocket extends IService {
     super.initialize(args: args);
     _account = args![0] as Account;
     _opponents = args[1] as OpponentsBloc;
-    _tribe = _account.get<Tribe?>(AccountField.tribe);
     connect();
   }
 
@@ -46,8 +43,8 @@ class NoobSocket extends IService {
         TcpSocketConnection(LoadingData.chatIp, LoadingData.chatPort);
     // _socketConnection.enableConsolePrint(true);
     await _socketConnection.connect(500, _messageReceived, attempts: 3);
-    subscribe("user${_account.get(AccountField.id)}");
-    if (_tribe != null) subscribe("tribe${_tribe?.id}");
+    subscribe("user${_account.id}");
+    if (_account.tribe != null) subscribe("tribe${_account.tribe?.id}");
   }
 
   void _messageReceived(String message) {
@@ -63,21 +60,21 @@ class NoobSocket extends IService {
       return;
     }
     try {
-    var b64 = utf8.fuse(base64);
+      var b64 = utf8.fuse(base64);
       var trimmedMessage = _messageStream.substring(startIndex + 15, endIndex);
-    trimmedMessage = b64.decode(trimmedMessage.xorDecrypt(secret: _secret));
+      trimmedMessage = b64.decode(trimmedMessage.xorDecrypt(secret: _secret));
 
-    var noobMessage = NoobMessage.getProperMessage(
-        _account, jsonDecode(trimmedMessage), _tribe);
+      var noobMessage = NoobMessage.getProperMessage(
+          _account, jsonDecode(trimmedMessage), _account.tribe);
       if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
-    _updateStatus(noobMessage);
-    for (var method in onReceive) {
-      method.call(noobMessage);
-    }
+      _updateStatus(noobMessage);
+      for (var method in onReceive) {
+        method.call(noobMessage);
+      }
       _messageStream = _messageStream.substring(endIndex + 12);
       _decodeMessage();
     } catch (e) {
-      log(e);
+      log(e.toString());
     }
   }
 
@@ -122,8 +119,8 @@ class NoobSocket extends IService {
     }
 
     // Update tribe members status
-    if (_tribe != null) {
-      loopPlayers(_tribe!.members);
+    if (_account.tribe != null) {
+      loopPlayers(_account.tribe!.members);
     }
   }
 }
@@ -223,7 +220,7 @@ class NoobHelpMessage extends NoobMessage {
   String attackerName = "", defenderName = "";
   NoobHelpMessage(Map<String, dynamic> map) : super(Noobs.help, map) {
     ownerId = map["help_owner_id"];
-    ownerTribeId = map["help_owner_tribe_id"];
+    ownerTribeId = map["help_owner_account.tribe_id"];
     attackerId = map["attacker_id"];
     defenderId = map["defender_id"];
     attackerName = map["attacker_name"];
@@ -249,7 +246,7 @@ class NoobChatMessage extends NoobMessage {
     creationDate = Utils.toInt(map["creationDate"]);
     timestamp = map["timestamp"] ?? 0.0;
     messageType = Messages.values[Utils.toInt(map["messageType"], 1)];
-    itsMe = sender == account.get(AccountField.name);
+    itsMe = sender == account.name;
   }
 }
 
@@ -264,8 +261,8 @@ class NoobEndBattleMessage extends NoobMessage {
     loserScore = result["loser_added_score"];
     winnerId = result["winner_id"];
     loserId = result["loser_id"];
-    winnerTribe = result["winner_tribe_name"];
-    loserTribe = result["loser_tribe_name"];
+    winnerTribe = result["winner_account.tribe_name"];
+    loserTribe = result["loser_account.tribe_name"];
     opponentsInfo = map["players_info"].values.toList();
   }
 }
@@ -276,4 +273,3 @@ class NoobAuctionMessage extends NoobMessage {
     card = AuctionCard(account, super.map);
   }
 }
-

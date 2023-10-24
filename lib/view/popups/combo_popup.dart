@@ -92,7 +92,7 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
     }
     return [
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Asset.load<Image>("icon_potion_number", height: 110.d),
+        Asset.load<Image>("icon_potion", height: 110.d),
         SkinnedText(" x${combo.cost}")
       ]),
       SizedBox(height: 24.d),

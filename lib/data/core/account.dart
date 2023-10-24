@@ -2,146 +2,15 @@
 
 import 'dart:math' as math;
 
-import '../../data/core/rpc_data.dart';
 import '../../utils/utils.dart';
 import 'building.dart';
 import 'card.dart';
 import 'infra.dart';
 import 'ranking.dart';
+import 'rpc_data.dart';
 import 'tribe.dart';
 
-enum AccountField {
-  id,
-  name,
-  buildings,
-  rank,
-  league_rank,
-  xp,
-  weekly_score,
-  level,
-  def_power,
-  league_id,
-  gold,
-  tribe_permission,
-  gold_building_level,
-  bank_building_level,
-  new_messages,
-  restore_key,
-  invite_key,
-  needs_captcha,
-  cooldowns_bought_today,
-  total_quests,
-  total_battles,
-  q,
-  bank_account_balance,
-  last_gold_collect_at,
-  tutorial_id,
-  tutorial_index,
-  potion_number,
-  nectar,
-  birth_year,
-  gender,
-  phone,
-  address,
-  realname,
-  prev_league_id,
-  prev_league_rank,
-  won_battle_num,
-  lost_battle_num,
-  mood_id,
-  avatar_id,
-  updated_at,
-  last_load_at,
-  medals,
-  avatar_slots,
-  avatars,
-  owned_avatars,
-  activity_status,
-  has_email,
-  cards,
-  gold_building_assigned_cards,
-  offense_building_assigned_cards,
-  defense_building_assigned_cards,
-  auction_building_assigned_cards,
-  gold_collection_allowed,
-  gold_collection_allowed_at,
-  gold_collection_extraction,
-  collection,
-  cards_view,
-  tribe,
-  achievements,
-  achievements_blob,
-  now,
-  league_remaining_time,
-  bonus_remaining_time,
-  is_existing_player,
-  is_name_temp,
-  sale_info,
-  available_combo_id_set,
-  potion_price,
-  nectar_price,
-  better_vitrin_promotion,
-  can_use_vitrin,
-  can_watch_advertisment,
-  purchase_deposits_to_bank,
-  better_choose_deck,
-  better_quest_map,
-  better_battle_outcome_navigation,
-  better_tutorial_background,
-  better_tutorial_steps,
-  more_xp,
-  better_gold_pack_multiplier,
-  better_gold_pack_ratio,
-  better_gold_pack_ratio_on_price,
-  better_league_tutorial,
-  better_enhance_tutorial,
-  better_mine_building_status,
-  is_mine_building_limited,
-  retouched_tutorial,
-  better_card_graphic,
-  durable_buildings_name,
-  show_task_until_levelup,
-  better_restore_button_label,
-  better_quest_tutorial,
-  heroes,
-  heroitems,
-  base_heroitems,
-  hero_id,
-  hero_id_set,
-  hero_max_rarity,
-  base_hero_id,
-  hero_tutorial_at_first,
-  hero_tutorial_at_first_and_selected,
-  hero_tutorial_at_first_and_selected_and_animated,
-  hero_tutorial_at_level_four,
-  hero_tutorial_at_second_quest,
-  fall_background,
-  unified_gold_icon,
-  send_all_tutorial_steps,
-  rolling_gold,
-  bundles,
-  daily_reward,
-  coach_info,
-  coaching,
-  coach_test,
-  mobile_number_verified,
-  wheel_of_fortune_opens_in,
-  wheel_of_fortune,
-  latest_app_version,
-  latest_app_version_for_notice,
-  latest_constants_version,
-  modules_version,
-  emergency_message,
-  update_message,
-  delta_time,
-  xpboost_created_at,
-  pwboost_created_at,
-  xpboost_id,
-  pwboost_id,
-  deadlines,
-}
-
-class Account extends StringMap<dynamic> {
+class Account extends DataModel {
   static const Map<String, int> availablityLevels = {
     'ads': 4,
     'name': 4,
@@ -152,43 +21,269 @@ class Account extends StringMap<dynamic> {
     'combo': 15,
     'tribeChange': 150,
   };
-  static const levelMultiplier = 1.3;
   static const levelExpo = 2.7;
-  late LoadingData loadingData;
+  static const levelMultiplier = 1.3;
+
   static int getXpRequiered(int level) =>
       (math.pow(level, levelExpo) * levelMultiplier).ceil();
+  late LoadingData loadingData;
 
-  Building? getBuilding(Buildings type) => map['buildings'][type] as Building;
-  Map<int, AccountCard> getCards() => map['cards'];
-  int get now => DateTime.now().secondsSinceEpoch + map['delta_time'] as int;
+  late String name,
+      phone,
+      address,
+      realname,
+      restore_key,
+      invite_key,
+      emergency_message,
+      update_message,
+      latest_app_version,
+      latest_app_version_for_notice;
+
+  late int id,
+      xp,
+      activity_status,
+      weekly_score,
+      level,
+      def_power,
+      league_id,
+      gold,
+      rank,
+      league_rank,
+      tribe_permission,
+      new_messages,
+      cooldowns_bought_today,
+      total_quests,
+      total_battles,
+      q,
+      bank_account_balance,
+      last_gold_collect_at,
+      tutorial_id,
+      tutorial_index,
+      potion,
+      nectar,
+      birth_year,
+      gender,
+      prev_league_id,
+      prev_league_rank,
+      won_battle_num,
+      lost_battle_num,
+      mood_id,
+      avatar_id,
+      updated_at,
+      last_load_at,
+      avatar_slots,
+      gold_collection_allowed_at,
+      gold_collection_extraction,
+      cards_view,
+      league_remaining_time,
+      bonus_remaining_time,
+      potion_price,
+      nectar_price,
+      hero_id,
+      hero_max_rarity,
+      base_hero_id,
+      wheel_of_fortune_opens_in,
+      latest_constants_version,
+      delta_time,
+      xpboost_created_at,
+      pwboost_created_at,
+      xpboost_id,
+      pwboost_id;
+
+  late bool needs_captcha,
+      has_email,
+      gold_collection_allowed,
+      is_existing_player,
+      is_name_temp,
+      better_vitrin_promotion,
+      can_use_vitrin,
+      can_watch_advertisment,
+      purchase_deposits_to_bank,
+      better_choose_deck,
+      better_quest_map,
+      better_battle_outcome_navigation,
+      better_tutorial_background,
+      better_tutorial_steps,
+      more_xp,
+      better_gold_pack_multiplier,
+      better_gold_pack_ratio,
+      better_gold_pack_ratio_on_price,
+      better_league_tutorial,
+      better_enhance_tutorial,
+      better_mine_building_status,
+      is_mine_building_limited,
+      retouched_tutorial,
+      better_card_graphic,
+      durable_buildings_name,
+      show_task_until_levelup,
+      better_restore_button_label,
+      better_quest_tutorial,
+      hero_tutorial_at_first,
+      hero_tutorial_at_first_and_selected,
+      hero_tutorial_at_first_and_selected_and_animated,
+      hero_tutorial_at_level_four,
+      hero_tutorial_at_second_quest,
+      fall_background,
+      unified_gold_icon,
+      send_all_tutorial_steps,
+      rolling_gold,
+      coach_test,
+      mobile_number_verified,
+      wheel_of_fortune;
+
+  dynamic medals,
+      avatars,
+      owned_avatars,
+      achievements,
+      achievements_blob,
+      sale_info,
+      bundles,
+      daily_reward,
+      coach_info,
+      coaching,
+      modules_version,
+      available_combo_id_set;
+
+  Tribe? tribe;
+  Map<Buildings, Building> buildings = {};
+  Map<int, AccountCard> cards = {};
+  List<int> collection = [];
+  List<Deadline> deadlines = [];
+  Map<int, HeroCard> heroes = {};
+  Map<int, HeroItem> heroitems = {};
+
+  int get now => DateTime.now().secondsSinceEpoch + delta_time;
 
   @override
-  void init(Map<String, dynamic> data, {dynamic args}) {
+  void initialize(Map<String, dynamic> map, {dynamic args}) {
     loadingData = args as LoadingData;
-    super.init(data);
-    map['delta_time'] = map['now'] - DateTime.now().secondsSinceEpoch;
+    super.initialize(map, args: args);
+    delta_time = map['now'] - DateTime.now().secondsSinceEpoch;
 
-    var accountCards = <int, AccountCard>{};
+    // Integers
+    id = Utils.toInt(map["id"]);
+    xp = Utils.toInt(map["xp"]);
+    activity_status = Utils.toInt(map["activity_status"]);
+    weekly_score = Utils.toInt(map["weekly_score"]);
+    level = Utils.toInt(map["level"]);
+    def_power = Utils.toInt(map["def_power"]);
+    league_id = Utils.toInt(map["league_id"]);
+    gold = Utils.toInt(map["gold"]);
+    rank = Utils.toInt(map["rank"]);
+    league_rank = Utils.toInt(map["league_rank"]);
+    tribe_permission = Utils.toInt(map["tribe_permission"]);
+    new_messages = Utils.toInt(map["new_messages"]);
+    cooldowns_bought_today = Utils.toInt(map["cooldowns_bought_today"]);
+    total_quests = Utils.toInt(map["total_quests"]);
+    total_battles = Utils.toInt(map["total_battles"]);
+    q = Utils.toInt(map["q"]);
+    bank_account_balance = Utils.toInt(map["bank_account_balance"]);
+    last_gold_collect_at = Utils.toInt(map["last_gold_collect_at"]);
+    tutorial_id = Utils.toInt(map["tutorial_id"]);
+    tutorial_index = Utils.toInt(map["tutorial_index"]);
+    potion = Utils.toInt(map["potion_number"]);
+    nectar = Utils.toInt(map["nectar"]);
+    birth_year = Utils.toInt(map["birth_year"]);
+    gender = Utils.toInt(map["gender"]);
+    prev_league_id = Utils.toInt(map["prev_league_id"]);
+    prev_league_rank = Utils.toInt(map["prev_league_rank"]);
+    won_battle_num = Utils.toInt(map["won_battle_num"]);
+    lost_battle_num = Utils.toInt(map["lost_battle_num"]);
+    mood_id = Utils.toInt(map["mood_id"]);
+    avatar_id = Utils.toInt(map["avatar_id"]);
+    updated_at = Utils.toInt(map["updated_at"]);
+    last_load_at = Utils.toInt(map["last_load_at"]);
+    avatar_slots = Utils.toInt(map["avatar_slots"]);
+    gold_collection_allowed_at = Utils.toInt(map["gold_collection_allowed_at"]);
+    gold_collection_extraction = Utils.toInt(map["gold_collection_extraction"]);
+    cards_view = Utils.toInt(map["cards_view"]);
+    league_remaining_time = Utils.toInt(map["league_remaining_time"]);
+    bonus_remaining_time = Utils.toInt(map["bonus_remaining_time"]);
+    potion_price = Utils.toInt(map["potion_price"]);
+    nectar_price = Utils.toInt(map["nectar_price"]);
+    hero_id = Utils.toInt(map["hero_id"]);
+    hero_max_rarity = Utils.toInt(map["hero_max_rarity"]);
+    base_hero_id = Utils.toInt(map["base_hero_id"]);
+    wheel_of_fortune_opens_in = Utils.toInt(map["wheel_of_fortune_opens_in"]);
+    latest_constants_version = Utils.toInt(map["latest_constants_version"]);
+    delta_time = Utils.toInt(map["delta_time"]);
+    xpboost_created_at = Utils.toInt(map["xpboost_created_at"]);
+    pwboost_created_at = Utils.toInt(map["pwboost_created_at"]);
+    xpboost_id = Utils.toInt(map["xpboost_id"]);
+    pwboost_id = Utils.toInt(map["pwboost_id"]);
+
+// Booleans
+    needs_captcha = map["needs_captcha"];
+    has_email = map["has_email"];
+    gold_collection_allowed = map["gold_collection_allowed"];
+    is_existing_player = map["is_existing_player"];
+    is_name_temp = map["is_name_temp"];
+    better_vitrin_promotion = map["better_vitrin_promotion"];
+    can_use_vitrin = map["can_use_vitrin"];
+    can_watch_advertisment = map["can_watch_advertisment"];
+    purchase_deposits_to_bank = map["purchase_deposits_to_bank"];
+    better_choose_deck = map["better_choose_deck"];
+    better_quest_map = map["better_quest_map"];
+    better_battle_outcome_navigation = map["better_battle_outcome_navigation"];
+    better_tutorial_background = map["better_tutorial_background"];
+    better_tutorial_steps = map["better_tutorial_steps"];
+    more_xp = map["more_xp"];
+    better_gold_pack_multiplier = map["better_gold_pack_multiplier"];
+    better_gold_pack_ratio = map["better_gold_pack_ratio"];
+    better_gold_pack_ratio_on_price = map["better_gold_pack_ratio_on_price"];
+    better_league_tutorial = map["better_league_tutorial"];
+    better_enhance_tutorial = map["better_enhance_tutorial"];
+    better_mine_building_status = map["better_mine_building_status"];
+    is_mine_building_limited = map["is_mine_building_limited"];
+    retouched_tutorial = map["retouched_tutorial"];
+    better_card_graphic = map["better_card_graphic"];
+    durable_buildings_name = map["durable_buildings_name"];
+    show_task_until_levelup = map["show_task_until_levelup"];
+    better_restore_button_label = map["better_restore_button_label"];
+    better_quest_tutorial = map["better_quest_tutorial"];
+    available_combo_id_set = map["available_combo_id_set"];
+    hero_tutorial_at_first = map["hero_tutorial_at_first"];
+    hero_tutorial_at_first_and_selected =
+        map["hero_tutorial_at_first_and_selected"];
+    hero_tutorial_at_first_and_selected_and_animated =
+        map["hero_tutorial_at_first_and_selected_and_animated"];
+    hero_tutorial_at_level_four = map["hero_tutorial_at_level_four"];
+    hero_tutorial_at_second_quest = map["hero_tutorial_at_second_quest"];
+    fall_background = map["fall_background"];
+    unified_gold_icon = map["unified_gold_icon"];
+    send_all_tutorial_steps = map["send_all_tutorial_steps"];
+    rolling_gold = map["rolling_gold"];
+    coach_test = map["coach_test"];
+    mobile_number_verified = map["mobile_number_verified"];
+    wheel_of_fortune = map["wheel_of_fortune"];
+
+// Strings
+    name = map["name"];
+    phone = map["phone"];
+    address = map["address"];
+    realname = map["realname"];
+    restore_key = map["restore_key"];
+    invite_key = map["invite_key"];
+    emergency_message = map["emergency_message"];
+    update_message = map["update_message"];
+    latest_app_version = map["latest_app_version"];
+    latest_app_version_for_notice = map["latest_app_version_for_notice"];
+
     for (var card in map['cards']) {
-      accountCards[card['id']] = AccountCard(this, card);
+      cards[card['id']] = AccountCard(this, card);
     }
-    map['cards'] = accountCards;
 
-    // Organize deadlines
-    _parse(AccountField.xpboost_id);
-    _parse(AccountField.pwboost_id);
-    _parse(AccountField.xpboost_created_at);
-    _parse(AccountField.pwboost_created_at);
-    _addDeadline(map, AccountField.xpboost_created_at, AccountField.xpboost_id);
-    _addDeadline(map, AccountField.pwboost_created_at, AccountField.pwboost_id);
+    collection = List.castFrom(map["collection"]);
+    _addDeadline(map, xpboost_created_at, xpboost_id);
+    _addDeadline(map, pwboost_created_at, pwboost_id);
 
-    map['buildings'] = <Buildings, Building>{};
+    buildings = {};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
     _addBuilding(Buildings.base);
     _addBuilding(Buildings.cards);
     _addBuilding(Buildings.defense, 0, map['defense_building_assigned_cards']);
     _addBuilding(Buildings.offense, 0, map['offense_building_assigned_cards']);
-    map['buildings'][Buildings.mine] = Mine();
+    buildings[Buildings.mine] = Mine();
     _addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
     _addBuilding(Buildings.treasury, map['bank_building_level']);
@@ -197,21 +292,18 @@ class Account extends StringMap<dynamic> {
     installTribe(map['tribe']);
 
     // Heroes
-    map['base_heroitems'] = loadingData.baseHeroItems;
-
-    var heroitems = <int, HeroItem>{};
+    heroitems = {};
     for (var item in map["heroitems"]) {
       var heroitem = HeroItem(item['id'],
           loadingData.baseHeroItems[item['base_heroitem_id']]!, item['state']);
       heroitem.position = item['position'];
       heroitems[item['id']] = heroitem;
     }
-    map["heroitems"] = heroitems;
 
-    var heroes = <int, HeroCard>{};
+    heroes = {};
     if (map['hero_id_set'] != null) {
       for (var h in map['hero_id_set']) {
-        var hero = HeroCard(accountCards[h['id']]!, h['potion']);
+        var hero = HeroCard(cards[h['id']]!, h['potion']);
         hero.items = <HeroItem>[];
         for (var item in h['items']) {
           var heroItem = heroitems[item["id"]! as int];
@@ -222,19 +314,11 @@ class Account extends StringMap<dynamic> {
         heroes[h['id']] = hero;
       }
     }
-    map['heroes'] = heroes;
 
     for (var id in map["available_combo_id_set"]) {
       loadingData.comboHints[id].isAvailable = true;
     }
   }
-
-  void _parse(AccountField key) {
-    if (map.containsKey(key.name)) map[key.name] = int.parse(map[key.name]);
-  }
-
-  bool contains(AccountField field) => map.containsKey(field.name);
-  T get<T>(AccountField field) => map[field.name] as T;
 
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
  @param player Player whose cards you are evaluating
@@ -245,7 +329,7 @@ class Account extends StringMap<dynamic> {
     for (var card in cards) {
       totalPower += card != null ? card.power : 0;
     }
-    Building offense = map['buildings'][Buildings.offense];
+    var offense = buildings[Buildings.offense]!;
     totalPower *= offense.getBenefit();
     totalPower += offense.getCardsBenefit(this);
     return totalPower.floor();
@@ -260,7 +344,7 @@ class Account extends StringMap<dynamic> {
       totalPower += card.power;
       index++;
     }
-    var offense = getBuilding(Buildings.offense)!;
+    var offense = buildings[Buildings.offense]!;
     totalPower *= offense.getBenefit();
     totalPower += offense.getCardsBenefit(this);
     return totalPower.floor();
@@ -268,7 +352,7 @@ class Account extends StringMap<dynamic> {
 
   int calculateMaxCooldown() {
     var cooldown = 0;
-    var origin = getCards().values.toList();
+    var origin = cards.values.toList();
     for (var card in origin) {
       var c = card.getRemainingCooldown();
       if (c > cooldown) cooldown = c;
@@ -293,11 +377,11 @@ class Account extends StringMap<dynamic> {
           Buildings.cards,
           Buildings.base
         ];
-    var origin = getCards().values.toList();
-    var cards = <AccountCard>[];
+    var origin = cards.values.toList();
+    var myCards = <AccountCard>[];
     inBuilding(AccountCard card, List<Buildings> exceptions) {
       for (var exception in exceptions) {
-        if (getBuilding(exception)!.cards.contains(card)) return true;
+        if (buildings[exception]!.cards.contains(card)) return true;
       }
       return false;
     }
@@ -307,26 +391,26 @@ class Account extends StringMap<dynamic> {
       if (removeMaxLevels && !card.isUpgradable) continue;
       if (removeCooldowns && card.getRemainingCooldown() > 0) continue;
       if (inBuilding(card, exceptions)) continue;
-      cards.add(getCard(card));
+      myCards.add(getCard(card));
     }
-    cards.sort((AccountCard a, AccountCard b) =>
+    myCards.sort((AccountCard a, AccountCard b) =>
         a.power * (b.base.isHero ? 1 : -1) -
         b.power * (a.base.isHero ? 1 : -1));
-    return cards;
+    return myCards;
   }
 
   void _addBuilding(Buildings type, [int level = 0, List? cards]) {
     cards = cards ?? [];
-    if (!map['buildings'].containsKey(type)) {
-      map['buildings'][type] = Building();
+    if (!buildings.containsKey(type)) {
+      buildings[type] = Building();
     }
-    map['buildings'][type].init({"type": type, "level": level},
+    buildings[type]!.init({"type": type, "level": level},
         args: {"account": this, "cards": cards});
   }
 
   void installTribe(dynamic data) {
     if (data == null) return;
-    var tribe = map['tribe'] = Tribe(data);
+    tribe = Tribe(data);
     var types = [
       Buildings.base,
       Buildings.cards,
@@ -334,69 +418,72 @@ class Account extends StringMap<dynamic> {
       Buildings.offense
     ];
     for (var type in types) {
-      getBuilding(type)?.map['level'] = tribe.levels[type.id];
+      buildings[type]?.map['level'] = tribe!.levels[type.id];
     }
   }
 
   Map<String, dynamic> update(Map<String, dynamic> data) {
-    if (data.containsKey("player_gold")) {
-      data["gold"] = data["player_gold"];
-    }
-    if (data.containsKey("player_potion")) {
-      data["potion_number"] = data["player_potion"];
-    }
-    if (data.containsKey("potion")) {
-      data["potion_number"] = data["potion"];
-    }
-    for (var field in AccountField.values) {
-      if (data.containsKey(field.name)) {
-        map[field.name] = data[field.name];
+    if (data.containsKey("gold")) {
+      gold += Utils.toInt(data["gold"]);
+    } else {
+      if (data.containsKey("player_gold")) {
+        gold = Utils.toInt(data["player_gold"]);
       }
+      gold += Utils.toInt(data["added_gold"]);
     }
+
+    if (data.containsKey("nectar")) {
+      nectar = Utils.toInt(data["nectar"]);
+    } else {
+      nectar += Utils.toInt(data["added_nectar"]);
+    }
+
+    if (data.containsKey("potion_number")) {
+      potion = Utils.toInt(data["potion_number"]);
+    } else {
+      if (data.containsKey("player_potion")) {
+        potion = Utils.toInt(data["player_potion"]);
+      }
+      if (data.containsKey("potion")) {
+        potion = Utils.toInt(data["potion"]);
+      }
+      potion += Utils.toInt(data["added_potion"]);
+    }
+    // for (var field in AccountField.values) {
+    //   if (data.containsKey(field.name)) {
+    //     map[field.name] = data[field.name];
+    //   }
+    // }
     if (data.containsKey("attack_cards")) {
       for (var attackCard in data["attack_cards"]) {
-        getCards()[attackCard['id']]?.lastUsedAt = attackCard["last_used_at"];
+        cards[attackCard['id']]?.lastUsedAt = attackCard["last_used_at"];
       }
     }
-    var tribe = get<Tribe?>(AccountField.tribe);
-    if (tribe != null && data.containsKey("tribe_gold")) {
-      tribe.gold = data["tribe_gold"];
-    }
-
-    if (!data.containsKey("gold")) {
-      map["gold"] = map["gold"] + (data["added_gold"] ?? 0);
-    }
-
-    if (!data.containsKey("nectar")) {
-      map["nectar"] = map["nectar"] + (data["added_nectar"] ?? 0);
-    }
-
-    if (!data.containsKey("potion_number")) {
-      map["potion_number"] = map["potion_number"] + (data["added_potion"] ?? 0);
+    if (data.containsKey("tribe_gold")) {
+      tribe?.gold = Utils.toInt(data["tribe_gold"]);
     }
 
     if (data.containsKey("hero_potion")) {
-      var heroes = get<Map<int, HeroCard>>(AccountField.heroes);
       if (heroes.containsKey(data["hero_id"])) {
         heroes[data["hero_id"]]!.potion = data["hero_potion"];
       }
     }
 
-    var cards = <AccountCard>[];
+    var achieveCards = <AccountCard>[];
     if (data.containsKey("achieveCards")) {
       for (var card in data["achieveCards"]) {
         var accountCard = AccountCard(this, card);
-        getCards()[card['id']] = accountCard;
-        cards.add(accountCard);
+        cards[card['id']] = accountCard;
+        achieveCards.add(accountCard);
       }
     }
-    data["achieveCards"] = cards;
+    data["achieveCards"] = achieveCards;
 
     if (data.containsKey("card")) {
       var newCard = data["card"];
-      var card = getCards()[newCard["id"]];
+      var card = cards[newCard["id"]];
       if (card == null) {
-        map['cards'][newCard["id"]] = card = AccountCard(this, newCard);
+        cards[newCard["id"]] = card = AccountCard(this, newCard);
       } else {
         card.power = newCard["power"];
         card.lastUsedAt = newCard["last_used_at"];
@@ -405,38 +492,37 @@ class Account extends StringMap<dynamic> {
       data["card"] = card;
     }
 
-    _addDeadline(
-        data, AccountField.xpboost_created_at, AccountField.xpboost_id);
-    _addDeadline(
-        data, AccountField.pwboost_created_at, AccountField.pwboost_id);
+    _addDeadline(data, xpboost_created_at, xpboost_id);
+    _addDeadline(data, pwboost_created_at, pwboost_id);
     return data;
   }
 
-  void _addDeadline(
-      Map<String, dynamic> data, AccountField startAt, AccountField id) {
-    if (!data.containsKey(startAt.name)) return;
-    var deadline = get<int>(startAt) + ShopData.boostDeadline;
+  void _addDeadline(Map<String, dynamic> data, int startAt, int id) {
+    if (startAt <= 0) return;
+    var deadline = startAt + ShopData.boostDeadline;
     if (deadline <= now) return;
 
-    List<Deadline> deadlines = map["deadlines"] ?? [];
     var boost = loadingData.shopItems[ShopSections.boost]!
-        .firstWhere((item) => item.id == get<int>(id));
+        .firstWhere((item) => item.id == id);
     deadlines.add(Deadline(deadline, boost));
-    map["deadlines"] = deadlines;
 
-    if (id == AccountField.pwboost_id) {
-      var cards = getCards().entries;
-      for (var card in cards) {
+    if (id == pwboost_id) {
+      for (var card in cards.entries) {
         card.value.power = (card.value.power * boost.ratio).round();
       }
     }
   }
 
   Opponent toOpponent() {
-    return Opponent.init(map, map["id"]);
+    return Opponent.init({} /*map*/, id);
   }
 
   int getValue(Values type) => switch (type) {
+        Values.gold => gold,
+        Values.leagueRank => league_rank,
+        Values.nectar => nectar,
+        Values.potion => potion,
+        Values.rank => rank,
         _ => 0,
       };
 }

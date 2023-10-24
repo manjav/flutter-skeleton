@@ -125,7 +125,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
 
   updateAccount(Map<String, dynamic> data) {
     for (var card in selectedCards.value) {
-      account.getCards().remove(card!.id);
+      account.cards.remove(card!.id);
     }
 
     account.update(data);

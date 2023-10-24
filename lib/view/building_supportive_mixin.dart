@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../services/localization.dart';
 import '../blocs/account_bloc.dart';
 import '../blocs/services_bloc.dart';
-import '../data/core/account.dart';
 import '../data/core/building.dart';
 import '../data/core/card.dart';
 import '../data/core/rpc.dart';
@@ -65,8 +64,7 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
 
     if (!mounted) return;
     var accountBloc = BlocProvider.of<AccountBloc>(context);
-    accountBloc.account!.get<Map<Buildings, Building>>(
-        AccountField.buildings)[building.type] = building;
+    accountBloc.account!.buildings[building.type] = building;
     accountBloc.add(SetAccount(account: accountBloc.account!));
   }
 }

@@ -64,7 +64,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
   _loadLeagueData() async {
     try {
       var data = await rpc(RpcId.league);
-      _leagueData = LeagueData.init(data, _account.get<int>(AccountField.id));
+      _leagueData = LeagueData.init(data, _account.id);
       setState(() {});
     } finally {}
   }
@@ -94,8 +94,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
                     padding: EdgeInsets.all(20.d),
                     color: TColors.primary70,
                     child: SkinnedText(
-                        (_account.get<int>(AccountField.league_remaining_time))
-                            .toRemainingTime()))
+                        (_account.league_remaining_time).toRemainingTime()))
               ],
             ),
             Widgets.rect(
@@ -257,8 +256,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
     try {
       var data = await rpc(RpcId.leagueHistory,
           params: {RpcParams.rounds.name: "[$round]"});
-      _leagueHistory =
-          LeagueHistory.init(data, round, _account.get<int>(AccountField.id));
+      _leagueHistory = LeagueHistory.init(data, round, _account.id);
       setState(() {});
     } finally {}
   }

@@ -225,8 +225,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var defenceMin = 40;
     var defenceValue = <int>[0, 0, 0];
     var multiplier = tutorialPowerMultiplier;
-    var q = account.get<int>(AccountField.q);
-    if (account.get<int>(AccountField.level) < 80) {
+    var q = account.q;
+    if (account.level < 80) {
       defenceValue[1] = (initialPower +
                   (initialGold * q + (q * (q - 1)) / 80) / costPowerRatio)
               .floor() *
@@ -248,15 +248,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   }
 
   // every 10 quests is boss fight
-  bool isBossQuest(Account account) =>
-      ((account.get<int>(AccountField.total_quests) / 10) % 1 == 0);
+  bool isBossQuest(Account account) => ((account.total_quests / 10) % 1 == 0);
 
   _attack(Account account) async {
     var params = <String, dynamic>{
       RpcParams.cards.name: _selectedCards.getIds(),
-      RpcParams.check.name: md5
-          .convert(utf8.encode("${account.get<int>(AccountField.q)}"))
-          .toString()
+      RpcParams.check.name: md5.convert(utf8.encode("${account.q}")).toString()
     };
     var route = widget.opponent == null ? Routes.questOut : Routes.battleOut;
     if (route == Routes.battleOut) {

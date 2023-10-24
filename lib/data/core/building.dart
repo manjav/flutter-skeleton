@@ -324,7 +324,7 @@ class Building extends StringMap<dynamic> {
     var cards = List.generate(
         4,
         (i) => i < args['cards'].length
-            ? account.getCards()[args['cards'][i]['id']]
+            ? account.cards[args['cards'][i]['id']]
             : null);
     map['cards'] = cards;
   }
@@ -377,7 +377,6 @@ class Building extends StringMap<dynamic> {
     var totalPower = 0.0;
     // a table for storing the hero cards benefits.
     var heroCardBenefits = <CardData, Map<String, int>>{};
-    var heros = account.get<Map<int, HeroCard>>(AccountField.heroes);
 
     for (var card in cards) {
       if (card == null) continue;
@@ -386,7 +385,7 @@ class Building extends StringMap<dynamic> {
       // stores the gained attributes of items for hero cards.
       if (card.base.isHero) {
         heroCardBenefits[card.base] =
-            heros[card.id]!.getGainedAttributesByItems();
+            account.heroes[card.id]!.getGainedAttributesByItems();
       }
     }
 
@@ -445,15 +444,12 @@ class Building extends StringMap<dynamic> {
 class Mine extends Building {
   int collectableGold(Account account) {
     var goldPerdSec = getCardsBenefit(account) / 3600;
-    return ((account.now -
-                account.get<int>(AccountField.last_gold_collect_at)) *
-            goldPerdSec)
+    return ((account.now - account.last_gold_collect_at) * goldPerdSec)
         .clamp(0, benefit)
         .floor();
   }
 
   bool isCollectable(Account account) {
-    return account.now >=
-        account.get<int>(AccountField.gold_collection_allowed_at);
+    return account.now >= account.gold_collection_allowed_at;
   }
 }

@@ -65,8 +65,7 @@ class Tribe with ServiceProvider {
     try {
       var result = await getService<HttpConnection>(context)
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
-      members =
-          Member.initAll(result["members"], account.get<int>(AccountField.id));
+      members = Member.initAll(result["members"], account.id);
     } finally {}
   }
 
@@ -79,10 +78,9 @@ class Tribe with ServiceProvider {
       "messageType": 1,
       "channel": "tribe$id",
       "push_message_type": "chat",
-      "sender": account.get(AccountField.name),
-      "avatar_id": account.get(AccountField.avatar_id),
-      "creationDate":
-          now.secondsSinceEpoch + account.get<int>(AccountField.delta_time),
+      "sender": account.name,
+      "avatar_id": account.avatar_id,
+      "creationDate": now.secondsSinceEpoch + account.delta_time,
       "timestamp": (now.microsecondsSinceEpoch -
               MyApp.startTime.microsecondsSinceEpoch) /
           1000

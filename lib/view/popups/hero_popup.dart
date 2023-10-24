@@ -65,12 +65,10 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     alignment = const Alignment(0, -0.8);
     super.initState();
     _account = accountBloc.account!;
-    var heroes =
-        _account.get<Map<int, HeroCard>>(AccountField.heroes).values.toList();
+    var heroes = _account.heroes.values.toList();
     _heroes = List.generate(heroes.length, (index) => heroes[index].clone());
     _keys = List.generate(_heroes.length, (index) => GlobalKey());
-    var baseHeroItems = _account.get(AccountField.base_heroitems);
-    for (var item in baseHeroItems.values) {
+    for (var item in _account.loadingData.baseHeroItems.values) {
       if (item.category == 1) {
         _minions.add(item);
       } else {
@@ -222,10 +220,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
 
   Widget? _itemBuilder(BaseHeroItem item, int position) {
     var host = item.getHost(_heroes);
-    var heroItem = item.getUsage(_account
-        .get<Map<int, HeroItem>>(AccountField.heroitems)
-        .values
-        .toList());
+    var heroItem = item.getUsage(_account.heroitems.values.toList());
     var isActive = host == null || heroItem != null;
     return Widgets.button(
         radius: 44.d,
@@ -291,7 +286,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       );
     }
 
-    if (item.unlockLevel > _account.get<int>(AccountField.hero_max_rarity)) {
+    if (item.unlockLevel > _account.hero_max_rarity) {
       return _lockItem("icon_locked", "level_l".l([item.unlockLevel]));
     }
     return Widgets.skinnedButton(
@@ -318,7 +313,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   _setItem(
       BaseHeroItem item, int position, HeroItem? heroItem, HeroCard? host) {
     if (heroItem == null) {
-      if (item.unlockLevel > _account.get<int>(AccountField.hero_max_rarity)) {
+      if (item.unlockLevel > _account.hero_max_rarity) {
         toast("heroitem_locked".l([item.unlockLevel]));
       } else {
         _buyItem(item);
@@ -339,7 +334,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   }
 
   _saveChanges() async {
-    var params = {"default_hero_id": _account.get(AccountField.base_hero_id)};
+    var params = <String, dynamic>{"default_hero_id": _account.base_hero_id};
     var heroDetails = [];
     for (var hero in _heroes) {
       heroDetails.add(hero.getResult());
@@ -348,7 +343,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     try {
       await _tryRPC(RpcId.equipHeroitems, params);
       for (var hero in _heroes) {
-        _account.map["heroes"][hero.card.id] = hero;
+        _account.heroes[hero.card.id] = hero;
       }
       if (mounted) {
         Navigator.pop(context);
@@ -361,7 +356,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       var result =
           await _tryRPC(RpcId.buyHeroItem, {RpcParams.id.name: item.id});
       int id = result["heroitem_id"];
-      _account.map["heroitems"][id] = HeroItem(id, item, 0);
+      _account.heroitems[id] = HeroItem(id, item, 0);
       if (mounted) {
         Navigator.pop(context);
       }

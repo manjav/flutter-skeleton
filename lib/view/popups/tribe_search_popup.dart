@@ -142,7 +142,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
           params: {RpcParams.tribe_id.name: tribe.id});
       if (mounted) {
         var bloc = accountBloc;
-        bloc.account!.map["tribe"] = Tribe(result["tribe"]);
+        bloc.account!.installTribe(result["tribe"]);
         bloc.add(SetAccount(account: bloc.account!));
       }
     } finally {}

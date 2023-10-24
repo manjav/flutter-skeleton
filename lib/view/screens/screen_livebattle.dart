@@ -151,8 +151,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void _onDeckFocus(int index, AccountCard focusedCard) {
     var slot = _slotState.value;
     if (slot.i == 5) return;
-    var mId = _account.get<int>(AccountField.id);
-    var mySlots = _opponents[mId]!.cards;
+    var mySlots = _opponents[_account.id]!.cards;
     if (focusedCard.base.isHero) {
       mySlots.setAtCard(slot.i, null);
       mySlots.setAtCard(4, focusedCard);
@@ -187,7 +186,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _deployCard(int index, AccountCard selectedCard) {
-    _account.getCards()[selectedCard.id]?.lastUsedAt = selectedCard.lastUsedAt;
+    _account.cards[selectedCard.id]?.lastUsedAt = selectedCard.lastUsedAt;
 
     var slot = _slotState.value;
     if (slot.i == 5) return;
@@ -305,7 +304,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           card.power += entry.value;
         } else {
           card.lastUsedAt = entry.value;
-          _account.getCards()[card.id]?.lastUsedAt = card.lastUsedAt;
+          _account.cards[card.id]?.lastUsedAt = card.lastUsedAt;
         }
         _opponents[message.ownerId]!
             .cards

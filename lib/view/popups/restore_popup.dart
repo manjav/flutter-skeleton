@@ -45,8 +45,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
             Text("settings_restore_get".l(), style: style),
             SizedBox(height: 30.d),
             SkinnedText("settings_restore_yours".l()),
-            Widgets.clipboardGetter(
-                _account.get<String>(AccountField.restore_key)),
+            Widgets.clipboardGetter(_account.restore_key),
             Widgets.divider(width: 120.d, margin: 36.d),
             Text("settings_restore_set".l(), style: style),
             SizedBox(height: 30.d),

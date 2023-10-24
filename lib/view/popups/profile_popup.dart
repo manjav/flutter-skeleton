@@ -53,7 +53,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
               top: -48.d,
               left: 24.d,
               child: const LevelIndicator(showLevel: false)),
-          SkinnedText(account.get(AccountField.name))
+          SkinnedText(account.name)
         ]));
   }
 }

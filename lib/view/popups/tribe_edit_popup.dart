@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
-import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -23,7 +22,6 @@ class TribeEditPopup extends AbstractPopup {
 }
 
 class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
-  Tribe? _tribe;
   int status = -1;
   late Account _account;
   final TextEditingController _nameController = TextEditingController();
@@ -32,12 +30,11 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
   @override
   void initState() {
     _account = accountBloc.account!;
-    _tribe = _account.get<Tribe?>(AccountField.tribe);
-    if (_tribe != null && _tribe!.id < 0) _tribe = null;
-    if (_tribe != null) {
-      _nameController.text = _tribe!.name;
-      _descriptionController.text = _tribe!.description;
-      status = _tribe!.status - 1;
+    if (_account.tribe != null && _account.tribe!.id < 0) _account.tribe = null;
+    if (_account.tribe != null) {
+      _nameController.text = _account.tribe!.name;
+      _descriptionController.text = _account.tribe!.description;
+      status = _account.tribe!.status - 1;
     }
     _nameController.addListener(() => setState(() {}));
     _descriptionController.addListener(() => setState(() {}));
@@ -45,7 +42,8 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
   }
 
   @override
-  String titleBuilder() => _tribe == null ? "tribe_new".l() : "tribe_edit".l();
+  String titleBuilder() =>
+      _account.tribe == null ? "tribe_new".l() : "tribe_edit".l();
 
   @override
   contentFactory() {
@@ -84,7 +82,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
             child: Asset.load<Image>('arrow_right')),
       ]),
       SizedBox(height: 24.d),
-      Text("tribe_help_${_tribe == null ? "new" : "edit"}".l(),
+      Text("tribe_help_${_account.tribe == null ? "new" : "edit"}".l(),
           style: TStyles.medium.copyWith(height: 1)),
       SizedBox(height: 32.d),
       _submitButton()
@@ -92,7 +90,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
   }
 
   Widget _submitButton() {
-    var isNew = _tribe == null;
+    var isNew = _account.tribe == null;
     var cost = isNew ? 15000 : 0;
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +100,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
               height: 160.d,
               isEnable: _nameController.text.isNotEmpty &&
                   _descriptionController.text.isNotEmpty &&
-                  cost <= _account.get<int>(AccountField.gold),
+                  cost <= _account.gold,
               color: ButtonColor.green,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,7 +124,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
                   ]),
               onPressed: () => _submit(),
               onDisablePressed: () {
-                var message = cost > _account.get<int>(AccountField.gold)
+                var message = cost > _account.gold
                     ? "error_183".l()
                     : "fill_requirements_l".l();
                 Overlays.insert(context, OverlayType.toast, args: message);
@@ -140,15 +138,15 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
       RpcParams.description.name: _descriptionController.text,
       RpcParams.status.name: status + 1,
     };
-    if (_tribe != null) {
-      params[RpcParams.tribe_id.name] = _tribe!.id;
+    if (_account.tribe != null) {
+      params[RpcParams.tribe_id.name] = _account.tribe!.id;
     }
     try {
-      await rpc(_tribe == null ? RpcId.tribeCreate : RpcId.tribeEdit,
+      await rpc(_account.tribe == null ? RpcId.tribeCreate : RpcId.tribeEdit,
           params: params);
-      _tribe!.name = _nameController.text;
-      _tribe!.description = _descriptionController.text;
-      _tribe!.status = status + 1;
+      _account.tribe!.name = _nameController.text;
+      _account.tribe!.description = _descriptionController.text;
+      _account.tribe!.status = status + 1;
       if (mounted) {
         Navigator.pop(context, true);
       }

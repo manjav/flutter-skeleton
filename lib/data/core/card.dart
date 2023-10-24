@@ -13,7 +13,6 @@ import 'account.dart';
 import 'building.dart';
 import 'infra.dart';
 import 'result.dart';
-import 'tribe.dart';
 
 enum FriutFields {
   id,
@@ -134,9 +133,8 @@ class AbstractCard with ServiceProvider {
   int get maxPrice => (power * powerToGoldRatio * maxPriceRatio).round();
 
   int getRemainingCooldown() {
-    var tribe = account.get<Tribe?>(AccountField.tribe);
-    var benefit = tribe != null
-        ? account.getBuilding(Buildings.cards)!.getBenefit()
+    var benefit = account.tribe != null
+        ? account.buildings[Buildings.cards]!.getBenefit()
         : 1.0;
     var delta = account.now - lastUsedAt;
     var cooldownTime = base.get<int>(CardFields.cooldown) * benefit;
@@ -165,9 +163,8 @@ class AbstractCard with ServiceProvider {
     num cooldownPrice = 0;
     var veteranLevel = base.get<int>(CardFields.veteran_level);
     if (veteranLevel > 0) {
-      var tribe = account.get<Tribe?>(AccountField.tribe);
-      var benefit = tribe != null
-          ? account.getBuilding(Buildings.cards)!.getBenefit()
+      var benefit = account.tribe != null
+          ? account.buildings[Buildings.cards]!.getBenefit()
           : 1.0;
       cooldownPrice = _cooldownTimeToCost(base.get<int>(CardFields.cooldown)) *
           CardData.veteranCooldownModifier *
@@ -181,8 +178,7 @@ class AbstractCard with ServiceProvider {
   }
 
   num _cooldownTimeToCost(int time) {
-    var cooldownsBoughtToday =
-        account.get<int>(AccountField.cooldowns_bought_today) + 1;
+    var cooldownsBoughtToday = account.cooldowns_bought_today + 1;
     return time *
         (cooldownsBoughtToday * CardData.cooldownIncreaseModifier).ceil() *
         CardData.cooldownCostModifier;
@@ -214,9 +210,9 @@ class AuctionCard extends AbstractCard {
     activityStatus = map["activity_status"];
     lastBidderId = Utils.toInt(map["last_bidder_id"]);
     lastBidderGold = Utils.toInt(map["last_bidder_gold"]);
-    ownerIsMe = account.get(AccountField.id) == ownerId;
-    winnerIsMe = account.get(AccountField.id) == maxBidderId;
-    loserIsMe = account.get(AccountField.id) == lastBidderId;
+    ownerIsMe = account.id == ownerId;
+    winnerIsMe = account.id == maxBidderId;
+    loserIsMe = account.id == lastBidderId;
   }
 
   static Map<int, AuctionCard> getList(Account account, list) {
@@ -232,7 +228,7 @@ class AccountCard extends AbstractCard {
   bool isDeployed = false;
   AccountCard(super.account, super.map, {int? ownerId}) {
     id = map['id'] ?? -1;
-    this.ownerId = ownerId ?? account.get(AccountField.id);
+    this.ownerId = ownerId ?? account.id;
     lastUsedAt = map['last_used_at'] ?? 0;
   }
 

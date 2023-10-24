@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -30,7 +29,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   void initState() {
     var account = accountBloc.account!;
     _fruits = account.loadingData.fruits.map.values.toList();
-    _avaibledCards = Set<int>.from(account.get(AccountField.collection));
+    _avaibledCards = Set<int>.from(account.collection);
     _selectedFruit = ValueNotifier(_fruits[0]);
     super.initState();
   }

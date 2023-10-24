@@ -28,7 +28,7 @@ class _TreasuryBuildingPopupState
   @override
   contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var gold = state.account.get<int>(AccountField.bank_account_balance);
+      var gold = state.account.bank_account_balance;
       var step = (building.benefit / 5).round();
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -94,8 +94,8 @@ class _TreasuryBuildingPopupState
   _transaction(Account account, RpcId id, int amount) async {
     try {
       var data = await rpc(id, params: {RpcParams.amount.name: amount});
+      account.bank_account_balance = data["bank_account_balance"];
       account.update(data);
-      if (!mounted) return;
       accountBloc.add(SetAccount(account: account));
     } finally {}
   }

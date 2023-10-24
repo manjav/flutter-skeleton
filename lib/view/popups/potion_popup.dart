@@ -26,12 +26,12 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
   @override
   contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var potion = state.account.get<int>(AccountField.potion_number);
-      var price = state.account.get<int>(AccountField.potion_price);
+      var potion = state.account.potion;
+      var price = state.account.potion_price;
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Asset.load<Image>("icon_potion_number", height: 210.d),
+          Asset.load<Image>("icon_potion", height: 210.d),
           SizedBox(height: 32.d),
           Text("potion_description".l(),
               style: TStyles.medium.copyWith(height: 2.7.d)),
@@ -41,7 +41,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
             potion.toDouble(),
             capacity,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Asset.load<Image>("icon_potion_number", height: 64.d),
+              Asset.load<Image>("icon_potion", height: 64.d),
               SizedBox(width: 12.d),
               SkinnedText("$potion/${capacity.floor()}", style: TStyles.large)
             ]),
@@ -76,7 +76,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
         height: 150.d,
         onDisablePressed: () => toast("max_level".l([titleBuilder()])),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Asset.load<Image>("icon_potion_number", height: 80.d),
+          Asset.load<Image>("icon_potion", height: 80.d),
           SizedBox(width: 6.d),
           SkinnedText(label),
           SizedBox(width: 16.d),

@@ -150,9 +150,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                 if (index == 3) {
                   var input =
                       controller.findInput<double>("level") as SMINumber;
-                  var tribe = account.get<Tribe?>(AccountField.tribe);
-                  input.value = tribe != null
-                      ? tribe.levels[Buildings.base.id]!.toDouble()
+                  input.value = account.tribe != null
+                      ? account.tribe!.levels[Buildings.base.id]!.toDouble()
                       : 0.0;
                 }
                 artboard.addController(controller);
@@ -194,7 +193,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         var text =
             bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deals";
         if (bid.card.loserIsMe) {
-          bloc.account!.map["gold"] = bid.card.lastBidderGold;
+          bloc.account!.gold = bid.card.lastBidderGold;
           bloc.add(SetAccount(account: bloc.account!));
         }
         Overlays.insert(context, OverlayType.confirm, args: {
@@ -205,11 +204,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       }
       if (message.type == Noobs.auctionSold) {
         if (bid.card.loserIsMe) {
-          bloc.account!.map["gold"] = bid.card.lastBidderGold;
+          bloc.account!.gold = bid.card.lastBidderGold;
         } else if (bid.card.ownerIsMe) {
           var card = AccountCard(bloc.account!, bid.card.map);
           card.id = bid.card.cardId;
-          bloc.account!.map["cards"][card.id] = card;
+          bloc.account!.cards[card.id] = card;
         }
         bloc.add(SetAccount(account: bloc.account!));
       }

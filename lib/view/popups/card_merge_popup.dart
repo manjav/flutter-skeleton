@@ -116,7 +116,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
   }
 
   _getCardView(AccountCard card, double size) {
-    card = account.getCards()[card.id] ?? card;
+    card = account.cards[card.id] ?? card;
     return SizedBox(
         width: size,
         child: CardItem(card,
@@ -194,7 +194,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     if (cards.length < 2) {
       // Show other mergable cards
       selectedCards.clear();
-      selectedCards.addCard(cards[0]);
+      if (cards.isNotEmpty) selectedCards.addCard(cards[0]);
       await Future.delayed(const Duration(milliseconds: 50));
       // Close if mergable cards not available
       if (mounted && cards.length < 2) {

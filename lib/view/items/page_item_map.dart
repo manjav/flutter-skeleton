@@ -29,9 +29,6 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var buildings =
-          state.account.get<Map<Buildings, Building>>(AccountField.buildings);
-      List<Deadline> deadlines = state.account.map["deadlines"] ?? [];
       return Stack(alignment: Alignment.topLeft, children: [
         const LoaderWidget(AssetType.animation, "map_home",
             fit: BoxFit.fitWidth),
@@ -56,14 +53,13 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupInbox.routeName))),
-        _building(state.account, buildings[Buildings.defense]!, 400, 300),
-        _building(state.account, buildings[Buildings.offense]!, 95, 670),
-        _building(state.account, buildings[Buildings.base]!, 400, 840),
-        _building(state.account, buildings[Buildings.treasury]!, 130, 1140),
-        _building(state.account, buildings[Buildings.mine]!, 754, 1140),
+        _building(state.account, Buildings.defense, 400, 300),
+        _building(state.account, Buildings.offense, 95, 670),
+        _building(state.account, Buildings.base, 400, 840),
+        _building(state.account, Buildings.treasury, 130, 1140),
+        _building(state.account, Buildings.mine, 754, 1140),
         _button("battle", "battle_l", 150, 270, 442, () {
-          if (state.account.get<int>(AccountField.level) <
-              Account.availablityLevels["liveBattle"]!) {
+          if (state.account.level < Account.availablityLevels["liveBattle"]!) {
             Overlays.insert(context, OverlayType.toast,
                 args: "unavailable_l".l(
                     ["battle_l".l(), Account.availablityLevels["liveBattle"]]));
@@ -73,12 +69,12 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         }),
         _button("quest", "quest_l", 620, 270, 310,
             () => Navigator.pushNamed(context, Routes.deck.routeName)),
-        if (state.account.contains(AccountField.deadlines))
-          for (var i = 0; i < deadlines.length; i++)
+        if (state.account.deadlines.isNotEmpty)
+          for (var i = 0; i < state.account.deadlines.length; i++)
             Positioned(
                 right: 32.d,
                 top: 200.d + i * 180.d,
-                child: DeadlineIndicator(deadlines[i])),
+                child: DeadlineIndicator(state.account.deadlines[i])),
       ]);
     });
   }
@@ -110,10 +106,10 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         ));
   }
 
-  Widget _building(Account account, Building building, double x, double y) {
-    Widget child = building.type == Buildings.mine
-        ? BuildingBalloon(building)
-        : const SizedBox();
+  Widget _building(Account account, Buildings type, double x, double y) {
+    var building = account.buildings[type]!;
+    Widget child =
+        type == Buildings.mine ? BuildingBalloon(building) : const SizedBox();
     return Positioned(
         left: x.d,
         top: y.d,
@@ -126,8 +122,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   _onBuildingTap(Account account, Building building) {
     if (building.level < 1) {
       Overlays.insert(context, OverlayType.toast,
-          args: account.get(AccountField.level) <
-                  Account.availablityLevels["tribe"]
+          args: account.level < Account.availablityLevels["tribe"]!
               ? "coming_soon".l()
               : "error_149".l());
       return;

@@ -127,15 +127,15 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     var cardSize = 230.d;
     var radius = Radius.circular(36.d);
     var bidable = card.activityStatus > 0 &&
-        (card.ownerId != _account.get(AccountField.id) &&
-            card.maxBidderId != _account.get(AccountField.id));
+        (card.ownerId != _account.id) &&
+        card.maxBidderId != _account.id;
     var time = card.activityStatus > 0
         ? (card.createdAt + secondsOffset).toRemainingTime()
         : "closed_l".l();
     var bidderName = "auction_bid".l();
     if (!bidable) {
       bidderName +=
-          "\n${card.maxBidderId == _account.get(AccountField.id) ? "you_l".l() : card.maxBidderName}\n";
+          "\n${card.maxBidderId == _account.id ? "you_l".l() : card.maxBidderName}\n";
     }
     return Widgets.button(
         radius: radius.x,

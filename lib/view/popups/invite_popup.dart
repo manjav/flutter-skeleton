@@ -41,7 +41,7 @@ class _InvitePopupState extends AbstractPopupState<InvitePopup> {
         SizedBox(height: 30.d),
         SkinnedText("settings_invite_yours".l()),
         SizedBox(height: 10.d),
-        Widgets.clipboardGetter(_account.get<String>(AccountField.invite_key))
+        Widgets.clipboardGetter(_account.invite_key)
       ],
     ));
   }

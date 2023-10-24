@@ -47,7 +47,7 @@ class HttpConnection extends IService {
       params[RpcParams.restore_key.name] = Pref.restoreKey.getString();
     }
     var data = await rpc(RpcId.playerLoad, params: params);
-    loadData.account = Account()..init(data, args: loadData);
+    loadData.account = Account()..initialize(data, args: loadData);
     super.initialize();
     return loadData;
   }

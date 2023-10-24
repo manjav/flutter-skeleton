@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -49,9 +48,7 @@ class CardItem extends StatefulWidget {
   }
 
   static getHeroAnimation(AbstractCard card, double size, {Key? key}) {
-    var hero =
-        card.account.get<Map<int, HeroCard>>(AccountField.heroes)[card.id];
-
+    var hero = card.account.heroes[card.id];
     var items = <String, HeroItem>{};
     if (hero != null) {
       for (var item in hero.items) {

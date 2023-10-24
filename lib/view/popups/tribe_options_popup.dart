@@ -34,13 +34,11 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
   void initState() {
     selectedTabIndex = widget.args["index"] ?? 0;
     _account = accountBloc.account!;
-    var tribe = _account.get<Tribe>(AccountField.tribe);
-    var index = tribe.members.indexWhere((member) => member.itsMe);
+    var index = _account.tribe!.members.indexWhere((member) => member.itsMe);
     if (index > -1) {
-      _member = tribe.members[index];
+      _member = _account.tribe!.members[index];
     } else {
-      var id = _account.get<int>(AccountField.id);
-      _member = Member.init({"id": id}, id);
+      _member = Member.init({"id": _account.id}, _account.id);
     }
 
     super.initState();
@@ -48,7 +46,6 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
 
   @override
   Widget contentFactory() {
-    var tribe = _account.get<Tribe>(AccountField.tribe);
     return SizedBox(
         height: 1380.d,
         child: Column(children: [
@@ -58,7 +55,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
                   ["icon_population", "tribe_upgrade"][i])
           ]),
           SizedBox(height: 30.d),
-          Expanded(child: _getSelectedPage(tribe))
+          Expanded(child: _getSelectedPage(_account.tribe!))
         ]));
   }
 
@@ -281,7 +278,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         RpcParams.type.name: id,
       });
       _account.update(result);
-      _account.getBuilding(id.toBuildings())!.map['level']++;
+      _account.buildings[id.toBuildings()]!.map['level']++;
       tribe.levels[id] = tribe.levels[id]! + 1;
       setState(() {});
     } finally {}

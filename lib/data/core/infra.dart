@@ -27,6 +27,11 @@ class StringMap<T> {
     map[name] = data[name] ?? defaultValue;
   }
 }
+
+class DataModel {
+  void initialize(Map<String, dynamic> map, {dynamic args}) {}
+}
+
 enum Values {
   none,
   gold,

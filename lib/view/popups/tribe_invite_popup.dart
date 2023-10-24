@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
-import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -48,9 +46,8 @@ class _TribeInvitePopupState extends AbstractPopupState<TribeInvitePopup> {
 
   _invite() async {
     try {
-      var tribe = accountBloc.account!.get<Tribe>(AccountField.tribe);
       await rpc(RpcId.tribeInvite, params: {
-        RpcParams.tribe_id.name: tribe.id,
+        RpcParams.tribe_id.name: accountBloc.account!.tribe!.id,
         RpcParams.invitee_name.name: _textController.text
       });
       if (mounted) {

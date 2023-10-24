@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
-import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -86,7 +84,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
     var account = accountBloc.account!;
     try {
       var result = await rpc(RpcId.tribeDonate, params: {
-        RpcParams.tribe_id.name: account.get<Tribe>(AccountField.tribe).id,
+        RpcParams.tribe_id.name: account.tribe!.id,
         RpcParams.gold.name: _donateValue,
       });
 

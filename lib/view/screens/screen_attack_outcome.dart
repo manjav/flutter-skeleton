@@ -3,7 +3,6 @@ import 'package:rive/rive.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/ranking.dart';
-import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -184,9 +183,9 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 36.d),
-              SkinnedText(_account.get<String>(AccountField.name)),
-              _account.contains(AccountField.tribe)
-                  ? SkinnedText(_account.get<Tribe>(AccountField.tribe).name)
+              SkinnedText(_account.name),
+              _account.tribe != null
+                  ? SkinnedText(_account.tribe!.name)
                   : const SizedBox(),
             ],
           ),
@@ -215,8 +214,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
 
   Widget? _prizeItemBuilder(String type, int value) {
     if (type == "league_bonus") {
-      type =
-          "league_${LeagueData.getIndices(_account.get(AccountField.league_id)).$1}";
+      type = "league_${LeagueData.getIndices(_account.league_id).$1}";
     }
     return Opacity(
         opacity: (_animationController.value - 1.2).clamp(0, 1),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/tribe.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/localization.dart';
@@ -77,10 +76,7 @@ class Message with ServiceProvider {
     for (var map in list) {
       var message = Message(map, account);
       if (message.type.inTribe) {
-        var tribe = account.get<Tribe?>(AccountField.tribe);
-        if (tribe != null) {
-          _addtoTribe(tribe, message, map, account);
-        }
+        _addtoTribe(account, message, map);
       } else {
         result.add(message);
       }
@@ -89,15 +85,17 @@ class Message with ServiceProvider {
   }
 
   static void _addtoTribe(
-      Tribe tribe, Message message, Map<String, dynamic> map, Account account) {
-    var index = tribe.chat.value.indexWhere((chat) => chat.id == map["id"]);
+      Account account, Message message, Map<String, dynamic> map) {
+    if (account.tribe != null) return;
+    var index =
+        account.tribe!.chat.value.indexWhere((chat) => chat.id == map["id"]);
     if (index >= 0) return;
     map["messageType"] = map["message_type"];
     map["creationDate"] = map["created_at"];
     var chat = NoobChatMessage(map, account);
     chat.text = message.getText();
     chat.base = message;
-    tribe.chat.add(chat);
+    account.tribe!.chat.add(chat);
   }
 
   String getText() {
