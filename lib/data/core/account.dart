@@ -10,7 +10,8 @@ import 'adam.dart';
 import 'rpc_data.dart';
 import 'tribe.dart';
 
-class Account {
+class Account extends Opponent {
+  Account() : super.initialize(null, 0);
   static const Map<String, int> availablityLevels = {
     'ads': 4,
     'name': 4,
@@ -28,8 +29,7 @@ class Account {
       (math.pow(level, levelExpo) * levelMultiplier).ceil();
   late LoadingData loadingData;
 
-  late String name,
-      phone,
+  late String phone,
       address,
       realname,
       restore_key,
@@ -39,21 +39,12 @@ class Account {
       latest_app_version,
       latest_app_version_for_notice;
 
-  late int id,
-      q,
+  late int q,
       xp,
-      rank,
-      gold,
-      level,
       potion,
       nectar,
-      defPower,
-      avatarId,
-      leagueId,
-      leagueRank,
       weekly_score,
       activity_status,
-      tribePermission,
       new_messages,
       cooldowns_bought_today,
       total_quests,
@@ -84,7 +75,7 @@ class Account {
       base_hero_id,
       wheel_of_fortune_opens_in,
       latest_constants_version,
-      delta_time,
+      deltaTime,
       xpboost_created_at,
       pwboost_created_at,
       xpboost_id,
@@ -152,35 +143,27 @@ class Account {
   Map<int, HeroCard> heroes = {};
   Map<int, HeroItem> heroitems = {};
 
-  int get now => DateTime.now().secondsSinceEpoch + delta_time;
+  int get now => DateTime.now().secondsSinceEpoch + deltaTime;
 
-  void initialize(Map<String, dynamic> map, {dynamic args}) {
-    loadingData = args as LoadingData;
-    delta_time = map['now'] - DateTime.now().secondsSinceEpoch;
+  Account.initialize(Map<String, dynamic> map, this.loadingData)
+      : super.initialize(map, map["id"]) {
+    deltaTime = map['now'] - DateTime.now().secondsSinceEpoch;
 
     // Integers
-    id = Utils.toInt(map["id"]);
+    q = Utils.toInt(map["q"]);
     xp = Utils.toInt(map["xp"]);
+    nectar = Utils.toInt(map["nectar"]);
+    potion = Utils.toInt(map["potion_number"]);
     activity_status = Utils.toInt(map["activity_status"]);
     weekly_score = Utils.toInt(map["weekly_score"]);
-    level = Utils.toInt(map["level"]);
-    defPower = Utils.toInt(map["def_power"]);
-    leagueId = Utils.toInt(map["league_id"]);
-    gold = Utils.toInt(map["gold"]);
-    rank = Utils.toInt(map["rank"]);
-    leagueRank = Utils.toInt(map["league_rank"]);
-    tribePermission = Utils.toInt(map["tribe_permission"]);
     new_messages = Utils.toInt(map["new_messages"]);
     cooldowns_bought_today = Utils.toInt(map["cooldowns_bought_today"]);
     total_quests = Utils.toInt(map["total_quests"]);
     total_battles = Utils.toInt(map["total_battles"]);
-    q = Utils.toInt(map["q"]);
     bank_account_balance = Utils.toInt(map["bank_account_balance"]);
     last_gold_collect_at = Utils.toInt(map["last_gold_collect_at"]);
     tutorial_id = Utils.toInt(map["tutorial_id"]);
     tutorial_index = Utils.toInt(map["tutorial_index"]);
-    potion = Utils.toInt(map["potion_number"]);
-    nectar = Utils.toInt(map["nectar"]);
     birth_year = Utils.toInt(map["birth_year"]);
     gender = Utils.toInt(map["gender"]);
     prev_league_id = Utils.toInt(map["prev_league_id"]);
@@ -188,7 +171,6 @@ class Account {
     won_battle_num = Utils.toInt(map["won_battle_num"]);
     lost_battle_num = Utils.toInt(map["lost_battle_num"]);
     mood_id = Utils.toInt(map["mood_id"]);
-    avatarId = Utils.toInt(map["avatar_id"]);
     updated_at = Utils.toInt(map["updated_at"]);
     last_load_at = Utils.toInt(map["last_load_at"]);
     avatar_slots = Utils.toInt(map["avatar_slots"]);
@@ -204,7 +186,7 @@ class Account {
     base_hero_id = Utils.toInt(map["base_hero_id"]);
     wheel_of_fortune_opens_in = Utils.toInt(map["wheel_of_fortune_opens_in"]);
     latest_constants_version = Utils.toInt(map["latest_constants_version"]);
-    delta_time = Utils.toInt(map["delta_time"]);
+    deltaTime = Utils.toInt(map["delta_time"]);
     xpboost_created_at = Utils.toInt(map["xpboost_created_at"]);
     pwboost_created_at = Utils.toInt(map["pwboost_created_at"]);
     xpboost_id = Utils.toInt(map["xpboost_id"]);
@@ -511,9 +493,7 @@ class Account {
     }
   }
 
-  Opponent toOpponent() {
-    return Opponent.initialize({} /*map*/, id);
-  }
+
 
   int getValue(Values type) => switch (type) {
         Values.gold => gold,

@@ -54,9 +54,9 @@ abstract class Rank {
   int index = 0, id = 0, rank = 0, score = 0, status = 0;
   Rank.initialize(Map<String, dynamic>? map, int ownerId) {
     if (map == null) return;
-    id = map["id"] ?? 0;
     name = map["name"] ?? "";
-    rank = map["rank"] ?? 0;
+    id = Utils.toInt(map["id"]);
+    rank = Utils.toInt(map["rank"]);
     itsMe = ownerId == id;
   }
 }
@@ -67,11 +67,11 @@ class TribeRank extends Rank {
   TribeRank.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    score = map["score"] ?? 0;
+    score = Utils.toInt(map["score"]);
     description = map["description"] ?? "";
-    memberCount = map["member_count"] ?? 0;
-    weeklyScore = map["weekly_score"] ?? 0;
-    weeklyRank = map["weekly_rank"] ?? 0;
+    memberCount = Utils.toInt(map["member_count"]);
+    weeklyScore = Utils.toInt(map["weekly_score"]);
+    weeklyRank = Utils.toInt(map["weekly_rank"]);
   }
 }
 
@@ -81,11 +81,11 @@ class Player extends Rank {
   Player.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    score = map["xp"] ?? 0;
-    level = map["level"] ?? 0;
-    tribeId = map["tribe_id"] ?? 0;
+    score = Utils.toInt(map["xp"]);
+    level = Utils.toInt(map["level"]);
+    tribeId = Utils.toInt(map["tribe_id"]);
     tribeName = map["tribe_name"] ?? "";
-    avatarId = map["avatar_id"] ?? 1;
+    avatarId = Utils.toInt(map["avatar_id"], 1);
   }
 }
 
@@ -100,16 +100,16 @@ class Member extends Rank {
   Member.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    xp = map["xp"] ?? 0;
-    gold = map["gold"] ?? 0;
-    degree = MemberDegree.values[map["tribe_permission"] ?? 1];
-    level = map["level"] ?? 0;
-    defPower = map["def_power"] ?? 0;
-    status = map["status"] ?? 0;
-    leagueId = map["league_id"] ?? 0;
-    leagueRank = map["league_rank"] ?? 0;
-    avatarId = map["avatar_id"] ?? 0;
+    xp = Utils.toInt(map["xp"]);
+    gold = Utils.toInt(map["gold"]);
+    level = Utils.toInt(map["level"]);
+    defPower = Utils.toInt(map["def_power"]);
+    status = Utils.toInt(map["status"]);
+    leagueId = Utils.toInt(map["league_id"]);
+    leagueRank = Utils.toInt(map["league_rank"]);
+    avatarId = Utils.toInt(map["avatar_id"]);
     pokeStatus = map["poke_status"] ?? false;
+    degree = MemberDegree.values[map["tribe_permission"] ?? 1];
   }
 
   static List<Member> initAll(List list, int ownerId) {
@@ -126,9 +126,9 @@ class LeagueRank extends Player {
   LeagueRank.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    rank = map["league_rank"] ?? 0;
-    score = map["overall_score"] ?? 0;
-    weeklyScore = map["weekly_score"] ?? 0;
+    rank = Utils.toInt(map["league_rank"]);
+    score = Utils.toInt(map["overall_score"]);
+    weeklyScore = Utils.toInt(map["weekly_score"]);
   }
 }
 
@@ -175,12 +175,12 @@ class LeagueData {
   LeagueData.initialize(Map<String, dynamic>? map, int ownerId) {
     if (map == null) return;
     var w = map["winner_ranges"];
-    id = w["league_id"];
-    leagueRank = map["league_rank"] ?? 0;
-    risingRank = map["league_rising_rank"] ?? 0;
-    fallingRank = map["league_falling_rank"] ?? 0;
-    currentBonus = map["current_league_bonus"] ?? 0;
-    nextBonus = map["next_league_bonus"] ?? 0;
+    id = Utils.toInt(w["league_id"]);
+    leagueRank = Utils.toInt(map["league_rank"]);
+    risingRank = Utils.toInt(map["league_rising_rank"]);
+    fallingRank = Utils.toInt(map["league_falling_rank"]);
+    currentBonus = Utils.toInt(map["current_league_bonus"]);
+    nextBonus = Utils.toInt(map["next_league_bonus"]);
     rewardAvgCardPower = map["reward_avg_card_power"] ?? 0.0;
 
     winnerRanges = [];
@@ -229,25 +229,25 @@ class Opponent extends Player {
   Opponent.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    gold = map["gold"] ?? 0;
-    status = map["status"] ?? 0;
-    score = map["xp"] ?? 0;
-    defPower = map["def_power"] ?? 0;
-    leagueId = map["league_id"] ?? 0;
-    leagueRank = map["league_rank"] ?? 0;
-    powerRatio = map["power_ratio"] ?? 0;
-    tribePermission = map["tribe_permission"] ?? 0;
+    gold = Utils.toInt(map["gold"]);
+    status = Utils.toInt(map["status"]);
+    score = Utils.toInt(map["xp"]);
+    defPower = Utils.toInt(map["def_power"]);
+    leagueId = Utils.toInt(map["league_id"]);
+    leagueRank = Utils.toInt(map["league_rank"]);
+    powerRatio = Utils.toInt(map["power_ratio"]);
+    tribePermission = Utils.toInt(map["tribe_permission"]);
   }
 
   static List<Opponent> fromMap(Map<String, dynamic> map) {
+    var index = 0;
+    var list = <Opponent>[];
     scoutCost = map["scout_cost"];
     _attackLogs = Opponent._getAttacksLog();
-    var list = <Opponent>[];
-    var index = 0;
     for (var player in map["players"]) {
       var opponent = Opponent.initialize(player, 0);
       opponent.index = index++;
-      opponent.todayAttacksCount = (_attackLogs["${opponent.id}"] ?? 0);
+      opponent.todayAttacksCount = Utils.toInt(_attackLogs["${opponent.id}"]);
       list.add(opponent);
     }
     return list;
@@ -279,11 +279,11 @@ class Opponent extends Player {
 
 class LiveOpponent {
   final Opponent base;
+  String tribeName = "";
   final int id, teamOwnerId;
   final OpponentSide fraction;
-  late final SelectedCards cards;
-  String tribeName = "";
   Map<String, dynamic> map = {};
+  late final SelectedCards cards;
   int gold = 0, xp = 0, power = 0, score = 0;
   Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
   bool won = false;
@@ -299,9 +299,9 @@ class LiveOpponent {
     gold = map["added_gold"];
     var benefits = map["hero_benefits_info"];
     if (benefits.length > 0) {
-      heroBenefits["power"] = benefits["power_benefit"] ?? 0;
-      heroBenefits["gold"] = benefits["gold_benefit"] ?? 0;
-      heroBenefits["cooldown"] = benefits["cooldown_benefit"] ?? 0;
+      heroBenefits["power"] = Utils.toInt(benefits["power_benefit"]);
+      heroBenefits["gold"] = Utils.toInt(benefits["gold_benefit"]);
+      heroBenefits["cooldown"] = Utils.toInt(benefits["cooldown_benefit"]);
     }
   }
 }
