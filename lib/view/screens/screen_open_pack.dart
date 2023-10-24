@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/card.dart';
+import '../../data/core/fruit.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/items/card_item.dart';
 import '../route_provider.dart';

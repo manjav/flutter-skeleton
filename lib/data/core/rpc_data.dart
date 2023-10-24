@@ -1,5 +1,5 @@
 import 'account.dart';
-import 'card.dart';
+import 'fruit.dart';
 
 class LoadingData {
   static String baseURL = '';

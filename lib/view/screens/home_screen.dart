@@ -6,7 +6,7 @@ import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
-import '../../data/core/card.dart';
+import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';

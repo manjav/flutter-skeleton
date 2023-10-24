@@ -3,7 +3,7 @@
 import 'dart:math' as math;
 
 import '../../data/core/account.dart';
-import '../../data/core/card.dart';
+import 'fruit.dart';
 import '../../utils/utils.dart';
 import 'infra.dart';
 

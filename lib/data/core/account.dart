@@ -4,7 +4,7 @@ import 'dart:math' as math;
 
 import '../../utils/utils.dart';
 import 'building.dart';
-import 'card.dart';
+import 'fruit.dart';
 import 'infra.dart';
 import 'adam.dart';
 import 'rpc_data.dart';

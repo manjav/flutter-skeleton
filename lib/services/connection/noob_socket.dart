@@ -4,7 +4,7 @@ import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
-import '../../data/core/card.dart';
+import '../../data/core/fruit.dart';
 import '../../data/core/message.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc_data.dart';

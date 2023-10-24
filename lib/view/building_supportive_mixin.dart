@@ -6,7 +6,7 @@ import '../../services/localization.dart';
 import '../blocs/account_bloc.dart';
 import '../blocs/services_bloc.dart';
 import '../data/core/building.dart';
-import '../data/core/card.dart';
+import '../data/core/fruit.dart';
 import '../data/core/rpc.dart';
 import '../services/connection/http_connection.dart';
 import 'overlays/ioverlay.dart';
