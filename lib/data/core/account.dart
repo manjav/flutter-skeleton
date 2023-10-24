@@ -40,27 +40,28 @@ class Account extends DataModel {
       latest_app_version_for_notice;
 
   late int id,
+      q,
       xp,
-      activity_status,
-      weekly_score,
-      level,
-      def_power,
-      league_id,
-      gold,
       rank,
-      league_rank,
-      tribe_permission,
+      gold,
+      level,
+      potion,
+      nectar,
+      defPower,
+      avatarId,
+      leagueId,
+      leagueRank,
+      weekly_score,
+      activity_status,
+      tribePermission,
       new_messages,
       cooldowns_bought_today,
       total_quests,
       total_battles,
-      q,
       bank_account_balance,
       last_gold_collect_at,
       tutorial_id,
       tutorial_index,
-      potion,
-      nectar,
       birth_year,
       gender,
       prev_league_id,
@@ -68,7 +69,6 @@ class Account extends DataModel {
       won_battle_num,
       lost_battle_num,
       mood_id,
-      avatar_id,
       updated_at,
       last_load_at,
       avatar_slots,
@@ -166,12 +166,12 @@ class Account extends DataModel {
     activity_status = Utils.toInt(map["activity_status"]);
     weekly_score = Utils.toInt(map["weekly_score"]);
     level = Utils.toInt(map["level"]);
-    def_power = Utils.toInt(map["def_power"]);
-    league_id = Utils.toInt(map["league_id"]);
+    defPower = Utils.toInt(map["def_power"]);
+    leagueId = Utils.toInt(map["league_id"]);
     gold = Utils.toInt(map["gold"]);
     rank = Utils.toInt(map["rank"]);
-    league_rank = Utils.toInt(map["league_rank"]);
-    tribe_permission = Utils.toInt(map["tribe_permission"]);
+    leagueRank = Utils.toInt(map["league_rank"]);
+    tribePermission = Utils.toInt(map["tribe_permission"]);
     new_messages = Utils.toInt(map["new_messages"]);
     cooldowns_bought_today = Utils.toInt(map["cooldowns_bought_today"]);
     total_quests = Utils.toInt(map["total_quests"]);
@@ -190,7 +190,7 @@ class Account extends DataModel {
     won_battle_num = Utils.toInt(map["won_battle_num"]);
     lost_battle_num = Utils.toInt(map["lost_battle_num"]);
     mood_id = Utils.toInt(map["mood_id"]);
-    avatar_id = Utils.toInt(map["avatar_id"]);
+    avatarId = Utils.toInt(map["avatar_id"]);
     updated_at = Utils.toInt(map["updated_at"]);
     last_load_at = Utils.toInt(map["last_load_at"]);
     avatar_slots = Utils.toInt(map["avatar_slots"]);
@@ -519,7 +519,7 @@ class Account extends DataModel {
 
   int getValue(Values type) => switch (type) {
         Values.gold => gold,
-        Values.leagueRank => league_rank,
+        Values.leagueRank => leagueRank,
         Values.nectar => nectar,
         Values.potion => potion,
         Values.rank => rank,

@@ -79,7 +79,7 @@ class Tribe with ServiceProvider {
       "channel": "tribe$id",
       "push_message_type": "chat",
       "sender": account.name,
-      "avatar_id": account.avatar_id,
+      "avatar_id": account.avatarId,
       "creationDate": now.secondsSinceEpoch + account.delta_time,
       "timestamp": (now.microsecondsSinceEpoch -
               MyApp.startTime.microsecondsSinceEpoch) /

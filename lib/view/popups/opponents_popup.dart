@@ -189,7 +189,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         children: [
           _group(
               "my_max_power".l(),
-              SkinnedText(_account.def_power.compact(),
+              SkinnedText(_account.defPower.compact(),
                   style: TStyles.big.copyWith(
                       color: TColors.orange.withGreen(10700), height: 3.d))),
           SizedBox(width: 32.d),

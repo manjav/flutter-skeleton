@@ -56,7 +56,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
         _updateParams(
           state.account.xp,
           state.account.level,
-          state.account.avatar_id,
+          state.account.avatarId,
         );
         return _elementsBuilder();
       });

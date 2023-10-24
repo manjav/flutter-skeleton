@@ -214,7 +214,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
 
   Widget? _prizeItemBuilder(String type, int value) {
     if (type == "league_bonus") {
-      type = "league_${LeagueData.getIndices(_account.league_id).$1}";
+      type = "league_${LeagueData.getIndices(_account.leagueId).$1}";
     }
     return Opacity(
         opacity: (_animationController.value - 1.2).clamp(0, 1),
