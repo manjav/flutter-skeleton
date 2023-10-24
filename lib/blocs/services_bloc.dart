@@ -84,7 +84,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       DeviceInfo => ServiceType.device,
       Inbox => ServiceType.inbox,
       Localization => ServiceType.localization,
-      LocalNotification() => ServiceType.localNotification,
+      LocalNotification => ServiceType.localNotification,
       Prefs => ServiceType.prefs,
       Sounds => ServiceType.sounds,
       Trackers => ServiceType.trackers,
