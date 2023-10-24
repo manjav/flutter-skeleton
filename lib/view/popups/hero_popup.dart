@@ -93,8 +93,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
           builder: (context, value, child) {
             var hero = _heroes[value];
             var name = hero.card.base
-                .get<FruitData>(CardFields.fruit)
-                .get<String>(FriutFields.name);
+                .get<Fruit>(CardFields.fruit)
+                .name;
             var items = List<HeroItem?>.generate(4, (i) => null);
             for (var item in hero.items) {
               if (item.base.category == 1) {
@@ -275,7 +275,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     if (isAvailable) {
       if (host != null) {
         return _lockItem("icon_used",
-            "${host.card.fruit.get<String>(FriutFields.name)}_t".l());
+            "${host.card.fruit.name}_t".l());
       }
       return Widgets.skinnedButton(
         width: 320.d,
@@ -323,7 +323,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
 
     if (host != null) {
       toast("heroitem_used"
-          .l(["${host.card.fruit.get<String>(FriutFields.name)}_t".l()]));
+          .l(["${host.card.fruit.name}_t".l()]));
       return;
     }
 

@@ -21,9 +21,9 @@ class CollectionPopup extends AbstractPopup {
 
 class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
     with KeyProvider {
-  late List<FruitData> _fruits;
+  late List<Fruit> _fruits;
   late Set<int> _avaibledCards;
-  late final ValueNotifier<FruitData> _selectedFruit;
+  late final ValueNotifier<Fruit> _selectedFruit;
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
 
   @override
   Widget contentFactory() {
-    return ValueListenableBuilder<FruitData>(
+    return ValueListenableBuilder<Fruit>(
         valueListenable: _selectedFruit,
         builder: (context, value, child) {
           return Stack(alignment: Alignment.center, children: [
@@ -69,15 +69,14 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
                     radius: 16.d,
                     color: TColors.primary70,
                     padding: EdgeInsets.symmetric(horizontal: 30.d),
-                    child: SkinnedText(
-                        "${value.get<String>(FriutFields.name)}_t".l(),
+                    child: SkinnedText("${value.name}_t".l(),
                         style: TStyles.large))),
             _fruitsListBuilder(),
           ]);
         });
   }
 
-  Widget _cardsListBuilder(FruitData fruit) {
+  Widget _cardsListBuilder(Fruit fruit) {
     var gap = 12.d;
     var len = fruit.cards[0].isHero ? 1 : fruit.cards.length;
     var crossAxisCount = len < 4 ? len % 4 : 4;
@@ -107,8 +106,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
     var id = card.get<int>(CardFields.id);
     var level = card.get<int>(CardFields.rarity);
     return Stack(alignment: Alignment.center, children: [
-      CardItem.getCardBackground(
-          card.fruit.get<int>(FriutFields.category), level),
+      CardItem.getCardBackground(card.fruit.category, level),
       _avaibledCards.contains(id)
           ? CardItem.getCardImage(card, itemSize * 0.9,
               key: getGlobalKey(card.get(CardFields.id)))
@@ -138,7 +136,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
         ));
   }
 
-  Widget _fruitItemBuilder(int index, FruitData fruit) {
+  Widget _fruitItemBuilder(int index, Fruit fruit) {
     var selected = _selectedFruit.value == fruit;
 
     return Widgets.button(

@@ -33,7 +33,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   @override
   void initState() {
     _card = widget.args['card'];
-    _name = _card.fruit.get<String>(FriutFields.name);
+    _name = _card.fruit.name;
     _account = accountBloc.account!;
     super.initState();
   }

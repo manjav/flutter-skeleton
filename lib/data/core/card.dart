@@ -14,35 +14,37 @@ import 'building.dart';
 import 'infra.dart';
 import 'result.dart';
 
-enum FriutFields {
-  id,
-  name,
-  smallImage,
-  maxLevel,
-  minLevel,
-  category,
-  description,
-}
+class Fruit {
+  late String name, smallImage, description;
+  late int id, maxLevel, minLevel, category;
 
-class FruitData extends StringMap<dynamic> {
   List<CardData> cards = [];
-  T get<T>(FriutFields field) => map[field.name] as T;
-  bool get isSalable => get<int>(FriutFields.category) < 3;
-  bool get isChristmas => get<int>(FriutFields.category) == 1;
-  bool get isMonster => get<int>(FriutFields.category) == 2;
-  bool get isCrystal => get<int>(FriutFields.category) == 3;
-  bool get isHero => get<int>(FriutFields.category) == 4;
+  bool get isSalable => category < 3;
+  bool get isChristmas => category == 1;
+  bool get isMonster => category == 2;
+  bool get isCrystal => category == 3;
+  bool get isHero => category == 4;
+
+  Fruit.initialize(Map<String, dynamic> data) {
+    name = data["name"];
+    id = Utils.toInt(data["id"]);
+    smallImage = data["smallImage"];
+    description = data["description"];
+    maxLevel = Utils.toInt(data["maxLevel"]);
+    minLevel = Utils.toInt(data["minLevel"]);
+    category = Utils.toInt(data["category"]);
+  }
 }
 
-class Fruits extends StringMap<FruitData> {
+class Fruits extends StringMap<Fruit> {
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
     data.forEach((key, value) {
-      map[key] = FruitData()..init(value);
+      map[key] = Fruit.initialize(value);
     });
   }
 
-  FruitData get(String key) => map[key]!;
+  Fruit get(String key) => map[key]!;
 }
 
 //         -=-=-=-    Card    -=-=-=-
@@ -76,7 +78,7 @@ class CardData extends StringMap<dynamic> {
   @override
   void init(Map<String, dynamic> data, {dynamic args}) {
     super.init(data);
-    map['fruit'] = args as FruitData;
+    map['fruit'] = args as Fruit;
     setDefault('heroType', data, -1);
     setDefault('isHero', data, false);
     setDefault('powerAttribute', data, 0);
@@ -87,7 +89,7 @@ class CardData extends StringMap<dynamic> {
 
   bool contains(CardFields field) => map.containsKey(field.name);
   T get<T>(CardFields field) => map[field.name] as T;
-  FruitData get fruit => get<FruitData>(CardFields.fruit);
+  Fruit get fruit => get<Fruit>(CardFields.fruit);
   int get cost {
     const maxEnhanceModifier = 45;
     const priceModifier = 100;
@@ -141,9 +143,8 @@ class AbstractCard with ServiceProvider {
     return (cooldownTime - delta).ceil().min(0);
   }
 
-  FruitData get fruit => base.get<FruitData>(CardFields.fruit);
-  bool get isUpgradable =>
-      base.get<int>(CardFields.rarity) < fruit.get<int>(FriutFields.maxLevel);
+  Fruit get fruit => base.get<Fruit>(CardFields.fruit);
+  bool get isUpgradable => base.get<int>(CardFields.rarity) < fruit.maxLevel;
 
   bool get isMonster {
     var baseId = base.get(CardFields.id);

@@ -28,14 +28,14 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
   late Account _account;
   int _selectedCardIndex = 0;
   int _selectedLevelIndex = 0;
-  List<FruitData> _fruits = [];
+  List<Fruit> _fruits = [];
 
   @override
   void initState() {
     super.initState();
     _account = accountBloc.account!;
     _fruits = _account.loadingData.fruits.map.values
-        .where((f) => f.get<int>(FriutFields.category) < 3)
+        .where((f) => f.category < 3)
         .toList();
   }
 
@@ -86,7 +86,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
         ]));
   }
 
-  Widget _cardItemBuilder(int index, FruitData fruit) {
+  Widget _cardItemBuilder(int index, Fruit fruit) {
     var selected = _selectedCardIndex == index;
     return Widgets.button(
         height: 100.d,
@@ -104,13 +104,13 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
           children: [
             CardItem.getCardImage(fruit.cards[0], 76.d),
             SizedBox(width: 12.d),
-            SkinnedText("${fruit.get(FriutFields.name)}_t".l())
+            SkinnedText("${fruit.name}_t".l())
           ],
         ),
         onPressed: () => setState(() => _selectedCardIndex = index));
   }
 
-  Widget _levelItemBuilder(int index, FruitData fruit) {
+  Widget _levelItemBuilder(int index, Fruit fruit) {
     var selected = _selectedLevelIndex == index;
     return Widgets.button(
         padding: EdgeInsets.all(8.d),

@@ -64,8 +64,7 @@ class CardItem extends StatefulWidget {
         width: size, height: size, onRiveInit: (Artboard artboard) {
       final controller =
           StateMachineController.fromArtboard(artboard, 'Heroes')!;
-      controller.findInput<double>('hero')?.value =
-          card.fruit.get(FriutFields.id).toDouble();
+      controller.findInput<double>('hero')?.value = card.fruit.id.toDouble();
       for (var item in items.entries) {
         controller.findInput<double>(item.key)?.value =
             item.value.base.id.toDouble();
@@ -104,8 +103,8 @@ class _CardItemState extends State<CardItem> {
     }
 
     var items = <Widget>[
-      CardItem.getCardBackground(baseCard.fruit.get<int>(FriutFields.category),
-          baseCard.get<int>(CardFields.rarity)),
+      CardItem.getCardBackground(
+          baseCard.fruit.category, baseCard.get<int>(CardFields.rarity)),
       widget.card.base.isHero
           ? CardItem.getHeroAnimation(widget.card, 320 * s)
           : CardItem.getCardImage(baseCard, 216 * s, key: _imageKey),

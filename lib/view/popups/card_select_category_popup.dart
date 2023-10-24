@@ -29,14 +29,14 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
   int _selectedCategory = 0;
   int _selectedLevelIndex = 0;
   int _cheapestMode = 0;
-  List<FruitData> _fruits = [];
+  List<Fruit> _fruits = [];
 
   @override
   void initState() {
     super.initState();
     _account = accountBloc.account!;
     _fruits = _account.loadingData.fruits.map.values
-        .where((f) => f.get<int>(FriutFields.category) < 3)
+        .where((f) => f.category < 3)
         .toList();
   }
 
@@ -58,8 +58,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
 
   @override
   contentFactory() {
-    var fruit = _fruits.firstWhere(
-        (f) => f.get<int>(FriutFields.category) == _selectedCategory);
+    var fruit = _fruits.firstWhere((f) => f.category == _selectedCategory);
     return SizedBox(
         // height: DeviceInfo.size.height * 0.5,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -113,7 +112,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
         onPressed: () => setState(() => _selectedCategory = category));
   }
 
-  Widget _levelItemBuilder(int index, FruitData fruit) {
+  Widget _levelItemBuilder(int index, Fruit fruit) {
     var selected = _selectedLevelIndex == index;
     return Widgets.button(
         padding: EdgeInsets.all(8.d),

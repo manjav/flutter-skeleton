@@ -493,8 +493,6 @@ class Account extends Opponent {
     }
   }
 
-
-
   int getValue(Values type) => switch (type) {
         Values.gold => gold,
         Values.leagueRank => leagueRank,
