@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/infra.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -40,8 +41,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
   }
 
   @override
-  List<Widget> appBarElements() =>
-      [Indicator(widget.type.name, AccountField.gold)];
+  List<Widget> appBarElements() => [Indicator(widget.type.name, Values.gold)];
 
   @override
   Widget innerChromeFactory() {

@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/infra.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
@@ -43,9 +44,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   @override
   List<Widget> appBarElementsRight() {
     return <Widget>[
-      Indicator(widget.type.name, AccountField.gold),
-      Indicator(widget.type.name, AccountField.nectar, width: 280.d),
-      Indicator(widget.type.name, AccountField.potion_number, width: 256.d),
+      Indicator(widget.type.name, Values.gold),
+      Indicator(widget.type.name, Values.nectar, width: 280.d),
+      Indicator(widget.type.name, Values.potion, width: 256.d),
     ];
   }
 

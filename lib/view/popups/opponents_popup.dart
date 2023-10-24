@@ -6,6 +6,7 @@ import 'package:rive/rive.dart';
 
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
+import '../../data/core/infra.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
@@ -170,7 +171,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                         SkinnedText(value.tribeName, style: tribeStyle),
                       ])),
                   SizedBox(width: 16.d),
-                  Indicator(widget.type.name, AccountField.league_rank,
+                  Indicator(widget.type.name, Values.leagueRank,
                       width: 240.d,
                       hasPlusIcon: false,
                       data: value.leagueId,

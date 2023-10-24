@@ -27,6 +27,14 @@ class StringMap<T> {
     map[name] = data[name] ?? defaultValue;
   }
 }
+enum Values {
+  none,
+  gold,
+  leagueRank,
+  nectar,
+  potion,
+  rank,
+}
 
 class IntVec2d {
   final int i, j;

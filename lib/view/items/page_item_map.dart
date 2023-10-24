@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
+import '../../data/core/infra.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
@@ -37,14 +38,14 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         Positioned(
             top: 380.d,
             left: 32.d,
-            child: Indicator("home", AccountField.league_rank,
+            child: Indicator("home", Values.leagueRank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupLeague.routeName))),
         Positioned(
             top: 240.d,
             left: 32.d,
-            child: Indicator("home", AccountField.rank,
+            child: Indicator("home", Values.rank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupRanking.routeName))),

@@ -7,7 +7,7 @@ import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/card.dart';
-import '../../data/core/tribe.dart';
+import '../../data/core/infra.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -75,9 +75,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       return [];
     }
     if (_selectedTab == 4) {
-      return [
-        Indicator(widget.type.name, AccountField.gold),
-      ];
+      return [Indicator(widget.type.name, Values.gold)];
     }
     if (_selectedTab == 2) {
       return <Widget>[

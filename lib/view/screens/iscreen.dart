@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
+import '../../data/core/infra.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/service_provider.dart';
 import '../../utils/assets.dart';
@@ -82,8 +82,8 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   List<Widget> appBarElementsRight() {
     return [
-      Indicator(widget.type.name, AccountField.gold),
-      Indicator(widget.type.name, AccountField.nectar, width: 300.d)
+      Indicator(widget.type.name, Values.gold),
+      Indicator(widget.type.name, Values.nectar, width: 300.d)
     ];
   }
 

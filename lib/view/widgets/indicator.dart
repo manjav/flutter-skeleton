@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
-import '../../data/core/account.dart';
+import '../../data/core/infra.dart';
 import '../../data/core/ranking.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
@@ -16,7 +16,7 @@ import '../widgets.dart';
 
 class Indicator extends StatefulWidget {
   final String origin;
-  final AccountField itemType;
+  final Values type;
   final int? value;
   final double? width;
   final Function? onTap;
@@ -25,7 +25,7 @@ class Indicator extends StatefulWidget {
 
   const Indicator(
     this.origin,
-    this.itemType, {
+    this.type, {
     Key? key,
     this.value,
     this.width,
@@ -47,7 +47,7 @@ class _IndicatorState extends State<Indicator>
         width: widget.width ?? (widget.hasPlusIcon ? 320.d : 250.d),
         height: height,
         child: Hero(
-          tag: widget.itemType.name,
+          tag: widget.type.name,
           child: Widgets.touchable(
               child: Material(
                 color: TColors.transparent,
@@ -55,7 +55,7 @@ class _IndicatorState extends State<Indicator>
                     ? BlocBuilder<AccountBloc, AccountState>(
                         builder: (context, state) => _getElements(
                             height,
-                            state.account.get<int>(widget.itemType),
+                            state.account.getValue(widget.type),
                             state.account.get<int>(AccountField.league_id)))
                     : _getElements(height, widget.value!, widget.data as int),
               ),
@@ -63,16 +63,16 @@ class _IndicatorState extends State<Indicator>
                 if (widget.onTap != null) {
                   widget.onTap?.call();
                 } else {
-                  switch (widget.itemType) {
-                    case AccountField.gold:
-                    case AccountField.nectar:
+                  switch (widget.type) {
+                    case Values.gold:
+                    case Values.nectar:
                       Navigator.popUntil(context, (route) => route.isFirst);
                       BlocProvider.of<ServicesBloc>(context)
                           .add(ServicesEvent(ServicesInitState.changeTab, 0));
 
                       log("Go to shop");
                       break;
-                    case AccountField.potion_number:
+                    case Values.potion:
                       Navigator.pushNamed(
                           context, Routes.popupPotion.routeName);
                       break;
@@ -91,9 +91,7 @@ class _IndicatorState extends State<Indicator>
   _getElements(double height, int value, int league) {
     var left = height * 0.65;
     var right = widget.hasPlusIcon ? height - 30.d : 0.0;
-    if (widget.itemType == AccountField.league_rank &&
-        value == 0 &&
-        league == 0) {
+    if (widget.type == Values.leagueRank && value == 0 && league == 0) {
       return const SizedBox();
     }
 
@@ -128,9 +126,9 @@ class _IndicatorState extends State<Indicator>
   }
 
   String _getIcon(int league) {
-    if (widget.itemType == AccountField.league_rank) {
+    if (widget.type == Values.leagueRank) {
       return "icon_league_${LeagueData.getIndices(league).$1}";
     }
-    return "icon_${widget.itemType.name}";
+    return "icon_${widget.type.name}";
   }
 }

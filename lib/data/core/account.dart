@@ -435,6 +435,10 @@ class Account extends StringMap<dynamic> {
   Opponent toOpponent() {
     return Opponent.init(map, map["id"]);
   }
+
+  int getValue(Values type) => switch (type) {
+        _ => 0,
+      };
 }
 
 class Deadline {

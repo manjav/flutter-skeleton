@@ -3,6 +3,7 @@ import 'package:rive/rive.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
+import '../../data/core/infra.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -38,8 +39,8 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
   @override
   List<Widget> appBarElements() {
     return [
-      Indicator(widget.type.name, AccountField.potion_number, width: 290.d),
-      Indicator(widget.type.name, AccountField.gold),
+      Indicator(widget.type.name, Values.potion, width: 290.d),
+      Indicator(widget.type.name, Values.gold),
     ];
   }
 

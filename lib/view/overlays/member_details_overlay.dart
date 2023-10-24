@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/account.dart';
+import '../../data/core/infra.dart';
 import '../../data/core/ranking.dart';
 import '../../data/core/rpc.dart';
-import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -73,8 +72,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
                             const Expanded(child: SizedBox()),
                             Transform.scale(
                                 scale: 0.7,
-                                child: Indicator(
-                                    "member", AccountField.league_rank,
+                                child: Indicator("member", Values.leagueRank,
                                     value: member.leagueRank,
                                     data: member.leagueId,
                                     hasPlusIcon: false,
