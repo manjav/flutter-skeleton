@@ -34,17 +34,14 @@ class Fruit {
     minLevel = Utils.toInt(data["minLevel"]);
     category = Utils.toInt(data["category"]);
   }
-}
 
-class Fruits extends StringMap<Fruit> {
-  @override
-  void initialize(Map<String, dynamic> data, {dynamic args}) {
+  static Map<int, Fruit> generateMap(Map<String, dynamic> data) {
+    Map<int, Fruit> map = {};
     data.forEach((key, value) {
-      map[key] = Fruit.initialize(value);
+      map[Utils.toInt(key)] = Fruit.initialize(value);
     });
+    return map;
   }
-
-  Fruit get(String key) => map[key]!;
 }
 
 //         -=-=-=-    Card    -=-=-=-
@@ -104,9 +101,9 @@ class CardData extends StringMap<dynamic> {
 class Cards extends StringMap<CardData> {
   @override
   void initialize(Map<String, dynamic> data, {dynamic args}) {
-    var fruits = args as Fruits;
+    var fruits = args as Map<int, Fruit>;
     for (var entry in data.entries) {
-      var fruit = fruits.get("${entry.value['fruitId']}");
+      var fruit = fruits[entry.value['fruitId']]!;
       map[entry.key] = CardData()..initialize(entry.value, args: fruit);
       fruit.cards.add(map[entry.key]!);
     }

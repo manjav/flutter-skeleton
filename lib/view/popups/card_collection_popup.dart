@@ -28,7 +28,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   @override
   void initState() {
     var account = accountBloc.account!;
-    _fruits = account.loadingData.fruits.map.values.toList();
+    _fruits = account.loadingData.fruits.values.toList();
     _avaibledCards = Set<int>.from(account.collection);
     _selectedFruit = ValueNotifier(_fruits[0]);
     super.initState();

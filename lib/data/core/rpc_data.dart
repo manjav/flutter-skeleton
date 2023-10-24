@@ -8,7 +8,7 @@ class LoadingData {
 
   late Account account;
   late Cards baseCards;
-  late Fruits fruits;
+  late Map<int, Fruit> fruits;
   late List<ComboHint> comboHints;
   late Map<int, BaseHeroItem> baseHeroItems;
   late Map<ShopSections, List<ShopItem>> shopItems;
@@ -17,7 +17,7 @@ class LoadingData {
   LoadingData();
 
   void init(data) {
-    fruits = Fruits()..initialize(data['fruits']);
+    fruits = Fruit.generateMap(data['fruits']);
     baseCards = Cards()..initialize(data['cards'], args: fruits);
     baseHeroItems = BaseHeroItem.init(data['heroItems']);
     comboHints = ComboHint.init(data["comboItems"]);
