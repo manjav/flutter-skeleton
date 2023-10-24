@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
-import '../../data/core/ranking.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
 import '../../services/deviceinfo.dart';

@@ -10,7 +10,7 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/infra.dart';
-import '../../data/core/ranking.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/local_notification.dart';

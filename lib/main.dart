@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../services/service_provider.dart';
 
 import '../../blocs/opponents_bloc.dart';
-import 'data/core/ranking.dart';
+import 'data/core/adam.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/sounds.dart';
 import 'blocs/account_bloc.dart';

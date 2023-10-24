@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../../../data/core/card.dart';
-import '../../../data/core/ranking.dart';
+import '../../../data/core/adam.dart';
 import '../../../services/deviceinfo.dart';
 import '../../../services/theme.dart';
 import '../../../utils/assets.dart';

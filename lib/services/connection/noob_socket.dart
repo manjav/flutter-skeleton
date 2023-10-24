@@ -6,7 +6,7 @@ import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/card.dart';
 import '../../data/core/message.dart';
-import '../../data/core/ranking.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/rpc_data.dart';
 import '../../data/core/tribe.dart';
 import '../../services/iservices.dart';

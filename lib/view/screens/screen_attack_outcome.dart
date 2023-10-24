@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/account.dart';
-import '../../data/core/ranking.dart';
+import '../../data/core/adam.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';

@@ -6,7 +6,7 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/message.dart';
-import '../../data/core/ranking.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';

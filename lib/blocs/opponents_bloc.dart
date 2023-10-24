@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/core/ranking.dart';
+import '../data/core/adam.dart';
 
 class OpponentsEvent {}
 

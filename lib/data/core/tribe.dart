@@ -9,7 +9,7 @@ import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
-import 'ranking.dart';
+import 'adam.dart';
 import 'rpc.dart';
 
 class Tribe with ServiceProvider {

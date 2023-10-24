@@ -6,7 +6,7 @@ import '../../utils/utils.dart';
 import 'building.dart';
 import 'card.dart';
 import 'infra.dart';
-import 'ranking.dart';
+import 'adam.dart';
 import 'rpc_data.dart';
 import 'tribe.dart';
 
