@@ -17,8 +17,8 @@ class LoadingData {
   LoadingData();
 
   void init(data) {
-    fruits = Fruits()..init(data['fruits']);
-    baseCards = Cards()..init(data['cards'], args: fruits);
+    fruits = Fruits()..initialize(data['fruits']);
+    baseCards = Cards()..initialize(data['cards'], args: fruits);
     baseHeroItems = BaseHeroItem.init(data['heroItems']);
     comboHints = ComboHint.init(data["comboItems"]);
     shopItems = ShopData.init(data["shop"]);

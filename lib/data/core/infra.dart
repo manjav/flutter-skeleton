@@ -16,7 +16,7 @@ enum Bundles { search, shop_0 }
 
 class StringMap<T> {
   final map = <String, T>{};
-  void init(Map<String, dynamic> data, {dynamic args}) {
+  void initialize(Map<String, dynamic> data, {dynamic args}) {
     data.forEach((key, value) {
       map[key] = value;
     });

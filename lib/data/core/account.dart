@@ -384,7 +384,7 @@ class Account extends Opponent {
     if (!buildings.containsKey(type)) {
       buildings[type] = Building();
     }
-    buildings[type]!.init({"type": type, "level": level},
+    buildings[type]!.initialize({"type": type, "level": level},
         args: {"account": this, "cards": cards});
   }
 

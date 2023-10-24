@@ -38,7 +38,7 @@ class Fruit {
 
 class Fruits extends StringMap<Fruit> {
   @override
-  void init(Map<String, dynamic> data, {dynamic args}) {
+  void initialize(Map<String, dynamic> data, {dynamic args}) {
     data.forEach((key, value) {
       map[key] = Fruit.initialize(value);
     });
@@ -76,8 +76,8 @@ class CardData extends StringMap<dynamic> {
   String get name => map["fruit"].map["name"];
 
   @override
-  void init(Map<String, dynamic> data, {dynamic args}) {
-    super.init(data);
+  void initialize(Map<String, dynamic> data, {dynamic args}) {
+    super.initialize(data);
     map['fruit'] = args as Fruit;
     setDefault('heroType', data, -1);
     setDefault('isHero', data, false);
@@ -103,11 +103,11 @@ class CardData extends StringMap<dynamic> {
 
 class Cards extends StringMap<CardData> {
   @override
-  void init(Map<String, dynamic> data, {dynamic args}) {
+  void initialize(Map<String, dynamic> data, {dynamic args}) {
     var fruits = args as Fruits;
     for (var entry in data.entries) {
       var fruit = fruits.get("${entry.value['fruitId']}");
-      map[entry.key] = CardData()..init(entry.value, args: fruit);
+      map[entry.key] = CardData()..initialize(entry.value, args: fruit);
       fruit.cards.add(map[entry.key]!);
     }
   }

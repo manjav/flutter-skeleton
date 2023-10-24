@@ -318,8 +318,8 @@ class Building extends StringMap<dynamic> {
   T get<T>(BuildingField fieldName) => map[fieldName.name] as T;
 
   @override
-  void init(Map<String, dynamic> data, {args}) {
-    super.init(data, args: args);
+  void initialize(Map<String, dynamic> data, {args}) {
+    super.initialize(data, args: args);
     var account = args['account']! as Account;
     var cards = List.generate(
         4,
