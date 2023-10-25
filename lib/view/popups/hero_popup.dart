@@ -39,13 +39,8 @@ class HeroPopup extends AbstractPopup {
 
   static Widget _attributeBuilder(
       HeroCard hero, MapEntry<FruitAttributes, int> attribute) {
-    var benefits = {
-      FruitAttributes.blessing: "benefit_gold",
-      FruitAttributes.power: "benefit_power",
-      FruitAttributes.wisdom: "benefit_cooldown"
-    };
     return Row(children: [
-      Asset.load<Image>(benefits[attribute.key]!, width: 56.d),
+      Asset.load<Image>("benefit_${attribute.key.benefit}", width: 56.d),
       SkinnedText(" ${hero.card.base.attribuites[attribute.key]}"),
       SkinnedText(" + ${attribute.value}",
           style: TStyles.medium.copyWith(color: TColors.green)),
@@ -234,24 +229,22 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
           SizedBox(width: 24.d),
           Expanded(
               child: Opacity(
-                  opacity: isActive ? 1 : 0.6,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SkinnedText("heroitem_${item.id}".l()),
-                      Expanded(
-                          child: Text("heroitem_${item.id}_description".l(),
-                              style: TStyles.small.copyWith(height: 1))),
-                      Row(
-                        children: [
-                          _itemAttributeBuilder("power", item.powerAmount),
-                          _itemAttributeBuilder("cooldown", item.wisdomAmount),
-                          _itemAttributeBuilder("gold", item.blessingAmount),
-                        ],
-                      )
-                    ],
-                  ))),
+            opacity: isActive ? 1 : 0.6,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SkinnedText("heroitem_${item.id}".l()),
+                  Expanded(
+                      child: Text("heroitem_${item.id}_description".l(),
+                          style: TStyles.small.copyWith(height: 1))),
+                  Row(children: [
+                    _itemAttributeBuilder(item, FruitAttributes.blessing),
+                    _itemAttributeBuilder(item, FruitAttributes.power),
+                    _itemAttributeBuilder(item, FruitAttributes.wisdom),
+                  ])
+                ]),
+          )),
           SizedBox(width: 12.d),
           Widgets.rect(
               alignment: Alignment.center,
@@ -263,10 +256,10 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
         onPressed: () => _setItem(item, position, heroItem, host));
   }
 
-  Widget _itemAttributeBuilder(String attribute, int value) {
+  Widget _itemAttributeBuilder(BaseHeroItem item, FruitAttributes attribute) {
     return Row(children: [
-      Asset.load<Image>("benefit_$attribute", width: 56.d),
-      Text(" +$value   "),
+      Asset.load<Image>("benefit_${attribute.benefit}", width: 56.d),
+      Text(" +${item.attributes[attribute]}   "),
     ]);
   }
 

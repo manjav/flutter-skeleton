@@ -400,7 +400,7 @@ class Building extends StringMap<dynamic> {
 
       // modifies the final blessing benefit with related modifiers.
       blessingBenefit *= HeroCard.benefitModifier *
-          HeroCard.benefit_BlessingMaxMultiplier /
+          HeroCard.benefit_maxMultipliers[FruitAttributes.blessing]! /
           HeroCard.benefitDecreaseModifier;
 
       // Applies blessing benefit to total power if(there is blessing benefit.
@@ -429,7 +429,7 @@ class Building extends StringMap<dynamic> {
 
       // modifies the final blessing benefit with related modifiers.
       powerBenefit *= HeroCard.benefitModifier *
-          HeroCard.benefit_PowerMaxMultiplier /
+          HeroCard.benefit_maxMultipliers[FruitAttributes.power]! /
           HeroCard.benefitDecreaseModifier;
 
       // Applies blessing benefit to total power if(there is blessing benefit.
