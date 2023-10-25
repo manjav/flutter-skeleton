@@ -40,9 +40,9 @@ class HeroPopup extends AbstractPopup {
   static Widget _attributeBuilder(
       HeroCard hero, MapEntry<FruitAttributes, int> attribute) {
     var benefits = {
-      "blessing": "benefit_gold",
-      "power": "benefit_power",
-      "wisdom": "benefit_cooldown"
+      FruitAttributes.blessing: "benefit_gold",
+      FruitAttributes.power: "benefit_power",
+      FruitAttributes.wisdom: "benefit_cooldown"
     };
     return Row(children: [
       Asset.load<Image>(benefits[attribute.key]!, width: 56.d),
