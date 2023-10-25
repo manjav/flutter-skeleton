@@ -13,18 +13,6 @@ import 'account.dart';
 import 'building.dart';
 import 'result.dart';
 
-enum FruitAttributes { power, wisdom, blessing }
-
-extension FruitAttributesExtesion on FruitAttributes {
-  String get benefit {
-    return switch (this) {
-      FruitAttributes.wisdom => "cooldown",
-      FruitAttributes.blessing => "gold",
-      _ => name,
-    };
-  }
-}
-
 class Fruit {
   late String name;
   late int id, maxLevel, minLevel, category;
@@ -69,7 +57,7 @@ class FruitCard {
       veteranLevel,
       heroType,
       potionLimit;
-  Map<FruitAttributes, int> attribuites = {};
+  Map<HeroAttribute, int> attribuites = {};
 
   double virtualRarity = 1.0;
 
@@ -88,9 +76,10 @@ class FruitCard {
     cooldown = Utils.toInt(data["cooldown"]);
     powerLimit = Utils.toInt(data["powerLimit"]);
     veteranLevel = Utils.toInt(data["veteran_level"]);
-    attribuites[FruitAttributes.power] = Utils.toInt(data["powerAttribute"]);
-    attribuites[FruitAttributes.wisdom] = Utils.toInt(data["wisdomAttribute"]);
-    attribuites[FruitAttributes.blessing] =
+
+    attribuites[HeroAttribute.power] = Utils.toInt(data["powerAttribute"]);
+    attribuites[HeroAttribute.wisdom] = Utils.toInt(data["wisdomAttribute"]);
+    attribuites[HeroAttribute.blessing] =
         Utils.toInt(data["blessingAttribute"]);
     potionLimit = Utils.toInt(data["potion_limit"]);
   }
@@ -292,10 +281,22 @@ class AccountCard extends AbstractCard {
         {
           "id": id,
           "power": power,
-          "last_used_at": lastUsedAt,
           "base_card_id": base.id,
+          "last_used_at": lastUsedAt,
         },
         ownerId: ownerId);
+  }
+}
+
+enum HeroAttribute { power, wisdom, blessing }
+
+extension HeroAttributesExtesion on HeroAttribute {
+  String get benefit {
+    return switch (this) {
+      HeroAttribute.wisdom => "cooldown",
+      HeroAttribute.blessing => "gold",
+      _ => name,
+    };
   }
 }
 
@@ -303,9 +304,9 @@ class HeroCard with ServiceProvider {
   static const attributeMultiplier = 2;
   static const benefitModifier = 0.01;
   static const benefit_maxMultipliers = {
-    FruitAttributes.power: 5.0,
-    FruitAttributes.wisdom: 1.1,
-    FruitAttributes.blessing: 4.0,
+    HeroAttribute.power: 5.0,
+    HeroAttribute.wisdom: 1.1,
+    HeroAttribute.blessing: 4.0,
   };
   static const evolveBaseNectar = 0.08;
   static const fakePowerModifier = 0.016666667;
@@ -318,61 +319,61 @@ class HeroCard with ServiceProvider {
 
   // returns the gained attributes by hero based on its equipped items.
   // @param base.id, the base id of hero
-  Map<FruitAttributes, int> getGainedAttributesByItems() {
+  Map<HeroAttribute, int> getGainedAttributesByItems() {
     // setups a table for containing the each value.
-    var values = <FruitAttributes, int>{
-      FruitAttributes.power: 0,
-      FruitAttributes.wisdom: 0,
-      FruitAttributes.blessing: 0
+    var values = <HeroAttribute, int>{
+      HeroAttribute.power: 0,
+      HeroAttribute.wisdom: 0,
+      HeroAttribute.blessing: 0
     };
 
     // setups the default multipliers for each attribute.
-    var multipliers = <FruitAttributes, int>{
-      FruitAttributes.power: 1,
-      FruitAttributes.wisdom: 1,
-      FruitAttributes.blessing: 1
+    var multipliers = <HeroAttribute, int>{
+      HeroAttribute.power: 1,
+      HeroAttribute.wisdom: 1,
+      HeroAttribute.blessing: 1
     };
 
     var heroType = card.base.heroType;
     if (heroType == 0) {
-      multipliers[FruitAttributes.power] = HeroCard.attributeMultiplier;
+      multipliers[HeroAttribute.power] = HeroCard.attributeMultiplier;
     } else if (heroType == 1) {
-      multipliers[FruitAttributes.wisdom] = HeroCard.attributeMultiplier;
+      multipliers[HeroAttribute.wisdom] = HeroCard.attributeMultiplier;
     } else {
-      multipliers[FruitAttributes.blessing] = HeroCard.attributeMultiplier;
+      multipliers[HeroAttribute.blessing] = HeroCard.attributeMultiplier;
     }
 
     // adds the  attributes for each equipped item.
-    concatItemAttribute(FruitAttributes attribute, HeroItem item) {
+    concatItemAttribute(HeroAttribute attribute, HeroItem item) {
       values[attribute] = values[attribute]! +
           item.base.attributes[attribute]! * multipliers[attribute]!;
     }
 
     for (var item in items) {
-      concatItemAttribute(FruitAttributes.power, item);
-      concatItemAttribute(FruitAttributes.wisdom, item);
-      concatItemAttribute(FruitAttributes.blessing, item);
+      concatItemAttribute(HeroAttribute.power, item);
+      concatItemAttribute(HeroAttribute.wisdom, item);
+      concatItemAttribute(HeroAttribute.blessing, item);
     }
     return values;
   }
 
-  Map<FruitAttributes, int> getNextLevelAttributes() {
+  Map<HeroAttribute, int> getNextLevelAttributes() {
     // setups a table for containing the each value.
-    var values = <FruitAttributes, int>{
-      FruitAttributes.power: 0,
-      FruitAttributes.wisdom: 0,
-      FruitAttributes.blessing: 0,
+    var values = <HeroAttribute, int>{
+      HeroAttribute.power: 0,
+      HeroAttribute.wisdom: 0,
+      HeroAttribute.blessing: 0,
     };
     var nextLevelCard = card.findNextLevel();
     if (nextLevelCard == null) {
       return values;
     }
 
-    diff(FruitAttributes f) =>
+    diff(HeroAttribute f) =>
         nextLevelCard.attribuites[f]! - card.base.attribuites[f]!;
-    values[FruitAttributes.power] = diff(FruitAttributes.power);
-    values[FruitAttributes.wisdom] = diff(FruitAttributes.wisdom);
-    values[FruitAttributes.blessing] = diff(FruitAttributes.blessing);
+    values[HeroAttribute.power] = diff(HeroAttribute.power);
+    values[HeroAttribute.wisdom] = diff(HeroAttribute.wisdom);
+    values[HeroAttribute.blessing] = diff(HeroAttribute.blessing);
     return values;
   }
 
@@ -410,7 +411,7 @@ class HeroItem {
 }
 
 class BaseHeroItem {
-  Map<FruitAttributes, int> attributes = {};
+  Map<HeroAttribute, int> attributes = {};
   int id = 0,
       itemType = 0,
       cost = 0,
@@ -430,9 +431,9 @@ class BaseHeroItem {
         ..compatibility = item["compatibility"]
         ..image = item["image"]
         ..attributes = {
-          FruitAttributes.power: item["powerAmount"],
-          FruitAttributes.wisdom: item["wisdomAmount"],
-          FruitAttributes.blessing: item["blessingAmount"],
+          HeroAttribute.power: item["powerAmount"],
+          HeroAttribute.wisdom: item["wisdomAmount"],
+          HeroAttribute.blessing: item["blessingAmount"],
         };
     }
     return result;
@@ -467,13 +468,13 @@ class ComboHint {
     for (var item in data) {
       result.add(ComboHint()
         ..id = item["id"]
-        ..fruit = item["fruit"]
-        ..benefit = item["benefit"]
         ..type = item["type"]
         ..cost = item["cost"]
+        ..fruit = item["fruit"]
         ..level = item["level"]
         ..count = item["count"]
         ..power = item["power"]
+        ..benefit = item["benefit"]
         ..icon = item["smallImage"]);
     }
     return result;

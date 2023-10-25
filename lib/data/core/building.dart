@@ -376,7 +376,7 @@ class Building extends StringMap<dynamic> {
   int getCardsBenefit(Account account) {
     var totalPower = 0.0;
     // a table for storing the hero cards benefits.
-    var heroCardBenefits = <FruitCard, Map<FruitAttributes, int>>{};
+    var heroCardBenefits = <FruitCard, Map<HeroAttribute, int>>{};
 
     for (var card in cards) {
       if (card == null) continue;
@@ -394,13 +394,13 @@ class Building extends StringMap<dynamic> {
 
       // adds benefit(blessing items + base blessing) of each assigned hero
       for (var e in heroCardBenefits.entries) {
-        blessingBenefit += e.value[FruitAttributes.blessing]! +
-            e.key.attribuites[FruitAttributes.blessing]!;
+        blessingBenefit += e.value[HeroAttribute.blessing]! +
+            e.key.attribuites[HeroAttribute.blessing]!;
       }
 
       // modifies the final blessing benefit with related modifiers.
       blessingBenefit *= HeroCard.benefitModifier *
-          HeroCard.benefit_maxMultipliers[FruitAttributes.blessing]! /
+          HeroCard.benefit_maxMultipliers[HeroAttribute.blessing]! /
           HeroCard.benefitDecreaseModifier;
 
       // Applies blessing benefit to total power if(there is blessing benefit.
@@ -423,13 +423,13 @@ class Building extends StringMap<dynamic> {
       // adds blessing benefit( blessing from items + base blessing) of each assigned hero
 
       for (var e in heroCardBenefits.entries) {
-        powerBenefit += e.value[FruitAttributes.power]! +
-            e.key.attribuites[FruitAttributes.power]!;
+        powerBenefit += e.value[HeroAttribute.power]! +
+            e.key.attribuites[HeroAttribute.power]!;
       }
 
       // modifies the final blessing benefit with related modifiers.
       powerBenefit *= HeroCard.benefitModifier *
-          HeroCard.benefit_maxMultipliers[FruitAttributes.power]! /
+          HeroCard.benefit_maxMultipliers[HeroAttribute.power]! /
           HeroCard.benefitDecreaseModifier;
 
       // Applies blessing benefit to total power if(there is blessing benefit.

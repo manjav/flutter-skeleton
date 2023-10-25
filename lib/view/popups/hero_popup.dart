@@ -23,7 +23,7 @@ class HeroPopup extends AbstractPopup {
   createState() => _HeroPopupState();
 
   static Widget attributesBuilder(
-      HeroCard hero, Map<FruitAttributes, int> attributes) {
+      HeroCard hero, Map<HeroAttribute, int> attributes) {
     return Widgets.rect(
         radius: 32.d,
         width: 700.d,
@@ -38,7 +38,7 @@ class HeroPopup extends AbstractPopup {
   }
 
   static Widget _attributeBuilder(
-      HeroCard hero, MapEntry<FruitAttributes, int> attribute) {
+      HeroCard hero, MapEntry<HeroAttribute, int> attribute) {
     return Row(children: [
       Asset.load<Image>("benefit_${attribute.key.benefit}", width: 56.d),
       SkinnedText(" ${hero.card.base.attribuites[attribute.key]}"),
@@ -239,9 +239,9 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                       child: Text("heroitem_${item.id}_description".l(),
                           style: TStyles.small.copyWith(height: 1))),
                   Row(children: [
-                    _itemAttributeBuilder(item, FruitAttributes.blessing),
-                    _itemAttributeBuilder(item, FruitAttributes.power),
-                    _itemAttributeBuilder(item, FruitAttributes.wisdom),
+                    _itemAttributeBuilder(item, HeroAttribute.blessing),
+                    _itemAttributeBuilder(item, HeroAttribute.power),
+                    _itemAttributeBuilder(item, HeroAttribute.wisdom),
                   ])
                 ]),
           )),
@@ -256,7 +256,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
         onPressed: () => _setItem(item, position, heroItem, host));
   }
 
-  Widget _itemAttributeBuilder(BaseHeroItem item, FruitAttributes attribute) {
+  Widget _itemAttributeBuilder(BaseHeroItem item, HeroAttribute attribute) {
     return Row(children: [
       Asset.load<Image>("benefit_${attribute.benefit}", width: 56.d),
       Text(" +${item.attributes[attribute]}   "),
