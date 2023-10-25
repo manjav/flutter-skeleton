@@ -467,7 +467,7 @@ class Account extends Opponent {
       } else {
         card.power = newCard["power"];
         card.lastUsedAt = newCard["last_used_at"];
-        card.base = loadingData.baseCards.get("${newCard['base_card_id']}");
+        card.base = loadingData.baseCards[newCard['base_card_id']]!;
       }
       data["card"] = card;
     }

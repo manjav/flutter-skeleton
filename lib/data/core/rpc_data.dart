@@ -7,9 +7,9 @@ class LoadingData {
   static int chatPort = 0;
 
   late Account account;
-  late Cards baseCards;
   late Map<int, Fruit> fruits;
   late List<ComboHint> comboHints;
+  late Map<int, FruitCard> baseCards;
   late Map<int, BaseHeroItem> baseHeroItems;
   late Map<ShopSections, List<ShopItem>> shopItems;
   Map<ShopSections, List<ShopItemVM>>? shopProceedItems;

@@ -376,7 +376,7 @@ class Building extends StringMap<dynamic> {
   int getCardsBenefit(Account account) {
     var totalPower = 0.0;
     // a table for storing the hero cards benefits.
-    var heroCardBenefits = <CardData, Map<String, int>>{};
+    var heroCardBenefits = <FruitCard, Map<FruitAttributes, int>>{};
 
     for (var card in cards) {
       if (card == null) continue;
@@ -394,8 +394,8 @@ class Building extends StringMap<dynamic> {
 
       // adds benefit(blessing items + base blessing) of each assigned hero
       for (var e in heroCardBenefits.entries) {
-        blessingBenefit +=
-            e.value['blessing']! + e.key.get<int>(CardFields.blessingAttribute);
+        blessingBenefit += e.value[FruitAttributes.blessing]! +
+            e.key.attribuites[FruitAttributes.blessing]!;
       }
 
       // modifies the final blessing benefit with related modifiers.
@@ -423,8 +423,8 @@ class Building extends StringMap<dynamic> {
       // adds blessing benefit( blessing from items + base blessing) of each assigned hero
 
       for (var e in heroCardBenefits.entries) {
-        powerBenefit +=
-            e.value['power']! + e.key.get<int>(CardFields.powerAttribute);
+        powerBenefit += e.value[FruitAttributes.power]! +
+            e.key.attribuites[FruitAttributes.power]!;
       }
 
       // modifies the final blessing benefit with related modifiers.

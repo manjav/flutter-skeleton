@@ -41,7 +41,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
   Widget contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var hero = state.account.heroes[(widget.args['card'] as AccountCard).id]!;
-      var capacity = hero.card.base.get<int>(CardFields.potion_limit);
+      var capacity = hero.card.base.potionLimit;
       return SizedBox(
           width: 960.d,
           child: Column(

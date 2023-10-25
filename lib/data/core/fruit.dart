@@ -11,14 +11,15 @@ import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
 import 'building.dart';
-import 'infra.dart';
 import 'result.dart';
 
+enum FruitAttributes { power, wisdom, blessing }
+
 class Fruit {
-  late String name, smallImage, description;
+  late String name;
   late int id, maxLevel, minLevel, category;
 
-  List<CardData> cards = [];
+  List<FruitCard> cards = [];
   bool get isSalable => category < 3;
   bool get isChristmas => category == 1;
   bool get isMonster => category == 2;
@@ -28,8 +29,8 @@ class Fruit {
   Fruit.initialize(Map<String, dynamic> data) {
     name = data["name"];
     id = Utils.toInt(data["id"]);
-    smallImage = data["smallImage"];
-    description = data["description"];
+    // smallImage = data["smallImage"];
+    // description = data["description"];
     maxLevel = Utils.toInt(data["maxLevel"]);
     minLevel = Utils.toInt(data["minLevel"]);
     category = Utils.toInt(data["category"]);
@@ -45,48 +46,47 @@ class Fruit {
 }
 
 //         -=-=-=-    Card    -=-=-=-
-enum CardFields {
-  id,
-  fruitId,
-  fruit,
-  power,
-  cooldown,
-  image,
-  rarity,
-  powerLimit,
-  virtualRarity,
-  name,
-  veteran_level,
-  heroType,
-  isHero,
-  powerAttribute,
-  wisdomAttribute,
-  blessingAttribute,
-  potion_limit,
-}
-
-class CardData extends StringMap<dynamic> {
+class FruitCard {
   static const cooldownCostModifier = 0.25;
   static const cooldownIncreaseModifier = 0.2;
   static const veteranCooldownModifier = 0.1;
 
-  String get name => map["fruit"].map["name"];
+  late int id,
+      power,
+      rarity,
+      cooldown,
+      powerLimit,
+      veteranLevel,
+      heroType,
+      potionLimit;
+  Map<FruitAttributes, int> attribuites = {};
 
-  @override
-  void initialize(Map<String, dynamic> data, {dynamic args}) {
-    super.initialize(data);
-    map['fruit'] = args as Fruit;
-    setDefault('heroType', data, -1);
-    setDefault('isHero', data, false);
-    setDefault('powerAttribute', data, 0);
-    setDefault('wisdomAttribute', data, 0);
-    setDefault('blessingAttribute', data, 0);
-    setDefault('potion_limit', data, 0);
+  double virtualRarity = 1.0;
+
+  final Fruit fruit;
+  String name = "";
+  bool isHero = false;
+
+  FruitCard.initialize(Map<String, dynamic> data, this.fruit) {
+    name = data["name"];
+    isHero = data["isHero"] ?? false;
+    id = Utils.toInt(data["id"]);
+    virtualRarity = data["virtualRarity"].toDouble();
+    power = Utils.toInt(data["power"]);
+    rarity = Utils.toInt(data["rarity"]);
+    heroType = Utils.toInt(data["heroType"], -1);
+    cooldown = Utils.toInt(data["cooldown"]);
+    powerLimit = Utils.toInt(data["powerLimit"]);
+    veteranLevel = Utils.toInt(data["veteran_level"]);
+    attribuites[FruitAttributes.power] = Utils.toInt(data["powerAttribute"]);
+    attribuites[FruitAttributes.wisdom] = Utils.toInt(data["wisdomAttribute"]);
+    attribuites[FruitAttributes.blessing] =
+        Utils.toInt(data["blessingAttribute"]);
+    potionLimit = Utils.toInt(data["potion_limit"]);
   }
 
-  bool contains(CardFields field) => map.containsKey(field.name);
-  T get<T>(CardFields field) => map[field.name] as T;
-  Fruit get fruit => get<Fruit>(CardFields.fruit);
+  String getName() => isHero ? fruit.name : name;
+
   int get cost {
     const maxEnhanceModifier = 45;
     const priceModifier = 100;
@@ -118,14 +118,14 @@ class AbstractCard with ServiceProvider {
   static double maxPriceRatio = 1.5;
   static double bidStepRatio = 0.05;
 
-  late CardData base;
+  late FruitCard base;
   int id = 0, power = 0, ownerId = 0, lastUsedAt = 0;
   final Map map;
   final Account account;
 
   AbstractCard(this.account, this.map) {
     power = map['power'].round() ?? 0;
-    base = account.loadingData.baseCards.get("${map['base_card_id']}");
+    base = account.loadingData.baseCards[map['base_card_id']]!;
   }
   int get basePrice => (power * powerToGoldRatio * minPriceRatio).round();
   int get bidStep => (power * powerToGoldRatio * bidStepRatio).round();
@@ -136,21 +136,18 @@ class AbstractCard with ServiceProvider {
         ? account.buildings[Buildings.cards]!.getBenefit()
         : 1.0;
     var delta = account.now - lastUsedAt;
-    var cooldownTime = base.get<int>(CardFields.cooldown) * benefit;
+    var cooldownTime = base.cooldown * benefit;
     return (cooldownTime - delta).ceil().min(0);
   }
 
-  Fruit get fruit => base.get<Fruit>(CardFields.fruit);
-  bool get isUpgradable => base.get<int>(CardFields.rarity) < fruit.maxLevel;
+  Fruit get fruit => base.fruit;
+  bool get isUpgradable => base.rarity < fruit.maxLevel;
 
   bool get isMonster {
-    var baseId = base.get(CardFields.id);
-    if ((baseId >= 310 && baseId <= 319) ||
-        (baseId >= 330 && baseId <= 344) ||
-        (baseId >= 815 && baseId <= 819)) {
-      return true;
-    }
-    return false;
+    return switch (base.id) {
+      (>= 310 && <= 319) || (>= 330 && <= 344) || (>= 815 && <= 819) => true,
+      _ => false,
+    };
   }
 
 /* returns the gold cost for purchasing the cooldown of this card, takes into
@@ -159,13 +156,13 @@ class AbstractCard with ServiceProvider {
  */
   int cooldownTimeToCost(int time) {
     num cooldownPrice = 0;
-    var veteranLevel = base.get<int>(CardFields.veteran_level);
+    var veteranLevel = base.veteranLevel;
     if (veteranLevel > 0) {
       var benefit = account.tribe != null
           ? account.buildings[Buildings.cards]!.getBenefit()
           : 1.0;
-      cooldownPrice = _cooldownTimeToCost(base.get<int>(CardFields.cooldown)) *
-          CardData.veteranCooldownModifier *
+      cooldownPrice = _cooldownTimeToCost(base.cooldown) *
+          FruitCard.veteranCooldownModifier *
           benefit *
           veteranLevel;
     } else {
@@ -178,8 +175,8 @@ class AbstractCard with ServiceProvider {
   num _cooldownTimeToCost(int time) {
     var cooldownsBoughtToday = account.cooldowns_bought_today + 1;
     return time *
-        (cooldownsBoughtToday * CardData.cooldownIncreaseModifier).ceil() *
-        CardData.cooldownCostModifier;
+        (cooldownsBoughtToday * FruitCard.cooldownIncreaseModifier).ceil() *
+        FruitCard.cooldownCostModifier;
   }
 }
 
@@ -246,12 +243,10 @@ class AccountCard extends AbstractCard {
     }
   }
 
-  CardData? findNextLevel() {
-    var nextLevel = base.get<int>(CardFields.rarity) + 1;
-    for (var e in account.loadingData.baseCards.map.entries) {
-      if (e.value.get<int>(CardFields.fruitId) ==
-              base.get<int>(CardFields.fruitId) &&
-          e.value.get<int>(CardFields.rarity) == nextLevel) {
+  FruitCard? findNextLevel() {
+    var nextLevel = base.rarity + 1;
+    for (var e in account.loadingData.baseCards.entries) {
+      if (e.value.fruit.id == base.fruit.id && e.value.rarity == nextLevel) {
         return e.value;
       }
     }
@@ -267,17 +262,16 @@ class AccountCard extends AbstractCard {
     var nextLevelCard = findNextLevel();
     if (nextLevelCard != null) {
       var secondPower = second != null ? second.power : 0;
-      var firstBasePower = base.get<int>(CardFields.power);
-      var secondBasePower =
-          second != null ? second.base.get<int>(CardFields.power) : 0;
-      var nextPower = nextLevelCard.get<int>(CardFields.power);
+      var firstBasePower = base.power;
+      var secondBasePower = second != null ? second.base.power : 0;
+      var nextPower = nextLevelCard.power;
       var diffs = (power - firstBasePower) + (secondPower - secondBasePower);
       diffs *= evolveEnhancePowerModifier;
       var finalPower = nextPower + diffs;
 
       // Soften Monster's power after adding 6th level of monsters
       if (base.fruit.isMonster) {
-        if (base.get<int>(CardFields.rarity) >= monsterEvolveMinRarity) {
+        if (base.rarity >= monsterEvolveMinRarity) {
           if (finalPower > monsterEvolveMaxPower) {
             finalPower -= monsterEvolvePowerModifier;
           }
@@ -295,7 +289,7 @@ class AccountCard extends AbstractCard {
           "id": id,
           "power": power,
           "last_used_at": lastUsedAt,
-          "base_card_id": base.get<int>(CardFields.id),
+          "base_card_id": base.id,
         },
         ownerId: ownerId);
   }
@@ -317,17 +311,17 @@ class HeroCard with ServiceProvider {
   HeroCard(this.card, this.potion);
 
   // returns the gained attributes by hero based on its equipped items.
-  // @param baseId, the base id of hero
-  Map<String, int> getGainedAttributesByItems() {
+  // @param base.id, the base id of hero
+  Map<FruitAttributes, int> getGainedAttributesByItems() {
     // setups a table for containing the each value.
-    var values = <String, int>{};
-    values['power'] = 0;
-    values['wisdom'] = 0;
-    values['blessing'] = 0;
+    var values = <FruitAttributes, int>{};
+    values[FruitAttributes.power] = 0;
+    values[FruitAttributes.wisdom] = 0;
+    values[FruitAttributes.blessing] = 0;
 
     // setups the default multipliers for each attribute.
     var powerMultiplier = 1, wisdomMultiplier = 1, blessingMultiplier = 1;
-    var heroType = card.base.get<int>(CardFields.heroType);
+    var heroType = card.base.heroType;
     if (heroType == 0) {
       powerMultiplier = HeroCard.attributeMultiplier;
     } else if (heroType == 1) {
@@ -338,36 +332,37 @@ class HeroCard with ServiceProvider {
 
     // adds the  attributes for each equipped item.
     for (var item in items) {
-      values['power'] =
-          values['power']! + item.base.powerAmount * powerMultiplier;
-      values['wisdom'] =
-          values['wisdom']! + item.base.wisdomAmount * wisdomMultiplier;
-      values['blessing'] =
-          values['blessing']! + item.base.blessingAmount * blessingMultiplier;
+      values[FruitAttributes.power] = values[FruitAttributes.power]! +
+          item.base.powerAmount * powerMultiplier;
+      values[FruitAttributes.wisdom] = values[FruitAttributes.wisdom]! +
+          item.base.wisdomAmount * wisdomMultiplier;
+      values[FruitAttributes.blessing] = values[FruitAttributes.blessing]! +
+          item.base.blessingAmount * blessingMultiplier;
     }
     return values;
   }
 
-  Map<String, int> getNextLevelAttributes() {
+  Map<FruitAttributes, int> getNextLevelAttributes() {
     // setups a table for containing the each value.
-    var values = <String, int>{};
-    values['power'] = 0;
-    values['wisdom'] = 0;
-    values['blessing'] = 0;
+    var values = <FruitAttributes, int>{};
+    values[FruitAttributes.power] = 0;
+    values[FruitAttributes.wisdom] = 0;
+    values[FruitAttributes.blessing] = 0;
     var nextLevel = card.findNextLevel();
     if (nextLevel == null) {
       return values;
     }
 
-    diff(CardFields f) => nextLevel.get<int>(f) - card.base.get<int>(f);
-    values['power'] = diff(CardFields.powerAttribute);
-    values['wisdom'] = diff(CardFields.wisdomAttribute);
-    values['blessing'] = diff(CardFields.blessingAttribute);
+    diff(FruitAttributes f) =>
+        nextLevel.attribuites[f]! - card.base.attribuites[f]!;
+    values[FruitAttributes.power] = diff(FruitAttributes.power);
+    values[FruitAttributes.wisdom] = diff(FruitAttributes.wisdom);
+    values[FruitAttributes.blessing] = diff(FruitAttributes.blessing);
     return values;
   }
 
   fillPotion(BuildContext context, int value) async {
-    var params = {RpcParams.hero_id.name: card.base.get(CardFields.id)};
+    var params = {RpcParams.hero_id.name: card.base.id};
     if (value > 0) {
       params[RpcParams.potion.name] = value;
     }
@@ -388,7 +383,7 @@ class HeroCard with ServiceProvider {
     for (var item in this.items) {
       items.add({"base_heroitem_id": item.base.id, "position": item.position});
     }
-    return {"hero_id": card.base.get<int>(CardFields.id), "items": items};
+    return {"hero_id": card.base.id, "items": items};
   }
 }
 

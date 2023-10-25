@@ -99,7 +99,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
         var nextBaseCard = card.findNextLevel();
         var nextCard = AccountCard(account, {
           "power": card.getNextLevelPower(selectedCards.value[1]),
-          "base_card_id": nextBaseCard!.get(CardFields.id)
+          "base_card_id": nextBaseCard!.id
         });
         return _getCardView(nextCard, size);
       }
@@ -162,7 +162,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
       goldPrice += card!.base.cost;
     }
     var nextCardPrice = first.findNextLevel()!.cost;
-    var veteranLevel = first.base.get<int>(CardFields.veteran_level);
+    var veteranLevel = first.base.veteranLevel;
     if (veteranLevel == 0) {
       goldPrice = ((nextCardPrice - goldPrice) * evolveCostModifier).floor();
       if (goldPrice < 0) {
@@ -170,10 +170,9 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
       }
 
       // Soften Monster's evolve cost after adding 6th level of monsters
-      var level = first.base.get<int>(CardFields.rarity);
-      if (first.isMonster && level >= monsterEvolveMinRarity) {
-        goldPrice =
-            monsterEvolveMinCost * (level - (monsterEvolveMinRarity - 1));
+      if (first.isMonster && first.base.rarity >= monsterEvolveMinRarity) {
+        goldPrice = monsterEvolveMinCost *
+            (first.base.rarity - (monsterEvolveMinRarity - 1));
       }
     } else {
       goldPrice =

@@ -102,20 +102,18 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
         ));
   }
 
-  Widget? _cardItemBuilder(int index, CardData card, double itemSize) {
-    var id = card.get<int>(CardFields.id);
-    var level = card.get<int>(CardFields.rarity);
+  Widget? _cardItemBuilder(int index, FruitCard card, double itemSize) {
     return Stack(alignment: Alignment.center, children: [
-      CardItem.getCardBackground(card.fruit.category, level),
-      _avaibledCards.contains(id)
+      CardItem.getCardBackground(card.fruit.category, card.rarity),
+      _avaibledCards.contains(card.id)
           ? CardItem.getCardImage(card, itemSize * 0.9,
-              key: getGlobalKey(card.get(CardFields.id)))
+              key: getGlobalKey(card.id))
           : Asset.load<Image>("deck_placeholder_card", width: itemSize * 0.6),
       Positioned(
           top: itemSize * 0.01,
           right: itemSize * 0.1,
           width: itemSize * 0.1,
-          child: SkinnedText(level.toString(),
+          child: SkinnedText(card.rarity.toString(),
               style: TStyles.large.copyWith(fontSize: itemSize * 0.18)))
     ]);
   }

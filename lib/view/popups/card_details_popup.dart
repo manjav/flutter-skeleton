@@ -56,7 +56,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
             width: 370.d,
             label: "popupcardenhance".l(),
             padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
-            isEnable: _card.power < _card.base.get<int>(CardFields.powerLimit),
+            isEnable: _card.power < _card.base.powerLimit,
             onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
             onDisablePressed: () => toast("card_max_power".l()),
           ),

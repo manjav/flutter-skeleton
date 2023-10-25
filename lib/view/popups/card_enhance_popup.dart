@@ -166,17 +166,17 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     for (var card in selectedCards.value) {
       // if there is active power boost, we use non-boost power as power in formula.
       // var power = card.powerBeforeBoost or element.power
-      var power = card!.base.get<int>(CardFields.power);
-      var verteranLevel = card.base.get<int>(CardFields.veteran_level);
+      var verteranLevel = card!.base.veteranLevel;
       if (verteranLevel > 0) {
-        cardPowers += power * veteranSacrificePowerModifier * verteranLevel;
+        cardPowers +=
+            card.base.power * veteranSacrificePowerModifier * verteranLevel;
       } else {
-        cardPowers += power;
+        cardPowers += card.base.power;
       }
     }
 
-    var rarity = card.base.get(CardFields.virtualRarity).toDouble();
-    var verteranLevel = card.base.get<int>(CardFields.veteran_level);
+    var rarity = card.base.virtualRarity.toDouble();
+    var verteranLevel = card.base.veteranLevel;
     var calculatePower = 0;
     if (verteranLevel == 0) {
       calculatePower = (cardPowers *
@@ -190,8 +190,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
           .floor();
     }
     _isSacrificeAvailable = calculatePower > 0 &&
-        card.power + calculatePower <=
-            card.base.get<int>(CardFields.powerLimit);
+        card.power + calculatePower <= card.base.powerLimit;
     return calculatePower.round();
   }
 
@@ -213,11 +212,11 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     const minimumNectarCostForEnhancement = 100;
     const priceModifier = 100;
 
-    var enhancementPower = card.base.get(CardFields.powerLimit) - card.power;
+    var enhancementPower = card.base.powerLimit - card.power;
     var cardPower = (enhancementPower /
             (enhancementModifier *
-                math.pow(card.base.get(CardFields.virtualRarity).toDouble(),
-                    enhanceRarityModifier)))
+                math.pow(
+                    card.base.virtualRarity.toDouble(), enhanceRarityModifier)))
         .floor();
     var totalCardPrice = (cardPower *
         enhanceNectarModifier *

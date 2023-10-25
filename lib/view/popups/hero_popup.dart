@@ -22,7 +22,8 @@ class HeroPopup extends AbstractPopup {
   @override
   createState() => _HeroPopupState();
 
-  static Widget attributesBuilder(HeroCard hero, Map<String, int> attributes) {
+  static Widget attributesBuilder(
+      HeroCard hero, Map<FruitAttributes, int> attributes) {
     return Widgets.rect(
         radius: 32.d,
         width: 700.d,
@@ -37,7 +38,7 @@ class HeroPopup extends AbstractPopup {
   }
 
   static Widget _attributeBuilder(
-      HeroCard hero, MapEntry<String, int> attribute) {
+      HeroCard hero, MapEntry<FruitAttributes, int> attribute) {
     var benefits = {
       "blessing": "benefit_gold",
       "power": "benefit_power",
@@ -45,7 +46,7 @@ class HeroPopup extends AbstractPopup {
     };
     return Row(children: [
       Asset.load<Image>(benefits[attribute.key]!, width: 56.d),
-      SkinnedText(" ${hero.card.base.map['${attribute.key}Attribute']}"),
+      SkinnedText(" ${hero.card.base.attribuites[attribute.key]}"),
       SkinnedText(" + ${attribute.value}",
           style: TStyles.medium.copyWith(color: TColors.green)),
     ]);
@@ -92,9 +93,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
           valueListenable: _selectedIndex,
           builder: (context, value, child) {
             var hero = _heroes[value];
-            var name = hero.card.base
-                .get<Fruit>(CardFields.fruit)
-                .name;
+            var name = hero.card.base.fruit.name;
             var items = List<HeroItem?>.generate(4, (i) => null);
             for (var item in hero.items) {
               if (item.base.category == 1) {
@@ -274,8 +273,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   _itemActionBuilder(BaseHeroItem item, bool isAvailable, HeroCard? host) {
     if (isAvailable) {
       if (host != null) {
-        return _lockItem("icon_used",
-            "${host.card.fruit.name}_t".l());
+        return _lockItem("icon_used", "${host.card.fruit.name}_t".l());
       }
       return Widgets.skinnedButton(
         width: 320.d,
@@ -322,8 +320,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     }
 
     if (host != null) {
-      toast("heroitem_used"
-          .l(["${host.card.fruit.name}_t".l()]));
+      toast("heroitem_used".l(["${host.card.fruit.name}_t".l()]));
       return;
     }
 

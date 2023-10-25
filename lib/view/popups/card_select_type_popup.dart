@@ -82,7 +82,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
               label: "search_l".l(),
               width: 340.d,
               onPressed: () => Navigator.pop(context,
-                  fruit.cards[_selectedLevelIndex].get(CardFields.id))),
+                  fruit.cards[_selectedLevelIndex].id)),
         ]));
   }
 
@@ -116,7 +116,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
         padding: EdgeInsets.all(8.d),
         decoration: selected ? Widgets.imageDecore("level_badge_border") : null,
         child: Asset.load<Image>(
-            "level_badge_${fruit.cards[index].get(CardFields.rarity)}",
+            "level_badge_${fruit.cards[index].rarity}",
             width: 100.d),
         onPressed: () => setState(() => _selectedLevelIndex = index));
   }

@@ -41,9 +41,8 @@ class CardItem extends StatefulWidget {
     return Asset.load<Image>("card_frame_$category$lavel");
   }
 
-  static getCardImage(CardData card, double size, {Key? key}) {
-    return LoaderWidget(AssetType.image,
-        card.isHero ? card.name : card.get<String>(CardFields.name),
+  static getCardImage(FruitCard card, double size, {Key? key}) {
+    return LoaderWidget(AssetType.image, card.getName(),
         key: key, subFolder: "cards", width: size);
   }
 
@@ -84,8 +83,8 @@ class _CardItemState extends State<CardItem> {
   @override
   Widget build(BuildContext context) {
     var baseCard = widget.card.base;
-    var level = baseCard.get<int>(CardFields.rarity);
-    var cooldown = baseCard.get<int>(CardFields.cooldown);
+    var level = baseCard.rarity;
+    var cooldown = baseCard.cooldown;
     _remainingCooldown.value = widget.card.getRemainingCooldown();
     if (widget.showCooloff && _remainingCooldown.value > 0) {
       _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -103,8 +102,7 @@ class _CardItemState extends State<CardItem> {
     }
 
     var items = <Widget>[
-      CardItem.getCardBackground(
-          baseCard.fruit.category, baseCard.get<int>(CardFields.rarity)),
+      CardItem.getCardBackground(baseCard.fruit.category, baseCard.rarity),
       widget.card.base.isHero
           ? CardItem.getHeroAnimation(widget.card, 320 * s)
           : CardItem.getCardImage(baseCard, 216 * s, key: _imageKey),
@@ -120,7 +118,7 @@ class _CardItemState extends State<CardItem> {
           top: 6 * s,
           left: 22 * s,
           height: 52 * s,
-          child: SkinnedText("${baseCard.name}_t".l(),
+          child: SkinnedText("${baseCard.fruit.name}_t".l(),
               style: _small!.autoSize(baseCard.name.length, 8, 36 * s))));
     }
     if (widget.showCooldown) {

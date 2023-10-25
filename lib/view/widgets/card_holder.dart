@@ -68,9 +68,7 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
 
   Widget _filledCard() {
     var card = widget.card!;
-    var name = card.base.isHero
-        ? card.base.get<Fruit>(CardFields.fruit).name
-        : card.base.get<String>(CardFields.name);
+    var name = card.base.isHero ? card.base.fruit.name : card.base.name;
     return LoaderWidget(AssetType.image, name,
         subFolder: "cards", key: getGlobalKey(card.id));
   }
