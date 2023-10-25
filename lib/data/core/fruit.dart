@@ -90,26 +90,20 @@ class FruitCard {
   int get cost {
     const maxEnhanceModifier = 45;
     const priceModifier = 100;
-    return ((priceModifier / maxEnhanceModifier) *
-            get<int>(CardFields.powerLimit))
-        .floor();
+    return ((priceModifier / maxEnhanceModifier) * powerLimit).floor();
   }
 
-  bool get isHero => fruit.isHero;
-}
-
-class Cards extends StringMap<CardData> {
-  @override
-  void initialize(Map<String, dynamic> data, {dynamic args}) {
-    var fruits = args as Map<int, Fruit>;
+  static Map<int, FruitCard> generateMap(
+      Map<String, dynamic> data, Map<int, Fruit> fruits) {
+    Map<int, FruitCard> map = {};
     for (var entry in data.entries) {
       var fruit = fruits[entry.value['fruitId']]!;
-      map[entry.key] = CardData()..initialize(entry.value, args: fruit);
-      fruit.cards.add(map[entry.key]!);
+      var card = FruitCard.initialize(entry.value, fruit);
+      map[card.id] = card;
+      fruit.cards.add(card);
     }
+    return map;
   }
-
-  CardData get(String key) => map[key]!;
 }
 
 class AbstractCard with ServiceProvider {

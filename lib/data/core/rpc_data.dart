@@ -18,7 +18,7 @@ class LoadingData {
 
   void init(data) {
     fruits = Fruit.generateMap(data['fruits']);
-    baseCards = Cards()..initialize(data['cards'], args: fruits);
+    baseCards = FruitCard.generateMap(data['cards'], fruits);
     baseHeroItems = BaseHeroItem.init(data['heroItems']);
     comboHints = ComboHint.init(data["comboItems"]);
     shopItems = ShopData.init(data["shop"]);
