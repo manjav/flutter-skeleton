@@ -55,12 +55,18 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
 
   Widget _headerBuilder(Account account) {
     return Widgets.rect(
-        decoration:
-            Widgets.imageDecore("deck_header", ImageCenterSliceData(117, 509)),
-        padding: EdgeInsets.all(10.d),
+        padding: EdgeInsets.symmetric(horizontal: 10.d, vertical: 7.d),
+        decoration: Widgets.imageDecore("frame_header_cheese",
+            ImageCenterSliceData(114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
         width: 940.d,
         height: 510.d,
         child: Stack(clipBehavior: Clip.none, children: [
+          Widgets.rect(
+              height: 192.d,
+              decoration: Widgets.imageDecore(
+                  "frame_hatch",
+                  ImageCenterSliceData(
+                      80, 100, const Rect.fromLTWH(38, 64, 2, 2)))),
           Positioned(
               top: -48.d,
               left: 24.d,
@@ -109,8 +115,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
       constraints: BoxConstraints(minWidth: 250.d),
       height: 92.d,
       padding: EdgeInsets.zero,
-      decoration:
-          Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
+      decoration: Widgets.imageDecore("frame_hatch", ImageCenterSliceData(60)),
       child: Stack(
           alignment: const Alignment(0, -0.2),
           clipBehavior: Clip.none,

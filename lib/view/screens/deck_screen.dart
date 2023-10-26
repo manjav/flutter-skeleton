@@ -138,41 +138,58 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   Widget _header(Account account) {
     return Widgets.rect(
-        decoration:
-            Widgets.imageDecore("deck_header", ImageCenterSliceData(117, 509)),
-        padding: EdgeInsets.fromLTRB(28.d, 12.d, 28.d, 32.d),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                  height: 168.d,
-                  child: Row(
-                    children: [
-                      _avatar(TextAlign.left),
-                      SizedBox(width: 8.d),
-                      _opponentInfo(CrossAxisAlignment.start, account),
-                      Asset.load<Image>("deck_battle_icon", height: 136.d),
-                      _opponentInfo(CrossAxisAlignment.end, account),
-                      SizedBox(width: 8.d),
-                      _avatar(TextAlign.right),
-                    ],
-                  )),
-              ValueListenableBuilder<List<AccountCard?>>(
-                  valueListenable: _selectedCards,
-                  builder: (context, value, child) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        for (var i = 0; i < _selectedCards.value.length; i++)
-                          CardHolder(
-                              card: _selectedCards.value[i],
-                              heroMode: i == 2,
-                              onTap: () => _selectedCards.setAtCard(i, null))
-                      ],
-                    );
-                  }),
-            ]));
+        padding: EdgeInsets.symmetric(horizontal: 10.d, vertical: 7.d),
+        decoration: Widgets.imageDecore("frame_header_cheese",
+            ImageCenterSliceData(114, 174, const Rect.fromLTWH(58, 48, 2, 2))),
+        child: Stack(children: [
+          Widgets.rect(
+              height: 192.d,
+              decoration: Widgets.imageDecore(
+                  "frame_hatch",
+                  ImageCenterSliceData(
+                      80, 100, const Rect.fromLTWH(38, 64, 2, 2)))),
+          Positioned(
+              left: 16.d,
+              top: 2,
+              right: 16.d,
+              bottom: 24.d,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        height: 168.d,
+                        child: Row(
+                          children: [
+                            _avatar(TextAlign.left),
+                            SizedBox(width: 8.d),
+                            _opponentInfo(CrossAxisAlignment.start, account),
+                            Asset.load<Image>("deck_battle_icon",
+                                height: 136.d),
+                            _opponentInfo(CrossAxisAlignment.end, account),
+                            SizedBox(width: 8.d),
+                            _avatar(TextAlign.right),
+                          ],
+                        )),
+                    ValueListenableBuilder<List<AccountCard?>>(
+                        valueListenable: _selectedCards,
+                        builder: (context, value, child) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              for (var i = 0;
+                                  i < _selectedCards.value.length;
+                                  i++)
+                                CardHolder(
+                                    card: _selectedCards.value[i],
+                                    heroMode: i == 2,
+                                    onTap: () =>
+                                        _selectedCards.setAtCard(i, null))
+                            ],
+                          );
+                        }),
+                  ]))
+        ]));
   }
 
   Widget _avatar(TextAlign align) => LevelIndicator(align: align, size: 160.d);
