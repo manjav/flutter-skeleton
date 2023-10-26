@@ -32,8 +32,8 @@ class Account extends Opponent {
   late String phone,
       address,
       realname,
-      restore_key,
-      invite_key,
+      restoreKey,
+      inviteKey,
       emergency_message,
       update_message,
       latest_app_version,
@@ -55,31 +55,31 @@ class Account extends Opponent {
       tutorial_index,
       birth_year,
       gender,
-      prev_league_id,
-      prev_league_rank,
-      won_battle_num,
-      lost_battle_num,
+      prevLeagueId,
+      prevLeagueRank,
+      wonBattlesCount,
+      lostBattlesCount,
       moodId,
       updated_at,
-      last_load_at,
+      lastLoadAt,
       avatar_slots,
       gold_collection_allowed_at,
       gold_collection_extraction,
       cards_view,
       league_remaining_time,
       bonus_remaining_time,
-      potion_price,
-      nectar_price,
+      potionPrice,
+      nectarPrice,
       hero_id,
       hero_max_rarity,
       base_hero_id,
       wheel_of_fortune_opens_in,
       latest_constants_version,
       deltaTime,
-      xpboost_created_at,
-      pwboost_created_at,
-      xpboost_id,
-      pwboost_id;
+      xpboostCreatedAt,
+      pwboostCreatedAt,
+      xpboostId,
+      pwboostId;
 
   late bool needs_captcha,
       has_email,
@@ -129,7 +129,7 @@ class Account extends Opponent {
       achievements_blob,
       sale_info,
       bundles,
-      daily_reward,
+      dailyReward,
       coach_info,
       coaching,
       modules_version,
@@ -166,31 +166,31 @@ class Account extends Opponent {
     tutorial_index = Utils.toInt(map["tutorial_index"]);
     birth_year = Utils.toInt(map["birth_year"]);
     gender = Utils.toInt(map["gender"]);
-    prev_league_id = Utils.toInt(map["prev_league_id"]);
-    prev_league_rank = Utils.toInt(map["prev_league_rank"]);
-    won_battle_num = Utils.toInt(map["won_battle_num"]);
-    lost_battle_num = Utils.toInt(map["lost_battle_num"]);
+    prevLeagueId = Utils.toInt(map["prev_league_id"]);
+    prevLeagueRank = Utils.toInt(map["prev_league_rank"]);
+    wonBattlesCount = Utils.toInt(map["won_battle_num"]);
+    lostBattlesCount = Utils.toInt(map["lost_battle_num"]);
     moodId = Utils.toInt(map["mood_id"]);
     updated_at = Utils.toInt(map["updated_at"]);
-    last_load_at = Utils.toInt(map["last_load_at"]);
+    lastLoadAt = Utils.toInt(map["last_load_at"]);
     avatar_slots = Utils.toInt(map["avatar_slots"]);
     gold_collection_allowed_at = Utils.toInt(map["gold_collection_allowed_at"]);
     gold_collection_extraction = Utils.toInt(map["gold_collection_extraction"]);
     cards_view = Utils.toInt(map["cards_view"]);
     league_remaining_time = Utils.toInt(map["league_remaining_time"]);
     bonus_remaining_time = Utils.toInt(map["bonus_remaining_time"]);
-    potion_price = Utils.toInt(map["potion_price"]);
-    nectar_price = Utils.toInt(map["nectar_price"]);
+    potionPrice = Utils.toInt(map["potion_price"]);
+    nectarPrice = Utils.toInt(map["nectar_price"]);
     hero_id = Utils.toInt(map["hero_id"]);
     hero_max_rarity = Utils.toInt(map["hero_max_rarity"]);
     base_hero_id = Utils.toInt(map["base_hero_id"]);
     wheel_of_fortune_opens_in = Utils.toInt(map["wheel_of_fortune_opens_in"]);
     latest_constants_version = Utils.toInt(map["latest_constants_version"]);
     deltaTime = Utils.toInt(map["delta_time"]);
-    xpboost_created_at = Utils.toInt(map["xpboost_created_at"]);
-    pwboost_created_at = Utils.toInt(map["pwboost_created_at"]);
-    xpboost_id = Utils.toInt(map["xpboost_id"]);
-    pwboost_id = Utils.toInt(map["pwboost_id"]);
+    xpboostCreatedAt = Utils.toInt(map["xpboost_created_at"]);
+    pwboostCreatedAt = Utils.toInt(map["pwboost_created_at"]);
+    xpboostId = Utils.toInt(map["xpboost_id"]);
+    pwboostId = Utils.toInt(map["pwboost_id"]);
 
 // Booleans
     needs_captcha = map["needs_captcha"];
@@ -242,8 +242,8 @@ class Account extends Opponent {
     phone = map["phone"];
     address = map["address"];
     realname = map["realname"];
-    restore_key = map["restore_key"];
-    invite_key = map["invite_key"];
+    restoreKey = map["restore_key"];
+    inviteKey = map["invite_key"];
     emergency_message = map["emergency_message"];
     update_message = map["update_message"];
     latest_app_version = map["latest_app_version"];
@@ -254,8 +254,8 @@ class Account extends Opponent {
     }
 
     collection = List.castFrom(map["collection"]);
-    _addDeadline(map, xpboost_created_at, xpboost_id);
-    _addDeadline(map, pwboost_created_at, pwboost_id);
+    _addDeadline(map, xpboostCreatedAt, xpboostId);
+    _addDeadline(map, pwboostCreatedAt, pwboostId);
 
     buildings = {};
     _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
@@ -472,8 +472,8 @@ class Account extends Opponent {
       data["card"] = card;
     }
 
-    _addDeadline(data, xpboost_created_at, xpboost_id);
-    _addDeadline(data, pwboost_created_at, pwboost_id);
+    _addDeadline(data, xpboostCreatedAt, xpboostId);
+    _addDeadline(data, pwboostCreatedAt, pwboostId);
     return data;
   }
 
@@ -486,7 +486,7 @@ class Account extends Opponent {
         .firstWhere((item) => item.id == id);
     deadlines.add(Deadline(deadline, boost));
 
-    if (id == pwboost_id) {
+    if (id == pwboostId) {
       for (var card in cards.entries) {
         card.value.power = (card.value.power * boost.ratio).round();
       }

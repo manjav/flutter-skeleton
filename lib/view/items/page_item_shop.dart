@@ -282,17 +282,18 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       < 80 => 20.0,
       < 90 => 25.0,
       < 100 => 30.0,
-      < 300 => 30.0 + (((_account.level - 90) / 10).floor() * goldMultiplier).floor(),
+      < 300 =>
+        30.0 + (((_account.level - 90) / 10).floor() * goldMultiplier).floor(),
       _ => 93.0 +
-          (((_account.level - 300) / veteranGoldDivider).floor() * veteranGoldMultiplier)
+          (((_account.level - 300) / veteranGoldDivider).floor() *
+                  veteranGoldMultiplier)
               .floor(),
     };
   }
 
   int _getBoostPackPrice(int price) {
     // Converts gold multiplier to nectar for boost packs
-    var boostNectarMultiplier =
-        _getShopMultiplier() / _account.nectar_price;
+    var boostNectarMultiplier = _getShopMultiplier() / _account.nectarPrice;
     if (price == 10) {
       return (30000 * boostNectarMultiplier).round();
     }

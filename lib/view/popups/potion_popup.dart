@@ -27,7 +27,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
   contentFactory() {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var potion = state.account.potion;
-      var price = state.account.potion_price;
+      var price = state.account.potionPrice;
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [

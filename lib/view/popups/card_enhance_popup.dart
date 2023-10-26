@@ -224,7 +224,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     var enhancementCost =
         totalCardPrice * enhancementCostModifier + totalCardPrice;
     return minimumNectarCostForEnhancement
-        .min((enhancementCost / account.nectar_price).round())
+        .min((enhancementCost / account.nectarPrice).round())
         .floor();
   }
 

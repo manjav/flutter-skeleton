@@ -126,8 +126,9 @@ class LocalNotification extends IService {
 
   void skedule(Account account) async {
     int nextDailyGiftAt = 0, maxCooldown = 0;
-    var reward = account.daily_reward;
-    if (reward != null) nextDailyGiftAt = reward["next_reward_at"];
+    if (account.dailyReward != null) {
+      nextDailyGiftAt = account.dailyReward["next_reward_at"];
+    }
     maxCooldown = account.calculateMaxCooldown();
 
     tz.initializeTimeZones();
