@@ -95,10 +95,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                 onRiveInit: (Artboard artboard) {
               final controller =
                   StateMachineController.fromArtboard(artboard, "Tab");
-              var input = controller?.findInput<double>("level") as SMINumber;
-              input.value = account.tribe != null
-                  ? account.tribe!.levels[Buildings.base.id]!.toDouble()
-                  : 0.0;
+              controller?.findInput<double>("level")!.value =
+                  account.tribe!.levels[Buildings.base.id]!.toDouble();
+              controller?.findInput<bool>("hideBackground")!.value = true;
+              controller?.findInput<bool>("active")!.value = true;
 
               artboard.addController(controller!);
             }, width: 160.d, height: 160.d),

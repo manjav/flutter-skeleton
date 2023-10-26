@@ -94,6 +94,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   Widget contentFactory() {
+    var tabSize = DeviceInfo.size.width / _tabInputs.length;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       return Widgets.rect(
           color: TColors.cyan,
@@ -109,8 +110,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               SizedBox(
                   height: _navbarHeight,
                   child: ListView.builder(
-                      itemExtent: DeviceInfo.size.width / _tabInputs.length,
-                      itemBuilder: (c, i) => _tabItemBuilder(state.account, i),
+                      itemExtent: tabSize,
+                      itemBuilder: (c, i) =>
+                          _tabItemBuilder(state.account, i, tabSize),
                       scrollDirection: Axis.horizontal,
                       itemCount: _tabInputs.length)),
               //   BlocConsumer<ServicesBloc, ServicesState>(
@@ -131,32 +133,38 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     };
   }
 
-  Widget? _tabItemBuilder(Account account, int index) {
+  Widget? _tabItemBuilder(Account account, int index, double size) {
     return Widgets.touchable(
         onTap: () => _selectTap(index, tabsChange: false),
         child: Stack(
+          clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
-            LoaderWidget(
-              AssetType.animation,
-              "tab_$index",
-              fit: BoxFit.fitWidth,
-              onRiveInit: (Artboard artboard) {
-                final controller =
-                    StateMachineController.fromArtboard(artboard, "Tab");
-                _tabInputs[index] =
-                    controller!.findInput<bool>("active") as SMIBool;
-                _tabInputs[index]!.value = index == _pageController.initialPage;
-                if (index == 3) {
-                  var input =
-                      controller.findInput<double>("level") as SMINumber;
-                  input.value = account.tribe != null
-                      ? account.tribe!.levels[Buildings.base.id]!.toDouble()
-                      : 0.0;
-                }
-                artboard.addController(controller);
-              },
-            ),
+            Positioned(
+                top: index == 3 ? 10.d : 0,
+                width: size * (index == 3 ? 0.6 : 1),
+                height: size * (index == 3 ? 0.6 : 1),
+                child: LoaderWidget(
+                  AssetType.animation,
+                  "tab_$index",
+                  fit: BoxFit.fitWidth,
+                  onRiveInit: (Artboard artboard) {
+                    final controller =
+                        StateMachineController.fromArtboard(artboard, "Tab");
+                    _tabInputs[index] =
+                        controller!.findInput<bool>("active") as SMIBool;
+                    _tabInputs[index]!.value =
+                        index == _pageController.initialPage;
+                    if (index == 3) {
+                      var input =
+                          controller.findInput<double>("level") as SMINumber;
+                      input.value = account.tribe != null
+                          ? account.tribe!.levels[Buildings.base.id]!.toDouble()
+                          : 0.0;
+                    }
+                    artboard.addController(controller);
+                  },
+                )),
             _selectedTab == index
                 ? Positioned(
                     bottom: 6.d,
