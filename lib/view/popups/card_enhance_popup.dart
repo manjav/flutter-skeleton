@@ -132,7 +132,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
           Widgets.rect(
               padding: EdgeInsets.all(12.d),
               decoration: Widgets.imageDecore(
-                  "ui_frame_inside", ImageCenterSliceData(42)),
+                  "frame_hatch_button", ImageCenterSliceData(42)),
               child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,

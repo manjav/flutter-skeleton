@@ -112,7 +112,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
                 height: 90.d,
                 padding: EdgeInsets.all(6.d),
                 decoration: Widgets.imageDecore(
-                    "ui_frame_inside", ImageCenterSliceData(42)),
+                    "frame_hatch_button", ImageCenterSliceData(42)),
                 child: LoaderWidget(
                     AssetType.image, "avatar_${member.avatarId + 1}",
                     width: 76.d, height: 76.d, subFolder: "avatars")),
@@ -152,7 +152,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         height: 64.d,
         padding: padding ?? EdgeInsets.only(left: 16.d, right: 16.d),
         decoration:
-            Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
+            Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Asset.load<Image>(icon, height: iconSize),
           SizedBox(width: 2.d),
@@ -252,8 +252,8 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         SizedBox(width: 20.d),
         Widgets.rect(
           padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
-          decoration:
-              Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
+          decoration: Widgets.imageDecore(
+              "frame_hatch_button", ImageCenterSliceData(42)),
           child: Row(children: [
             Asset.load<Image>("icon_gold", height: 76.d),
             SkinnedText(cost.compact(),

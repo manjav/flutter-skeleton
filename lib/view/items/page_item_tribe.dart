@@ -138,7 +138,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             Widgets.rect(
                 padding: EdgeInsets.all(10.d),
                 decoration: Widgets.imageDecore(
-                    "ui_frame_inside", ImageCenterSliceData(42)),
+                    "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Asset.load<Image>("tribe_edit", width: 42.d))
           ]),
           Row(children: [
@@ -189,7 +189,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         height: 64.d,
         padding: padding ?? EdgeInsets.only(left: 16.d, right: 16.d),
         decoration:
-            Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
+            Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Asset.load<Image>(icon, height: iconSize),
           SizedBox(width: 12.d),
@@ -278,7 +278,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         radius: padding,
         padding: EdgeInsets.all(6.d),
         decoration:
-            Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
+            Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
         child: LoaderWidget(AssetType.image, "avatar_${message.avatarId}",
             width: 76.d, height: 76.d, subFolder: "avatars"));
     return Column(children: [

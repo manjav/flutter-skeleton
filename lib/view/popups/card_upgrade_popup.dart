@@ -109,7 +109,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
               Widgets.rect(
                 padding: EdgeInsets.only(right: 12.d),
                 decoration: Widgets.imageDecore(
-                    "ui_frame_inside", ImageCenterSliceData(42)),
+                    "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_nectar", height: 72.d),
                   SkinnedText(price.compact(), style: TStyles.large),

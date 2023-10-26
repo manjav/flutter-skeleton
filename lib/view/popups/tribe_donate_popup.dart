@@ -58,7 +58,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
             Widgets.rect(
               padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
               decoration: Widgets.imageDecore(
-                  "ui_frame_inside", ImageCenterSliceData(42)),
+                  "frame_hatch_button", ImageCenterSliceData(42)),
               child: Row(children: [
                 Asset.load<Image>("icon_gold", height: 76.d),
                 SkinnedText(_donateValue.compact(),

@@ -83,7 +83,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
           Widgets.rect(
             padding: EdgeInsets.only(right: 12.d),
             decoration: Widgets.imageDecore(
-                "ui_frame_inside", ImageCenterSliceData(42)),
+                "frame_hatch_button", ImageCenterSliceData(42)),
             child: Row(children: [
               Asset.load<Image>("icon_gold", height: 66.d),
               SkinnedText(cost.compact()),

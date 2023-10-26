@@ -114,7 +114,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 6.d, horizontal: 12.d),
                             decoration: Widgets.imageDecore(
-                                "ui_frame_inside", ImageCenterSliceData(42)),
+                                "frame_hatch_button", ImageCenterSliceData(42)),
                             child: Row(children: [
                               Asset.load<Image>("icon_gold", height: 76.d),
                               SkinnedText(15000.compact(),

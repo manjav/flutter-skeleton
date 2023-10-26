@@ -110,7 +110,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
       height: 92.d,
       padding: EdgeInsets.zero,
       decoration:
-          Widgets.imageDecore("ui_frame_inside", ImageCenterSliceData(42)),
+          Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
       child: Stack(
           alignment: const Alignment(0, -0.2),
           clipBehavior: Clip.none,
