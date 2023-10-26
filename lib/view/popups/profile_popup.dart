@@ -69,7 +69,15 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
               top: 10.d,
               left: 240.d,
               child: SkinnedText(account.name, style: TStyles.large)),
-          SkinnedText(account.name)
+          Positioned(
+              top: 80.d,
+              left: 240.d,
+              child: Row(children: [
+                SkinnedText("mood_l".l()),
+                SizedBox(width: 16.d),
+                LoaderWidget(AssetType.image, "mood_${account.moodId}",
+                    subFolder: "moods", width: 50.d)
+              ])),
           Positioned(
               top: 220.d,
               left: 60.d,

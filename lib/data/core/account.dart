@@ -59,7 +59,7 @@ class Account extends Opponent {
       prev_league_rank,
       won_battle_num,
       lost_battle_num,
-      mood_id,
+      moodId,
       updated_at,
       last_load_at,
       avatar_slots,
@@ -170,7 +170,7 @@ class Account extends Opponent {
     prev_league_rank = Utils.toInt(map["prev_league_rank"]);
     won_battle_num = Utils.toInt(map["won_battle_num"]);
     lost_battle_num = Utils.toInt(map["lost_battle_num"]);
-    mood_id = Utils.toInt(map["mood_id"]);
+    moodId = Utils.toInt(map["mood_id"]);
     updated_at = Utils.toInt(map["updated_at"]);
     last_load_at = Utils.toInt(map["last_load_at"]);
     avatar_slots = Utils.toInt(map["avatar_slots"]);
