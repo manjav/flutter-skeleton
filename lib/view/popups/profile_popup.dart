@@ -20,6 +20,9 @@ class ProfilePopup extends AbstractPopup {
 
 class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
   @override
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(24.d, 200.d, 24.d, 92.d);
+
+  @override
   void initState() {
     super.initState();
   }
@@ -38,7 +41,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
       return SizedBox(
           height: DeviceInfo.size.height * 0.7,
           child: Column(
-            children: [SizedBox(height: 32.d), _headerBuilder(state.account)],
+            children: [_headerBuilder(state.account)],
           ));
     });
   }
