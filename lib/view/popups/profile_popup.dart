@@ -43,8 +43,9 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
         children: [
           _headerBuilder(state.account),
           _medalsBuilder(state.account),
+          _leagueBuilder(state.account),
         ],
-          ));
+      ));
     });
   }
 
@@ -89,9 +90,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
               left: 60.d,
               child: _indicator(
                   "last_played ".l(),
-                  (DateTime.now().secondsSinceEpoch - account.last_load_at)
-                      .toElapsedTime(),
-                  valueStyle: TStyles.medium)),
+                  (DateTime.now().secondsSinceEpoch - account.lastLoadAt)
+                      .toElapsedTime())),
           Positioned(
               top: 220.d,
               left: 500.d,
@@ -108,7 +108,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
       {String? icon, TextStyle? valueStyle}) {
     return Widgets.rect(
       constraints: BoxConstraints(minWidth: 250.d),
-      height: 92.d,
+      height: 96.d,
       padding: EdgeInsets.zero,
       decoration: Widgets.imageDecore("frame_hatch", ImageCenterSliceData(60)),
       child: Stack(
@@ -125,7 +125,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
                   ? Asset.load<Image>(icon, width: 68.d)
                   : const SizedBox(),
               SizedBox(width: icon == null ? 0 : 16.d),
-              SkinnedText(value, style: valueStyle ?? TStyles.large),
+              SkinnedText(value, style: valueStyle ?? TStyles.medium),
               SizedBox(width: 16.d),
             ])
           ]),
@@ -190,4 +190,52 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
     );
   }
 
+  Widget _leagueBuilder(Account account) {
+    return Widgets.rect(
+        margin: EdgeInsets.only(top: 30.d),
+        decoration: Widgets.imageDecore("frame_header_cheese",
+            ImageCenterSliceData(114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
+        width: 940.d,
+        height: 400.d,
+        child: Stack(clipBehavior: Clip.none, children: [
+          Positioned(
+              top: -25.d, left: 60.d, child: SkinnedText("popupleague".l())),
+          Positioned(
+              top: 50.d,
+              left: 80.d,
+              child: Asset.load<Image>("icon_league_${account.prevLeagueId}",
+                  width: 160.d)),
+          Positioned(
+              top: 260.d,
+              left: 40.d,
+              child: _indicator("total_rank".l(), "${account.prevLeagueRank}",
+                  icon: "icon_rank")),
+          Positioned(
+              top: 60.d,
+              left: 320.d,
+              child: Widgets.divider(direction: Axis.vertical, height: 260.d)),
+          Positioned(
+              top: 50.d,
+              left: 400.d,
+              child: Asset.load<Image>("icon_league_${account.leagueId}",
+                  width: 160.d)),
+          Positioned(
+              top: 260.d,
+              left: 370.d,
+              child: _indicator("total_rank".l(), "${account.leagueRank}",
+                  icon: "icon_rank")),
+          Positioned(
+              top: 120.d,
+              left: 630.d,
+              child: _indicator(
+                  "total_rank".l(), account.total_battles.toString(),
+                  icon: "icon_attacks")),
+          Positioned(
+              top: 260.d,
+              left: 630.d,
+              child: _indicator("total_rank".l(),
+                  "${(account.wonBattlesCount / account.total_battles * 100).round()}%",
+                  icon: "icon_attacks")),
+        ]));
+  }
 }
