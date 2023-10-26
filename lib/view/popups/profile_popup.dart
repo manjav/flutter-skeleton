@@ -34,21 +34,16 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
     super.initState();
   }
 
-  // _loadMessages() async {
-  //   // await getService<Profile>().initialize(args: [context, accountBloc.account!]);
-  //   setState(() {});
-  // }
-
   @override
   contentFactory() {
-    // var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
-    // var now = DateTime.now().secondsSinceEpoch;
-
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       return SizedBox(
-          height: DeviceInfo.size.height * 0.7,
           child: Column(
-            children: [_headerBuilder(state.account)],
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _headerBuilder(state.account),
+          _medalsBuilder(state.account),
+        ],
           ));
     });
   }
@@ -154,4 +149,45 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
       SkinnedText(account.tribe!.name, style: TStyles.large)
     ]);
   }
+
+  Widget _medalsBuilder(Account account) {
+    return SizedBox(
+        height: 250.d,
+        child: Stack(alignment: Alignment.bottomCenter, children: [
+          Positioned(
+              bottom: 50.d,
+              child: Widgets.rect(
+                  height: 71.d,
+                  width: 880.d,
+                  margin: EdgeInsets.fromLTRB(16.d, 44.d, 16.d, 0),
+                  decoration: Widgets.imageDecore(
+                      "shelf", ImageCenterSliceData(108, 71)))),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var i = 10001; i < 10007; i++)
+                  _medalBuilder(i, account.medals[i])
+              ])
+        ]));
+  }
+
+  Widget _medalBuilder(int name, int? count) {
+    var size = 140.d;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ColorFiltered(
+            colorFilter: ColorFilter.mode(
+              count == null ? TColors.black80 : TColors.white,
+              count == null ? BlendMode.srcIn : BlendMode.dstIn,
+            ),
+            child: LoaderWidget(AssetType.image, "medal_$name",
+                subFolder: "medals", width: size, height: size)),
+        SizedBox(height: 30.d),
+        count != null ? Text("x$count") : const SizedBox()
+      ],
+    );
+  }
+
 }

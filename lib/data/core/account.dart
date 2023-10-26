@@ -122,8 +122,7 @@ class Account extends Opponent {
       mobile_number_verified,
       wheel_of_fortune;
 
-  dynamic medals,
-      avatars,
+  dynamic avatars,
       owned_avatars,
       achievements,
       achievements_blob,
@@ -139,6 +138,7 @@ class Account extends Opponent {
   Map<Buildings, Building> buildings = {};
   Map<int, AccountCard> cards = {};
   List<int> collection = [];
+  Map<int, int> medals = {};
   List<Deadline> deadlines = [];
   Map<int, HeroCard> heroes = {};
   Map<int, HeroItem> heroitems = {};
@@ -251,6 +251,10 @@ class Account extends Opponent {
 
     for (var card in map['cards']) {
       cards[card['id']] = AccountCard(this, card);
+    }
+
+    for (var e in map["medals"].entries) {
+      medals[int.parse(e.key)] = e.value;
     }
 
     collection = List.castFrom(map["collection"]);
