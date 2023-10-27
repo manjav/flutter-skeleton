@@ -36,6 +36,7 @@ dependencies:
   in_app_purchase: ^3.1.8
   intl: ^0.18.0
   kochava_tracker: ^2.2.0
+  onesignal_flutter: ^5.0.3 
   path_provider: ^2.1.0
   rive: ^0.11.14
   shared_preferences: ^2.2.0

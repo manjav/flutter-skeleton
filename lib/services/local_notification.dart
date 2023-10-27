@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -20,6 +21,11 @@ class Notifications extends IService {
 
   @override
   initialize({List<Object>? args}) async {
+    var account = args![0] as Account;
+    _initializeLocal(account);
+  }
+
+  _initializeLocal(Account account) async {
     final StreamController<String?> selectNotificationStream = StreamController<
         String?>.broadcast(); // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
 
@@ -93,7 +99,7 @@ class Notifications extends IService {
       // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
     await _requestPermissions();
-    skedule(args![0] as Account);
+    skedule(account);
   }
 
   _requestPermissions() async {
@@ -187,7 +193,7 @@ class Notifications extends IService {
           // androidAllowWhileIdle: true,
           uiLocalNotificationDateInterpretation:
               UILocalNotificationDateInterpretation.absoluteTime);
-      log("${msg.key} index $index title $title body: $body time ${msg.time}");
+      // log("${msg.key} index $index title $title body: $body time ${msg.time}");
       ++index;
     }
   }
@@ -200,12 +206,12 @@ class Notifications extends IService {
   static Future<dynamic> onDidReceiveLocalNotification(
       int? id, String? title, String? body, String? payload) async {
     ILogger.slog(
-        LocalNotification, "Noti: title $title body $body payload: $payload");
+        Notifications, "Noti: title $title body $body payload: $payload");
   }
 
   static Future<dynamic> onSelectNotification(String? payload) async {
     if (payload != null) {
-      ILogger.slog(LocalNotification, 'Noti: notification payload: $payload');
+      ILogger.slog(Notifications, 'Noti: notification payload: $payload');
     }
   }
 
@@ -255,6 +261,23 @@ class Notifications extends IService {
       string += fruits[math.Random().nextInt(fruits.length)];
     }
     return string;
+  }
+
+  void _initializeRemote(Account account) {
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+
+    OneSignal.Debug.setAlertLevel(OSLogLevel.none);
+    // OneSignal.consentRequired(_requireConsent);
+
+    // AndroidOnly stat only
+    // OneSignal.Notifications.removeNotification(1);
+    // OneSignal.Notifications.removeGroupedNotifications("group5");
+
+    // OneSignal.Notifications.clearAll();
+
+    OneSignal.initialize("onesignal_appid".l());
+    OneSignal.login("${account.id}");
+    OneSignal.Notifications.requestPermission(true);
   }
 }
 
