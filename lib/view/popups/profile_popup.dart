@@ -60,20 +60,18 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
           Widgets.rect(
               height: 192.d,
               decoration: Widgets.imageDecore(
-                  "frame_hatch",
-                  ImageCenterSliceData(
-                      80, 100, const Rect.fromLTWH(38, 64, 2, 2)))),
+                  "frame_hatch", ImageCenterSliceData(80, 100))),
           Positioned(
               top: -48.d,
               left: 24.d,
               child: const LevelIndicator(showLevel: false)),
           Positioned(
               top: 10.d,
-              left: 240.d,
+              left: 250.d,
               child: SkinnedText(account.name, style: TStyles.large)),
           Positioned(
               top: 80.d,
-              left: 240.d,
+              left: 250.d,
               child: Row(children: [
                 SkinnedText("mood_l".l()),
                 SizedBox(width: 16.d),
@@ -89,7 +87,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
               top: 360.d,
               left: 60.d,
               child: _indicator(
-                  "last_played ".l(),
+                  "last_played".l(),
                   (DateTime.now().secondsSinceEpoch - account.lastLoadAt)
                       .toElapsedTime())),
           Positioned(
@@ -187,7 +185,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
             child: LoaderWidget(AssetType.image, "medal_$name",
                 subFolder: "medals", width: size, height: size)),
         SizedBox(height: 30.d),
-        count != null ? Text("x$count") : const SizedBox()
+        count != null ? Text("x$count") : SizedBox(height: 48.d)
       ],
     );
   }
@@ -213,7 +211,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
           Positioned(
               top: 260.d,
               left: 40.d,
-              child: _indicator("total_rank".l(), "${account.prevLeagueRank}",
+              child: _indicator(
+                  "prev_league_rank".l(), "${account.prevLeagueRank}",
                   icon: "icon_rank")),
           Positioned(
               top: 60.d,
@@ -227,19 +226,18 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
           Positioned(
               top: 260.d,
               left: 370.d,
-              child: _indicator("total_rank".l(), "${account.leagueRank}",
+              child: _indicator("league_rank".l(), "${account.leagueRank}",
                   icon: "icon_rank")),
           Positioned(
               top: 120.d,
               left: 630.d,
-              child: _indicator(
-                  "total_rank".l(), account.total_battles.toString(),
+              child: _indicator("battles_count".l(), "$battles",
                   icon: "icon_attacks")),
           Positioned(
               top: 260.d,
               left: 630.d,
-              child: _indicator("total_rank".l(),
-                  "${(account.wonBattlesCount / account.total_battles * 100).round()}%",
+              child: _indicator(
+                  "battles_win_rate".l(), "${(battleRate * 100).round()}%",
                   icon: "icon_attacks")),
         ]));
   }

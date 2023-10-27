@@ -255,7 +255,7 @@ class Account extends Opponent {
 
     if (map.containsKey("medals")) {
       for (var e in map["medals"]) {
-      medals[int.parse(e.key)] = e.value;
+        medals[int.parse(e.key)] = e.value;
       }
     }
 
