@@ -193,6 +193,9 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
   }
 
   Widget _leagueBuilder(Account account) {
+    if (account.leagueId <= 0) return const SizedBox();
+    var battles = account.wonBattlesCount + account.lostBattlesCount;
+    var battleRate = battles == 0 ? 0 : account.wonBattlesCount / battles;
     return Widgets.rect(
         margin: EdgeInsets.only(top: 30.d),
         decoration: Widgets.imageDecore("frame_header_cheese",
