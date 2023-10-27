@@ -227,14 +227,16 @@ class Widgets {
       {double? width,
       double? height,
       double margin = 0,
-      Axis direction = Axis.horizontal}) {
+      Axis direction = Axis.horizontal,
+      BoxDecoration? decoration}) {
     var v = direction == Axis.vertical;
-    var slicingData = ImageCenterSliceData(v ? 16 : 38, v ? 38 : 16);
     return rect(
         width: width ?? 16.d,
         height: height ?? 16.d,
         margin: EdgeInsets.all(margin),
-        decoration: imageDecore("ui_divider_${v ? 'v' : 'h'}", slicingData));
+        decoration: decoration ??
+            imageDecore("ui_divider_${v ? 'v' : 'h'}",
+                ImageCenterSliceData(v ? 16 : 38, v ? 38 : 16)));
   }
 
   static slider(double min, double value, double max,
