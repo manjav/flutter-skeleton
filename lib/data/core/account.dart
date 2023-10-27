@@ -253,8 +253,10 @@ class Account extends Opponent {
       cards[card['id']] = AccountCard(this, card);
     }
 
-    for (var e in map["medals"].entries) {
+    if (map.containsKey("medals")) {
+      for (var e in map["medals"]) {
       medals[int.parse(e.key)] = e.value;
+      }
     }
 
     collection = List.castFrom(map["collection"]);
