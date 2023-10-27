@@ -287,7 +287,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       account.update(data);
 
       // Reset reminder notifications ....
-      getService<LocalNotification>().skedule(account);
+      getService<Notifications>().skedule(account);
       if (mounted) {
         accountBloc.add(SetAccount(account: account));
         Navigator.pop(context);

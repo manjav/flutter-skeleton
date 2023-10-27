@@ -13,7 +13,7 @@ import '../services/iservices.dart';
 import '../services/localization.dart';
 import '../utils/ilogger.dart';
 
-class LocalNotification extends IService {
+class Notifications extends IService {
   static bool granted = false;
   static final FlutterLocalNotificationsPlugin
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();

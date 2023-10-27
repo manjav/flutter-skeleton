@@ -37,7 +37,7 @@ enum ServiceType {
   device,
   inbox,
   localization,
-  localNotification,
+  notifications,
   prefs,
   sounds,
   settings,
@@ -84,7 +84,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       DeviceInfo => ServiceType.device,
       Inbox => ServiceType.inbox,
       Localization => ServiceType.localization,
-      LocalNotification => ServiceType.localNotification,
+      Notifications => ServiceType.notifications,
       Prefs => ServiceType.prefs,
       Sounds => ServiceType.sounds,
       Trackers => ServiceType.trackers,
@@ -108,7 +108,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.device] = DeviceInfo();
     _map[ServiceType.inbox] = Inbox();
     _map[ServiceType.localization] = Localization();
-    _map[ServiceType.localNotification] = LocalNotification();
+    _map[ServiceType.notifications] = Notifications();
     _map[ServiceType.prefs] = Prefs();
     _map[ServiceType.socket] = NoobSocket();
     _map[ServiceType.sounds] = Sounds();
@@ -134,8 +134,8 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
         BlocProvider.of<ServicesBloc>(context)
             .add(ServicesEvent(ServicesInitState.initialize, null));
 
-        // Scedule notifications ...
-        _map[ServiceType.localNotification]!.initialize(args: [data.account]);
+        // Initialize notifications ...
+        _map[ServiceType.notifications]!.initialize(args: [data.account]);
       }
 
       // Initialize socket

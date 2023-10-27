@@ -201,7 +201,6 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     return Widgets.skinnedButton(
         padding: EdgeInsets.fromLTRB(24.d, 0, 28.d, 20.d),
         color: color,
-        size: ButtonSize.small,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Asset.load<Image>(icon, width: 50.d),
           SizedBox(width: 8.d),

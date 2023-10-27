@@ -5,9 +5,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
-import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
@@ -337,7 +337,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
 
     // Reset reminder notifications ....
-    getService<LocalNotification>().skedule(accountBloc.account!);
+    getService<Notifications>().skedule(accountBloc.account!);
 
     Navigator.pushNamed(context, Routes.livebattleOut.routeName, arguments: {
       "alliseId": _allies.id,
