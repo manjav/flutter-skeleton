@@ -89,7 +89,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         child: Widgets.button(
           onPressed: onPressed,
           decoration: Widgets.imageDecore(
-              "ui_button_map",
+              "button_map",
               ImageCenterSliceData(422, 202,
                   const Rect.fromLTWH(85, 85, 422 - 85 * 2, 202 - 85 * 2))),
           child: Stack(

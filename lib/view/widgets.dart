@@ -217,11 +217,10 @@ class Widgets {
 
   static buttonDecore(ButtonColor color, [ButtonSize size = ButtonSize.small]) {
     var slicingData = switch (size) {
-      ButtonSize.small =>
-        ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 2, 46)),
-      _ => ImageCenterSliceData(130, 158, const Rect.fromLTWH(64, 50, 2, 58)),
+      ButtonSize.small => ImageCenterSliceData(102, 106),
+      _ => ImageCenterSliceData(130, 158),
     };
-    return imageDecore("ui_button_${size.name}_${color.name}", slicingData);
+    return imageDecore("button_${size.name}_${color.name}", slicingData);
   }
 
   static divider(
