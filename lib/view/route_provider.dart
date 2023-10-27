@@ -138,6 +138,7 @@ extension RouteProvider on Routes {
       "/popupHero" ||
       "/popupInbox" ||
       "/popupSettings" ||
+      "/popupProfile" ||
       "/popupRestore" ||
       "/popupInvite" ||
       "/popupRedeemGift" ||
