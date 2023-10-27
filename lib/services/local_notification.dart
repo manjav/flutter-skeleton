@@ -23,6 +23,7 @@ class Notifications extends IService {
   initialize({List<Object>? args}) async {
     var account = args![0] as Account;
     _initializeLocal(account);
+    _initializeRemote(account);
   }
 
   _initializeLocal(Account account) async {

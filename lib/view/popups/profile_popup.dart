@@ -133,11 +133,12 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
   }
 
   Widget _tribeSection(Account account) {
+    var hasTribe = account.tribe != null && account.tribe!.id > 0;
     return Column(children: [
       LoaderWidget(AssetType.animation, "tab_3", fit: BoxFit.fitWidth,
           onRiveInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(artboard, "Tab");
-        var level = account.tribe != null
+        var level = hasTribe
             ? account.tribe!.levels[Buildings.base.id]!.toDouble()
             : 0.0;
         controller?.findInput<double>("level")!.value = level;
@@ -146,7 +147,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
         artboard.addController(controller!);
       }, width: 130.d, height: 130.d),
       SizedBox(height: 20.d),
-      SkinnedText(account.tribe!.name, style: TStyles.large)
+      SkinnedText(hasTribe ? account.tribe!.name : "no_tribe".l(),
+          style: TStyles.large)
     ]);
   }
 
