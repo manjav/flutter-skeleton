@@ -110,8 +110,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           SizedBox(height: 20.d),
           SizedBox(
               height: (account.tribe!.description.length / 50).round() * 44.d,
-              child: SkinnedText(account.tribe!.description,
-                  alignment: Alignment.centerLeft,
+              child: Text(account.tribe!.description,
+                  textDirection: account.tribe!.description.getDirection(),
                   style: TStyles.medium.copyWith(height: 1.1))),
           SizedBox(height: 32.d),
           _upgradeLineBuilder(account.tribe!)
@@ -231,12 +231,14 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               child: Row(children: [
                 Asset.load<Image>("icon_pin", width: 50.d),
                 SizedBox(width: 32.d),
-                Expanded(child: Text(value.text)),
+                Expanded(
+                    child: Text(value.text,
+                        textDirection: value.text.getDirection())),
               ]));
         });
   }
 
-  _chatList(Account account) {
+  Widget _chatList(Account account) {
     var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
     var now = DateTime.now().secondsSinceEpoch;
 
