@@ -118,20 +118,20 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
                     itemCount: Ranks.lists[api]!.length)));
   }
 
-  _itemBuilder(BuildContext context, int index, RpcId rpc) {
-    Rank record = Ranks.lists[rpc]![index];
+  _itemBuilder(BuildContext context, int index, RpcId rpcId) {
+    Rank record = Ranks.lists[rpcId]![index];
     if (record.name.isEmpty) {
       return SizedBox(height: 120.d, child: SkinnedText("rank_near".l()));
     }
     var color = index % 2 == 0 ? TColors.primary : TColors.primary90;
     if (record.itsMe) {
       color = TColors.orange;
-      record.name = rpc == RpcId.rankingGlobal ? "You" : record.name;
+      record.name = rpcId == RpcId.rankingGlobal ? "You" : record.name;
     }
-    var rank = rpc == RpcId.rankingTopTribes
+    var rank = rpcId == RpcId.rankingTopTribes
         ? (record as TribeRank).weeklyRank
         : record.rank;
-    var score = rpc == RpcId.rankingTopTribes
+    var score = rpcId == RpcId.rankingTopTribes
         ? (record as TribeRank).weeklyScore
         : record.score;
 
@@ -155,7 +155,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
           SizedBox(width: 4.d),
           SizedBox(
               width: 220.d,
-              child: rpc == RpcId.rankingGlobal
+              child: rpcId == RpcId.rankingGlobal
                   ? Text((record as Record).tribeName,
                       style: TStyles.small, textAlign: TextAlign.center)
                   : null),
@@ -163,12 +163,9 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
           Text(score.compact(), style: TStyles.small),
         ]),
         onPressed: () async {
-          if (!record.itsMe) {
-            // var accounts = await _network.getAccounts([record.ownerId]);
-            // if (mounted) {
-            //   Navigator.pushNamed(context, Pages.profile.routeName,
-            //       arguments: accounts[0]);
-            // }
+          if (rpcId == RpcId.rankingGlobal && !record.itsMe) {
+            Navigator.pushNamed(context, Routes.popupProfile.routeName,
+                arguments: {"id": record.id});
           }
         });
   }

@@ -198,11 +198,8 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
         ]),
         onPressed: () async {
           if (!record.itsMe) {
-            // var accounts = await _network.getAccounts([record.ownerId]);
-            // if (mounted) {
-            //   Navigator.pushNamed(context, Pages.profile.routeName,
-            //       arguments: accounts[0]);
-            // }
+            Navigator.pushNamed(context, Routes.popupProfile.routeName,
+                arguments: {"id": record.id});
           }
         });
   }

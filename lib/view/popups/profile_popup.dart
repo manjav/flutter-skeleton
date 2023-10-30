@@ -5,6 +5,7 @@ import 'package:rive/rive.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/building.dart';
+import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -18,33 +19,50 @@ import '../route_provider.dart';
 import '../widgets.dart';
 
 class ProfilePopup extends AbstractPopup {
-  final Player? player;
+  final int playerId;
 
-  ProfilePopup({super.key, this.player}) : super(Routes.popupProfile, args: {});
+  ProfilePopup(this.playerId, {super.key})
+      : super(Routes.popupProfile, args: {});
 
   @override
   createState() => _ProfilePopupState();
 }
 
 class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
+  Player? _player;
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(24.d, 200.d, 24.d, 92.d);
 
   @override
-  contentFactory() {
-    Player player = widget.player ?? accountBloc.account!;
-    return SizedBox(
-        child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _headerBuilder(player),
-        _medalsBuilder(player),
-        _leagueBuilder(player),
-      ],
-    ));
+  void initState() {
+    _loadPlayer();
+    super.initState();
   }
 
-  Widget _headerBuilder(Player player) {
+  _loadPlayer() async {
+    if (widget.playerId > 0) {
+      var result = await rpc(RpcId.getProfileInfo,
+          params: {RpcParams.player_id.name: widget.playerId});
+      setState(() => _player = Player.initialize(result, 0));
+    } else {
+      _player = accountBloc.account!;
+    }
+  }
+
+  @override
+  contentFactory() {
+    return SizedBox(
+      child: _player == null
+          ? null
+          : Column(mainAxisSize: MainAxisSize.min, children: [
+              _headerBuilder(),
+              _medalsBuilder(),
+              _leagueBuilder(),
+            ]),
+    );
+  }
+
+  Widget _headerBuilder() {
     return Widgets.rect(
         padding: EdgeInsets.symmetric(horizontal: 10.d, vertical: 7.d),
         decoration: Widgets.imageDecore("frame_header_cheese",
@@ -63,37 +81,34 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
           Positioned(
               top: 10.d,
               left: 250.d,
-              child: SkinnedText(player.name, style: TStyles.large)),
+              child: SkinnedText(_player!.name, style: TStyles.large)),
           Positioned(
               top: 80.d,
               left: 250.d,
               child: Row(children: [
                 SkinnedText("mood_l".l()),
                 SizedBox(width: 16.d),
-                LoaderWidget(AssetType.image, "mood_${player.moodId}",
+                LoaderWidget(AssetType.image, "mood_${_player!.moodId}",
                     subFolder: "moods", width: 50.d)
               ])),
           Positioned(
               top: 220.d,
               left: 60.d,
-              child: _indicator("total_rank".l(), player.rank.toString(),
+              child: _indicator("total_rank".l(), _player!.rank.toString(),
                   icon: "icon_rank")),
           Positioned(
               top: 360.d,
               left: 60.d,
               child: _indicator(
                   "last_played".l(),
-                  (DateTime.now().secondsSinceEpoch - player.lastLoadAt)
+                  (DateTime.now().secondsSinceEpoch - _player!.lastLoadAt)
                       .toElapsedTime())),
           Positioned(
               top: 220.d,
               left: 500.d,
               child: Widgets.divider(direction: Axis.vertical, height: 220.d)),
           Positioned(
-              top: 210.d,
-              right: 12.d,
-              width: 380.d,
-              child: _tribeSection(player))
+              top: 210.d, right: 12.d, width: 380.d, child: _tribeSection())
         ]));
   }
 
@@ -125,12 +140,12 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
     );
   }
 
-  Widget _tribeSection(Player player) {
+  Widget _tribeSection() {
     return Column(children: [
       LoaderWidget(AssetType.animation, "tab_3", fit: BoxFit.fitWidth,
           onRiveInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(artboard, "Tab");
-        var level = player.tribeId == accountBloc.account!.tribeId
+        var level = _player!.tribeId == accountBloc.account!.tribeId
             ? accountBloc.account!.tribe!.levels[Buildings.base.id]!.toDouble()
             : 0.0;
         controller?.findInput<double>("level")!.value = level;
@@ -139,11 +154,11 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
         artboard.addController(controller!);
       }, width: 130.d, height: 130.d),
       SizedBox(height: 20.d),
-      SkinnedText(player.tribeName, style: TStyles.large)
+      SkinnedText(_player!.tribeName, style: TStyles.large)
     ]);
   }
 
-  Widget _medalsBuilder(Player player) {
+  Widget _medalsBuilder() {
     return SizedBox(
         height: 250.d,
         child: Stack(alignment: Alignment.bottomCenter, children: [
@@ -160,7 +175,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 for (var i = 10001; i < 10007; i++)
-                  _medalBuilder(i, player.medals[i])
+                  _medalBuilder(i, _player!.medals[i])
               ])
         ]));
   }
@@ -183,10 +198,10 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
     );
   }
 
-  Widget _leagueBuilder(Player player) {
-    if (player.leagueId <= 0) return const SizedBox();
-    var battles = player.wonBattlesCount + player.lostBattlesCount;
-    var battleRate = battles == 0 ? 0 : player.wonBattlesCount / battles;
+  Widget _leagueBuilder() {
+    if (_player!.leagueId <= 0) return const SizedBox();
+    var battles = _player!.wonBattlesCount + _player!.lostBattlesCount;
+    var battleRate = battles == 0 ? 0 : _player!.wonBattlesCount / battles;
     return Widgets.rect(
         margin: EdgeInsets.only(top: 30.d),
         decoration: Widgets.imageDecore("frame_header_cheese",
@@ -200,13 +215,13 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
               top: 50.d,
               left: 80.d,
               child: Asset.load<Image>(
-                  "icon_league_${LeagueData.getIndices(player.prevLeagueId).$1}",
+                  "icon_league_${LeagueData.getIndices(_player!.prevLeagueId).$1}",
                   width: 160.d)),
           Positioned(
               top: 260.d,
               left: 40.d,
               child: _indicator(
-                  "prev_league_rank".l(), "${player.prevLeagueRank}",
+                  "prev_league_rank".l(), "${_player!.prevLeagueRank}",
                   icon: "icon_rank")),
           Positioned(
               top: 60.d,
@@ -216,12 +231,12 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
               top: 50.d,
               left: 400.d,
               child: Asset.load<Image>(
-                  "icon_league_${LeagueData.getIndices(player.leagueId).$1}",
+                  "icon_league_${LeagueData.getIndices(_player!.leagueId).$1}",
                   width: 160.d)),
           Positioned(
               top: 260.d,
               left: 370.d,
-              child: _indicator("league_rank".l(), "${player.leagueRank}",
+              child: _indicator("league_rank".l(), "${_player!.leagueRank}",
                   icon: "icon_rank")),
           Positioned(
               top: 120.d,

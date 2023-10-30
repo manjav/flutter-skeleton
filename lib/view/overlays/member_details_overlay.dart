@@ -110,22 +110,18 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
 
   _onButtonsPressed(RpcId id) async {
     var bloc = accountBloc;
-    var params = {};
     if (id == RpcId.getProfileInfo) {
-      params[RpcParams.player_id.name] = widget.member.id;
-    } else {
-      params = {
-        RpcParams.tribe_id.name: bloc.account!.tribe!.id,
-        RpcParams.member_id.name: widget.member.id,
-      };
+      Navigator.pushNamed(context, Routes.popupProfile.routeName,
+          arguments: {"id": widget.member.id});
+      close();
+      return;
     }
     try {
-      var result = await rpc(id, params: params);
-      if (!mounted) return;
-      if (id == RpcId.getProfileInfo) {
-        Navigator.pushNamed(context, Routes.popupProfile.routeName,
-            arguments: {"player": Player.initialize(result, bloc.account!.id)});
-      } else if (id == RpcId.tribeLeave) {
+      await rpc(id, params: {
+        RpcParams.tribe_id.name: bloc.account!.tribe!.id,
+        RpcParams.member_id.name: widget.member.id,
+      });
+      if (mounted && id == RpcId.tribeLeave) {
         bloc.account!.tribe = null;
         bloc.add(SetAccount(account: bloc.account!));
         Navigator.pop(context);
