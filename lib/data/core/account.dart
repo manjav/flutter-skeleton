@@ -2,16 +2,58 @@
 
 import 'dart:math' as math;
 
+import '../../services/localization.dart';
 import '../../utils/utils.dart';
+import 'adam.dart';
 import 'building.dart';
 import 'fruit.dart';
 import 'infra.dart';
-import 'adam.dart';
 import 'rpc_data.dart';
 import 'tribe.dart';
 
-class Account extends Opponent {
-  Account() : super.initialize(null, 0);
+class Player extends Opponent {
+  late int gender,
+      birthYear,
+      wonBattlesCount,
+      lostBattlesCount,
+      moodId,
+      updatedAt,
+      lastLoadAt,
+      tribeRanklastLoadAt,
+      tribeRank,
+      prevLeagueId,
+      prevLeagueRank;
+
+  late String realname, address, phone, tribe_name;
+  Map<int, int> medals = {};
+
+  Player.initialize(Map<String, dynamic> map, int ownerId)
+      : super.initialize(map, ownerId) {
+    moodId = Utils.toInt(map["mood_id"]);
+    gender = Utils.toInt(map["gender"]);
+    birthYear = Utils.toInt(map["birth_year"]);
+    updatedAt = Utils.toInt(map["updated_at"]);
+    lastLoadAt = Utils.toInt(map["last_load_at"]);
+    tribeRank = Utils.toInt(map["tribe_rank"]);
+    prevLeagueId = Utils.toInt(map["prev_league_id"]);
+    prevLeagueRank = Utils.toInt(map["prev_league_rank"]);
+    wonBattlesCount = Utils.toInt(map["won_battle_num"]);
+    lostBattlesCount = Utils.toInt(map["lost_battle_num"]);
+
+    phone = map["phone"] ?? "";
+    address = map["address"] ?? "";
+    realname = map["realname"] ?? "";
+
+    if (map.containsKey("medals") && map["medals"].isNotEmpty) {
+      for (var e in map["medals"].entries) {
+        medals[int.parse(e.key)] = e.value;
+      }
+    }
+  }
+}
+
+class Account extends Player {
+  Account() : super.initialize({}, 0);
   static const Map<String, int> availablityLevels = {
     'ads': 4,
     'name': 4,
@@ -29,10 +71,7 @@ class Account extends Opponent {
       (math.pow(level, levelExpo) * levelMultiplier).ceil();
   late LoadingData loadingData;
 
-  late String phone,
-      address,
-      realname,
-      restoreKey,
+  late String restoreKey,
       inviteKey,
       emergency_message,
       update_message,
@@ -40,7 +79,6 @@ class Account extends Opponent {
       latest_app_version_for_notice;
 
   late int q,
-      xp,
       potion,
       nectar,
       weekly_score,
@@ -53,15 +91,6 @@ class Account extends Opponent {
       last_gold_collect_at,
       tutorial_id,
       tutorial_index,
-      birth_year,
-      gender,
-      prevLeagueId,
-      prevLeagueRank,
-      wonBattlesCount,
-      lostBattlesCount,
-      moodId,
-      updated_at,
-      lastLoadAt,
       avatar_slots,
       gold_collection_allowed_at,
       gold_collection_extraction,
@@ -138,7 +167,6 @@ class Account extends Opponent {
   Map<Buildings, Building> buildings = {};
   Map<int, AccountCard> cards = {};
   List<int> collection = [];
-  Map<int, int> medals = {};
   List<Deadline> deadlines = [];
   Map<int, HeroCard> heroes = {};
   Map<int, HeroItem> heroitems = {};
@@ -164,15 +192,6 @@ class Account extends Opponent {
     last_gold_collect_at = Utils.toInt(map["last_gold_collect_at"]);
     tutorial_id = Utils.toInt(map["tutorial_id"]);
     tutorial_index = Utils.toInt(map["tutorial_index"]);
-    birth_year = Utils.toInt(map["birth_year"]);
-    gender = Utils.toInt(map["gender"]);
-    prevLeagueId = Utils.toInt(map["prev_league_id"]);
-    prevLeagueRank = Utils.toInt(map["prev_league_rank"]);
-    wonBattlesCount = Utils.toInt(map["won_battle_num"]);
-    lostBattlesCount = Utils.toInt(map["lost_battle_num"]);
-    moodId = Utils.toInt(map["mood_id"]);
-    updated_at = Utils.toInt(map["updated_at"]);
-    lastLoadAt = Utils.toInt(map["last_load_at"]);
     avatar_slots = Utils.toInt(map["avatar_slots"]);
     gold_collection_allowed_at = Utils.toInt(map["gold_collection_allowed_at"]);
     gold_collection_extraction = Utils.toInt(map["gold_collection_extraction"]);
@@ -239,9 +258,6 @@ class Account extends Opponent {
 
 // Strings
     name = map["name"];
-    phone = map["phone"];
-    address = map["address"];
-    realname = map["realname"];
     restoreKey = map["restore_key"];
     inviteKey = map["invite_key"];
     emergency_message = map["emergency_message"];
@@ -251,12 +267,6 @@ class Account extends Opponent {
 
     for (var card in map['cards']) {
       cards[card['id']] = AccountCard(this, card);
-    }
-
-    if (map.containsKey("medals") && map["medals"].isNotEmpty) {
-      for (var e in map["medals"].entries) {
-        medals[int.parse(e.key)] = e.value;
-      }
     }
 
     collection = List.castFrom(map["collection"]);

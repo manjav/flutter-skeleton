@@ -56,7 +56,10 @@ abstract class Rank {
     if (map == null) return;
     name = map["name"] ?? "";
     id = Utils.toInt(map["id"]);
-    rank = Utils.toInt(map["rank"]);
+    if (map.containsKey("total_rank")) {
+      rank = Utils.toInt(map["total_rank"]);
+    } else {
+      rank = Utils.toInt(map["rank"]);
     }
     score = Utils.toInt(map["score"]);
     itsMe = ownerId == id;
