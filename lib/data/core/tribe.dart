@@ -24,7 +24,7 @@ class Tribe with ServiceProvider {
       weeklyRank;
   late String name, description;
   final Map<int, int> levels = {};
-  List<Member> members = [];
+  List<Opponent> members = [];
   ChatNotifier chat = ChatNotifier([]);
   ValueNotifier<NoobChatMessage?> pinnedMessage = ValueNotifier(null);
 
@@ -65,7 +65,7 @@ class Tribe with ServiceProvider {
     try {
       var result = await getService<HttpConnection>(context)
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
-      members = Member.initAll(result["members"], account.id);
+      members = Opponent.fromMap(result["members"], account.id);
     } finally {}
   }
 

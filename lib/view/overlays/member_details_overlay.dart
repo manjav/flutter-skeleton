@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/infra.dart';
 import '../../data/core/adam.dart';
+import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -16,7 +16,7 @@ import 'ioverlay.dart';
 
 class MemberOverlay extends AbstractOverlay {
   final double y;
-  final Member member, me;
+  final Opponent member, me;
   const MemberOverlay(this.member, this.me, this.y, {super.key})
       : super(type: OverlayType.member);
 
@@ -28,12 +28,14 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
   @override
   Widget build(BuildContext context) {
     var member = widget.member;
-    var buttons = <RpcId, ButtonColor>{RpcId.none: ButtonColor.gray};
+    var buttons = <RpcId, ButtonColor>{};
     if (!member.itsMe) {
+      buttons[RpcId.getProfileInfo] = ButtonColor.teal;
       buttons[RpcId.tribePoke] = ButtonColor.green;
     }
-    if (!member.itsMe && member.degree.index < widget.me.degree.index) {
-      buttons[widget.me.degree.index - member.degree.index > 1
+    if (!member.itsMe &&
+        member.tribePosition.index < widget.me.tribePosition.index) {
+      buttons[widget.member.tribePosition == TribePosition.member
           ? RpcId.tribePromote
           : RpcId.tribeDemote] = ButtonColor.green;
       buttons[RpcId.tribeKick] = ButtonColor.yellow;
@@ -100,14 +102,14 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
     return Widgets.skinnedButton(
         padding: EdgeInsets.only(bottom: 20.d),
         color: color,
-        label: "${id.name.substring(5).toLowerCase()}_l".l(),
+        label: "${id.name.toLowerCase()}_l".l(),
         onPressed: () => _onButtonsPressed(id));
   }
 
   _onButtonsPressed(RpcId id) async {
     var bloc = accountBloc;
     try {
-      await rpc(id, params: {
+      var result = await rpc(id, params: {
         RpcParams.tribe_id.name: bloc.account!.tribe!.id,
         RpcParams.member_id.name: widget.member.id,
       });

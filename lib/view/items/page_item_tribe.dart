@@ -4,9 +4,9 @@ import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/building.dart';
 import '../../data/core/message.dart';
-import '../../data/core/adam.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
@@ -352,8 +352,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   void _onChatItemTap(
       Account account, TapUpDetails details, NoobChatMessage message) {
     var options = <ChatOptions>[];
-    if (account.tribe!.members.firstWhere((m) => m.itsMe).degree.index >=
-        MemberDegree.owner.index) {
+    if (account.tribe!.members.firstWhere((m) => m.itsMe).tribePosition.index >=
+        TribePosition.owner.index) {
       options.add(ChatOptions.pin);
     }
     if (!message.itsMe) {

@@ -28,7 +28,7 @@ class TribeOptionsPopup extends AbstractPopup {
 
 class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
     with TabProviderMixin {
-  Member? _member;
+  Opponent? _member;
   late Account _account;
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
     if (index > -1) {
       _member = _account.tribe!.members[index];
     } else {
-      _member = Member.initialize({"id": _account.id}, _account.id);
+      _member = Opponent.initialize({"id": _account.id}, _account.id);
     }
 
     super.initState();
@@ -94,7 +94,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
     ]);
   }
 
-  Widget? _listItemBuilder(Tribe tribe, Member member, int index) {
+  Widget? _listItemBuilder(Tribe tribe, Opponent member, int index) {
     return Widgets.button(
         height: 144.d,
         margin: EdgeInsets.all(2.d),
@@ -130,12 +130,13 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
                 ]),
                 SizedBox(height: 8.d),
                 Row(children: [
-                  member.degree.index < 2
+                  member.tribePosition.index < 2
                       ? const SizedBox()
-                      : Asset.load<Image>("position_${member.degree.index}",
+                      : Asset.load<Image>(
+                          "position_${member.tribePosition.index}",
                           height: 40.d),
-                  SizedBox(width: member.degree.index < 2 ? 0 : 12.d),
-                  Text("tribe_degree_${member.degree.index}".l(),
+                  SizedBox(width: member.tribePosition.index < 2 ? 0 : 12.d),
+                  Text("tribe_degree_${member.tribePosition.index}".l(),
                       style: TStyles.small)
                 ]),
               ]),

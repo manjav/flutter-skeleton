@@ -66,7 +66,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     if ((deltaTime > 30 && _requestsCount % 5 == 0) || deltaTime > 120) {
       var data = await rpc(RpcId.getOpponents);
 
-      opponentBloc.list = Opponent.fromMap(data);
+      opponentBloc.list = Opponent.fromMap(data, 0);
       if (mounted) {
         BlocProvider.of<OpponentsBloc>(context)
             .add(SetOpponents(list: opponentBloc.list!));
@@ -156,7 +156,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                   LevelIndicator(
                       size: 170.d,
                       level: value.level,
-                      xp: value.score,
+                      xp: value.xp,
                       avatarId: value.avatarId),
                   SizedBox(width: 16.d),
                   Expanded(

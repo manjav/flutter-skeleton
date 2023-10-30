@@ -89,38 +89,6 @@ class Player extends Rank {
   }
 }
 
-enum MemberDegree { none, member, elder, owner }
-
-class Member extends Rank {
-  int level = 0, xp = 0, gold = 0, avatarId = 1;
-  int leagueId = 0, leagueRank = 0, defPower = 0;
-  bool pokeStatus = false;
-  MemberDegree degree = MemberDegree.none;
-
-  Member.initialize(Map<String, dynamic>? map, int ownerId)
-      : super.initialize(map, ownerId) {
-    if (map == null) return;
-    xp = Utils.toInt(map["xp"]);
-    gold = Utils.toInt(map["gold"]);
-    level = Utils.toInt(map["level"]);
-    defPower = Utils.toInt(map["def_power"]);
-    status = Utils.toInt(map["status"]);
-    leagueId = Utils.toInt(map["league_id"]);
-    leagueRank = Utils.toInt(map["league_rank"]);
-    avatarId = Utils.toInt(map["avatar_id"]);
-    pokeStatus = map["poke_status"] ?? false;
-    degree = MemberDegree.values[map["tribe_permission"] ?? 1];
-  }
-
-  static List<Member> initAll(List list, int ownerId) {
-    var result = <Member>[];
-    for (var map in list) {
-      result.add(Member.initialize(map, ownerId));
-    }
-    return result;
-  }
-}
-
 class LeagueRank extends Player {
   int weeklyScore = 0;
   LeagueRank.initialize(Map<String, dynamic>? map, int ownerId)
