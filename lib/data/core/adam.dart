@@ -215,18 +215,22 @@ class Opponent extends Record {
     }
   }
 
-  static List<Opponent> fromMap(Map<String, dynamic> map) {
-    var index = 0;
-    var list = <Opponent>[];
+  static List<Opponent> fromMap(Map<String, dynamic> map, int ownerId) {
     scoutCost = map["scout_cost"];
     _attackLogs = Opponent._getAttacksLog();
-    for (var player in map["players"]) {
-      var opponent = Opponent.initialize(player, 0);
+    return createList(map["players"], ownerId);
+  }
+
+  static List<Opponent> createList(List list, int ownerId) {
+    var index = 0;
+    var result = <Opponent>[];
+    for (var player in list) {
+      var opponent = Opponent.initialize(player, ownerId);
       opponent.index = index++;
       opponent.todayAttacksCount = Utils.toInt(_attackLogs["${opponent.id}"]);
-      list.add(opponent);
+      result.add(opponent);
     }
-    return list;
+    return result;
   }
 
   static Map<String, dynamic> _getAttacksLog() {
