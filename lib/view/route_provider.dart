@@ -107,7 +107,7 @@ extension RouteProvider on Routes {
       "/popupCombo" => ComboPopup(),
       "/popupHero" => HeroPopup(),
       "/popupInbox" => InboxPopup(),
-      "/popupProfile" => ProfilePopup(player: args!["player"] as Player?),
+      "/popupProfile" => ProfilePopup(player: args?["player"] as Player?),
       "/popupSettings" => SettingsPopup(),
       "/popupRestore" => RestorePopup(),
       "/popupInvite" => InvitePopup(),
