@@ -253,8 +253,8 @@ class Account extends Opponent {
       cards[card['id']] = AccountCard(this, card);
     }
 
-    if (map.containsKey("medals")) {
-      for (var e in map["medals"]) {
+    if (map.containsKey("medals") && map["medals"].isNotEmpty) {
+      for (var e in map["medals"].entries) {
         medals[int.parse(e.key)] = e.value;
       }
     }
