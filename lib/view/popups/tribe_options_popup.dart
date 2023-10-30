@@ -100,7 +100,7 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
         margin: EdgeInsets.all(4.d),
         padding: EdgeInsets.fromLTRB(20.d, 0, 22.d, 10.d),
         decoration: Widgets.imageDecore(
-            "tribe_member_bg${member.itsMe ? "_me" : ""}",
+            "iconed_item_bg${member.itsMe ? "_selected" : ""}",
             ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
         child: Row(
           children: [

@@ -225,7 +225,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               margin: EdgeInsets.fromLTRB(32.d, 16.d, 32.d, 0),
               padding: EdgeInsets.fromLTRB(32.d, 32.d, 32.d, 44.d),
               decoration: Widgets.imageDecore(
-                  "tribe_member_bg_me",
+                  "iconed_item_bg_selected",
                   ImageCenterSliceData(
                       132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
               child: Row(children: [
