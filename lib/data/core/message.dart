@@ -87,7 +87,9 @@ class Message with ServiceProvider {
 
   static List<Message> initAll(List list, Account account) {
     var result = <Message>[];
+    var now = DateTime.now().secondsSinceEpoch;
     for (var map in list) {
+      if (now - map["created_at"] > 3600 * 24 * 365) continue;
       var message = Message(map, account);
       if (message.type.inTribe) {
         _addtoTribe(account, message, map);
