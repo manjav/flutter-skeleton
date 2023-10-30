@@ -96,47 +96,53 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
 
   Widget? _listItemBuilder(Tribe tribe, Member member, int index) {
     return Widgets.button(
-        height: 120.d,
-        margin: EdgeInsets.all(4.d),
+        height: 144.d,
+        margin: EdgeInsets.all(2.d),
         padding: EdgeInsets.fromLTRB(20.d, 0, 22.d, 10.d),
         decoration: Widgets.imageDecore(
             "iconed_item_bg${member.itsMe ? "_selected" : ""}",
             ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
-        child: Row(
-          children: [
-            SizedBox(width: 70.d, child: SkinnedText("${index + 1}")),
-            SizedBox(width: 12.d),
-            Widgets.rect(
-                radius: 48.d,
-                width: 90.d,
-                height: 90.d,
-                padding: EdgeInsets.all(6.d),
-                decoration: Widgets.imageDecore(
-                    "frame_hatch_button", ImageCenterSliceData(42)),
-                child: LoaderWidget(
-                    AssetType.image, "avatar_${member.avatarId + 1}",
-                    width: 76.d, height: 76.d, subFolder: "avatars")),
-            SizedBox(width: 20.d),
-            Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
-                    member.status == 1
-                        ? Asset.load<Image>("tribe_online", height: 32.d)
-                        : const SizedBox(),
-                    SizedBox(width: member.status == 1 ? 12.d : 0),
-                    SkinnedText(member.name,
-                        style: TStyles.medium.copyWith(height: 1.1)),
-                  ]),
-                  Text("tribe_degree_${member.degree.index}".l(),
-                      style: TStyles.small),
+        child: Row(children: [
+          SizedBox(width: 70.d, child: SkinnedText("${index + 1}")),
+          SizedBox(width: 12.d),
+          Widgets.rect(
+              radius: 48.d,
+              width: 90.d,
+              height: 90.d,
+              padding: EdgeInsets.all(6.d),
+              decoration: Widgets.imageDecore(
+                  "frame_hatch_button", ImageCenterSliceData(42)),
+              child: LoaderWidget(
+                  AssetType.image, "avatar_${member.avatarId + 1}",
+                  width: 76.d, height: 76.d, subFolder: "avatars")),
+          SizedBox(width: 20.d),
+          Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  member.status == 1
+                      ? Asset.load<Image>("tribe_online", height: 32.d)
+                      : const SizedBox(),
+                  SizedBox(width: member.status == 1 ? 12.d : 0),
+                  SkinnedText(member.name,
+                      style: TStyles.medium.copyWith(height: 1.1)),
                 ]),
-            const Expanded(child: SizedBox()),
-            _indicator("icon_xp", member.xp.compact(), 60.d,
-                EdgeInsets.only(right: 16.d)),
-          ],
-        ),
+                SizedBox(height: 8.d),
+                Row(children: [
+                  member.degree.index < 2
+                      ? const SizedBox()
+                      : Asset.load<Image>("position_${member.degree.index}",
+                          height: 40.d),
+                  SizedBox(width: member.degree.index < 2 ? 0 : 12.d),
+                  Text("tribe_degree_${member.degree.index}".l(),
+                      style: TStyles.small)
+                ]),
+              ]),
+          const Expanded(child: SizedBox()),
+          _indicator("icon_xp", member.xp.compact(), 60.d,
+              EdgeInsets.only(right: 16.d)),
+        ]),
         onTapUp: (details) {
           Overlays.insert(context, OverlayType.member, args: [
             member,
