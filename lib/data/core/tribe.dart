@@ -65,7 +65,7 @@ class Tribe with ServiceProvider {
     try {
       var result = await getService<HttpConnection>(context)
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
-      members = Opponent.fromMap(result["members"], account.id);
+      members = Opponent.createList(result["members"], account.id);
     } finally {}
   }
 

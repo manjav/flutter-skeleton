@@ -33,8 +33,8 @@ class Ranks {
 
   /// Add factory functions for every Type and every constructor you want to make available to `make`
   static final _factories = <Type, Function>{
-    Player: (Map<String, dynamic>? map, int ownerId) =>
-        Player.initialize(map, ownerId),
+    Record: (Map<String, dynamic>? map, int ownerId) =>
+        Record.initialize(map, ownerId),
     TribeRank: (Map<String, dynamic>? map, int ownerId) =>
         TribeRank.initialize(map, ownerId),
     LeagueRank: (Map<String, dynamic>? map, int ownerId) =>
@@ -57,6 +57,8 @@ abstract class Rank {
     name = map["name"] ?? "";
     id = Utils.toInt(map["id"]);
     rank = Utils.toInt(map["rank"]);
+    }
+    score = Utils.toInt(map["score"]);
     itsMe = ownerId == id;
   }
 }
@@ -67,7 +69,6 @@ class TribeRank extends Rank {
   TribeRank.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    score = Utils.toInt(map["score"]);
     description = map["description"] ?? "";
     memberCount = Utils.toInt(map["member_count"]);
     weeklyScore = Utils.toInt(map["weekly_score"]);
@@ -75,13 +76,12 @@ class TribeRank extends Rank {
   }
 }
 
-class Player extends Rank {
+class Record extends Rank {
   String tribeName = "";
   int level = 0, tribeId = 0, avatarId = 1;
-  Player.initialize(Map<String, dynamic>? map, int ownerId)
+  Record.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    score = Utils.toInt(map["xp"]);
     level = Utils.toInt(map["level"]);
     tribeId = Utils.toInt(map["tribe_id"]);
     tribeName = map["tribe_name"] ?? "";
@@ -89,7 +89,7 @@ class Player extends Rank {
   }
 }
 
-class LeagueRank extends Player {
+class LeagueRank extends Record {
   int weeklyScore = 0;
   LeagueRank.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
@@ -183,28 +183,36 @@ class LeagueData {
 
 enum OpponentSide { allies, axis }
 
-class Opponent extends Player {
+enum TribePosition { none, member, elder, owner }
+
+class Opponent extends Record {
   static int scoutCost = 0;
   static Map<String, dynamic> _attackLogs = {};
   int gold = 0,
-      tribePermission = 0,
+      xp = 0,
       defPower = 0,
       leagueId = 0,
       leagueRank = 0,
-      powerRatio = 0;
-  bool isRevealed = false;
-  int todayAttacksCount = 0;
+      powerRatio = 0,
+      todayAttacksCount = 0;
+  bool isRevealed = false, pokeStatus = false;
+  TribePosition tribePosition = TribePosition.none;
   Opponent.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
     gold = Utils.toInt(map["gold"]);
     status = Utils.toInt(map["status"]);
-    score = Utils.toInt(map["xp"]);
+    xp = Utils.toInt(map["xp"]);
     defPower = Utils.toInt(map["def_power"]);
     leagueId = Utils.toInt(map["league_id"]);
     leagueRank = Utils.toInt(map["league_rank"]);
     powerRatio = Utils.toInt(map["power_ratio"]);
-    tribePermission = Utils.toInt(map["tribe_permission"]);
+    pokeStatus = map["poke_status"] ?? false;
+    if (map.containsKey("tribe_position")) {
+      TribePosition.values[map["tribe_position"]];
+    } else {
+      tribePosition = TribePosition.values[map["tribe_permission"] ?? 1];
+    }
   }
 
   static List<Opponent> fromMap(Map<String, dynamic> map) {

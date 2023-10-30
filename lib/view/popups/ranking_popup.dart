@@ -95,7 +95,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
     try {
       var data = await rpc(api);
       if (api == RpcId.rankingGlobal) {
-        Ranks.lists[api] = Ranks.createList<Player>(data, _account.id);
+        Ranks.lists[api] = Ranks.createList<Record>(data, _account.id);
       } else {
         Ranks.lists[api] =
             Ranks.createList<TribeRank>(data, _account.tribe!.id);
@@ -156,7 +156,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
           SizedBox(
               width: 220.d,
               child: rpc == RpcId.rankingGlobal
-                  ? Text((record as Player).tribeName,
+                  ? Text((record as Record).tribeName,
                       style: TStyles.small, textAlign: TextAlign.center)
                   : null),
           SizedBox(width: 79.d),
