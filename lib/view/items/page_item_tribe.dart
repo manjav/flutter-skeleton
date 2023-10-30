@@ -107,7 +107,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             const Expanded(child: SizedBox()),
             _membersButtonBuilder(account.tribe!),
           ]),
-          SizedBox(height: 24.d),
+          SizedBox(height: 20.d),
           SizedBox(
               height: (account.tribe!.description.length / 50).round() * 44.d,
               child: SkinnedText(account.tribe!.description,
@@ -167,7 +167,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   Widget _upgradeLineBuilder(Tribe tribe) {
     return SizedBox(
         width: 840.d,
-        height: 96.d,
+        height: 100.d,
         child: Row(
           children: [
             _upgradable(ButtonColor.wooden, "tribe_upgrade_1002",
