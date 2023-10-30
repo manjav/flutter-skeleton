@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../data/core/account.dart';
 import 'popups/building_mine_popup.dart';
 import 'popups/building_supportive_popup.dart';
 import 'popups/building_treasury_popup.dart';
@@ -106,7 +107,7 @@ extension RouteProvider on Routes {
       "/popupCombo" => ComboPopup(),
       "/popupHero" => HeroPopup(),
       "/popupInbox" => InboxPopup(),
-      "/popupProfile" => ProfilePopup(),
+      "/popupProfile" => ProfilePopup(player: args!["player"] as Player?),
       "/popupSettings" => SettingsPopup(),
       "/popupRestore" => RestorePopup(),
       "/popupInvite" => InvitePopup(),

@@ -405,8 +405,14 @@ class Account extends Player {
   }
 
   void installTribe(dynamic data) {
-    if (data == null) return;
+    if (data == null) {
+      tribeId = -1;
+      tribeName = "no_tribe".l();
+      return;
+    }
     tribe = Tribe(data);
+    tribeId = tribe!.id;
+    tribeName = tribe!.name;
     var types = [
       Buildings.base,
       Buildings.cards,

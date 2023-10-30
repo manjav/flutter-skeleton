@@ -9,6 +9,7 @@ enum RpcId {
   fillPotion,
   redeemGift,
   messages,
+  getProfileInfo,
 
   // Card
   coolOff,
@@ -98,6 +99,7 @@ extension RpcIdEx on RpcId {
       RpcId.witdraw => "player/withdrawfrombank",
       RpcId.fillPotion => "player/fillpotion",
       RpcId.redeemGift => "player/redeemgift",
+      RpcId.getProfileInfo => "player/getplayerinfo",
       RpcId.messages => "message/systemmessages",
       RpcId.rankingGlobal => "ranking/global",
       RpcId.rankingExpertTribes => "ranking/tribe",
@@ -191,4 +193,5 @@ enum RpcParams {
   gold,
   invitee_name,
   member_id,
+  player_id,
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/view/route_provider.dart';
 
 import '../../blocs/account_bloc.dart';
+import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
@@ -108,12 +110,22 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
 
   _onButtonsPressed(RpcId id) async {
     var bloc = accountBloc;
-    try {
-      var result = await rpc(id, params: {
+    var params = {};
+    if (id == RpcId.getProfileInfo) {
+      params[RpcParams.player_id.name] = widget.member.id;
+    } else {
+      params = {
         RpcParams.tribe_id.name: bloc.account!.tribe!.id,
         RpcParams.member_id.name: widget.member.id,
-      });
-      if (mounted && id == RpcId.tribeLeave) {
+      };
+    }
+    try {
+      var result = await rpc(id, params: params);
+      if (!mounted) return;
+      if (id == RpcId.getProfileInfo) {
+        Navigator.pushNamed(context, Routes.popupProfile.routeName,
+            arguments: {"player": Player.initialize(result, bloc.account!.id)});
+      } else if (id == RpcId.tribeLeave) {
         bloc.account!.tribe = null;
         bloc.add(SetAccount(account: bloc.account!));
         Navigator.pop(context);
