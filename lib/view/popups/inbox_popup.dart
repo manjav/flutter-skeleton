@@ -51,14 +51,23 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
   Widget _itemBuilder(Message message, TextStyle titleStyle, int now) {
     return Column(children: [
       Widgets.rect(
-        padding: EdgeInsets.fromLTRB(32.d, 32.d, 16.d, 16.d),
-        decoration:
-            Widgets.imageDecore("ui_popup_group", ImageCenterSliceData(144)),
-        child:
-            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Text(message.getText(), textDirection: message.text.getDirection()),
-          SizedBox(height: 22.d),
-          _getConfirmButtons(message)
+        padding: EdgeInsets.fromLTRB(24.d, 0, 16.d, 8.d),
+        decoration: Widgets.imageDecore("iconed_item_bg",
+            ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
+        child: Row(children: [
+          Asset.load<Image>("inbox_item_${message.type.subject.name}",
+              width: 60.d),
+          SizedBox(width: 32.d),
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                SizedBox(height: 24.d),
+                Text(message.getText(),
+                    textDirection: message.text.getDirection()),
+                SizedBox(height: 16.d),
+                _getConfirmButtons(message)
+              ])),
         ]),
       ),
       Row(mainAxisAlignment: MainAxisAlignment.end, children: [

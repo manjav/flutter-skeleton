@@ -32,6 +32,8 @@ enum Messages {
   unknown3, //20
 }
 
+enum MessageSubject { attack, info, social }
+
 extension MessagesExtenstion on Messages {
   bool get inTribe => switch (this) {
         Messages.joinTribeRequest ||
@@ -50,6 +52,18 @@ extension MessagesExtenstion on Messages {
       Messages.joinTribeRequest || Messages.inviteTribeRequest => true,
       _ => false,
     };
+  }
+
+  MessageSubject get subject {
+    if (this == Messages.attackLose || this == Messages.attackLose2) {
+      return MessageSubject.attack;
+    }
+    if (inTribe ||
+        this == Messages.joinSucceed ||
+        this == Messages.inviteTribeRequest) {
+      return MessageSubject.social;
+    }
+    return MessageSubject.info;
   }
 }
 
