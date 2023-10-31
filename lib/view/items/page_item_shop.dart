@@ -390,4 +390,10 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       }
     } finally {}
   }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 }
