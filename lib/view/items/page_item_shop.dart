@@ -7,7 +7,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
-import '../../data/core/rpc_data.dart';
+import '../../data/core/store.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -42,11 +42,11 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   _fetchData() async {
-    if (_account.loadingData.shopProceedItems != null) {
-      _items = _account.loadingData.shopProceedItems!;
-      setState(() {});
-      return;
-    }
+    // if (_account.loadingData.shopProceedItems != null) {
+    //   _items = _account.loadingData.shopProceedItems!;
+    //   setState(() {});
+    //   return;
+    // }
     Set<String> skus = {};
     try {
       var result = await rpc(RpcId.getShopitems);
@@ -121,6 +121,16 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   _deliverProduct(ShopSections section, PurchaseDetails details) async {
     for (var item in _items[section]!) {
       if (item.base.productID == details.productID) {
+        var params = {
+          "type": item.base.id,
+          "receipt": details.verificationData.localVerificationData,
+          "token": details.purchaseID,
+          "store": "2"
+        };
+
+        var result = await rpc(RpcId.buyGoldPack, params: params);
+        // accountBloc.account!.update({section.name: item.base.value});
+        // accountBloc.add(SetAccount(account: accountBloc.account!));
         return;
       }
     }
@@ -351,8 +361,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       return _productDetails[item.base.productID]!.price;
     }
     if (item.base.section == ShopSections.boost) {
-    // Converts gold multiplier to nectar for boost packs
-    var boostNectarMultiplier = _getShopMultiplier() / _account.nectarPrice;
+      // Converts gold multiplier to nectar for boost packs
+      var boostNectarMultiplier = _getShopMultiplier() / _account.nectarPrice;
       return switch (price) {
         10 => (30000 * boostNectarMultiplier).round(),
         20 => (90000 * boostNectarMultiplier).round(),

@@ -9,6 +9,7 @@ import 'building.dart';
 import 'fruit.dart';
 import 'infra.dart';
 import 'rpc_data.dart';
+import 'store.dart';
 import 'tribe.dart';
 
 class Player extends Opponent {
