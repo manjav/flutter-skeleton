@@ -24,13 +24,13 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
             CardHolder(
                 showPower: showPower,
                 card: building.cards[i],
-                isLocked: i > building.maxCards,
+                isLocked: i >= building.maxCards,
                 onTap: () => onSelectCard(i, building))
         ]);
   }
 
   onSelectCard(int index, Building building) async {
-    if (index > building.maxCards) {
+    if (index >= building.maxCards) {
       Overlays.insert(context, OverlayType.toast,
           args: "card_holder_unavailable".l([
             "building_${building.type.name}_t".l(),
