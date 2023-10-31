@@ -145,7 +145,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
       LoaderWidget(AssetType.animation, "tab_3", fit: BoxFit.fitWidth,
           onRiveInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(artboard, "Tab");
-        var level = _player!.tribeId == accountBloc.account!.tribeId
+        var level = _player!.tribeName == accountBloc.account!.tribeName
             ? accountBloc.account!.tribe!.levels[Buildings.base.id]!.toDouble()
             : 0.0;
         controller?.findInput<double>("level")!.value = level;

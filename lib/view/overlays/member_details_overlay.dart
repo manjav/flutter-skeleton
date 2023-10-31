@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/view/route_provider.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';

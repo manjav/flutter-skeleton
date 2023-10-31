@@ -24,7 +24,7 @@ class Player extends Opponent {
       prevLeagueId,
       prevLeagueRank;
 
-  late String realname, address, phone, tribe_name;
+  late String realname, address, phone;
   Map<int, int> medals = {};
 
   Player.initialize(Map<String, dynamic> map, int ownerId)

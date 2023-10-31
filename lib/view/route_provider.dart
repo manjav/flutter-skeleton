@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../data/core/account.dart';
 import 'popups/building_mine_popup.dart';
 import 'popups/building_supportive_popup.dart';
 import 'popups/building_treasury_popup.dart';
