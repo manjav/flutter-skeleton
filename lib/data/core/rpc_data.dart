@@ -72,6 +72,8 @@ class ShopItem {
     isPopular = data.containsKey("pop");
     currency = data["currency"] ?? section.getCurrecy();
   }
+
+  Object? get productID => "${section.name}_$id";
 }
 
 class ShopItemVM {

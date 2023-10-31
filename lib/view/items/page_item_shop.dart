@@ -15,6 +15,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import 'page_item.dart';
@@ -150,7 +151,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     return Container(
         clipBehavior: Clip.none,
         decoration: Widgets.imageDecore("shop_header_${section.name}",
-            ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 56, 2, 2))),
+            ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 57, 2, 2))),
         width: 1000.d,
         height: 188.d,
         child: Row(
@@ -289,10 +290,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
               child: Widgets.skinnedButton(
                   color: ButtonColor.green,
                   padding: EdgeInsets.only(bottom: 10.d),
-                  icon: item.base.currency == "real"
-                      ? null
-                      : "icon_${item.base.currency}",
-                  label: _getBoostPackPrice(item.base.value).compact(),
+                  icon: item.inStore ? null : "icon_${item.base.currency}",
+                  label: _getItemPrice(item),
                   height: 120.d))
         ]),
         onPressed: () => _onItemPressed(item.base));
@@ -346,25 +345,34 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     };
   }
 
-  int _getBoostPackPrice(int price) {
+  String _getItemPrice(ShopItemVM item) {
+    var price = item.base.value;
+    if (item.inStore && _productDetails.containsKey(item.base.productID)) {
+      return _productDetails[item.base.productID]!.price;
+    }
+    if (item.base.section == ShopSections.boost) {
     // Converts gold multiplier to nectar for boost packs
     var boostNectarMultiplier = _getShopMultiplier() / _account.nectarPrice;
-    if (price == 10) {
-      return (30000 * boostNectarMultiplier).round();
+      return switch (price) {
+        10 => (30000 * boostNectarMultiplier).round(),
+        20 => (90000 * boostNectarMultiplier).round(),
+        50 => (300000 * boostNectarMultiplier).round(),
+        100 => (1000000 * boostNectarMultiplier).round(),
+        _ => price,
+      }
+          .compact();
     }
-    if (price == 20) {
-      return (90000 * boostNectarMultiplier).round();
-    }
-    if (price == 50) {
-      return (300000 * boostNectarMultiplier).round();
-    }
-    if (price == 100) {
-      return (1000000 * boostNectarMultiplier).round();
-    }
-    return price;
+    return price.compact();
   }
 
   _onItemPressed(ShopItem item) async {
+    if (item.inStore) {
+      InAppPurchase.instance.buyConsumable(
+          purchaseParam:
+              PurchaseParam(productDetails: _productDetails[item.productID]!));
+      return;
+    }
+
     var params = {RpcParams.type.name: item.id};
     try {
       var result = await rpc(RpcId.buyCardPack, params: params);
