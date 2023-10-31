@@ -37,6 +37,8 @@ extension ShopSectionsExtrension on ShopSections {
       _ => "nectar"
     };
   }
+
+  bool get inStore => this == ShopSections.gold || this == ShopSections.nectar;
 }
 
 class ShopData {
@@ -60,6 +62,7 @@ class ShopItem {
   String currency = "", reward = "";
   int id = 0, value = 0, level = 1;
   late ShopSections section;
+  bool get inStore => section.inStore;
   ShopItem(this.section, Map data) {
     id = data["id"] ?? 0;
     value = data["value"] ?? 0;
@@ -72,7 +75,8 @@ class ShopItem {
 }
 
 class ShopItemVM {
-  final int price, mainCells, crossCells;
   final ShopItem base;
+  final int price, mainCells, crossCells;
+  bool get inStore => base.inStore;
   ShopItemVM(this.base, this.price, this.mainCells, this.crossCells);
 }

@@ -26,8 +26,11 @@ class ShopPageItem extends AbstractPageItem {
 
 class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   late Account _account;
-  Map<ShopSections, List<ShopItemVM>> _items = {};
+  final Map<ShopSections, List<ShopItemVM>> _items = {};
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
   final bool _hackMode = false;
+
+  final Map<String, ProductDetails> _productDetails = {};
 
   @override
   void initState() {
@@ -42,30 +45,35 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       setState(() {});
       return;
     }
+    Set<String> skus = {};
     try {
       var result = await rpc(RpcId.getShopitems);
       for (var entry in _account.loadingData.shopItems.entries) {
         var section = entry.key;
+        var items = entry.value;
         _items[section] = [];
-        for (var i = 0; i < entry.value.length; i++) {
+        for (var i = 0; i < items.length; i++) {
           if (section == ShopSections.gold &&
-              !result.containsKey(entry.value[i].id.toString())) continue;
+              !result.containsKey(items[i].id.toString())) continue;
           _items[section]!.add(ShopItemVM(
-            entry.value[i],
+            items[i],
             0,
             i > _items.length - 2 && section == ShopSections.nectar ? 10 : 8,
             section == ShopSections.nectar ? 11 : 12,
           ));
+
+          if (section.inStore) {
+            skus.add("${section.name}_${items[i].id}");
+          }
         }
         if (section == ShopSections.nectar) {
           _items[section]!
               .add(ShopItemVM(ShopItem(ShopSections.none, {}), 0, 2, 10));
         }
-        if (section == ShopSections.gold || section == ShopSections.nectar) {
+        if (section.inStore) {
           _items[section]!.reverseRange(0, _items[section]!.length);
         }
         _account.loadingData.shopProceedItems = _items;
-        setState(() {});
       }
     } finally {}
   }
