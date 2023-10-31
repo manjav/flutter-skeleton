@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
@@ -75,7 +76,53 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         }
         _account.loadingData.shopProceedItems = _items;
       }
+      final Stream<List<PurchaseDetails>> purchaseUpdated =
+          InAppPurchase.instance.purchaseStream;
+      _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+        _listenToPurchaseUpdated(purchaseDetailsList);
+      }, onDone: () => _subscription.cancel());
+      final bool available = await InAppPurchase.instance.isAvailable();
+      if (available) {
+        var response = await InAppPurchase.instance.queryProductDetails(skus);
+        for (var details in response.productDetails) {
+          _productDetails[details.id] = details;
+        }
+      }
+      setState(() {});
     } finally {}
+  }
+
+  void _listenToPurchaseUpdated(
+      List<PurchaseDetails> purchaseDetailsList) async {
+    for (var details in purchaseDetailsList) {
+      if (details.status != PurchaseStatus.pending) {
+        if (details.status == PurchaseStatus.error ||
+            details.status == PurchaseStatus.canceled) {
+          Overlays.remove(OverlayType.waiting);
+          Overlays.insert(context, OverlayType.waiting,
+              args: details.error!.message.l());
+        } else if (details.status == PurchaseStatus.purchased ||
+            details.status == PurchaseStatus.restored) {
+          Overlays.remove(OverlayType.waiting);
+          if (details.productID.startsWith("gold_")) {
+            _deliverProduct(ShopSections.gold, details);
+          } else {
+            _deliverProduct(ShopSections.nectar, details);
+          }
+        }
+        if (details.pendingCompletePurchase) {
+          await InAppPurchase.instance.completePurchase(details);
+        }
+      }
+    }
+  }
+
+  _deliverProduct(ShopSections section, PurchaseDetails details) async {
+    for (var item in _items[section]!) {
+      if (item.base.productID == details.productID) {
+        return;
+      }
+    }
   }
 
   @override
