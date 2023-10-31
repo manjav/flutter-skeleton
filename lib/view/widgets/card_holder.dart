@@ -84,14 +84,15 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   getIds() =>
       "[${value.map((c) => c?.id).where((id) => id != null).join(',')}]";
 
-  bool setCard(AccountCard card, {int exception = -1}) {
+  bool setCard(AccountCard card, {int exception = -1, int? lenght}) {
     var index = value.indexOf(card);
     if (index > -1) {
       setAtCard(index, null);
       return true;
     }
 
-    for (var i = 0; i < value.length; i++) {
+    var len = lenght ?? value.length;
+    for (var i = 0; i < len; i++) {
       if (i != exception && value[i] == null) {
         setAtCard(i, card);
         return true;
@@ -100,7 +101,7 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
 
     var weakest = double.infinity;
     var weakestPosition = 3;
-    for (var i = 0; i < value.length; i++) {
+    for (var i = 0; i < len; i++) {
       if (i != exception && value[i]!.power < weakest) {
         weakest = value[i]!.power.toDouble();
         weakestPosition = i;

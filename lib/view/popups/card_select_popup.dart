@@ -81,8 +81,9 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
                     children: [
                       for (var i = 0; i < _selectedCards.value.length; i++)
                         CardHolder(
-                            card: _selectedCards.value[i],
                             showPower: false,
+                            isLocked: i >= _building.maxCards,
+                            card: _selectedCards.value[i],
                             onTap: () => _selectedCards.setAtCard(i, null)),
                     ],
                   ),
@@ -108,7 +109,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
               borderRadius: BorderRadius.all(Radius.circular(28.d)),
               border: Border.all(color: TColors.primary10, width: 10.d))
           : null,
-      onPressed: () => _selectedCards.setCard(card),
+      onPressed: () => _selectedCards.setCard(card, lenght: _building.maxCards),
       child: CardItem(card,
           size: itemSize,
           showCooloff: true,
