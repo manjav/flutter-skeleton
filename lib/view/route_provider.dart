@@ -104,7 +104,7 @@ extension RouteProvider on Routes {
       "/popupTreasuryBuilding" => TreasuryBuildingPopup(args: args ?? {}),
       "/popupPotion" => PotionPopup(),
       "/popupCombo" => ComboPopup(),
-      "/popupHero" => HeroPopup(),
+      "/popupHero" => HeroPopup(args?["card"] as int),
       "/popupInbox" => InboxPopup(),
       "/popupProfile" => ProfilePopup(args?["id"] ?? -1),
       "/popupSettings" => SettingsPopup(),

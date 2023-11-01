@@ -55,7 +55,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                   alignment: alignment,
                   padding: EdgeInsets.all(100.d),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
-      SizedBox(
+                    SizedBox(
                         width: 500.d,
                         child: CardItem(_card,
                             size: 500.d, heroTag: "hero_${_card.id}")),
@@ -67,50 +67,57 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                       _button(
                         width: 420.d,
                         label: "˧  ${"popupcardenhance".l()}",
-            isEnable: _card.power < _card.base.powerLimit,
-            onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
-            onDisablePressed: () => toast("card_max_power".l()),
-          ),
+                        isEnable: _card.power < _card.base.powerLimit,
+                        onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
+                        onDisablePressed: () => toast("card_max_power".l()),
+                      ),
                       _button(
                           width: 420.d,
-              isEnable: isUpgradable,
+                          isEnable: isUpgradable,
                           label:
                               "˨  ${"popupcard${_card.base.isHero ? "upgrade" : "merge"}".l()}",
-              onPressed: () => _onButtonsTap(_card.base.isHero
-                  ? Routes.popupCardUpgrade
-                  : Routes.popupCardMerge),
-              onDisablePressed: () {
-                toast(_card.isUpgradable
-                    ? "card_no_sibling".l()
-                    : "max_level".l(["${_name}_t".l()]));
-              }),
-        ]),
+                          onPressed: () => _onButtonsTap(_card.base.isHero
+                              ? Routes.popupCardUpgrade
+                              : Routes.popupCardMerge),
+                          onDisablePressed: () {
+                            toast(_card.isUpgradable
+                                ? "card_no_sibling".l()
+                                : "max_level".l(["${_name}_t".l()]));
+                          }),
+                    ]),
+                    _button(
+                        isVisible: _card.fruit.isHero,
+                        color: ButtonColor.violet,
+                        label: "˩  ${"hero_edit".l()}",
+                        onPressed: () => Navigator.pushNamed(
+                            context, Routes.popupHero.routeName,
+                            arguments: {"card": _card.fruit.id})),
                     _button(
                         isVisible: _card.fruit.isSalable,
-            color: ButtonColor.green,
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        color: ButtonColor.green,
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
                           SkinnedText("˫  ${"card_sell".l()}",
                               style: TStyles.large),
-              SizedBox(width: 20.d),
-              Widgets.rect(
-                padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
-                decoration: Widgets.imageDecore(
-                    "frame_hatch_button", ImageCenterSliceData(42)),
-                child: Row(children: [
-                  Asset.load<Image>("icon_gold", height: 76.d),
-                  SkinnedText(_card.basePrice.compact(),
-                      style: TStyles.large.copyWith(height: 1)),
-                ]),
-              )
-            ]),
+                          SizedBox(width: 20.d),
+                          Widgets.rect(
+                            padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
+                            decoration: Widgets.imageDecore(
+                                "frame_hatch_button", ImageCenterSliceData(42)),
+                            child: Row(children: [
+                              Asset.load<Image>("icon_gold", height: 76.d),
+                              SkinnedText(_card.basePrice.compact(),
+                                  style: TStyles.large.copyWith(height: 1)),
+                            ]),
+                          )
+                        ]),
                         onPressed: () => Overlays.insert(
                                 context, OverlayType.confirm,
                                 args: {
                                   "message": "card_sell_warn"
                                       .l([_card.basePrice.compact()]),
-                  "onAccept": _sell
-                }),
-            onDisablePressed: () => toast("not_salable".l()))
+                                  "onAccept": _sell
+                                }),
+                        onDisablePressed: () => toast("not_salable".l()))
                   ]))
             ])));
   }

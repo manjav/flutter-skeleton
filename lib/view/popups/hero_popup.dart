@@ -17,7 +17,8 @@ import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
 
 class HeroPopup extends AbstractPopup {
-  HeroPopup({super.key}) : super(Routes.popupHero, args: {});
+  final int selectedHero;
+  HeroPopup(this.selectedHero, {super.key}) : super(Routes.popupHero, args: {});
 
   @override
   createState() => _HeroPopupState();
@@ -63,6 +64,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     _account = accountBloc.account!;
     var heroes = _account.heroes.values.toList();
     _heroes = List.generate(heroes.length, (index) => heroes[index].clone());
+    _selectedIndex.value =
+        _heroes.indexWhere((h) => h.card.fruit.id == widget.selectedHero);
     _keys = List.generate(_heroes.length, (index) => GlobalKey());
     for (var item in _account.loadingData.baseHeroItems.values) {
       if (item.category == 1) {
