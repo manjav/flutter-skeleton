@@ -65,15 +65,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                   } else {
                     Navigator.pushNamed(context, Routes.popupCombo.routeName);
                   }
-                })),
-        Positioned(
-            left: 276.d,
-            top: 28.d,
-            width: 132.d,
-            child: Widgets.skinnedButton(
-                icon: "icon_hero",
-                onPressed: () =>
-                    Navigator.pushNamed(context, Routes.popupHero.routeName)))
+                }))
       ]);
     });
   }

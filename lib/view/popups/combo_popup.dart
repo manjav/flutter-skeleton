@@ -115,24 +115,24 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
   _comboItem(int index) {
     var selected = _selectedIndex.value == index;
     var combo = _account.loadingData.comboHints[index];
-    return Widgets.button(
-        height: 110.d,
-        radius: 32.d,
-        color: selected ? TColors.primary80 : TColors.primary90,
-        padding: EdgeInsets.all(16.d),
-        foregroundDecoration: selected
-            ? BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(32.d)),
-                border: Border.all(color: TColors.primary10, width: 8.d))
-            : null,
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Opacity(
-              opacity: combo.isAvailable ? 1 : 0.4,
-              child: Asset.load<Image>("combo_${combo.count}", width: 72.d)),
-          SizedBox(width: 12.d),
-          SkinnedText("combo_$index".l()),
-        ]),
-        onPressed: () => _selectedIndex.value = index);
+    return Opacity(
+        opacity: combo.isAvailable ? 1 : 0.6,
+        child: Widgets.button(
+            height: 110.d,
+            radius: 32.d,
+            color: selected ? TColors.primary80 : TColors.primary90,
+            padding: EdgeInsets.all(16.d),
+            foregroundDecoration: selected
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(32.d)),
+                    border: Border.all(color: TColors.primary10, width: 8.d))
+                : null,
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Asset.load<Image>("combo_${combo.count}", width: 72.d),
+              SizedBox(width: 12.d),
+              SkinnedText("combo_$index".l()),
+            ]),
+            onPressed: () => _selectedIndex.value = index));
   }
 
 // local function findAvailableCombo(rowIndexOfComboTable)

@@ -51,7 +51,7 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
   Widget _itemBuilder(Message message, TextStyle titleStyle, int now) {
     return Column(children: [
       Widgets.rect(
-        padding: EdgeInsets.fromLTRB(24.d, 0, 16.d, 8.d),
+        padding: EdgeInsets.fromLTRB(24.d, 10.d, 16.d, 16.d),
         decoration: Widgets.imageDecore("iconed_item_bg",
             ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
         child: Row(children: [
@@ -66,7 +66,7 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
                 Text(message.getText(),
                     textDirection: message.text.getDirection()),
                 SizedBox(height: 16.d),
-                _getConfirmButtons(message)
+                _getConfirmButtons(message),
               ])),
         ]),
       ),
@@ -79,7 +79,7 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
   }
 
   _getConfirmButtons(Message message) {
-    var padding = EdgeInsets.fromLTRB(32.d, 12.d, 32.d, 32.d);
+    var padding = EdgeInsets.fromLTRB(44.d, 20.d, 44.d, 40.d);
     if (message.type == Messages.text) {
       return Widgets.skinnedButton(
           padding: padding,
@@ -92,14 +92,14 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
       Widgets.skinnedButton(
           padding: padding,
           color: ButtonColor.yellow,
-          label: "reject_l".l(),
+          label: "˦",
           onPressed: () =>
               message.decideTribeRequest(context, message.intData[0], false)),
-      SizedBox(width: 24.d),
+      SizedBox(width: 8.d),
       Widgets.skinnedButton(
           padding: padding,
           color: ButtonColor.green,
-          label: "accept_l".l(),
+          label: "˥",
           onPressed: () async {
             if (accountBloc.account!.tribe != null) {
               toast("error_195".l());

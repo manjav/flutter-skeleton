@@ -220,7 +220,7 @@ class NoobHelpMessage extends NoobMessage {
   String attackerName = "", defenderName = "";
   NoobHelpMessage(Map<String, dynamic> map) : super(Noobs.help, map) {
     ownerId = map["help_owner_id"];
-    ownerTribeId = map["help_owner_account.tribe_id"];
+    ownerTribeId = map["help_owner_tribe_id"];
     attackerId = map["attacker_id"];
     defenderId = map["defender_id"];
     attackerName = map["attacker_name"];
@@ -233,7 +233,7 @@ class NoobHelpMessage extends NoobMessage {
 class NoobChatMessage extends NoobMessage {
   Message? base;
   bool itsMe = false;
-  double timestamp = 0.0;
+  int timestamp = 0;
   String sender = "", text = "";
   int avatarId = 0, creationDate = 0;
   Messages messageType = Messages.none;
@@ -244,7 +244,7 @@ class NoobChatMessage extends NoobMessage {
     channel = map["channel"] ?? "";
     avatarId = Utils.toInt(map["avatar_id"]);
     creationDate = Utils.toInt(map["creationDate"]);
-    timestamp = map["timestamp"] ?? 0.0;
+    timestamp = Utils.toInt(map["timestamp"]);
     messageType = Messages.values[Utils.toInt(map["messageType"], 1)];
     itsMe = sender == account.name;
   }
@@ -261,8 +261,8 @@ class NoobEndBattleMessage extends NoobMessage {
     loserScore = result["loser_added_score"];
     winnerId = result["winner_id"];
     loserId = result["loser_id"];
-    winnerTribe = result["winner_account.tribe_name"];
-    loserTribe = result["loser_account.tribe_name"];
+    winnerTribe = result["winner_tribe_name"];
+    loserTribe = result["loser_tribe_name"];
     opponentsInfo = map["players_info"].values.toList();
   }
 }

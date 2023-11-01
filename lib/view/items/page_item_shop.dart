@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -121,9 +122,14 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   _deliverProduct(ShopSections section, PurchaseDetails details) async {
     for (var item in _items[section]!) {
       if (item.base.productID == details.productID) {
+        var data = jsonDecode(details.verificationData.localVerificationData);
+        if (details.status != PurchaseStatus.purchased ||
+            data["purchaseState"] != 0) {
+          return;
+        }
         var params = {
           "type": item.base.id,
-          "receipt": details.verificationData.localVerificationData,
+          "receipt": data["purchaseToken"],
           "token": details.purchaseID,
           "store": "2"
         };
@@ -161,7 +167,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     return Container(
         clipBehavior: Clip.none,
         decoration: Widgets.imageDecore("shop_header_${section.name}",
-            ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 57, 2, 2))),
+            ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 58, 2, 2))),
         width: 1000.d,
         height: 188.d,
         child: Row(
