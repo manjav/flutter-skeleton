@@ -39,33 +39,43 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   }
 
   @override
-  contentFactory() {
+  Widget build(BuildContext context) {
     var siblings = _account.getReadyCards().where((c) => c.base == _card.base);
     var isUpgradable =
         (siblings.length > 1 || _card.base.isHero) && _card.isUpgradable;
-    return Column(mainAxisSize: MainAxisSize.min, children: [
+    return SafeArea(
+        child: Scaffold(
+            backgroundColor: backgroundColor,
+            body: Stack(children: [
+              Widgets.touchable(
+                  onTap: widget.barrierDismissible
+                      ? () => Navigator.pop(context)
+                      : null),
+              Container(
+                  alignment: alignment,
+                  padding: EdgeInsets.all(100.d),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
       SizedBox(
-          width: 360.d,
-          child: CardItem(_card, size: 360.d, heroTag: "hero_${_card.id}")),
-      SizedBox(height: 24.d),
-      Text("${_name}_d".l(), style: TStyles.medium.copyWith(height: 2.7.d)),
-      SizedBox(height: 48.d),
-      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Column(children: [
-          Widgets.skinnedButton(
-            width: 370.d,
-            label: "popupcardenhance".l(),
-            padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
+                        width: 500.d,
+                        child: CardItem(_card,
+                            size: 500.d, heroTag: "hero_${_card.id}")),
+                    SizedBox(height: 70.d),
+                    Text("${_name}_d".l(),
+                        style: TStyles.mediumInvert.copyWith(height: 2.7.d)),
+                    SizedBox(height: 100.d),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      _button(
+                        width: 420.d,
+                        label: "˧  ${"popupcardenhance".l()}",
             isEnable: _card.power < _card.base.powerLimit,
             onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
             onDisablePressed: () => toast("card_max_power".l()),
           ),
-          SizedBox(height: 16.d),
-          Widgets.skinnedButton(
-              padding: EdgeInsets.fromLTRB(8.d, 6.d, 8.d, 22.d),
+                      _button(
+                          width: 420.d,
               isEnable: isUpgradable,
-              label: "popupcard${_card.base.isHero ? "upgrade" : "merge"}".l(),
-              width: 370.d,
+                          label:
+                              "˨  ${"popupcard${_card.base.isHero ? "upgrade" : "merge"}".l()}",
               onPressed: () => _onButtonsTap(_card.base.isHero
                   ? Routes.popupCardUpgrade
                   : Routes.popupCardMerge),
@@ -75,14 +85,12 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                     : "max_level".l(["${_name}_t".l()]));
               }),
         ]),
-        Widgets.divider(height: 140.d, margin: 24.d, direction: Axis.vertical),
-        Widgets.skinnedButton(
+                    _button(
+                        isVisible: _card.fruit.isSalable,
             color: ButtonColor.green,
-            height: 160.d,
-            isEnable: _card.fruit.isSalable,
-            padding: EdgeInsets.fromLTRB(28.d, 18.d, 22.d, 28.d),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              SkinnedText("card_sell".l(), style: TStyles.large),
+                          SkinnedText("˫  ${"card_sell".l()}",
+                              style: TStyles.large),
               SizedBox(width: 20.d),
               Widgets.rect(
                 padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
@@ -95,14 +103,42 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                 ]),
               )
             ]),
-            onPressed: () =>
-                Overlays.insert(context, OverlayType.confirm, args: {
-                  "message": "card_sell_warn".l([_card.basePrice.compact()]),
+                        onPressed: () => Overlays.insert(
+                                context, OverlayType.confirm,
+                                args: {
+                                  "message": "card_sell_warn"
+                                      .l([_card.basePrice.compact()]),
                   "onAccept": _sell
                 }),
             onDisablePressed: () => toast("not_salable".l()))
-      ])
-    ]);
+                  ]))
+            ])));
+  }
+
+  Widget _button(
+      {bool isVisible = true,
+      bool isEnable = true,
+      Function()? onPressed,
+      Function()? onDisablePressed,
+      String? icon,
+      String? label,
+      ButtonColor color = ButtonColor.yellow,
+      Widget? child,
+      double width = 800}) {
+    if (!isVisible) {
+      return const SizedBox();
+    }
+    return Widgets.skinnedButton(
+        margin: EdgeInsets.all(8.d),
+        icon: icon,
+        color: color,
+        child: child,
+        label: label,
+        width: width,
+        height: 160.d,
+        isEnable: isEnable,
+        onPressed: onPressed,
+        onDisablePressed: onDisablePressed);
   }
 
   _onButtonsTap(Routes route) async {
