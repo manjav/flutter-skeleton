@@ -145,7 +145,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
       LoaderWidget(AssetType.animation, "tab_3", fit: BoxFit.fitWidth,
           onRiveInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(artboard, "Tab");
-        var level = _player!.tribeName == accountBloc.account!.tribeName
+        var level = _player!.tribeName == accountBloc.account!.tribeName &&
+                _player!.tribeId > 0
             ? accountBloc.account!.tribe!.levels[Buildings.base.id]!.toDouble()
             : 0.0;
         controller?.findInput<double>("level")!.value = level;
@@ -154,7 +155,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
         artboard.addController(controller!);
       }, width: 130.d, height: 130.d),
       SizedBox(height: 20.d),
-      SkinnedText(_player!.tribeName, style: TStyles.large)
+      SkinnedText(_player!.tribeName, style: TStyles.large),
     ]);
   }
 
