@@ -217,7 +217,8 @@ class Widgets {
 
   static buttonDecore(ButtonColor color, [ButtonSize size = ButtonSize.small]) {
     var slicingData = switch (size) {
-      ButtonSize.small => ImageCenterSliceData(102, 106),
+      ButtonSize.small =>
+        ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 4, 20)),
       _ => ImageCenterSliceData(130, 158),
     };
     return imageDecore("button_${size.name}_${color.name}", slicingData);
@@ -342,6 +343,6 @@ class Widgets {
   }
 }
 
-enum ButtonColor { cream, gray, green, teal, wooden, yellow }
+enum ButtonColor { cream, gray, green, violet, teal, wooden, yellow }
 
 enum ButtonSize { small, medium }
