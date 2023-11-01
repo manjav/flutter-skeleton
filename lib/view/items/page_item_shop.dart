@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -121,9 +122,14 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   _deliverProduct(ShopSections section, PurchaseDetails details) async {
     for (var item in _items[section]!) {
       if (item.base.productID == details.productID) {
+        var data = jsonDecode(details.verificationData.localVerificationData);
+        if (details.status != PurchaseStatus.purchased ||
+            data["purchaseState"] != 0) {
+          return;
+        }
         var params = {
           "type": item.base.id,
-          "receipt": details.verificationData.localVerificationData,
+          "receipt": data["purchaseToken"],
           "token": details.purchaseID,
           "store": "2"
         };
