@@ -167,7 +167,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     return Container(
         clipBehavior: Clip.none,
         decoration: Widgets.imageDecore("shop_header_${section.name}",
-            ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 57, 2, 2))),
+            ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 58, 2, 2))),
         width: 1000.d,
         height: 188.d,
         child: Row(
