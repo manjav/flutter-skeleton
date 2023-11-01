@@ -102,7 +102,7 @@ class Message with ServiceProvider {
 
   static void _addtoTribe(
       Account account, Message message, Map<String, dynamic> map) {
-    if (account.tribe != null) return;
+    if (account.tribe == null) return;
     var index =
         account.tribe!.chat.value.indexWhere((chat) => chat.id == map["id"]);
     if (index >= 0) return;
