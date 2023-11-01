@@ -131,14 +131,9 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
-      Buildings.base => Routes.livebattle,
       _ => Routes.none,
     };
     if (type == Routes.none) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Hi, Flutter developers'),
-      ));
-      // Overlays.insert(context, OverlayType.toast, args: "coming_soon".l());
       return;
     }
     Navigator.pushNamed(context, type.routeName,
