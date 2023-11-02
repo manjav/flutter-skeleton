@@ -51,7 +51,7 @@ class ShopItem {
 
 class ShopItemVM {
   final ShopItem base;
-  final int price, mainCells, crossCells;
+  int price, mainCells, crossCells;
   bool get inStore => base.inStore;
   ShopItemVM(this.base, this.price, this.mainCells, this.crossCells);
 }

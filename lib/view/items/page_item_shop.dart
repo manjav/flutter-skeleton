@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -61,7 +60,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           _items[section]!.add(ShopItemVM(
             items[i],
             0,
-            i > _items.length - 2 && section == ShopSections.nectar ? 10 : 8,
+            8,
             section == ShopSections.nectar ? 11 : 12,
           ));
 
@@ -69,13 +68,19 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             skus.add("${section.name}_${items[i].id}");
           }
         }
-        if (section == ShopSections.nectar) {
-          _items[section]!
-              .add(ShopItemVM(ShopItem(ShopSections.none, {}), 0, 2, 10));
+        var len = _items[section]!.length;
+        if (len % 3 == 2) {
+          for (var i = 0; i < len; i++) {
+            if (i > len - 3) {
+              _items[section]![i].mainCells = 10;
+            }
+          }
+          _items[section]!.insert(
+              len - 2, ShopItemVM(ShopItem(ShopSections.none, {}), 0, 2, 10));
         }
-        if (section.inStore) {
-          _items[section]!.reverseRange(0, _items[section]!.length);
-        }
+        // if (section.inStore) {
+        //   _items[section]!.reverseRange(0, _items[section]!.length);
+        // }
         _account.loadingData.shopProceedItems = _items;
       }
       final Stream<List<PurchaseDetails>> purchaseUpdated =
