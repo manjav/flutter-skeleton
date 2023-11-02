@@ -167,7 +167,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   Widget _upgradeLineBuilder(Tribe tribe) {
     return SizedBox(
         width: 840.d,
-        height: 100.d,
+        height: 102.d,
         child: Row(
           children: [
             _upgradable(ButtonColor.wooden, "tribe_upgrade_1002",
@@ -291,7 +291,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                 decoration: Widgets.imageDecore(
                     "chat_balloon_${message.itsMe ? "right" : "left"}",
                     ImageCenterSliceData(
-                        80, 78, const Rect.fromLTWH(39, 13, 2, 2))),
+                        80, 78, const Rect.fromLTWH(39, 16, 2, 2))),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
