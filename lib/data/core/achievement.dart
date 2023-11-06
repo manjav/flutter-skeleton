@@ -24,6 +24,18 @@ enum AchivementType {
   t153,
 }
 
+extension AchivementTypeExtension on AchivementType {
+  int get id {
+    return switch (this) {
+      AchivementType.t150 => 150,
+      AchivementType.t151 => 151,
+      AchivementType.t152 => 152,
+      AchivementType.t153 => 153,
+      _ => index
+    };
+  }
+}
+
 class AchievementLine {
   ValueNotifier<int> selectedIndex = ValueNotifier(0);
   final AchivementType type;
@@ -41,10 +53,23 @@ class AchievementLine {
       AchivementType.collection => account.collection.length,
       AchivementType.playTime => Utils.toInt(map["timeOfPlaying"]),
       AchivementType.levelup => account.level,
+      // AchivementType.birds => Utils.toInt(map["numberOfEvolvedCards"]),
+      // AchivementType.facebook => Utils.toInt(map["numberOfEvolvedCards"]),
+      // AchivementType.invitation => Utils.toInt(map["numberOfEvolvedCards"]),
+      // AchivementType.instagram => Utils.toInt(map["numberOfEvolvedCards"]),
       _ => 0,
     };
   }
 
+  String format(int value) {
+    return switch (type) {
+      AchivementType.donation => value.compact(),
+      AchivementType.playTime => value.round().toRemainingTime(),
+      AchivementType.collection =>
+        "${(value / steps[3].max * 100).floor().max(100)}%",
+      _ => value.toString(),
+    };
+  }
 
   static AchivementType getType(int id) {
     return switch (id) {
@@ -78,7 +103,16 @@ class AchievementLine {
     }
     return result;
   }
+
+  void organizeSelections(Account account) {
+    for (var i = 0; i < steps.length; i++) {
+      if (steps[i].max > getAccountValue(account)) {
+        selectedIndex.value = i;
+        return;
+      }
+    }
   }
+}
 
 class AchievementStep {
   final int id, min, max;
