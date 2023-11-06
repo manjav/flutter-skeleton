@@ -160,11 +160,11 @@ class MaterialTransparentRoute<T> extends PageRoute<T>
   final bool isOpaque;
   MaterialTransparentRoute({
     required this.builder,
-    required RouteSettings settings,
+    required RouteSettings super.settings,
     this.isOpaque = true,
     this.maintainState = true,
-    bool fullscreenDialog = true,
-  }) : super(settings: settings, fullscreenDialog: fullscreenDialog);
+    super.fullscreenDialog = true,
+  });
 
   final WidgetBuilder builder;
 

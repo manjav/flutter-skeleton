@@ -26,13 +26,13 @@ class Indicator extends StatefulWidget {
   const Indicator(
     this.origin,
     this.type, {
-    Key? key,
+    super.key,
     this.value,
     this.width,
     this.onTap,
     this.data,
     this.hasPlusIcon = true,
-  }) : super(key: key);
+  });
   @override
   createState() => _IndicatorState();
 }

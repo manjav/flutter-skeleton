@@ -127,7 +127,8 @@ class Notifications extends IService {
       final androidImplementation = _flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>();
-      granted = await androidImplementation?.requestPermission() ?? false;
+      granted = await androidImplementation?.requestNotificationsPermission() ??
+          false;
     }
   }
 

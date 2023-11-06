@@ -78,18 +78,18 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
 
   ServiceType _getType(Type type) {
     return switch (type) {
-      Ads => ServiceType.ads,
-      Games => ServiceType.games,
-      HttpConnection => ServiceType.connection,
-      DeviceInfo => ServiceType.device,
-      Inbox => ServiceType.inbox,
-      Localization => ServiceType.localization,
-      Notifications => ServiceType.notifications,
-      Prefs => ServiceType.prefs,
-      Sounds => ServiceType.sounds,
-      Trackers => ServiceType.trackers,
-      Theme => ServiceType.themes,
-      NoobSocket => ServiceType.socket,
+      const (Ads) => ServiceType.ads,
+      const (Games) => ServiceType.games,
+      const (HttpConnection) => ServiceType.connection,
+      const (DeviceInfo) => ServiceType.device,
+      const (Inbox) => ServiceType.inbox,
+      const (Localization) => ServiceType.localization,
+      const (Notifications) => ServiceType.notifications,
+      const (Prefs) => ServiceType.prefs,
+      const (Sounds) => ServiceType.sounds,
+      const (Trackers) => ServiceType.trackers,
+      const (Theme) => ServiceType.themes,
+      const (NoobSocket) => ServiceType.socket,
       _ => ServiceType.none
     };
   }

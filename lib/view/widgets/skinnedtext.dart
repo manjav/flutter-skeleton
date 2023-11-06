@@ -13,14 +13,14 @@ class SkinnedText extends StatelessWidget {
   final TextOverflow? overflow;
   const SkinnedText(
     this.text, {
-    Key? key,
+    super.key,
     this.style,
     this.strokeColor = TColors.primary10,
     this.textAlign,
     this.strokeWidth,
     this.alignment = Alignment.center,
     this.overflow,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

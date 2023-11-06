@@ -132,14 +132,14 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             data["purchaseState"] != 0) {
           return;
         }
-        var params = {
-          "type": item.base.id,
-          "receipt": data["purchaseToken"],
-          "token": details.purchaseID,
-          "store": "2"
-        };
+        // var params = {
+        //   "type": item.base.id,
+        //   "receipt": data["purchaseToken"],
+        //   "token": details.purchaseID,
+        //   "store": "2"
+        // };
 
-        var result = await rpc(RpcId.buyGoldPack, params: params);
+        // var result = await rpc(RpcId.buyGoldPack, params: params);
         // accountBloc.account!.update({section.name: item.base.value});
         // accountBloc.add(SetAccount(account: accountBloc.account!));
         return;

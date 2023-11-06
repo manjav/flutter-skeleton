@@ -37,10 +37,10 @@ class Asset {
 
   static AssetType _getType(dynamic type) {
     return switch (type) {
-      RiveAnimation => AssetType.animation,
-      Image => AssetType.image,
-      DeviceFileSource => AssetType.sound,
-      SvgPicture => AssetType.vector,
+      const (RiveAnimation) => AssetType.animation,
+      const (Image) => AssetType.image,
+      const (DeviceFileSource) => AssetType.sound,
+      const (SvgPicture) => AssetType.vector,
       _ => AssetType.text
     };
   }
