@@ -12,6 +12,7 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
+import '../../view/tab_provider.dart';
 import '../../view/widgets/indicator_level.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
@@ -28,18 +29,37 @@ class ProfilePopup extends AbstractPopup {
   createState() => _ProfilePopupState();
 }
 
-class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
+class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
+    with TabProviderMixin {
   Player? _player;
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(24.d, 200.d, 24.d, 92.d);
+  @override
+  String titleBuilder() => "profile_tab_0".l();
 
   @override
   void initState() {
-    _loadPlayer();
+    selectedTabIndex = 0;
     super.initState();
   }
 
+  @override
+  Widget contentFactory() {
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      tabsBuilder(data: [
+        for (var i = 0; i < 2; i++) TabData("profile_tab_$i".l()),
+      ]),
+      SizedBox(
+          height: DeviceInfo.size.height * 0.6,
+          child: switch (selectedTabIndex) {
+            < 1 => _profileSegment(),
+            _ => _achievementSegment(),
+          })
+    ]);
+  }
+
   _loadPlayer() async {
+    if (_player != null) return;
     if (widget.playerId > 0) {
       var result = await rpc(RpcId.getProfileInfo,
           params: {RpcParams.player_id.name: widget.playerId});
@@ -49,12 +69,15 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
     }
   }
 
-  @override
-  contentFactory() {
+  Widget _profileSegment() {
+    _loadPlayer();
     return SizedBox(
       child: _player == null
           ? null
-          : Column(mainAxisSize: MainAxisSize.min, children: [
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
               _headerBuilder(),
               _medalsBuilder(),
               _leagueBuilder(),
@@ -251,5 +274,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup> {
                   "battles_win_rate".l(), "${(battleRate * 100).round()}%",
                   icon: "icon_attacks")),
         ]));
+  }
+
+  _achievementSegment() {
   }
 }
