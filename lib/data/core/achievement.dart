@@ -29,6 +29,22 @@ class AchievementLine {
   final AchivementType type;
   List<AchievementStep> steps = [];
   AchievementLine(this.type);
+  int getAccountValue(Account account) {
+    var map = account.achivementMap;
+    return switch (type) {
+      AchivementType.pirtul => Utils.toInt(map["numberOfsquashedPirtul"]),
+      AchivementType.battle => Utils.toInt(map["numberOfWonBattle"]),
+      AchivementType.quest => Utils.toInt(map["numberOfWonQuest"]),
+      AchivementType.merge => Utils.toInt(map["numberOfEvolvedCards"]),
+      AchivementType.enhance => Utils.toInt(map["numberOfEnhancedCards"]),
+      AchivementType.donation => Utils.toInt(map["numberOfCollectedGold"]),
+      AchivementType.collection => account.collection.length,
+      AchivementType.playTime => Utils.toInt(map["timeOfPlaying"]),
+      AchivementType.levelup => account.level,
+      _ => 0,
+    };
+  }
+
 
   static AchivementType getType(int id) {
     return switch (id) {

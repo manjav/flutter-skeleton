@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:math' as math;
 
 import '../../services/localization.dart';
@@ -154,8 +155,6 @@ class Account extends Player {
 
   dynamic avatars,
       owned_avatars,
-      achievements,
-      achievements_blob,
       sale_info,
       bundles,
       dailyReward,
@@ -165,12 +164,13 @@ class Account extends Player {
       available_combo_id_set;
 
   Tribe? tribe;
-  Map<Buildings, Building> buildings = {};
-  Map<int, AccountCard> cards = {};
   List<int> collection = [];
   List<Deadline> deadlines = [];
   Map<int, HeroCard> heroes = {};
+  Map<int, AccountCard> cards = {};
   Map<int, HeroItem> heroitems = {};
+  Map<String, int> achivementMap = {};
+  Map<Buildings, Building> buildings = {};
 
   int get now => DateTime.now().secondsSinceEpoch + deltaTime;
 
@@ -257,7 +257,7 @@ class Account extends Player {
     mobile_number_verified = map["mobile_number_verified"];
     wheel_of_fortune = map["wheel_of_fortune"];
 
-// Strings
+    // Strings
     name = map["name"];
     restoreKey = map["restore_key"];
     inviteKey = map["invite_key"];
@@ -314,6 +314,12 @@ class Account extends Player {
 
     for (var id in map["available_combo_id_set"]) {
       loadingData.comboHints[id].isAvailable = true;
+    }
+
+    var achievementText = utf8.fuse(base64).decode(map["achievements_blob"]);
+    achivementMap = Map.castFrom(jsonDecode(achievementText));
+    for (var line in loadingData.achievements.values) {
+      line.organizeSelections(this);
     }
   }
 
