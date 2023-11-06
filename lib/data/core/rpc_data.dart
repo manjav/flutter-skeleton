@@ -1,4 +1,5 @@
 import 'account.dart';
+import 'achievement.dart';
 import 'fruit.dart';
 import 'store.dart';
 
@@ -13,6 +14,7 @@ class LoadingData {
   late Map<int, FruitCard> baseCards;
   late Map<int, BaseHeroItem> baseHeroItems;
   late Map<ShopSections, List<ShopItem>> shopItems;
+  late Map<AchivementType, AchievementLine> achievements;
   Map<ShopSections, List<ShopItemVM>>? shopProceedItems;
 
   LoadingData();
@@ -21,6 +23,7 @@ class LoadingData {
     fruits = Fruit.generateMap(data['fruits']);
     baseCards = FruitCard.generateMap(data['cards'], fruits);
     baseHeroItems = BaseHeroItem.init(data['heroItems']);
+    achievements = AchievementLine.init(data["achievements"]);
     comboHints = ComboHint.init(data["comboItems"]);
     shopItems = ShopData.init(data["shop"]);
   }
