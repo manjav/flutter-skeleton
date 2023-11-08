@@ -68,7 +68,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           }
         }),
         _button("quest", "quest_l", 620, 270, 310,
-            () => Navigator.pushNamed(context, Routes.deck.routeName)),
+            () => Navigator.pushNamed(context, Routes.quest.routeName)),
         if (state.account.deadlines.isNotEmpty)
           for (var i = 0; i < state.account.deadlines.length; i++)
             Positioned(

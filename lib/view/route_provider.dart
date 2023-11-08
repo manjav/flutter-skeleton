@@ -31,6 +31,7 @@ import 'popups/tribe_options_popup.dart';
 import 'screens/deck_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
+import 'screens/quest_screen.dart';
 import 'screens/screen_attack_outcome.dart';
 import 'screens/screen_livebattle.dart';
 import 'screens/screen_livebattle_outcome.dart';
@@ -39,6 +40,7 @@ import 'screens/screen_open_pack.dart';
 enum Routes {
   none,
   deck,
+  quest,
   questOut,
   battleOut,
   livebattleOut,
@@ -84,6 +86,7 @@ extension RouteProvider on Routes {
     return switch (routeName) {
       "/home" => HomeScreen(),
       "/deck" => DeckScreen(opponent: args?['opponent']),
+      "/quest" => QuestScreen(args: args ?? {}),
       "/questOut" => AttackOutScreen(Routes.questOut, args: args ?? {}),
       "/battleOut" => AttackOutScreen(Routes.battleOut, args: args ?? {}),
       "/livebattleOut" => LiveOutScreen(args: args ?? {}),
