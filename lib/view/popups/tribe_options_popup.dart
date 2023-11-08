@@ -18,15 +18,15 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
 
-class TribeOptionsPopup extends AbstractPopup {
-  const TribeOptionsPopup({required super.args, super.key})
+class TribeDetailsPopup extends AbstractPopup {
+  const TribeDetailsPopup({required super.args, super.key})
       : super(Routes.popupTribeOptions);
 
   @override
-  createState() => _TribeMembersPopupState();
+  createState() => _TribeDetailsPopupState();
 }
 
-class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
+class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
     with TabProviderMixin {
   Opponent? _member;
   late Account _account;
@@ -90,11 +90,11 @@ class _TribeMembersPopupState extends AbstractPopupState<TribeOptionsPopup>
           child: ListView.builder(
               itemCount: tribe.members.length,
               itemBuilder: (c, i) =>
-                  _listItemBuilder(tribe, tribe.members[i], i))),
+                  _memberItemBuilder(tribe, tribe.members[i], i))),
     ]);
   }
 
-  Widget? _listItemBuilder(Tribe tribe, Opponent member, int index) {
+  Widget? _memberItemBuilder(Tribe tribe, Opponent member, int index) {
     return Widgets.button(
         height: 144.d,
         margin: EdgeInsets.all(2.d),

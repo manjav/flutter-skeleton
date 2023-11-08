@@ -114,7 +114,7 @@ extension RouteProvider on Routes {
       "/popupRestore" => RestorePopup(),
       "/popupInvite" => InvitePopup(),
       "/popupRedeemGift" => RedeemGiftPopup(),
-      "/popupTribeOptions" => TribeOptionsPopup(args: args ?? {}),
+      "/popupTribeOptions" => TribeDetailsPopup(args: args ?? {}),
       "/popupTribeInvite" => TribeInvitePopup(),
       "/popupTribeEdit" => TribeEditPopup(),
       "/popupTribeDonate" => TribeDonatePopup(),

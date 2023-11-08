@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/view/route_provider.dart';
+import '../../view/route_provider.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/adam.dart';
