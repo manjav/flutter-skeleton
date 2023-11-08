@@ -290,8 +290,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       getService<Notifications>().skedule(account);
       if (mounted) {
         accountBloc.add(SetAccount(account: account));
-        Navigator.pop(context);
-        Navigator.pushNamed(context, route.routeName, arguments: data);
+        await Navigator.pushNamed(context, route.routeName, arguments: data);
+        if (mounted) Navigator.pop(context);
       }
     } finally {}
   }

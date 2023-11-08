@@ -44,6 +44,60 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
         height: DeviceInfo.size.height,
         child: Stack(alignment: Alignment.center, children: [
           LoaderWidget(AssetType.animation, "quest_map_${mapIndex.max(0)}",
+              onRiveInit: (Artboard artboard) {
+            var controller =
+                StateMachineController.fromArtboard(artboard, "Map");
+            controller?.addEventListener(
+                (event) => _riveEventsListener(mapIndex, event));
+            artboard.addController(controller!);
+          }),
+          ValueListenableBuilder<List<Offset>>(
+              valueListenable: _lands[mapIndex],
+              builder: (context, value, child) {
+                return Stack(children: [
+                  for (var i = 0; i < value.length; i++)
+                    _buttonRenderer(mapIndex, i, value[i])
+                ]);
+              }),
         ]));
   }
 
+  void _riveEventsListener(int mapIndex, RiveEvent event) {
+    WidgetsBinding.instance.addPostFrameCallback((d) async {
+      if (event.name == "click") {
+        await Navigator.pushNamed(context, Routes.deck.routeName);
+        _lands[mapIndex].value.clear();
+        _lands[mapIndex].value = _lands[mapIndex].value;
+      } else if (event.name == "loading") {
+        var positions = <Offset>[];
+        var buttons = event.properties["buttons"].split(",");
+        for (var button in buttons) {
+          var offset = button.split(":");
+          positions
+              .add(Offset(double.parse(offset[0]), double.parse(offset[1])));
+        }
+        _lands[mapIndex].value = positions;
+      }
+    });
+  }
+
+  Widget _buttonRenderer(int mapIndex, int index, Offset position) {
+    var size = index == 12 ? 200.d : 170.d;
+    return Positioned(
+      left: position.dx.d - size * 0.5,
+      top: position.dy.d - size * 0.5,
+      child: LoaderWidget(AssetType.animation, "quest_map_button",
+          width: size, height: size, onRiveInit: (Artboard artboard) {
+        var controller =
+            StateMachineController.fromArtboard(artboard, "Button");
+        controller?.findInput<double>("state")?.value =
+            (-mapIndex * 130 - index * 10 + _questsCount).toDouble();
+        controller?.findInput<double>("level")?.value = (index + 1).toDouble();
+        controller?.findInput<bool>("button")?.value = false;
+        controller
+            ?.addEventListener((event) => _riveEventsListener(mapIndex, event));
+        artboard.addController(controller!);
+      }),
+    );
+  }
+}
