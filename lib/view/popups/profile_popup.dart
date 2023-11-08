@@ -384,5 +384,11 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                       child: Widgets.slider(0, ratio, 1,
                           height: 18.d, width: 122.d, padding: 5.d))
                   : const SizedBox(),
+              Positioned(
+                  bottom: -10.d,
+                  child: SkinnedText("achievement_${line.type.id}_$index".l(),
+                      style: TStyles.small)),
+            ]),
+        onPressed: () => line.selectedIndex.value = index);
   }
 }
