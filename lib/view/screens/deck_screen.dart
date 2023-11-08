@@ -265,7 +265,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   }
 
   // every 10 quests is boss fight
-  bool isBossQuest(Account account) => ((account.total_quests / 10) % 1 == 0);
+  bool isBossQuest(Account account) => ((account.questsCount / 10) % 1 == 0);
 
   _attack(Account account) async {
     var params = <String, dynamic>{
