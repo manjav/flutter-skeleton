@@ -287,33 +287,40 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
   }
 
   Widget _achievementsItemBuilder(Account account, AchievementLine line) {
-    // var steps = line.steps.values.toList();
+    var title = "";
+    if (line.steps.last.max > line.getAccountValue(account)) {
+      title =
+          "   ( ${line.countFormat(line.getAccountValue(account))} / ${line.countFormat(line.currentStep.max)} )";
+    }
     return ValueListenableBuilder(
         valueListenable: line.selectedIndex,
         builder: (context, value, child) {
           return Widgets.rect(
-              margin: EdgeInsets.only(top: 80.d),
+              margin: EdgeInsets.only(top: 60.d),
               decoration: Widgets.imageDecore(
                   "frame_header_cheese",
                   ImageCenterSliceData(
                       114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
-              height: 320.d,
-              child: Stack(clipBehavior: Clip.none, children: [
+              height: 386.d,
+              child: Stack(
+                  alignment: Alignment.center,
+                  clipBehavior: Clip.none,
+                  children: [
                 Positioned(
-                    top: -28.d,
+                        top: -25.d,
                     left: 80.d,
-                    child:
-                        SkinnedText("achievement_${line.type.id}_title".l())),
+                        child: SkinnedText(
+                            "${"achievement_${line.type.id}_title".l()} $title")),
                 Positioned(
-                    top: 40.d,
-                    left: 50.d,
+                        bottom: 25.d,
                     child: Text("achievement_${line.type.id}_message"
                         .l([line.format(line.steps[value].max)]))),
                 Positioned(
-                    top: 100.d,
-                    left: 40.d,
-                    right: 40.d,
-                    height: 200.d,
+                        top: 40.d,
+                        width: line.steps.length == 1 ? 230.d : null,
+                        left: line.steps.length > 1 ? 40.d : null,
+                        right: line.steps.length > 1 ? 40.d : null,
+                        height: 260.d,
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: line.steps.length,
@@ -325,29 +332,57 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
 
   Widget _achievementItemBuilder(
       Account account, AchievementLine line, int index) {
-    var isSelected = line.selectedIndex.value == index;
     var state = line.getAccountValue(account);
+    var isSelected = line.selectedIndex.value == index;
+    var achieved = state >= line.steps[index].max;
     var isCurrent = state >= line.steps[index].min &&
         (state < line.steps[index].max || index == line.steps.length - 1);
-    return Opacity(
+    var ratio = 0.0;
+    if (isCurrent) {
+      ratio = ((state - line.steps[index].min) /
+              (line.steps[index].max - line.steps[index].min))
+          .clamp(0, 1);
+    }
+    return Widgets.button(
+        width: 183.d,
+        margin: EdgeInsets.fromLTRB(16.d, 18.d, 16.d, 12.d),
+        padding: EdgeInsets.zero,
+        alignment: Alignment.center,
+        child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              Opacity(
+                  opacity: isSelected ? 1 : 0.4,
+                  child: Widgets.rect(
+                      decoration: Widgets.imageDecore(
+                          "frame_hatch", ImageCenterSliceData(80, 100)))),
+              Opacity(
       opacity: isSelected ? 1 : 0.7,
-      child: Widgets.button(
-          width: isCurrent ? 300.d : 180.d,
-          margin: EdgeInsets.all(6.d),
-          padding: EdgeInsets.all(16.d),
-          alignment: Alignment.center,
-          decoration:
-              Widgets.imageDecore("frame_hatch", ImageCenterSliceData(80, 100)),
-          child: Stack(alignment: Alignment.topRight, children: [
-            state >= line.steps[index].min
-                ? Asset.load<Image>("achievement_${line.type.id}_${index + 1}")
-                : SkinnedText("?", style: TStyles.large),
-            state >= line.steps[index].max
+                  child: state >= line.steps[index].min
+                      ? Align(
+                          alignment: const Alignment(0, -0.5),
+                          child: Asset.load<Image>(
+                              "achievement_${line.type.id}_${index + 1}",
+                              height: 128.d))
+                      : SkinnedText("?", style: TStyles.large)),
+              achieved
+                  ? Positioned(
+                      top: -20.d,
+                      right: -10.d,
+                      child: Asset.load<Image>("tick", width: 40.d))
+                  : const SizedBox(),
+              isCurrent && !achieved
+                  ? Positioned(
+                      top: -20.d,
+                      right: -15.d,
+                      child: SkinnedText("${(ratio * 100).floor()}%"))
+                  : const SizedBox(),
+              isCurrent
                 ? Positioned(
-                    child: Asset.load<Image>("checkbox_on", width: 70.d))
-                : const SizedBox()
-          ]),
-          onPressed: () => line.selectedIndex.value = index),
-    );
+                      bottom: 45.d,
+                      child: Widgets.slider(0, ratio, 1,
+                          height: 18.d, width: 122.d, padding: 5.d))
+                  : const SizedBox(),
   }
 }

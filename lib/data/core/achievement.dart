@@ -40,6 +40,8 @@ class AchievementLine {
   ValueNotifier<int> selectedIndex = ValueNotifier(0);
   final AchivementType type;
   List<AchievementStep> steps = [];
+  late AchievementStep currentStep;
+
   AchievementLine(this.type);
   int getAccountValue(Account account) {
     var map = account.achivementMap;
@@ -104,12 +106,14 @@ class AchievementLine {
     return result;
   }
 
-  void organizeSelections(Account account) {
+  void updateCurrents(Account account) {
     for (var i = 0; i < steps.length; i++) {
       if (steps[i].max > getAccountValue(account)) {
         selectedIndex.value = i;
+        currentStep = steps[i];
         return;
       }
+      currentStep = steps.last;
     }
   }
 }
