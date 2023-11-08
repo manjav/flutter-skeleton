@@ -273,14 +273,23 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     }
     if (message.messageType != Messages.text) return _logItemRenderer(message);
     var padding = 120.d;
-    var avatar = Widgets.rect(
+    var avatar = Widgets.button(
         width: padding,
         height: padding,
         radius: padding,
         padding: EdgeInsets.all(6.d),
+        onTapUp: (details) async {
+          await account.tribe!.loadMembers(context, account);
+          if (!mounted) return;
+          Overlays.insert(context, OverlayType.member, args: [
+            account.tribe!.members.firstWhere((m) => m.name == message.sender),
+            account,
+            details.globalPosition.dy - 220.d
+          ]);
+        },
         decoration:
             Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
-        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId}",
+        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId + 1}",
             width: 76.d, height: 76.d, subFolder: "avatars"));
     return Column(children: [
       Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
