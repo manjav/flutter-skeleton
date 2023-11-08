@@ -73,6 +73,14 @@ class AchievementLine {
     };
   }
 
+  String countFormat(int value) {
+    return switch (type) {
+      AchivementType.donation => value.compact(),
+      AchivementType.playTime => value.round().toRemainingTime(),
+      _ => value.toString(),
+    };
+  }
+
   static AchivementType getType(int id) {
     return switch (id) {
       150 => AchivementType.t150,
