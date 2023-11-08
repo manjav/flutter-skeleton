@@ -46,6 +46,10 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
 
   @override
   Widget contentFactory() {
+    _loadPlayer();
+    if (_player != accountBloc.account!) {
+      return _profileSegment();
+    }
     return Column(mainAxisSize: MainAxisSize.min, children: [
       tabsBuilder(data: [
         for (var i = 0; i < 2; i++) TabData("profile_tab_$i".l()),
@@ -71,7 +75,6 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
   }
 
   Widget _profileSegment() {
-    _loadPlayer();
     return SizedBox(
       child: _player == null
           ? null
@@ -306,27 +309,27 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                   alignment: Alignment.center,
                   clipBehavior: Clip.none,
                   children: [
-                Positioned(
+                    Positioned(
                         top: -25.d,
-                    left: 80.d,
+                        left: 80.d,
                         child: SkinnedText(
                             "${"achievement_${line.type.id}_title".l()} $title")),
-                Positioned(
+                    Positioned(
                         bottom: 25.d,
-                    child: Text("achievement_${line.type.id}_message"
-                        .l([line.format(line.steps[value].max)]))),
-                Positioned(
+                        child: Text("achievement_${line.type.id}_message"
+                            .l([line.format(line.steps[value].max)]))),
+                    Positioned(
                         top: 40.d,
                         width: line.steps.length == 1 ? 230.d : null,
                         left: line.steps.length > 1 ? 40.d : null,
                         right: line.steps.length > 1 ? 40.d : null,
                         height: 260.d,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: line.steps.length,
-                        itemBuilder: (c, i) =>
-                            _achievementItemBuilder(account, line, i)))
-              ]));
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: line.steps.length,
+                            itemBuilder: (c, i) =>
+                                _achievementItemBuilder(account, line, i)))
+                  ]));
         });
   }
 
@@ -358,7 +361,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                       decoration: Widgets.imageDecore(
                           "frame_hatch", ImageCenterSliceData(80, 100)))),
               Opacity(
-      opacity: isSelected ? 1 : 0.7,
+                  opacity: isSelected ? 1 : 0.7,
                   child: state >= line.steps[index].min
                       ? Align(
                           alignment: const Alignment(0, -0.5),
@@ -379,7 +382,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                       child: SkinnedText("${(ratio * 100).floor()}%"))
                   : const SizedBox(),
               isCurrent
-                ? Positioned(
+                  ? Positioned(
                       bottom: 45.d,
                       child: Widgets.slider(0, ratio, 1,
                           height: 18.d, width: 122.d, padding: 5.d))
