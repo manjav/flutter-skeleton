@@ -109,12 +109,21 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
               borderRadius: BorderRadius.all(Radius.circular(28.d)),
               border: Border.all(color: TColors.primary10, width: 10.d))
           : null,
-      onPressed: () => _selectedCards.setCard(card, lenght: _building.maxCards),
+      onPressed: () => _onCardSelect(card),
       child: CardItem(card,
           size: itemSize,
           showCooloff: true,
           showCooldown: false,
           key: getGlobalKey(card.id)),
     );
+  }
+
+  _onCardSelect(AccountCard card) {
+    if (card.getRemainingCooldown() > 0) {
+      card.coolOff(context);
+      setState(() {});
+      return;
+    }
+    _selectedCards.setCard(card, lenght: _building.maxCards);
   }
 }
