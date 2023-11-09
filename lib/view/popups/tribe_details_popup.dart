@@ -285,7 +285,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         RpcParams.type.name: id,
       });
       _account.update(result);
-      _account.buildings[id.toBuildings()]!.map['level']++;
+      _account.buildings[id.toBuildings()]!.level++;
       tribe.levels[id] = tribe.levels[id]! + 1;
       setState(() {});
     } finally {}

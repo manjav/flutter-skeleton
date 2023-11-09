@@ -157,7 +157,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   _sell() async {
     try {
       await rpc(RpcId.auctionSell, params: {RpcParams.card_id.name: _card.id});
-      _account.buildings[Buildings.auction]!.map["cards"].add(_card);
+      _account.buildings[Buildings.auction]!.cards.add(_card);
       if (!mounted) return;
       accountBloc.add(SetAccount(account: _account));
       Navigator.pop(context);

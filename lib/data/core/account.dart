@@ -242,16 +242,18 @@ class Account extends Player {
     _addDeadline(map, xpboostCreatedAt, xpboostId);
     _addDeadline(map, pwboostCreatedAt, pwboostId);
 
+    addBuilding(Buildings type, [int level = 0, List? cards]) =>
+        buildings[type] = Building(this, type, level, cards ?? []);
+
     buildings = {};
-    _addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
-    _addBuilding(Buildings.base);
-    _addBuilding(Buildings.cards);
-    _addBuilding(Buildings.defense, 0, map['defense_building_assigned_cards']);
-    _addBuilding(Buildings.offense, 0, map['offense_building_assigned_cards']);
-    buildings[Buildings.mine] = Mine();
-    _addBuilding(Buildings.mine, map['gold_building_level'],
+    addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
+    addBuilding(Buildings.base);
+    addBuilding(Buildings.cards);
+    addBuilding(Buildings.defense, 0, map['defense_building_assigned_cards']);
+    addBuilding(Buildings.offense, 0, map['offense_building_assigned_cards']);
+    addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
-    _addBuilding(Buildings.treasury, map['bank_building_level']);
+    addBuilding(Buildings.treasury, map['bank_building_level']);
 
     // Tribe
     installTribe(map['tribe']);
@@ -414,15 +416,6 @@ class Account extends Player {
     return myCards;
   }
 
-  void _addBuilding(Buildings type, [int level = 0, List? cards]) {
-    cards = cards ?? [];
-    if (!buildings.containsKey(type)) {
-      buildings[type] = Building();
-    }
-    buildings[type]!.initialize({"type": type, "level": level},
-        args: {"account": this, "cards": cards});
-  }
-
   void installTribe(dynamic data) {
     if (data == null) {
       tribeId = -1;
@@ -439,7 +432,7 @@ class Account extends Player {
       Buildings.offense
     ];
     for (var type in types) {
-      buildings[type]?.map['level'] = tribe!.levels[type.id];
+      buildings[type]!.level = tribe!.levels[type.id]!;
     }
   }
 

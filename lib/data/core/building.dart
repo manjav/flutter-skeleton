@@ -3,9 +3,8 @@
 import 'dart:math' as math;
 
 import '../../data/core/account.dart';
-import 'fruit.dart';
 import '../../utils/utils.dart';
-import 'infra.dart';
+import 'fruit.dart';
 
 enum Buildings {
   none,
@@ -50,31 +49,7 @@ extension BuildingExtension on Buildings {
   }
 }
 
-enum BuildingField {
-  type,
-  cards,
-  level,
-  // Tribe fields
-  id,
-  name,
-  description,
-  score,
-  rank,
-  gold,
-  member_count,
-  defense_building_level,
-  offense_building_level,
-  cooldown_building_level,
-  mainhall_building_level,
-  donates_number,
-  status,
-  weekly_score,
-  weekly_rank,
-}
-
-class Building extends StringMap<dynamic> {
-  static const goldMinePowerModifier1 = 0.7; //per hour
-  static const goldMinePowerModifier2 = 3.0; //per hour
+class Building {
   static const offensePowerModifier = 0.1;
   static const defensePowerModifier = 0.1;
   static const maxLevels = 10;
@@ -311,22 +286,13 @@ class Building extends StringMap<dynamic> {
     ],
     Buildings.treasury: [0, 1000, 5000, 10000, 30000, 100000, 250000, 1000000],
   };
-
-  int get level => map['level'];
-  Buildings get type => map['type'];
-  List<AccountCard?> get cards => map['cards'];
-  T get<T>(BuildingField fieldName) => map[fieldName.name] as T;
-
-  @override
-  void initialize(Map<String, dynamic> data, {args}) {
-    super.initialize(data, args: args);
-    var account = args['account']! as Account;
-    var cards = List.generate(
-        4,
-        (i) => i < args['cards'].length
-            ? account.cards[args['cards'][i]['id']]
-            : null);
-    map['cards'] = cards;
+  int level = 0;
+  final Buildings type;
+  List<AccountCard?> cards = [];
+  Building(Account account, this.type, this.level, List cards,
+      {Map<String, dynamic>? map}) {
+    this.cards = List.generate(
+        4, (i) => i < cards.length ? account.cards[cards[i]['id']] : null);
   }
 
   static int get_maxLevel(Buildings type) => _upgradeCosts[type]!.length;
@@ -407,7 +373,8 @@ class Building extends StringMap<dynamic> {
       if (blessingBenefit > 0) {
         totalPower += (totalPower * blessingBenefit);
       }
-
+      const goldMinePowerModifier1 = 0.7; //per hour
+      const goldMinePowerModifier2 = 3.0; //per hour
       return (math.pow(totalPower, goldMinePowerModifier1) *
               goldMinePowerModifier2)
           .floor();
@@ -421,7 +388,6 @@ class Building extends StringMap<dynamic> {
 
       var powerBenefit = 0.0; // default benefit of blessing value
       // adds blessing benefit( blessing from items + base blessing) of each assigned hero
-
       for (var e in heroCardBenefits.entries) {
         powerBenefit += e.value[HeroAttribute.power]! +
             e.key.attribuites[HeroAttribute.power]!;
@@ -438,18 +404,5 @@ class Building extends StringMap<dynamic> {
       }
       return (totalPower * buildingPowerModifier).floor();
     }
-  }
-}
-
-class Mine extends Building {
-  int collectableGold(Account account) {
-    var goldPerdSec = getCardsBenefit(account) / 3600;
-    return ((account.now - account.last_gold_collect_at) * goldPerdSec)
-        .clamp(0, benefit)
-        .floor();
-  }
-
-  bool isCollectable(Account account) {
-    return account.now >= account.gold_collection_allowed_at;
   }
 }

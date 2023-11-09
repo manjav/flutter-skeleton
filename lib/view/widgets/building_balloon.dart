@@ -28,8 +28,7 @@ class _BuildingBalloonState extends State<BuildingBalloon>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      var mine = widget.building as Mine;
-      if (!mine.isCollectable(state.account)) {
+      if (!isCollectable(state.account)) {
         return const SizedBox();
       }
       return Widgets.button(
@@ -38,14 +37,14 @@ class _BuildingBalloonState extends State<BuildingBalloon>
           padding: EdgeInsets.all(12.d),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Asset.load<Image>("icon_gold", width: 72.d),
-            Text(mine.collectableGold(state.account).compact())
+            Text(collectableGold(state.account).compact())
           ]),
-          onPressed: () => _onPressed(state.account, mine));
+          onPressed: () => _onPressed(state.account));
     });
   }
 
-  Future<void> _onPressed(Account account, Mine mine) async {
-    if (!mine.isCollectable(account)) {
+  Future<void> _onPressed(Account account) async {
+    if (!isCollectable(account)) {
       return;
     }
     var params = {RpcParams.client.name: Platform.operatingSystem};
@@ -58,4 +57,14 @@ class _BuildingBalloonState extends State<BuildingBalloon>
       }
     } finally {}
   }
+
+  int collectableGold(Account account) {
+    var goldPerdSec = widget.building.getCardsBenefit(account) / 3600;
+    return ((account.now - account.last_gold_collect_at) * goldPerdSec)
+        .clamp(0, widget.building.benefit)
+        .floor();
+  }
+
+  bool isCollectable(Account account) =>
+      account.now >= account.gold_collection_allowed_at;
 }

@@ -82,7 +82,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
       if (!mounted) return;
       var accountBloc = BlocProvider.of<AccountBloc>(context);
       accountBloc.account!.update(data);
-      building.map["level"] = data["level"];
+      building.level = data["level"];
       accountBloc.add(SetAccount(account: accountBloc.account!));
     } finally {}
   }
