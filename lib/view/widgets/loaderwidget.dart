@@ -50,13 +50,8 @@ class _LoaderWidgetState extends State<LoaderWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.width,
-      height: widget.height,
-      child: _result,
-    );
-  }
+  Widget build(BuildContext context) =>
+      SizedBox(width: widget.width, height: widget.height, child: _result);
 
   Future<void> _load() async {
     var url = widget.baseUrl ??
