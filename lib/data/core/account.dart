@@ -178,41 +178,9 @@ class Account extends Player {
       : super.initialize(map, map["id"]) {
     deltaTime = map['now'] - DateTime.now().secondsSinceEpoch;
 
-    // Integers
-    q = Utils.toInt(map["q"]);
-    xp = Utils.toInt(map["xp"]);
-    nectar = Utils.toInt(map["nectar"]);
-    potion = Utils.toInt(map["potion_number"]);
-    activity_status = Utils.toInt(map["activity_status"]);
-    weekly_score = Utils.toInt(map["weekly_score"]);
-    new_messages = Utils.toInt(map["new_messages"]);
-    cooldowns_bought_today = Utils.toInt(map["cooldowns_bought_today"]);
-    total_quests = Utils.toInt(map["total_quests"]);
-    total_battles = Utils.toInt(map["total_battles"]);
-    bank_account_balance = Utils.toInt(map["bank_account_balance"]);
-    last_gold_collect_at = Utils.toInt(map["last_gold_collect_at"]);
-    tutorial_id = Utils.toInt(map["tutorial_id"]);
-    tutorial_index = Utils.toInt(map["tutorial_index"]);
-    avatar_slots = Utils.toInt(map["avatar_slots"]);
-    gold_collection_allowed_at = Utils.toInt(map["gold_collection_allowed_at"]);
-    gold_collection_extraction = Utils.toInt(map["gold_collection_extraction"]);
-    cards_view = Utils.toInt(map["cards_view"]);
-    league_remaining_time = Utils.toInt(map["league_remaining_time"]);
-    bonus_remaining_time = Utils.toInt(map["bonus_remaining_time"]);
-    potionPrice = Utils.toInt(map["potion_price"]);
-    nectarPrice = Utils.toInt(map["nectar_price"]);
-    hero_id = Utils.toInt(map["hero_id"]);
-    hero_max_rarity = Utils.toInt(map["hero_max_rarity"]);
-    base_hero_id = Utils.toInt(map["base_hero_id"]);
-    wheel_of_fortune_opens_in = Utils.toInt(map["wheel_of_fortune_opens_in"]);
-    latest_constants_version = Utils.toInt(map["latest_constants_version"]);
-    deltaTime = Utils.toInt(map["delta_time"]);
-    xpboostCreatedAt = Utils.toInt(map["xpboost_created_at"]);
-    pwboostCreatedAt = Utils.toInt(map["pwboost_created_at"]);
-    xpboostId = Utils.toInt(map["xpboost_id"]);
-    pwboostId = Utils.toInt(map["pwboost_id"]);
+    _updateInteger(map);
 
-// Booleans
+    // Booleans
     needs_captcha = map["needs_captcha"];
     has_email = map["has_email"];
     gold_collection_allowed = map["gold_collection_allowed"];
@@ -319,8 +287,52 @@ class Account extends Player {
     var achievementText = utf8.fuse(base64).decode(map["achievements_blob"]);
     achivementMap = Map.castFrom(jsonDecode(achievementText));
     for (var line in loadingData.achievements.values) {
-      line.organizeSelections(this);
+      line.updateCurrents(this);
     }
+  }
+
+  void _updateInteger(Map<String, dynamic> map) {
+    q = Utils.toInt(map["q"], q);
+    xp = Utils.toInt(map["xp"], xp);
+    nectar = Utils.toInt(map["nectar"], nectar);
+    potion = Utils.toInt(map["potion_number"], potion);
+    activity_status = Utils.toInt(map["activity_status"], activity_status);
+    weekly_score = Utils.toInt(map["weekly_score"], weekly_score);
+    new_messages = Utils.toInt(map["new_messages"], new_messages);
+    cooldowns_bought_today =
+        Utils.toInt(map["cooldowns_bought_today"], cooldowns_bought_today);
+    questsCount = Utils.toInt(map["total_quests"], questsCount);
+    battlesCount = Utils.toInt(map["total_battles"], battlesCount);
+    bank_account_balance =
+        Utils.toInt(map["bank_account_balance"], bank_account_balance);
+    last_gold_collect_at =
+        Utils.toInt(map["last_gold_collect_at"], last_gold_collect_at);
+    tutorial_id = Utils.toInt(map["tutorial_id"], tutorial_id);
+    tutorial_index = Utils.toInt(map["tutorial_index"], tutorial_index);
+    avatar_slots = Utils.toInt(map["avatar_slots"], avatar_slots);
+    gold_collection_allowed_at = Utils.toInt(
+        map["gold_collection_allowed_at"], gold_collection_allowed_at);
+    gold_collection_extraction = Utils.toInt(
+        map["gold_collection_extraction"], gold_collection_extraction);
+    cards_view = Utils.toInt(map["cards_view"], cards_view);
+    league_remaining_time =
+        Utils.toInt(map["league_remaining_time"], league_remaining_time);
+    bonus_remaining_time =
+        Utils.toInt(map["bonus_remaining_time"], bonus_remaining_time);
+    potionPrice = Utils.toInt(map["potion_price"], potionPrice);
+    nectarPrice = Utils.toInt(map["nectar_price"], nectarPrice);
+    hero_id = Utils.toInt(map["hero_id"], hero_id);
+    hero_max_rarity = Utils.toInt(map["hero_max_rarity"], hero_max_rarity);
+    base_hero_id = Utils.toInt(map["base_hero_id"], base_hero_id);
+    wheel_of_fortune_opens_in = Utils.toInt(
+        map["wheel_of_fortune_opens_in"], wheel_of_fortune_opens_in);
+    latest_constants_version =
+        Utils.toInt(map["latest_constants_version"], latest_constants_version);
+    deltaTime = Utils.toInt(map["delta_time"], deltaTime);
+    xpboostCreatedAt = Utils.toInt(map["xpboost_created_at"], xpboostCreatedAt);
+    pwboostCreatedAt = Utils.toInt(map["pwboost_created_at"], pwboostCreatedAt);
+    xpboostId = Utils.toInt(map["xpboost_id"], xpboostId);
+    pwboostId = Utils.toInt(map["pwboost_id"], pwboostId);
   }
 
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
@@ -432,24 +444,19 @@ class Account extends Player {
   }
 
   Map<String, dynamic> update(Map<String, dynamic> data) {
-    if (data.containsKey("gold")) {
-      gold += Utils.toInt(data["gold"]);
-    } else {
+    _updateInteger(data);
+    if (!data.containsKey("gold")) {
       if (data.containsKey("player_gold")) {
         gold = Utils.toInt(data["player_gold"]);
       }
       gold += Utils.toInt(data["added_gold"]);
     }
 
-    if (data.containsKey("nectar")) {
-      nectar = Utils.toInt(data["nectar"]);
-    } else {
+    if (!data.containsKey("nectar")) {
       nectar += Utils.toInt(data["added_nectar"]);
     }
 
-    if (data.containsKey("potion_number")) {
-      potion = Utils.toInt(data["potion_number"]);
-    } else {
+    if (!data.containsKey("potion_number")) {
       if (data.containsKey("player_potion")) {
         potion = Utils.toInt(data["player_potion"]);
       }
@@ -458,11 +465,11 @@ class Account extends Player {
       }
       potion += Utils.toInt(data["added_potion"]);
     }
-    // for (var field in AccountField.values) {
-    //   if (data.containsKey(field.name)) {
-    //     map[field.name] = data[field.name];
-    //   }
-    // }
+
+    if (!data.containsKey("xp")) {
+      xp += Utils.toInt(data["xp_added"]);
+    }
+
     if (data.containsKey("attack_cards")) {
       for (var attackCard in data["attack_cards"]) {
         cards[attackCard['id']]?.lastUsedAt = attackCard["last_used_at"];
@@ -470,6 +477,9 @@ class Account extends Player {
     }
     if (data.containsKey("tribe_gold")) {
       tribe?.gold = Utils.toInt(data["tribe_gold"]);
+    }
+    if (data.containsKey("tribe_rank")) {
+      tribeRank = Utils.toInt(data["tribe_rank"]);
     }
 
     if (data.containsKey("hero_potion")) {
