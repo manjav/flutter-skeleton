@@ -285,6 +285,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     try {
       var data = await rpc(RpcId.quest, params: params);
       account.update(data);
+      _selectedCards.clear(setNull: true);
 
       // Reset reminder notifications ....
       getService<Notifications>().skedule(account);

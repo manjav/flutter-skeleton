@@ -120,8 +120,14 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
     notifyListeners();
   }
 
-  void clear() {
-    value.clear();
+  void clear({bool setNull = false}) {
+    if (setNull) {
+      for (var i = 0; i < value.length; i++) {
+        value[i] = null;
+      }
+    } else {
+      value.clear();
+    }
     notifyListeners();
   }
 
