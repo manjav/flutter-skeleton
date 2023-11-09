@@ -16,8 +16,8 @@ class QuestScreen extends AbstractScreen {
 }
 
 class _QuestScreenState extends AbstractScreenState<QuestScreen> {
-  List<ValueNotifier<List<Offset>>> _lands = [];
   int _questsCount = 0;
+  List<ValueNotifier<List<City>>> _lands = [];
 
   @override
   void initState() {
@@ -28,7 +28,6 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   @override
   Widget contentFactory() {
     super.contentFactory();
-    _questsCount = accountBloc.account!.questsCount;
     return SizedBox(
         width: DeviceInfo.size.width,
         height: DeviceInfo.size.height,
@@ -48,56 +47,68 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
             var controller =
                 StateMachineController.fromArtboard(artboard, "Map");
             controller?.addEventListener(
-                (event) => _riveEventsListener(mapIndex, event));
+                (event) => _riveEventsListener(event, mapIndex));
             artboard.addController(controller!);
           }),
-          ValueListenableBuilder<List<Offset>>(
+          ValueListenableBuilder<List<City>>(
               valueListenable: _lands[mapIndex],
               builder: (context, value, child) {
                 return Stack(children: [
                   for (var i = 0; i < value.length; i++)
-                    _buttonRenderer(mapIndex, i, value[i])
+                    _cityRenderer(mapIndex, i, value[i])
                 ]);
               }),
         ]));
   }
 
-  void _riveEventsListener(int mapIndex, RiveEvent event) {
+  void _riveEventsListener(RiveEvent event, int mapIndex) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
+      _questsCount = accountBloc.account!.questsCount;
       if (event.name == "click") {
         await Navigator.pushNamed(context, Routes.deck.routeName);
-        _lands[mapIndex].value.clear();
-        _lands[mapIndex].value = _lands[mapIndex].value;
+        // Update city levels after quest
+        for (var i = 0; i < _lands[mapIndex].value.length; i++) {
+          _lands[mapIndex].value[i].state?.value =
+              (_questsCount - mapIndex * 130 - i * 10).toDouble();
+        }
       } else if (event.name == "loading") {
-        var positions = <Offset>[];
-        var buttons = event.properties["buttons"].split(",");
-        for (var button in buttons) {
-          var offset = button.split(":");
-          positions
-              .add(Offset(double.parse(offset[0]), double.parse(offset[1])));
+        // Load city positions
+        var positions = <City>[];
+        var cities = event.properties["buttons"].split(",");
+        for (var i = 0; i < cities.length; i++) {
+          var offset = cities[i].split(":");
+          positions.add(City(
+              i, Offset(double.parse(offset[0]), double.parse(offset[1]))));
         }
         _lands[mapIndex].value = positions;
       }
     });
   }
 
-  Widget _buttonRenderer(int mapIndex, int index, Offset position) {
+  Widget _cityRenderer(int mapIndex, int index, City city) {
     var size = index == 12 ? 200.d : 170.d;
     return Positioned(
-      left: position.dx.d - size * 0.5,
-      top: position.dy.d - size * 0.5,
+      left: city.position.dx.d - size * 0.5,
+      top: city.position.dy.d - size * 0.5,
       child: LoaderWidget(AssetType.animation, "quest_map_button",
           width: size, height: size, onRiveInit: (Artboard artboard) {
         var controller =
             StateMachineController.fromArtboard(artboard, "Button");
-        controller?.findInput<double>("state")?.value =
-            (-mapIndex * 130 - index * 10 + _questsCount).toDouble();
+        city.state = controller?.findInput<double>("state") as SMINumber;
+        city.state?.value =
+            (_questsCount - mapIndex * 130 - index * 10).toDouble();
         controller?.findInput<double>("level")?.value = (index + 1).toDouble();
-        controller?.findInput<bool>("button")?.value = false;
         controller
-            ?.addEventListener((event) => _riveEventsListener(mapIndex, event));
+            ?.addEventListener((event) => _riveEventsListener(event, mapIndex));
         artboard.addController(controller!);
       }),
     );
   }
+}
+
+class City {
+  final int index;
+  SMINumber? state;
+  final Offset position;
+  City(this.index, this.position);
 }
