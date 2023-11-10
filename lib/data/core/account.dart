@@ -286,8 +286,10 @@ class Account extends Player {
       loadingData.comboHints[id].isAvailable = true;
     }
 
-    var achievementText = utf8.fuse(base64).decode(map["achievements_blob"]);
-    achivementMap = Map.castFrom(jsonDecode(achievementText));
+    if (map["achievements_blob"] != null) {
+      var achievementText = utf8.fuse(base64).decode(map["achievements_blob"]);
+      achivementMap = Map.castFrom(jsonDecode(achievementText));
+    }
     for (var line in loadingData.achievements.values) {
       line.updateCurrents(this);
     }
