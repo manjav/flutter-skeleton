@@ -38,7 +38,6 @@ enum ServiceType {
   inbox,
   localization,
   notifications,
-  prefs,
   sounds,
   settings,
   themes,
@@ -85,7 +84,6 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       const (Inbox) => ServiceType.inbox,
       const (Localization) => ServiceType.localization,
       const (Notifications) => ServiceType.notifications,
-      const (Prefs) => ServiceType.prefs,
       const (Sounds) => ServiceType.sounds,
       const (Trackers) => ServiceType.trackers,
       const (Theme) => ServiceType.themes,
@@ -109,7 +107,6 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     _map[ServiceType.inbox] = Inbox();
     _map[ServiceType.localization] = Localization();
     _map[ServiceType.notifications] = Notifications();
-    _map[ServiceType.prefs] = Prefs();
     _map[ServiceType.socket] = NoobSocket();
     _map[ServiceType.sounds] = Sounds();
     _map[ServiceType.themes] = Themes();
@@ -120,7 +117,6 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     var q = MediaQuery.of(context);
     _map[ServiceType.device]!.initialize(args: [q.size, q.devicePixelRatio]);
     _map[ServiceType.themes]!.initialize();
-    await _map[ServiceType.prefs]!.initialize();
     await _map[ServiceType.localization]!.initialize();
     await _map[ServiceType.trackers]!.initialize();
 

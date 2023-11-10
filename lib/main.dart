@@ -5,12 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../services/service_provider.dart';
 
-import '../../blocs/opponents_bloc.dart';
-import 'data/core/adam.dart';
-import '../../services/deviceinfo.dart';
-import '../../services/sounds.dart';
 import 'blocs/account_bloc.dart';
+import 'blocs/opponents_bloc.dart';
 import 'blocs/services_bloc.dart';
+import 'data/core/adam.dart';
+import 'services/deviceinfo.dart';
+import 'services/localization.dart';
+import 'services/prefs.dart';
+import 'services/service_provider.dart';
+import 'services/sounds.dart';
 import 'services/theme.dart';
 import 'view/route_provider.dart';
 import 'view/widgets/loaderwidget.dart';
@@ -20,6 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
+  await Prefs().initialize();
   runApp(const MyApp());
 }
 
