@@ -117,7 +117,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     var q = MediaQuery.of(context);
     _map[ServiceType.device]!.initialize(args: [q.size, q.devicePixelRatio]);
     _map[ServiceType.themes]!.initialize();
-    await _map[ServiceType.localization]!.initialize();
+    await _map[ServiceType.localization]!.initialize(args: [context]);
     await _map[ServiceType.trackers]!.initialize();
 
     try {
