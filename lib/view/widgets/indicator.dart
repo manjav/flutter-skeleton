@@ -94,7 +94,6 @@ class _IndicatorState extends State<Indicator>
     if (widget.type == Values.leagueRank && value == 0 && league == 0) {
       return const SizedBox();
     }
-
     return Stack(alignment: Alignment.centerLeft, children: [
       Positioned(
           right: right,

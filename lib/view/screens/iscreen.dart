@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/infra.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
 import '../../services/service_provider.dart';
 import '../../utils/assets.dart';
 import '../../utils/ilogger.dart';
@@ -72,10 +73,10 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   List<Widget> appBarElementsLeft() {
     return [
       Widgets.button(
-          // width: 132.d,
           height: 117.d,
           padding: EdgeInsets.all(22.d),
-          child: Asset.load<Image>("ui_arrow_back"),
+          child: Asset.load<Image>(
+              "ui_arrow_${getService<Localization>().isRTL ? "forward" : "back"}"),
           onPressed: () => Navigator.pop(context))
     ];
   }

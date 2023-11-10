@@ -239,47 +239,53 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   Widget _buttons(List<Opponent> opponents) {
+    var isRTL = getService<Localization>().isRTL;
     return ValueListenableBuilder<Opponent>(
         valueListenable: _selectedOpponent,
         builder: (context, value, child) {
           return Widgets.rect(
-              height: 196.d,
-              padding: EdgeInsets.symmetric(horizontal: 24.d),
-              child: Row(children: [
-                Widgets.skinnedButton(
-                    alignment: Alignment.center,
-                    width: 230.d,
-                    size: ButtonSize.medium,
-                    color: ButtonColor.green,
-                    isEnable: value.index > 0,
-                    child: Asset.load<Image>("ui_arrow_back", width: 68.d),
-                    onPressed: () =>
-                        _selectMap(opponents, _pageController.page! - 1)),
-                SizedBox(width: 8.d),
-                Expanded(
-                    child: Widgets.skinnedButton(
-                        padding: EdgeInsets.fromLTRB(32.d, 28.d, 42.d, 42.d),
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const LoaderWidget(AssetType.image, "icon_battle"),
-                            SkinnedText("attack_l".l(), style: TStyles.large),
-                          ],
-                        ),
-                        size: ButtonSize.medium,
-                        onPressed: _attack)),
-                SizedBox(width: 8.d),
-                Widgets.skinnedButton(
-                    width: 230.d,
-                    alignment: Alignment.center,
-                    size: ButtonSize.medium,
-                    color: ButtonColor.green,
-                    isEnable: value.index < opponents.length - 1,
-                    child: Asset.load<Image>("ui_arrow_forward", width: 68.d),
-                    onPressed: () =>
-                        _selectMap(opponents, _pageController.page! + 1)),
-              ]));
+            height: 196.d,
+            padding: EdgeInsets.symmetric(horizontal: 24.d),
+            child: Row(children: [
+              Widgets.skinnedButton(
+                  alignment: Alignment.center,
+                  width: 230.d,
+                  size: ButtonSize.medium,
+                  color: ButtonColor.green,
+                  isEnable: value.index > 0,
+                  child: Asset.load<Image>(
+                      "ui_arrow_${isRTL ? "forward" : "back"}",
+                      width: 68.d),
+                  onPressed: () =>
+                      _selectMap(opponents, _pageController.page! - 1)),
+              SizedBox(width: 8.d),
+              Expanded(
+                  child: Widgets.skinnedButton(
+                      padding: EdgeInsets.fromLTRB(32.d, 28.d, 42.d, 42.d),
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const LoaderWidget(AssetType.image, "icon_battle"),
+                          SkinnedText("attack_l".l(), style: TStyles.large),
+                        ],
+                      ),
+                      size: ButtonSize.medium,
+                      onPressed: _attack)),
+              SizedBox(width: 8.d),
+              Widgets.skinnedButton(
+                  width: 230.d,
+                  alignment: Alignment.center,
+                  size: ButtonSize.medium,
+                  color: ButtonColor.green,
+                  isEnable: value.index < opponents.length - 1,
+                  child: Asset.load<Image>(
+                      "ui_arrow_${isRTL ? "back" : "forward"}",
+                      width: 68.d),
+                  onPressed: () =>
+                      _selectMap(opponents, _pageController.page! + 1)),
+            ]),
+          );
         });
   }
 
