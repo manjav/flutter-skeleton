@@ -33,23 +33,23 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return Stack(alignment: Alignment.topLeft, children: [
         const LoaderWidget(AssetType.animation, "map_home",
             fit: BoxFit.fitWidth),
-        Positioned(
+        PositionedDirectional(
             top: 380.d,
-            left: 32.d,
+            start: 32.d,
             child: Indicator("home", Values.leagueRank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupLeague.routeName))),
-        Positioned(
+        PositionedDirectional(
             top: 240.d,
-            left: 32.d,
+            start: 32.d,
             child: Indicator("home", Values.rank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupRanking.routeName))),
-        Positioned(
+        PositionedDirectional(
             top: 150.d,
-            right: 24.d,
+            end: 24.d,
             child: Widgets.button(
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
                 onPressed: () =>

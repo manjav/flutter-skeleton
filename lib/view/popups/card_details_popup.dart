@@ -103,11 +103,13 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                             padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
                             decoration: Widgets.imageDecore(
                                 "frame_hatch_button", ImageCenterSliceData(42)),
-                            child: Row(children: [
-                              Asset.load<Image>("icon_gold", height: 76.d),
-                              SkinnedText(_card.basePrice.compact(),
-                                  style: TStyles.large.copyWith(height: 1)),
-                            ]),
+                            child: Row(
+                                textDirection: TextDirection.ltr,
+                                children: [
+                                  Asset.load<Image>("icon_gold", height: 76.d),
+                                  SkinnedText(_card.basePrice.compact(),
+                                      style: TStyles.large.copyWith(height: 1)),
+                                ]),
                           )
                         ]),
                         onPressed: () => Overlays.insert(

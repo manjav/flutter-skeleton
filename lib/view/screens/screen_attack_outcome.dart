@@ -115,10 +115,10 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
                     height: 240.d,
                     width: 800.d,
                     child: _outResults()),
-                Positioned(
+                PositionedDirectional(
                     height: 322.d,
-                    right: 60.d,
-                    left: 180.d,
+                    end: 60.d,
+                    start: 180.d,
                     bottom: 180.d,
                     child: _prizeList()),
                 Positioned(
@@ -204,9 +204,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
   _prizeList() {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisExtent: 130.d,
-        ),
+            crossAxisCount: 3, mainAxisExtent: 130.d),
         itemCount: _prizes.length,
         itemBuilder: (c, i) =>
             _prizeItemBuilder(_prizes[i].key, _prizes[i].value));

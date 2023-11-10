@@ -93,13 +93,13 @@ class _LevelIndicatorState extends State<LevelIndicator> {
               child: LoaderWidget(AssetType.image, 'avatar_$_avatarId',
                   subFolder: 'avatars')),
           widget.showLevel
-              ? Positioned(
+              ? PositionedDirectional(
                   top: -24 * s,
                   width: 110 * s,
-                  left: widget.align == TextAlign.left
+                  start: widget.align == TextAlign.left
                       ? widget.size - 120 * s
                       : null,
-                  right: widget.align == TextAlign.right
+                  end: widget.align == TextAlign.right
                       ? widget.size - 120 * s
                       : null,
                   child: SkinnedText(_level.toString()))

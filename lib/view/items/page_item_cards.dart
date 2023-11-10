@@ -39,18 +39,18 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                 crossAxisSpacing: gap,
                 mainAxisSpacing: gap),
             itemBuilder: (c, i) => cardItemBuilder(c, i, cards[i], itemSize)),
-        Positioned(
-            left: 12.d,
+        PositionedDirectional(
             top: 28.d,
+            start: 12.d,
             width: 132.d,
             child: Widgets.skinnedButton(
                 icon: "icon_collection",
                 onPressed: () => Navigator.pushNamed(
                     context, Routes.popupCollection.routeName))),
-        Positioned(
-            left: 144.d,
+        PositionedDirectional(
             top: 28.d,
             width: 132.d,
+            start: 144.d,
             child: Widgets.skinnedButton(
                 icon: "icon_combo",
                 onPressed: () {

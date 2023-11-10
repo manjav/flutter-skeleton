@@ -101,17 +101,17 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
               height: 192.d,
               decoration: Widgets.imageDecore(
                   "frame_hatch", ImageCenterSliceData(80, 100))),
-          Positioned(
+          PositionedDirectional(
               top: -48.d,
-              left: 24.d,
+              start: 24.d,
               child: const LevelIndicator(showLevel: false)),
-          Positioned(
+          PositionedDirectional(
               top: 10.d,
-              left: 250.d,
+              start: 250.d,
               child: SkinnedText(_player!.name, style: TStyles.large)),
-          Positioned(
+          PositionedDirectional(
               top: 80.d,
-              left: 250.d,
+              start: 250.d,
               child: Row(children: [
                 SkinnedText("mood_l".l()),
                 SizedBox(width: 16.d),
@@ -150,9 +150,9 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
           alignment: const Alignment(0, -0.2),
           clipBehavior: Clip.none,
           children: [
-            Positioned(
+            PositionedDirectional(
                 top: -34.d,
-                left: 10.d,
+                start: 14.d,
                 child: Text(label, style: TStyles.tiny)),
             Row(mainAxisSize: MainAxisSize.min, children: [
               SizedBox(width: icon == null ? 16.d : 8.d),
@@ -237,8 +237,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         width: 940.d,
         height: 410.d,
         child: Stack(clipBehavior: Clip.none, children: [
-          Positioned(
-              top: -25.d, left: 60.d, child: SkinnedText("popupleague".l())),
+          PositionedDirectional(
+              top: -28.d, start: 60.d, child: SkinnedText("popupleague".l())),
           Positioned(
               top: 50.d,
               left: 80.d,

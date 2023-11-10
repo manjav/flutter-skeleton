@@ -108,10 +108,10 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                 children: [
                   _heroes.length > 1
                       ? Widgets.button(
-                      padding: EdgeInsets.all(22.d),
-                      width: 120.d,
-                      height: 120.d,
-                      onPressed: () => _setIndex(-1),
+                          padding: EdgeInsets.all(22.d),
+                          width: 120.d,
+                          height: 120.d,
+                          onPressed: () => _setIndex(-1),
                           child: Asset.load<Image>('arrow_left'))
                       : const SizedBox(),
                   Stack(alignment: Alignment.center, children: [
@@ -122,10 +122,10 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                   ]),
                   _heroes.length > 1
                       ? Widgets.button(
-                      padding: EdgeInsets.all(22.d),
-                      width: 120.d,
-                      height: 120.d,
-                      onPressed: () => _setIndex(1),
+                          padding: EdgeInsets.all(22.d),
+                          width: 120.d,
+                          height: 120.d,
+                          onPressed: () => _setIndex(1),
                           child: Asset.load<Image>('arrow_right'))
                       : const SizedBox(),
                 ],
@@ -137,6 +137,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
               SizedBox(
                   height: 160.d,
                   child: Row(
+                      textDirection: TextDirection.ltr,
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [

@@ -190,22 +190,28 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         padding: padding ?? EdgeInsets.only(left: 16.d, right: 16.d),
         decoration:
             Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Asset.load<Image>(icon, height: iconSize),
-          SizedBox(width: 12.d),
-          SkinnedText(label)
-        ]));
+        child: Row(
+            textDirection: TextDirection.ltr,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Asset.load<Image>(icon, height: iconSize),
+              SizedBox(width: 12.d),
+              SkinnedText(label)
+            ]));
   }
 
   Widget _upgradable(ButtonColor color, String icon, String label) {
     return Widgets.skinnedButton(
         padding: EdgeInsets.fromLTRB(24.d, 0, 28.d, 20.d),
         color: color,
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Asset.load<Image>(icon, width: 50.d),
-          SizedBox(width: 8.d),
-          SkinnedText(label),
-        ]),
+        child: Row(
+            mainAxisSize: MainAxisSize.min,
+            textDirection: TextDirection.ltr,
+            children: [
+              Asset.load<Image>(icon, width: 50.d),
+              SizedBox(width: 12.d),
+              SkinnedText(label),
+            ]),
         onPressed: () async {
           await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
               arguments: {"index": 1});

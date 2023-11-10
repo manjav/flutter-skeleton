@@ -56,10 +56,10 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
           child: Stack(children: [
             Positioned(
                 top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
-            Positioned(
+            PositionedDirectional(
                 top: 32.d,
-                left: 54.d,
-                right: 32.d,
+                start: 54.d,
+                end: 32.d,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,

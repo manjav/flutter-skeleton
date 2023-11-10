@@ -49,9 +49,9 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
         color: TColors.transparent,
         child: Widgets.button(
             child: Stack(children: [
-              Positioned(
+              PositionedDirectional(
                   top: widget.y,
-                  left: 240.d,
+                  start: 240.d,
                   width: 680.d,
                   height: 192.d + (items.length / 2).ceil() * 125.d,
                   child: Widgets.rect(
@@ -67,7 +67,6 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
                                 xp: member.xp,
                                 level: member.level,
                                 avatarId: member.avatarId),
-                            SizedBox(width: 16.d),
                             SizedBox(
                                 width: 240.d,
                                 child: SkinnedText(member.name,
