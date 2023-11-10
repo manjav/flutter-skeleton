@@ -50,16 +50,14 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       SizedBox(height: 168.d),
       Widgets.rect(
           radius: 32.d,
+          width: DeviceInfo.size.width * 0.96,
           height: 156.d,
           color: TColors.black80,
-          child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (var i = 0; i < tabsName.length; i++)
-                  _tabItemRenderer(i, tabsName[i])
-              ])),
+          child: Row(children: [
+            for (var i = 0; i < tabsName.length; i++)
+              Expanded(
+                  flex: i == 1 ? 5 : 4, child: _tabItemRenderer(i, tabsName[i]))
+          ])),
       SizedBox(height: 32.d),
       Expanded(
           child: GridView.builder(
@@ -77,9 +75,8 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     var title = "auction_$tabName";
     return Widgets.button(
         radius: 20.d,
-        width: 148.d,
         alignment: Alignment.center,
-        margin: EdgeInsets.all(14.d),
+        margin: EdgeInsets.all(8.d),
         padding: EdgeInsets.zero,
         color: isSelected ? TColors.accent : TColors.transparent,
         child: Column(
