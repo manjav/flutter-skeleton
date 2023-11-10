@@ -135,20 +135,21 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                   hero, hero.getGainedAttributesByItems()),
               SizedBox(height: 40.d),
               SizedBox(
-                  height: 128.d,
+                  height: 160.d,
                   child: Row(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Widgets.skinnedButton(
-                            label: "×",
-                            width: 140.d,
+                            color: ButtonColor.cream,
+                            label: "cancel_l".l(),
+                            width: 340.d,
                             padding: EdgeInsets.only(bottom: 12.d),
                             onPressed: () => Navigator.pop(context)),
                         SizedBox(width: 12.d),
                         Widgets.skinnedButton(
-                            label: "Save",
-                            width: 320.d,
+                            label: "save_l".l(),
+                            width: 340.d,
                             color: ButtonColor.green,
                             padding: EdgeInsets.only(bottom: 16.d),
                             onPressed: _saveChanges),
