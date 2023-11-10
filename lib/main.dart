@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../services/service_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'blocs/account_bloc.dart';
 import 'blocs/opponents_bloc.dart';
@@ -89,20 +89,19 @@ class _MyAppState extends State<MyApp>
               BlocProvider(create: (context) => OpponentsBloc())
             ],
             child: MaterialApp(
-                navigatorObservers: [MyApp._observer],
-
+                navigatorObservers: [
+                  MyApp._observer
+                ],
                 // Provide the generated AppLocalizations to the MaterialApp. This
                 // allows descendant Widgets to display the correct translations
                 // depending on the user's locale.
-                /* localizationsDelegates: const [
-                  AppLocalizations.delegate,
+                localizationsDelegates: const [
+                  // AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,
                 ],
-                supportedLocales: const [
-                  Locale('en', ''), // English, no country code
-                ], */
+                supportedLocales: Localization.locales,
 
                 // Use AppLocalizations to configure the correct application title
                 // depending on the user's locale.
@@ -116,6 +115,9 @@ class _MyAppState extends State<MyApp>
                 // preferred ThemeMode (light, dark, or system default) from the
                 // SettingsController to display the correct theme.
                 theme: Themes.darkData,
+                locale: Localization.locales.firstWhere((l) =>
+                    l.languageCode ==
+                    Pref.language.getString(defaultValue: 'en')),
                 // darkTheme: Themes.darkData,
                 // themeMode: settingsController.themeMode,
 
