@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../main.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
@@ -38,21 +39,11 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
             _onRowPressed),
         _row(
             Pref.language,
-            IgnorePointer(
-                ignoring: true,
-                child: DropdownButton<String>(
-                  value: Pref.language.getString(),
-                  style: TStyles.medium,
-                  icon: Asset.load<Image>("icon_chevron", width: 44.d),
-                  onChanged: (String? value) =>
-                      setState(() => Pref.language.setString(value!)),
-                  items: ['en', 'fa']
-                      .map<DropdownMenuItem<String>>((String value) =>
-                          DropdownMenuItem<String>(
-                              value: value,
-                              child: SkinnedText("${"settings_$value".l()}  ")))
-                      .toList(),
-                )),
+            Row(children: [
+              SkinnedText("settings_${Pref.language.getString()}".l()),
+              SizedBox(width: 16.d),
+              Asset.load<Image>("icon_chevron", width: 44.d),
+            ]),
             _onRowPressed),
         Widgets.divider(width: 120.d, margin: 20.d),
         SizedBox(height: 16.d),
@@ -82,7 +73,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
   void _onRowPressed(Pref setting) {
     if (setting == Pref.language) {
-      toast("coming_soon".l());
+      _showLocales();
       return;
     }
     setting.setBool(!setting.getBool());
@@ -131,5 +122,49 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
       _ => Routes.popupRedeemGift,
     };
     Navigator.pushNamed(context, route.routeName);
+  }
+
+  void _showLocales() {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: TColors.transparent,
+        constraints: BoxConstraints.tightFor(height: 700.d),
+        builder: (BuildContext context) {
+          return Widgets.rect(
+            decoration: BoxDecoration(
+              color: TColors.primary90,
+              border: Border.all(color: TColors.clay, width: 8.d),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(80.d)),
+            ),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              SizedBox(height: 20.d),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Asset.load<Image>("icon_language", height: 70.d),
+                SizedBox(width: 20.d),
+                Text("settings_language".l()),
+              ]),
+              SizedBox(height: 20.d),
+              Expanded(
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(100.d)),
+                      child: ListView.builder(
+                          padding: EdgeInsets.all(12.d),
+                          itemExtent: 240.d,
+                          itemBuilder: (c, i) =>
+                              _localeItemBuilder(Localization.locales[i]),
+                          itemCount: Localization.locales.length))),
+            ]),
+          );
+        });
+  }
+
+  Widget _localeItemBuilder(Locale local) {
+    return Widgets.button(
+      child: SkinnedText("settings_${local.languageCode}".l()),
+      onPressed: () {
+        Pref.language.setString(local.languageCode);
+        MyApp.restartApp(context);
+      },
+    );
   }
 }
