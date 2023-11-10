@@ -8,6 +8,7 @@ import '../../utils/ilogger.dart';
 import 'iservices.dart';
 
 class Localization extends IService {
+  static var locales = const [Locale('en'), Locale('fa')];
   static Map<String, dynamic>? _sentences;
   var dir = TextDirection.ltr;
   var languageCode = "en";
@@ -20,11 +21,12 @@ class Localization extends IService {
 
   @override
   initialize({List<Object>? args}) async {
+    var locale = Localizations.localeOf(args![0] as BuildContext);
+    isRTL = locale.languageCode == "fa" || locale.languageCode == "ar";
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
-
     await _getData('keys.json');
-    await _getData('locale.json');
+    await _getData('${locale.languageCode}.json');
     super.initialize();
   }
 
