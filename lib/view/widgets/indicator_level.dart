@@ -95,11 +95,12 @@ class _LevelIndicatorState extends State<LevelIndicator> {
           widget.showLevel
               ? Positioned(
                   top: -24 * s,
+                  width: 110 * s,
                   left: widget.align == TextAlign.left
-                      ? widget.size - 56 * s
+                      ? widget.size - 120 * s
                       : null,
                   right: widget.align == TextAlign.right
-                      ? widget.size - 56 * s
+                      ? widget.size - 120 * s
                       : null,
                   child: SkinnedText(_level.toString()))
               : const SizedBox(),
