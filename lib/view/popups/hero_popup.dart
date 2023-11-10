@@ -106,24 +106,28 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Widgets.button(
+                  _heroes.length > 1
+                      ? Widgets.button(
                       padding: EdgeInsets.all(22.d),
                       width: 120.d,
                       height: 120.d,
                       onPressed: () => _setIndex(-1),
-                      child: Asset.load<Image>('arrow_left')),
+                          child: Asset.load<Image>('arrow_left'))
+                      : const SizedBox(),
                   Stack(alignment: Alignment.center, children: [
                     Asset.load<Image>("card_frame_hero_edit", width: 420.d),
                     LoaderWidget(AssetType.image, name,
                         subFolder: "cards", width: 320.d, key: _keys[value]),
                     for (var i = 0; i < 4; i++) _itemHolder(i, items[i])
                   ]),
-                  Widgets.button(
+                  _heroes.length > 1
+                      ? Widgets.button(
                       padding: EdgeInsets.all(22.d),
                       width: 120.d,
                       height: 120.d,
                       onPressed: () => _setIndex(1),
-                      child: Asset.load<Image>('arrow_right')),
+                          child: Asset.load<Image>('arrow_right'))
+                      : const SizedBox(),
                 ],
               ),
               SizedBox(height: 24.d),
