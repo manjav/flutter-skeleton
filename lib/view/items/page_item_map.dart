@@ -7,6 +7,7 @@ import '../../data/core/building.dart';
 import '../../data/core/infra.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets/building_balloon.dart';
 import '../../view/widgets/indicator.dart';
@@ -100,7 +101,9 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
                   top: -80.d,
                   width: 148.d,
                   child: LoaderWidget(AssetType.image, "icon_$icon")),
-              Positioned(bottom: -10.d, child: SkinnedText(text.l()))
+              Positioned(
+                  bottom: -10.d,
+                  child: SkinnedText(text.l(), style: TStyles.large))
             ],
           ),
         ));
