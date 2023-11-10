@@ -21,6 +21,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 
   @override
   void initState() {
+    _questsCount = accountBloc.account!.questsCount - 1;
     _lands = List.generate(4, (index) => ValueNotifier([]));
     super.initState();
   }
@@ -63,9 +64,9 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 
   void _riveEventsListener(RiveEvent event, int mapIndex) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
-      _questsCount = accountBloc.account!.questsCount;
       if (event.name == "click") {
         await Navigator.pushNamed(context, Routes.deck.routeName);
+        _questsCount = accountBloc.account!.questsCount - 1;
         // Update city levels after quest
         for (var i = 0; i < _lands[mapIndex].value.length; i++) {
           _lands[mapIndex].value[i].state?.value =
