@@ -106,7 +106,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
         width: 260.d,
         height: 260.d / CardItem.aspectRatio,
         child: SkinnedText(
-          "${"card_category_$category".l()}\n${"cards_l".l()}",
+          "card_category_$category".l(),
           textAlign: TextAlign.center,
         ),
         onPressed: () => setState(() => _selectedCategory = category));
@@ -117,8 +117,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
     return Widgets.button(
         padding: EdgeInsets.all(8.d),
         decoration: selected ? Widgets.imageDecore("level_badge_border") : null,
-        child: Asset.load<Image>(
-            "level_badge_${fruit.cards[index].rarity}",
+        child: Asset.load<Image>("level_badge_${fruit.cards[index].rarity}",
             width: 100.d),
         onPressed: () => setState(() => _selectedLevelIndex = index));
   }
