@@ -11,6 +11,7 @@ class SkinnedText extends StatelessWidget {
   final Alignment alignment;
   final TextAlign? textAlign;
   final TextOverflow? overflow;
+  final TextDirection? textDirection;
   const SkinnedText(
     this.text, {
     super.key,
@@ -19,6 +20,7 @@ class SkinnedText extends StatelessWidget {
     this.textAlign,
     this.strokeWidth,
     this.alignment = Alignment.center,
+    this.textDirection,
     this.overflow,
   });
 
@@ -30,6 +32,7 @@ class SkinnedText extends StatelessWidget {
       Text(text,
           overflow: overflow,
           textAlign: textAlign,
+          textDirection: textDirection,
           style: style.copyWith(
               // backgroundColor: TColors.accent,
               foreground: Paint()
@@ -40,6 +43,7 @@ class SkinnedText extends StatelessWidget {
       Text(text,
           overflow: overflow,
           textAlign: textAlign,
+          textDirection: textDirection,
           style: style.copyWith(
             color: style.color == TColors.primary10
                 ? TColors.primary
