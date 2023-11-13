@@ -128,7 +128,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
       account.cards.remove(card!.id);
     }
 
-    account.update(data);
+    account.update(context, data);
     if (!mounted) return;
     BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
   }

@@ -365,8 +365,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   _tryRPC(RpcId id, Map<String, dynamic> params) async {
     try {
       var data = await rpc(id, params: params);
-      _account.update(data);
       if (!mounted) return;
+      _account.update(context, data);
       accountBloc.add(SetAccount(account: _account));
       setState(() {});
       return data;

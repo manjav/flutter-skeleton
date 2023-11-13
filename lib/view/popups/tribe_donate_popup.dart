@@ -88,8 +88,10 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
         RpcParams.gold.name: _donateValue,
       });
 
-      account.update(result);
-      if (mounted) Navigator.pop(context);
+      if (mounted) {
+        account.update(context, result);
+        Navigator.pop(context);
+      }
     } finally {}
   }
 }

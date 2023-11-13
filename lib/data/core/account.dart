@@ -438,7 +438,7 @@ class Account extends Player {
     }
   }
 
-  Map<String, dynamic> update(Map<String, dynamic> data) {
+  Map<String, dynamic> update(BuildContext context, Map<String, dynamic> data) {
     _updateInteger(data);
     if (!data.containsKey("gold")) {
       if (data.containsKey("player_gold")) {

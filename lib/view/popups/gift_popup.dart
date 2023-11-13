@@ -62,8 +62,8 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
     try {
       var data = await rpc(RpcId.redeemGift,
           params: {RpcParams.code.name: _textController.text});
-      _account.update(data);
       if (!mounted) return;
+      _account.update(context, data);
       accountBloc.add(SetAccount(account: _account));
     } finally {}
   }

@@ -185,7 +185,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                               SkinnedText("+${card.bidStep.compact()}",
                                   style: TStyles.large)
                             ]),
-                            onPressed: () => _bid(card))
+                            onPressed: () => _bid(context, card))
                         : const SizedBox(),
                   ])),
             ],
@@ -193,7 +193,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
         ]));
   }
 
-  _bid(AuctionCard card) async {
+  _bid(BuildContext context, AuctionCard card) async {
     try {
       var data = await rpc(RpcId.auctionBid, params: {"auction_id": card.id});
       var auction = AuctionCard(_account, data["auction"]);
@@ -201,7 +201,9 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       if (index > -1) {
         setState(() => _cards[index] = auction);
       }
-      _account.update(data);
+      if (context.mounted) {
+        _account.update(context, data);
+      }
       toast("auction_added".l());
     } finally {}
   }

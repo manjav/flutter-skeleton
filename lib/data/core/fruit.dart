@@ -225,8 +225,8 @@ class AccountCard extends AbstractCard {
       var data = await getService<HttpConnection>(context)
           .tryRpc(context, RpcId.coolOff, params: {RpcParams.card_id.name: id});
       lastUsedAt = 0;
-      account.update(data);
       if (context.mounted) {
+        account.update(context, data);
         getAccountBloc(context).add(SetAccount(account: account));
       }
     } on RpcException catch (e) {
@@ -388,7 +388,7 @@ class HeroCard with ServiceProvider {
       if (!context.mounted) return;
       data["hero_id"] = card.id;
       var accountBloc = getAccountBloc(context);
-      accountBloc.account!.update(data);
+      accountBloc.account!.update(context, data);
       accountBloc.add(SetAccount(account: accountBloc.account!));
     } finally {}
   }

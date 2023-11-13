@@ -95,7 +95,9 @@ class _TreasuryBuildingPopupState
     try {
       var data = await rpc(id, params: {RpcParams.amount.name: amount});
       account.bank_account_balance = data["bank_account_balance"];
-      account.update(data);
+      if (mounted) {
+        account.update(context, data);
+      }
       accountBloc.add(SetAccount(account: account));
     } finally {}
   }

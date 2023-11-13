@@ -134,7 +134,9 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
       var result = await rpc(RpcId.evolveCard,
           params: {RpcParams.sacrifices.name: "[${hero.card.id}]"});
       account.cards.remove(hero.card.id);
-      account.update(result);
+      if (mounted) {
+        account.update(context, result);
+      }
 
       // Replace hero
       AccountCard card = result["card"];

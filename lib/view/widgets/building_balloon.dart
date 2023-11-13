@@ -51,8 +51,8 @@ class _BuildingBalloonState extends State<BuildingBalloon>
     try {
       var result = await rpc(RpcId.collectGold, params: params);
       if (result is List) return;
-      account.update(result);
       if (mounted) {
+        account.update(context, result);
         accountBloc.add(SetAccount(account: account));
       }
     } finally {}

@@ -81,7 +81,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
           .tryRpc(context, RpcId.upgrade, params: params);
       if (!mounted) return;
       var accountBloc = BlocProvider.of<AccountBloc>(context);
-      accountBloc.account!.update(data);
+      accountBloc.account!.update(context, data);
       building.level = data["level"];
       accountBloc.add(SetAccount(account: accountBloc.account!));
     } finally {}

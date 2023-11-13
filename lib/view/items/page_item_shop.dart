@@ -399,8 +399,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       var result = await rpc(RpcId.buyCardPack, params: params);
       result["achieveCards"] = result['cards'];
       result.remove('cards');
-      _account.update(result);
       if (mounted) {
+        _account.update(context, result);
         if (_hackMode) {
           await Future.delayed(const Duration(milliseconds: 1750));
           if (mounted) _onItemPressed(item);
