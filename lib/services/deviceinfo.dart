@@ -25,7 +25,7 @@ class DeviceInfo extends IService {
     var height = math.max(size.width, size.height);
     ratio = width / 1080;
     aspectRatio = width / height;
-    log("${args[0]} ${args[1]} $ratio");
+    log("◢◤◢◤◢◤◢◤◢◤◢ ${args[0]} ${args[1]} $ratio ◢◤◢◤◢◤◢◤◢◤◢");
     var deviceInfoPlugin = DeviceInfoPlugin();
     try {
       if (kIsWeb) {
