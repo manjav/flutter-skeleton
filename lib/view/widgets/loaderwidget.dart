@@ -18,6 +18,7 @@ class LoaderWidget extends StatefulWidget {
   final double? height;
   final String? baseUrl;
   final Function(Artboard)? onRiveInit;
+  final CallbackAssetLoader? riveAssetLoader;
 
   const LoaderWidget(
     this.type,
@@ -27,6 +28,7 @@ class LoaderWidget extends StatefulWidget {
     this.width,
     this.height,
     this.onRiveInit,
+    this.riveAssetLoader,
     this.baseUrl,
     super.key,
   });
@@ -39,6 +41,7 @@ class LoaderWidget extends StatefulWidget {
 class _LoaderWidgetState extends State<LoaderWidget> {
   late Loader _loader;
   Widget? _result;
+  RiveFile? _riveFile;
   String _poolName = "";
 
   @override
@@ -63,6 +66,11 @@ class _LoaderWidgetState extends State<LoaderWidget> {
           hash: LoaderWidget.hashMap[path]);
       LoaderWidget.cacshedLoders[_poolName] = _loader;
     }
+    if (widget.type == AssetType.animation ||
+        widget.type == AssetType.animationZipped) {
+      _riveFile = await RiveFile.file(_loader.file!.path,
+          assetLoader: widget.riveAssetLoader);
+    }
     if (mounted) {
       _result = _getResult();
       setState(() {});
@@ -74,7 +82,7 @@ class _LoaderWidgetState extends State<LoaderWidget> {
     switch (widget.type) {
       case AssetType.animation:
       case AssetType.animationZipped:
-        return RiveAnimation.file(_loader.file!.path,
+        return RiveAnimation.direct(_riveFile!,
             onInit: ((p0) => widget.onRiveInit?.call(p0)), fit: widget.fit);
       case AssetType.image:
         return Image.memory(Uint8List.fromList(_loader.bytes!),
