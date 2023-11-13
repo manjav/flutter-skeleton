@@ -83,7 +83,9 @@ class _LevelIndicatorState extends State<LevelIndicator> {
             shadowWidth: 20 * s,
             progressWidth: 8 * s,
             borderRadius: 40 * s,
-            startAngle: StartAngle.topRight,
+            startAngle: widget.align == TextAlign.left
+                ? StartAngle.topLeft
+                : StartAngle.topRight,
             shadowColor: TColors.primary20,
             progressColor: TColors.green,
           ),

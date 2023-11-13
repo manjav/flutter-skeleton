@@ -56,7 +56,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
                     Navigator.pushNamed(context, Routes.popupInbox.routeName))),
         _building(state.account, Buildings.defense, 400, 300),
         _building(state.account, Buildings.offense, 95, 670),
-        _building(state.account, Buildings.base, 400, 840),
+        _building(state.account, Buildings.base, 400, 820),
         _building(state.account, Buildings.treasury, 130, 1140),
         _building(state.account, Buildings.mine, 754, 1140),
         _button("battle", "battle_l", 150, 270, 442, () {
@@ -104,8 +104,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               Positioned(
                   bottom: -10.d,
                   child: SkinnedText(text.l(), style: TStyles.large))
-            ],
-          ),
+              ]),
         ));
   }
 
