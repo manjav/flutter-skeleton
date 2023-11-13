@@ -41,6 +41,7 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
         child: Stack(children: [
+          LoaderWidget(AssetType.animation, "levelup", onRiveInit: _onRiveInit),
           _rewardsBuilder(),
         ]),
         onPressed: () {
@@ -48,6 +49,22 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
             Navigator.pop(context);
           }
         });
+  }
+
+  _onRiveInit(Artboard artboard) {
+    String level = "${widget.args["level"] ?? 123}";
+    artboard.component<TextValueRun>('text_level')!.text = level;
+    artboard.component<TextValueRun>('text_level_stroke')!.text = level;
+    artboard.component<TextValueRun>('text_level_shadow')!.text = level;
+    var controller = StateMachineController.fromArtboard(artboard, "Levelup")!;
+    controller.addEventListener(_onRiveEvent);
+    artboard.addController(controller);
+  }
+  _onRiveEvent(RiveEvent event) async {
+    if (event.name == "play") {
+      await Future.delayed(_animationController.duration!);
+      _animationController.forward();
+    }
   }
 
   Widget _rewardsBuilder() {
