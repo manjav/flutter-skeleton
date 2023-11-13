@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
@@ -19,11 +21,20 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   int _questsCount = 0;
   List<ValueNotifier<List<City>>> _lands = [];
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     _questsCount = accountBloc.account!.questsCount - 1;
     _lands = List.generate(4, (index) => ValueNotifier([]));
     super.initState();
+  }
+
+  @override
+  void onRender(Duration timeStamp) {
+    super.onRender(timeStamp);
+    _scrollController.jumpTo(_questsCount / 130 * DeviceInfo.size.height * 0.7 +
+        Random().nextDouble() * DeviceInfo.size.height * 0.4);
   }
 
   @override
@@ -35,6 +46,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
         child: ListView.builder(
             reverse: true,
             itemCount: _lands.length,
+            controller: _scrollController,
             itemBuilder: _mapItemRenderer));
   }
 
