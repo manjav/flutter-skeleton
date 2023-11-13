@@ -3,8 +3,11 @@
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
+import '../../view/route_provider.dart';
 import 'adam.dart';
 import 'building.dart';
 import 'fruit.dart';
@@ -504,6 +507,10 @@ class Account extends Player {
         card.base = loadingData.baseCards[newCard['base_card_id']]!;
       }
       data["card"] = card;
+    }
+
+    if ((data["levelup_gold_added"] ?? 0) > 0) {
+      Navigator.pushNamed(context, Routes.levelup.routeName, arguments: data);
     }
 
     _addDeadline(data, xpboostCreatedAt, xpboostId);

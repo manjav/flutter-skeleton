@@ -33,6 +33,7 @@ import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/quest_screen.dart';
 import 'screens/screen_attack_outcome.dart';
+import 'screens/screen_levelup.dart';
 import 'screens/screen_livebattle.dart';
 import 'screens/screen_livebattle_outcome.dart';
 import 'screens/screen_open_pack.dart';
@@ -48,6 +49,7 @@ enum Routes {
   loading,
   livebattle,
   openPack,
+  levelup,
 
   popupNone,
   popupMessage,
@@ -91,6 +93,7 @@ extension RouteProvider on Routes {
       "/battleOut" => AttackOutScreen(Routes.battleOut, args: args ?? {}),
       "/livebattleOut" => LiveOutScreen(args: args ?? {}),
       "/livebattle" => LiveBattleScreen(args: args ?? {}),
+      "/levelup" => LevelupScreen(args: args ?? {}),
       "/openPack" => OpenPackScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
