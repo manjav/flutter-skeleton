@@ -112,12 +112,14 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
           PositionedDirectional(
               top: 80.d,
               start: 250.d,
-              child: Row(children: [
-                SkinnedText("mood_l".l()),
-                SizedBox(width: 16.d),
-                LoaderWidget(AssetType.image, "mood_${_player!.moodId}",
-                    subFolder: "moods", width: 50.d)
-              ])),
+              child: _player!.moodId > 0
+                  ? Row(children: [
+                      SkinnedText("mood_l".l()),
+                      SizedBox(width: 16.d),
+                      LoaderWidget(AssetType.image, "mood_${_player!.moodId}",
+                          subFolder: "moods", width: 50.d)
+                    ])
+                  : const SizedBox()),
           Positioned(
               top: 220.d,
               left: 60.d,
