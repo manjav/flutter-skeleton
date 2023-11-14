@@ -23,7 +23,8 @@ class LevelupScreen extends AbstractScreen {
   createState() => _LevelupScreenState();
 }
 
-class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
+class _LevelupScreenState extends AbstractScreenState<LevelupScreen>
+    with RewardScreenMixin {
   @override
   List<Widget> appBarElementsLeft() => [];
   @override
@@ -46,10 +47,14 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
         alignment: Alignment.center,
         child: Stack(children: [
           backgrounBuilder(),
+          LoaderWidget(AssetType.animation, "levelup",
+              onRiveInit: _onRiveInit, riveAssetLoader: _onRiveAssetLoad),
         ]),
         onPressed: () {
-          if (_animationController.isCompleted) {
-            Navigator.pop(context);
+          if (readyToClose) {
+            closeInput?.value = true;
+          } else {
+            skipInput?.value = true;
           }
         });
   }
@@ -61,9 +66,19 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
     artboard.component<TextValueRun>('text_level_shadow')!.text = level;
     var controller = StateMachineController.fromArtboard(artboard, "Levelup")!;
     controller.addEventListener(_onRiveEvent);
+    skipInput = controller.findInput<bool>("skip") as SMITrigger;
+    closeInput = controller.findInput<bool>("close") as SMITrigger;
     artboard.addController(controller);
   }
+
   _onRiveEvent(RiveEvent event) async {
+    if (event.name == "ready") {
+      readyToClose = true;
+    } else if (event.name == "close") {
+      WidgetsBinding.instance
+          .addPostFrameCallback((t) => Navigator.pop(context));
+    }
+  }
 
   Future<bool> _onRiveAssetLoad(
       FileAsset asset, Uint8List? embeddedBytes) async {
