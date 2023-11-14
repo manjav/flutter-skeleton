@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
+// ignore: implementation_imports
+import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../services/deviceinfo.dart';
+import '../../data/core/fruit.dart';
+import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/loaderwidget.dart';
@@ -26,13 +30,13 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
   List<Widget> appBarElementsRight() => [];
   late AnimationController _animationController;
   int _gold = 0;
+  AccountCard? _card;
 
   @override
   void initState() {
     super.initState();
     _gold = widget.args["levelup_gold_added"] ?? 100;
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;
   }
 
   @override
@@ -61,40 +65,37 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
     artboard.addController(controller);
   }
   _onRiveEvent(RiveEvent event) async {
-    if (event.name == "play") {
-      await Future.delayed(_animationController.duration!);
-      _animationController.forward();
+  Future<bool> _onRiveAssetLoad(
+      FileAsset asset, Uint8List? embeddedBytes) async {
+    if (asset is ImageAsset) {
+      if (asset.name == "cardIcon") {
+        _loadCardIcon(asset);
+        return true;
+      } else if (asset.name == "cardFrame") {
+        _loadCardFrame(asset);
+        return true;
+      }
     }
+    return false; // load the default embedded asset
   }
 
-  Widget _rewardsBuilder() {
-    return Align(
-        alignment: const Alignment(0, 0.4),
-        child: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return Opacity(
-                  opacity: _animationController.value,
-                  child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      textDirection: TextDirection.ltr,
-                      children: [
-                        Widgets.rect(
-                            width: 100.d,
-                            height: 130.d,
-                            padding: EdgeInsets.all(16.d),
-                            decoration: Widgets.imageDecore("ui_prize_frame"),
-                            child: Asset.load<Image>("icon_gold")),
-                        SizedBox(width: 12.d),
-                        SkinnedText("+ ${_gold.compact()}",
-                            textDirection: TextDirection.ltr),
-                      ]));
-            }));
+  Future<void> _loadCardIcon(ImageAsset asset) async {
+    var loader = await LoaderWidget.load(AssetType.image, _card!.base.getName(),
+        subFolder: "cards");
+    while (loader.metadata == null) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    var image = await ImageAsset.parseBytes(loader.metadata as Uint8List);
+    asset.image = image;
   }
 
-  @override
-  void dispose() {
-    _animationController.stop();
-    super.dispose();
+  Future<void> _loadCardFrame(ImageAsset asset) async {
+    var category = _card!.base.fruit.category;
+    var level = category == 0 ? "_${_card!.base.rarity}" : "";
+    var bytes =
+        await rootBundle.load('assets/images/card_frame_$category$level.webp');
+    var image = await ImageAsset.parseBytes(bytes.buffer.asUint8List());
+    asset.image = image;
+  }
   }
 }
