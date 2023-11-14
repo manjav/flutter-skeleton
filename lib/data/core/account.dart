@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
@@ -445,6 +446,10 @@ class Account extends Player {
 
   Map<String, dynamic> update(BuildContext context, Map<String, dynamic> data) {
     _updateInteger(data);
+    if (data.containsKey("level")) {
+      level = Utils.toInt(data["level"], level);
+    }
+
     if (!data.containsKey("gold")) {
       if (data.containsKey("player_gold")) {
         gold = Utils.toInt(data["player_gold"]);
