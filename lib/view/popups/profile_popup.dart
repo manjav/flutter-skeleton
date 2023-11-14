@@ -80,7 +80,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
           ? null
           : Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                   _headerBuilder(),
                   _medalsBuilder(),
