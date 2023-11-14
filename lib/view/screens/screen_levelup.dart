@@ -60,10 +60,19 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen>
   }
 
   _onRiveInit(Artboard artboard) {
-    String level = "${widget.args["level"] ?? 123}";
-    artboard.component<TextValueRun>('text_level')!.text = level;
-    artboard.component<TextValueRun>('text_level_stroke')!.text = level;
-    artboard.component<TextValueRun>('text_level_shadow')!.text = level;
+    text(String name, String value) {
+      artboard.component<TextValueRun>(name)?.text = value;
+      artboard.component<TextValueRun>("${name}_stroke")?.text = value;
+      artboard.component<TextValueRun>("${name}_shadow")?.text = value;
+    }
+
+    text("goldText", "$_gold");
+    text("levelText", "${widget.args["level"] ?? 123}");
+    text("cardNameText", "${_card!.base.fruit.name}_t".l());
+    text("cardLevelText", "${_card!.base.rarity}");
+    text("cardPowerText", "ˢ${_card!.power.compact()}");
+    text("commentText", "tap_close".l());
+
     var controller = StateMachineController.fromArtboard(artboard, "Levelup")!;
     controller.addEventListener(_onRiveEvent);
     skipInput = controller.findInput<bool>("skip") as SMITrigger;
