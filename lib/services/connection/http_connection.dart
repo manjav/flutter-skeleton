@@ -48,6 +48,7 @@ class HttpConnection extends IService {
     }
     var data = await rpc(RpcId.playerLoad, params: params);
     loadData.account = Account.initialize(data, loadData);
+    Pref.restoreKey.setString(loadData.account.restoreKey);
     super.initialize();
     return loadData;
   }
