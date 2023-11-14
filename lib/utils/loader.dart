@@ -14,6 +14,7 @@ class Loader with ILogger {
   File? file;
   List<int>? bytes;
   String path = "";
+  dynamic metadata;
 
   Future<File?> load(String path, String url,
       {Function(double)? onProgress,

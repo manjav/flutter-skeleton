@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
+// ignore: implementation_imports
+import 'package:rive/src/rive_core/assets/file_asset.dart' as rive;
 
 import '../../utils/assets.dart';
 import '../../utils/loader.dart';
@@ -18,7 +20,8 @@ class LoaderWidget extends StatefulWidget {
   final double? height;
   final String? baseUrl;
   final Function(Artboard)? onRiveInit;
-  final CallbackAssetLoader? riveAssetLoader;
+  final Future<bool> Function(rive.FileAsset asset, Uint8List? embeddedBytes)?
+      riveAssetLoader;
 
   const LoaderWidget(
     this.type,
@@ -36,59 +39,77 @@ class LoaderWidget extends StatefulWidget {
   @override
   createState() => _LoaderWidgetState();
   static final Map<String, Loader> cacshedLoders = {};
+
+  static Future<Loader> load(AssetType type, String name,
+      {String? baseUrl,
+      String? subFolder,
+      Future<bool> Function(rive.FileAsset asset, Uint8List? embeddedBytes)?
+          riveAssetLoader}) async {
+    var key = "${type.name}_$name";
+    var loader = cacshedLoders[key] ?? Loader();
+    var url =
+        baseUrl ?? "${LoaderWidget.baseURL}/${type.folder(subFolder ?? '')}";
+    var netPath = "$name.${type.extension}";
+    var path = "$name.${type.type}";
+    if (loader.path.isEmpty) {
+      await loader.load(path, '$url/$netPath', hash: hashMap[path]);
+    }
+    if (type == AssetType.image || type == AssetType.vector) {
+      loader.metadata = Uint8List.fromList(loader.bytes!);
+    }
+    if (type == AssetType.animation || type == AssetType.animationZipped) {
+      loader.metadata = await RiveFile.file(loader.file!.path,
+          assetLoader: riveAssetLoader != null
+              ? CallbackAssetLoader(riveAssetLoader)
+              : null);
+    }
+    cacshedLoders[key] = loader;
+    return loader;
+  }
 }
 
 class _LoaderWidgetState extends State<LoaderWidget> {
-  late Loader _loader;
   Widget? _result;
-  RiveFile? _riveFile;
-  String _poolName = "";
+  String get poolName => "${widget.type.name}_${widget.name}";
 
   @override
   void initState() {
-    _poolName = "${widget.type.name}_${widget.name}";
-    _loader = LoaderWidget.cacshedLoders[_poolName] ?? Loader();
-    _load();
+    _loadWidget();
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) =>
-      SizedBox(width: widget.width, height: widget.height, child: _result);
-
-  Future<void> _load() async {
-    var url = widget.baseUrl ??
-        "${LoaderWidget.baseURL}/${widget.type.folder(widget.subFolder ?? '')}";
-    var netPath = "${widget.name}.${widget.type.extension}";
-    var path = "${widget.name}.${widget.type.type}";
-    if (_loader.path.isEmpty) {
-      await _loader.load(path, '$url/$netPath',
-          hash: LoaderWidget.hashMap[path]);
-      LoaderWidget.cacshedLoders[_poolName] = _loader;
-    }
-    if (widget.type == AssetType.animation ||
-        widget.type == AssetType.animationZipped) {
-      _riveFile = await RiveFile.file(_loader.file!.path,
-          assetLoader: widget.riveAssetLoader);
-    }
+  _loadWidget() async {
+    await LoaderWidget.load(widget.type, widget.name,
+        baseUrl: widget.baseUrl,
+        subFolder: widget.subFolder,
+        riveAssetLoader: widget.riveAssetLoader);
     if (mounted) {
       _result = _getResult();
       setState(() {});
     }
   }
 
+  @override
+  Widget build(BuildContext context) =>
+      SizedBox(width: widget.width, height: widget.height, child: _result);
+
   Widget? _getResult() {
-    if (_loader.bytes == null) return null;
+    var loader =
+        LoaderWidget.cacshedLoders["${widget.type.name}_${widget.name}"]!;
+
+    if (loader.bytes == null) return null;
     switch (widget.type) {
       case AssetType.animation:
       case AssetType.animationZipped:
-        return RiveAnimation.direct(_riveFile!,
+        return RiveAnimation.direct(loader.metadata as RiveFile,
             onInit: ((p0) => widget.onRiveInit?.call(p0)), fit: widget.fit);
       case AssetType.image:
-        return Image.memory(Uint8List.fromList(_loader.bytes!),
-            gaplessPlayback: true);
+        if (loader.metadata == null) return null;
+        final image =
+            Image.memory(loader.metadata as Uint8List, gaplessPlayback: true);
+        return image;
       case AssetType.vector:
-        return SvgPicture.memory(Uint8List.fromList(_loader.bytes!));
+        return SvgPicture.memory(loader.metadata as Uint8List);
       default:
         return null;
     }
@@ -96,7 +117,7 @@ class _LoaderWidgetState extends State<LoaderWidget> {
 
   @override
   void dispose() {
-    _loader.abort();
+    // _loader.abort();
     super.dispose();
   }
 }
