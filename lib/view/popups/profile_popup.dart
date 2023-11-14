@@ -182,7 +182,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         artboard.addController(controller!);
       }, width: 130.d, height: 130.d),
       SizedBox(height: 20.d),
-      SkinnedText(_player!.tribeName, style: TStyles.large),
+      SkinnedText(_player!.tribeId > 0 ? _player!.tribeName : "no_tribe".l(),
+          style: TStyles.large),
     ]);
   }
 

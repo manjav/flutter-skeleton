@@ -424,6 +424,8 @@ class Account extends Player {
   void installTribe(dynamic data) {
     if (data == null) {
       tribeId = -1;
+    }
+    if (tribeId < 0) {
       tribeName = "no_tribe".l();
       return;
     }
