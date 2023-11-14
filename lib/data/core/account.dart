@@ -489,17 +489,8 @@ class Account extends Player {
     }
 
     var achieveCards = <AccountCard>[];
-    if (data.containsKey("achieveCards")) {
-      for (var card in data["achieveCards"]) {
-        var accountCard = AccountCard(this, card);
-        cards[card['id']] = accountCard;
-        achieveCards.add(accountCard);
-      }
-    }
-    data["achieveCards"] = achieveCards;
-
-    if (data.containsKey("card")) {
-      var newCard = data["card"];
+    addCard(dynamic newCard) {
+      if (newCard == null) return null;
       var card = cards[newCard["id"]];
       if (card == null) {
         cards[newCard["id"]] = card = AccountCard(this, newCard);
@@ -508,13 +499,27 @@ class Account extends Player {
         card.lastUsedAt = newCard["last_used_at"];
         card.base = loadingData.baseCards[newCard['base_card_id']]!;
       }
-      data["card"] = card;
+      achieveCards.add(card);
+      return card;
     }
 
+    if (data.containsKey("achieveCards")) {
+      for (var card in data["achieveCards"]) {
+        addCard(card);
+      }
+    }
+
+    if (data.containsKey("card")) {
+      data["card"] = addCard(data["card"]);
+    }
+
+    // Level Up
+    data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
       Navigator.pushNamed(context, Routes.levelup.routeName, arguments: data);
     }
 
+    data["achieveCards"] = achieveCards;
     _addDeadline(data, xpboostCreatedAt, xpboostId);
     _addDeadline(data, pwboostCreatedAt, pwboostId);
     return data;
