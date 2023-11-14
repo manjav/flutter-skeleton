@@ -76,6 +76,10 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
         return true;
       }
     }
+    if (asset is FontAsset) {
+      _loadFont(asset);
+      return true;
+    }
     return false; // load the default embedded asset
   }
 
@@ -96,6 +100,12 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
         await rootBundle.load('assets/images/card_frame_$category$level.webp');
     var image = await ImageAsset.parseBytes(bytes.buffer.asUint8List());
     asset.image = image;
+  }
+
+  Future<void> _loadFont(FontAsset asset) async {
+    var bytes = await rootBundle.load('assets/fonts/${asset.name}');
+    var font = await FontAsset.parseBytes(bytes.buffer.asUint8List());
+    asset.font = font;
   }
   }
 }
