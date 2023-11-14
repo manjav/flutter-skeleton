@@ -45,8 +45,7 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
         child: Stack(children: [
-          LoaderWidget(AssetType.animation, "levelup", onRiveInit: _onRiveInit),
-          _rewardsBuilder(),
+          backgrounBuilder(),
         ]),
         onPressed: () {
           if (_animationController.isCompleted) {
@@ -65,6 +64,7 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
     artboard.addController(controller);
   }
   _onRiveEvent(RiveEvent event) async {
+
   Future<bool> _onRiveAssetLoad(
       FileAsset asset, Uint8List? embeddedBytes) async {
     if (asset is ImageAsset) {
@@ -107,5 +107,17 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen> {
     var font = await FontAsset.parseBytes(bytes.buffer.asUint8List());
     asset.font = font;
   }
+}
+
+mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
+  bool readyToClose = false;
+  SMITrigger? skipInput, closeInput;
+  Widget backgrounBuilder() {
+    return LoaderWidget(AssetType.animation, "background_pattern",
+        onRiveInit: (Artboard artboard) {
+      var controller = StateMachineController.fromArtboard(artboard, "Pattern");
+      // controller.findInput<bool>("move")?.value = true;
+      artboard.addController(controller!);
+    });
   }
 }
