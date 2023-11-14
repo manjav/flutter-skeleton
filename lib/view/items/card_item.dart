@@ -37,11 +37,11 @@ class CardItem extends StatefulWidget {
   State<CardItem> createState() => _CardItemState();
 
   static Image getCardBackground(int category, int rarity) {
-    var lavel = category == 0 ? "_$rarity" : "";
-    return Asset.load<Image>("card_frame_$category$lavel");
+    var level = category == 0 ? "_$rarity" : "";
+    return Asset.load<Image>("card_frame_$category$level");
   }
 
-  static getCardImage(FruitCard card, double size, {Key? key}) {
+  static LoaderWidget getCardImage(FruitCard card, double size, {Key? key}) {
     return LoaderWidget(AssetType.image, card.getName(),
         key: key, subFolder: "cards", width: size);
   }

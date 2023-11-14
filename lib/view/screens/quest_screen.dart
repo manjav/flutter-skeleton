@@ -34,7 +34,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
     _scrollController.jumpTo(_questsCount / 130 * DeviceInfo.size.height * 0.7 +
-        Random().nextDouble() * DeviceInfo.size.height * 0.4);
+        Random().nextDouble() * DeviceInfo.size.height * 0.1);
   }
 
   @override
