@@ -516,7 +516,10 @@ class Account extends Player {
     // Level Up
     data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
-      Navigator.pushNamed(context, Routes.levelup.routeName, arguments: data);
+      Timer(
+          const Duration(milliseconds: 100),
+          () => Navigator.pushNamed(context, Routes.levelup.routeName,
+              arguments: data));
     }
 
     data["achieveCards"] = achieveCards;
