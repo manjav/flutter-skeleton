@@ -184,8 +184,8 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
             children: [
               SizedBox(height: 36.d),
               SkinnedText(_account.name),
-              _account.tribe != null
-                  ? SkinnedText(_account.tribe!.name)
+              _account.tribeId > 0
+                  ? SkinnedText(_account.tribeName)
                   : const SizedBox(),
             ],
           ),

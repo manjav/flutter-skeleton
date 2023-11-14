@@ -8,12 +8,12 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/fruit.dart';
 import '../../services/localization.dart';
+import '../../services/sounds.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
 import 'iscreen.dart';
 
 class LevelupScreen extends AbstractScreen {
@@ -29,13 +29,13 @@ class _LevelupScreenState extends AbstractScreenState<LevelupScreen>
   List<Widget> appBarElementsLeft() => [];
   @override
   List<Widget> appBarElementsRight() => [];
-  late AnimationController _animationController;
   int _gold = 0;
   AccountCard? _card;
 
   @override
   void initState() {
     super.initState();
+    getService<Sounds>().play("levelup");
     _gold = widget.args["levelup_gold_added"] ?? 100;
     _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;
   }
