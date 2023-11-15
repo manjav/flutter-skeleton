@@ -13,6 +13,9 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   bool readyToClose = false;
   SMITrigger? skipInput, closeInput;
 
+  List<Widget> appBarElementsLeft() => [];
+  List<Widget> appBarElementsRight() => [];
+
   Widget backgrounBuilder() {
     return LoaderWidget(AssetType.animation, "background_pattern",
         onRiveInit: (Artboard artboard) {
