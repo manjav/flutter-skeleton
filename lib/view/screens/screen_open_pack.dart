@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
 import '../../services/deviceinfo.dart';
+import '../../services/sounds.dart';
 import '../../view/items/card_item.dart';
 import '../../view/mixins/reward_mixin.dart';
 import '../route_provider.dart';
@@ -22,7 +23,7 @@ class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen>
 
   @override
   void initState() {
-    _cards = widget.args["achieveCards"];
+    getService<Sounds>().play("levelup");
     _cards = widget.args["achieveCards"] ??
         accountBloc.account!.cards.values.toList();
     _opacityAnimationController = AnimationController(
@@ -47,16 +48,16 @@ class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen>
         child: Stack(alignment: const Alignment(0, -0.3), children: [
           backgrounBuilder(),
           SizedBox(
-            width: itemSize * crossAxisCount + gap * crossAxisCount + 1,
-            height: itemSize / CardItem.aspectRatio * mainAxisCount +
-                (mainAxisCount + 1) * gap,
-            child: GridView.builder(
-              itemCount: _cards.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: CardItem.aspectRatio,
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: gap,
-                  mainAxisSpacing: gap),
+              width: itemSize * crossAxisCount + gap * crossAxisCount + 1,
+              height: itemSize / CardItem.aspectRatio * mainAxisCount +
+                  (mainAxisCount + 1) * gap,
+              child: GridView.builder(
+                itemCount: _cards.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: CardItem.aspectRatio,
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: gap,
+                    mainAxisSpacing: gap),
                 itemBuilder: (c, i) => _cardItemBuilder(i, itemSize),
               ))
         ]),
