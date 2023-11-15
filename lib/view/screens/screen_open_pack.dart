@@ -18,14 +18,16 @@ class OpenPackScreen extends AbstractScreen {
 class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen>
     with RewardScreenMixin {
   late List<AccountCard> _cards;
-  @override
-  List<Widget> appBarElementsLeft() => [];
-  @override
-  List<Widget> appBarElementsRight() => [];
+  late AnimationController _opacityAnimationController;
 
   @override
   void initState() {
     _cards = widget.args["achieveCards"];
+    _cards = widget.args["achieveCards"] ??
+        accountBloc.account!.cards.values.toList();
+    _opacityAnimationController = AnimationController(
+        vsync: this, upperBound: 3, duration: const Duration(seconds: 3));
+    _opacityAnimationController.forward();
     super.initState();
   }
 
@@ -61,7 +63,15 @@ class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen>
         onPressed: () => Navigator.pop(context));
   }
 
-  Widget _cardItemBuilder(AccountCard card, double size) {
-    return SizedBox(width: size, child: CardItem(card, size: size));
+  Widget _cardItemBuilder(int index, double size) {
+    return AnimatedBuilder(
+        animation: _opacityAnimationController,
+        builder: (context, child) {
+          return Opacity(
+              opacity: (_opacityAnimationController.value - 2 + index * 0.1)
+                  .clamp(0, 1),
+              child: SizedBox(
+                  width: size, child: CardItem(_cards[index], size: size)));
+        });
   }
 }
