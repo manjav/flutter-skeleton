@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/core/fruit.dart';
 import '../../services/deviceinfo.dart';
 import '../../view/items/card_item.dart';
+import '../../view/mixins/reward_mixin.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import 'iscreen.dart';
@@ -14,7 +15,8 @@ class OpenPackScreen extends AbstractScreen {
   createState() => _OpenPackScreenState();
 }
 
-class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen> {
+class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen>
+    with RewardScreenMixin {
   late List<AccountCard> _cards;
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -34,14 +36,15 @@ class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen> {
     var crossAxisCount = len < 4 ? len % 4 : 4;
     var mainAxisCount = (len / crossAxisCount).ceil();
     var itemSize = len < 2
-        ? 438.d
+        ? 430.d
         : len < 3
-            ? 360.d
-            : 250.d;
+            ? 350.d
+            : 240.d;
     return Widgets.button(
         padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: SizedBox(
+        child: Stack(alignment: const Alignment(0, -0.3), children: [
+          backgrounBuilder(),
+          SizedBox(
             width: itemSize * crossAxisCount + gap * crossAxisCount + 1,
             height: itemSize / CardItem.aspectRatio * mainAxisCount +
                 (mainAxisCount + 1) * gap,
@@ -52,8 +55,9 @@ class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen> {
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: gap,
                   mainAxisSpacing: gap),
-              itemBuilder: (c, i) => _cardItemBuilder(_cards[i], itemSize),
-            )),
+                itemBuilder: (c, i) => _cardItemBuilder(i, itemSize),
+              ))
+        ]),
         onPressed: () => Navigator.pop(context));
   }
 
