@@ -12,19 +12,25 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   late Artboard _artboard;
   bool readyToClose = false;
   SMITrigger? skipInput, closeInput;
+  SMINumber? _colorInput;
 
   List<Widget> appBarElementsLeft() => [];
   List<Widget> appBarElementsRight() => [];
 
-  Widget backgrounBuilder() {
+  Widget backgrounBuilder({int color = 0, bool animated = true}) {
     return LoaderWidget(AssetType.animation, "background_pattern",
         onRiveInit: (Artboard artboard) {
       var controller =
           StateMachineController.fromArtboard(artboard, "State Machine 1");
-      // controller.findInput<bool>("move")?.value = true;
+      controller?.findInput<bool>("move")?.value = animated;
+      _colorInput = controller?.findInput<double>("color") as SMINumber;
+      changeBackgroundColor(color);
       artboard.addController(controller!);
     });
   }
+
+  void changeBackgroundColor(int color) =>
+      _colorInput?.value = color.toDouble();
 
   Widget animationBuilder(String fileName, {String? stateMachinName}) {
     return LoaderWidget(AssetType.animation, "feast_$fileName",
