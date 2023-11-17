@@ -148,10 +148,18 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
       RpcParams.card_id.name: card.id,
       RpcParams.sacrifices.name: selectedCards.getIds()
     };
+    var oldPower = card.power;
     try {
       var result = await rpc(RpcId.enhanceCard, params: params);
       updateAccount(result);
-      if (mounted) Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, Routes.feastEnhance.routeName, arguments: {
+          "card": card,
+          "oldPower": oldPower,
+          "sacrifiedCount": selectedCards.value.length,
+        });
+      }
     } finally {}
   }
 
