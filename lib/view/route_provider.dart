@@ -33,6 +33,7 @@ import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/quest_screen.dart';
 import 'screens/screen_attack_outcome.dart';
+import 'screens/screen_feast_enhance.dart';
 import 'screens/screen_feast_levelup.dart';
 import 'screens/screen_feast_openpack.dart';
 import 'screens/screen_livebattle.dart';
@@ -51,6 +52,7 @@ enum Routes {
 
   feastOpenpack,
   feastLevelup,
+  feastEnhance,
 
   popupNone,
   popupMessage,
@@ -96,6 +98,7 @@ extension RouteProvider on Routes {
       "/livebattle" => LiveBattleScreen(args: args ?? {}),
       "/feastLevelup" => LevelupFeastScreen(args: args ?? {}),
       "/feastOpenpack" => OpenpackFeastScreen(args: args ?? {}),
+      "/feastEnhance" => EnhanceFeastScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
       "/popupCardMerge" => CardMergePopup(args: args ?? {}),
