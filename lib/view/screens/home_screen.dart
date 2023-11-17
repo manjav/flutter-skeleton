@@ -19,6 +19,7 @@ import '../../view/items/page_item_tribe.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
+import '../mixins/reward_mixin.dart';
 import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
@@ -35,7 +36,8 @@ class HomeScreen extends AbstractScreen {
   createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+class _HomeScreenState extends AbstractScreenState<AbstractScreen>
+    with RewardScreenMixin {
   int _selectedTab = 2;
   final double _navbarHeight = 210.d;
   final _tabInputs = List<SMIBool?>.generate(5, (index) => null);
@@ -96,30 +98,29 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Widget contentFactory() {
     var tabSize = DeviceInfo.size.width / _tabInputs.length;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      return Widgets.rect(
-          color: TColors.cyan,
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              PageView.builder(
-                controller: _pageController,
-                itemCount: _tabInputs.length,
-                itemBuilder: _pageItemBuilder,
-                onPageChanged: (value) => _selectTap(value, pageChange: false),
-              ),
-              SizedBox(
-                  height: _navbarHeight,
-                  child: ListView.builder(
-                      itemExtent: tabSize,
-                      itemBuilder: (c, i) =>
-                          _tabItemBuilder(state.account, i, tabSize),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _tabInputs.length)),
-              //   BlocConsumer<ServicesBloc, ServicesState>(
-              //       builder: (context, state) => const SizedBox(),
-              //       listener: (context, state) => _selectTap(state.data as int))
-            ],
-          ));
+      return Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          backgrounBuilder(color: 2, animated: false),
+          PageView.builder(
+            controller: _pageController,
+            itemCount: _tabInputs.length,
+            itemBuilder: _pageItemBuilder,
+            onPageChanged: (value) => _selectTap(value, pageChange: false),
+          ),
+          SizedBox(
+              height: _navbarHeight,
+              child: ListView.builder(
+                  itemExtent: tabSize,
+                  itemBuilder: (c, i) =>
+                      _tabItemBuilder(state.account, i, tabSize),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _tabInputs.length)),
+          //   BlocConsumer<ServicesBloc, ServicesState>(
+          //       builder: (context, state) => const SizedBox(),
+          //       listener: (context, state) => _selectTap(state.data as int))
+        ],
+      );
     });
   }
 
@@ -176,6 +177,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   _selectTap(int index, {bool tabsChange = true, bool pageChange = true}) {
+    changeBackgroundColor(index + 1);
+
     if (tabsChange) {
       for (var i = 0; i < _tabInputs.length; i++) {
         _tabInputs[i]!.value = i == index;
