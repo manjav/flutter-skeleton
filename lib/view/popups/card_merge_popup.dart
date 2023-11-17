@@ -188,6 +188,12 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     try {
       var result = await rpc(RpcId.evolveCard, params: params);
       updateAccount(result);
+      if (mounted) {
+        Navigator.pushNamed(context, Routes.feastMerge.routeName, arguments: {
+          "mergedCard": selectedCards.value.first,
+          "newCard": result["card"]
+        });
+      }
     } finally {}
     cards = getCards(account);
     if (cards.length < 2) {
