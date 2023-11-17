@@ -40,7 +40,7 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
         alignment: Alignment.center,
         child: Stack(children: [
           backgrounBuilder(),
-          animationBuilder("levelup", "Levelup"),
+          animationBuilder("levelup"),
         ]),
         onPressed: () {
           if (readyToClose) {

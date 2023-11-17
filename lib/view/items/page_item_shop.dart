@@ -405,7 +405,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           await Future.delayed(const Duration(milliseconds: 1750));
           if (mounted) _onItemPressed(item);
         } else {
-          Navigator.pushNamed(context, Routes.openPack.routeName,
+          Navigator.pushNamed(context, Routes.feastOpenpack.routeName,
               arguments: result);
         }
       }

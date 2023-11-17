@@ -19,16 +19,18 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   Widget backgrounBuilder() {
     return LoaderWidget(AssetType.animation, "background_pattern",
         onRiveInit: (Artboard artboard) {
-      var controller = StateMachineController.fromArtboard(artboard, "Pattern");
+      var controller =
+          StateMachineController.fromArtboard(artboard, "State Machine 1");
       // controller.findInput<bool>("move")?.value = true;
       artboard.addController(controller!);
     });
   }
 
-  Widget animationBuilder(String fileName, String stateMachinName) {
-    return LoaderWidget(AssetType.animation, fileName,
+  Widget animationBuilder(String fileName, {String? stateMachinName}) {
+    return LoaderWidget(AssetType.animation, "feast_$fileName",
         riveAssetLoader: onRiveAssetLoad,
-        onRiveInit: (artboard) => onRiveInit(artboard, stateMachinName));
+        onRiveInit: (artboard) =>
+            onRiveInit(artboard, stateMachinName ?? "State Machine 1"));
   }
 
   onRiveInit(Artboard artboard, String stateMachinName) {
