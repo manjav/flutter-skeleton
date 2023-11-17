@@ -52,14 +52,16 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
   }
 
   @override
-  onRiveInit(Artboard artboard, String stateMachineName) {
-    super.onRiveInit(artboard, stateMachineName);
+  StateMachineController onRiveInit(
+      Artboard artboard, String stateMachineName) {
+    var controller = super.onRiveInit(artboard, stateMachineName);
     updateRiveText("goldText", "$_gold");
     updateRiveText("levelText", "${widget.args["level"] ?? 123}");
     updateRiveText("cardNameText", "${_card!.base.fruit.name}_t".l());
     updateRiveText("cardLevelText", "${_card!.base.rarity}");
     updateRiveText("cardPowerText", "ˢ${_card!.power.compact()}");
     updateRiveText("commentText", "tap_close".l());
+    return controller;
   }
 
   @override

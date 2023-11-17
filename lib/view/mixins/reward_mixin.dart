@@ -39,7 +39,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
             onRiveInit(artboard, stateMachinName ?? "State Machine 1"));
   }
 
-  onRiveInit(Artboard artboard, String stateMachinName) {
+  StateMachineController onRiveInit(Artboard artboard, String stateMachinName) {
     _artboard = artboard;
     var controller =
         StateMachineController.fromArtboard(artboard, stateMachinName)!;
@@ -48,6 +48,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
     controller.findInput<double>("cards")?.value = 6.0;
     controller.addEventListener(onRiveEvent);
     artboard.addController(controller);
+    return controller;
   }
 
   Future<bool> onRiveAssetLoad(
