@@ -523,7 +523,7 @@ class Account extends Player {
     if ((data["levelup_gold_added"] ?? 0) > 0) {
       Timer(
           const Duration(milliseconds: 100),
-          () => Navigator.pushNamed(context, Routes.levelup.routeName,
+          () => Navigator.pushNamed(context, Routes.feastLevelup.routeName,
               arguments: data));
     }
 

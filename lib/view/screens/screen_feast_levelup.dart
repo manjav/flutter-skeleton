@@ -12,14 +12,15 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import 'iscreen.dart';
 
-class LevelupScreen extends AbstractScreen {
-  LevelupScreen({required super.args, super.key}) : super(Routes.levelup);
+class LevelupFeastScreen extends AbstractScreen {
+  LevelupFeastScreen({required super.args, super.key})
+      : super(Routes.feastLevelup);
 
   @override
   createState() => _LevelupScreenState();
 }
 
-class _LevelupScreenState extends AbstractScreenState<LevelupScreen>
+class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
     with RewardScreenMixin {
   int _gold = 0;
   AccountCard? _card;

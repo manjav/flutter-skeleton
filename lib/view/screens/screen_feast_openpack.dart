@@ -9,14 +9,15 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import 'iscreen.dart';
 
-class OpenPackScreen extends AbstractScreen {
-  OpenPackScreen({required super.args, super.key}) : super(Routes.openPack);
+class OpenpackFeastScreen extends AbstractScreen {
+  OpenpackFeastScreen({required super.args, super.key})
+      : super(Routes.feastOpenpack);
 
   @override
   createState() => _OpenPackScreenState();
 }
 
-class _OpenPackScreenState extends AbstractScreenState<OpenPackScreen>
+class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
     with RewardScreenMixin {
   late List<AccountCard> _cards;
   late AnimationController _opacityAnimationController;
