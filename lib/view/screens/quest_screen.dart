@@ -119,6 +119,16 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
         setText("levelText", "${index + 1}");
         controller
             ?.addEventListener((event) => _riveEventsListener(event, mapIndex));
+
+        if (index == 1 ||
+            index == 4 ||
+            index == 7 ||
+            index == 10 ||
+            index == 12) {
+          controller?.findInput<double>("bubble")?.value = state > 10 ? 2 : 1;
+          controller?.findInput<double>("bubbleIndex")?.value =
+              index == 12 ? 0 : 1;
+        }
         artboard.addController(controller!);
       }),
     );
