@@ -104,7 +104,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
           PositionedDirectional(
               top: -48.d,
               start: 24.d,
-              child: const LevelIndicator(showLevel: false)),
+              child: LevelIndicator(
+                  showLevel: false, avatarId: _player!.avatarId)),
           PositionedDirectional(
               top: 10.d,
               start: 250.d,
@@ -307,7 +308,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                   "frame_header_cheese",
                   ImageCenterSliceData(
                       114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
-              height: 386.d,
+              height: 400.d,
               child: Stack(
                   alignment: Alignment.center,
                   clipBehavior: Clip.none,
