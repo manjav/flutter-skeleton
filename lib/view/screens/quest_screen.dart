@@ -112,7 +112,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
         }
 
         var controller =
-            StateMachineController.fromArtboard(artboard, "Button");
+            StateMachineController.fromArtboard(artboard, "State Machine 1");
         city.state = controller?.findInput<double>("state") as SMINumber;
         var state = (_questsCount - mapIndex * 130 - index * 10).toDouble();
         city.state?.value = state;
