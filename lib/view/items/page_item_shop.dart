@@ -362,7 +362,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                     source: ""),
                 transactionDate: ""));
       } else {
-      InAppPurchase.instance.buyConsumable(
+        InAppPurchase.instance.buyConsumable(
             purchaseParam: PurchaseParam(
                 productDetails: _productDetails[item.productID]!));
       }
@@ -380,6 +380,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           await Future.delayed(const Duration(milliseconds: 1750));
           if (mounted) _onItemPressed(item);
         } else {
+          result["item"] = item;
           Navigator.pushNamed(context, Routes.feastOpenpack.routeName,
               arguments: result);
         }

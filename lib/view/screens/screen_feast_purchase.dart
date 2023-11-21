@@ -31,8 +31,9 @@ class _PurchaseFeastScreenState extends AbstractScreenState<PurchaseFeastScreen>
   void initState() {
     super.initState();
     getService<Sounds>().play("levelup");
-    _item = accountBloc
-        .account!.loadingData.shopProceedItems![ShopSections.gold]![1];
+    _item = widget.args["item"] ??
+        accountBloc
+            .account!.loadingData.shopProceedItems![ShopSections.gold]![1];
   }
 
   @override

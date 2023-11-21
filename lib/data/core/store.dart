@@ -96,7 +96,7 @@ class ShopItem {
     currency = data["currency"] ?? section.getCurrecy();
   }
 
-  Object? get productID => "${section.name}_$id";
+  String get productID => "${section.name}_$id";
 }
 
 class ShopItemVM {
