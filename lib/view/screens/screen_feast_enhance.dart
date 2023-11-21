@@ -30,7 +30,7 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
     super.initState();
     getService<Sounds>().play("levelup");
     _oldPower = widget.args["oldPower"] ?? 90;
-    _sacrifiedCount = widget.args["sacrifiedCount"] ?? 4;
+    _sacrifiedCount = (widget.args["sacrifiedCount"] ?? 6).clamp(1, 6);
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
   }
 
@@ -56,7 +56,7 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
-    controller.findInput("cards")?.value = _sacrifiedCount.toDouble();
+    controller.findInput<double>("cards")?.value = _sacrifiedCount.toDouble();
     updateRiveText("cardNameText", "${_card.base.fruit.name}_t".l());
     updateRiveText("cardLevelText", "${_card.base.rarity}");
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");

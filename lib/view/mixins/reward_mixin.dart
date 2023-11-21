@@ -45,7 +45,6 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
         StateMachineController.fromArtboard(artboard, stateMachinName)!;
     skipInput = controller.findInput<bool>("skip") as SMITrigger;
     closeInput = controller.findInput<bool>("close") as SMITrigger;
-    controller.findInput<double>("cards")?.value = 6.0;
     controller.addEventListener(onRiveEvent);
     artboard.addController(controller);
     return controller;
