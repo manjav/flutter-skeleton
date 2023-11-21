@@ -68,7 +68,8 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
               builder: (context, value, child) {
                 return Stack(children: [
                   for (var i = 0; i < value.length; i++)
-                    _cityRenderer(mapIndex, i, value[i])
+                    _cityRenderer(mapIndex, value.length - i - 1,
+                        value[value.length - i - 1])
                 ]);
               }),
         ]));
