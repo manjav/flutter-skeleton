@@ -259,7 +259,6 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
               alignment: Alignment.center,
               width: 200.d,
               child: IgnorePointer(
-                  ignoring: true,
                   child: _itemActionBuilder(item, heroItem != null, host))),
         ]),
         onPressed: () => _setItem(item, position, heroItem, host));

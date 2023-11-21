@@ -107,7 +107,6 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
         right: right,
         height: 200.d,
         child: IgnorePointer(
-            ignoring: true,
             child: Asset.load<Image>("ui_shade_bottom",
                 centerSlice: ImageCenterSliceData(
                     32, 32, const Rect.fromLTWH(0, 0, 32, 32)))));

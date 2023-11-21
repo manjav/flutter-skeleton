@@ -157,7 +157,6 @@ class _CardItemState extends State<CardItem> {
                         const Expanded(child: SizedBox()),
                         SkinnedText(_remainingCooldown.value.toRemainingTime()),
                         IgnorePointer(
-                            ignoring: true,
                             child: Widgets.skinnedButton(
                                 height: 128.d,
                                 color: ButtonColor.teal,

@@ -307,7 +307,6 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                   textAlign: TextAlign.center),
           SizedBox(height: description.isEmpty ? 0 : 20.d),
           IgnorePointer(
-              ignoring: true,
               child: Widgets.skinnedButton(
                   color: ButtonColor.green,
                   padding: EdgeInsets.only(bottom: 10.d),

@@ -66,7 +66,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
           SizedBox(width: 20.d),
           Text("settings_${setting.name}".l()),
           const Expanded(child: SizedBox()),
-          IgnorePointer(ignoring: true, child: action),
+          IgnorePointer(child: action),
         ]),
         onPressed: () => onPressed(setting));
   }

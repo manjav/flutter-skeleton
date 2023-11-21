@@ -42,7 +42,6 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-        ignoring: true,
         child: Scaffold(
             backgroundColor: TColors.transparent,
             body: Stack(alignment: Alignment.center, children: [
