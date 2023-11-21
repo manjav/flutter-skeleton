@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -142,6 +143,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         // var result = await rpc(RpcId.buyGoldPack, params: params);
         // accountBloc.account!.update({section.name: item.base.value});
         // accountBloc.add(SetAccount(account: accountBloc.account!));
+
+        Navigator.pushNamed(context, Routes.feastPurchase.routeName,
+            arguments: {"item": item});
         return;
       }
     }
@@ -345,9 +349,23 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   _onItemPressed(ShopItem item) async {
     if (item.inStore) {
+      if (kDebugMode) {
+        _deliverProduct(
+            item.section,
+            PurchaseDetails(
+                purchaseID: "",
+                productID: item.productID,
+                status: PurchaseStatus.purchased,
+                verificationData: PurchaseVerificationData(
+                    localVerificationData: '{"purchaseState":0}',
+                    serverVerificationData: "{}",
+                    source: ""),
+                transactionDate: ""));
+      } else {
       InAppPurchase.instance.buyConsumable(
-          purchaseParam:
-              PurchaseParam(productDetails: _productDetails[item.productID]!));
+            purchaseParam: PurchaseParam(
+                productDetails: _productDetails[item.productID]!));
+      }
       return;
     }
 
