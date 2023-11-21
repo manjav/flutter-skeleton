@@ -54,4 +54,5 @@ class ShopItemVM {
   int price, mainCells, crossCells;
   bool get inStore => base.inStore;
   ShopItemVM(this.base, this.price, this.mainCells, this.crossCells);
+  String getTitle() => "shop_${base.section.name}_${base.id}";
 }

@@ -221,7 +221,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _itemGoldBuilder(int index, ShopItemVM item) {
-    var title = _getTitle(item.base);
+    var title = item.getTitle();
     return _baseItemBilder(
         index,
         title,
@@ -269,7 +269,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _itemCardBuilder(int index, ShopItemVM item) {
-    var title = _getTitle(item.base);
+    var title = item.getTitle();
     return _baseItemBilder(index, title, title, item,
         LoaderWidget(AssetType.image, title, subFolder: 'shop'));
   }
@@ -338,9 +338,6 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             angle: -0.15,
             child: Asset.load<Image>("reward_$reward", width: 76.d)));
   }
-
-  String _getTitle(ShopItem item) => "shop_${item.section.name}_${item.id}";
-
   double _getShopMultiplier() {
     const goldMultiplier = 3;
     const veteranGoldDivider = 20;
