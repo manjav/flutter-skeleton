@@ -105,12 +105,18 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
       top: city.position.dy.d - size * 0.5,
       child: LoaderWidget(AssetType.animation, "quest_map_button",
           width: size, height: size, onRiveInit: (Artboard artboard) {
+        void setText(String name, String value) {
+          artboard.component<TextValueRun>(name)?.text = value;
+          artboard.component<TextValueRun>("${name}_stroke")?.text = value;
+          artboard.component<TextValueRun>("${name}_shadow")?.text = value;
+        }
+
         var controller =
             StateMachineController.fromArtboard(artboard, "Button");
         city.state = controller?.findInput<double>("state") as SMINumber;
-        city.state?.value =
-            (_questsCount - mapIndex * 130 - index * 10).toDouble();
-        controller?.findInput<double>("level")?.value = (index + 1).toDouble();
+        var state = (_questsCount - mapIndex * 130 - index * 10).toDouble();
+        city.state?.value = state;
+        setText("levelText", "${index + 1}");
         controller
             ?.addEventListener((event) => _riveEventsListener(event, mapIndex));
         artboard.addController(controller!);
