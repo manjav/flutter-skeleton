@@ -65,15 +65,10 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
   }
 
   @override
-  Future<void> loadCardIcon(ImageAsset asset, String name) async {
+  Future<void> loadCardIcon(ImageAsset asset, String name) async =>
     super.loadCardIcon(asset, _card!.base.getName());
-  }
 
   @override
-  Future<void> loadCardFrame(
-      ImageAsset asset, int category, String level) async {
-    var category = _card!.base.fruit.category;
-    super.loadCardFrame(
-        asset, category, category == 0 ? "_${_card!.base.rarity}" : "");
-  }
+  Future<void> loadCardFrame(ImageAsset asset, FruitCard? card) async =>
+      super.loadCardFrame(asset, _card!.base);
 }

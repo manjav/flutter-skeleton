@@ -95,15 +95,10 @@ class _MergeFeastScreenState extends AbstractScreenState<MergeFeastScreen>
   @override
   Future<void> loadCardIcon(ImageAsset asset, String name) async {
     super.loadCardIcon(asset, _mergedCard.base.getName());
-  }
 
   @override
-  Future<void> loadCardFrame(
-      ImageAsset asset, int category, String level) async {
-    var category = _mergedCard.base.fruit.category;
-    super.loadCardFrame(
-        asset, category, category == 0 ? "_${_mergedCard.base.rarity}" : "");
-  }
+  Future<void> loadCardFrame(ImageAsset asset, FruitCard? card) async =>
+      super.loadCardFrame(asset, _mergedCard.base);
 
   @override
   Future<bool> onRiveAssetLoad(
@@ -113,9 +108,7 @@ class _MergeFeastScreenState extends AbstractScreenState<MergeFeastScreen>
         super.loadCardIcon(asset, _newCard.base.getName());
         return true;
       } else if (asset.name == "newCardFrame") {
-        var category = _newCard.base.fruit.category;
-        super.loadCardFrame(
-            asset, category, category == 0 ? "_${_newCard.base.rarity}" : "");
+        super.loadCardFrame(asset, _newCard.base);
         return true;
       }
     }

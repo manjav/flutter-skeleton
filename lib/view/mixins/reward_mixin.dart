@@ -1,9 +1,12 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
+import '../../data/core/fruit.dart';
 import '../../utils/assets.dart';
 import '../screens/iscreen.dart';
 import '../widgets/loaderwidget.dart';
@@ -57,7 +60,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
         loadCardIcon(asset, "");
         return true;
       } else if (asset.name == "cardFrame") {
-        loadCardFrame(asset, 0, "");
+        loadCardFrame(asset, null);
         return true;
       }
     }
@@ -83,20 +86,25 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
     }
   }
 
-  Future<void> loadCardIcon(ImageAsset asset, String name) async {
+  Future<void> loadCardIcon(ImageAsset asset, String name) async =>
+      asset.image = await loadImage(name, subFolder: "cards");
+
+  Future<void> loadCardFrame(ImageAsset asset, FruitCard? card) async {
+    if (card == null) return;
+    var levelString = card.fruit.category == 0 ? "_${card.rarity}" : "";
+    var bytes = await rootBundle.load(
+        'assets/images/card_frame_${card.fruit.category}$levelString.webp');
+    asset.image = await ImageAsset.parseBytes(bytes.buffer.asUint8List());
+  }
+
+  Future<ui.Image?> loadImage(String name, {String? subFolder}) async {
     var loader =
-        await LoaderWidget.load(AssetType.image, name, subFolder: "cards");
+        await LoaderWidget.load(AssetType.image, name, subFolder: subFolder);
     while (loader.metadata == null) {
       await Future.delayed(const Duration(milliseconds: 100));
     }
-    asset.image = await ImageAsset.parseBytes(loader.metadata as Uint8List);
-  }
-
-  Future<void> loadCardFrame(
-      ImageAsset asset, int category, String level) async {
-    var bytes =
-        await rootBundle.load('assets/images/card_frame_$category$level.webp');
-    asset.image = await ImageAsset.parseBytes(bytes.buffer.asUint8List());
+    var image = await ImageAsset.parseBytes(loader.metadata as Uint8List);
+    return image;
   }
 
   Future<void> loadFont(FontAsset asset) async {
