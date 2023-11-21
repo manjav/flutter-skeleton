@@ -60,13 +60,12 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
     updateRiveText("cardNameText", "${_card!.base.fruit.name}_t".l());
     updateRiveText("cardLevelText", "${_card!.base.rarity}");
     updateRiveText("cardPowerText", "ˢ${_card!.power.compact()}");
-    updateRiveText("commentText", "tap_close".l());
     return controller;
   }
 
   @override
   Future<void> loadCardIcon(ImageAsset asset, String name) async =>
-    super.loadCardIcon(asset, _card!.base.getName());
+      super.loadCardIcon(asset, _card!.base.getName());
 
   @override
   Future<void> loadCardFrame(ImageAsset asset, FruitCard? card) async =>

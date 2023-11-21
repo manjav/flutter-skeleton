@@ -60,7 +60,6 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
     updateRiveText("cardNameText", "${_card.base.fruit.name}_t".l());
     updateRiveText("cardLevelText", "${_card.base.rarity}");
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
-    updateRiveText("commentText", "tap_close".l());
     return controller;
   }
 

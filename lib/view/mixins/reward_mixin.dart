@@ -7,6 +7,7 @@ import 'package:rive/rive.dart';
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/fruit.dart';
+import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../screens/iscreen.dart';
 import '../widgets/loaderwidget.dart';
@@ -18,7 +19,6 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   SMINumber? _colorInput;
 
   List<Widget> appBarElementsLeft() => [];
-  List<Widget> appBarElementsRight() => [];
 
   Widget backgrounBuilder({int color = 0, bool animated = true}) {
     return LoaderWidget(AssetType.animation, "background_pattern",
@@ -48,6 +48,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
         StateMachineController.fromArtboard(artboard, stateMachinName)!;
     skipInput = controller.findInput<bool>("skip") as SMITrigger;
     closeInput = controller.findInput<bool>("close") as SMITrigger;
+    updateRiveText("commentText", "tap_close".l());
     controller.addEventListener(onRiveEvent);
     artboard.addController(controller);
     return controller;

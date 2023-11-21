@@ -67,34 +67,12 @@ class _MergeFeastScreenState extends AbstractScreenState<MergeFeastScreen>
     updateRiveText("cardLevelText3", "${_newCard.base.rarity}");
     updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");
     updateRiveText("titleText", "popupcardmerge".l());
-    updateRiveText("commentText", "tap_close".l());
     return controller;
   }
 
-  // @override
-  // void onRiveEvent(RiveEvent event) {
-  //   super.onRiveEvent(event);
-  //   if (event.name == "merge") {
-  //     var category = _newCard.base.fruit.category;
-  //     super.loadCardFrame(_frameImageAsset!, category,
-  //         category == 0 ? "_${_newCard.base.rarity}" : "");
-  //     super.loadCardIcon(_iconImageAsset!, _newCard.base.getName());
-  //     //   updateRiveText(
-  //     //       "addedPowerText", "+ ˢ${(_newCard - _card!.power).compact()}");
-  //     //   updateRiveText("cardPowerText", "ˢ${(_newCard).compact()}");
-  //     // } else if (event.name == "powerUp") {
-  //     //   ++_sacrificeStep;
-  //     //   var diff = _newCard - _card!.power;
-  //     //   var addedPower = (diff * (_sacrificeStep / _sacrifiedCount)).round();
-  //     //   updateRiveText("addedPowerText", "+ ˢ${addedPower.compact()}");
-  //   }
-  // }
-
-  // ImageAsset? _frameImageAsset, _iconImageAsset;
-
   @override
-  Future<void> loadCardIcon(ImageAsset asset, String name) async {
-    super.loadCardIcon(asset, _mergedCard.base.getName());
+  Future<void> loadCardIcon(ImageAsset asset, String name) async =>
+      super.loadCardIcon(asset, _mergedCard.base.getName());
 
   @override
   Future<void> loadCardFrame(ImageAsset asset, FruitCard? card) async =>
