@@ -186,7 +186,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                 child: section == ShopSections.gold
                     ? Widgets.rect(
                         decoration: Widgets.imageDecore("icon_star"),
-                        child: SkinnedText("x${_getShopMultiplier().toInt()}"))
+                        child: SkinnedText(
+                            "x${ShopData.getMultiplier(_account).round()}"))
                     : null),
             SizedBox(width: 130.d),
             const Expanded(child: SizedBox()),
@@ -240,7 +241,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 Asset.load<Image>("icon_gold", width: 76.d),
                 SkinnedText(
-                    (item.base.value * _getShopMultiplier()).round().compact(),
+                    (item.base.value * ShopData.getMultiplier(_account))
+                        .round()
+                        .compact(),
                     style: TStyles.large.copyWith(color: TColors.orange))
               ])),
           _percentageBadge(item.base.ratio),
@@ -249,7 +252,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _itemNectarBuilder(int index, ShopItemVM item) {
-    var title = _getTitle(item.base);
+    var title = item.getTitle();
     return _baseItemBilder(
         index,
         title,
@@ -311,7 +314,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                   color: ButtonColor.green,
                   padding: EdgeInsets.only(bottom: 10.d),
                   icon: item.inStore ? null : "icon_${item.base.currency}",
-                  label: _getItemPrice(item),
+                  label:
+                      ShopData.calculatePrice(_account, _productDetails, item),
                   height: 120.d))
         ]),
         onPressed: () => _onItemPressed(item.base));
@@ -337,49 +341,6 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         child: Transform.rotate(
             angle: -0.15,
             child: Asset.load<Image>("reward_$reward", width: 76.d)));
-  }
-  double _getShopMultiplier() {
-    const goldMultiplier = 3;
-    const veteranGoldDivider = 20;
-    const veteranGoldMultiplier = 80;
-    return switch (_account.level) {
-      < 10 => 1.0,
-      < 20 => 2.5,
-      < 30 => 4.5,
-      < 40 => 7.0,
-      < 50 => 10.0,
-      < 60 => 12.5,
-      < 70 => 16.0,
-      < 80 => 20.0,
-      < 90 => 25.0,
-      < 100 => 30.0,
-      < 300 =>
-        30.0 + (((_account.level - 90) / 10).floor() * goldMultiplier).floor(),
-      _ => 93.0 +
-          (((_account.level - 300) / veteranGoldDivider).floor() *
-                  veteranGoldMultiplier)
-              .floor(),
-    };
-  }
-
-  String _getItemPrice(ShopItemVM item) {
-    var price = item.base.value;
-    if (item.inStore && _productDetails.containsKey(item.base.productID)) {
-      return _productDetails[item.base.productID]!.price;
-    }
-    if (item.base.section == ShopSections.boost) {
-      // Converts gold multiplier to nectar for boost packs
-      var boostNectarMultiplier = _getShopMultiplier() / _account.nectarPrice;
-      return switch (price) {
-        10 => (30000 * boostNectarMultiplier).round(),
-        20 => (90000 * boostNectarMultiplier).round(),
-        50 => (300000 * boostNectarMultiplier).round(),
-        100 => (1000000 * boostNectarMultiplier).round(),
-        _ => price,
-      }
-          .compact();
-    }
-    return price.compact();
   }
 
   _onItemPressed(ShopItem item) async {
