@@ -66,7 +66,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       _button(
                         width: 420.d,
-                        label: "˧  ${"popupcardenhance".l()}",
+                        label: "˧  ${"enhance_l".l()}",
                         isEnable: _card.power < _card.base.powerLimit,
                         onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
                         onDisablePressed: () => toast("card_max_power".l()),
@@ -74,8 +74,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                       _button(
                           width: 420.d,
                           isEnable: isUpgradable,
-                          label:
-                              "˨  ${"popupcard${_card.base.isHero ? "upgrade" : "merge"}".l()}",
+                          label: "˨  ${"evolve_l".l()}",
                           onPressed: () => _onButtonsTap(_card.base.isHero
                               ? Routes.popupCardUpgrade
                               : Routes.popupCardMerge),

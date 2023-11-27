@@ -32,6 +32,9 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
 
   @override
+  String titleBuilder() => "enhance_l".l();
+
+  @override
   selectedForeground() {
     return Widgets.rect(
         radius: 18.d,
