@@ -132,10 +132,11 @@ class _CardItemState extends State<CardItem> {
       items.add(Positioned(
           bottom: 16 * s,
           left: 16 * s,
-          child: Row(children: [
+          child: Row(textDirection: TextDirection.ltr, children: [
             SkinnedText("ˢ${widget.card.power.compact()}", style: _small),
             widget.extraPower > 0
                 ? SkinnedText("+${widget.extraPower.compact()}",
+                    textDirection: TextDirection.ltr,
                     style: _small!.copyWith(color: TColors.orange))
                 : const SizedBox(),
           ])));
