@@ -58,7 +58,7 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
     var controller = super.onRiveInit(artboard, stateMachineName);
     controller.findInput<double>("cards")?.value = _sacrifiedCount.toDouble();
     updateRiveText("cardNameText", "${_card.base.fruit.name}_title".l());
-    updateRiveText("cardLevelText", "${_card.base.rarity}");
+    updateRiveText("cardLevelText", _card.base.rarity.convert());
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
     return controller;
   }

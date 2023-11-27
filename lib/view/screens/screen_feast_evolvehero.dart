@@ -57,7 +57,7 @@ class _EvolveHeroFeastScreenState
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
     updateRiveText("cardNameText", "${_card.base.fruit.name}_title".l());
-    updateRiveText("cardLevelText", "${_card.base.rarity - 1}");
+    updateRiveText("cardLevelText", (_card.base.rarity - 1).convert());
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
     return controller;
   }
@@ -66,7 +66,7 @@ class _EvolveHeroFeastScreenState
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (event.name == "ready") {
-      updateRiveText("cardLevelText", "${_card.base.rarity}");
+      updateRiveText("cardLevelText", _card.base.rarity.convert());
       updateRiveText(
           "addedPowerText", "+ ˢ${(_card.power - _oldPower).compact()}");
       updateRiveText("cardPowerText", "ˢ${(_card.power).compact()}");

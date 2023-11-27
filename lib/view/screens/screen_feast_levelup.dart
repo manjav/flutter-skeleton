@@ -58,7 +58,7 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
     updateRiveText("goldText", "$_gold");
     updateRiveText("levelText", "${widget.args["level"] ?? 123}");
     updateRiveText("cardNameText", "${_card!.base.fruit.name}_title".l());
-    updateRiveText("cardLevelText", "${_card!.base.rarity}");
+    updateRiveText("cardLevelText", _card!.base.rarity.convert());
     updateRiveText("cardPowerText", "ˢ${_card!.power.compact()}");
     return controller;
   }

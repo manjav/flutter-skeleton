@@ -110,8 +110,8 @@ class _CardItemState extends State<CardItem> {
           top: (level > 9 ? 8 : 2) * s,
           right: 13 * s,
           width: 48 * s,
-          child: SkinnedText(level.toString(),
-              style: level > 9 ? _small : _medium))
+          child:
+              SkinnedText(level.convert(), style: level > 9 ? _small : _medium))
     ];
     if (widget.showTitle) {
       items.add(Positioned(

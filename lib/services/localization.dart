@@ -38,6 +38,21 @@ class Localization extends IService {
       _sentences![key] = value.toString();
     });
   }
+
+  static String convert(String input) {
+    if (!Localization.isRTL) return input;
+    return input
+        .replaceAll('0', '٠')
+        .replaceAll('1', '١')
+        .replaceAll('2', '٢')
+        .replaceAll('3', '٣')
+        .replaceAll('4', '۴')
+        .replaceAll('5', '۵')
+        .replaceAll('6', '۶')
+        .replaceAll('7', '٧')
+        .replaceAll('8', '٨')
+        .replaceAll('9', '٩');
+  }
 }
 
 extension LocalizationExtension on String {
@@ -63,4 +78,10 @@ extension LocalizationExtension on String {
   TextDirection getDirection() => intl.Bidi.detectRtlDirectionality(this)
       ? TextDirection.rtl
       : TextDirection.ltr;
+
+  String convert() => Localization.convert(this);
+}
+
+extension LocalizationIntExtension on int {
+  String convert() => Localization.convert(toString());
 }
