@@ -56,7 +56,7 @@ class _EvolveHeroFeastScreenState
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
-    updateRiveText("cardNameText", "${_card.base.fruit.name}_t".l());
+    updateRiveText("cardNameText", "${_card.base.fruit.name}_title".l());
     updateRiveText("cardLevelText", "${_card.base.rarity - 1}");
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
     return controller;

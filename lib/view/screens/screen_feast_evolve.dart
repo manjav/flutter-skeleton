@@ -59,11 +59,11 @@ class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
     for (var i = 1; i < 3; i++) {
-      updateRiveText("cardNameText$i", "${_mergedCard.base.fruit.name}_t".l());
+      updateRiveText("cardNameText$i", "${_mergedCard.base.fruit.name}_title".l());
       updateRiveText("cardLevelText$i", "${_mergedCard.base.rarity}");
       updateRiveText("cardPowerText$i", "ˢ${_mergedCard.power.compact()}");
     }
-    updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_t".l());
+    updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_title".l());
     updateRiveText("cardLevelText3", "${_newCard.base.rarity}");
     updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");
     updateRiveText("titleText", "evolve_l".l());

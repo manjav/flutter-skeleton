@@ -118,7 +118,7 @@ class _CardItemState extends State<CardItem> {
           top: 6 * s,
           left: 22 * s,
           height: 52 * s,
-          child: SkinnedText("${baseCard.fruit.name}_t".l(),
+          child: SkinnedText("${baseCard.fruit.name}_title".l(),
               style: _small!.autoSize(baseCard.name.length, 8, 36 * s))));
     }
     if (widget.showCooldown) {

@@ -60,7 +60,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                         child: CardItem(_card,
                             size: 500.d, heroTag: "hero_${_card.id}")),
                     SizedBox(height: 70.d),
-                    Text("${_name}_d".l(),
+                    Text("${_name}_description".l(),
                         style: TStyles.mediumInvert.copyWith(height: 2.7.d)),
                     SizedBox(height: 100.d),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
