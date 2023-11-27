@@ -1,5 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter_skeleton/services/trackers/tracker_metrix.dart';
+import '../../services/trackers/tracker_metrix.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../services/ads/ads_abstract.dart';

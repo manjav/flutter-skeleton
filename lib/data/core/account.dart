@@ -7,6 +7,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../services/localization.dart';
+import '../../services/service_provider.dart';
+import '../../services/trackers/trackers.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';
 import 'adam.dart';
@@ -58,7 +60,7 @@ class Player extends Opponent {
   }
 }
 
-class Account extends Player {
+class Account extends Player with ServiceProvider {
   Account() : super.initialize({}, 0);
   static const Map<String, int> availablityLevels = {
     'ads': 4,
@@ -521,6 +523,9 @@ class Account extends Player {
     // Level Up
     data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
+      if (data["level"] == 5) {
+        getService<Trackers>(context).design("level_5");
+      }
       Timer(
           const Duration(milliseconds: 100),
           () => Navigator.pushNamed(context, Routes.feastLevelup.routeName,
