@@ -10,9 +10,9 @@ import 'iservices.dart';
 class Localization extends IService {
   static var locales = const [Locale('en'), Locale('fa')];
   static Map<String, dynamic>? _sentences;
-  var dir = TextDirection.ltr;
-  var languageCode = "en";
-  var isRTL = false;
+  static String languageCode = "en";
+  static TextDirection dir = TextDirection.ltr;
+  static bool isRTL = false;
 
   Localization();
 
@@ -22,11 +22,12 @@ class Localization extends IService {
   @override
   initialize({List<Object>? args}) async {
     var locale = Localizations.localeOf(args![0] as BuildContext);
-    isRTL = locale.languageCode == "fa" || locale.languageCode == "ar";
+    languageCode = locale.languageCode;
+    isRTL = languageCode == "fa" || languageCode == "ar";
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
     await _getData('keys.json');
-    await _getData('${locale.languageCode}.json');
+    await _getData('$languageCode.json');
     super.initialize();
   }
 
