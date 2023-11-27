@@ -15,15 +15,15 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import 'iscreen.dart';
 
-class MergeFeastScreen extends AbstractScreen {
-  MergeFeastScreen({required super.args, super.key})
+class EvolveFeastScreen extends AbstractScreen {
+  EvolveFeastScreen({required super.args, super.key})
       : super(Routes.feastLevelup);
 
   @override
-  createState() => _MergeFeastScreenState();
+  createState() => _EvolveFeastScreenState();
 }
 
-class _MergeFeastScreenState extends AbstractScreenState<MergeFeastScreen>
+class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
     with RewardScreenMixin {
   late AccountCard _mergedCard, _newCard;
 
