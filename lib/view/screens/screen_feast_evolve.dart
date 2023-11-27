@@ -66,7 +66,7 @@ class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
     updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_t".l());
     updateRiveText("cardLevelText3", "${_newCard.base.rarity}");
     updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");
-    updateRiveText("titleText", "popupcardmerge".l());
+    updateRiveText("titleText", "evolve_l".l());
     return controller;
   }
 
