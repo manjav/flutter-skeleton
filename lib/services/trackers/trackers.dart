@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_skeleton/services/trackers/tracker_metrix.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../services/ads/ads_abstract.dart';
@@ -10,7 +11,7 @@ import 'tracker_firebase.dart';
 import 'tracker_gameanalytics.dart';
 import 'tracker_kochava.dart';
 
-enum TrackerSDK { none, firebase, gameAnalytics, kochava }
+enum TrackerSDK { none, firebase, gameAnalytics, kochava, metrix }
 
 enum BuildType { installed, instant }
 
@@ -28,7 +29,8 @@ class Trackers extends IService {
   final _sdks = <TrackerSDK, AbstractTracker>{
     TrackerSDK.firebase: FirebaseTracker(),
     TrackerSDK.gameAnalytics: GATracker(),
-    TrackerSDK.kochava: KochavaaTracker()
+    TrackerSDK.kochava: KochavaaTracker(),
+    TrackerSDK.metrix: MetrixTracker(),
   };
   final FirebaseAnalytics firebaseAnalytics;
   final _buildType = BuildType.installed;

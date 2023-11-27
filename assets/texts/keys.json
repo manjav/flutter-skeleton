@@ -11,5 +11,10 @@
     "onesignal_appid": "b3f4396e-084b-4490-bfd3-42dbc670a0a3",
     "tracker_gameAnalytics_android_key": "e7726c809a3f78fdc5f669afc19b28c2",
     "tracker_gameAnalytics_android_sec": "cdf94869c839f6a506d7649ca24579c5bb1b90d3",
-    "tracker_kochava_android_key": "konew-fruitcraft-jwx7t"
+    "tracker_kochava_android_key": "konew-fruitcraft-jwx7t",
+    "tracker_metrix_app_id": "xmqcrkjfmwteytt",
+    "tracker_metrix_has_purchase": "uxkbw",
+    "tracker_metrix_purchase": "ihlht",
+    "tracker_metrix_rewarded_andriod": "ggghr",
+    "tracker_metrix_reached_level_5": "tdmxa"
 }
