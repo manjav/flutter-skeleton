@@ -76,7 +76,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                           isEnable: isUpgradable,
                           label: "˨  ${"evolve_l".l()}",
                           onPressed: () => _onButtonsTap(_card.base.isHero
-                              ? Routes.popupCardUpgrade
+                              ? Routes.popupHeroEvolve
                               : Routes.popupCardMerge),
                           onDisablePressed: () {
                             toast(_card.isUpgradable

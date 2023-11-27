@@ -19,15 +19,15 @@ import '../widgets/indicator.dart';
 import '../widgets/skinnedtext.dart';
 import 'ipopup.dart';
 
-class CardUpgradePopup extends AbstractPopup {
-  const CardUpgradePopup({super.key, required super.args})
-      : super(Routes.popupCardUpgrade);
+class HeroEvolvePopup extends AbstractPopup {
+  const HeroEvolvePopup({super.key, required super.args})
+      : super(Routes.popupHeroEvolve);
 
   @override
-  createState() => _CardUpgradePopupState();
+  createState() => _HeroEvolvePopupState();
 }
 
-class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
+class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
   @override
   List<Widget> appBarElements() {
     return [
@@ -36,6 +36,9 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
       Indicator(widget.type.name, Values.potion, width: 280.d),
     ];
   }
+
+  @override
+  String titleBuilder() => "evolve_l".l();
 
   @override
   Widget contentFactory() {
@@ -90,7 +93,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
           width: 500.d,
           color: ButtonColor.green,
           label: titleBuilder(),
-          onPressed: () => _upgrade(account, hero));
+          onPressed: () => _evolve(account, hero));
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -129,7 +132,7 @@ class _CardUpgradePopupState extends AbstractPopupState<CardUpgradePopup> {
     }
   }
 
-  _upgrade(Account account, HeroCard hero) async {
+  _evolve(Account account, HeroCard hero) async {
     try {
       var result = await rpc(RpcId.evolveCard,
           params: {RpcParams.sacrifices.name: "[${hero.card.id}]"});
