@@ -10,7 +10,8 @@ import 'trackers.dart';
 class MetrixTracker extends AbstractTracker {
   static const _prefix = "tracker_metrix_";
   @override
-  initialize({List? args}) {
+  initialize({List? args, Function(dynamic)? logCallback}) {
+    super.initialize(args: args, logCallback: logCallback);
     if (Platform.isIOS) {
       Metrix.initialize("${_prefix}app_id".l());
     }

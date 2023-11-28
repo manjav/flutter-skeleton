@@ -1,10 +1,12 @@
-import '../../utils/ilogger.dart';
 import '../ads/ads_abstract.dart';
 import 'trackers.dart';
 
-abstract class AbstractTracker with ILogger {
-  var sdk = TrackerSDK.none;
-  initialize({List? args});
+abstract class AbstractTracker {
+  TrackerSDK sdk = TrackerSDK.none;
+  Function(dynamic)? logCallback;
+  initialize({List? args, Function(dynamic)? logCallback}) {
+    this.logCallback = logCallback;
+  }
   // AppMetrica.runZoneGuarded(() {
   //   WidgetsFlutterBinding.ensureInitialized();
   //   AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
@@ -57,4 +59,6 @@ abstract class AbstractTracker with ILogger {
   // AppMetrica.reportEventWithMap(name, data);
 
   setScreen(String screenName);
+
+  log(dynamic input) => logCallback?.call(input);
 }
