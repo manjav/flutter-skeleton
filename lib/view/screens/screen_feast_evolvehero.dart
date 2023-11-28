@@ -22,7 +22,8 @@ class EvolveHeroFeastScreen extends AbstractScreen {
 
 class _EvolveHeroFeastScreenState
     extends AbstractScreenState<EvolveHeroFeastScreen> with RewardScreenMixin {
-  int _oldPower = 0, _evolveStepsCount = 3, _evolveStep = 0;
+  int _oldPower = 0, _evolveStep = 0;
+  final _evolveStepsCount = 3;
   late AccountCard _card;
 
   @override
@@ -30,7 +31,6 @@ class _EvolveHeroFeastScreenState
     super.initState();
     getService<Sounds>().play("levelup");
     _oldPower = widget.args["oldPower"] ?? 10;
-    _evolveStepsCount = (widget.args["sacrifiedCount"] ?? 3).clamp(1, 3);
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
   }
 
