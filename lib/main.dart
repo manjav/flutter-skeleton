@@ -92,9 +92,6 @@ class _MyAppState extends State<MyApp>
                 navigatorObservers: [
                   MyApp._observer
                 ],
-                // Provide the generated AppLocalizations to the MaterialApp. This
-                // allows descendant Widgets to display the correct translations
-                // depending on the user's locale.
                 localizationsDelegates: const [
                   // AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,
@@ -102,18 +99,6 @@ class _MyAppState extends State<MyApp>
                   GlobalMaterialLocalizations.delegate,
                 ],
                 supportedLocales: Localization.locales,
-
-                // Use AppLocalizations to configure the correct application title
-                // depending on the user's locale.
-                //
-                // The appTitle is defined in .arb files found in the localization
-                // directory.
-                /* onGenerateTitle: (BuildContext context) =>
-                    AppLocalizations.of(context)!.appTitle, */
-
-                // Define a light and dark color theme. Then, read the user's
-                // preferred ThemeMode (light, dark, or system default) from the
-                // SettingsController to display the correct theme.
                 theme: Themes.darkData,
                 locale: Localization.locales.firstWhere((l) =>
                     l.languageCode ==
