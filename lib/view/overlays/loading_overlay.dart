@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/services/prefs.dart';
 import 'package:rive/rive.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../blocs/services_bloc.dart';
 import '../../data/core/result.dart';
@@ -36,6 +39,10 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    var isUpdateError =
+        _exception?.statusCode == StatusCode.C700_UPDATE_NOTICE ||
+            _exception?.statusCode == StatusCode.C701_UPDATE_FORCE;
+    var isForceUpdate = _exception?.statusCode == StatusCode.C701_UPDATE_FORCE;
     return Scaffold(
       body: Stack(alignment: Alignment.center, children: [
         Asset.load<RiveAnimation>('loading', onRiveInit: (Artboard artboard) {
@@ -97,25 +104,58 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                 child: Column(
                   children: [
                     Text(
-                      "${'error_${_exception!.statusCode.value}'.l()}\nPlease try again.",
+                      "${'error_${_exception!.statusCode.value}'.l([
+                            _exception!.message
+                          ])}\n${isUpdateError ? "" : "try_again".l()}",
                       textAlign: TextAlign.center,
                       style: TStyles.mediumInvert,
                       softWrap: true,
                     ),
                     SizedBox(height: 48.d),
-                    Widgets.skinnedButton(
-                        width: 440.d,
-                        height: 160.d,
-                        padding: EdgeInsets.only(bottom: 16.d),
-                        label: 'Retry',
-                        buttonId: -1,
-                        onPressed: () {
-                          _reload();
-                        })
+                    Row(
+                        textDirection: TextDirection.ltr,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          isUpdateError && !isForceUpdate
+                              ? Widgets.skinnedButton(
+                                  height: 160.d,
+                                  padding:
+                                      EdgeInsets.fromLTRB(42.d, 0, 42.d, 16.d),
+                                  label: "play_l".l(),
+                                  buttonId: -1,
+                                  onPressed: () {
+                                    Pref.skipUpdate.setBool(true);
+                                    _reload();
+                                  })
+                              : const SizedBox(),
+                          SizedBox(width: 12.d),
+                          Widgets.skinnedButton(
+                              color: isUpdateError
+                                  ? ButtonColor.green
+                                  : ButtonColor.yellow,
+                              height: 160.d,
+                              padding: EdgeInsets.fromLTRB(42.d, 0, 42.d, 16.d),
+                              label: isUpdateError
+                                  ? "update_l".l()
+                                  : "retry_l".l(),
+                              buttonId: -1,
+                              onPressed: () {
+                                if (isUpdateError) {
+                                  _update(isForceUpdate);
+                                } else {
+                                  _reload();
+                                }
+                              }),
+                        ])
                   ],
                 )),
       ]),
     );
+  }
+
+  void _update(bool isForceUpdate) {
+    launchUrl(Uri.parse("app_url".l()));
+    SystemNavigator.pop();
   }
 
   void _reload() {

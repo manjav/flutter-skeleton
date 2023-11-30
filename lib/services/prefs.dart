@@ -54,13 +54,14 @@ class Prefs extends IService {
 enum Pref {
   attacks,
   cookies,
-  language, 
+  language,
   music,
   restoreKey,
   sfx,
   testVersion,
   tutorStep,
   visitCount,
+  skipUpdate,
 }
 
 extension PrefExt on Pref {

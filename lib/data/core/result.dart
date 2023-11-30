@@ -312,6 +312,8 @@ extension StatusCodeEx on StatusCode {
       StatusCode.C301_MOVED_PERMANENTLY => 301,
       StatusCode.C403_SERVICE_UNAVAILABLE => 403,
       StatusCode.C503_SERVICE_UNAVAILABLE => 503,
+      StatusCode.C700_UPDATE_NOTICE => 700,
+      StatusCode.C701_UPDATE_FORCE => 701,
       _ => 250
     };
   }
