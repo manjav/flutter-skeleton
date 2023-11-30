@@ -12,24 +12,26 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import 'iscreen.dart';
 
-class EvolveHeroFeastScreen extends AbstractScreen {
-  EvolveHeroFeastScreen({required super.args, super.key})
+class UpgradeCardFeastScreen extends AbstractScreen {
+  UpgradeCardFeastScreen({required super.args, super.key})
       : super(Routes.feastLevelup);
 
   @override
-  createState() => _EvolveHeroFeastScreenState();
+  createState() => _UpgradeCardFeastScreenState();
 }
 
-class _EvolveHeroFeastScreenState
-    extends AbstractScreenState<EvolveHeroFeastScreen> with RewardScreenMixin {
+class _UpgradeCardFeastScreenState
+    extends AbstractScreenState<UpgradeCardFeastScreen> with RewardScreenMixin {
   int _oldPower = 0, _evolveStep = 0;
   final _evolveStepsCount = 3;
   late AccountCard _card;
+  bool _isHero = false;
 
   @override
   void initState() {
     super.initState();
     getService<Sounds>().play("levelup");
+    _isHero = widget.args["isHero"] ?? false;
     _oldPower = widget.args["oldPower"] ?? 10;
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
   }
@@ -56,6 +58,8 @@ class _EvolveHeroFeastScreenState
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
+    controller.findInput<bool>("withPotion")?.value = _isHero;
+    controller.findInput<bool>("withNectar")?.value = !_isHero;
     updateRiveText("cardNameText", "${_card.base.fruit.name}_title".l());
     updateRiveText("cardLevelText", (_card.base.rarity - 1).convert());
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
