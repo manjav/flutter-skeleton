@@ -133,6 +133,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
   }
 
   _evolve(Account account, HeroCard hero) async {
+    var oldPower = hero.card.power;
     try {
       var result = await rpc(RpcId.evolveCard,
           params: {RpcParams.sacrifices.name: "[${hero.card.id}]"});
@@ -150,6 +151,9 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
       if (mounted) {
         accountBloc.add(SetAccount(account: account));
         Navigator.popUntil(context, (route) => route.isFirst);
+        var args = {"card": newHero.card, "oldPower": oldPower};
+        Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
+            arguments: args);
       }
     } finally {}
   }
