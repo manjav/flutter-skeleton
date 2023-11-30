@@ -633,6 +633,7 @@
     "error_503": "Server Unavailable!",
     "error_700": "Version  'v.%s' is available for update.",
     "error_701": "Your game must be Updated!",
+    "error_999": "Unknown Error!",
     "ago_moments": "Moments ago",
     "ago_minutes": "%s minutes ago",
     "ago_hours": "%s hours ago",
