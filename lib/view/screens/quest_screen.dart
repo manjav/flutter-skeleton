@@ -32,14 +32,12 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 
   @override
   void onRender(Duration timeStamp) {
-    super.onRender(timeStamp);
     _scrollController.jumpTo(_questsCount / 130 * DeviceInfo.size.height * 0.7 +
         Random().nextDouble() * DeviceInfo.size.height * 0.1);
   }
 
   @override
   Widget contentFactory() {
-    super.contentFactory();
     return SizedBox(
         width: DeviceInfo.size.width,
         height: DeviceInfo.size.height,
