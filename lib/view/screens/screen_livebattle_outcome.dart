@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/core/adam.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
@@ -29,6 +30,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   void initState() {
+    getService<Sounds>().play("won");
     var opponents = widget.args["opponents"] as List<LiveOpponent>;
     for (var opponent in opponents) {
       if (opponent.teamOwnerId == widget.args["alliseId"]) {
@@ -56,6 +58,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   @override
   Widget contentFactory() {
     var color = _alliseOwner.won ? "green" : "red";
+    getService<Sounds>().play(_alliseOwner.won ? "won" : "lose");
     return Widgets.button(
         padding: EdgeInsets.all(32.d),
         child: Column(
