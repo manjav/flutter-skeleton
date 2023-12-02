@@ -66,7 +66,7 @@ class NoobSocket extends IService {
 
       var noobMessage = NoobMessage.getProperMessage(
           _account, jsonDecode(trimmedMessage), _account.tribe);
-      if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
+      // if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
       _updateStatus(noobMessage);
       for (var method in onReceive) {
         method.call(noobMessage);
@@ -232,8 +232,8 @@ class NoobHelpMessage extends NoobMessage {
 // mainEnemy = mainEnemyID ,
 class NoobChatMessage extends NoobMessage {
   Message? base;
-  bool itsMe = false;
   int timestamp = 0;
+  bool itsMe = false;
   String sender = "", text = "";
   int avatarId = 0, creationDate = 0;
   Messages messageType = Messages.none;

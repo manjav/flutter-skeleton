@@ -15,15 +15,15 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import 'ipopup.dart';
 
-class CardMergePopup extends AbstractPopup {
-  const CardMergePopup({super.key, required super.args})
-      : super(Routes.popupCardMerge);
+class CardEvolvePopup extends AbstractPopup {
+  const CardEvolvePopup({super.key, required super.args})
+      : super(Routes.popupCardEvolve);
 
   @override
-  createState() => _CardMergePopupState();
+  createState() => _CardEvolvePopupState();
 }
 
-class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
+class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
     with CardEditMixin {
   final bool _hackMode = false;
   @override
@@ -31,6 +31,9 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
     selectedCards.addCard(widget.args['card']);
     super.initState();
   }
+
+  @override
+  String titleBuilder() => "evolve_l".l();
 
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
@@ -130,15 +133,15 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
       child: Widgets.skinnedButton(
           isEnable: selectedCards.value.length >= 2,
           padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
-          child: Row(children: [
-            SkinnedText("popupcardmerge".l(),
+          child: Row(textDirection: TextDirection.ltr, children: [
+            SkinnedText(titleBuilder(),
                 style: TStyles.large.copyWith(height: 3.d)),
             SizedBox(width: 24.d),
             Widgets.rect(
               padding: EdgeInsets.only(right: 12.d),
               decoration: Widgets.imageDecore(
                   "frame_hatch_button", ImageCenterSliceData(42)),
-              child: Row(children: [
+              child: Row(textDirection: TextDirection.ltr, children: [
                 Asset.load<Image>("icon_gold", height: 76.d),
                 SkinnedText(_getMergeCost().compact(), style: TStyles.large),
               ]),
@@ -189,7 +192,7 @@ class _CardMergePopupState extends AbstractPopupState<CardMergePopup>
       var result = await rpc(RpcId.evolveCard, params: params);
       updateAccount(result);
       if (mounted) {
-        Navigator.pushNamed(context, Routes.feastMerge.routeName, arguments: {
+        Navigator.pushNamed(context, Routes.feastEvolve.routeName, arguments: {
           "mergedCard": selectedCards.value.first,
           "newCard": result["card"]
         });

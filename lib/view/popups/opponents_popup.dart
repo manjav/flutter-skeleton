@@ -239,7 +239,6 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   Widget _buttons(List<Opponent> opponents) {
-    var isRTL = getService<Localization>().isRTL;
     return ValueListenableBuilder<Opponent>(
         valueListenable: _selectedOpponent,
         builder: (context, value, child) {
@@ -254,7 +253,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                   color: ButtonColor.green,
                   isEnable: value.index > 0,
                   child: Asset.load<Image>(
-                      "ui_arrow_${isRTL ? "forward" : "back"}",
+                      "ui_arrow_${Localization.isRTL ? "forward" : "back"}",
                       width: 68.d),
                   onPressed: () =>
                       _selectMap(opponents, _pageController.page! - 1)),
@@ -280,7 +279,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                   color: ButtonColor.green,
                   isEnable: value.index < opponents.length - 1,
                   child: Asset.load<Image>(
-                      "ui_arrow_${isRTL ? "back" : "forward"}",
+                      "ui_arrow_${Localization.isRTL ? "back" : "forward"}",
                       width: 68.d),
                   onPressed: () =>
                       _selectMap(opponents, _pageController.page! + 1)),

@@ -10,9 +10,9 @@ import 'iservices.dart';
 class Localization extends IService {
   static var locales = const [Locale('en'), Locale('fa')];
   static Map<String, dynamic>? _sentences;
-  var dir = TextDirection.ltr;
-  var languageCode = "en";
-  var isRTL = false;
+  static String languageCode = "en";
+  static TextDirection dir = TextDirection.ltr;
+  static bool isRTL = false;
 
   Localization();
 
@@ -22,11 +22,12 @@ class Localization extends IService {
   @override
   initialize({List<Object>? args}) async {
     var locale = Localizations.localeOf(args![0] as BuildContext);
-    isRTL = locale.languageCode == "fa" || locale.languageCode == "ar";
+    languageCode = locale.languageCode;
+    isRTL = languageCode == "fa" || languageCode == "ar";
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
     await _getData('keys.json');
-    await _getData('${locale.languageCode}.json');
+    await _getData('$languageCode.json');
     super.initialize();
   }
 
@@ -36,6 +37,21 @@ class Localization extends IService {
     result.forEach((String key, dynamic value) {
       _sentences![key] = value.toString();
     });
+  }
+
+  static String convert(String input) {
+    if (!Localization.isRTL) return input;
+    return input
+        .replaceAll('0', '٠')
+        .replaceAll('1', '١')
+        .replaceAll('2', '٢')
+        .replaceAll('3', '٣')
+        .replaceAll('4', '۴')
+        .replaceAll('5', '۵')
+        .replaceAll('6', '۶')
+        .replaceAll('7', '٧')
+        .replaceAll('8', '٨')
+        .replaceAll('9', '٩');
   }
 }
 
@@ -62,4 +78,10 @@ extension LocalizationExtension on String {
   TextDirection getDirection() => intl.Bidi.detectRtlDirectionality(this)
       ? TextDirection.rtl
       : TextDirection.ltr;
+
+  String convert() => Localization.convert(this);
+}
+
+extension LocalizationIntExtension on int {
+  String convert() => Localization.convert(toString());
 }

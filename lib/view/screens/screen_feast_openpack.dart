@@ -72,8 +72,8 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
     controller.findInput<double>("cards")?.value = count.toDouble();
     for (var i = 1; i <= count; i++) {
       var card = _cards[i - 1];
-      updateRiveText("cardNameText$i", "${card.base.fruit.name}_t".l());
-      updateRiveText("cardLevelText$i", "${card.base.rarity}");
+      updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
+      updateRiveText("cardLevelText$i", card.base.rarity.convert());
       updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
     }
     updateRiveText("packNameText", "shop_card_${_pack.id}".l());

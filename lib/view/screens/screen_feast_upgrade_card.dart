@@ -12,25 +12,27 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import 'iscreen.dart';
 
-class EnhanceFeastScreen extends AbstractScreen {
-  EnhanceFeastScreen({required super.args, super.key})
+class UpgradeCardFeastScreen extends AbstractScreen {
+  UpgradeCardFeastScreen({required super.args, super.key})
       : super(Routes.feastLevelup);
 
   @override
-  createState() => _EnhanceFeastScreenState();
+  createState() => _UpgradeCardFeastScreenState();
 }
 
-class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
-    with RewardScreenMixin {
-  int _oldPower = 0, _sacrifiedCount = 2, _sacrificeStep = 0;
+class _UpgradeCardFeastScreenState
+    extends AbstractScreenState<UpgradeCardFeastScreen> with RewardScreenMixin {
+  int _oldPower = 0, _evolveStep = 0;
+  final _evolveStepsCount = 3;
   late AccountCard _card;
+  bool _isHero = false;
 
   @override
   void initState() {
     super.initState();
     getService<Sounds>().play("levelup");
-    _oldPower = widget.args["oldPower"] ?? 90;
-    _sacrifiedCount = (widget.args["sacrifiedCount"] ?? 6).clamp(1, 6);
+    _isHero = widget.args["isHero"] ?? false;
+    _oldPower = widget.args["oldPower"] ?? 10;
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
   }
 
@@ -41,7 +43,7 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
         alignment: Alignment.center,
         child: Stack(children: [
           backgrounBuilder(),
-          animationBuilder("enhance"),
+          animationBuilder("evolvehero"),
         ]),
         onPressed: () {
           if (readyToClose) {
@@ -56,9 +58,10 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
-    controller.findInput<double>("cards")?.value = _sacrifiedCount.toDouble();
+    controller.findInput<bool>("withPotion")?.value = _isHero;
+    controller.findInput<bool>("withNectar")?.value = !_isHero;
     updateRiveText("cardNameText", "${_card.base.fruit.name}_title".l());
-    updateRiveText("cardLevelText", _card.base.rarity.convert());
+    updateRiveText("cardLevelText", (_card.base.rarity - 1).convert());
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
     return controller;
   }
@@ -67,13 +70,14 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (event.name == "ready") {
+      updateRiveText("cardLevelText", _card.base.rarity.convert());
       updateRiveText(
           "addedPowerText", "+ ˢ${(_card.power - _oldPower).compact()}");
       updateRiveText("cardPowerText", "ˢ${(_card.power).compact()}");
     } else if (event.name == "powerUp") {
-      ++_sacrificeStep;
+      ++_evolveStep;
       var diff = _card.power - _oldPower;
-      var addedPower = (diff * (_sacrificeStep / _sacrifiedCount)).round();
+      var addedPower = (diff * (_evolveStep / _evolveStepsCount)).round();
       updateRiveText("addedPowerText", "+ ˢ${addedPower.compact()}");
     }
   }

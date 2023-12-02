@@ -66,6 +66,16 @@ class HttpConnection extends IService {
     }
     if (response!.statusCode == 200) {
       _config = json.decode(response.body);
+      var version = int.parse("app_version".l());
+      if (_config["forceVersion"] > version) {
+        throw RpcException(
+            StatusCode.C701_UPDATE_FORCE, "${_config["forceVersion"]}");
+      } else if (!Pref.skipUpdate.getBool() &&
+          _config["noticeVersion"] > version) {
+        throw RpcException(
+            StatusCode.C700_UPDATE_NOTICE, "${_config["noticeVersion"]}");
+      }
+      Pref.skipUpdate.setBool(false);
       LoadingData.baseURL = "http://${_config['ip']}";
       LoadingData.chatIp = _config['chatIp'];
       LoadingData.chatPort = _config['chatPort'];

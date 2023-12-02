@@ -168,23 +168,29 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                   bottom: 8.d,
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Text(bidderName, style: TStyles.medium.copyWith(height: 1)),
-                    Row(mainAxisSize: MainAxisSize.min, children: [
-                      Asset.load<Image>("icon_gold", width: 60.d),
-                      SizedBox(width: 8.d),
-                      SkinnedText(card.maxBid.compact(), style: TStyles.large)
-                    ]),
+                    Row(
+                        mainAxisSize: MainAxisSize.min,
+                        textDirection: TextDirection.ltr,
+                        children: [
+                          Asset.load<Image>("icon_gold", width: 60.d),
+                          SizedBox(width: 8.d),
+                          SkinnedText(card.maxBid.compact(),
+                              style: TStyles.large)
+                        ]),
                     SizedBox(height: 8.d),
                     bidable
                         ? Widgets.skinnedButton(
                             padding: EdgeInsets.fromLTRB(0, 12.d, 8.d, 32.d),
                             color: ButtonColor.green,
-                            child:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              Asset.load<Image>("icon_gold", width: 60.d),
-                              SizedBox(width: 4.d),
-                              SkinnedText("+${card.bidStep.compact()}",
-                                  style: TStyles.large)
-                            ]),
+                            child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                textDirection: TextDirection.ltr,
+                                children: [
+                                  Asset.load<Image>("icon_gold", width: 60.d),
+                                  SizedBox(width: 4.d),
+                                  SkinnedText("+${card.bidStep.compact()}",
+                                      style: TStyles.large)
+                                ]),
                             onPressed: () => _bid(context, card))
                         : const SizedBox(),
                   ])),

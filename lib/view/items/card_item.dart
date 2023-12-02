@@ -110,15 +110,15 @@ class _CardItemState extends State<CardItem> {
           top: (level > 9 ? 8 : 2) * s,
           right: 13 * s,
           width: 48 * s,
-          child: SkinnedText(level.toString(),
-              style: level > 9 ? _small : _medium))
+          child:
+              SkinnedText(level.convert(), style: level > 9 ? _small : _medium))
     ];
     if (widget.showTitle) {
       items.add(Positioned(
           top: 6 * s,
           left: 22 * s,
           height: 52 * s,
-          child: SkinnedText("${baseCard.fruit.name}_t".l(),
+          child: SkinnedText("${baseCard.fruit.name}_title".l(),
               style: _small!.autoSize(baseCard.name.length, 8, 36 * s))));
     }
     if (widget.showCooldown) {
@@ -132,10 +132,11 @@ class _CardItemState extends State<CardItem> {
       items.add(Positioned(
           bottom: 16 * s,
           left: 16 * s,
-          child: Row(children: [
+          child: Row(textDirection: TextDirection.ltr, children: [
             SkinnedText("ˢ${widget.card.power.compact()}", style: _small),
             widget.extraPower > 0
                 ? SkinnedText("+${widget.extraPower.compact()}",
+                    textDirection: TextDirection.ltr,
                     style: _small!.copyWith(color: TColors.orange))
                 : const SizedBox(),
           ])));

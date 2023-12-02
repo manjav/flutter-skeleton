@@ -60,13 +60,13 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                         child: CardItem(_card,
                             size: 500.d, heroTag: "hero_${_card.id}")),
                     SizedBox(height: 70.d),
-                    Text("${_name}_d".l(),
+                    Text("${_name}_description".l(),
                         style: TStyles.mediumInvert.copyWith(height: 2.7.d)),
                     SizedBox(height: 100.d),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       _button(
                         width: 420.d,
-                        label: "˧  ${"popupcardenhance".l()}",
+                        label: "˧  ${"enhance_l".l()}",
                         isEnable: _card.power < _card.base.powerLimit,
                         onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
                         onDisablePressed: () => toast("card_max_power".l()),
@@ -74,11 +74,10 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                       _button(
                           width: 420.d,
                           isEnable: isUpgradable,
-                          label:
-                              "˨  ${"popupcard${_card.base.isHero ? "upgrade" : "merge"}".l()}",
+                          label: "˨  ${"evolve_l".l()}",
                           onPressed: () => _onButtonsTap(_card.base.isHero
-                              ? Routes.popupCardUpgrade
-                              : Routes.popupCardMerge),
+                              ? Routes.popupHeroEvolve
+                              : Routes.popupCardEvolve),
                           onDisablePressed: () {
                             toast(_card.isUpgradable
                                 ? "card_no_sibling".l()

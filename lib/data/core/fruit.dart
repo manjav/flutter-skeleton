@@ -230,7 +230,7 @@ class AccountCard extends AbstractCard {
         getAccountBloc(context).add(SetAccount(account: account));
       }
     } on RpcException catch (e) {
-      if (e.statusCode == StatusCode.C178_COOL_ENOUGH) {
+      if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL) {
         lastUsedAt = 0;
       }
     }

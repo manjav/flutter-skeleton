@@ -6,13 +6,13 @@ import 'popups/building_treasury_popup.dart';
 import 'popups/card_collection_popup.dart';
 import 'popups/card_details_popup.dart';
 import 'popups/card_enhance_popup.dart';
-import 'popups/card_merge_popup.dart';
+import 'popups/card_evolve_popup.dart';
 import 'popups/card_select_category_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/card_select_type_popup.dart';
-import 'popups/card_upgrade_popup.dart';
 import 'popups/combo_popup.dart';
 import 'popups/gift_popup.dart';
+import 'popups/hero_evolve_popup.dart';
 import 'popups/hero_popup.dart';
 import 'popups/inbox_popup.dart';
 import 'popups/invite_popup.dart';
@@ -34,8 +34,9 @@ import 'screens/loading_screen.dart';
 import 'screens/quest_screen.dart';
 import 'screens/screen_attack_outcome.dart';
 import 'screens/screen_feast_enhance.dart';
+import 'screens/screen_feast_evolve.dart';
+import 'screens/screen_feast_upgrade_card.dart';
 import 'screens/screen_feast_levelup.dart';
-import 'screens/screen_feast_merge.dart';
 import 'screens/screen_feast_openpack.dart';
 import 'screens/screen_feast_purchase.dart';
 import 'screens/screen_livebattle.dart';
@@ -55,15 +56,17 @@ enum Routes {
   feastOpenpack,
   feastLevelup,
   feastEnhance,
-  feastMerge,
+  feastEnhancemax,
+  feastEvolve,
   feastPurchase,
+  feastUpgradeCard,
 
   popupNone,
   popupMessage,
   popupCardDetails,
   popupCardEnhance,
-  popupCardUpgrade,
-  popupCardMerge,
+  popupHeroEvolve,
+  popupCardEvolve,
   popupCollection,
   popupCardSelect,
   popupLeague,
@@ -103,12 +106,14 @@ extension RouteProvider on Routes {
       "/feastLevelup" => LevelupFeastScreen(args: args ?? {}),
       "/feastOpenpack" => OpenpackFeastScreen(args: args ?? {}),
       "/feastEnhance" => EnhanceFeastScreen(args: args ?? {}),
-      "/feastMerge" => MergeFeastScreen(args: args ?? {}),
+      "/feastEnhancemax" => PurchaseFeastScreen(args: args ?? {}),
+      "/feastEvolve" => EvolveFeastScreen(args: args ?? {}),
       "/feastPurchase" => PurchaseFeastScreen(args: args ?? {}),
+      "/feastUpgradeCard" => UpgradeCardFeastScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
-      "/popupCardMerge" => CardMergePopup(args: args ?? {}),
-      "/popupCardUpgrade" => CardUpgradePopup(args: args ?? {}),
+      "/popupCardEvolve" => CardEvolvePopup(args: args ?? {}),
+      "/popupHeroEvolve" => HeroEvolvePopup(args: args ?? {}),
       "/popupCollection" => CollectionPopup(),
       "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),

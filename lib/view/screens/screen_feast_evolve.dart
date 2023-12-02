@@ -15,15 +15,15 @@ import '../route_provider.dart';
 import '../widgets.dart';
 import 'iscreen.dart';
 
-class MergeFeastScreen extends AbstractScreen {
-  MergeFeastScreen({required super.args, super.key})
+class EvolveFeastScreen extends AbstractScreen {
+  EvolveFeastScreen({required super.args, super.key})
       : super(Routes.feastLevelup);
 
   @override
-  createState() => _MergeFeastScreenState();
+  createState() => _EvolveFeastScreenState();
 }
 
-class _MergeFeastScreenState extends AbstractScreenState<MergeFeastScreen>
+class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
     with RewardScreenMixin {
   late AccountCard _mergedCard, _newCard;
 
@@ -59,14 +59,15 @@ class _MergeFeastScreenState extends AbstractScreenState<MergeFeastScreen>
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
     for (var i = 1; i < 3; i++) {
-      updateRiveText("cardNameText$i", "${_mergedCard.base.fruit.name}_t".l());
-      updateRiveText("cardLevelText$i", "${_mergedCard.base.rarity}");
+      updateRiveText(
+          "cardNameText$i", "${_mergedCard.base.fruit.name}_title".l());
+      updateRiveText("cardLevelText$i", _mergedCard.base.rarity.convert());
       updateRiveText("cardPowerText$i", "ˢ${_mergedCard.power.compact()}");
     }
-    updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_t".l());
-    updateRiveText("cardLevelText3", "${_newCard.base.rarity}");
+    updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_title".l());
+    updateRiveText("cardLevelText3", _newCard.base.rarity.convert());
     updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");
-    updateRiveText("titleText", "popupcardmerge".l());
+    updateRiveText("titleText", "evolve_l".l());
     return controller;
   }
 
