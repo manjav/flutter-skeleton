@@ -33,7 +33,7 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
 
   @override
   void initState() {
-    getService<Sounds>().play("levelup");
+    getService<Sounds>().play("open_card_pack");
     _pack = widget.args["item"] ??
         accountBloc.account!.loadingData.shopItems[ShopSections.card]![0];
     _cards = widget.args["achieveCards"] ??
