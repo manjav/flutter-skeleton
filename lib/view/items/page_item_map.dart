@@ -130,7 +130,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return;
     }
     var type = switch (building.type) {
-      Buildings.base => Routes.popupMineBuilding,
+      Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
       _ => Routes.none,
