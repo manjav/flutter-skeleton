@@ -66,4 +66,22 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     return result["card"];
   }
 
+  Future<AccountCard> evolveHero(
+      BuildContext context, AccountCard heroCard) async {
+    var result = await getService<HttpConnection>(context).rpc(RpcId.evolveCard,
+        params: {RpcParams.sacrifices.name: "[${heroCard.id}]"});
+
+    account!.cards.remove(heroCard.id);
+    if (context.mounted) {
+      account!.update(context, result);
+    }
+    // Replace hero
+    AccountCard card = result["card"];
+    var newHero = HeroCard(card, 0);
+    newHero.items = account!.heroes[heroCard.id]!.items;
+    account!.heroes[card.id] = newHero;
+    add(SetAccount(account: account!));
+    return newHero.card;
+  }
+
 }
