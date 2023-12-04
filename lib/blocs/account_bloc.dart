@@ -94,4 +94,21 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     return result["card"];
   }
 
+  Future<AccountCard> enhance(BuildContext context, AccountCard card,
+      SelectedCards selectedCards) async {
+    var params = {
+      RpcParams.card_id.name: card.id,
+      RpcParams.sacrifices.name: selectedCards.getIds()
+    };
+    var result = await getService<HttpConnection>(context)
+        .rpc(RpcId.enhanceCard, params: params);
+    for (var card in selectedCards.value) {
+      account!.cards.remove(card!.id);
+    }
+    if (context.mounted) {
+      account!.update(context, result);
+      add(SetAccount(account: account!));
+    }
+    return result["card"];
+  }
 }

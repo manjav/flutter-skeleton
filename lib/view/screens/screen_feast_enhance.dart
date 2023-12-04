@@ -21,24 +21,29 @@ class EnhanceFeastScreen extends AbstractScreen {
 
 class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
     with RewardScreenMixin {
-  int _oldPower = 0, _sacrifiedCount = 2, _sacrificeStep = 0;
   late AccountCard _card;
-
+  late SelectedCards _sacrificedCards;
+  int _oldPower = 0, _sacrificeStep = 0;
   @override
   void initState() {
     super.initState();
     getService<Sounds>().play("levelup");
-    _oldPower = widget.args["oldPower"] ?? 90;
-    _sacrifiedCount = (widget.args["sacrifiedCount"] ?? 6).clamp(1, 6);
     children = [backgrounBuilder(), animationBuilder("enhance")];
+    _sacrificedCards = widget.args["sacrifiedCards"] ??
+        [accountBloc.account!.cards.values.last];
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
+    _oldPower = _card.power;
+    process(() async {
+      return _card =
+          await accountBloc.enhance(context, _card, _sacrificedCards);
+    });
   }
 
   @override
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
-    controller.findInput<double>("cards")?.value = _sacrifiedCount.toDouble();
+    controller.findInput<double>("cards")?.value = _sacrificedCards.count;
     updateRiveText("cardNameText", "${_card.base.fruit.name}_title".l());
     updateRiveText("cardLevelText", _card.base.rarity.convert());
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
@@ -48,14 +53,15 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
   @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
-    if (event.name == "ready") {
-      updateRiveText(
-          "addedPowerText", "+ ˢ${(_card.power - _oldPower).compact()}");
-      updateRiveText("cardPowerText", "ˢ${(_card.power).compact()}");
+    var diff = _card.power - _oldPower;
+    if (state == RewardAniationState.started) {
+      updateRiveText("addedPowerText", "+ ˢ${diff.compact()}");
+    } else if (state == RewardAniationState.shown) {
+      updateRiveText("cardPowerText", "ˢ${_card.power.compact()}");
     } else if (event.name == "powerUp") {
       ++_sacrificeStep;
-      var diff = _card.power - _oldPower;
-      var addedPower = (diff * (_sacrificeStep / _sacrifiedCount)).round();
+      var addedPower =
+          (diff * (_sacrificeStep / _sacrificedCards.count)).round();
       updateRiveText("addedPowerText", "+ ˢ${addedPower.compact()}");
     }
   }
