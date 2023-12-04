@@ -144,5 +144,27 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
     var font = await FontAsset.parseBytes(bytes.buffer.asUint8List());
     asset.font = font;
   }
+
+  process(Future<dynamic> Function() callback) async {
+    try {
+      result = await callback.call();
+      if (state == RewardAniationState.waiting) {
+        startInput?.value = true;
+      }
+    } on RpcException catch (e) {
+      if (context.mounted) {
+        close();
+        await Future.delayed(const Duration(milliseconds: 10));
+        if (mounted) {
+          Navigator.pushNamed(context, Routes.popupMessage.routeName,
+              arguments: {
+                "title": "Error",
+                "message": "error_${e.statusCode.value}".l()
+              });
+        }
+      }
+    }
+  }
+
   void close() => Navigator.pop(context);
 }
