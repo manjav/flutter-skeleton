@@ -14,7 +14,6 @@ import '../../utils/utils.dart';
 import '../../view/mixins/reward_mixin.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
-import '../widgets.dart';
 import 'iscreen.dart';
 
 class OpenpackFeastScreen extends AbstractScreen {
@@ -35,32 +34,18 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
   void initState() {
     getService<Sounds>().play("levelup");
     _pack = widget.args["item"] ??
+
+    children = [
+      backgrounBuilder(),
+      _cardsList(),
+      IgnorePointer(child: animationBuilder("openpack")),
+    ];
         accountBloc.account!.loadingData.shopItems[ShopSections.card]![0];
-    _cards = widget.args["achieveCards"] ??
-        accountBloc.account!.cards.values.toList();
 
     _opacityAnimationController = AnimationController(
         vsync: this, upperBound: 3, duration: const Duration(seconds: 3));
     _opacityAnimationController.forward();
     super.initState();
-  }
-
-  @override
-  Widget contentFactory() {
-    return Widgets.button(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: Stack(alignment: const Alignment(0, 0.1), children: [
-          backgrounBuilder(),
-          _cardsList(),
-          IgnorePointer(child: animationBuilder("openpack")),
-        ]),
-        onPressed: () {
-          if (readyToClose) {
-            closeInput?.value = true;
-          } else {
-            skipInput?.value = true;
-          }
         });
   }
 

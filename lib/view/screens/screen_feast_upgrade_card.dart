@@ -31,27 +31,12 @@ class _UpgradeCardFeastScreenState
   void initState() {
     super.initState();
     getService<Sounds>().play("levelup");
+    children = [backgrounBuilder(), animationBuilder("evolvehero")];
     _isHero = widget.args["isHero"] ?? false;
     _oldPower = widget.args["oldPower"] ?? 10;
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
   }
 
-  @override
-  Widget contentFactory() {
-    return Widgets.button(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: Stack(children: [
-          backgrounBuilder(),
-          animationBuilder("evolvehero"),
-        ]),
-        onPressed: () {
-          if (readyToClose) {
-            closeInput?.value = true;
-          } else {
-            skipInput?.value = true;
-          }
-        });
   }
 
   @override

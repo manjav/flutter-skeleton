@@ -1,15 +1,14 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../utils/utils.dart';
+import '../../view/widgets/card_holder.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
-import '../widgets.dart';
 import 'iscreen.dart';
 
 class EnhanceFeastScreen extends AbstractScreen {
@@ -31,25 +30,8 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
     getService<Sounds>().play("levelup");
     _oldPower = widget.args["oldPower"] ?? 90;
     _sacrifiedCount = (widget.args["sacrifiedCount"] ?? 6).clamp(1, 6);
+    children = [backgrounBuilder(), animationBuilder("enhance")];
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
-  }
-
-  @override
-  Widget contentFactory() {
-    return Widgets.button(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: Stack(children: [
-          backgrounBuilder(),
-          animationBuilder("enhance"),
-        ]),
-        onPressed: () {
-          if (readyToClose) {
-            closeInput?.value = true;
-          } else {
-            skipInput?.value = true;
-          }
-        });
   }
 
   @override

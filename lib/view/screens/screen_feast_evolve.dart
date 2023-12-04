@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -12,7 +11,6 @@ import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
-import '../widgets.dart';
 import 'iscreen.dart';
 
 class EvolveFeastScreen extends AbstractScreen {
@@ -34,23 +32,8 @@ class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
     _newCard = widget.args["newCard"] ?? accountBloc.account!.cards.values.last;
     _mergedCard =
         widget.args["mergedCard"] ?? accountBloc.account!.cards.values.first;
-  }
 
-  @override
-  Widget contentFactory() {
-    return Widgets.button(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: Stack(children: [
-          backgrounBuilder(),
-          animationBuilder("merge"),
-        ]),
-        onPressed: () {
-          if (readyToClose) {
-            closeInput?.value = true;
-          } else {
-            skipInput?.value = true;
-          }
+    children = [backgrounBuilder(), animationBuilder("merge")];
         });
   }
 

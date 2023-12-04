@@ -10,6 +10,7 @@ import '../../data/core/fruit.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../screens/iscreen.dart';
+import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
 
 mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
@@ -17,8 +18,24 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   bool readyToClose = false;
   SMITrigger? skipInput, closeInput;
   SMINumber? _colorInput;
+  List<Widget> children = [];
 
   List<Widget> appBarElementsLeft() => [];
+
+  Widget contentFactory() {
+    return Widgets.button(
+        padding: EdgeInsets.zero,
+        alignment: Alignment.center,
+        child: Stack(children: children),
+        onPressed: () {
+          if (state.index <= RewardAniationState.waiting.index) return;
+          if (state == RewardAniationState.started) {
+            skipInput?.value = true;
+          } else if (state == RewardAniationState.shown) {
+            closeInput?.value = true;
+          }
+        });
+  }
 
   Widget backgrounBuilder({int color = 0, bool animated = true}) {
     return LoaderWidget(AssetType.animation, "background_pattern",
