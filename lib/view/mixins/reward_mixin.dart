@@ -7,18 +7,23 @@ import 'package:rive/rive.dart';
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/fruit.dart';
+import '../../data/core/result.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
+import '../route_provider.dart';
 import '../screens/iscreen.dart';
 import '../widgets.dart';
 import '../widgets/loaderwidget.dart';
 
+enum RewardAniationState { none, waiting, started, shown, closed }
+
 mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   late Artboard _artboard;
-  bool readyToClose = false;
-  SMITrigger? skipInput, closeInput;
+  RewardAniationState state = RewardAniationState.none;
+  SMITrigger? startInput, skipInput, closeInput;
   SMINumber? _colorInput;
   List<Widget> children = [];
+  dynamic result;
 
   List<Widget> appBarElementsLeft() => [];
 
@@ -63,6 +68,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
     _artboard = artboard;
     var controller =
         StateMachineController.fromArtboard(artboard, stateMachinName)!;
+    startInput = controller.findInput<bool>("start") as SMITrigger;
     skipInput = controller.findInput<bool>("skip") as SMITrigger;
     closeInput = controller.findInput<bool>("close") as SMITrigger;
     updateRiveText("commentText", "tap_close".l());
@@ -96,11 +102,19 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   }
 
   void onRiveEvent(RiveEvent event) {
-    if (event.name == "ready") {
-      readyToClose = true;
-    } else if (event.name == "close") {
-      WidgetsBinding.instance
-          .addPostFrameCallback((t) => Navigator.pop(context));
+    state = switch (event.name) {
+      "waiting" => RewardAniationState.waiting,
+      "started" => RewardAniationState.started,
+      "shown" => RewardAniationState.shown,
+      "closed" || "close" => RewardAniationState.closed,
+      _ => RewardAniationState.none,
+    };
+    if (state == RewardAniationState.waiting) {
+      if (result != null) {
+        startInput?.value = true;
+      }
+    } else if (state == RewardAniationState.closed) {
+      WidgetsBinding.instance.addPostFrameCallback((t) => close());
     }
   }
 
@@ -130,4 +144,5 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
     var font = await FontAsset.parseBytes(bytes.buffer.asUint8List());
     asset.font = font;
   }
+  void close() => Navigator.pop(context);
 }
