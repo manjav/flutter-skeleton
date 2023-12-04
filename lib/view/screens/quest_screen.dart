@@ -106,24 +106,24 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
   Widget build(BuildContext context) {
     if (_waitingMode) return SizedBox(height: DeviceInfo.size.height);
     return SizedBox(
-        width: DeviceInfo.size.width,
-        height: DeviceInfo.size.height,
-        child: Stack(alignment: Alignment.center, children: [
+      width: DeviceInfo.size.width,
+      height: DeviceInfo.size.height,
+      child: Stack(alignment: Alignment.center, children: [
         LoaderWidget(AssetType.animation, "quest_map_0",
-              onRiveInit: (Artboard artboard) {
+            onRiveInit: (Artboard artboard) {
           var controller = StateMachineController.fromArtboard(artboard, "Map");
           controller?.addEventListener((event) => _riveEventsListener(event));
-            artboard.addController(controller!);
-          }),
-          ValueListenableBuilder<List<City>>(
+          artboard.addController(controller!);
+        }),
+        ValueListenableBuilder<List<City>>(
             valueListenable: widget.arena,
-              builder: (context, value, child) {
-                return Stack(children: [
-                  for (var i = 0; i < value.length; i++)
+            builder: (context, value, child) {
+              return Stack(children: [
+                for (var i = 0; i < value.length; i++)
                   _cityRenderer(
                       value.length - i - 1, value[value.length - i - 1])
-                ]);
-              }),
+              ]);
+            }),
         Positioned(
             top: 140.d,
             child: SkinnedText("arena_l".l([widget.index + 1]),
@@ -176,14 +176,16 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
         city.state?.value = state;
         setText("levelText", "${index + 1}");
         controller?.addEventListener((event) => _riveEventsListener(event));
-        if (index == 1 ||
-            index == 4 ||
-            index == 7 ||
-            index == 10 ||
-            index == 12) {
-          controller?.findInput<double>("bubble")?.value = state > 10 ? 2 : 1;
-          controller?.findInput<double>("bubbleIndex")?.value =
-              index == 12 ? 0 : 1;
+        if (widget.index < 390) {
+          if (index == 1 ||
+              index == 4 ||
+              index == 7 ||
+              index == 10 ||
+              index == 12) {
+            controller?.findInput<double>("bubble")?.value = state > 10 ? 2 : 1;
+            controller?.findInput<double>("bubbleIndex")?.value =
+                index == 12 ? 0 : 1;
+          }
         }
         artboard.addController(controller!);
       }),
