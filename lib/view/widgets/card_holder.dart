@@ -76,6 +76,7 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
 
 class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   SelectedCards(super.value);
+  double get count => value.length.toDouble();
   setAtCard(int index, AccountCard? card, {bool toggleMode = true}) {
     value[index] = toggleMode && value[index] == card ? null : card;
     notifyListeners();
