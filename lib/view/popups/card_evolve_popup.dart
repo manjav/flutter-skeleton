@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
-import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -25,7 +24,7 @@ class CardEvolvePopup extends AbstractPopup {
 
 class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
     with CardEditMixin {
-  final bool _hackMode = false;
+  // final bool _hackMode = false;
   @override
   void initState() {
     selectedCards.addCard(widget.args['card']);
@@ -147,7 +146,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
               ]),
             )
           ]),
-          onPressed: _merge),
+          onPressed: _evolve),
     );
   }
 
@@ -185,19 +184,9 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
     return goldPrice;
   }
 
-  _merge() async {
-    if (selectedCards.value.length < 2) return;
-    var params = {RpcParams.sacrifices.name: selectedCards.getIds()};
-    try {
-      var result = await rpc(RpcId.evolveCard, params: params);
-      updateAccount(result);
-      if (mounted) {
-        Navigator.pushNamed(context, Routes.feastEvolve.routeName, arguments: {
-          "mergedCard": selectedCards.value.first,
-          "newCard": result["card"]
-        });
-      }
-    } finally {}
+  _evolve() async {
+    await Navigator.pushNamed(context, Routes.feastEvolve.routeName,
+        arguments: {"cards": selectedCards});
     cards = getCards(account);
     if (cards.length < 2) {
       // Show other mergable cards
@@ -214,10 +203,11 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
       selectedCards.value.clear();
       selectedCards.addCard(cards[0]);
     }
-    if (_hackMode) {
-      selectedCards.addCard(cards[1]);
-      await Future.delayed(const Duration(milliseconds: 1800));
-      if (mounted) _merge();
-    }
+    // if (_hackMode) {
+    //   await accountBloc.evolve(context, selectedCards);
+    //   selectedCards.addCard(cards[1]);
+    //   await Future.delayed(const Duration(milliseconds: 1800));
+    //   if (mounted) _evolve();
+    // }
   }
 }
