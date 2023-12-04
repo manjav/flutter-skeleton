@@ -43,6 +43,7 @@ class NoobSocket extends IService {
         TcpSocketConnection(LoadingData.chatIp, LoadingData.chatPort);
     // _socketConnection.enableConsolePrint(true);
     await _socketConnection.connect(500, _messageReceived, attempts: 3);
+    _lastMessageReceiveTime = DateTime.now().secondsSinceEpoch;
     subscribe("user${_account.id}");
     if (_account.tribe != null) subscribe("tribe${_account.tribe?.id}");
   }
@@ -89,7 +90,7 @@ class NoobSocket extends IService {
   void subscribe(String channel) => _run(NoobCommand.subscribe, channel);
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
   publish(String message) async {
-    if (!_socketConnection.isConnected()) {
+    if (!isConnected) {
       await connect();
     }
     var b64 = utf8.fuse(base64);
