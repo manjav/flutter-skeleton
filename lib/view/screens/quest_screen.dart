@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../services/deviceinfo.dart';
+import '../../services/localization.dart';
+import '../../services/service_provider.dart';
+import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/loaderwidget.dart';
+import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import 'iscreen.dart';
 
@@ -45,43 +49,84 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
             reverse: true,
             itemCount: _lands.length,
             controller: _scrollController,
-            itemBuilder: _mapItemRenderer));
+            itemBuilder: (context, index) =>
+                _mapItemRenderer(index + _firstArena)));
   }
 
-  Widget _mapItemRenderer(BuildContext context, int mapIndex) {
+  Widget _mapItemRenderer(int index) =>
+      ArenaItemRenderer(index, _getArena(index), _questsCount, _waitingMode);
+
+  ValueNotifier<List<City>> _getArena(int index) {
+    return _arenas[index >= _arenas.length ? _arenas.length - 1 : index];
+  }
+}
+
+class ArenaItemRenderer extends StatefulWidget {
+  final int index;
+  final int questsCount;
+  final bool waitingMode;
+  final ValueNotifier<List<City>> arena;
+  const ArenaItemRenderer(
+      this.index, this.arena, this.questsCount, this.waitingMode,
+      {super.key});
+
+  @override
+  State<ArenaItemRenderer> createState() => _ArenaItemRendererState();
+}
+
+class _ArenaItemRendererState extends State<ArenaItemRenderer>
+    with ServiceProviderMixin {
+  int _questsCount = 0;
+  bool _waitingMode = true;
+  @override
+  void initState() {
+    super.initState();
+    _questsCount = widget.questsCount;
+    if (widget.waitingMode) {
+      WidgetsBinding.instance.addPostFrameCallback((d) {
+        _waitingMode = false;
+        if (mounted) {
+          setState(() {});
+        }
+      });
+    } else {
+      _waitingMode = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_waitingMode) return SizedBox(height: DeviceInfo.size.height);
     return SizedBox(
         width: DeviceInfo.size.width,
         height: DeviceInfo.size.height,
         child: Stack(alignment: Alignment.center, children: [
-          LoaderWidget(AssetType.animation, "quest_map_${mapIndex.max(0)}",
+        LoaderWidget(AssetType.animation, "quest_map_0",
               onRiveInit: (Artboard artboard) {
-            var controller =
-                StateMachineController.fromArtboard(artboard, "Map");
-            controller?.addEventListener(
-                (event) => _riveEventsListener(event, mapIndex));
+          var controller = StateMachineController.fromArtboard(artboard, "Map");
+          controller?.addEventListener((event) => _riveEventsListener(event));
             artboard.addController(controller!);
           }),
           ValueListenableBuilder<List<City>>(
-              valueListenable: _lands[mapIndex],
+            valueListenable: widget.arena,
               builder: (context, value, child) {
                 return Stack(children: [
                   for (var i = 0; i < value.length; i++)
-                    _cityRenderer(mapIndex, value.length - i - 1,
-                        value[value.length - i - 1])
+                  _cityRenderer(
+                      value.length - i - 1, value[value.length - i - 1])
                 ]);
               }),
-        ]));
-  }
+        Positioned(
 
-  void _riveEventsListener(RiveEvent event, int mapIndex) {
+  void _riveEventsListener(RiveEvent event) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
       if (event.name == "click") {
         await Navigator.pushNamed(context, Routes.deck.routeName);
         _questsCount = accountBloc.account!.questsCount - 1;
         // Update city levels after quest
-        for (var i = 0; i < _lands[mapIndex].value.length; i++) {
-          _lands[mapIndex].value[i].state?.value =
-              (_questsCount - mapIndex * 130 - i * 10).toDouble();
+        for (var i = 0; i < widget.arena.value.length; i++) {
+          widget.arena.value[i].state?.value =
+              (_questsCount - widget.index * 130 - i * 10).toDouble();
         }
       } else if (event.name == "loading") {
         // Load city positions
@@ -92,12 +137,12 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
           positions.add(City(
               i, Offset(double.parse(offset[0]), double.parse(offset[1]))));
         }
-        _lands[mapIndex].value = positions;
+        widget.arena.value = positions;
       }
     });
   }
 
-  Widget _cityRenderer(int mapIndex, int index, City city) {
+  Widget _cityRenderer(int index, City city) {
     var size = index == 12 ? 200.d : 170.d;
     return Positioned(
       left: city.position.dx.d - size * 0.5,
@@ -113,12 +158,10 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
         var controller =
             StateMachineController.fromArtboard(artboard, "State Machine 1");
         city.state = controller?.findInput<double>("state") as SMINumber;
-        var state = (_questsCount - mapIndex * 130 - index * 10).toDouble();
+        var state = (_questsCount - widget.index * 130 - index * 10).toDouble();
         city.state?.value = state;
         setText("levelText", "${index + 1}");
-        controller
-            ?.addEventListener((event) => _riveEventsListener(event, mapIndex));
-
+        controller?.addEventListener((event) => _riveEventsListener(event));
         if (index == 1 ||
             index == 4 ||
             index == 7 ||
