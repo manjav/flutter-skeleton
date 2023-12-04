@@ -27,43 +27,58 @@ class OpenpackFeastScreen extends AbstractScreen {
 class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
     with RewardScreenMixin {
   late ShopItem _pack;
-  late List<AccountCard> _cards;
+  SMIInput<double>? _countInput;
+  List<AccountCard> _cards = [];
   late AnimationController _opacityAnimationController;
+  final Map<int, ImageAsset> _cardIconAssets = {}, _cardFrameAssets = {};
 
   @override
   void initState() {
     getService<Sounds>().play("levelup");
-    _pack = widget.args["item"] ??
-
     children = [
       backgrounBuilder(),
       _cardsList(),
       IgnorePointer(child: animationBuilder("openpack")),
     ];
+    _pack = widget.args["pack"] ??
         accountBloc.account!.loadingData.shopItems[ShopSections.card]![0];
 
     _opacityAnimationController = AnimationController(
         vsync: this, upperBound: 3, duration: const Duration(seconds: 3));
     _opacityAnimationController.forward();
     super.initState();
-        });
+
+    process(() async {
+      return _cards = await accountBloc.openPack(context, _pack);
+    });
   }
 
   @override
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
-    var count = _cards.length > 2 ? 0 : _cards.length;
-    controller.findInput<double>("cards")?.value = count.toDouble();
-    for (var i = 1; i <= count; i++) {
-      var card = _cards[i - 1];
-      updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
-      updateRiveText("cardLevelText$i", card.base.rarity.convert());
-      updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
-    }
+    _countInput = controller.findInput<double>("cards");
+
     updateRiveText("packNameText", "shop_card_${_pack.id}".l());
     updateRiveText("packDescriptionText", "shop_card_${_pack.id}_desc".l());
     return controller;
+  }
+
+  @override
+  void onRiveEvent(RiveEvent event) {
+    super.onRiveEvent(event);
+    if (state == RewardAniationState.started) {
+      var count = _cards.length > 2 ? 0 : _cards.length;
+      _countInput?.value = count.toDouble();
+      for (var i = 1; i <= count; i++) {
+        var card = _cards[i - 1];
+        updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
+        updateRiveText("cardLevelText$i", card.base.rarity.convert());
+        updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
+        loadCardIcon(_cardIconAssets[i - 1]!, _cards[i - 1].base.getName());
+        loadCardFrame(_cardFrameAssets[i - 1]!, _cards[i - 1].base);
+      }
+    }
   }
 
   @override
@@ -74,16 +89,12 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
         loadCardIcon(asset, "shop_card_${_pack.id}");
         return true;
       } else if (asset.name.startsWith("cardIcon")) {
-        if (_cards.length < 3) {
-          var index = int.parse(asset.name.substring(8)) - 1;
-          loadCardIcon(asset, _cards[index].base.getName());
-        }
+        var index = int.parse(asset.name.substring(8)) - 1;
+        _cardIconAssets[index] = asset;
         return true;
       } else if (asset.name.startsWith("cardFrame")) {
-        if (_cards.length < 3) {
-          var index = int.parse(asset.name.substring(9)) - 1;
-          loadCardFrame(asset, _cards[index].base);
-        }
+        var index = int.parse(asset.name.substring(9)) - 1;
+        _cardFrameAssets[index] = asset;
         return true;
       }
     }

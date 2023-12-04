@@ -111,4 +111,17 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     }
     return result["card"];
   }
+
+  Future<List<AccountCard>> openPack(
+      BuildContext context, ShopItem pack) async {
+    var result = await getService<HttpConnection>(context)
+        .rpc(RpcId.buyCardPack, params: {RpcParams.type.name: pack.id});
+    result["achieveCards"] = result["cards"];
+    result.remove("cards");
+    if (context.mounted) {
+      account!.update(context, result);
+      add(SetAccount(account: account!));
+    }
+    return result["achieveCards"];
+  }
 }
