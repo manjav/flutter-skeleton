@@ -117,6 +117,12 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
                 ]);
               }),
         Positioned(
+            top: 140.d,
+            child: SkinnedText("arena_l".l([widget.index + 1]),
+                style: TStyles.large)),
+      ]),
+    );
+  }
 
   void _riveEventsListener(RiveEvent event) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
