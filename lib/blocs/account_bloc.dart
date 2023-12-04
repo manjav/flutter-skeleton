@@ -84,4 +84,14 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     return newHero.card;
   }
 
+  Future<AccountCard> enhanceMax(BuildContext context, AccountCard card) async {
+    var result = await getService<HttpConnection>(context)
+        .rpc(RpcId.enhanceMax, params: {RpcParams.card_id.name: card.id});
+    if (context.mounted) {
+      account!.update(context, result);
+      add(SetAccount(account: account!));
+    }
+    return result["card"];
+  }
+
 }

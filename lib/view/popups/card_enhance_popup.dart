@@ -240,16 +240,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   }
 
   _enhanceMax() async {
-    try {
-      var result = await rpc(RpcId.enhanceMax,
-          params: {RpcParams.card_id.name: card.id});
-      updateAccount(result);
-      if (mounted) {
-        var args = {"card": account.cards[card.id], "oldPower": card.power};
-        Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
-            arguments: args);
-        Navigator.pop(context);
-      }
-    } finally {}
+    await Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
+        arguments: {"card": account.cards[card.id]});
+    if (mounted) Navigator.pop(context);
   }
 }
