@@ -22,23 +22,31 @@ class QuestScreen extends AbstractScreen {
 }
 
 class _QuestScreenState extends AbstractScreenState<QuestScreen> {
+  final int _padding = 10;
   int _questsCount = 0;
-  List<ValueNotifier<List<City>>> _lands = [];
-
-  final ScrollController _scrollController = ScrollController();
+  int _firstArena = 0, _lastArena = 0;
+  bool _waitingMode = true;
+  late ScrollController _scrollController;
+  List<ValueNotifier<List<City>>> _arenas = [];
 
   @override
   void initState() {
     _questsCount = accountBloc.account!.questsCount - 1;
-    _lands = List.generate(4, (index) => ValueNotifier([]));
+    var arenaIndex = (_questsCount / 130).floor();
+    _firstArena = (arenaIndex - _padding).min(0);
+    _lastArena = arenaIndex + _padding;
+    _arenas = List.generate(4, (index) => ValueNotifier([]));
+    _scrollController = ScrollController(
+        keepScrollOffset: false,
+        initialScrollOffset:
+            (arenaIndex - _firstArena) * DeviceInfo.size.height +
+                Random().nextDouble() * DeviceInfo.size.height * 0.6);
+
     super.initState();
   }
 
   @override
-  void onRender(Duration timeStamp) {
-    _scrollController.jumpTo(_questsCount / 130 * DeviceInfo.size.height * 0.7 +
-        Random().nextDouble() * DeviceInfo.size.height * 0.1);
-  }
+  void onRender(Duration timeStamp) => _waitingMode = false;
 
   @override
   Widget contentFactory() {
@@ -47,7 +55,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
         height: DeviceInfo.size.height,
         child: ListView.builder(
             reverse: true,
-            itemCount: _lands.length,
+            itemCount: _lastArena - _firstArena,
             controller: _scrollController,
             itemBuilder: (context, index) =>
                 _mapItemRenderer(index + _firstArena)));
