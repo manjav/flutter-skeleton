@@ -9,7 +9,6 @@ import '../../data/core/fruit.dart';
 import '../../data/core/store.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
-import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../../view/mixins/reward_mixin.dart';
 import '../items/card_item.dart';
@@ -34,6 +33,7 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
 
   @override
   void initState() {
+    startSFX = "open_card_pack";
     children = [
       _cardsList(),
       IgnorePointer(child: animationBuilder("openpack")),

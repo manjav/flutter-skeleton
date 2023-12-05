@@ -5,6 +5,7 @@ import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
@@ -46,6 +47,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
     _account = accountBloc.account!;
     _isWin = widget.args['outcome'];
     _color = _isWin ? "green" : "red";
+    getService<Sounds>().play(_isWin ? "won" : "lose");
     if (widget.args["attacker_hero_benefits_info"].length > 0) {
       var benefits = widget.args["attacker_hero_benefits_info"];
       var map = <String, int>{

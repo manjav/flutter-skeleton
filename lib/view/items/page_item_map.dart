@@ -94,16 +94,16 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               ImageCenterSliceData(422, 202,
                   const Rect.fromLTWH(85, 85, 422 - 85 * 2, 202 - 85 * 2))),
           child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              Positioned(
-                  top: -80.d,
-                  width: 148.d,
-                  child: LoaderWidget(AssetType.image, "icon_$icon")),
-              Positioned(
-                  bottom: -10.d,
-                  child: SkinnedText(text.l(), style: TStyles.large))
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                    top: -80.d,
+                    width: 148.d,
+                    child: LoaderWidget(AssetType.image, "icon_$icon")),
+                Positioned(
+                    bottom: -10.d,
+                    child: SkinnedText(text.l(), style: TStyles.large))
               ]),
         ));
   }

@@ -28,6 +28,7 @@ class _PurchaseFeastScreenState extends AbstractScreenState<PurchaseFeastScreen>
   @override
   void initState() {
     super.initState();
+    startSFX = "prize";
     children = [animationBuilder("purchase")];
     _item = widget.args["item"] ??
         accountBloc
