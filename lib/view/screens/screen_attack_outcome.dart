@@ -140,7 +140,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
       Positioned(
           height: 180.d,
           bottom: 240.d,
-          child: Row(children: [
+          child: Row(textDirection: TextDirection.ltr, children: [
             Widgets.skinnedButton(
                 padding: EdgeInsets.fromLTRB(48.d, 48.d, 48.d, 60.d),
                 child: Asset.load<Image>("ui_arrow_back"),
