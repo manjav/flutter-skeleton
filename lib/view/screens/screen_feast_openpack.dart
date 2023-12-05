@@ -48,7 +48,10 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
     super.initState();
 
     process(() async {
-      return _cards = await accountBloc.openPack(context, _pack);
+      _cards = await accountBloc.openPack(context, _pack);
+      var count = _cards.length > 2 ? 0 : _cards.length;
+      _countInput?.value = count.toDouble();
+      return _cards;
     });
   }
 
@@ -68,14 +71,13 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
     super.onRiveEvent(event);
     if (state == RewardAniationState.started) {
       var count = _cards.length > 2 ? 0 : _cards.length;
-      _countInput?.value = count.toDouble();
-      for (var i = 1; i <= count; i++) {
-        var card = _cards[i - 1];
+      for (var i = 0; i < count; i++) {
+        var card = _cards[i];
         updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
         updateRiveText("cardLevelText$i", card.base.rarity.convert());
         updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
-        loadCardIcon(_cardIconAssets[i - 1]!, _cards[i - 1].base.getName());
-        loadCardFrame(_cardFrameAssets[i - 1]!, _cards[i - 1].base);
+        loadCardIcon(_cardIconAssets[i]!, card.base.getName());
+        loadCardFrame(_cardFrameAssets[i]!, card.base);
       }
     }
   }
@@ -84,15 +86,16 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
   Future<bool> onRiveAssetLoad(
       FileAsset asset, Uint8List? embeddedBytes) async {
     if (asset is ImageAsset) {
+      print(asset.name);
       if (asset.name == "packIcon") {
         loadCardIcon(asset, "shop_card_${_pack.id}");
         return true;
       } else if (asset.name.startsWith("cardIcon")) {
-        var index = int.parse(asset.name.substring(8)) - 1;
+        var index = int.parse(asset.name.substring(8));
         _cardIconAssets[index] = asset;
         return true;
       } else if (asset.name.startsWith("cardFrame")) {
-        var index = int.parse(asset.name.substring(9)) - 1;
+        var index = int.parse(asset.name.substring(9));
         _cardFrameAssets[index] = asset;
         return true;
       }
