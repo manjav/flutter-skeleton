@@ -28,7 +28,7 @@ class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
   void initState() {
     super.initState();
     getService<Sounds>().play("levelup");
-    children = [backgrounBuilder(), animationBuilder("enhance")];
+    children = [animationBuilder("enhance")];
     _sacrificedCards = widget.args["sacrifiedCards"] ??
         [accountBloc.account!.cards.values.last];
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;

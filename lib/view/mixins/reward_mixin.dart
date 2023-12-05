@@ -28,10 +28,12 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   List<Widget> appBarElementsLeft() => [];
 
   Widget contentFactory() {
+    var items = <Widget>[backgrounBuilder()];
+    items.addAll(children);
     return Widgets.button(
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
-        child: Stack(children: children),
+        child: Stack(children: items),
         onPressed: () {
           if (state.index <= RewardAniationState.waiting.index) return;
           if (state == RewardAniationState.started) {
