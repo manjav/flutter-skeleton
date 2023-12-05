@@ -32,6 +32,11 @@ class _PurchaseFeastScreenState extends AbstractScreenState<PurchaseFeastScreen>
     _item = widget.args["item"] ??
         accountBloc
             .account!.loadingData.shopProceedItems![ShopSections.gold]![1];
+
+    process(() async {
+      await Future.delayed(const Duration(milliseconds: 500));
+      return true; //await rpc(RpcId.buyGoldPack, params: params);
+    });
   }
 
   @override
