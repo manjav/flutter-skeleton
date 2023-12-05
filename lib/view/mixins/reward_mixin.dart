@@ -8,6 +8,7 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/fruit.dart';
 import '../../data/core/result.dart';
+import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../route_provider.dart';
@@ -18,18 +19,20 @@ import '../widgets/loaderwidget.dart';
 enum RewardAniationState { none, waiting, started, shown, closed }
 
 mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
-  late Artboard _artboard;
-  RewardAniationState state = RewardAniationState.none;
-  SMITrigger? startInput, skipInput, closeInput;
-  SMINumber? _colorInput;
-  List<Widget> children = [];
   dynamic result;
+  SMINumber? _colorInput;
+  late Artboard _artboard;
+  List<Widget> children = [];
+  SMITrigger? startInput, skipInput, closeInput;
+  RewardAniationState state = RewardAniationState.none;
+  final ValueNotifier<bool> _progressbarNotifier = ValueNotifier(true);
 
   List<Widget> appBarElementsLeft() => [];
 
   Widget contentFactory() {
     var items = <Widget>[backgrounBuilder()];
     items.addAll(children);
+    items.add(_progressbarBuilder());
     return Widgets.button(
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
@@ -115,6 +118,8 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
       if (result != null) {
         startInput?.value = true;
       }
+    } else if (state == RewardAniationState.started) {
+      _progressbarNotifier.value = false;
     } else if (state == RewardAniationState.closed) {
       WidgetsBinding.instance.addPostFrameCallback((t) => close());
     }
@@ -169,4 +174,16 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   }
 
   void close() => Navigator.pop(context);
+
+  Widget _progressbarBuilder() => ValueListenableBuilder(
+      valueListenable: _progressbarNotifier,
+      builder: (context, value, child) {
+        if (value) {
+          return Align(
+              alignment: const Alignment(0, 0.65),
+              child: LoaderWidget(AssetType.animation, "progressbar",
+                  width: 128.d, height: 128.d));
+        }
+        return const SizedBox();
+      });
 }
