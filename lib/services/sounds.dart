@@ -30,6 +30,7 @@ class Sounds extends ISounds {
   @override
   Future<void> play(String name, {String? channel}) async {
     AudioPlayer player;
+    if (name.isEmpty) return;
     if (channel == null) {
       if (!Pref.sfx.getBool()) return;
       player = _findPlayer();

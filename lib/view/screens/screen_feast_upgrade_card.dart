@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
@@ -9,7 +8,6 @@ import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
-import '../widgets.dart';
 import 'iscreen.dart';
 
 class UpgradeCardFeastScreen extends AbstractScreen {
@@ -22,36 +20,24 @@ class UpgradeCardFeastScreen extends AbstractScreen {
 
 class _UpgradeCardFeastScreenState
     extends AbstractScreenState<UpgradeCardFeastScreen> with RewardScreenMixin {
-  int _oldPower = 0, _evolveStep = 0;
+  int _evolveStep = 0, _oldPower = 0;
   final _evolveStepsCount = 3;
-  late AccountCard _card;
   bool _isHero = false;
+  late AccountCard _oldCard, _newCard;
 
   @override
   void initState() {
     super.initState();
-    getService<Sounds>().play("levelup");
+    children = [animationBuilder("evolvehero")];
     _isHero = widget.args["isHero"] ?? false;
-    _oldPower = widget.args["oldPower"] ?? 10;
-    _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
-  }
-
-  @override
-  Widget contentFactory() {
-    return Widgets.button(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: Stack(children: [
-          backgrounBuilder(),
-          animationBuilder("evolvehero"),
-        ]),
-        onPressed: () {
-          if (readyToClose) {
-            closeInput?.value = true;
-          } else {
-            skipInput?.value = true;
-          }
-        });
+    _oldCard = widget.args["card"] ?? accountBloc.account!.cards.values.first;
+    _oldPower = _oldPower;
+    process(() async {
+      if (_isHero) {
+        return _newCard = await accountBloc.evolveHero(context, _oldCard);
+      }
+      return _newCard = await accountBloc.enhanceMax(context, _oldCard);
+    });
   }
 
   @override
@@ -60,8 +46,8 @@ class _UpgradeCardFeastScreenState
     var controller = super.onRiveInit(artboard, stateMachineName);
     controller.findInput<bool>("withPotion")?.value = _isHero;
     controller.findInput<bool>("withNectar")?.value = !_isHero;
-    updateRiveText("cardNameText", "${_card.base.fruit.name}_title".l());
-    updateRiveText("cardLevelText", (_card.base.rarity - 1).convert());
+    updateRiveText("cardNameText", "${_oldCard.base.fruit.name}_title".l());
+    updateRiveText("cardLevelText", (_oldCard.base.rarity - 1).convert());
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
     return controller;
   }
@@ -69,14 +55,14 @@ class _UpgradeCardFeastScreenState
   @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
-    if (event.name == "ready") {
-      updateRiveText("cardLevelText", _card.base.rarity.convert());
-      updateRiveText(
-          "addedPowerText", "+ ˢ${(_card.power - _oldPower).compact()}");
-      updateRiveText("cardPowerText", "ˢ${(_card.power).compact()}");
+    var diff = _newCard.power - _oldPower;
+    if (state == RewardAniationState.started) {
+      updateRiveText("cardLevelText", _newCard.base.rarity.convert());
+      updateRiveText("cardPowerText", "ˢ${(_newCard.power).compact()}");
+    } else if (state == RewardAniationState.shown) {
+      updateRiveText("addedPowerText", "+ ˢ${diff.compact()}");
     } else if (event.name == "powerUp") {
       ++_evolveStep;
-      var diff = _card.power - _oldPower;
       var addedPower = (diff * (_evolveStep / _evolveStepsCount)).round();
       updateRiveText("addedPowerText", "+ ˢ${addedPower.compact()}");
     }
@@ -84,11 +70,11 @@ class _UpgradeCardFeastScreenState
 
   @override
   Future<void> loadCardIcon(ImageAsset asset, String name) async {
-    super.loadCardIcon(asset, _card.base.getName());
+    super.loadCardIcon(asset, _oldCard.base.getName());
   }
 
   @override
   Future<void> loadCardFrame(ImageAsset asset, FruitCard? card) async {
-    super.loadCardFrame(asset, _card.base);
+    super.loadCardFrame(asset, _oldCard.base);
   }
 }

@@ -123,8 +123,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
 
   _onBuildingTap(Account account, Building building) {
     if (building.level < 1) {
-      Overlays.insert(context, OverlayType.toast,
-          args: account.level < Account.availablityLevels["tribe"]!
+      toast(account.level < Account.availablityLevels["tribe"]!
               ? "coming_soon".l()
               : "error_149".l());
       return;

@@ -31,7 +31,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   late Account _account;
   final Map<ShopSections, List<ShopItemVM>> _items = {};
   late StreamSubscription<List<PurchaseDetails>> _subscription;
-  final bool _hackMode = false;
+  // final bool _hackMode = false;
 
   final Map<String, ProductDetails> _productDetails = {};
 
@@ -369,23 +369,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       return;
     }
 
-    var params = {RpcParams.type.name: item.id};
-    try {
-      var result = await rpc(RpcId.buyCardPack, params: params);
-      result["achieveCards"] = result['cards'];
-      result.remove('cards');
-      if (mounted) {
-        _account.update(context, result);
-        if (_hackMode) {
-          await Future.delayed(const Duration(milliseconds: 1750));
-          if (mounted) _onItemPressed(item);
-        } else {
-          result["item"] = item;
-          Navigator.pushNamed(context, Routes.feastOpenpack.routeName,
-              arguments: result);
-        }
-      }
-    } finally {}
+    Navigator.pushNamed(context, Routes.feastOpenpack.routeName,
+        arguments: {"pack": item});
   }
 
   @override

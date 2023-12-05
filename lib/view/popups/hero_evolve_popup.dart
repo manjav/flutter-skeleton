@@ -5,7 +5,6 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
-import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -133,28 +132,10 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
   }
 
   _evolve(Account account, HeroCard hero) async {
-    var oldPower = hero.card.power;
-    try {
-      var result = await rpc(RpcId.evolveCard,
-          params: {RpcParams.sacrifices.name: "[${hero.card.id}]"});
-      account.cards.remove(hero.card.id);
-      if (mounted) {
-        account.update(context, result);
-      }
-
-      // Replace hero
-      AccountCard card = result["card"];
-      var newHero = HeroCard(card, 0);
-      newHero.items = hero.items;
-      account.heroes[card.id] = newHero;
-
-      if (mounted) {
-        accountBloc.add(SetAccount(account: account));
-        Navigator.popUntil(context, (route) => route.isFirst);
-        var args = {"card": newHero.card, "oldPower": oldPower};
-        Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
-            arguments: args);
-      }
-    } finally {}
+    await Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
+        arguments: {"card": hero.card, "isHero": true});
+    if (mounted) {
+      // Navigator.popUntil(context, (route) => route.isFirst);
+    }
   }
 }

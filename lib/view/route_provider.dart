@@ -56,7 +56,6 @@ enum Routes {
   feastOpenpack,
   feastLevelup,
   feastEnhance,
-  feastEnhancemax,
   feastEvolve,
   feastPurchase,
   feastUpgradeCard,
