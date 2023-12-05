@@ -7,7 +7,6 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/store.dart';
 import '../../services/localization.dart';
-import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';

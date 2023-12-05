@@ -85,7 +85,6 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
   Future<bool> onRiveAssetLoad(
       FileAsset asset, Uint8List? embeddedBytes) async {
     if (asset is ImageAsset) {
-      print(asset.name);
       if (asset.name == "packIcon") {
         loadCardIcon(asset, "shop_card_${_pack.id}");
         return true;
