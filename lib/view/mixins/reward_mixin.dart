@@ -169,7 +169,6 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
 
   process(Future<dynamic> Function() callback) async {
     try {
-      await Future.delayed(Duration(seconds: 3));
       result = await callback.call();
       if (state == RewardAniationState.waiting) {
         startInput?.value = true;

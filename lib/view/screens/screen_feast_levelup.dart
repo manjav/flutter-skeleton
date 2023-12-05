@@ -25,9 +25,10 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
   @override
   void initState() {
     super.initState();
-    children = [animationBuilder("leveup")];
+    children = [animationBuilder("levelup")];
     _gold = widget.args["levelup_gold_added"] ?? 100;
     _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;
+    process(() async => true);
   }
 
   @override
