@@ -26,7 +26,6 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
   @override
   void initState() {
     super.initState();
-    getService<Sounds>().play("levelup");
     children = [animationBuilder("leveup")];
     _gold = widget.args["levelup_gold_added"] ?? 100;
     _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;

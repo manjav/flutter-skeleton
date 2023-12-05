@@ -31,7 +31,6 @@ class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
   void initState() {
     super.initState();
     children = [animationBuilder("merge")];
-    getService<Sounds>().play("levelup");
     _mergedCard = widget.args["cards"].value[0] ??
         accountBloc.account!.cards.values.first;
 

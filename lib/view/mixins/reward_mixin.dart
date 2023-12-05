@@ -2,14 +2,17 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
+import '../../blocs/services_bloc.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/result.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/sounds.dart';
 import '../../utils/assets.dart';
 import '../route_provider.dart';
 import '../screens/iscreen.dart';
@@ -23,11 +26,20 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   SMINumber? _colorInput;
   late Artboard _artboard;
   List<Widget> children = [];
+  String waitingSFX = "waiting", startSFX = "levelup";
   SMITrigger? startInput, skipInput, closeInput;
   RewardAniationState state = RewardAniationState.none;
   final ValueNotifier<bool> _progressbarNotifier = ValueNotifier(true);
 
   List<Widget> appBarElementsLeft() => [];
+
+  @override
+  void initState() {
+    BlocProvider.of<ServicesBloc>(context)
+        .get<Sounds>()
+        .play(waitingSFX, channel: "reward");
+    super.initState();
+  }
 
   Widget contentFactory() {
     var items = <Widget>[backgrounBuilder()];
@@ -119,7 +131,10 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
         startInput?.value = true;
       }
     } else if (state == RewardAniationState.started) {
-      _progressbarNotifier.value = false;
+      BlocProvider.of<ServicesBloc>(context).get<Sounds>().stop("reward");
+      BlocProvider.of<ServicesBloc>(context).get<Sounds>().play(startSFX);
+      WidgetsBinding.instance
+          .addPostFrameCallback((t) => _progressbarNotifier.value = false);
     } else if (state == RewardAniationState.closed) {
       WidgetsBinding.instance.addPostFrameCallback((t) => close());
     }
@@ -154,6 +169,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
 
   process(Future<dynamic> Function() callback) async {
     try {
+      await Future.delayed(Duration(seconds: 3));
       result = await callback.call();
       if (state == RewardAniationState.waiting) {
         startInput?.value = true;

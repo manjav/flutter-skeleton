@@ -34,7 +34,6 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
 
   @override
   void initState() {
-    getService<Sounds>().play("levelup");
     children = [
       _cardsList(),
       IgnorePointer(child: animationBuilder("openpack")),

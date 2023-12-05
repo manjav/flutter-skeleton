@@ -28,7 +28,6 @@ class _PurchaseFeastScreenState extends AbstractScreenState<PurchaseFeastScreen>
   @override
   void initState() {
     super.initState();
-    getService<Sounds>().play("levelup");
     children = [animationBuilder("purchase")];
     _item = widget.args["item"] ??
         accountBloc

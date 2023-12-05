@@ -28,7 +28,6 @@ class _UpgradeCardFeastScreenState
   @override
   void initState() {
     super.initState();
-    getService<Sounds>().play("levelup");
     children = [animationBuilder("evolvehero")];
     _isHero = widget.args["isHero"] ?? false;
     _oldCard = widget.args["card"] ?? accountBloc.account!.cards.values.first;
