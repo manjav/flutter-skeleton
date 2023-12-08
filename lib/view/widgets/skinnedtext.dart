@@ -36,10 +36,10 @@ class SkinnedText extends StatelessWidget {
           style: style.copyWith(
               // backgroundColor: TColors.accent,
               foreground: Paint()
-                ..strokeWidth = strokeWidth ?? 9.d
+                ..strokeWidth = strokeWidth ?? style.fontSize! * 0.15
                 ..color = strokeColor
                 ..style = PaintingStyle.stroke,
-              shadows: [_shadow(0, style.fontSize! * 0.18)])),
+              shadows: [_shadow(0, style.fontSize! * 0.16)])),
       Text(text,
           overflow: overflow,
           textAlign: textAlign,
