@@ -105,35 +105,35 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
             _player = state.account;
           }
           return Stack(clipBehavior: Clip.none, children: [
-          Widgets.rect(
-              height: 192.d,
-              decoration: Widgets.imageDecore(
-                  "frame_hatch", ImageCenterSliceData(80, 100))),
-          PositionedDirectional(
-              top: -48.d,
-              start: 24.d,
-              child: LevelIndicator(
+            Widgets.rect(
+                height: 192.d,
+                decoration: Widgets.imageDecore(
+                    "frame_hatch", ImageCenterSliceData(80, 100))),
+            PositionedDirectional(
+                top: -48.d,
+                start: 24.d,
+                child: LevelIndicator(
                     showLevel: false,
                     avatarId: _player!.avatarId,
                     onPressed: () => Navigator.pushNamed(
                         context, Routes.popupProfileAvatars.routeName))),
-          PositionedDirectional(
-              top: 10.d,
-              start: 250.d,
-              child: SkinnedText(_player!.name, style: TStyles.large)),
-          PositionedDirectional(
-              top: 80.d,
-              start: 250.d,
-              child: _player!.moodId > 0
-                  ? Row(children: [
-                      SkinnedText("mood_l".l()),
-                      SizedBox(width: 16.d),
-                      LoaderWidget(AssetType.image, "mood_${_player!.moodId}",
+            PositionedDirectional(
+                top: 10.d,
+                start: 250.d,
+                child: SkinnedText(_player!.name, style: TStyles.large)),
+            PositionedDirectional(
+                top: 80.d,
+                start: 250.d,
+                child: _player!.moodId > 0
+                    ? Row(children: [
+                        SkinnedText("mood_l".l()),
+                        SizedBox(width: 16.d),
+                        LoaderWidget(AssetType.image, "mood_${_player!.moodId}",
                             subFolder: "moods",
                             width: 50.d,
                             key: getGlobalKey(_player!.moodId))
-                    ])
-                  : const SizedBox()),
+                      ])
+                    : const SizedBox()),
             _player!.itsMe
                 ? PositionedDirectional(
                     top: 20.d,
@@ -144,27 +144,29 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                       padding: EdgeInsets.fromLTRB(16.d, 10.d, 16.d, 24.d),
                       color: ButtonColor.wooden,
                       child: Asset.load<Image>("tribe_edit"),
+                      onPressed: () => Navigator.pushNamed(
+                          context, Routes.popupProfileEdit.routeName),
                     ))
                 : const SizedBox(),
-          Positioned(
-              top: 220.d,
-              left: 60.d,
-              child: _indicator("total_rank".l(), _player!.rank.toString(),
-                  icon: "icon_rank")),
-          Positioned(
-              top: 360.d,
-              left: 60.d,
-              child: _indicator(
-                  "last_played".l(),
-                  (DateTime.now().secondsSinceEpoch - _player!.lastLoadAt)
-                      .toElapsedTime())),
-          Positioned(
-              top: 220.d,
-              left: 500.d,
+            Positioned(
+                top: 220.d,
+                left: 60.d,
+                child: _indicator("total_rank".l(), _player!.rank.toString(),
+                    icon: "icon_rank")),
+            Positioned(
+                top: 360.d,
+                left: 60.d,
+                child: _indicator(
+                    "last_played".l(),
+                    (DateTime.now().secondsSinceEpoch - _player!.lastLoadAt)
+                        .toElapsedTime())),
+            Positioned(
+                top: 220.d,
+                left: 500.d,
                 child:
                     Widgets.divider(direction: Axis.vertical, height: 220.d)),
-          Positioned(
-              top: 210.d, right: 12.d, width: 380.d, child: _tribeSection())
+            Positioned(
+                top: 210.d, right: 12.d, width: 380.d, child: _tribeSection())
           ]);
         }));
   }
