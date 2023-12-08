@@ -29,8 +29,7 @@ class _ProfileAvatarsPopupState
       Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
-  EdgeInsets get contentPadding =>
-      EdgeInsets.fromLTRB(122.d, 180.d, 122.d, 80.d);
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(50.d, 180.d, 50.d, 80.d);
 
   @override
   Widget contentFactory() {
@@ -42,7 +41,7 @@ class _ProfileAvatarsPopupState
           // SkinnedText("profile_mood_title".l()),
           // SizedBox(height: 20.d),
           SizedBox(
-              height: 600.d,
+              height: 700.d,
               child: GridView.builder(
                   itemCount: 20,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -56,8 +55,8 @@ class _ProfileAvatarsPopupState
     return Widgets.button(
       radius: 32.d,
       color: account.avatarId == id ? TColors.green : TColors.primary80,
-      margin: EdgeInsets.all(10.d),
-      padding: EdgeInsets.all(20.d),
+      margin: EdgeInsets.all(8.d),
+      padding: EdgeInsets.all(16.d),
       child: LoaderWidget(AssetType.image, "avatar_$id", subFolder: "avatars"),
       onPressed: () async {
         await getService<HttpConnection>()

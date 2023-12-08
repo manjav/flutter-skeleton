@@ -45,7 +45,7 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
   void _updateParams(int xp, int level, int avatarId) {
     _xp = xp;
     _level = level;
-    _avatarId = avatarId + 1;
+    _avatarId = avatarId;
     _minXp = Account.getXpRequiered(level - 1);
     _maxXp = Account.getXpRequiered(level);
   }
