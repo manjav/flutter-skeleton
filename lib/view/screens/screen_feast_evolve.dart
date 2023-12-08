@@ -57,6 +57,18 @@ class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
   }
 
   @override
+  void onRiveEvent(RiveEvent event) {
+    super.onRiveEvent(event);
+    if (state == RewardAniationState.started) {
+      updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_title".l());
+      updateRiveText("cardLevelText3", _newCard.base.rarity.convert());
+      updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");
+      super.loadCardIcon(_cardIconAsset!, _newCard.base.getName());
+      super.loadCardFrame(_cardBackgroundAsset!, _newCard.base);
+    }
+  }
+
+  @override
   Future<void> loadCardIcon(ImageAsset asset, String name) async =>
       super.loadCardIcon(asset, _mergedCard.base.getName());
 
@@ -77,17 +89,5 @@ class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
       }
     }
     return super.onRiveAssetLoad(asset, embeddedBytes);
-  }
-
-  @override
-  void onRiveEvent(RiveEvent event) {
-    super.onRiveEvent(event);
-    if (event.name == "started") {
-      updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_title".l());
-      updateRiveText("cardLevelText3", _newCard.base.rarity.convert());
-      updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");
-      super.loadCardIcon(_cardIconAsset!, _newCard.base.getName());
-      super.loadCardFrame(_cardBackgroundAsset!, _newCard.base);
-    }
   }
 }

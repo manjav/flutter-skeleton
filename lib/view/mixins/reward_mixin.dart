@@ -119,13 +119,15 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   }
 
   void onRiveEvent(RiveEvent event) {
-    state = switch (event.name) {
+    var state = switch (event.name) {
       "waiting" => RewardAniationState.waiting,
       "started" => RewardAniationState.started,
       "shown" => RewardAniationState.shown,
-      "closed" || "close" => RewardAniationState.closed,
+      "closed" => RewardAniationState.closed,
       _ => RewardAniationState.none,
     };
+    if (state == RewardAniationState.none) return;
+    this.state = state;
     if (state == RewardAniationState.waiting) {
       if (result != null) {
         startInput?.value = true;
