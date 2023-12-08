@@ -11,6 +11,7 @@ import 'popups/card_select_category_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/card_select_type_popup.dart';
 import 'popups/combo_popup.dart';
+import 'popups/daily_gift_popup.dart';
 import 'popups/gift_popup.dart';
 import 'popups/hero_evolve_popup.dart';
 import 'popups/hero_popup.dart';
@@ -87,6 +88,7 @@ enum Routes {
   popupRestore,
   popupInvite,
   popupRedeemGift,
+  popupDailyGift,
   popupTribeSearch,
   popupTribeOptions,
   popupTribeInvite,
@@ -137,6 +139,7 @@ extension RouteProvider on Routes {
       "/popupRestore" => RestorePopup(),
       "/popupInvite" => InvitePopup(),
       "/popupRedeemGift" => RedeemGiftPopup(),
+      "/popupDailyGift" => DailyGiftPopup(),
       "/popupTribeOptions" => TribeDetailsPopup(args: args ?? {}),
       "/popupTribeInvite" => TribeInvitePopup(),
       "/popupTribeEdit" => TribeEditPopup(),
@@ -170,6 +173,7 @@ extension RouteProvider on Routes {
       "/popupRestore" ||
       "/popupInvite" ||
       "/popupRedeemGift" ||
+      "/popupDailyGift" ||
       "/popupMineBuilding" ||
       "/popupTribeOptions" ||
       "/popupTribeEdit" ||

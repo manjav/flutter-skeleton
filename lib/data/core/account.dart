@@ -235,6 +235,7 @@ class Account extends Player with ServiceProvider {
     name = map["name"];
     restoreKey = map["restore_key"];
     inviteKey = map["invite_key"];
+    dailyReward = map["daily_reward"];
     emergency_message = map["emergency_message"];
     update_message = map["update_message"];
     latest_app_version = map["latest_app_version"];
@@ -263,6 +264,10 @@ class Account extends Player with ServiceProvider {
 
     // Tribe
     installTribe(map['tribe']);
+
+    if (dailyReward != null) {
+      print(dailyReward);
+    }
 
     // Heroes
     heroitems = {};
