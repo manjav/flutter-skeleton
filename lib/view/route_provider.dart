@@ -20,6 +20,7 @@ import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/potion_popup.dart';
+import 'popups/profile_avatars_popup.dart';
 import 'popups/profile_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
@@ -35,10 +36,10 @@ import 'screens/quest_screen.dart';
 import 'screens/screen_attack_outcome.dart';
 import 'screens/screen_feast_enhance.dart';
 import 'screens/screen_feast_evolve.dart';
-import 'screens/screen_feast_upgrade_card.dart';
 import 'screens/screen_feast_levelup.dart';
 import 'screens/screen_feast_openpack.dart';
 import 'screens/screen_feast_purchase.dart';
+import 'screens/screen_feast_upgrade_card.dart';
 import 'screens/screen_livebattle.dart';
 import 'screens/screen_livebattle_outcome.dart';
 
@@ -79,6 +80,7 @@ enum Routes {
   popupHero,
   popupInbox,
   popupProfile,
+  popupProfileAvatars,
   popupSettings,
   popupRestore,
   popupInvite,
@@ -127,6 +129,7 @@ extension RouteProvider on Routes {
       "/popupHero" => HeroPopup(args?["card"] as int),
       "/popupInbox" => InboxPopup(),
       "/popupProfile" => ProfilePopup(args?["id"] ?? -1),
+      "/popupProfileAvatars" => ProfileAvatarsPopup(),
       "/popupSettings" => SettingsPopup(),
       "/popupRestore" => RestorePopup(),
       "/popupInvite" => InvitePopup(),
@@ -159,6 +162,7 @@ extension RouteProvider on Routes {
       "/popupInbox" ||
       "/popupSettings" ||
       "/popupProfile" ||
+      "/popupProfileAvatars" ||
       "/popupRestore" ||
       "/popupInvite" ||
       "/popupRedeemGift" ||

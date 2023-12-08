@@ -113,7 +113,10 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
               top: -48.d,
               start: 24.d,
               child: LevelIndicator(
-                  showLevel: false, avatarId: _player!.avatarId)),
+                    showLevel: false,
+                    avatarId: _player!.avatarId,
+                    onPressed: () => Navigator.pushNamed(
+                        context, Routes.popupProfileAvatars.routeName))),
           PositionedDirectional(
               top: 10.d,
               start: 250.d,
