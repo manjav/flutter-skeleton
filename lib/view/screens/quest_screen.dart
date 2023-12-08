@@ -50,15 +50,12 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 
   @override
   Widget contentFactory() {
-    return SizedBox(
-        width: DeviceInfo.size.width,
-        height: DeviceInfo.size.height,
-        child: ListView.builder(
+    return ListView.builder(
             reverse: true,
+        itemExtent: DeviceInfo.size.height - 10.d,
             itemCount: _lastArena - _firstArena,
             controller: _scrollController,
-            itemBuilder: (context, index) =>
-                _mapItemRenderer(index + _firstArena)));
+        itemBuilder: (context, index) => _mapItemRenderer(index + _firstArena));
   }
 
   Widget _mapItemRenderer(int index) =>
