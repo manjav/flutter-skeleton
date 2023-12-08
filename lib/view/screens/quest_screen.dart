@@ -33,14 +33,16 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   void initState() {
     _questsCount = accountBloc.account!.questsCount - 1;
     var arenaIndex = (_questsCount / 130).floor();
+    var location = _questsCount % 130;
     _firstArena = (arenaIndex - _padding).min(0);
     _lastArena = arenaIndex + _padding;
     _arenas = List.generate(4, (index) => ValueNotifier([]));
     _scrollController = ScrollController(
         keepScrollOffset: false,
         initialScrollOffset:
-            (arenaIndex - _firstArena) * DeviceInfo.size.height +
-                Random().nextDouble() * DeviceInfo.size.height * 0.6);
+            (arenaIndex - _firstArena - 0.1 - Random().nextDouble() * 0.6) *
+                    DeviceInfo.size.height +
+                location * 20.d);
 
     super.initState();
   }
@@ -51,10 +53,10 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   @override
   Widget contentFactory() {
     return ListView.builder(
-            reverse: true,
+        reverse: true,
         itemExtent: DeviceInfo.size.height - 10.d,
-            itemCount: _lastArena - _firstArena,
-            controller: _scrollController,
+        itemCount: _lastArena - _firstArena,
+        controller: _scrollController,
         itemBuilder: (context, index) => _mapItemRenderer(index + _firstArena));
   }
 
