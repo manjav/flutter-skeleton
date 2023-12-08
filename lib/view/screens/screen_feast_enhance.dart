@@ -12,7 +12,7 @@ import 'iscreen.dart';
 
 class EnhanceFeastScreen extends AbstractScreen {
   EnhanceFeastScreen({required super.args, super.key})
-      : super(Routes.feastLevelup);
+      : super(Routes.feastEnhance);
 
   @override
   createState() => _EnhanceFeastScreenState();

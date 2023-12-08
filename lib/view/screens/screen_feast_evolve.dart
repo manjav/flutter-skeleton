@@ -14,7 +14,7 @@ import 'iscreen.dart';
 
 class EvolveFeastScreen extends AbstractScreen {
   EvolveFeastScreen({required super.args, super.key})
-      : super(Routes.feastLevelup);
+      : super(Routes.feastEvolve);
 
   @override
   createState() => _EvolveFeastScreenState();

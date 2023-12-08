@@ -14,7 +14,7 @@ import 'iscreen.dart';
 
 class PurchaseFeastScreen extends AbstractScreen {
   PurchaseFeastScreen({required super.args, super.key})
-      : super(Routes.feastLevelup);
+      : super(Routes.feastPurchase);
 
   @override
   createState() => _PurchaseFeastScreenState();

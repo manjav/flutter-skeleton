@@ -11,7 +11,7 @@ import 'iscreen.dart';
 
 class UpgradeCardFeastScreen extends AbstractScreen {
   UpgradeCardFeastScreen({required super.args, super.key})
-      : super(Routes.feastLevelup);
+      : super(Routes.feastUpgradeCard);
 
   @override
   createState() => _UpgradeCardFeastScreenState();
