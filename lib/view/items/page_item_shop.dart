@@ -322,7 +322,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                       ShopData.calculatePrice(_account, _productDetails, item),
                   height: 120.d))
         ]),
-        onPressed: () => _onItemPressed(item.base));
+        onPressed: () => _onItemPressed(item));
   }
 
   Widget _percentageBadge(double ratio) {
@@ -347,14 +347,14 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             child: Asset.load<Image>("reward_$reward", width: 76.d)));
   }
 
-  _onItemPressed(ShopItem item) async {
+  _onItemPressed(ShopItemVM item) async {
     if (item.inStore) {
       if (kDebugMode) {
         _deliverProduct(
-            item.section,
+            item.base.section,
             PurchaseDetails(
                 purchaseID: "",
-                productID: item.productID,
+                productID: item.base.productID,
                 status: PurchaseStatus.purchased,
                 verificationData: PurchaseVerificationData(
                     localVerificationData: '{"purchaseState":0}',
@@ -364,13 +364,18 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       } else {
         InAppPurchase.instance.buyConsumable(
             purchaseParam: PurchaseParam(
-                productDetails: _productDetails[item.productID]!));
+                productDetails: _productDetails[item.base.productID]!));
       }
       return;
     }
 
-    Navigator.pushNamed(context, Routes.feastOpenpack.routeName,
-        arguments: {"pack": item});
+    if (item.base.section == ShopSections.boost) {
+      Navigator.pushNamed(context, Routes.feastPurchase.routeName,
+          arguments: {"item": item});
+    } else {
+      Navigator.pushNamed(context, Routes.feastOpenpack.routeName,
+          arguments: {"pack": item.base});
+    }
   }
 
   @override

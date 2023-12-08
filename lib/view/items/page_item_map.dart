@@ -124,11 +124,12 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   _onBuildingTap(Account account, Building building) {
     if (building.level < 1) {
       toast(account.level < Account.availablityLevels["tribe"]!
-              ? "coming_soon".l()
-              : "error_149".l());
+          ? "coming_soon".l()
+          : "error_149".l());
       return;
     }
     var type = switch (building.type) {
+      Buildings.base => Routes.popupDailyGift,
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
