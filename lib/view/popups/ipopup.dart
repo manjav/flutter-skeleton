@@ -33,7 +33,10 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     with ILogger, ServiceProviderMixin {
   Alignment alignment = Alignment.center;
 
-@override
+  BoxDecoration get chromeSkinBuilder =>
+      Widgets.imageDecore("popup_chrome", ImageCenterSliceData(410, 460));
+
+  @override
   void initState() {
     getService<Sounds>().play("popup");
     super.initState();
@@ -54,8 +57,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
             child: Widgets.rect(
               margin: chromeMargin,
               padding: EdgeInsets.symmetric(horizontal: 24.d),
-              decoration: Widgets.imageDecore(
-                  "popup_chrome", ImageCenterSliceData(410, 460)),
+              decoration: chromeSkinBuilder,
               child: Stack(
                   alignment: Alignment.topCenter,
                   fit: StackFit.loose,

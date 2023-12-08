@@ -23,6 +23,9 @@ class SettingsPopup extends AbstractPopup {
 class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(60.d, 200.d, 60.d, 80.d);
+  @override
+  BoxDecoration get chromeSkinBuilder =>
+      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   Widget contentFactory() {
