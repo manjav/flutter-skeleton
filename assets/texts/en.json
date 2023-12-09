@@ -38,6 +38,7 @@
     "save_l": "Save",
     "cancel_l": "Cancel",
     "join_l": "Join",
+    "arena_l": "Arena %s",
     "tap_close": "Tap to close ...",
     "request_l": "Send\nRequest",
     "tribeleave_l": "Leave",

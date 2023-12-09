@@ -7,6 +7,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
 import '../../services/theme.dart';
+import '../../utils/assets.dart';
 import '../../view/popups/ipopup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
@@ -20,6 +21,10 @@ class RestorePopup extends AbstractPopup {
 }
 
 class _RestorePopupState extends AbstractPopupState<RestorePopup> {
+  @override
+  BoxDecoration get chromeSkinBuilder =>
+      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
+
   late Account _account;
   late TextEditingController _textController;
 

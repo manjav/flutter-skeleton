@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
-import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -147,23 +146,11 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   _sacrifice() async {
     if (!_isSacrificeAvailable) return;
-    var params = {
-      RpcParams.card_id.name: card.id,
-      RpcParams.sacrifices.name: selectedCards.getIds()
-    };
-    var oldPower = card.power;
-    try {
-      var result = await rpc(RpcId.enhanceCard, params: params);
-      updateAccount(result);
-      if (mounted) {
-        Navigator.pop(context);
-        Navigator.pushNamed(context, Routes.feastEnhance.routeName, arguments: {
-          "card": card,
-          "oldPower": oldPower,
-          "sacrifiedCount": selectedCards.value.length,
-        });
-      }
-    } finally {}
+    await Navigator.pushNamed(context, Routes.feastEnhance.routeName,
+        arguments: {"card": card, "sacrifiedCards": selectedCards});
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   int _getSacrificesPower() {
@@ -240,16 +227,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   }
 
   _enhanceMax() async {
-    try {
-      var result = await rpc(RpcId.enhanceMax,
-          params: {RpcParams.card_id.name: card.id});
-      updateAccount(result);
-      if (mounted) {
-        var args = {"card": account.cards[card.id], "oldPower": card.power};
-        Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
-            arguments: args);
-        Navigator.pop(context);
-      }
-    } finally {}
+    await Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
+        arguments: {"card": account.cards[card.id]});
+    if (mounted) Navigator.pop(context);
   }
 }

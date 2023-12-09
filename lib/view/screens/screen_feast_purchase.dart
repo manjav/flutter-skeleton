@@ -1,23 +1,20 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/store.dart';
 import '../../services/localization.dart';
-import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
-import '../widgets.dart';
 import 'iscreen.dart';
 
 class PurchaseFeastScreen extends AbstractScreen {
   PurchaseFeastScreen({required super.args, super.key})
-      : super(Routes.feastLevelup);
+      : super(Routes.feastPurchase);
 
   @override
   createState() => _PurchaseFeastScreenState();
@@ -30,28 +27,16 @@ class _PurchaseFeastScreenState extends AbstractScreenState<PurchaseFeastScreen>
   @override
   void initState() {
     super.initState();
-    getService<Sounds>().play("prize");
+    startSFX = "prize";
+    children = [animationBuilder("purchase")];
     _item = widget.args["item"] ??
         accountBloc
             .account!.loadingData.shopProceedItems![ShopSections.gold]![1];
-  }
 
-  @override
-  Widget contentFactory() {
-    return Widgets.button(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: Stack(children: [
-          backgrounBuilder(),
-          animationBuilder("purchase"),
-        ]),
-        onPressed: () {
-          if (readyToClose) {
-            closeInput?.value = true;
-          } else {
-            skipInput?.value = true;
-          }
-        });
+    process(() async {
+      await Future.delayed(const Duration(milliseconds: 500));
+      return true; //await rpc(RpcId.buyGoldPack, params: params);
+    });
   }
 
   @override

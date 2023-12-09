@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../view/key_provider.dart';
 import 'package:rive/rive.dart';
 
+import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/achievement.dart';
 import '../../data/core/adam.dart';
@@ -31,7 +34,7 @@ class ProfilePopup extends AbstractPopup {
 }
 
 class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
-    with TabProviderMixin {
+    with TabProviderMixin, KeyProvider {
   Player? _player;
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(24.d, 200.d, 24.d, 92.d);
@@ -96,50 +99,76 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
             ImageCenterSliceData(114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
         width: 940.d,
         height: 510.d,
-        child: Stack(clipBehavior: Clip.none, children: [
-          Widgets.rect(
-              height: 192.d,
-              decoration: Widgets.imageDecore(
-                  "frame_hatch", ImageCenterSliceData(80, 100))),
-          PositionedDirectional(
-              top: -48.d,
-              start: 24.d,
-              child: LevelIndicator(
-                  showLevel: false, avatarId: _player!.avatarId)),
-          PositionedDirectional(
-              top: 10.d,
-              start: 250.d,
-              child: SkinnedText(_player!.name, style: TStyles.large)),
-          PositionedDirectional(
-              top: 80.d,
-              start: 250.d,
-              child: _player!.moodId > 0
-                  ? Row(children: [
-                      SkinnedText("mood_l".l()),
-                      SizedBox(width: 16.d),
-                      LoaderWidget(AssetType.image, "mood_${_player!.moodId}",
-                          subFolder: "moods", width: 50.d)
-                    ])
-                  : const SizedBox()),
-          Positioned(
-              top: 220.d,
-              left: 60.d,
-              child: _indicator("total_rank".l(), _player!.rank.toString(),
-                  icon: "icon_rank")),
-          Positioned(
-              top: 360.d,
-              left: 60.d,
-              child: _indicator(
-                  "last_played".l(),
-                  (DateTime.now().secondsSinceEpoch - _player!.lastLoadAt)
-                      .toElapsedTime())),
-          Positioned(
-              top: 220.d,
-              left: 500.d,
-              child: Widgets.divider(direction: Axis.vertical, height: 220.d)),
-          Positioned(
-              top: 210.d, right: 12.d, width: 380.d, child: _tribeSection())
-        ]));
+        child:
+            BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+          if (state.account.itsMe) {
+            _player = state.account;
+          }
+          return Stack(clipBehavior: Clip.none, children: [
+            Widgets.rect(
+                height: 192.d,
+                decoration: Widgets.imageDecore(
+                    "frame_hatch", ImageCenterSliceData(80, 100))),
+            PositionedDirectional(
+                top: -48.d,
+                start: 24.d,
+                child: LevelIndicator(
+                    showLevel: false,
+                    avatarId: _player!.avatarId,
+                    onPressed: () => Navigator.pushNamed(
+                        context, Routes.popupProfileAvatars.routeName))),
+            PositionedDirectional(
+                top: 10.d,
+                start: 250.d,
+                child: SkinnedText(_player!.name, style: TStyles.large)),
+            PositionedDirectional(
+                top: 80.d,
+                start: 250.d,
+                child: _player!.moodId > 0
+                    ? Row(children: [
+                        SkinnedText("mood_l".l()),
+                        SizedBox(width: 16.d),
+                        LoaderWidget(AssetType.image, "mood_${_player!.moodId}",
+                            subFolder: "moods",
+                            width: 50.d,
+                            key: getGlobalKey(_player!.moodId))
+                      ])
+                    : const SizedBox()),
+            _player!.itsMe
+                ? PositionedDirectional(
+                    top: 20.d,
+                    end: 20.d,
+                    width: 100.d,
+                    height: 100.d,
+                    child: Widgets.skinnedButton(
+                      padding: EdgeInsets.fromLTRB(16.d, 10.d, 16.d, 24.d),
+                      color: ButtonColor.wooden,
+                      child: Asset.load<Image>("tribe_edit"),
+                      onPressed: () => Navigator.pushNamed(
+                          context, Routes.popupProfileEdit.routeName),
+                    ))
+                : const SizedBox(),
+            Positioned(
+                top: 220.d,
+                left: 60.d,
+                child: _indicator("total_rank".l(), _player!.rank.toString(),
+                    icon: "icon_rank")),
+            Positioned(
+                top: 360.d,
+                left: 60.d,
+                child: _indicator(
+                    "last_played".l(),
+                    (DateTime.now().secondsSinceEpoch - _player!.lastLoadAt)
+                        .toElapsedTime())),
+            Positioned(
+                top: 220.d,
+                left: 500.d,
+                child:
+                    Widgets.divider(direction: Axis.vertical, height: 220.d)),
+            Positioned(
+                top: 210.d, right: 12.d, width: 380.d, child: _tribeSection())
+          ]);
+        }));
   }
 
   Widget _indicator(String label, String value,

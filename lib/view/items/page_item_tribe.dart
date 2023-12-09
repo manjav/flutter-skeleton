@@ -298,29 +298,33 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         child: LoaderWidget(AssetType.image, "avatar_${message.avatarId + 1}",
             width: 76.d, height: 76.d, subFolder: "avatars"));
     return Column(children: [
-      Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        message.itsMe ? SizedBox(width: padding) : avatar,
-        Expanded(
-            child: Widgets.button(
-                padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 16.d),
-                decoration: Widgets.imageDecore(
-                    "chat_balloon_${message.itsMe ? "right" : "left"}",
-                    ImageCenterSliceData(
-                        80, 78, const Rect.fromLTWH(39, 16, 2, 2))),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(message.sender,
-                          style: titleStyle,
-                          textAlign:
-                              message.itsMe ? TextAlign.right : TextAlign.left),
-                      Text(message.text,
-                          textDirection: message.text.getDirection())
-                    ]),
-                onTapUp: (details) =>
-                    _onChatItemTap(account, details, message))),
-        message.itsMe ? avatar : SizedBox(width: padding),
-      ]),
+      Row(
+          textDirection: TextDirection.ltr,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            message.itsMe ? SizedBox(width: padding) : avatar,
+            Expanded(
+                child: Widgets.button(
+                    padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 16.d),
+                    decoration: Widgets.imageDecore(
+                        "chat_balloon_${message.itsMe ? "right" : "left"}",
+                        ImageCenterSliceData(
+                            80, 78, const Rect.fromLTWH(39, 16, 2, 2))),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(message.sender,
+                              style: titleStyle,
+                              textAlign: message.itsMe
+                                  ? TextAlign.right
+                                  : TextAlign.left),
+                          Text(message.text,
+                              textDirection: message.text.getDirection())
+                        ]),
+                    onTapUp: (details) =>
+                        _onChatItemTap(account, details, message))),
+            message.itsMe ? avatar : SizedBox(width: padding),
+          ]),
       Row(children: [
         SizedBox(width: padding + 24.d),
         Text((now - message.creationDate).toElapsedTime(),
@@ -383,7 +387,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             account.tribe!.pinMessage(context, account, message);
           } else if (option == ChatOptions.reply) {
             _inputController.text =
-                "@${message.sender}: ${message.text.truncate(16)}...\n";
+                "@${message.sender}: ${message.text.truncate(16)}...\n${_inputController.text}";
             setState(() {});
           }
         }
@@ -406,7 +410,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         margin: EdgeInsets.symmetric(horizontal: 32.d),
         padding: EdgeInsets.all(12.d),
         color: TColors.white,
-        child: Row(children: [
+        child: Row(textDirection: TextDirection.ltr, children: [
           Expanded(
               child: Widgets.skinnedInput(
             radius: 56.d,

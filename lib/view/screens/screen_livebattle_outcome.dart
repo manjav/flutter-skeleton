@@ -30,7 +30,6 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   void initState() {
-    getService<Sounds>().play("won");
     var opponents = widget.args["opponents"] as List<LiveOpponent>;
     for (var opponent in opponents) {
       if (opponent.teamOwnerId == widget.args["alliseId"]) {

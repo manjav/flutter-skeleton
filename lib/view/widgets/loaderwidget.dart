@@ -102,7 +102,14 @@ class _LoaderWidgetState extends State<LoaderWidget> {
       case AssetType.animation:
       case AssetType.animationZipped:
         return RiveAnimation.direct(loader.metadata as RiveFile,
-            onInit: ((p0) => widget.onRiveInit?.call(p0)), fit: widget.fit);
+            onInit: ((artboard) {
+          if (widget.onRiveInit == null) {
+            artboard.addController(StateMachineController.fromArtboard(
+                artboard, "State Machine 1")!);
+          } else {
+            widget.onRiveInit?.call(artboard);
+          }
+        }), fit: widget.fit);
       case AssetType.image:
         if (loader.metadata == null) return null;
         final image =

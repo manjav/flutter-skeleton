@@ -1,15 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
 import '../../services/localization.dart';
-import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
-import '../widgets.dart';
 import 'iscreen.dart';
 
 class LevelupFeastScreen extends AbstractScreen {
@@ -28,27 +25,10 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
   @override
   void initState() {
     super.initState();
-    getService<Sounds>().play("levelup");
+    children = [animationBuilder("levelup")];
     _gold = widget.args["levelup_gold_added"] ?? 100;
     _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;
-  }
-
-  @override
-  Widget contentFactory() {
-    return Widgets.button(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: Stack(children: [
-          backgrounBuilder(),
-          animationBuilder("levelup"),
-        ]),
-        onPressed: () {
-          if (readyToClose) {
-            closeInput?.value = true;
-          } else {
-            skipInput?.value = true;
-          }
-        });
+    process(() async => true);
   }
 
   @override

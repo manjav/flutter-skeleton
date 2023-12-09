@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../view/key_provider.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
 
 import '../../blocs/account_bloc.dart';
@@ -34,7 +35,7 @@ class LevelIndicator extends StatefulWidget {
   State<LevelIndicator> createState() => _LevelIndicatorState();
 }
 
-class _LevelIndicatorState extends State<LevelIndicator> {
+class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
   int _xp = 0;
   int _level = 0;
   int _avatarId = 0;
@@ -93,7 +94,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
               radius: 20 * s,
               margin: EdgeInsets.all(14 * s),
               child: LoaderWidget(AssetType.image, 'avatar_$_avatarId',
-                  subFolder: 'avatars')),
+                  subFolder: 'avatars', key: getGlobalKey(_avatarId))),
           widget.showLevel
               ? PositionedDirectional(
                   top: -24 * s,
