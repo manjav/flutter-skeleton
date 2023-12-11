@@ -35,9 +35,11 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
 
   @override
   void initState() {
-    BlocProvider.of<ServicesBloc>(context)
-        .get<Sounds>()
-        .play(waitingSFX, channel: "reward");
+    if (waitingSFX.isNotEmpty) {
+      BlocProvider.of<ServicesBloc>(context)
+          .get<Sounds>()
+          .play(waitingSFX, channel: "reward");
+    }
     super.initState();
   }
 
