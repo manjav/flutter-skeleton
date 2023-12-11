@@ -46,12 +46,14 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
             (arenaIndex - _firstArena - 0.1 - Random().nextDouble() * 0.6) *
                     _mapHeight +
                 location * 20.d);
-
+    _loadCityButton();
     super.initState();
   }
 
-  @override
-  void onRender(Duration timeStamp) => _waitingMode = false;
+  _loadCityButton() async {
+    await LoaderWidget.load(AssetType.animation, "quest_map_button");
+    _waitingMode = false;
+  }
 
   @override
   Widget contentFactory() {
