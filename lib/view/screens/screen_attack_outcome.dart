@@ -77,9 +77,9 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
       backgrounBuilder(animated: true, color: _isWin ? 4 : 2),
       _isWin
           ? Positioned(
-              top: 20.d,
-              width: 780.d,
-              height: 780.d,
+              top: 0,
+              width: 600.d,
+              height: 600.d,
               child: LoaderWidget(AssetType.animation, "outcome_crown",
                   onRiveInit: (Artboard artboard) {
                 final controller =
@@ -95,7 +95,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
               alignment: Alignment.center,
               child: Stack(alignment: Alignment.center, children: [
                 Positioned(
-                    top: 32.d,
+                    top: 60.d,
                     width: 622.d,
                     height: 114.d,
                     child: Opacity(
@@ -145,7 +145,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
               ]))),
       Positioned(
           height: 180.d,
-          bottom: 240.d,
+          bottom: 180.d,
           child: Row(textDirection: TextDirection.ltr, children: [
             Widgets.skinnedButton(
                 padding: EdgeInsets.fromLTRB(48.d, 48.d, 48.d, 60.d),
@@ -240,5 +240,11 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
           Asset.load<Image>(type, height: 62.d),
           SkinnedText("  ${value > 0 ? '+' : ''}${value.compact()}")
         ]));
+  }
+
+  @override
+  void dispose() {
+    _animationController.stop();
+    super.dispose();
   }
 }
