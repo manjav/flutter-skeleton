@@ -60,8 +60,8 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   }
 
   Widget backgrounBuilder({int color = 0, bool animated = true}) {
-    return LoaderWidget(AssetType.animation, "background_pattern",
-        fit: BoxFit.fitWidth, onRiveInit: (Artboard artboard) {
+    return Asset.load<RiveAnimation>('background_pattern', fit: BoxFit.fitWidth,
+        onRiveInit: (Artboard artboard) {
       var controller =
           StateMachineController.fromArtboard(artboard, "State Machine 1");
       controller?.findInput<bool>("move")?.value = animated;
