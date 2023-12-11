@@ -14,6 +14,7 @@ import '../../data/core/infra.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
@@ -63,6 +64,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     if (accountBloc.account!.dailyReward.containsKey("next_reward_at")) {
       Navigator.pushNamed(context, Routes.popupDailyGift.routeName);
     }
+    getService<Sounds>().playMusic();
   }
 
   @override
