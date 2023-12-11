@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../view/key_provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
@@ -16,10 +15,11 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
-import '../../view/tab_provider.dart';
 import '../../view/widgets/indicator_level.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../mixins/key_provider.dart';
+import '../mixins/tab_provider.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 

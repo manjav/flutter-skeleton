@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../view/key_provider.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
 
 import '../../blocs/account_bloc.dart';
@@ -8,6 +7,7 @@ import '../../data/core/account.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets/loaderwidget.dart';
+import '../mixins/key_provider.dart';
 import '../widgets.dart';
 import 'skinnedtext.dart';
 

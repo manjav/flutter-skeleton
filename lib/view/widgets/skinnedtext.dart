@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 
 class SkinnedText extends StatelessWidget {

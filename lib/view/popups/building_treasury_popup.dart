@@ -12,7 +12,7 @@ import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
-import '../building_mixin.dart';
+import '../mixins/building_mixin.dart';
 import '../route_provider.dart';
 
 class TreasuryBuildingPopup extends AbstractPopup {
