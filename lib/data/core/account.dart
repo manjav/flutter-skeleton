@@ -163,13 +163,13 @@ class Account extends Player with ServiceProvider {
       owned_avatars,
       sale_info,
       bundles,
-      dailyReward,
       coach_info,
       coaching,
       modules_version,
       available_combo_id_set;
 
   Tribe? tribe;
+  Map dailyReward = {};
   List<int> collection = [];
   List<Deadline> deadlines = [];
   Map<int, HeroCard> heroes = {};
@@ -235,11 +235,13 @@ class Account extends Player with ServiceProvider {
     name = map["name"];
     restoreKey = map["restore_key"];
     inviteKey = map["invite_key"];
-    dailyReward = map["daily_reward"];
+    if (map.containsKey("daily_reward") && map["daily_reward"] is Map) {
+      dailyReward = map["daily_reward"];
+    }
     emergency_message = map["emergency_message"];
     update_message = map["update_message"];
-    latest_app_version = map["latest_app_version"];
-    latest_app_version_for_notice = map["latest_app_version_for_notice"];
+    // latest_app_version = map["latest_app_version"];
+    // latest_app_version_for_notice = map["latest_app_version_for_notice"];
 
     for (var card in map['cards']) {
       cards[card['id']] = AccountCard(this, card);

@@ -59,6 +59,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     var bloc = BlocProvider.of<ServicesBloc>(context);
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
     bloc.get<NoobSocket>().onReceive.add(_onNoobReceive);
+
+    if (accountBloc.account!.dailyReward.containsKey("next_reward_at")) {
+      Navigator.pushNamed(context, Routes.popupDailyGift.routeName);
+    }
   }
 
   @override

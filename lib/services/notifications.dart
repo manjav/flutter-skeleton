@@ -133,11 +133,8 @@ class Notifications extends IService {
   }
 
   void skedule(Account account) async {
-    int nextDailyGiftAt = 0, maxCooldown = 0;
-    if (account.dailyReward != null) {
-      nextDailyGiftAt = account.dailyReward["next_reward_at"];
-    }
-    maxCooldown = account.calculateMaxCooldown();
+    int nextDailyGiftAt = account.dailyReward["next_reward_at"] ?? 0;
+    int maxCooldown = account.calculateMaxCooldown();
 
     tz.initializeTimeZones();
     // Set localation
