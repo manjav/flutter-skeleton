@@ -9,6 +9,7 @@ import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
+import '../../view/mixins/reward_mixin.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
@@ -24,7 +25,8 @@ class AttackOutScreen extends AbstractScreen {
   createState() => _AttackOutScreenState();
 }
 
-class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
+class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
+    with RewardScreenMixin {
   bool _isWin = false;
   String _color = "green";
 
@@ -40,6 +42,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
 
   @override
   void initState() {
+    waitingSFX = "";
     _animationController = AnimationController(
         vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
     _animationController.forward();
@@ -71,6 +74,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
   @override
   Widget contentFactory() {
     return Stack(alignment: Alignment.center, children: [
+      backgrounBuilder(animated: true, color: _isWin ? 4 : 2),
       _isWin
           ? Positioned(
               top: 20.d,
