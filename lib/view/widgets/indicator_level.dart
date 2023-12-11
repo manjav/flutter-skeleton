@@ -85,8 +85,8 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
             progressWidth: 8 * s,
             borderRadius: 40 * s,
             startAngle: widget.align == TextAlign.left
-                ? StartAngle.topLeft
-                : StartAngle.topRight,
+                ? StartAngle.topRight
+                : StartAngle.topLeft,
             shadowColor: TColors.primary20,
             progressColor: TColors.green,
           ),
@@ -100,10 +100,10 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
                   top: -24 * s,
                   width: 110 * s,
                   start: widget.align == TextAlign.left
-                      ? widget.size - 120 * s
+                      ? widget.size - 114 * s
                       : null,
                   end: widget.align == TextAlign.right
-                      ? widget.size - 120 * s
+                      ? widget.size - 114 * s
                       : null,
                   child: SkinnedText(_level.toString()))
               : const SizedBox(),
