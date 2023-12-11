@@ -43,14 +43,16 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
 
   @override
   void initState() {
+    _loadPlayer();
     selectedTabIndex = 0;
     super.initState();
   }
 
   @override
   Widget contentFactory() {
-    _loadPlayer();
-    if (_player != accountBloc.account!) {
+    if (_player == null) {
+      return SizedBox(width: 900.d, height: DeviceInfo.size.height * 0.6);
+    }
       return _profileSegment();
     }
     return Column(mainAxisSize: MainAxisSize.min, children: [
@@ -71,6 +73,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
     if (widget.playerId > 0) {
       var result = await rpc(RpcId.getProfileInfo,
           params: {RpcParams.player_id.name: widget.playerId});
+      result["id"] = widget.playerId;
+      result["tribe_id"] = result["tribe_id"] ?? 1;
       setState(() => _player = Player.initialize(result, 0));
     } else {
       _player = accountBloc.account!;
@@ -101,7 +105,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         height: 510.d,
         child:
             BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-          if (state.account.itsMe) {
+          if (_player!.itsMe) {
             _player = state.account;
           }
           return Stack(clipBehavior: Clip.none, children: [
