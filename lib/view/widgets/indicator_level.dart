@@ -83,7 +83,7 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
             progress: (_xp - _minXp) / (_maxXp - _minXp),
             shadowWidth: 20 * s,
             progressWidth: 8 * s,
-            borderRadius: 40 * s,
+            borderRadius: 30 * s,
             startAngle: widget.align == TextAlign.left
                 ? StartAngle.topRight
                 : StartAngle.topLeft,
@@ -97,15 +97,12 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
                   subFolder: 'avatars', key: getGlobalKey(_avatarId))),
           widget.showLevel
               ? PositionedDirectional(
-                  top: -24 * s,
-                  width: 110 * s,
-                  start: widget.align == TextAlign.left
-                      ? widget.size - 114 * s
-                      : null,
-                  end: widget.align == TextAlign.right
-                      ? widget.size - 114 * s
-                      : null,
-                  child: SkinnedText(_level.toString()))
+                  top: -20 * s,
+                  width: 80 * s,
+                  end: widget.align == TextAlign.left ? -40 * s : null,
+                  start: widget.align == TextAlign.right ? -40 * s : null,
+                  child: SkinnedText("$_level",
+                      style: TStyles.small.copyWith(fontSize: 40 * s)))
               : const SizedBox(),
         ],
       ),

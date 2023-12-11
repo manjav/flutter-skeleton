@@ -53,7 +53,7 @@ class Loader with ILogger {
         return null;
       }
       await file!.writeAsBytes(bytes!);
-      log("Complete downloading $url");
+      // log("Complete downloading $url");
       if (!exists || !forceUpdate) {
         return file!;
       }
