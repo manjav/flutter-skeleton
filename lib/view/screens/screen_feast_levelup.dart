@@ -28,7 +28,10 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
     children = [animationBuilder("levelup")];
     _gold = widget.args["levelup_gold_added"] ?? 100;
     _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;
-    process(() async => true);
+    process(() async {
+      await Future.delayed(const Duration(milliseconds: 100));
+      return true;
+    });
   }
 
   @override
