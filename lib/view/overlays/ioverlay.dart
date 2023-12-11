@@ -75,4 +75,7 @@ class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
   void close() {
     Overlays.remove(widget.type);
   }
+
+  void toast(String message) =>
+      Overlays.insert(context, OverlayType.toast, args: message);
 }

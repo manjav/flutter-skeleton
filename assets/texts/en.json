@@ -276,6 +276,7 @@
     "tribe_visibility": "Appear Online",
     "tribe_invite_description": "You can invite players that you think are suitable to your tribe. Once they accept your invitation they will be automatically added to your tribe.",
     "tribe_donate_description": "You can give some of your own gold to the tribe in order to purchase a building sooner.",
+    "tribe_poke_success": "You successfully poked your fellow tribe member.",
     "chat_pin": "Pin",
     "chat_reply": "Reply",
     "auction_bid": "Last Bid:",
