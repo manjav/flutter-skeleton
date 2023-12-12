@@ -20,6 +20,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/page_item_auction.dart';
 import '../../view/items/page_item_tribe.dart';
+import '../../view/mixins/key_provider.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
@@ -41,7 +42,7 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen>
-    with RewardScreenMixin {
+    with RewardScreenMixin, KeyProvider {
   int _selectedTab = 2;
   final double _navbarHeight = 210.d;
   final _tabInputs = List<SMIBool?>.generate(5, (index) => null);
@@ -135,12 +136,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   Widget? _pageItemBuilder(BuildContext context, int index) {
+    var key = getGlobalKey(index);
     return switch (index) {
-      0 => const ShopPageItem(),
-      1 => const CardsPageItem(),
-      2 => const MainMapPageItem(),
-      3 => const TribePageItem(),
-      _ => const AuctionPageItem()
+      0 => ShopPageItem(key: key),
+      1 => CardsPageItem(key: key),
+      2 => MainMapPageItem(key: key),
+      3 => TribePageItem(key: key),
+      _ => AuctionPageItem(key: key)
     };
   }
 
