@@ -4,7 +4,6 @@ import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
 import '../../services/localization.dart';
-import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
@@ -26,9 +25,13 @@ class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
   @override
   void initState() {
     super.initState();
-    children = [animationBuilder("leveup")];
+    children = [animationBuilder("levelup")];
     _gold = widget.args["levelup_gold_added"] ?? 100;
     _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;
+    process(() async {
+      await Future.delayed(const Duration(milliseconds: 100));
+      return true;
+    });
   }
 
   @override

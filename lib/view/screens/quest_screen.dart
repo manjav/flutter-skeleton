@@ -29,36 +29,40 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   late ScrollController _scrollController;
   List<ValueNotifier<List<City>>> _arenas = [];
 
+  double _mapHeight = 0;
+
   @override
   void initState() {
     _questsCount = accountBloc.account!.questsCount - 1;
+    _mapHeight = DeviceInfo.size.width * 2.105;
     var arenaIndex = (_questsCount / 130).floor();
+    var location = _questsCount % 130;
     _firstArena = (arenaIndex - _padding).min(0);
     _lastArena = arenaIndex + _padding;
     _arenas = List.generate(4, (index) => ValueNotifier([]));
     _scrollController = ScrollController(
         keepScrollOffset: false,
         initialScrollOffset:
-            (arenaIndex - _firstArena) * DeviceInfo.size.height +
-                Random().nextDouble() * DeviceInfo.size.height * 0.6);
-
+            (arenaIndex - _firstArena - 0.1 - Random().nextDouble() * 0.6) *
+                    _mapHeight +
+                location * 20.d);
+    _loadCityButton();
     super.initState();
   }
 
-  @override
-  void onRender(Duration timeStamp) => _waitingMode = false;
+  _loadCityButton() async {
+    await LoaderWidget.load(AssetType.animation, "quest_map_button");
+    _waitingMode = false;
+  }
 
   @override
   Widget contentFactory() {
-    return SizedBox(
-        width: DeviceInfo.size.width,
-        height: DeviceInfo.size.height,
-        child: ListView.builder(
-            reverse: true,
-            itemCount: _lastArena - _firstArena,
-            controller: _scrollController,
-            itemBuilder: (context, index) =>
-                _mapItemRenderer(index + _firstArena)));
+    return ListView.builder(
+        reverse: true,
+        itemExtent: _mapHeight,
+        itemCount: _lastArena - _firstArena,
+        controller: _scrollController,
+        itemBuilder: (context, index) => _mapItemRenderer(index + _firstArena));
   }
 
   Widget _mapItemRenderer(int index) =>
@@ -107,14 +111,13 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     if (_waitingMode) return SizedBox(height: DeviceInfo.size.height);
     return SizedBox(
       width: DeviceInfo.size.width,
-      height: DeviceInfo.size.height,
       child: Stack(alignment: Alignment.center, children: [
         LoaderWidget(AssetType.animation, "quest_map_0",
             onRiveInit: (Artboard artboard) {
           var controller = StateMachineController.fromArtboard(artboard, "Map");
           controller?.addEventListener((event) => _riveEventsListener(event));
           artboard.addController(controller!);
-        }),
+        }, fit: BoxFit.fitWidth),
         ValueListenableBuilder<List<City>>(
             valueListenable: widget.arena,
             builder: (context, value, child) {

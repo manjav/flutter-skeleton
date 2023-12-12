@@ -10,6 +10,7 @@ class LoadingData {
 
   late Account account;
   late Map<int, Fruit> fruits;
+  late Map<String, dynamic> rules;
   late List<ComboHint> comboHints;
   late Map<int, FruitCard> baseCards;
   late Map<int, BaseHeroItem> baseHeroItems;
@@ -26,5 +27,11 @@ class LoadingData {
     achievements = AchievementLine.init(data["achievements"]);
     comboHints = ComboHint.init(data["comboItems"]);
     shopItems = ShopData.init(data["shop"]);
+    rules = data["rules"] ??
+        {
+          "changeNameMinLevel": 100,
+          "changeNameCost": 1000,
+          "maxDailyGifts": 30
+        };
   }
 }

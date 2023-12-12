@@ -54,12 +54,12 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupInbox.routeName))),
-        _building(state.account, Buildings.defense, 400, 300),
-        _building(state.account, Buildings.offense, 95, 670),
-        _building(state.account, Buildings.base, 400, 820),
-        _building(state.account, Buildings.treasury, 130, 1140),
-        _building(state.account, Buildings.mine, 754, 1140),
-        _button("battle", "battle_l", 150, 270, 442, () {
+        _building(state.account, Buildings.defense, 0, -640),
+        _building(state.account, Buildings.offense, -320, -380),
+        _building(state.account, Buildings.base, 0, -180),
+        _building(state.account, Buildings.treasury, -260, 100),
+        _building(state.account, Buildings.mine, 290, 90),
+        _button("battle", "battle_l", 150, 250, 442, () {
           if (state.account.level < Account.availablityLevels["liveBattle"]!) {
             Overlays.insert(context, OverlayType.toast,
                 args: "unavailable_l".l(
@@ -68,7 +68,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             Navigator.pushNamed(context, Routes.popupOpponents.routeName);
           }
         }),
-        _button("quest", "quest_l", 620, 270, 310,
+        _button("quest", "quest_l", 620, 250, 310,
             () => Navigator.pushNamed(context, Routes.quest.routeName)),
         if (state.account.deadlines.isNotEmpty)
           for (var i = 0; i < state.account.deadlines.length; i++)
@@ -112,11 +112,13 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     var building = account.buildings[type]!;
     Widget child =
         type == Buildings.mine ? BuildingBalloon(building) : const SizedBox();
+    var center = DeviceInfo.size.center(Offset.zero);
+    var size = Size(280.d, 300.d);
     return Positioned(
-        left: x.d,
-        top: y.d,
-        width: 280.d,
-        height: 300.d,
+        left: center.dx + x.d - size.width * 0.5,
+        top: center.dy + y.d - size.height * 0.5,
+        width: size.width,
+        height: size.height,
         child: BuildingWidget(building,
             child: child, onTap: () => _onBuildingTap(account, building)));
   }
@@ -124,11 +126,12 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   _onBuildingTap(Account account, Building building) {
     if (building.level < 1) {
       toast(account.level < Account.availablityLevels["tribe"]!
-              ? "coming_soon".l()
-              : "error_149".l());
+          ? "coming_soon".l()
+          : "error_149".l());
       return;
     }
     var type = switch (building.type) {
+      Buildings.base => Routes.popupDailyGift,
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,

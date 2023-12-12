@@ -387,7 +387,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             account.tribe!.pinMessage(context, account, message);
           } else if (option == ChatOptions.reply) {
             _inputController.text =
-                "@${message.sender}: ${message.text.truncate(16)}...\n";
+                "@${message.sender}: ${message.text.truncate(16)}...\n${_inputController.text}";
             setState(() {});
           }
         }

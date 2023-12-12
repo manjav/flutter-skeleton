@@ -11,6 +11,7 @@ import 'popups/card_select_category_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/card_select_type_popup.dart';
 import 'popups/combo_popup.dart';
+import 'popups/daily_gift_popup.dart';
 import 'popups/gift_popup.dart';
 import 'popups/hero_evolve_popup.dart';
 import 'popups/hero_popup.dart';
@@ -20,6 +21,8 @@ import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/potion_popup.dart';
+import 'popups/profile_avatars_popup.dart';
+import 'popups/profile_edit_popup.dart';
 import 'popups/profile_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
@@ -35,10 +38,10 @@ import 'screens/quest_screen.dart';
 import 'screens/screen_attack_outcome.dart';
 import 'screens/screen_feast_enhance.dart';
 import 'screens/screen_feast_evolve.dart';
-import 'screens/screen_feast_upgrade_card.dart';
 import 'screens/screen_feast_levelup.dart';
 import 'screens/screen_feast_openpack.dart';
 import 'screens/screen_feast_purchase.dart';
+import 'screens/screen_feast_upgrade_card.dart';
 import 'screens/screen_livebattle.dart';
 import 'screens/screen_livebattle_outcome.dart';
 
@@ -79,10 +82,13 @@ enum Routes {
   popupHero,
   popupInbox,
   popupProfile,
+  popupProfileEdit,
+  popupProfileAvatars,
   popupSettings,
   popupRestore,
   popupInvite,
   popupRedeemGift,
+  popupDailyGift,
   popupTribeSearch,
   popupTribeOptions,
   popupTribeInvite,
@@ -127,10 +133,13 @@ extension RouteProvider on Routes {
       "/popupHero" => HeroPopup(args?["card"] as int),
       "/popupInbox" => InboxPopup(),
       "/popupProfile" => ProfilePopup(args?["id"] ?? -1),
+      "/popupProfileEdit" => ProfileEditPopup(),
+      "/popupProfileAvatars" => ProfileAvatarsPopup(),
       "/popupSettings" => SettingsPopup(),
       "/popupRestore" => RestorePopup(),
       "/popupInvite" => InvitePopup(),
       "/popupRedeemGift" => RedeemGiftPopup(),
+      "/popupDailyGift" => DailyGiftPopup(),
       "/popupTribeOptions" => TribeDetailsPopup(args: args ?? {}),
       "/popupTribeInvite" => TribeInvitePopup(),
       "/popupTribeEdit" => TribeEditPopup(),
@@ -159,9 +168,12 @@ extension RouteProvider on Routes {
       "/popupInbox" ||
       "/popupSettings" ||
       "/popupProfile" ||
+      "/popupProfileEdit" ||
+      "/popupProfileAvatars" ||
       "/popupRestore" ||
       "/popupInvite" ||
       "/popupRedeemGift" ||
+      "/popupDailyGift" ||
       "/popupMineBuilding" ||
       "/popupTribeOptions" ||
       "/popupTribeEdit" ||

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
+// ignore: implementation_imports
+import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
@@ -11,11 +14,13 @@ import '../../data/core/infra.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
+import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/page_item_auction.dart';
 import '../../view/items/page_item_tribe.dart';
+import '../../view/mixins/key_provider.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
@@ -37,7 +42,7 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen>
-    with RewardScreenMixin {
+    with RewardScreenMixin, KeyProvider {
   int _selectedTab = 2;
   final double _navbarHeight = 210.d;
   final _tabInputs = List<SMIBool?>.generate(5, (index) => null);
@@ -45,6 +50,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
 
   @override
   void initState() {
+    waitingSFX = "";
     _pageController = PageController(initialPage: _selectedTab);
     super.initState();
   }
@@ -55,6 +61,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     var bloc = BlocProvider.of<ServicesBloc>(context);
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
     bloc.get<NoobSocket>().onReceive.add(_onNoobReceive);
+
+    if (accountBloc.account!.dailyReward.containsKey("next_reward_at")) {
+      Navigator.pushNamed(context, Routes.popupDailyGift.routeName);
+    }
+    getService<Sounds>().playMusic();
   }
 
   @override
@@ -125,12 +136,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   Widget? _pageItemBuilder(BuildContext context, int index) {
+    var key = getGlobalKey(index);
     return switch (index) {
-      0 => const ShopPageItem(),
-      1 => const CardsPageItem(),
-      2 => const MainMapPageItem(),
-      3 => const TribePageItem(),
-      _ => const AuctionPageItem()
+      0 => ShopPageItem(key: key),
+      1 => CardsPageItem(key: key),
+      2 => MainMapPageItem(key: key),
+      3 => TribePageItem(key: key),
+      _ => AuctionPageItem(key: key)
     };
   }
 
@@ -149,6 +161,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
                   AssetType.animation,
                   "tab_$index",
                   fit: BoxFit.fitWidth,
+                  riveAssetLoader: _onTabAssetLoad,
                   onRiveInit: (Artboard artboard) {
                     final controller =
                         StateMachineController.fromArtboard(artboard, "Tab");
@@ -224,6 +237,15 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         bloc.add(SetAccount(account: bloc.account!));
       }
     }
+  }
+
+  Future<bool> _onTabAssetLoad(FileAsset asset, Uint8List? list) async {
+    if (asset is ImageAsset && asset.name == "background") {
+      var bytes = await rootBundle.load('assets/images/tab_background.webp');
+      asset.image = await ImageAsset.parseBytes(bytes.buffer.asUint8List());
+      return true;
+    }
+    return false;
   }
 
   @override

@@ -92,7 +92,10 @@ class Themes extends IService {
     );
 
     return ThemeData(
-      colorScheme: const ColorScheme.dark(background: TColors.black),
+      colorScheme: const ColorScheme.dark(
+          background: TColors.black,
+          primary: TColors.primary30,
+          outline: TColors.primary70),
       brightness: Brightness.dark,
       textTheme: textTheme,
       useMaterial3: true,

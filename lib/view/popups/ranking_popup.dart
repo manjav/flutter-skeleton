@@ -9,8 +9,8 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
-import '../../view/tab_provider.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../mixins/tab_provider.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 

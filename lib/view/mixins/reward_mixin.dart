@@ -35,9 +35,11 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
 
   @override
   void initState() {
-    BlocProvider.of<ServicesBloc>(context)
-        .get<Sounds>()
-        .play(waitingSFX, channel: "reward");
+    if (waitingSFX.isNotEmpty) {
+      BlocProvider.of<ServicesBloc>(context)
+          .get<Sounds>()
+          .play(waitingSFX, channel: "reward");
+    }
     super.initState();
   }
 
@@ -60,8 +62,8 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   }
 
   Widget backgrounBuilder({int color = 0, bool animated = true}) {
-    return LoaderWidget(AssetType.animation, "background_pattern",
-        fit: BoxFit.fitWidth, onRiveInit: (Artboard artboard) {
+    return Asset.load<RiveAnimation>('background_pattern', fit: BoxFit.fitWidth,
+        onRiveInit: (Artboard artboard) {
       var controller =
           StateMachineController.fromArtboard(artboard, "State Machine 1");
       controller?.findInput<bool>("move")?.value = animated;
@@ -119,13 +121,15 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   }
 
   void onRiveEvent(RiveEvent event) {
-    state = switch (event.name) {
+    var state = switch (event.name) {
       "waiting" => RewardAniationState.waiting,
       "started" => RewardAniationState.started,
       "shown" => RewardAniationState.shown,
-      "closed" || "close" => RewardAniationState.closed,
+      "closed" => RewardAniationState.closed,
       _ => RewardAniationState.none,
     };
+    if (state == RewardAniationState.none) return;
+    this.state = state;
     if (state == RewardAniationState.waiting) {
       if (result != null) {
         startInput?.value = true;
@@ -169,7 +173,6 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
 
   process(Future<dynamic> Function() callback) async {
     try {
-      await Future.delayed(Duration(seconds: 3));
       result = await callback.call();
       if (state == RewardAniationState.waiting) {
         startInput?.value = true;

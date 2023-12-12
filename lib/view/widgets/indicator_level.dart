@@ -7,6 +7,7 @@ import '../../data/core/account.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets/loaderwidget.dart';
+import '../mixins/key_provider.dart';
 import '../widgets.dart';
 import 'skinnedtext.dart';
 
@@ -34,7 +35,7 @@ class LevelIndicator extends StatefulWidget {
   State<LevelIndicator> createState() => _LevelIndicatorState();
 }
 
-class _LevelIndicatorState extends State<LevelIndicator> {
+class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
   int _xp = 0;
   int _level = 0;
   int _avatarId = 0;
@@ -44,7 +45,7 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   void _updateParams(int xp, int level, int avatarId) {
     _xp = xp;
     _level = level;
-    _avatarId = avatarId + 1;
+    _avatarId = avatarId;
     _minXp = Account.getXpRequiered(level - 1);
     _maxXp = Account.getXpRequiered(level);
   }
@@ -82,10 +83,10 @@ class _LevelIndicatorState extends State<LevelIndicator> {
             progress: (_xp - _minXp) / (_maxXp - _minXp),
             shadowWidth: 20 * s,
             progressWidth: 8 * s,
-            borderRadius: 40 * s,
+            borderRadius: 30 * s,
             startAngle: widget.align == TextAlign.left
-                ? StartAngle.topLeft
-                : StartAngle.topRight,
+                ? StartAngle.topRight
+                : StartAngle.topLeft,
             shadowColor: TColors.primary20,
             progressColor: TColors.green,
           ),
@@ -93,18 +94,15 @@ class _LevelIndicatorState extends State<LevelIndicator> {
               radius: 20 * s,
               margin: EdgeInsets.all(14 * s),
               child: LoaderWidget(AssetType.image, 'avatar_$_avatarId',
-                  subFolder: 'avatars')),
+                  subFolder: 'avatars', key: getGlobalKey(_avatarId))),
           widget.showLevel
               ? PositionedDirectional(
-                  top: -24 * s,
-                  width: 110 * s,
-                  start: widget.align == TextAlign.left
-                      ? widget.size - 120 * s
-                      : null,
-                  end: widget.align == TextAlign.right
-                      ? widget.size - 120 * s
-                      : null,
-                  child: SkinnedText(_level.toString()))
+                  top: -20 * s,
+                  width: 80 * s,
+                  end: widget.align == TextAlign.left ? -40 * s : null,
+                  start: widget.align == TextAlign.right ? -40 * s : null,
+                  child: SkinnedText("$_level",
+                      style: TStyles.small.copyWith(fontSize: 40 * s)))
               : const SizedBox(),
         ],
       ),

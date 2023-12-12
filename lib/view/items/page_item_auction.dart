@@ -10,7 +10,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
-import '../key_provider.dart';
+import '../mixins/key_provider.dart';
 import '../route_provider.dart';
 import 'card_item.dart';
 import 'page_item.dart';

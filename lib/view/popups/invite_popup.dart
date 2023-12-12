@@ -5,6 +5,7 @@ import '../../data/core/account.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
+import '../../utils/assets.dart';
 import '../../view/popups/ipopup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
@@ -19,6 +20,9 @@ class InvitePopup extends AbstractPopup {
 
 class _InvitePopupState extends AbstractPopupState<InvitePopup> {
   late Account _account;
+  @override
+  BoxDecoration get chromeSkinBuilder =>
+      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   void initState() {

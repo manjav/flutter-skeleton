@@ -4,7 +4,6 @@ import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
 import '../../services/localization.dart';
-import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
@@ -12,7 +11,7 @@ import 'iscreen.dart';
 
 class UpgradeCardFeastScreen extends AbstractScreen {
   UpgradeCardFeastScreen({required super.args, super.key})
-      : super(Routes.feastLevelup);
+      : super(Routes.feastUpgradeCard);
 
   @override
   createState() => _UpgradeCardFeastScreenState();

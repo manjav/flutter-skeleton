@@ -294,8 +294,10 @@ class Widgets {
     Function(String)? onSubmit,
   }) {
     var style = TStyles.medium.copyWith(height: 1.5);
-    return SizedBox(
-        width: width ?? 570.d,
+    return rect(
+        radius: radius,
+        color: TColors.primary,
+        width: width ?? 720.d,
         child: TextField(
             maxLines: maxLines,
             autofocus: autofocus,

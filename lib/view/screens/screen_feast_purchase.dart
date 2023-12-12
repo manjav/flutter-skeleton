@@ -7,7 +7,6 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/store.dart';
 import '../../services/localization.dart';
-import '../../services/sounds.dart';
 import '../../utils/utils.dart';
 import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
@@ -15,7 +14,7 @@ import 'iscreen.dart';
 
 class PurchaseFeastScreen extends AbstractScreen {
   PurchaseFeastScreen({required super.args, super.key})
-      : super(Routes.feastLevelup);
+      : super(Routes.feastPurchase);
 
   @override
   createState() => _PurchaseFeastScreenState();
@@ -33,6 +32,15 @@ class _PurchaseFeastScreenState extends AbstractScreenState<PurchaseFeastScreen>
     _item = widget.args["item"] ??
         accountBloc
             .account!.loadingData.shopProceedItems![ShopSections.gold]![1];
+
+    process(() async {
+      if (!_item.inStore) {
+        await accountBloc.openPack(context, widget.args["item"].base);
+      } else {
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+      return true; //await rpc(RpcId.buyGoldPack, params: params);
+    });
   }
 
   @override

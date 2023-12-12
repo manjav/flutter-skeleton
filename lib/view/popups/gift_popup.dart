@@ -7,6 +7,7 @@ import '../../data/core/rpc.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
+import '../../utils/assets.dart';
 import '../../view/popups/ipopup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
@@ -31,6 +32,9 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
 
   @override
   String titleBuilder() => "settings_gift".l();
+  @override
+  BoxDecoration get chromeSkinBuilder =>
+      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   contentFactory() {

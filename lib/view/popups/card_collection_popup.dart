@@ -8,7 +8,7 @@ import '../../utils/assets.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
-import '../key_provider.dart';
+import '../mixins/key_provider.dart';
 import '../route_provider.dart';
 import 'ipopup.dart';
 
