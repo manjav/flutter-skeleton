@@ -119,6 +119,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
         RpcParams.tribe_id.name: bloc.account!.tribe!.id,
         RpcParams.member_id.name: widget.member.id,
       });
+      if (id == RpcId.tribePoke) toast("tribe_poke_success".l());
       if (mounted && id == RpcId.tribeLeave) {
         bloc.account!.tribe = null;
         bloc.add(SetAccount(account: bloc.account!));

@@ -9,6 +9,7 @@ import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
+import '../../view/mixins/reward_mixin.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
@@ -24,7 +25,8 @@ class AttackOutScreen extends AbstractScreen {
   createState() => _AttackOutScreenState();
 }
 
-class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
+class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
+    with RewardScreenMixin {
   bool _isWin = false;
   String _color = "green";
 
@@ -40,6 +42,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
 
   @override
   void initState() {
+    waitingSFX = "";
     _animationController = AnimationController(
         vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
     _animationController.forward();
@@ -71,11 +74,12 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
   @override
   Widget contentFactory() {
     return Stack(alignment: Alignment.center, children: [
+      backgrounBuilder(animated: true, color: _isWin ? 4 : 2),
       _isWin
           ? Positioned(
-              top: 20.d,
-              width: 780.d,
-              height: 780.d,
+              top: 0,
+              width: 600.d,
+              height: 600.d,
               child: LoaderWidget(AssetType.animation, "outcome_crown",
                   onRiveInit: (Artboard artboard) {
                 final controller =
@@ -91,7 +95,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
               alignment: Alignment.center,
               child: Stack(alignment: Alignment.center, children: [
                 Positioned(
-                    top: 32.d,
+                    top: 60.d,
                     width: 622.d,
                     height: 114.d,
                     child: Opacity(
@@ -105,12 +109,13 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
                     bottom: -180.d,
                     width: 1050.d,
                     height: 980.d,
-                    child: LoaderWidget(
-                        AssetType.animation, "outcome_panel_$_color",
+                    child: LoaderWidget(AssetType.animation, "outcome_panel",
                         onRiveInit: (Artboard artboard) {
-                      artboard.addController(
-                          StateMachineController.fromArtboard(
-                              artboard, 'Panel')!);
+                      var controller = StateMachineController.fromArtboard(
+                          artboard, "State Machine 1")!;
+                      controller.findInput<double>("color")?.value =
+                          _isWin ? 1 : 0;
+                      artboard.addController(controller);
                     }, fit: BoxFit.fitWidth)),
                 Positioned(
                     bottom: 660.d,
@@ -141,7 +146,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
               ]))),
       Positioned(
           height: 180.d,
-          bottom: 240.d,
+          bottom: 180.d,
           child: Row(textDirection: TextDirection.ltr, children: [
             Widgets.skinnedButton(
                 padding: EdgeInsets.fromLTRB(48.d, 48.d, 48.d, 60.d),
@@ -236,5 +241,11 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
           Asset.load<Image>(type, height: 62.d),
           SkinnedText("  ${value > 0 ? '+' : ''}${value.compact()}")
         ]));
+  }
+
+  @override
+  void dispose() {
+    _animationController.stop();
+    super.dispose();
   }
 }

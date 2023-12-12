@@ -34,7 +34,11 @@ class _PurchaseFeastScreenState extends AbstractScreenState<PurchaseFeastScreen>
             .account!.loadingData.shopProceedItems![ShopSections.gold]![1];
 
     process(() async {
-      await Future.delayed(const Duration(milliseconds: 500));
+      if (!_item.inStore) {
+        await accountBloc.openPack(context, widget.args["item"].base);
+      } else {
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
       return true; //await rpc(RpcId.buyGoldPack, params: params);
     });
   }

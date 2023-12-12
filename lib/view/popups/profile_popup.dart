@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../view/key_provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
@@ -16,10 +15,11 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/popups/ipopup.dart';
-import '../../view/tab_provider.dart';
 import '../../view/widgets/indicator_level.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
+import '../mixins/key_provider.dart';
+import '../mixins/tab_provider.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -37,19 +37,22 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
     with TabProviderMixin, KeyProvider {
   Player? _player;
   @override
-  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(24.d, 200.d, 24.d, 92.d);
+  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(24.d, 190.d, 24.d, 60.d);
   @override
   String titleBuilder() => "profile_tab_0".l();
 
   @override
   void initState() {
+    _loadPlayer();
     selectedTabIndex = 0;
     super.initState();
   }
 
   @override
   Widget contentFactory() {
-    _loadPlayer();
+    if (_player == null) {
+      return SizedBox(width: 900.d, height: DeviceInfo.size.height * 0.6);
+    }
     if (_player != accountBloc.account!) {
       return _profileSegment();
     }
@@ -58,7 +61,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         for (var i = 0; i < 2; i++) TabData("profile_tab_$i".l()),
       ]),
       SizedBox(
-          height: DeviceInfo.size.height * 0.6,
+          height: DeviceInfo.size.height * 0.64,
           child: switch (selectedTabIndex) {
             < 1 => _profileSegment(),
             _ => _achievementSegment(),
@@ -71,6 +74,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
     if (widget.playerId > 0) {
       var result = await rpc(RpcId.getProfileInfo,
           params: {RpcParams.player_id.name: widget.playerId});
+      result["id"] = widget.playerId;
+      result["tribe_id"] = result["tribe_id"] ?? 1;
       setState(() => _player = Player.initialize(result, 0));
     } else {
       _player = accountBloc.account!;
@@ -98,10 +103,10 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         decoration: Widgets.imageDecore("frame_header_cheese",
             ImageCenterSliceData(114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
         width: 940.d,
-        height: 510.d,
+        height: 480.d,
         child:
             BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-          if (state.account.itsMe) {
+          if (_player!.itsMe) {
             _player = state.account;
           }
           return Stack(clipBehavior: Clip.none, children: [
@@ -154,7 +159,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                 child: _indicator("total_rank".l(), _player!.rank.toString(),
                     icon: "icon_rank")),
             Positioned(
-                top: 360.d,
+                top: 350.d,
                 left: 60.d,
                 child: _indicator(
                     "last_played".l(),
@@ -164,7 +169,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                 top: 220.d,
                 left: 500.d,
                 child:
-                    Widgets.divider(direction: Axis.vertical, height: 220.d)),
+                    Widgets.divider(direction: Axis.vertical, height: 200.d)),
             Positioned(
                 top: 210.d, right: 12.d, width: 380.d, child: _tribeSection())
           ]);
@@ -175,7 +180,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
       {String? icon, TextStyle? valueStyle}) {
     return Widgets.rect(
       constraints: BoxConstraints(minWidth: 250.d),
-      height: 96.d,
+      height: 90.d,
       padding: EdgeInsets.zero,
       decoration: Widgets.imageDecore("frame_hatch", ImageCenterSliceData(60)),
       child: Stack(
@@ -212,7 +217,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         controller?.findInput<bool>("hideBackground")!.value = true;
         controller?.findInput<bool>("active")!.value = true;
         artboard.addController(controller!);
-      }, width: 130.d, height: 130.d),
+      }, width: 120.d, height: 120.d),
       SizedBox(height: 20.d),
       SkinnedText(_player!.tribeId > 0 ? _player!.tribeName : "no_tribe".l(),
           style: TStyles.large),
@@ -221,7 +226,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
 
   Widget _medalsBuilder() {
     return SizedBox(
-        height: 280.d,
+        height: 260.d,
         child: Stack(alignment: Alignment.bottomCenter, children: [
           Positioned(
               bottom: 50.d,
@@ -268,45 +273,45 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         decoration: Widgets.imageDecore("frame_header_cheese",
             ImageCenterSliceData(114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
         width: 940.d,
-        height: 410.d,
+        height: 340.d,
         child: Stack(clipBehavior: Clip.none, children: [
           PositionedDirectional(
               top: -28.d, start: 60.d, child: SkinnedText("popupleague".l())),
           Positioned(
-              top: 50.d,
-              left: 80.d,
+              top: 40.d,
+              left: 110.d,
               child: Asset.load<Image>(
                   "icon_league_${LeagueData.getIndices(_player!.prevLeagueId).$1}",
-                  width: 160.d)),
+                  width: 120.d)),
           Positioned(
-              top: 260.d,
+              top: 210.d,
               left: 40.d,
               child: _indicator(
                   "prev_league_rank".l(), "${_player!.prevLeagueRank}",
                   icon: "icon_rank")),
           Positioned(
               top: 60.d,
-              left: 320.d,
-              child: Widgets.divider(direction: Axis.vertical, height: 260.d)),
+              left: 340.d,
+              child: Widgets.divider(direction: Axis.vertical, height: 200.d)),
           Positioned(
-              top: 50.d,
-              left: 400.d,
+              top: 40.d,
+              left: 450.d,
               child: Asset.load<Image>(
                   "icon_league_${LeagueData.getIndices(_player!.leagueId).$1}",
-                  width: 160.d)),
+                  width: 120.d)),
           Positioned(
-              top: 260.d,
-              left: 370.d,
+              top: 210.d,
+              left: 390.d,
               child: _indicator("league_rank".l(), "${_player!.leagueRank}",
                   icon: "icon_rank")),
           Positioned(
-              top: 120.d,
-              left: 630.d,
+              top: 80.d,
+              left: 650.d,
               child: _indicator("battles_count".l(), "$battles",
                   icon: "icon_attacks")),
           Positioned(
-              top: 260.d,
-              left: 630.d,
+              top: 210.d,
+              left: 650.d,
               child: _indicator(
                   "battles_win_rate".l(), "${(battleRate * 100).round()}%",
                   icon: "icon_attacks")),

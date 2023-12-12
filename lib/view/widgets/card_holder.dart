@@ -5,7 +5,7 @@ import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../key_provider.dart';
+import '../mixins/key_provider.dart';
 import '../widgets.dart';
 import 'loaderwidget.dart';
 

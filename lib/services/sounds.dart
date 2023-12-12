@@ -16,7 +16,6 @@ abstract class ISounds extends IService {
 class Sounds extends ISounds {
   @override
   initialize({List<Object>? args}) {
-    playMusic();
     super.initialize();
   }
 

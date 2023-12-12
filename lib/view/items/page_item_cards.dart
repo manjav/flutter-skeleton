@@ -7,7 +7,7 @@ import '../../data/core/fruit.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../view/route_provider.dart';
-import '../key_provider.dart';
+import '../mixins/key_provider.dart';
 import '../overlays/ioverlay.dart';
 import '../widgets.dart';
 import 'card_item.dart';

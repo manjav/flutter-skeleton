@@ -27,7 +27,11 @@ class LoadingData {
     achievements = AchievementLine.init(data["achievements"]);
     comboHints = ComboHint.init(data["comboItems"]);
     shopItems = ShopData.init(data["shop"]);
-    rules =
-        data["rules"] ?? {"changeNameMinLevel": 100, "changeNameCost": 1000};
+    rules = data["rules"] ??
+        {
+          "changeNameMinLevel": 100,
+          "changeNameCost": 1000,
+          "maxDailyGifts": 30
+        };
   }
 }

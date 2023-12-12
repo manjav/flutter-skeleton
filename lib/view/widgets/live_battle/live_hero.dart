@@ -7,7 +7,7 @@ import '../../../services/service_provider.dart';
 import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
 import '../../items/card_item.dart';
-import '../../key_provider.dart';
+import '../../mixins/key_provider.dart';
 import '../../widgets.dart';
 import '../card_holder.dart';
 
