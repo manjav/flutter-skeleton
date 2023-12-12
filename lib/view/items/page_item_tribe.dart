@@ -416,6 +416,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             radius: 56.d,
             maxLines: null,
             controller: _inputController,
+            onChange: (text) {
+              if (text.contains("\n")) {
+                _inputController.text = text.substring(0, text.length - 1);
+                _sendMessage(account);
+              }
+            },
             onSubmit: (text) => _sendMessage(account),
           )),
           SizedBox(width: 12.d),
