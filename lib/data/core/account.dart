@@ -267,10 +267,6 @@ class Account extends Player with ServiceProvider {
     // Tribe
     installTribe(map['tribe']);
 
-    if (dailyReward != null) {
-      print(dailyReward);
-    }
-
     // Heroes
     heroitems = {};
     for (var item in map["heroitems"]) {
