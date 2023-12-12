@@ -299,14 +299,15 @@ class Widgets {
         color: TColors.primary,
         width: width ?? 720.d,
         child: TextField(
+            style: style,
             maxLines: maxLines,
             autofocus: autofocus,
             maxLength: maxLength == 1 ? null : maxLength,
             controller: controller,
-            style: style,
             textAlign: TextAlign.center,
             onChanged: onChange,
             onSubmitted: onSubmit,
+            onTapOutside: (p) => FocusManager.instance.primaryFocus?.unfocus(),
             decoration: InputDecoration(
               hintStyle: style,
               hintText: hintText,
