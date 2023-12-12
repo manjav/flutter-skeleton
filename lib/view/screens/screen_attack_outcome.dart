@@ -109,12 +109,13 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                     bottom: -180.d,
                     width: 1050.d,
                     height: 980.d,
-                    child: LoaderWidget(
-                        AssetType.animation, "outcome_panel_$_color",
+                    child: LoaderWidget(AssetType.animation, "outcome_panel",
                         onRiveInit: (Artboard artboard) {
-                      artboard.addController(
-                          StateMachineController.fromArtboard(
-                              artboard, 'Panel')!);
+                      var controller = StateMachineController.fromArtboard(
+                          artboard, "State Machine 1")!;
+                      controller.findInput<double>("color")?.value =
+                          _isWin ? 1 : 0;
+                      artboard.addController(controller);
                     }, fit: BoxFit.fitWidth)),
                 Positioned(
                     bottom: 660.d,
