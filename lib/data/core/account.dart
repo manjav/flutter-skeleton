@@ -311,6 +311,7 @@ class Account extends Player with ServiceProvider {
   void _updateInteger(Map<String, dynamic> map) {
     q = Utils.toInt(map["q"], q);
     xp = Utils.toInt(map["xp"], xp);
+    gold = Utils.toInt(map["gold"], xp);
     nectar = Utils.toInt(map["nectar"], nectar);
     potion = Utils.toInt(map["potion_number"], potion);
     activity_status = Utils.toInt(map["activity_status"], activity_status);
