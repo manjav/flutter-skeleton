@@ -98,9 +98,9 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
           widget.showLevel
               ? PositionedDirectional(
                   top: -20 * s,
-                  width: 80 * s,
-                  end: widget.align == TextAlign.left ? -40 * s : null,
-                  start: widget.align == TextAlign.right ? -40 * s : null,
+                  width: 100 * s,
+                  end: widget.align == TextAlign.left ? -50 * s : null,
+                  start: widget.align == TextAlign.right ? -50 * s : null,
                   child: SkinnedText("$_level",
                       style: TStyles.small.copyWith(fontSize: 40 * s)))
               : const SizedBox(),
