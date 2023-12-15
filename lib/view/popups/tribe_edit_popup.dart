@@ -72,14 +72,16 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
             width: 120.d,
             height: 120.d,
             onPressed: () => setState(() => status = (status - 1) % 3),
-            child: Asset.load<Image>('arrow_left')),
+            child: Asset.load<Image>(
+                "arrow_${Localization.isRTL ? "right" : "left"}")),
         SkinnedText("tribe_stats_$status".l()),
         Widgets.button(
             padding: EdgeInsets.all(22.d),
             width: 120.d,
             height: 120.d,
             onPressed: () => setState(() => status = (status + 1) % 3),
-            child: Asset.load<Image>('arrow_right')),
+            child: Asset.load<Image>(
+                "arrow_${Localization.isRTL ? "left" : "right"}")),
       ]),
       SizedBox(height: 24.d),
       Text("tribe_help_${_account.tribe == null ? "new" : "edit"}".l(),
