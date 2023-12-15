@@ -121,7 +121,7 @@ class NoobSocket extends IService {
 
     // Update tribe members status
     if (_account.tribe != null) {
-      loopPlayers(_account.tribe!.members);
+      loopPlayers(_account.tribe!.members.value);
     }
   }
 }

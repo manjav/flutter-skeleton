@@ -69,8 +69,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
                     radius: 16.d,
                     color: TColors.primary70,
                     padding: EdgeInsets.symmetric(horizontal: 30.d),
-                    child: SkinnedText("${value.name}_t".l(),
-                        style: TStyles.large))),
+                    child: SkinnedText(value.name.l(), style: TStyles.large))),
             _fruitsListBuilder(),
           ]);
         });
