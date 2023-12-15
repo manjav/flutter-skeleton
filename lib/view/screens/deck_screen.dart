@@ -212,6 +212,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   Widget _opponentInfo(
       CrossAxisAlignment align, Account account, Opponent opponent) {
     var itsMe = align == CrossAxisAlignment.start;
+    var opponentPower = "????";
+    if (opponent.isRevealed) {
+      opponentPower = opponent.defPower.compact();
+    } else if (widget.opponent == null) {
+      opponentPower = "~${opponent.defPower.compact()}";
+    }
     return Expanded(
       child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
