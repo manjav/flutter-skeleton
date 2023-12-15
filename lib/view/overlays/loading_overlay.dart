@@ -43,6 +43,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
         _exception?.statusCode == StatusCode.C700_UPDATE_NOTICE ||
             _exception?.statusCode == StatusCode.C701_UPDATE_FORCE;
     var isForceUpdate = _exception?.statusCode == StatusCode.C701_UPDATE_FORCE;
+    var logStyle = TStyles.tiny.copyWith(color: TColors.gray);
     return Scaffold(
       body: Stack(alignment: Alignment.center, children: [
         Asset.load<RiveAnimation>('loading', onRiveInit: (Artboard artboard) {
@@ -78,11 +79,11 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
         Positioned(
             bottom: 4.d,
             right: 16.d,
-            child: Text("v.${'app_version'.l()}", style: TStyles.smallInvert)),
+            child: Text("v.${'app_version'.l()}", style: logStyle)),
         Positioned(
             bottom: 4.d,
             left: 16.d,
-            child: Text(DeviceInfo.adId, style: TStyles.tinyInvert)),
+            child: Text(DeviceInfo.adId, style: logStyle)),
         Positioned(
             top: 4.d,
             right: 4.d,
