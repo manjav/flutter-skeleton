@@ -34,9 +34,10 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
   void initState() {
     selectedTabIndex = widget.args["index"] ?? 0;
     _account = accountBloc.account!;
-    var index = _account.tribe!.members.indexWhere((member) => member.itsMe);
+    var index =
+        _account.tribe!.members.value.indexWhere((member) => member.itsMe);
     if (index > -1) {
-      _member = _account.tribe!.members[index];
+      _member = _account.tribe!.members.value[index];
     } else {
       _member = Opponent.initialize({"id": _account.id}, _account.id);
     }
@@ -88,9 +89,9 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
       SizedBox(height: 20.d),
       Expanded(
           child: ListView.builder(
-              itemCount: tribe.members.length,
+              itemCount: tribe.members.value.length,
               itemBuilder: (c, i) =>
-                  _memberItemBuilder(tribe, tribe.members[i], i))),
+                  _memberItemBuilder(tribe, tribe.members.value[i], i))),
     ]);
   }
 
@@ -147,7 +148,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         onTapUp: (details) {
           Overlays.insert(context, OverlayType.member, args: [
             member,
-            tribe.members.firstWhere((m) => m.itsMe),
+            tribe.members.value.firstWhere((m) => m.itsMe),
             details.globalPosition.dy - 220.d
           ]);
         });
@@ -225,7 +226,8 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             Positioned(
                 top: 170.d,
                 width: 400.d,
-                child: Text("tribe_upgrade_d_$id".l([tribe.getOption(id)]),
+                child: Text(
+                    "tribe_upgrade_d_$id".l([tribe.getOption(id).convert()]),
                     textAlign: TextAlign.center,
                     style: TStyles.medium.copyWith(height: 1))),
             Positioned(
@@ -239,8 +241,12 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
 
   Widget _upgradeButton(Tribe tribe, int id) {
     if (tribe.levels[id]! >= Building.get_maxLevel(id.toBuildings())) {
-      return SkinnedText("max_level".l(["tribe_upgrade_t_$id".l()]),
-          textAlign: TextAlign.center);
+      return Column(children: [
+        Asset.load<Image>("tick", height: 80.d),
+        SizedBox(height: 25.d),
+        SkinnedText("max_level".l(["tribe_upgrade_t_$id".l()]),
+            textAlign: TextAlign.center)
+      ]);
     }
     var cost = tribe.getOptionCost(id);
     var newBenefit = tribe.getOption(id, tribe.levels[id]! + 1);
@@ -253,7 +259,8 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SkinnedText("tribe_upgarde".l(),
               style: TStyles.small.copyWith(height: 3.d)),
-          SkinnedText("$newBenefit${id == Buildings.base.id ? "ˡ" : "%"}",
+          SkinnedText(
+              "$newBenefit${id == Buildings.base.id ? "ˡ" : "%"}".convert(),
               style: TStyles.large.copyWith(height: 3.5.d)),
         ]),
         SizedBox(width: 20.d),
@@ -261,7 +268,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
           decoration: Widgets.imageDecore(
               "frame_hatch_button", ImageCenterSliceData(42)),
-          child: Row(children: [
+          child: Row(textDirection: TextDirection.ltr, children: [
             Asset.load<Image>("icon_gold", height: 76.d),
             SkinnedText(cost.compact(),
                 style: TStyles.large.copyWith(height: 1)),

@@ -152,16 +152,26 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   }
 
   Widget _membersButtonBuilder(Tribe tribe) {
-    return Widgets.rect(
-      width: 260.d,
-      padding: EdgeInsets.zero,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        _indicator("icon_population",
-            "${tribe.population}/${tribe.getOption(Buildings.base.id)}", 40.d),
-        SizedBox(height: 8.d),
-        _indicator("tribe_online", "2 onlines", 32.d),
-      ]),
-    );
+    return ValueListenableBuilder<List<Opponent>>(
+        valueListenable: tribe.members,
+        builder: (context, value, child) => Widgets.rect(
+              width: 260.d,
+              padding: EdgeInsets.zero,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _indicator(
+                        "icon_population",
+                        "${tribe.population}/${tribe.getOption(Buildings.base.id)}"
+                            .convert(),
+                        40.d),
+                    SizedBox(height: 8.d),
+                    _indicator(
+                        "tribe_online",
+                        "tribe_onlines".l([tribe.onlineMembersCount.convert()]),
+                        32.d),
+                  ]),
+            ));
   }
 
   Widget _upgradeLineBuilder(Tribe tribe) {
@@ -210,7 +220,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             children: [
               Asset.load<Image>(icon, width: 50.d),
               SizedBox(width: 12.d),
-              SkinnedText(label),
+              SkinnedText(label.convert()),
             ]),
         onPressed: () async {
           await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
@@ -288,14 +298,15 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           await account.tribe!.loadMembers(context, account);
           if (!mounted) return;
           Overlays.insert(context, OverlayType.member, args: [
-            account.tribe!.members.firstWhere((m) => m.name == message.sender),
+            account.tribe!.members.value
+                .firstWhere((m) => m.name == message.sender),
             account,
             details.globalPosition.dy - 220.d
           ]);
         },
         decoration:
             Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
-        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId + 1}",
+        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId}",
             width: 76.d, height: 76.d, subFolder: "avatars"));
     return Column(children: [
       Row(
@@ -371,7 +382,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   void _onChatItemTap(
       Account account, TapUpDetails details, NoobChatMessage message) {
     var options = <ChatOptions>[];
-    if (account.tribe!.members.firstWhere((m) => m.itsMe).tribePosition.index >=
+    if (account.tribe!.members.value
+            .firstWhere((m) => m.itsMe)
+            .tribePosition
+            .index >=
         TribePosition.owner.index) {
       options.add(ChatOptions.pin);
     }

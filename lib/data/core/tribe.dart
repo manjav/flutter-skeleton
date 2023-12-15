@@ -24,8 +24,8 @@ class Tribe with ServiceProvider {
       weeklyRank;
   late String name, description;
   final Map<int, int> levels = {};
-  List<Opponent> members = [];
   ChatNotifier chat = ChatNotifier([]);
+  ValueNotifier<List<Opponent>> members = ValueNotifier([]);
   ValueNotifier<NoobChatMessage?> pinnedMessage = ValueNotifier(null);
 
   Tribe(Map? map) : super() {
@@ -61,12 +61,16 @@ class Tribe with ServiceProvider {
   }
 
   loadMembers(BuildContext context, Account account) async {
-    if (members.isNotEmpty) return;
+    if (members.value.isNotEmpty) return;
     try {
       var result = await getService<HttpConnection>(context)
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
-      members = Opponent.createList(result["members"], account.id);
+      members.value = Opponent.createList(result["members"], account.id);
     } finally {}
+  }
+
+  int get onlineMembersCount {
+    return members.value.where((member) => member.status > 0).length;
   }
 
   sendMessage(BuildContext context, Account account, String text) async {

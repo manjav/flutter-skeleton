@@ -270,6 +270,7 @@
     "tribe_stats_0": "Public",
     "tribe_stats_1": "Invite Only",
     "tribe_stats_2": "Closed",
+    "tribe_onlines": "%s onlines",
     "tribe_help_new": "If you don't feel like joining one of the existing tribes you can create your own. You'll need to have 15K gold to create a tribe, this gold will go towards providing you with a 5% defense bonus for all of your cards.",
     "tribe_help_edit": "You can edit your tribe description. Tribes that are not in the top 25 can change their name too. Since other players generally recognize your tribe by name it's best not to change names regularly.",
     "tribe_invite": "Invite Player",
