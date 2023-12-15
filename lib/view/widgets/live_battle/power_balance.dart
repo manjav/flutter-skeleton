@@ -39,7 +39,10 @@ class Powerbalance extends StatelessWidget {
               duration: const Duration(seconds: 1),
               child:
                   Widgets.rect(width: w - p * 2, color: color, radius: r - p)),
-          Positioned(left: 132.d, child: SkinnedText(value.compact()))
+          Positioned(
+              left: 132.d,
+              child: SkinnedText(value.compact(),
+                  textDirection: TextDirection.ltr))
         ]);
   }
 }

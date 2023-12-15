@@ -232,7 +232,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                     builder: (context, value, child) => SkinnedText(
                         account.calculatePower(_selectedCards.value).compact()),
                   )
-                : SkinnedText("~${opponent.defPower.compact()}"),
+                : SkinnedText(opponentPower, textDirection: TextDirection.ltr),
             SizedBox(height: 16.d)
           ]),
     );
