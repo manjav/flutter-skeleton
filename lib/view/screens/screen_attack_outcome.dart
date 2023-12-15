@@ -51,7 +51,8 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
     _isWin = widget.args['outcome'];
     _color = _isWin ? "green" : "red";
     getService<Sounds>().play(_isWin ? "won" : "lose");
-    if (widget.args["attacker_hero_benefits_info"].length > 0) {
+    if (widget.args.containsKey("attacker_hero_benefits_info") &&
+        widget.args["attacker_hero_benefits_info"].length > 0) {
       var benefits = widget.args["attacker_hero_benefits_info"];
       var map = <String, int>{
         "benefit_gold": benefits['gold_benefit'] ?? 0,
