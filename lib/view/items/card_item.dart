@@ -125,7 +125,8 @@ class _CardItemState extends State<CardItem> {
       items.add(Positioned(
           bottom: 20 * s,
           right: 20 * s,
-          child: SkinnedText("ˣ${cooldown.toRemainingTime()}", style: _tiny)));
+          child: SkinnedText("ˣ${cooldown.toRemainingTime().convert()}",
+              style: _tiny)));
     }
 
     if (widget.showPower) {
@@ -133,9 +134,10 @@ class _CardItemState extends State<CardItem> {
           bottom: 16 * s,
           left: 16 * s,
           child: Row(textDirection: TextDirection.ltr, children: [
-            SkinnedText("ˢ${widget.card.power.compact()}", style: _small),
+            SkinnedText("ˢ${widget.card.power.compact().convert()}",
+                style: _small),
             widget.extraPower > 0
-                ? SkinnedText("+${widget.extraPower.compact()}",
+                ? SkinnedText("+${widget.extraPower.compact().convert()}",
                     textDirection: TextDirection.ltr,
                     style: _small!.copyWith(color: TColors.orange))
                 : const SizedBox(),
@@ -156,7 +158,9 @@ class _CardItemState extends State<CardItem> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Expanded(child: SizedBox()),
-                        SkinnedText(_remainingCooldown.value.toRemainingTime()),
+                        SkinnedText(_remainingCooldown.value
+                            .toRemainingTime()
+                            .convert()),
                         IgnorePointer(
                             child: Widgets.skinnedButton(
                                 height: 128.d,
