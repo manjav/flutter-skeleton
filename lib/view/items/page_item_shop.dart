@@ -191,7 +191,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                     ? Widgets.rect(
                         decoration: Widgets.imageDecore("icon_star"),
                         child: SkinnedText(
-                            "x${ShopData.getMultiplier(_account).round()}"))
+                            "x${ShopData.getMultiplier(_account.level).round()}"))
                     : null),
             SizedBox(width: 130.d),
             const Expanded(child: SizedBox()),
@@ -245,7 +245,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 Asset.load<Image>("icon_gold", width: 76.d),
                 SkinnedText(
-                    (item.base.value * ShopData.getMultiplier(_account))
+                    (item.base.value * ShopData.getMultiplier(_account.level))
                         .round()
                         .compact(),
                     style: TStyles.large.copyWith(color: TColors.orange))
@@ -318,8 +318,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                   color: ButtonColor.green,
                   padding: EdgeInsets.only(bottom: 10.d),
                   icon: item.inStore ? null : "icon_${item.base.currency}",
-                  label:
-                      ShopData.calculatePrice(_account, _productDetails, item),
+                  label: ShopData.calculatePrice(_account.level,
+                      _account.nectarPrice, _productDetails, item),
                   height: 120.d))
         ]),
         onPressed: () => _onItemPressed(item));
