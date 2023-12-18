@@ -153,7 +153,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
     await Navigator.pushNamed(context, route.routeName,
         arguments: {"card": _card});
     if (mounted && !accountBloc.account!.cards.containsKey(_card.id)) {
-      Navigator.pop(context);
+      Navigator.popUntil(context, (route) => route.isFirst);
     }
     setState(() {});
   }
