@@ -1,5 +1,5 @@
-import '../../services/service_provider.dart';
-import '../../utils/ilogger.dart';
+import '../mixins/ilogger.dart';
+import '../mixins/service_provider.dart';
 
 abstract class IService with ILogger, ServiceProvider {
   bool isInitialized = false;

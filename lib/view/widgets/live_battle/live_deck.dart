@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/core/fruit.dart';
+import '../../../mixins/key_provider.dart';
 import '../../../services/deviceinfo.dart';
 import '../../items/card_item.dart';
-import '../../mixins/key_provider.dart';
 import '../../widgets.dart';
 import '../card_holder.dart';
 

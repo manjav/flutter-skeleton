@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/infra.dart';
+import '../../mixins/ilogger.dart';
+import '../../mixins/service_provider.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
-import '../../services/service_provider.dart';
 import '../../utils/assets.dart';
-import '../../utils/ilogger.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
 import '../overlays/ioverlay.dart';

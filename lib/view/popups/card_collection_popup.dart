@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
+import '../../mixins/key_provider.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -8,7 +9,6 @@ import '../../utils/assets.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
-import '../mixins/key_provider.dart';
 import '../route_provider.dart';
 import 'ipopup.dart';
 

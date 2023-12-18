@@ -9,6 +9,8 @@ import '../../data/core/achievement.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
+import '../../mixins/key_provider.dart';
+import '../../mixins/tab_provider.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -18,8 +20,6 @@ import '../../view/popups/ipopup.dart';
 import '../../view/widgets/indicator_level.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
-import '../mixins/key_provider.dart';
-import '../mixins/tab_provider.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 

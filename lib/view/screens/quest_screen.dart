@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
+import '../../mixins/service_provider.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
-import '../../services/service_provider.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';

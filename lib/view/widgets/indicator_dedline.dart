@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
+import '../../mixins/service_provider.dart';
 import '../../services/deviceinfo.dart';
-import '../../services/service_provider.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/skinnedtext.dart';

@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/store.dart';
 import '../../services/connection/http_connection.dart';
-import '../../services/service_provider.dart';
 import '../data/core/account.dart';
 import '../data/core/rpc.dart';
+import '../mixins/service_provider.dart';
 import '../view/widgets/card_holder.dart';
 
 class AccountEvent {}

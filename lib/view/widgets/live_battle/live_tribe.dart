@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 
 import '../../../data/core/adam.dart';
 import '../../../data/core/rpc.dart';
+import '../../../mixins/service_provider.dart';
 import '../../../services/deviceinfo.dart';
-import '../../../services/service_provider.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
 import '../../../view/widgets/indicator_level.dart';

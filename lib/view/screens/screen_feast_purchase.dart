@@ -6,9 +6,9 @@ import 'package:rive/rive.dart';
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/store.dart';
+import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
 import 'iscreen.dart';
 

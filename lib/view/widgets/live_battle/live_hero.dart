@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../data/core/fruit.dart';
 import '../../../data/core/rpc.dart';
+import '../../../mixins/key_provider.dart';
+import '../../../mixins/service_provider.dart';
 import '../../../services/deviceinfo.dart';
-import '../../../services/service_provider.dart';
 import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
 import '../../items/card_item.dart';
-import '../../mixins/key_provider.dart';
 import '../../widgets.dart';
 import '../card_holder.dart';
 

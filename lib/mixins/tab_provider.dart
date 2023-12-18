@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../services/deviceinfo.dart';
-import '../../../view/widgets/skinnedtext.dart';
-import '../../utils/assets.dart';
-import '../widgets.dart';
+import '../../services/deviceinfo.dart';
+import '../../view/widgets/skinnedtext.dart';
+import '../utils/assets.dart';
+import '../view/widgets.dart';
 
 @optionalTypeArgs
 mixin TabProviderMixin<T extends StatefulWidget> on State<T> {

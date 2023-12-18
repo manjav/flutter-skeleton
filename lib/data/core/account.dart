@@ -6,8 +6,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
-import '../../services/service_provider.dart';
 import '../../services/trackers/trackers.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';

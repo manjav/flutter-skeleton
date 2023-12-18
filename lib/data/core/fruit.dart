@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/rpc.dart';
+import '../../mixins/service_provider.dart';
 import '../../services/connection/http_connection.dart';
-import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
 import 'building.dart';

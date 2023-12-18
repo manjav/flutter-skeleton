@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../utils/ilogger.dart';
+import '../mixins/ilogger.dart';
 import 'iservices.dart';
 
 class Localization extends IService {

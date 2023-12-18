@@ -7,19 +7,19 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../blocs/services_bloc.dart';
-import '../../data/core/fruit.dart';
-import '../../data/core/result.dart';
-import '../../services/deviceinfo.dart';
-import '../../services/localization.dart';
-import '../../services/sounds.dart';
-import '../../utils/assets.dart';
-import '../route_provider.dart';
-import '../screens/iscreen.dart';
-import '../widgets.dart';
-import '../widgets/loaderwidget.dart';
+import '../blocs/services_bloc.dart';
+import '../data/core/fruit.dart';
+import '../data/core/result.dart';
+import '../services/deviceinfo.dart';
+import '../services/localization.dart';
+import '../services/sounds.dart';
+import '../utils/assets.dart';
+import '../view/route_provider.dart';
+import '../view/screens/iscreen.dart';
+import '../view/widgets.dart';
+import '../view/widgets/loaderwidget.dart';
 
-enum RewardAniationState { none, waiting, started, shown, closed }
+enum RewardAniationState { none, waiting, started, shown, closed, disposed }
 
 mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   dynamic result;
@@ -192,7 +192,12 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
     }
   }
 
-  void close() => Navigator.pop(context);
+  void close() {
+    if (state.index < RewardAniationState.disposed.index) {
+      Navigator.pop(context);
+      state = RewardAniationState.disposed;
+    }
+  }
 
   Widget _progressbarBuilder() => ValueListenableBuilder(
       valueListenable: _progressbarNotifier,

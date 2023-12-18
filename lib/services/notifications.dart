@@ -10,9 +10,9 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../data/core/account.dart';
+import '../mixins/ilogger.dart';
 import '../services/iservices.dart';
 import '../services/localization.dart';
-import '../utils/ilogger.dart';
 
 class Notifications extends IService {
   static bool granted = false;

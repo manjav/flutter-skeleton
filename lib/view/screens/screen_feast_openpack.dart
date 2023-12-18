@@ -7,10 +7,10 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/fruit.dart';
 import '../../data/core/store.dart';
+import '../../mixins/reward_mixin.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../../view/mixins/reward_mixin.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
 import 'iscreen.dart';

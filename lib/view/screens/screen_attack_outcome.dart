@@ -3,13 +3,13 @@ import 'package:rive/rive.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
+import '../../mixins/reward_mixin.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/mixins/reward_mixin.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';

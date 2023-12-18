@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../mixins/ilogger.dart';
+import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
-import '../../services/service_provider.dart';
 import '../../services/theme.dart';
-import '../../utils/ilogger.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../overlays/ioverlay.dart';
 

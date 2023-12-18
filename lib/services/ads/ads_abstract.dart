@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/ilogger.dart';
+import '../../mixins/ilogger.dart';
 import '../localization.dart';
 
 enum AdSDKName { none, adivery, applovin, google, unity }

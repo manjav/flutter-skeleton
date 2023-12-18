@@ -2,17 +2,17 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../services/localization.dart';
-import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
-import '../../data/core/building.dart';
-import '../../data/core/fruit.dart';
-import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
-import '../overlays/ioverlay.dart';
-import '../popups/ipopup.dart';
-import '../route_provider.dart';
-import '../widgets/card_holder.dart';
+import '../../services/localization.dart';
+import '../blocs/account_bloc.dart';
+import '../blocs/services_bloc.dart';
+import '../data/core/building.dart';
+import '../data/core/fruit.dart';
+import '../data/core/rpc.dart';
+import '../services/connection/http_connection.dart';
+import '../view/overlays/ioverlay.dart';
+import '../view/popups/ipopup.dart';
+import '../view/route_provider.dart';
+import '../view/widgets/card_holder.dart';
 
 mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
   cardHolder(Building building, {bool showPower = false}) {

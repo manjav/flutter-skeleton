@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
+import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../mixins/reward_mixin.dart';
 import '../route_provider.dart';
 import 'iscreen.dart';
 
