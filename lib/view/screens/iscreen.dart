@@ -51,8 +51,8 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     appBarElements.addAll(appBarElementsRight());
     return SafeArea(
       child: Scaffold(
-        body: WillPopScope(
-          onWillPop: () async => widget.closable,
+        body: PopScope(
+          onPopInvoked: (i) async => widget.closable,
           child: Stack(children: [
             Positioned(
                 top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
