@@ -13,6 +13,7 @@ import '../../services/localization.dart';
 import '../../utils/utils.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
+import '../widgets/tab_navigator.dart';
 import 'iscreen.dart';
 
 class OpenpackFeastScreen extends AbstractScreen {
@@ -28,6 +29,7 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
   late ShopItem _pack;
   SMIInput<double>? _countInput;
   List<AccountCard> _cards = [];
+  final ValueNotifier<int> _punchIndex = ValueNotifier(-1);
   late AnimationController _opacityAnimationController;
   final Map<int, ImageAsset> _cardIconAssets = {}, _cardFrameAssets = {};
 
@@ -37,6 +39,13 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
     children = [
       _cardsList(),
       IgnorePointer(child: animationBuilder("openpack")),
+      Align(
+          alignment: Alignment.bottomCenter,
+          child: TabNavigator(
+            tabsCount: 5,
+            punchIndex: _punchIndex,
+            selectedIndex: ValueNotifier(0),
+          )),
     ];
     _pack = widget.args["pack"] ??
         accountBloc.account!.loadingData.shopItems[ShopSections.card]![0];
@@ -78,6 +87,8 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
         loadCardIcon(_cardIconAssets[i]!, card.base.getName());
         loadCardFrame(_cardFrameAssets[i]!, card.base);
       }
+    } else if (state == RewardAniationState.shown) {
+      _punchIndex.value = 1;
     }
   }
 
