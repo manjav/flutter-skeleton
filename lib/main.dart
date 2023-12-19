@@ -22,7 +22,8 @@ void main() async {
   MyApp.startTime = DateTime.now();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+      overlays: []);
   await Firebase.initializeApp();
   await Prefs().initialize();
   runApp(const MyApp());

@@ -34,31 +34,31 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         const LoaderWidget(AssetType.animation, "map_home",
             fit: BoxFit.fitWidth),
         PositionedDirectional(
-            top: 380.d,
-            start: 32.d,
+            top: 340.d,
+            end: 32.d,
             child: Indicator("home", Values.leagueRank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupLeague.routeName))),
         PositionedDirectional(
-            top: 240.d,
-            start: 32.d,
+            top: 220.d,
+            end: 32.d,
             child: Indicator("home", Values.rank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupRanking.routeName))),
         PositionedDirectional(
-            top: 150.d,
-            end: 24.d,
+            top: 220.d,
+            start: 44.d,
             child: Widgets.button(
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupInbox.routeName))),
         _building(state.account, Buildings.defense, 0, -640),
-        _building(state.account, Buildings.offense, -320, -380),
-        _building(state.account, Buildings.base, 0, -180),
-        _building(state.account, Buildings.treasury, -260, 100),
-        _building(state.account, Buildings.mine, 290, 90),
+        _building(state.account, Buildings.offense, -340, -370),
+        _building(state.account, Buildings.base, 0, -140),
+        _building(state.account, Buildings.treasury, -270, 140),
+        _building(state.account, Buildings.mine, 300, 90),
         _button("battle", "battle_l", 150, 250, 442, () {
           if (state.account.level < Account.availablityLevels["liveBattle"]!) {
             Overlays.insert(context, OverlayType.toast,

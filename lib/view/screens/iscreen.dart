@@ -57,7 +57,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
             Positioned(
                 top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
             PositionedDirectional(
-                top: 32.d,
+                top: 44.d,
                 start: 54.d,
                 end: 32.d,
                 child: Row(
