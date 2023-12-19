@@ -83,7 +83,7 @@ class _LiveTribeState extends State<LiveTribe>
   }
 
   Widget _hornButton() {
-    if (_requestSent) {
+    if (widget.helpCost == 0 || _requestSent) {
       return const SizedBox();
     }
     return Widgets.skinnedButton(

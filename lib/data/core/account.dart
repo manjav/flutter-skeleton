@@ -263,6 +263,7 @@ class Account extends Player with ServiceProvider {
     addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
     addBuilding(Buildings.treasury, map['bank_building_level']);
+    addBuilding(Buildings.park);
 
     // Tribe
     installTribe(map['tribe']);

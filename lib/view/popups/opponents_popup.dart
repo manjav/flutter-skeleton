@@ -318,7 +318,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         var result = await rpc(RpcId.battleLive,
             params: {RpcParams.opponent_id.name: opponent.id});
         if (mounted) {
-          result["opponent"] = opponent;
+          result["axis"] = opponent;
           Navigator.pushNamed(context, Routes.livebattle.routeName,
               arguments: result);
         }

@@ -65,7 +65,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     LiveBattleScreen.deadlines = [28, 10, 10, 10, 0, 1];
     _account = accountBloc.account!;
     _allies = _account;
-    _axis = (widget.args["opponent"] as Opponent?) ??
+    _axis = (widget.args["axis"] as Opponent?) ??
         Opponent.initialize(
             {"level": 10, "xp": 1200, "name": "Test", "tribe_name": "tribe"},
             _allies.id);
