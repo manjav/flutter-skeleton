@@ -19,6 +19,7 @@ enum Buildings {
   // tribe,
   // quest,
   auction,
+  park,
 }
 
 extension BuildingIntExtension on int {

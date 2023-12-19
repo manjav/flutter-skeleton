@@ -55,10 +55,11 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupInbox.routeName))),
         _building(state.account, Buildings.defense, 0, -640),
-        _building(state.account, Buildings.offense, -340, -370),
-        _building(state.account, Buildings.base, 0, -140),
-        _building(state.account, Buildings.treasury, -270, 140),
-        _building(state.account, Buildings.mine, 300, 90),
+        _building(state.account, Buildings.offense, -340, -380),
+        _building(state.account, Buildings.base, 0, -160),
+        _building(state.account, Buildings.treasury, -270, 100),
+        _building(state.account, Buildings.mine, 330, -350),
+        _building(state.account, Buildings.park, 320, 30),
         _button("battle", "battle_l", 150, 250, 442, () {
           if (state.account.level < Account.availablityLevels["liveBattle"]!) {
             Overlays.insert(context, OverlayType.toast,
