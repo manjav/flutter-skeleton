@@ -123,10 +123,10 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                     height: 240.d,
                     width: 800.d,
                     child: _outResults()),
-                PositionedDirectional(
+                Positioned(
                     height: 322.d,
-                    end: 60.d,
-                    start: 180.d,
+                    left: 180.d,
+                    right: 180.d,
                     bottom: 180.d,
                     child: _prizeList()),
                 Positioned(
