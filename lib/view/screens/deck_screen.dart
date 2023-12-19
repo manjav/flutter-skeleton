@@ -38,6 +38,7 @@ class DeckScreen extends AbstractScreen {
 
 class _DeckScreenState extends AbstractScreenState<DeckScreen>
     with KeyProvider {
+  bool _attackStarted = false;
   final SelectedCards _selectedCards =
       SelectedCards(List.generate(5, (i) => null));
 
@@ -284,6 +285,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   bool isBossQuest(Account account) => ((account.questsCount / 10) % 1 == 0);
 
   _attack(Account account) async {
+    if (_attackStarted) return;
+    _attackStarted = true;
     var params = <String, dynamic>{
       RpcParams.cards.name: _selectedCards.getIds(),
       RpcParams.check.name: md5.convert(utf8.encode("${account.q}")).toString()
