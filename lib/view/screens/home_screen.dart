@@ -205,10 +205,23 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   void _onNoobReceive(NoobMessage message) {
-    if (message.type == Noobs.help) {
-      if (ModalRoute.of(context)!.settings.name != Routes.home.routeName) {
+    if (ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
+      var help = message as NoobHelpMessage;
+
+      Overlays.insert(context, OverlayType.confirm, args: {
+        "message": "tribe_help".l([help.attackerName, help.defenderName]),
+        "onAccept": () async {
+          var result = await rpc(RpcId.joinBattle,
+              params: {"battle_id": help.id, "mainEnemy": help.ownerId});
+          if (mounted) {
+            result["helpCost"] = 0;
+            // result["opponent"] = opponent;
+            Navigator.pushNamed(context, Routes.livebattle.routeName,
+                arguments: result);
+          }
+        }
+      });
         return;
-      }
     }
     if (message.type == Noobs.auctionBid) {
       var bid = message as NoobAuctionMessage;
