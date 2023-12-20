@@ -167,6 +167,13 @@ class NoobMessage {
   }
 }
 
+class NoobBattleMessage extends NoobMessage {
+  int teamOwnerId = 0;
+  NoobBattleMessage(super.type, super.map) {
+    teamOwnerId = map["owner_team_id"];
+  }
+}
+
 class NoobStatusMessage extends NoobMessage {
   late int playerId, status;
   NoobStatusMessage(Map<String, dynamic> map) : super(Noobs.playerStatus, map) {
@@ -176,14 +183,13 @@ class NoobStatusMessage extends NoobMessage {
   }
 }
 
-class NoobCardMessage extends NoobMessage {
+class NoobCardMessage extends NoobBattleMessage {
+  int round = 0;
   AccountCard? card;
   String ownerName = "";
-  int round = 0, teamOwnerId = 0;
   NoobCardMessage(Account account, Map<String, dynamic> map)
       : super(Noobs.deployCard, map) {
     round = map["round"];
-    teamOwnerId = map["owner_team_id"];
     ownerName = map["card_owner_name"];
     card = map["card"] == null
         ? null
@@ -201,14 +207,13 @@ extension AbilitiesExtrension on Abilities {
       };
 }
 
-class NoobAbilityMessage extends NoobMessage {
-  late int teamOwnerId, ownerId, heroId;
+class NoobAbilityMessage extends NoobBattleMessage {
+  late int ownerId, heroId;
   Abilities ability = Abilities.none;
   Map<String, int> cards = {};
   NoobAbilityMessage(Map<String, dynamic> map) : super(Noobs.heroAbility, map) {
     heroId = map["hero_id"];
     ownerId = map["hero_owner_id"];
-    teamOwnerId = map["owner_team_id"];
     ability = Abilities.values[map["ability_type"]];
     for (var card in map["hero_benefits_info"]["cards"]) {
       cards[card["id"]] = card[ability.value];
