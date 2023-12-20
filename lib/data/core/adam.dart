@@ -81,7 +81,7 @@ class TribeRank extends Rank {
 
 class Record extends Rank {
   String tribeName = "";
-  int level = 0, tribeId = 0, avatarId = 1;
+  int level = 1, tribeId = 0, avatarId = 1;
   Record.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
