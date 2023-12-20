@@ -108,7 +108,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       Timer.periodic(const Duration(seconds: 4), (timer) {
         var index = timer.tick - 1;
         if (index < 4) {
-          _opponents[0]!.cards.setAtCard(index, cards[index]);
+          _warriors[0]!.cards.setAtCard(index, cards[index]);
           _updatePowerBalance();
         }
         if (index == 5) {
@@ -280,7 +280,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     if (!_warriors.containsKey(cardOwnerId)) {
       _warriors[cardOwnerId] = LiveWarrior(
           side,
-            message.teamOwnerId,
+          message.teamOwnerId,
           Opponent.initialize(
               {"id": cardOwnerId, "name": message.ownerName}, _account.id));
     }
@@ -330,19 +330,23 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   void _handleEndingMessage(NoobEndBattleMessage message) {
     for (var info in message.opponentsInfo) {
-      var oppo = _opponents[info["id"]]!;
-      oppo.addResult(info);
-      oppo.won = oppo.id == message.winnerId;
-      if (oppo.teamOwnerId == _allies.id) {
-        if (oppo.id == _allies.id) {
-          oppo.score = oppo.won ? message.winnerScore : message.loserScore;
+      var warrior = _warriors[info["id"]]!;
+      warrior.addResult(info);
+      warrior.won = warrior.teamOwnerId == message.winnerId;
+      if (warrior.teamOwnerId == _friendsHead.id) {
+        if (warrior.base.id == _friendsHead.id) {
+          warrior.score =
+              warrior.won ? message.winnerScore : message.loserScore;
         }
-        oppo.tribeName = oppo.won ? message.winnerTribe : message.loserTribe;
+        warrior.tribeName =
+            warrior.won ? message.winnerTribe : message.loserTribe;
       } else {
-        if (oppo.id == _axis.id) {
-          oppo.score = oppo.won ? message.winnerScore : message.loserScore;
+        if (warrior.base.id == _oppositesHead.id) {
+          warrior.score =
+              warrior.won ? message.winnerScore : message.loserScore;
         }
-        oppo.tribeName = oppo.won ? message.winnerTribe : message.loserTribe;
+        warrior.tribeName =
+            warrior.won ? message.winnerTribe : message.loserTribe;
       }
     }
 
