@@ -35,7 +35,7 @@ class LiveBattleScreen extends AbstractScreen {
 class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   late Account _account;
   late PageController _pageController;
-  final Map<int, LiveOpponent> _opponents = {};
+  final Map<int, LiveWarrior> _warriors = {};
   final SelectedCards _deckCards = SelectedCards([]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));

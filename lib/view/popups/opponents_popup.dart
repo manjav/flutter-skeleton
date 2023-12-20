@@ -61,7 +61,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(12.d, 210.d, 12.d, 64.d);
 
   _findOpponents() async {
-    var deltaTime = _account.now - _fetchAt;
+    var deltaTime = _account.getTime() - _fetchAt;
     var opponentBloc = BlocProvider.of<OpponentsBloc>(context);
     if ((deltaTime > 30 && _requestsCount % 5 == 0) || deltaTime > 120) {
       var data = await rpc(RpcId.getOpponents);
@@ -71,7 +71,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         BlocProvider.of<OpponentsBloc>(context)
             .add(SetOpponents(list: opponentBloc.list!));
       }
-      _fetchAt = _account.now;
+      _fetchAt = _account.getTime();
     }
     ++_requestsCount;
     _selectedOpponent.value = opponentBloc.list![0];
@@ -318,7 +318,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         var result = await rpc(RpcId.battleLive,
             params: {RpcParams.opponent_id.name: opponent.id});
         if (mounted) {
-          result["axis"] = opponent;
+          result["oppositesHead"] = opponent;
           Navigator.pushNamed(context, Routes.livebattle.routeName,
               arguments: result);
         }

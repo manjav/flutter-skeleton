@@ -36,7 +36,7 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator>
 
   @override
   Widget build(BuildContext context) {
-    var remaining = widget.deadline.time - accountBloc.account!.now;
+    var remaining = widget.deadline.time - accountBloc.account!.getTime();
     return SizedBox(
         width: 230.d,
         height: 230.d,

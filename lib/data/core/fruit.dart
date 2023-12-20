@@ -128,7 +128,7 @@ class AbstractCard with ServiceProvider {
     var benefit = account.tribe != null
         ? account.buildings[Buildings.cards]!.getBenefit()
         : 1.0;
-    var delta = account.now - lastUsedAt;
+    var delta = account.getTime() - lastUsedAt;
     var cooldownTime = base.cooldown * benefit;
     return (cooldownTime - delta).ceil().min(0);
   }

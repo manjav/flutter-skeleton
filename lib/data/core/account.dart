@@ -178,7 +178,8 @@ class Account extends Player with ServiceProvider {
   Map<String, int> achivementMap = {};
   Map<Buildings, Building> buildings = {};
 
-  int get now => DateTime.now().secondsSinceEpoch + deltaTime;
+  int getTime({int? time}) =>
+      (time ?? DateTime.now().secondsSinceEpoch) + deltaTime;
 
   Account.initialize(Map<String, dynamic> map, this.loadingData)
       : super.initialize(map, map["id"]) {
@@ -546,7 +547,7 @@ class Account extends Player with ServiceProvider {
   void _addDeadline(Map<String, dynamic> data, int startAt, int id) {
     if (startAt <= 0) return;
     var deadline = startAt + ShopData.boostDeadline;
-    if (deadline <= now) return;
+    if (deadline <= getTime()) return;
 
     var boost = loadingData.shopItems[ShopSections.boost]!
         .firstWhere((item) => item.id == id);

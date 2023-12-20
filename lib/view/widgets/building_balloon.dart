@@ -60,11 +60,11 @@ class _BuildingBalloonState extends State<BuildingBalloon>
 
   int collectableGold(Account account) {
     var goldPerdSec = widget.building.getCardsBenefit(account) / 3600;
-    return ((account.now - account.last_gold_collect_at) * goldPerdSec)
+    return ((account.getTime() - account.last_gold_collect_at) * goldPerdSec)
         .clamp(0, widget.building.benefit)
         .floor();
   }
 
   bool isCollectable(Account account) =>
-      account.now >= account.gold_collection_allowed_at;
+      account.getTime() >= account.gold_collection_allowed_at;
 }
