@@ -15,7 +15,7 @@ import '../../widgets.dart';
 
 class LiveTribe extends StatefulWidget {
   final int ownerId, battleId, helpCost;
-  final Map<int, LiveOpponent> opponents;
+  final Map<int, LiveWarrior> opponents;
 
   const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.opponents,
       {super.key});
@@ -49,9 +49,7 @@ class _LiveTribeState extends State<LiveTribe>
 
   @override
   Widget build(BuildContext context) {
-    var side = widget.opponents[widget.ownerId]!.fraction;
-    var team = widget.opponents.values.where(
-        (o) => o.fraction == side && o != widget.opponents[widget.ownerId]!);
+    var side = widget.opponents[widget.ownerId]!.side;
     var items = <Widget>[
       LevelIndicator(
           size: 150.d,
@@ -60,7 +58,7 @@ class _LiveTribeState extends State<LiveTribe>
           avatarId: widget.opponents.values.first.base.avatarId),
       Widgets.divider(margin: 16.d, height: 56.d, direction: Axis.vertical)
     ];
-    if (team.isEmpty && side == OpponentSide.allies) {
+    if (team.isEmpty && side == WarriorSide.friends) {
       items.add(_hornButton());
     }
     for (var opponent in team) {
@@ -68,15 +66,15 @@ class _LiveTribeState extends State<LiveTribe>
           width: 260.d, height: 174.d, child: LiveOpponentView(opponent)));
     }
     return Positioned(
-        top: side == OpponentSide.axis ? 0 : null,
-        bottom: side == OpponentSide.allies ? 0 : null,
+        top: side == WarriorSide.opposites ? 0 : null,
+        bottom: side == WarriorSide.friends ? 0 : null,
         height: 190.d,
         child: Widgets.rect(
             padding: EdgeInsets.symmetric(horizontal: 12.d),
             decoration: Widgets.imageDecore(
                 "live_tribe_${side.name}", ImageCenterSliceData(101, 92)),
             child: Row(
-                mainAxisAlignment: side == OpponentSide.axis
+                mainAxisAlignment: side == WarriorSide.opposites
                     ? MainAxisAlignment.end
                     : MainAxisAlignment.start,
                 children: items)));

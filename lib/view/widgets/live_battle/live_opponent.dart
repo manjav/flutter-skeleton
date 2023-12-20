@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../data/core/fruit.dart';
 import '../../../data/core/adam.dart';
+import '../../../data/core/fruit.dart';
 import '../../../services/deviceinfo.dart';
 import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
@@ -12,23 +12,23 @@ import '../skinnedtext.dart';
 
 class LiveOpponentView extends StatelessWidget {
   final bool isExpanded;
-  final LiveOpponent opponent;
-  const LiveOpponentView(this.opponent, {this.isExpanded = false, super.key});
+  final LiveWarrior warrior;
+  const LiveOpponentView(this.warrior, {this.isExpanded = false, super.key});
 
   @override
   Widget build(BuildContext context) {
-    var items = <Widget>[_titleBuilder(opponent)];
+    var items = <Widget>[_titleBuilder(warrior)];
     if (isExpanded) {
       items.addAll([
         SizedBox(height: 10.d),
-        _rewardItemBuilder("icon_seed", opponent.score, "power", opponent),
-        _rewardItemBuilder("icon_gold", opponent.gold, "gold", opponent),
-        _rewardItemBuilder("icon_xp", opponent.xp, "cooldown", opponent)
+        _rewardItemBuilder("icon_seed", warrior.score, "power", warrior),
+        _rewardItemBuilder("icon_gold", warrior.gold, "gold", warrior),
+        _rewardItemBuilder("icon_xp", warrior.xp, "cooldown", warrior)
       ]);
     }
     items.addAll([
       const Expanded(child: SizedBox()),
-      SkinnedText(opponent.base.name, overflow: TextOverflow.ellipsis),
+      SkinnedText(warrior.base.name, overflow: TextOverflow.ellipsis),
     ]);
     return Widgets.rect(
         width: 400.d,
@@ -40,7 +40,7 @@ class LiveOpponentView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center, children: items));
   }
 
-  Widget _titleBuilder(LiveOpponent opponent) {
+  Widget _titleBuilder(LiveWarrior warrior) {
     return SizedBox(
         child: Row(mainAxisSize: MainAxisSize.min, children: [
       Widgets.rect(
@@ -48,21 +48,21 @@ class LiveOpponentView extends StatelessWidget {
           padding: EdgeInsets.all(6.d),
           color: TColors.black.withOpacity(0.3),
           child: LoaderWidget(
-              AssetType.image, "avatar_${opponent.base.avatarId}",
+              AssetType.image, "avatar_${warrior.base.avatarId}",
               width: 88.d, height: 88.d, subFolder: "avatars")),
       SizedBox(width: 12.d),
       Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _usedCards(opponent),
-            SkinnedText("ˢ${opponent.power.compact()}", style: TStyles.small)
+            _usedCards(warrior),
+            SkinnedText("ˢ${warrior.power.compact()}", style: TStyles.small)
           ])
     ]));
   }
 
-  Widget _usedCards(LiveOpponent opponent) {
-    var cards = opponent.cards.value;
+  Widget _usedCards(LiveWarrior warrior) {
+    var cards = warrior.cards.value;
     return SizedBox(
       height: 48.d,
       width: 112.d,
@@ -79,7 +79,7 @@ class LiveOpponentView extends StatelessWidget {
     );
   }
 
-  Widget _usedCard(OpponentSide fraction, AccountCard? card, double angle,
+  Widget _usedCard(WarriorSide fraction, AccountCard? card, double angle,
       double left, double top) {
     return Positioned(
         top: top,
@@ -92,7 +92,7 @@ class LiveOpponentView extends StatelessWidget {
   }
 
   Widget _rewardItemBuilder(
-      String icon, int value, String benefit, LiveOpponent opponent) {
+      String icon, int value, String benefit, LiveWarrior opponent) {
     space(s) => SizedBox(width: s);
     format(int v) => benefit == "cooldown" ? v.toRemainingTime() : v.compact();
 
