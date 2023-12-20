@@ -7,9 +7,9 @@ import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/live_battle/live_opponent.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
+import '../widgets/live_battle/live_warrior.dart';
 import 'iscreen.dart';
 
 class LiveOutScreen extends AbstractScreen {

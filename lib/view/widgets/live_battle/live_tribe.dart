@@ -9,9 +9,9 @@ import '../../../services/deviceinfo.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
 import '../../../view/widgets/indicator_level.dart';
-import '../../../view/widgets/live_battle/live_opponent.dart';
 import '../../../view/widgets/skinnedtext.dart';
 import '../../widgets.dart';
+import 'live_warrior.dart';
 
 class LiveTribe extends StatefulWidget {
   final int ownerId, battleId, helpCost;
