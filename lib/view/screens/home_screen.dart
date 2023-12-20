@@ -186,12 +186,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     }
 
   _onAcceptHelp(NoobHelpMessage help, Account account) async {
-    var attacker = Opponent.initialize(
-        {"id": help.attackerId, "name": help.attackerName, "level": 1, "xp": 1},
-        account.id);
-    var defender = Opponent.initialize(
-        {"id": help.defenderId, "name": help.defenderName, "level": 1, "xp": 1},
-        account.id);
+    var attacker =
+        Opponent.create(help.attackerId, help.attackerName, account.id);
+    var defender =
+        Opponent.create(help.defenderId, help.defenderName, account.id);
     getFriend() => help.ownerId == help.attackerId ? attacker : defender;
     getOpposite() => help.ownerId == help.attackerId ? defender : attacker;
     var result = await rpc(RpcId.joinBattle,

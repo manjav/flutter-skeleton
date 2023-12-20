@@ -189,6 +189,9 @@ enum WarriorSide { friends, opposites }
 enum TribePosition { none, member, elder, owner }
 
 class Opponent extends Record {
+  static Opponent create(int id, String name, [int? ownerId]) =>
+      Opponent.initialize({"id": id, "name": name}, ownerId ?? id);
+
   static int scoutCost = 0;
   static Map<String, dynamic> _attackLogs = {};
   int gold = 0,

@@ -281,8 +281,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       _warriors[cardOwnerId] = LiveWarrior(
           side,
           message.teamOwnerId,
-          Opponent.initialize(
-              {"id": cardOwnerId, "name": message.ownerName}, _account.id));
+          Opponent.create(cardOwnerId, message.ownerName, _account.id));
     }
     _warriors[cardOwnerId]?.cards.setAtCard(message.round - 1, message.card);
     _updatePowerBalance();
