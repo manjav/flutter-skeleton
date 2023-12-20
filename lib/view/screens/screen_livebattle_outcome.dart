@@ -20,8 +20,8 @@ class LiveOutScreen extends AbstractScreen {
 
 class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
   // late AnimationController _animationController;
-  late LiveOpponent _alliseOwner, _axisOwner;
-  final List<LiveOpponent> _allise = [], _axis = [];
+  late LiveWarrior _friendsHead, _oppositeHead;
+  final List<LiveWarrior> _friends = [], _opposites = [];
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -30,19 +30,19 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   void initState() {
-    var opponents = widget.args["opponents"] as List<LiveOpponent>;
-    for (var opponent in opponents) {
-      if (opponent.teamOwnerId == widget.args["alliseId"]) {
-        if (opponent.id == widget.args["alliseId"]) {
-          _alliseOwner = opponent;
+    var warriors = widget.args["warriors"] as List<LiveWarrior>;
+    for (var warrior in warriors) {
+      if (warrior.teamOwnerId == widget.args["friendsId"]) {
+        if (warrior.base.id == widget.args["friendsId"]) {
+          _friendsHead = warrior;
         } else {
-          _allise.add(opponent);
+          _friends.add(warrior);
         }
       } else {
-        if (opponent.id == widget.args["axisId"]) {
-          _axisOwner = opponent;
+        if (warrior.base.id == widget.args["oppositesId"]) {
+          _oppositeHead = warrior;
         } else {
-          _axis.add(opponent);
+          _opposites.add(warrior);
         }
       }
     }
@@ -56,19 +56,19 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   Widget contentFactory() {
-    var color = _alliseOwner.won ? "green" : "red";
-    getService<Sounds>().play(_alliseOwner.won ? "won" : "lose");
+    var color = _friendsHead.won ? "green" : "red";
+    getService<Sounds>().play(_friendsHead.won ? "won" : "lose");
     return Widgets.button(
         padding: EdgeInsets.all(32.d),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _fractionBuilder(_axisOwner, _axis),
+              _fractionBuilder(_oppositeHead, _opposites),
               SizedBox(height: 40.d),
               _vsBuilder(),
               SizedBox(height: 40.d),
-              _fractionBuilder(_alliseOwner, _allise),
+              _fractionBuilder(_friendsHead, _friends),
               Widgets.rect(
                   margin: EdgeInsets.all(44.d),
                   height: 130.d,
@@ -95,11 +95,11 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         ]);
   }
 
-  Widget _fractionBuilder(LiveOpponent opponent, List<LiveOpponent> team) {
+  Widget _fractionBuilder(LiveWarrior opponent, List<LiveWarrior> team) {
     return Widgets.rect(
         padding: EdgeInsets.fromLTRB(80.d, 90.d, 80.d, 60.d),
-        decoration: Widgets.imageDecore("liveout_bg_${opponent.fraction.name}",
-            ImageCenterSliceData(201, 158)),
+        decoration: Widgets.imageDecore(
+            "liveout_bg_${opponent.side.name}", ImageCenterSliceData(201, 158)),
         height: 580.d,
         child: Stack(
           alignment: Alignment.center,
@@ -120,7 +120,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         ));
   }
 
-  Widget _headerBuilder(LiveOpponent opponent) {
+  Widget _headerBuilder(LiveWarrior opponent) {
     return Positioned(
         top: -80.d,
         height: 70.d,
@@ -132,7 +132,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
                 style: TStyles.medium.copyWith(height: 1))));
   }
 
-  Widget _helpersBuilder(List<LiveOpponent> team) {
+  Widget _helpersBuilder(List<LiveWarrior> team) {
     return Expanded(
         child: GridView.builder(
       padding: EdgeInsets.symmetric(vertical: 42.d),

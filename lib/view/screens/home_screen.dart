@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/data/core/account.dart';
 import 'package:flutter_skeleton/data/core/adam.dart';
 import 'package:flutter_skeleton/data/core/rpc.dart';
 import 'package:flutter_skeleton/view/widgets/tab_navigator.dart';
@@ -146,48 +147,36 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   void _onNoobReceive(NoobMessage message) {
-    if (ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
+    if (message.type == Noobs.help &&
+        ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
       var help = message as NoobHelpMessage;
+      if (help.ownerTribeId == accountBloc.account!.tribeId) {
       Overlays.insert(context, OverlayType.confirm, args: {
         "message": "tribe_help".l([help.attackerName, help.defenderName]),
-        "onAccept": () async {
-          var result = await rpc(RpcId.joinBattle,
-              params: {"battle_id": help.id, "mainEnemy": help.ownerId});
-          if (mounted) {
-            result["help_cost"] = 0;
-            result["axis"] = Opponent.initialize({
-              "id": help.ownerId,
-              "name": help.ownerId == help.attackerId
-                  ? help.attackerName
-                  : help.defenderName
-            }, accountBloc.account!.id);
-            Navigator.pushNamed(context, Routes.livebattle.routeName,
-                arguments: result);
+          "onAccept": () => _onAcceptHelp(help, accountBloc.account!)
+        });
           }
-        }
-      });
       return;
     }
+    var bloc = accountBloc;
     if (message.type == Noobs.auctionBid) {
       var bid = message as NoobAuctionMessage;
       var bloc = accountBloc;
       if (bid.card.ownerIsMe && bid.card.loserIsMe) {
-        var text =
-            bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deals";
-        if (bid.card.loserIsMe) {
+        var text = bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deal";
           bloc.account!.gold = bid.card.lastBidderGold;
           bloc.add(SetAccount(account: bloc.account!));
-        }
         Overlays.insert(context, OverlayType.confirm, args: {
           "message": text.l([bid.card.maxBidderName]),
           "acceptLabel": "go_l".l(),
           "onAccept": () => _selectTap(4)
         });
       }
-      if (message.type == Noobs.auctionSold) {
+    } else if (message.type == Noobs.auctionSold) {
+      var bid = message as NoobAuctionMessage;
         if (bid.card.loserIsMe) {
           bloc.account!.gold = bid.card.lastBidderGold;
-        } else if (bid.card.ownerIsMe) {
+      } else if (bid.card.winnerIsMe) {
           var card = AccountCard(bloc.account!, bid.card.map);
           card.id = bid.card.cardId;
           bloc.account!.cards[card.id] = card;
@@ -195,6 +184,25 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         bloc.add(SetAccount(account: bloc.account!));
       }
     }
+
+  _onAcceptHelp(NoobHelpMessage help, Account account) async {
+    var attacker = Opponent.initialize(
+        {"id": help.attackerId, "name": help.attackerName, "level": 1, "xp": 1},
+        account.id);
+    var defender = Opponent.initialize(
+        {"id": help.defenderId, "name": help.defenderName, "level": 1, "xp": 1},
+        account.id);
+    getFriend() => help.ownerId == help.attackerId ? attacker : defender;
+    getOpposite() => help.ownerId == help.attackerId ? defender : attacker;
+    var result = await rpc(RpcId.joinBattle,
+        params: {"battle_id": help.id, "mainEnemy": getOpposite().id});
+    if (!mounted) return;
+    result["help_cost"] = 0;
+    result["battle_id"] = help.id;
+    result["friendsHead"] = getFriend();
+    result["oppositesHead"] = getOpposite();
+    Navigator.pushNamed(context, Routes.livebattle.routeName,
+        arguments: result);
   }
 
   @override

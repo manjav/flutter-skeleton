@@ -260,10 +260,10 @@ class Opponent extends Record {
   }
 }
 
-class LiveOpponent {
+class LiveWarrior {
   final Opponent base;
   String tribeName = "";
-  final int id, teamOwnerId;
+  final int teamOwnerId;
   final WarriorSide side;
   Map<String, dynamic> map = {};
   late final SelectedCards cards;
@@ -271,10 +271,9 @@ class LiveOpponent {
   Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
   bool won = false;
 
-  LiveOpponent(this.fraction, this.id, this.teamOwnerId, this.base) {
+  LiveWarrior(this.side, this.teamOwnerId, this.base) {
     cards = SelectedCards([null, null, null, null, null]);
   }
-
   void addResult(Map<String, dynamic> map) {
     this.map = map;
     xp = map["added_xp"];
