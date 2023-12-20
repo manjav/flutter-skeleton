@@ -55,7 +55,9 @@ class LoaderWidget extends StatefulWidget {
       await loader.load(path, '$url/$netPath', hash: hashMap[path]);
     }
     if (type == AssetType.image || type == AssetType.vector) {
-      loader.metadata = Uint8List.fromList(loader.bytes!);
+      if (loader.bytes != null) {
+        loader.metadata = Uint8List.fromList(loader.bytes!);
+      }
     }
     if (type == AssetType.animation || type == AssetType.animationZipped) {
       loader.metadata = await RiveFile.file(loader.file!.path,
