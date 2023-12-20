@@ -36,7 +36,8 @@ class TabNavigator extends StatefulWidget {
 
 class _TabNavigatorState extends State<TabNavigator> with ServiceProviderMixin {
   final double _navbarHeight = 210.d;
-  final List<SMIBool?> _punchInputs = [], _selectionInputs = [];
+  final List<SMITrigger?> _punchInputs = [];
+  final List<SMIBool?> _selectionInputs = [];
 
   @override
   void initState() {
@@ -46,7 +47,6 @@ class _TabNavigatorState extends State<TabNavigator> with ServiceProviderMixin {
     }
     widget.selectedIndex.addListener(() {
       for (var i = 0; i < widget.tabsCount; i++) {
-        print("$i ${widget.selectedIndex.value}");
         _selectionInputs[i]!.value = i == widget.selectedIndex.value;
       }
     });
@@ -95,7 +95,7 @@ class _TabNavigatorState extends State<TabNavigator> with ServiceProviderMixin {
                     _selectionInputs[index] =
                         controller!.findInput<bool>("active") as SMIBool;
                     _punchInputs[index] =
-                        controller.findInput<bool>("punch") as SMIBool?;
+                        controller.findInput<bool>("punch") as SMITrigger?;
                     _selectionInputs[index]!.value =
                         index == widget.selectedIndex.value;
                     if (index == 3) {
