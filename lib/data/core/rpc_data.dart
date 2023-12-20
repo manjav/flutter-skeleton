@@ -4,8 +4,8 @@ import 'fruit.dart';
 import 'store.dart';
 
 class LoadingData {
-  static String baseURL = '';
-  static String chatIp = '';
+  static String baseURL = "";
+  static String chatIp = "";
   static int chatPort = 0;
 
   late Account account;

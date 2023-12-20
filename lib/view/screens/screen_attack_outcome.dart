@@ -231,7 +231,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
               padding: EdgeInsets.all(16.d),
               decoration: Widgets.imageDecore("ui_prize_frame"),
               child: Asset.load<Image>("icon_$type")),
-          SkinnedText(" ${value > 0 ? '+' : ''}${value.compact()}")
+          SkinnedText(" ${value > 0 ? '+' : ""}${value.compact()}")
         ]));
   }
 
@@ -240,7 +240,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
         height: 76.d,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Asset.load<Image>(type, height: 62.d),
-          SkinnedText("  ${value > 0 ? '+' : ''}${value.compact()}")
+          SkinnedText("  ${value > 0 ? '+' : ""}${value.compact()}")
         ]));
   }
 

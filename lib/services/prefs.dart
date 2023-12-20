@@ -22,7 +22,7 @@ class Prefs extends IService {
 
   static bool contains(String key) => _instance!.containsKey(key);
 
-  static String getString(String key, {String defaultValue = ''}) =>
+  static String getString(String key, {String defaultValue = ""}) =>
       _instance!.getString(key) ?? defaultValue;
   static String setString(String key, String value) {
     _instance!.setString(key, value);
@@ -73,7 +73,7 @@ extension PrefExt on Pref {
   int increase(int value) => Prefs.increase(name, value);
 
   String setString(String value) => Prefs.setString(name, value);
-  String getString({String defaultValue = ''}) =>
+  String getString({String defaultValue = ""}) =>
       Prefs.getString(name, defaultValue: defaultValue);
 
   bool setBool(bool value) => Prefs.setBool(name, value);

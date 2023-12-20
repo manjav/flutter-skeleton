@@ -48,7 +48,7 @@ class LoaderWidget extends StatefulWidget {
     var key = "${type.name}_$name";
     var loader = cacshedLoders[key] ?? Loader();
     var url =
-        baseUrl ?? "${LoaderWidget.baseURL}/${type.folder(subFolder ?? '')}";
+        baseUrl ?? "${LoaderWidget.baseURL}/${type.folder(subFolder ?? "")}";
     var netPath = "$name.${type.extension}";
     var path = "$name.${type.type}";
     if (loader.path.isEmpty) {

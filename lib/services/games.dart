@@ -24,7 +24,7 @@ class Games extends IGames {
         playerName = await GamesServices.getPlayerName();
         // playerToken = await GamesServices.getPlayerToken();
       } else {
-        playerId = '';
+        playerId = "";
       }
     } catch (e) {
       log(e.toString());

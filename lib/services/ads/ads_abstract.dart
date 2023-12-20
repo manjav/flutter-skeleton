@@ -77,7 +77,7 @@ abstract class AbstractAdSDK with ILogger {
     placement.state = state;
     onUpdate?.call(placement);
     if (placement.order > 0) {}
-    log("${placement.sdk} ${placement.type} $state ${error ?? ''}");
+    log("${placement.sdk} ${placement.type} $state ${error ?? ""}");
   }
 
   @protected

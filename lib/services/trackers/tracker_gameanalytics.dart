@@ -31,7 +31,7 @@ class GATracker extends AbstractTracker {
 
   @override
   Future<int> getVariantId(String testName) async {
-    var testVersion = ''; //PrefsService.testVersion.getString();
+    var testVersion = ""; //PrefsService.testVersion.getString();
     var version = "app_version".l();
     log("version ==> $version testVersion ==> $testVersion");
     if (testVersion.isNotEmpty && testVersion != version) {

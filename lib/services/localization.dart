@@ -8,7 +8,7 @@ import '../mixins/ilogger.dart';
 import 'iservices.dart';
 
 class Localization extends IService {
-  static var locales = const [Locale('en'), Locale('fa')];
+  static var locales = const [Locale("en"), Locale("fa")];
   static Map<String, dynamic>? _sentences;
   static String languageCode = "en";
   static TextDirection dir = TextDirection.ltr;
@@ -26,13 +26,13 @@ class Localization extends IService {
     isRTL = languageCode == "fa" || languageCode == "ar";
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
-    await _getData('keys.json');
-    await _getData('$languageCode.json');
+    await _getData("keys.json");
+    await _getData("$languageCode.json");
     super.initialize();
   }
 
   static _getData(String file) async {
-    var data = await rootBundle.loadString('assets/texts/$file');
+    var data = await rootBundle.loadString("assets/texts/$file");
     var result = json.decode(data);
     result.forEach((String key, dynamic value) {
       _sentences![key] = value.toString();
@@ -60,7 +60,7 @@ extension LocalizationExtension on String {
     final key = this;
     if (Localization._sentences == null) {
       ILogger.slog(this, "sentences = null");
-      return '';
+      return "";
     }
     var result = Localization._sentences![key];
     if (result == null) {

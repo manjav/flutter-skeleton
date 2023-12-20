@@ -11,11 +11,11 @@ class DeviceInfo extends IService {
   static double ratio = 1;
   static double aspectRatio = 1;
   static Size size = Size.zero;
-  static String id = '';
-  static String adId = '';
-  static String model = '';
+  static String id = "";
+  static String adId = "";
+  static String model = "";
   static double osVersion = 0;
-  static String baseVersion = '';
+  static String baseVersion = "";
   static Map<String, dynamic> _deviceData = {};
 
   @override

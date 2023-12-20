@@ -53,12 +53,12 @@ class Trackers extends IService {
     // Set user data
     for (var sdk in _sdks.values) {
       sdk.setProperties({
-        'buildType': _buildType.name,
-        'build_type': _buildType.name,
-        'userId': '',
-        'deviceId': DeviceInfo.adId,
-        'test_name': _testName,
-        'test_variant': variant.toString(),
+        "buildType": _buildType.name,
+        "build_type": _buildType.name,
+        "userId": "",
+        "deviceId": DeviceInfo.adId,
+        "test_name": _testName,
+        "test_variant": variant.toString(),
       });
     }
   }

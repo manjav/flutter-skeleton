@@ -141,7 +141,7 @@ enum Noobs {
 
 class NoobMessage {
   int id = 0;
-  String channel = '';
+  String channel = "";
   static NoobMessage getProperMessage(
       Account account, Map<String, dynamic> map, Tribe? tribe) {
     var message = switch (map["push_message_type"] ?? "") {
