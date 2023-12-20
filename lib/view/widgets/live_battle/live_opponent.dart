@@ -69,11 +69,11 @@ class LiveOpponentView extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          _usedCard(opponent.fraction, cards[0], -0.15, 0, 2.d),
-          _usedCard(opponent.fraction, cards[1], -0.05, 16.d, 0),
-          _usedCard(opponent.fraction, cards[4], 0.05, 37.d, 0),
-          _usedCard(opponent.fraction, cards[2], 0.15, 60.d, 1.d),
-          _usedCard(opponent.fraction, cards[3], 0.25, 86.d, 5.d),
+          _usedCard(warrior.side, cards[0], -0.15, 0, 2.d),
+          _usedCard(warrior.side, cards[1], -0.05, 16.d, 0),
+          _usedCard(warrior.side, cards[4], 0.05, 37.d, 0),
+          _usedCard(warrior.side, cards[2], 0.15, 60.d, 1.d),
+          _usedCard(warrior.side, cards[3], 0.25, 86.d, 5.d),
         ],
       ),
     );

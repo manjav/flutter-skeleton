@@ -184,7 +184,7 @@ class LeagueData {
   }
 }
 
-enum OpponentSide { allies, axis }
+enum WarriorSide { friends, opposites }
 
 enum TribePosition { none, member, elder, owner }
 
@@ -264,7 +264,7 @@ class LiveOpponent {
   final Opponent base;
   String tribeName = "";
   final int id, teamOwnerId;
-  final OpponentSide fraction;
+  final WarriorSide side;
   Map<String, dynamic> map = {};
   late final SelectedCards cards;
   int gold = 0, xp = 0, power = 0, score = 0;
