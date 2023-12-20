@@ -277,11 +277,14 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     var side = message.teamOwnerId == _friendsHead.id
         ? WarriorSide.friends
         : WarriorSide.opposites;
+    if (!_warriors.containsKey(cardOwnerId)) {
+      _warriors[cardOwnerId] = LiveWarrior(
+          side,
             message.teamOwnerId,
-            Opponent.initialize({"name": message.ownerName}, _allies.id));
-      }
-      _opponents[cardOwnerId]?.cards.setAtCard(message.round - 1, message.card);
+          Opponent.initialize(
+              {"id": cardOwnerId, "name": message.ownerName}, _account.id));
     }
+    _warriors[cardOwnerId]?.cards.setAtCard(message.round - 1, message.card);
     _updatePowerBalance();
   }
 
