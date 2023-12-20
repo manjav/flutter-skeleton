@@ -50,6 +50,14 @@ class _LiveTribeState extends State<LiveTribe>
   @override
   Widget build(BuildContext context) {
     var side = widget.opponents[widget.ownerId]!.side;
+    var team = widget.opponents.values.where((o) {
+      if (side != o.side) return false;
+      if (side == WarriorSide.friends) {
+        return !o.base.itsMe;
+      } else {
+        return o.base.id != widget.ownerId;
+      }
+    });
     var items = <Widget>[
       LevelIndicator(
           size: 150.d,
