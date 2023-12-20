@@ -131,6 +131,7 @@ enum Noobs {
   playerStatus,
   deployCard,
   battleEnd,
+  battleJoin,
   heroAbility,
   help,
   chat,
@@ -146,6 +147,7 @@ class NoobMessage {
     var message = switch (map["push_message_type"] ?? "") {
       "player_status" || "tribe_player_status" => NoobStatusMessage(map),
       "battle_update" => NoobCardMessage(account, map),
+      "battle_join" => NoobJoinBattleMessage(account, map),
       "battle_hero_ability" => NoobAbilityMessage(map),
       "battle_help" => NoobHelpMessage(map),
       "battle_finished" => NoobEndBattleMessage(map, account),
@@ -180,6 +182,16 @@ class NoobStatusMessage extends NoobMessage {
     var id = map["player_id"];
     playerId = (id is String) ? int.parse(id) : id;
     status = map["status"];
+  }
+}
+
+class NoobJoinBattleMessage extends NoobBattleMessage {
+  late int warriorId;
+  late String warriorName;
+  NoobJoinBattleMessage(Account account, Map<String, dynamic> map)
+      : super(Noobs.battleJoin, map) {
+    warriorId = map["player_id"];
+    warriorName = map["player_name"];
   }
 }
 
