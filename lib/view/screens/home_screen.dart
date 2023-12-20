@@ -147,13 +147,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   void _onNoobReceive(NoobMessage message) {
+    var account = accountBloc.account!;
     if (message.type == Noobs.help &&
         ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
       var help = message as NoobHelpMessage;
-      if (help.ownerTribeId == accountBloc.account!.tribeId) {
+      if (help.ownerTribeId == account.tribeId) {
       Overlays.insert(context, OverlayType.confirm, args: {
         "message": "tribe_help".l([help.attackerName, help.defenderName]),
-          "onAccept": () => _onAcceptHelp(help, accountBloc.account!)
+          "onAccept": () => _onAcceptHelp(help, account)
         });
           }
       return;
@@ -190,22 +191,30 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         Opponent.create(help.attackerId, help.attackerName, account.id);
     var defender =
         Opponent.create(help.defenderId, help.defenderName, account.id);
-    getFriend() => help.ownerId == help.attackerId ? attacker : defender;
-    getOpposite() => help.ownerId == help.attackerId ? defender : attacker;
+    getFriend() => help.isAttacker ? attacker : defender;
+    getOpposite() => help.isAttacker ? defender : attacker;
     var result = await rpc(RpcId.joinBattle,
         params: {"battle_id": help.id, "mainEnemy": getOpposite().id});
     if (!mounted) return;
-    result["help_cost"] = 0;
-    result["battle_id"] = help.id;
-    result["friendsHead"] = getFriend();
-    result["oppositesHead"] = getOpposite();
-    Navigator.pushNamed(context, Routes.livebattle.routeName,
-        arguments: result);
+    _joinBattle(help.id, getFriend(), getOpposite(), 0);
   }
 
   @override
   void dispose() {
     getService<NoobSocket>().onReceive.remove(_onNoobReceive);
     super.dispose();
+  }
+
+  void _joinBattle(int id, Opponent friendsHead, Opponent oppositesHead,
+      [int helpCost = -1]) {
+    var args = {
+      "battle_id": id,
+      "friendsHead": friendsHead,
+      "oppositesHead": oppositesHead
+    };
+    if (helpCost > -1) {
+      result["helpCost"] = helpCost;
+    }
+    Navigator.pushNamed(context, Routes.livebattle.routeName, arguments: args);
   }
 }
