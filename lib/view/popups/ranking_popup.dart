@@ -91,7 +91,6 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
   }
 
   _loadRanking(RpcId api) async {
-    if (Ranks.lists[api] != null) return;
     try {
       var data = await rpc(api);
       if (api == RpcId.rankingGlobal) {

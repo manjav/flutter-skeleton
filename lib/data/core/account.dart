@@ -457,6 +457,12 @@ class Account extends Player with ServiceProvider {
     if (data.containsKey("level")) {
       level = Utils.toInt(data["level"], level);
     }
+    if (data.containsKey("rank")) {
+      rank = data["rank"];
+    }
+    if (data.containsKey("league_rank")) {
+      leagueRank = Utils.toInt(data["league_rank"], leagueRank);
+    }
 
     if (!data.containsKey("gold")) {
       if (data.containsKey("player_gold")) {
