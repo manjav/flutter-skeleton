@@ -7,6 +7,7 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
+import '../../view/overlays/ioverlay.dart';
 import '../blocs/services_bloc.dart';
 import '../data/core/fruit.dart';
 import '../data/core/result.dart';
@@ -18,7 +19,15 @@ import '../view/route_provider.dart';
 import '../view/widgets.dart';
 import '../view/widgets/loaderwidget.dart';
 
-enum RewardAniationState { none, waiting, started, shown, closed, disposed }
+enum RewardAniationState {
+  none,
+  waiting,
+  started,
+  shown,
+  closing,
+  closed,
+  disposed
+}
 
 mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   dynamic result;
@@ -57,6 +66,8 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
           if (state == RewardAniationState.started) {
             skipInput?.value = true;
           } else if (state == RewardAniationState.shown) {
+            onRiveEvent(const RiveEvent(
+                name: "closing", secondsDelay: 0, properties: {}));
             closeInput?.value = true;
           }
         });
@@ -111,6 +122,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       "waiting" => RewardAniationState.waiting,
       "started" => RewardAniationState.started,
       "shown" => RewardAniationState.shown,
+      "closing" => RewardAniationState.closing,
       "closed" => RewardAniationState.closed,
       _ => RewardAniationState.none,
     };
