@@ -152,11 +152,25 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
       var help = message as NoobHelpMessage;
       if (help.ownerTribeId == account.tribeId) {
-      Overlays.insert(context, OverlayType.confirm, args: {
-        "message": "tribe_help".l([help.attackerName, help.defenderName]),
+        Overlays.insert(context, OverlayType.confirm, args: {
+          "message": "tribe_help".l([help.attackerName, help.defenderName]),
           "onAccept": () => _onAcceptHelp(help, account)
         });
-          }
+      }
+      return;
+    }
+    if (message.type == Noobs.battleRequest) {
+      var request = message as NoobRequestBattleMessage;
+      Overlays.insert(context, OverlayType.confirm, args: {
+        "message": "battle_request".l([request.attackerName]),
+        "onAccept": () {
+          _joinBattle(
+              request.id,
+              account,
+              Opponent.create(request.attackerId, request.attackerName),
+              account.id);
+        }
+      });
       return;
     }
     var bloc = accountBloc;
@@ -165,8 +179,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       var bloc = accountBloc;
       if (bid.card.ownerIsMe && bid.card.loserIsMe) {
         var text = bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deal";
-          bloc.account!.gold = bid.card.lastBidderGold;
-          bloc.add(SetAccount(account: bloc.account!));
+        bloc.account!.gold = bid.card.lastBidderGold;
+        bloc.add(SetAccount(account: bloc.account!));
         Overlays.insert(context, OverlayType.confirm, args: {
           "message": text.l([bid.card.maxBidderName]),
           "acceptLabel": "go_l".l(),
@@ -175,16 +189,16 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       }
     } else if (message.type == Noobs.auctionSold) {
       var bid = message as NoobAuctionMessage;
-        if (bid.card.loserIsMe) {
-          bloc.account!.gold = bid.card.lastBidderGold;
+      if (bid.card.loserIsMe) {
+        bloc.account!.gold = bid.card.lastBidderGold;
       } else if (bid.card.winnerIsMe) {
-          var card = AccountCard(bloc.account!, bid.card.map);
-          card.id = bid.card.cardId;
-          bloc.account!.cards[card.id] = card;
-        }
-        bloc.add(SetAccount(account: bloc.account!));
+        var card = AccountCard(bloc.account!, bid.card.map);
+        card.id = bid.card.cardId;
+        bloc.account!.cards[card.id] = card;
       }
+      bloc.add(SetAccount(account: bloc.account!));
     }
+  }
 
   _onAcceptHelp(NoobHelpMessage help, Account account) async {
     var attacker =

@@ -136,6 +136,7 @@ enum Noobs {
   deployCard,
   battleEnd,
   battleJoin,
+  battleRequest,
   heroAbility,
   help,
   chat,
@@ -151,6 +152,7 @@ class NoobMessage {
     var message = switch (map["push_message_type"] ?? "") {
       "player_status" || "tribe_player_status" => NoobStatusMessage(map),
       "battle_update" => NoobCardMessage(account, map),
+      "battle_request" => NoobRequestBattleMessage(map),
       "battle_join" => NoobJoinBattleMessage(account, map),
       "battle_hero_ability" => NoobAbilityMessage(map),
       "battle_help" => NoobHelpMessage(map),
@@ -176,7 +178,7 @@ class NoobMessage {
 class NoobBattleMessage extends NoobMessage {
   int teamOwnerId = 0;
   NoobBattleMessage(super.type, super.map) {
-    teamOwnerId = map["owner_team_id"];
+    teamOwnerId = map["owner_team_id"] ?? 0;
   }
 }
 
@@ -186,6 +188,18 @@ class NoobStatusMessage extends NoobMessage {
     var id = map["player_id"];
     playerId = (id is String) ? int.parse(id) : id;
     status = map["status"];
+  }
+}
+
+class NoobRequestBattleMessage extends NoobBattleMessage {
+  late int attackerId;
+  late String attackerName, attackerTribeName;
+  NoobRequestBattleMessage(Map<String, dynamic> map)
+      : super(Noobs.battleRequest, map) {
+    id = map["battle_id"];
+    attackerTribeName = map["tribe_name"];
+    attackerId = map["attacker_id"];
+    attackerName = map["attacker_name"];
   }
 }
 
