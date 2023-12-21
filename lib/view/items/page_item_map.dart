@@ -31,8 +31,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       return Stack(alignment: Alignment.topLeft, children: [
-        const LoaderWidget(AssetType.animation, "map_home",
-            fit: BoxFit.fitWidth),
+        const LoaderWidget(AssetType.animation, "map_home", fit: BoxFit.cover),
         PositionedDirectional(
             top: 340.d,
             end: 32.d,

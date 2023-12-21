@@ -6,7 +6,7 @@ import '../utils/assets.dart';
 mixin BackgroundMixin<S extends StatefulWidget> on State<S> {
   SMINumber? _colorInput;
   Widget backgroundBuilder({int color = 0, bool animated = true}) {
-    return Asset.load<RiveAnimation>("background_pattern", fit: BoxFit.fitWidth,
+    return Asset.load<RiveAnimation>("background_pattern", fit: BoxFit.cover,
         onRiveInit: (Artboard artboard) {
       var controller =
           StateMachineController.fromArtboard(artboard, "State Machine 1");
