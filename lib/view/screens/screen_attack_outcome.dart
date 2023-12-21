@@ -167,10 +167,10 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                 ),
                 onPressed: () {
                   if (widget.type == Routes.battleOut) {
-                    Navigator.pop(context);
-                  } else {
                     Navigator.pushReplacementNamed(
                         context, Routes.deck.routeName);
+                  } else {
+                    Navigator.pop(context);
                   }
                 })
           ]))
