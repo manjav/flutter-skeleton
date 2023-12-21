@@ -3,7 +3,7 @@ import 'package:rive/rive.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
-import '../../mixins/reward_mixin.dart';
+import '../../mixins/background_mixin.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
@@ -26,7 +26,7 @@ class AttackOutScreen extends AbstractScreen {
 }
 
 class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
-    with RewardScreenMixin {
+    with BackgroundMixin {
   bool _isWin = false;
   String _color = "green";
 
@@ -42,7 +42,6 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
 
   @override
   void initState() {
-    waitingSFX = "";
     _animationController = AnimationController(
         vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
     _animationController.forward();
@@ -75,7 +74,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
   @override
   Widget contentFactory() {
     return Stack(alignment: Alignment.center, children: [
-      backgrounBuilder(animated: true, color: _isWin ? 4 : 2),
+      backgroundBuilder(animated: true, color: _isWin ? 4 : 2),
       _isWin
           ? Positioned(
               top: 0,

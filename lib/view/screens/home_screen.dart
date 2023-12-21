@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/data/core/account.dart';
-import 'package:flutter_skeleton/data/core/adam.dart';
-import 'package:flutter_skeleton/data/core/rpc.dart';
-import 'package:flutter_skeleton/view/widgets/tab_navigator.dart';
+import '../../data/core/account.dart';
+import '../../data/core/adam.dart';
+import '../../data/core/rpc.dart';
+import '../../mixins/background_mixin.dart';
+import '../../view/widgets/tab_navigator.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/key_provider.dart';
-import '../../mixins/reward_mixin.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -36,7 +36,7 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen>
-    with RewardScreenMixin, KeyProvider {
+    with BackgroundMixin, KeyProvider {
   final int _tabsCont = 5;
   late PageController _pageController;
   final ValueNotifier<int> _selectedTab = ValueNotifier(2);
@@ -104,7 +104,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       return Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          backgrounBuilder(color: 2, animated: false),
+          backgroundBuilder(color: 2, animated: false),
           PageView.builder(
             controller: _pageController,
             itemCount: _tabsCont,

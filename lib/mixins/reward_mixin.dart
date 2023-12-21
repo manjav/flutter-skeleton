@@ -23,7 +23,6 @@ enum RewardAniationState { none, waiting, started, shown, closed, disposed }
 
 mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   dynamic result;
-  SMINumber? _colorInput;
   late Artboard _artboard;
   List<Widget> children = [];
   String waitingSFX = "waiting", startSFX = "levelup";
@@ -44,7 +43,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
   }
 
   Widget contentFactory() {
-    var items = <Widget>[backgrounBuilder()];
+    var items = <Widget>[];
     items.addAll(children);
     items.add(_progressbarBuilder());
     return Widgets.button(
@@ -60,21 +59,6 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
           }
         });
   }
-
-  Widget backgrounBuilder({int color = 0, bool animated = true}) {
-    return Asset.load<RiveAnimation>('background_pattern', fit: BoxFit.fitWidth,
-        onRiveInit: (Artboard artboard) {
-      var controller =
-          StateMachineController.fromArtboard(artboard, "State Machine 1");
-      controller?.findInput<bool>("move")?.value = animated;
-      _colorInput = controller?.findInput<double>("color") as SMINumber;
-      changeBackgroundColor(color);
-      artboard.addController(controller!);
-    });
-  }
-
-  void changeBackgroundColor(int color) =>
-      _colorInput?.value = color.toDouble();
 
   Widget animationBuilder(String fileName, {String? stateMachinName}) {
     return LoaderWidget(AssetType.animation, "feast_$fileName",
