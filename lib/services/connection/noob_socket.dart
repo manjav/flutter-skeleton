@@ -28,7 +28,7 @@ class NoobSocket extends IService {
 
   String get _secret => "floatint201412bool23string";
   bool get isConnected =>
-      DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 300;
+      DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 60;
 
   @override
   initialize({List<Object>? args}) async {
@@ -69,9 +69,7 @@ class NoobSocket extends IService {
           _account, jsonDecode(trimmedMessage), _account.tribe);
       // if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
       _updateStatus(noobMessage);
-      for (var method in onReceive) {
-        method.call(noobMessage);
-      }
+      dispatchMessage(noobMessage);
       _messageStream = _messageStream.substring(endIndex + 12);
       _decodeMessage();
     } catch (e) {
@@ -122,6 +120,12 @@ class NoobSocket extends IService {
     // Update tribe members status
     if (_account.tribe != null) {
       loopPlayers(_account.tribe!.members.value);
+    }
+  }
+
+  void dispatchMessage(NoobMessage noobMessage) {
+    for (var method in onReceive) {
+      method.call(noobMessage);
     }
   }
 }
@@ -244,6 +248,7 @@ class NoobHelpMessage extends NoobMessage {
     attackerName = map["attacker_name"];
     defenderName = map["defender_name"];
   }
+  bool get isAttacker => ownerId == attackerId;
 }
 
 // battle_id = self.battle_id,
