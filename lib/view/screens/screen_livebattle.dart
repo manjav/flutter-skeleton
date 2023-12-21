@@ -55,7 +55,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void initState() {
     _account = accountBloc.account!;
     _battleId = widget.args["battle_id"] ?? 0;
-    _helpCost = widget.args["help_cost"] ?? 1550;
+    _helpCost = widget.args["helpCost"] ?? 1550;
     if (widget.args.containsKey("created_at")) {
       _seconds = (_account.getTime() -
               _account.getTime(time: widget.args["created_at"]))
@@ -264,6 +264,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       return;
     }
     return switch (message.type) {
+      Noobs.battleJoin => _handleJoinMessage(message as NoobJoinBattleMessage),
       Noobs.deployCard => _handleCardMessage(message as NoobCardMessage),
       Noobs.heroAbility => _handleAbilityMessage(message as NoobAbilityMessage),
       Noobs.help => _handleHelpMessage(message as NoobHelpMessage),
@@ -272,14 +273,19 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     };
   }
 
+  void _handleJoinMessage(NoobJoinBattleMessage message) {
+    if (_warriors.containsKey(message.warriorId)) return;
+    _warriors[message.warriorId] = LiveWarrior(
+        _warriors[message.teamOwnerId]!.side,
+        message.teamOwnerId,
+        Opponent.create(message.warriorId, message.warriorName, _account.id));
+  }
+
   void _handleCardMessage(NoobCardMessage message) {
     var cardOwnerId = message.card!.ownerId;
-    var side = message.teamOwnerId == _friendsHead.id
-        ? WarriorSide.friends
-        : WarriorSide.opposites;
     if (!_warriors.containsKey(cardOwnerId)) {
       _warriors[cardOwnerId] = LiveWarrior(
-          side,
+          _warriors[message.teamOwnerId]!.side,
           message.teamOwnerId,
           Opponent.create(cardOwnerId, message.ownerName, _account.id));
     }
