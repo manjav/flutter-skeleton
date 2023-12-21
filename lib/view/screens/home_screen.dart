@@ -197,12 +197,23 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         params: {"battle_id": help.id, "mainEnemy": getOpposite().id});
     if (!mounted) return;
     _joinBattle(help.id, getFriend(), getOpposite(), 0);
+    _addBattleCard(account, result, help.attackerId, "attacker_cards_set");
+    _addBattleCard(account, result, help.defenderId, "defender_cards_set");
   }
 
   @override
   void dispose() {
     getService<NoobSocket>().onReceive.remove(_onNoobReceive);
     super.dispose();
+  }
+
+  _addBattleCard(Account account, result, int attackerId, String side) async {
+    await Future.delayed(const Duration(milliseconds: 10));
+    for (var element in result[side]) {
+      element["owner_team_id"] = attackerId;
+      var messae = NoobCardMessage(account, element);
+      getService<NoobSocket>().dispatchMessage(messae);
+    }
   }
 
   void _joinBattle(int id, Opponent friendsHead, Opponent oppositesHead,
