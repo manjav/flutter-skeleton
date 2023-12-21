@@ -317,6 +317,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         await Navigator.pushNamed(context, route.routeName, arguments: data);
         if (mounted) Navigator.pop(context);
       }
-    } finally {}
+    } finally {
+      _attackStarted = false;
+    }
   }
 }

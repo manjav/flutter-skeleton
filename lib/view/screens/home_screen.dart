@@ -167,8 +167,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
           _joinBattle(
               request.id,
               account,
-              Opponent.create(request.attackerId, request.attackerName),
-              account.id);
+              Opponent.create(
+                  request.attackerId, request.attackerName, account.id));
         }
       });
       return;
@@ -238,7 +238,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       "oppositesHead": oppositesHead
     };
     if (helpCost > -1) {
-      result["helpCost"] = helpCost;
+      args["helpCost"] = helpCost;
     }
     Navigator.pushNamed(context, Routes.livebattle.routeName, arguments: args);
   }
