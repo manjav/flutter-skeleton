@@ -6,30 +6,30 @@ import 'package:rive/rive.dart';
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/fruit.dart';
+import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../route_provider.dart';
-import 'iscreen.dart';
+import '../overlays/ioverlay.dart';
 
-class EvolveFeastScreen extends AbstractScreen {
-  EvolveFeastScreen({required super.args, super.key})
-      : super(Routes.feastEvolve);
+class EvolveFeastOverlay extends AbstractOverlay {
+  final Map<String, dynamic> args;
+  const EvolveFeastOverlay({required this.args, super.key})
+      : super(type: OverlayType.feastEvolve);
 
   @override
-  createState() => _EvolveFeastScreenState();
+  createState() => _EvolveFeastOverlayState();
 }
 
-class _EvolveFeastScreenState extends AbstractScreenState<EvolveFeastScreen>
-    with RewardScreenMixin {
+class _EvolveFeastOverlayState extends AbstractOverlayState<EvolveFeastOverlay>
+    with RewardScreenMixin, BackgroundMixin {
   late AccountCard _mergedCard, _newCard;
-
   ImageAsset? _cardIconAsset, _cardBackgroundAsset;
 
   @override
   void initState() {
     super.initState();
-    children = [animationBuilder("merge")];
+    children = [backgroundBuilder(), animationBuilder("merge")];
     _mergedCard = widget.args["cards"].value[0] ??
         accountBloc.account!.cards.values.first;
 

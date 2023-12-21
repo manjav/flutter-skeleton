@@ -1,24 +1,26 @@
 import 'dart:async';
 
+import '../../mixins/background_mixin.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../route_provider.dart';
-import 'iscreen.dart';
+import '../overlays/ioverlay.dart';
 
-class UpgradeCardFeastScreen extends AbstractScreen {
-  UpgradeCardFeastScreen({required super.args, super.key})
-      : super(Routes.feastUpgradeCard);
+class UpgradeCardFeastOverlay extends AbstractOverlay {
+  final Map<String, dynamic> args;
+  const UpgradeCardFeastOverlay({required this.args, super.key})
+      : super(type: OverlayType.feastUpgradeCard);
 
   @override
-  createState() => _UpgradeCardFeastScreenState();
+  createState() => _UpgradeCardFeastOverlayState();
 }
 
-class _UpgradeCardFeastScreenState
-    extends AbstractScreenState<UpgradeCardFeastScreen> with RewardScreenMixin {
+class _UpgradeCardFeastOverlayState
+    extends AbstractOverlayState<UpgradeCardFeastOverlay>
+    with RewardScreenMixin, BackgroundMixin {
   int _evolveStep = 0, _oldPower = 0;
   final _evolveStepsCount = 3;
   bool _isHero = false;
@@ -27,7 +29,7 @@ class _UpgradeCardFeastScreenState
   @override
   void initState() {
     super.initState();
-    children = [animationBuilder("evolvehero")];
+    children = [backgroundBuilder(), animationBuilder("evolvehero")];
     _isHero = widget.args["isHero"] ?? false;
     _oldCard = widget.args["card"] ?? accountBloc.account!.cards.values.first;
     _oldPower = _oldPower;

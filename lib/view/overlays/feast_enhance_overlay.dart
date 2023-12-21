@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../mixins/background_mixin.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
@@ -7,26 +8,27 @@ import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/card_holder.dart';
-import '../route_provider.dart';
-import 'iscreen.dart';
+import '../overlays/ioverlay.dart';
 
-class EnhanceFeastScreen extends AbstractScreen {
-  EnhanceFeastScreen({required super.args, super.key})
-      : super(Routes.feastEnhance);
+class EnhanceFeastOverlay extends AbstractOverlay {
+  final Map<String, dynamic> args;
+  const EnhanceFeastOverlay({required this.args, super.key})
+      : super(type: OverlayType.feastEnhance);
 
   @override
-  createState() => _EnhanceFeastScreenState();
+  createState() => _EnhanceFeastOverlayState();
 }
 
-class _EnhanceFeastScreenState extends AbstractScreenState<EnhanceFeastScreen>
-    with RewardScreenMixin {
+class _EnhanceFeastOverlayState
+    extends AbstractOverlayState<EnhanceFeastOverlay>
+    with RewardScreenMixin, BackgroundMixin {
   late AccountCard _card;
   late SelectedCards _sacrificedCards;
   int _oldPower = 0, _sacrificeStep = 0;
   @override
   void initState() {
     super.initState();
-    children = [animationBuilder("enhance")];
+    children = [backgroundBuilder(), animationBuilder("enhance")];
     _sacrificedCards = widget.args["sacrifiedCards"] ??
         [accountBloc.account!.cards.values.last];
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;

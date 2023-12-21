@@ -1,31 +1,32 @@
 import 'dart:async';
 
+import '../../mixins/background_mixin.dart';
+import '../../view/overlays/ioverlay.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../route_provider.dart';
-import 'iscreen.dart';
 
-class LevelupFeastScreen extends AbstractScreen {
-  LevelupFeastScreen({required super.args, super.key})
-      : super(Routes.feastLevelup);
+class LevelupFeastOverlay extends AbstractOverlay {
+  final Map<String, dynamic> args;
+  const LevelupFeastOverlay({required this.args, super.key})
+      : super(type: OverlayType.feastLevelup);
 
   @override
   createState() => _LevelupScreenState();
 }
 
-class _LevelupScreenState extends AbstractScreenState<LevelupFeastScreen>
-    with RewardScreenMixin {
+class _LevelupScreenState extends AbstractOverlayState<LevelupFeastOverlay>
+    with RewardScreenMixin, BackgroundMixin {
   int _gold = 0;
   AccountCard? _card;
 
   @override
   void initState() {
     super.initState();
-    children = [animationBuilder("levelup")];
+    children = [backgroundBuilder(), animationBuilder("levelup")];
     _gold = widget.args["levelup_gold_added"] ?? 100;
     _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;
     process(() async {

@@ -7,51 +7,51 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/fruit.dart';
 import '../../data/core/store.dart';
+import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
 import '../items/card_item.dart';
-import '../route_provider.dart';
-import '../widgets/tab_navigator.dart';
-import 'iscreen.dart';
+import '../overlays/ioverlay.dart';
 
-class OpenpackFeastScreen extends AbstractScreen {
-  OpenpackFeastScreen({required super.args, super.key})
-      : super(Routes.feastOpenpack);
+class OpenpackFeastOverlay extends AbstractOverlay {
+  final Map<String, dynamic> args;
+  const OpenpackFeastOverlay({required this.args, super.key})
+      : super(type: OverlayType.feastOpenpack);
 
   @override
   createState() => _OpenPackScreenState();
 }
 
-class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
-    with RewardScreenMixin {
+class _OpenPackScreenState extends AbstractOverlayState<OpenpackFeastOverlay>
+    with RewardScreenMixin, TickerProviderStateMixin, BackgroundMixin {
   late ShopItem _pack;
   SMIInput<double>? _countInput;
   List<AccountCard> _cards = [];
-  final ValueNotifier<int> _punchIndex = ValueNotifier(-1);
+  late AnimationController _opacityBackgroundAnimationController;
   late AnimationController _opacityAnimationController;
   final Map<int, ImageAsset> _cardIconAssets = {}, _cardFrameAssets = {};
 
   @override
   void initState() {
     startSFX = "open_card_pack";
+    _opacityAnimationController = AnimationController(
+        vsync: this, upperBound: 3, duration: const Duration(seconds: 3));
+    _opacityBackgroundAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300), value: 1);
     children = [
+      AnimatedBuilder(
+          animation: _opacityBackgroundAnimationController,
+          builder: (context, child) => Opacity(
+              opacity: _opacityBackgroundAnimationController.value,
+              child: backgroundBuilder())),
       _cardsList(),
       IgnorePointer(child: animationBuilder("openpack")),
-      Align(
-          alignment: Alignment.bottomCenter,
-          child: TabNavigator(
-            tabsCount: 5,
-            punchIndex: _punchIndex,
-            selectedIndex: ValueNotifier(0),
-          )),
     ];
     _pack = widget.args["pack"] ??
         accountBloc.account!.loadingData.shopItems[ShopSections.card]![0];
 
-    _opacityAnimationController = AnimationController(
-        vsync: this, upperBound: 3, duration: const Duration(seconds: 3));
     _opacityAnimationController.forward();
     super.initState();
 
@@ -87,8 +87,8 @@ class _OpenPackScreenState extends AbstractScreenState<OpenpackFeastScreen>
         loadCardIcon(_cardIconAssets[i]!, card.base.getName());
         loadCardFrame(_cardFrameAssets[i]!, card.base);
       }
-    } else if (state == RewardAniationState.shown) {
-      _punchIndex.value = 1;
+    } else if (state == RewardAniationState.closing) {
+      _opacityBackgroundAnimationController.reverse();
     }
   }
 

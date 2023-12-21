@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import '../../mixins/background_mixin.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -9,26 +10,27 @@ import '../../data/core/store.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../route_provider.dart';
-import 'iscreen.dart';
+import '../overlays/ioverlay.dart';
 
-class PurchaseFeastScreen extends AbstractScreen {
-  PurchaseFeastScreen({required super.args, super.key})
-      : super(Routes.feastPurchase);
+class PurchaseFeastOverlay extends AbstractOverlay {
+  final Map<String, dynamic> args;
+  const PurchaseFeastOverlay({required this.args, super.key})
+      : super(type: OverlayType.feastPurchase);
 
   @override
-  createState() => _PurchaseFeastScreenState();
+  createState() => _PurchaseFeastOverlayState();
 }
 
-class _PurchaseFeastScreenState extends AbstractScreenState<PurchaseFeastScreen>
-    with RewardScreenMixin {
+class _PurchaseFeastOverlayState
+    extends AbstractOverlayState<PurchaseFeastOverlay>
+    with RewardScreenMixin, BackgroundMixin {
   late ShopItemVM _item;
 
   @override
   void initState() {
     super.initState();
     startSFX = "prize";
-    children = [animationBuilder("purchase")];
+    children = [backgroundBuilder(), animationBuilder("purchase")];
     _item = widget.args["item"] ??
         accountBloc
             .account!.loadingData.shopProceedItems![ShopSections.gold]![1];
