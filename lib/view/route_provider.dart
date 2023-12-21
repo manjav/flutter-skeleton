@@ -36,12 +36,6 @@ import 'screens/home_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/quest_screen.dart';
 import 'screens/screen_attack_outcome.dart';
-import 'screens/screen_feast_enhance.dart';
-import 'screens/screen_feast_evolve.dart';
-import 'screens/screen_feast_levelup.dart';
-import 'screens/screen_feast_openpack.dart';
-import 'screens/screen_feast_purchase.dart';
-import 'screens/screen_feast_upgrade_card.dart';
 import 'screens/screen_livebattle.dart';
 import 'screens/screen_livebattle_outcome.dart';
 
@@ -55,13 +49,6 @@ enum Routes {
   home,
   loading,
   livebattle,
-
-  feastOpenpack,
-  feastLevelup,
-  feastEnhance,
-  feastEvolve,
-  feastPurchase,
-  feastUpgradeCard,
 
   popupNone,
   popupMessage,
@@ -108,13 +95,6 @@ extension RouteProvider on Routes {
       "/battleOut" => AttackOutScreen(Routes.battleOut, args: args ?? {}),
       "/livebattleOut" => LiveOutScreen(args: args ?? {}),
       "/livebattle" => LiveBattleScreen(args: args ?? {}),
-      "/feastLevelup" => LevelupFeastScreen(args: args ?? {}),
-      "/feastOpenpack" => OpenpackFeastScreen(args: args ?? {}),
-      "/feastEnhance" => EnhanceFeastScreen(args: args ?? {}),
-      "/feastEnhancemax" => PurchaseFeastScreen(args: args ?? {}),
-      "/feastEvolve" => EvolveFeastScreen(args: args ?? {}),
-      "/feastPurchase" => PurchaseFeastScreen(args: args ?? {}),
-      "/feastUpgradeCard" => UpgradeCardFeastScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
       "/popupCardEvolve" => CardEvolvePopup(args: args ?? {}),

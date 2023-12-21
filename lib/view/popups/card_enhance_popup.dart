@@ -9,6 +9,7 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
+import '../../view/overlays/ioverlay.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
@@ -146,8 +147,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   _sacrifice() async {
     if (!_isSacrificeAvailable) return;
-    await Navigator.pushNamed(context, Routes.feastEnhance.routeName,
-        arguments: {"card": card, "sacrifiedCards": selectedCards});
+    Overlays.insert(context, OverlayType.feastEnhance,
+        args: {"card": card, "sacrifiedCards": selectedCards});
     if (mounted) {
       Navigator.pop(context);
     }
@@ -227,8 +228,9 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   }
 
   _enhanceMax() async {
-    await Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
-        arguments: {"card": account.cards[card.id]});
+    Overlays.insert(context, OverlayType.feastUpgradeCard,
+        args: {"card": account.cards[card.id]}
     if (mounted) Navigator.pop(context);
+    });
   }
 }

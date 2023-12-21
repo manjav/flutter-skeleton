@@ -5,6 +5,12 @@ import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
 import '../../view/overlays/confirm_overlay.dart';
 import 'chat_options_overlay.dart';
+import 'feast_enhance_overlay.dart';
+import 'feast_evolve_overlay.dart';
+import 'feast_levelup_overlay.dart';
+import 'feast_openpack_overlay.dart';
+import 'feast_purchase_overlay.dart';
+import 'feast_upgrade_card_overlay.dart';
 import 'loading_overlay.dart';
 import 'member_details_overlay.dart';
 import 'toast_overlay.dart';
@@ -18,6 +24,13 @@ enum OverlayType {
   outcome,
   toast,
   waiting,
+
+  feastOpenpack,
+  feastLevelup,
+  feastEnhance,
+  feastEvolve,
+  feastPurchase,
+  feastUpgradeCard,
 }
 
 extension Overlays on OverlayType {
@@ -34,6 +47,13 @@ extension Overlays on OverlayType {
       "/member" => MemberOverlay(args[0], args[1], args[2]),
       "/toast" => ToastOverlay(args as String),
       "/waiting" => ToastOverlay(args as String),
+      "/feastLevelup" => LevelupFeastOverlay(args: args ?? {}),
+      "/feastOpenpack" => OpenpackFeastOverlay(args: args ?? {}),
+      "/feastEnhance" => EnhanceFeastOverlay(args: args ?? {}),
+      "/feastEnhancemax" => PurchaseFeastOverlay(args: args ?? {}),
+      "/feastEvolve" => EvolveFeastOverlay(args: args ?? {}),
+      "/feastPurchase" => PurchaseFeastOverlay(args: args ?? {}),
+      "/feastUpgradeCard" => UpgradeCardFeastOverlay(args: args ?? {}),
       _ => const AbstractOverlay(),
     };
   }

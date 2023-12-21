@@ -15,13 +15,12 @@ import '../services/localization.dart';
 import '../services/sounds.dart';
 import '../utils/assets.dart';
 import '../view/route_provider.dart';
-import '../view/screens/iscreen.dart';
 import '../view/widgets.dart';
 import '../view/widgets/loaderwidget.dart';
 
 enum RewardAniationState { none, waiting, started, shown, closed, disposed }
 
-mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
+mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   dynamic result;
   late Artboard _artboard;
   List<Widget> children = [];
@@ -42,13 +41,16 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
     super.initState();
   }
 
-  Widget contentFactory() {
+  @override
+  Widget build(BuildContext context) {
     var items = <Widget>[];
     items.addAll(children);
     items.add(_progressbarBuilder());
     return Widgets.button(
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
+        width: DeviceInfo.size.width,
+        height: DeviceInfo.size.height,
         child: Stack(children: items),
         onPressed: () {
           if (state.index <= RewardAniationState.waiting.index) return;
@@ -124,7 +126,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
       WidgetsBinding.instance
           .addPostFrameCallback((t) => _progressbarNotifier.value = false);
     } else if (state == RewardAniationState.closed) {
-      WidgetsBinding.instance.addPostFrameCallback((t) => close());
+      WidgetsBinding.instance.addPostFrameCallback((t) => dismiss());
     }
   }
 
@@ -163,7 +165,7 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
       }
     } on RpcException catch (e) {
       if (context.mounted) {
-        close();
+        dismiss();
         await Future.delayed(const Duration(milliseconds: 10));
         if (mounted) {
           Navigator.pushNamed(context, Routes.popupMessage.routeName,
@@ -176,9 +178,9 @@ mixin RewardScreenMixin<T extends AbstractScreen> on State<T> {
     }
   }
 
-  void close() {
+  void dismiss() {
     if (state.index < RewardAniationState.disposed.index) {
-      Navigator.pop(context);
+      Overlays.remove(widget.type);
       state = RewardAniationState.disposed;
     }
   }

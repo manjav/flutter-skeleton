@@ -10,6 +10,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import 'ipopup.dart';
@@ -184,8 +185,8 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
     return goldPrice;
   }
 
-  _evolve() async {
-    await Navigator.pushNamed(context, Routes.feastEvolve.routeName,
+  _evolve() {
+    Overlays.insert(context, OverlayType.feastEvolve,
         arguments: {"cards": selectedCards});
     cards = getCards(account);
     if (cards.length < 2) {

@@ -17,7 +17,6 @@ import '../../utils/utils.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../overlays/ioverlay.dart';
-import '../route_provider.dart';
 import '../widgets.dart';
 import 'page_item.dart';
 
@@ -144,8 +143,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         // accountBloc.account!.update({section.name: item.base.value});
         // accountBloc.add(SetAccount(account: accountBloc.account!));
 
-        Navigator.pushNamed(context, Routes.feastPurchase.routeName,
-            arguments: {"item": item});
+        Overlays.insert(context, OverlayType.feastPurchase,
+            args: {"item": item});
         return;
       }
     }
@@ -370,11 +369,13 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     }
 
     if (item.base.section == ShopSections.boost) {
-      Navigator.pushNamed(context, Routes.feastPurchase.routeName,
-          arguments: {"item": item});
+      Overlays.insert(context, OverlayType.feastPurchase, args: {"item": item});
     } else {
-      Navigator.pushNamed(context, Routes.feastOpenpack.routeName,
-          arguments: {"pack": item.base});
+      Overlays.insert(
+        context,
+        OverlayType.feastOpenpack,
+        args: {"pack": item.base},
+      );
     }
   }
 

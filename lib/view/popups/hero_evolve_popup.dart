@@ -12,6 +12,7 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/popups/hero_popup.dart';
 import '../items/card_item.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
@@ -132,8 +133,8 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
   }
 
   _evolve(Account account, HeroCard hero) async {
-    await Navigator.pushNamed(context, Routes.feastUpgradeCard.routeName,
-        arguments: {"card": hero.card, "isHero": true});
+    Overlays.insert(context, OverlayType.feastUpgradeCard,
+        args: {"card": hero.card, "isHero": true});
     if (mounted) {
       // Navigator.popUntil(context, (route) => route.isFirst);
     }
