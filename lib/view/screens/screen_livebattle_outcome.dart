@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/adam.dart';
+import '../../mixins/background_mixin.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
@@ -18,7 +19,8 @@ class LiveOutScreen extends AbstractScreen {
   createState() => _LiveOutScreenState();
 }
 
-class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
+class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
+    with BackgroundMixin {
   // late AnimationController _animationController;
   late LiveWarrior _friendsHead, _oppositeHead;
   final List<LiveWarrior> _friends = [], _opposites = [];
@@ -56,26 +58,31 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   Widget contentFactory() {
-    var color = _friendsHead.won ? "green" : "red";
     getService<Sounds>().play(_friendsHead.won ? "won" : "lose");
     return Widgets.button(
         padding: EdgeInsets.all(32.d),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _fractionBuilder(_oppositeHead, _opposites),
-              SizedBox(height: 40.d),
-              _vsBuilder(),
-              SizedBox(height: 40.d),
-              _fractionBuilder(_friendsHead, _friends),
-              Widgets.rect(
-                  margin: EdgeInsets.all(44.d),
-                  height: 130.d,
-                  decoration: Widgets.imageDecore("ui_ribbon_$color"),
-                  child: SkinnedText("fight_lebel_$color".l()))
-            ]),
+        child: Stack(alignment: Alignment.center, children: [
+          backgroundBuilder(),
+          _positioned(-740.d, _ribbon(_friendsHead.won ? "green" : "red")),
+          _positioned(-500.d, _fractionBuilder(_oppositeHead, _opposites)),
+          _positioned(180.d, _fractionBuilder(_friendsHead, _friends)),
+          _positioned(100.d, _vsBuilder()),
+        ]),
         onPressed: () => Navigator.popUntil(context, (route) => route.isFirst));
+  }
+
+  Widget _positioned(double top, Widget child) => Positioned(
+      width: DeviceInfo.size.width * 0.9,
+      top: DeviceInfo.size.height * 0.5 + top,
+      child: child);
+
+  Widget _ribbon(String color) {
+    return Widgets.rect(
+        width: DeviceInfo.size.width,
+        height: 130.d,
+        margin: EdgeInsets.all(44.d),
+        decoration: Widgets.imageDecore("ui_ribbon_$color"),
+        child: SkinnedText("fight_lebel_$color".l()));
   }
 
   Widget _vsBuilder() {
