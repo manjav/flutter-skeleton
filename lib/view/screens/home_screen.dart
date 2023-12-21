@@ -151,7 +151,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     if (message.type == Noobs.help &&
         ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
       var help = message as NoobHelpMessage;
-      if (help.ownerTribeId == account.tribeId) {
+      if (help.ownerTribeId == account.tribeId && help.ownerId != account.id) {
         Overlays.insert(context, OverlayType.confirm, args: {
           "message": "tribe_help".l([help.attackerName, help.defenderName]),
           "onAccept": () => _onAcceptHelp(help, account)
