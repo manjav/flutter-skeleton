@@ -6,6 +6,7 @@ import '../../blocs/services_bloc.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/ilogger.dart';
+import '../../mixins/service_provider.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
@@ -38,7 +39,7 @@ class Indicator extends StatefulWidget {
 }
 
 class _IndicatorState extends State<Indicator>
-    with TickerProviderStateMixin, ILogger {
+    with TickerProviderStateMixin, ILogger, ServiceProviderMixin {
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();
@@ -67,7 +68,7 @@ class _IndicatorState extends State<Indicator>
                     case Values.gold:
                     case Values.nectar:
                       Navigator.popUntil(context, (route) => route.isFirst);
-                      BlocProvider.of<ServicesBloc>(context)
+                      services
                           .add(ServicesEvent(ServicesInitState.changeTab, 0));
 
                       log("Go to shop");

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/store.dart';
@@ -375,6 +376,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         context,
         OverlayType.feastOpenpack,
         args: {"pack": item.base},
+        onClose: () => services.add(ServicesEvent(ServicesInitState.punch, 1)),
       );
     }
   }

@@ -61,18 +61,25 @@ extension Overlays on OverlayType {
   String get routeName => "/$name";
 
   static final _entries = <OverlayType, OverlayEntry>{};
-  static insert(BuildContext context, OverlayType type, {dynamic args}) {
+  static final _callbacks = <OverlayType, Function()>{};
+  static insert(BuildContext context, OverlayType type,
+      {dynamic args, Function()? onClose}) {
     if (!_entries.containsKey(type)) {
       _entries[type] =
           OverlayEntry(builder: (c) => getWidget(type.routeName, args: args));
-      Overlay.of(context).insert(_entries[type]!);
     }
+    if (onClose != null) {
+      _callbacks[type] = onClose;
+    }
+    Overlay.of(context).insert(_entries[type]!);
   }
 
   static remove(OverlayType type) {
     if (_entries.containsKey(type)) {
       _entries[type]?.remove();
       _entries.remove(type);
+      _callbacks[type]?.call();
+      _callbacks.remove(type);
     }
   }
 }

@@ -229,8 +229,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   _enhanceMax() async {
     Overlays.insert(context, OverlayType.feastUpgradeCard,
-        args: {"card": account.cards[card.id]}
-    if (mounted) Navigator.pop(context);
+        args: {"card": account.cards[card.id]}, onClose: () {
+      if (mounted) Navigator.pop(context);
     });
   }
 }

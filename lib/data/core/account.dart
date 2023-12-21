@@ -10,7 +10,7 @@ import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
 import '../../services/trackers/trackers.dart';
 import '../../utils/utils.dart';
-import '../../view/route_provider.dart';
+import '../../view/overlays/ioverlay.dart';
 import 'adam.dart';
 import 'building.dart';
 import 'fruit.dart';
@@ -541,10 +541,8 @@ class Account extends Player with ServiceProvider {
       if (data["level"] == 5) {
         getService<Trackers>(context).design("level_5");
       }
-      Timer(
-          const Duration(milliseconds: 100),
-          () => Navigator.pushNamed(context, Routes.feastLevelup.routeName,
-              arguments: data));
+      Timer(const Duration(milliseconds: 100),
+          () => Overlays.insert(context, OverlayType.feastLevelup, args: data));
     }
 
     data["achieveCards"] = achieveCards;

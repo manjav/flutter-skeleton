@@ -187,28 +187,29 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
 
   _evolve() {
     Overlays.insert(context, OverlayType.feastEvolve,
-        arguments: {"cards": selectedCards});
-    cards = getCards(account);
-    if (cards.length < 2) {
-      // Show other mergable cards
-      selectedCards.clear();
-      if (cards.isNotEmpty) selectedCards.addCard(cards[0]);
-      await Future.delayed(const Duration(milliseconds: 50));
-      // Close if mergable cards not available
-      if (mounted && cards.length < 2) {
-        Navigator.popUntil(context, (route) => route.isFirst);
-        return;
+        args: {"cards": selectedCards}, onClose: () async {
+      cards = getCards(account);
+      if (cards.length < 2) {
+        // Show other mergable cards
+        selectedCards.clear();
+        if (cards.isNotEmpty) selectedCards.addCard(cards[0]);
+        await Future.delayed(const Duration(milliseconds: 50));
+        // Close if mergable cards not available
+        if (mounted && cards.length < 2) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+          return;
+        }
+      } else {
+        // Add onother same-type mergable card
+        selectedCards.value.clear();
+        selectedCards.addCard(cards[0]);
       }
-    } else {
-      // Add onother same-type mergable card
-      selectedCards.value.clear();
-      selectedCards.addCard(cards[0]);
-    }
-    // if (_hackMode) {
-    //   await accountBloc.evolve(context, selectedCards);
-    //   selectedCards.addCard(cards[1]);
-    //   await Future.delayed(const Duration(milliseconds: 1800));
-    //   if (mounted) _evolve();
-    // }
+      // if (_hackMode) {
+      //   await accountBloc.evolve(context, selectedCards);
+      //   selectedCards.addCard(cards[1]);
+      //   await Future.delayed(const Duration(milliseconds: 1800));
+      //   if (mounted) _evolve();
+      // }
+    });
   }
 }
