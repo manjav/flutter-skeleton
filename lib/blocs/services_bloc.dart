@@ -26,6 +26,7 @@ enum ServicesInitState {
   initialize,
   complete,
   changeTab,
+  punch,
   error,
 }
 

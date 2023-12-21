@@ -40,6 +40,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   final int _tabsCont = 5;
   late PageController _pageController;
   final ValueNotifier<int> _selectedTab = ValueNotifier(2);
+  final ValueNotifier<int> _punchIndex = ValueNotifier(-1);
 
   @override
   void initState() {
@@ -113,12 +114,15 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
           TabNavigator(
               tabsCount: _tabsCont,
               selectedIndex: _selectedTab,
+              punchIndex: _punchIndex,
               onChange: (i) => _selectTap(i, tabsChange: false)),
           BlocConsumer<ServicesBloc, ServicesState>(
               builder: (context, state) => const SizedBox(),
               listener: (context, state) {
                 if (state.initState == ServicesInitState.changeTab) {
                   _selectTap(state.data as int);
+                } else if (state.initState == ServicesInitState.punch) {
+                  _punchIndex.value = state.data as int;
                 }
               })
         ],
