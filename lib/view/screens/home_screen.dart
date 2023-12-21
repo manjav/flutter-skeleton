@@ -43,7 +43,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
 
   @override
   void initState() {
-    waitingSFX = "";
     _pageController = PageController(initialPage: _selectedTab.value);
     super.initState();
   }
@@ -115,9 +114,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
               tabsCount: _tabsCont,
               selectedIndex: _selectedTab,
               onChange: (i) => _selectTap(i, tabsChange: false)),
-          //   BlocConsumer<ServicesBloc, ServicesState>(
-          //       builder: (context, state) => const SizedBox(),
-          //       listener: (context, state) => _selectTap(state.data as int))
+          BlocConsumer<ServicesBloc, ServicesState>(
+              builder: (context, state) => const SizedBox(),
+              listener: (context, state) {
+                if (state.initState == ServicesInitState.changeTab) {
+                  _selectTap(state.data as int);
+                }
+              })
         ],
       );
     });
