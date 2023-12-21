@@ -37,7 +37,7 @@ class LevelIndicator extends StatefulWidget {
 
 class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
   int _xp = 0;
-  int _level = 0;
+  int _level = 1;
   int _avatarId = 0;
   int _minXp = 0;
   int _maxXp = 0;

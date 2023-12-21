@@ -75,8 +75,11 @@ class Account extends Player with ServiceProvider {
   static const levelExpo = 2.7;
   static const levelMultiplier = 1.3;
 
-  static int getXpRequiered(int level) =>
-      (math.pow(level, levelExpo) * levelMultiplier).ceil();
+  static int getXpRequiered(int level) {
+    if (level <= 0) return 0;
+    return (math.pow(level, levelExpo) * levelMultiplier).ceil();
+  }
+
   late LoadingData loadingData;
 
   late String restoreKey,
