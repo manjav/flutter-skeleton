@@ -170,12 +170,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       var request = message as NoobRequestBattleMessage;
       Overlays.insert(context, OverlayType.confirm, args: {
         "message": "battle_request".l([request.attackerName]),
-        "onAccept": () {
-          _joinBattle(
-              request.id,
-              account,
-              Opponent.create(
-                  request.attackerId, request.attackerName, account.id));
+        "onAccept": () async {
+          try {
+            var result = await rpc(RpcId.battleDefense, params: {
+              "battle_id": request.id,
+              "already_in_game": 0,
+              "mainEnemy": request.attackerId
+            });
+            _joinBattle(
+                request.id,
+                account,
+                Opponent.create(
+                    request.attackerId, request.attackerName, account.id));
+          } finally {}
         }
       });
       return;
@@ -214,7 +221,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         Opponent.create(help.defenderId, help.defenderName, account.id);
     getFriend() => help.isAttacker ? attacker : defender;
     getOpposite() => help.isAttacker ? defender : attacker;
-    var result = await rpc(RpcId.joinBattle,
+    var result = await rpc(RpcId.battleJoin,
         params: {"battle_id": help.id, "mainEnemy": getOpposite().id});
     if (!mounted) return;
     _joinBattle(help.id, getFriend(), getOpposite(), 0);
