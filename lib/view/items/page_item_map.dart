@@ -53,23 +53,13 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupInbox.routeName))),
-        _building(state.account, Buildings.defense, 0, -640),
-        _building(state.account, Buildings.offense, -340, -380),
-        _building(state.account, Buildings.base, 0, -160),
-        _building(state.account, Buildings.treasury, -270, 100),
-        _building(state.account, Buildings.mine, 330, -350),
-        _building(state.account, Buildings.park, 320, 30),
-        _button("battle", "battle_l", 150, 250, 442, () {
-          if (state.account.level < Account.availablityLevels["liveBattle"]!) {
-            Overlays.insert(context, OverlayType.toast,
-                args: "unavailable_l".l(
-                    ["battle_l".l(), Account.availablityLevels["liveBattle"]]));
-          } else {
-            Navigator.pushNamed(context, Routes.popupOpponents.routeName);
-          }
-        }),
-        _button("quest", "quest_l", 620, 250, 310,
-            () => Navigator.pushNamed(context, Routes.quest.routeName)),
+        _building(state.account, Buildings.defense, 0, -440),
+        _building(state.account, Buildings.offense, -340, -280),
+        _building(state.account, Buildings.base, 0, -60),
+        _building(state.account, Buildings.treasury, -280, 200),
+        _building(state.account, Buildings.mine, 330, -250),
+        _building(state.account, Buildings.park, 340, 160),
+        _building(state.account, Buildings.quest, 140, 490),
         if (state.account.deadlines.isNotEmpty)
           for (var i = 0; i < state.account.deadlines.length; i++)
             Positioned(
@@ -124,6 +114,11 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   }
 
   _onBuildingTap(Account account, Building building) {
+    if (account.level < Account.availablityLevels["liveBattle"]!) {
+      toast("unavailable_l"
+          .l(["battle_l".l(), Account.availablityLevels["liveBattle"]]));
+      return;
+    }
     if (building.level < 1) {
       toast(account.level < Account.availablityLevels["tribe"]!
           ? "coming_soon".l()
@@ -131,7 +126,8 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return;
     }
     var type = switch (building.type) {
-      Buildings.base => Routes.popupDailyGift,
+      Buildings.quest => Routes.quest,
+      Buildings.base => Routes.popupOpponents,
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,

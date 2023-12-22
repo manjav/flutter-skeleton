@@ -38,9 +38,8 @@ class _BuildingWidgetState extends State<BuildingWidget> {
                 fit: BoxFit.fitWidth,
                 onRiveInit: (Artboard artboard) {
                   final controller = StateMachineController.fromArtboard(
-                      artboard, 'Building')!;
+                      artboard, "State Machine 1")!;
                   var input = controller.findInput<double>('level');
-                  // controller.stateMachine.listeners.
                   if (input != null) {
                     _levelInput = input as SMINumber;
                     _levelInput!.value = widget.building.level.toDouble();
