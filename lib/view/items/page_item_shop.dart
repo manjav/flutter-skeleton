@@ -376,7 +376,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         context,
         OverlayType.feastOpenpack,
         args: {"pack": item.base},
-        onClose: () => services.add(ServicesEvent(ServicesInitState.punch, 1)),
+        onClose: (d) => services.add(ServicesEvent(ServicesInitState.punch, 1)),
       );
     }
   }

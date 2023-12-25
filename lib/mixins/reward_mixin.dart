@@ -191,6 +191,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   }
 
   void dismiss() {
+    widget.onClose?.call(result);
     if (state.index < RewardAniationState.disposed.index) {
       Overlays.remove(widget.type);
       state = RewardAniationState.disposed;
