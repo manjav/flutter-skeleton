@@ -49,10 +49,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     process(() async {
       var data =
           await rpc(isBattle ? RpcId.battle : RpcId.quest, params: params);
-      if (data != null) {
-        return data;
-      }
-      return null;
+      return data;
     });
   }
 

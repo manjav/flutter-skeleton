@@ -294,8 +294,10 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         var route = widget.args["opponent"] != null
             ? Routes.battleOut
             : Routes.questOut;
-        await Navigator.pushNamed(context, route.routeName, arguments: data);
-        if (mounted) Navigator.pop(context);
+        if(data != null){
+          await Navigator.pushNamed(context, route.routeName, arguments: data);
+          if (mounted) Navigator.pop(context);
+        }
       }
       // Reset reminder notifications ....
       getService<Notifications>().skedule(account);

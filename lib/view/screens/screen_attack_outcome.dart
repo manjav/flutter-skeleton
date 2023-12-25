@@ -166,7 +166,8 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                   ],
                 ),
                 onPressed: () {
-                  if (widget.type == Routes.battleOut) {
+                  if (widget.type == Routes.battleOut ||
+                      widget.type == Routes.questOut) {
                     Navigator.pushReplacementNamed(
                         context, Routes.deck.routeName);
                   } else {
