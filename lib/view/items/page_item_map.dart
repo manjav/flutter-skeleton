@@ -15,7 +15,6 @@ import '../../view/widgets/indicator_dedline.dart';
 import '../../view/widgets/loaderwidget.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../map_elements/building_widget.dart';
-import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import 'page_item.dart';
@@ -33,33 +32,33 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return Stack(alignment: Alignment.topLeft, children: [
         const LoaderWidget(AssetType.animation, "map_home", fit: BoxFit.cover),
         PositionedDirectional(
-            top: 340.d,
-            end: 32.d,
+            bottom: 350.d,
+            start: 32.d,
             child: Indicator("home", Values.leagueRank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupLeague.routeName))),
         PositionedDirectional(
-            top: 220.d,
-            end: 32.d,
+            bottom: 220.d,
+            start: 32.d,
             child: Indicator("home", Values.rank,
                 hasPlusIcon: false,
                 onTap: () => Navigator.pushNamed(
                     context, Routes.popupRanking.routeName))),
         PositionedDirectional(
-            top: 220.d,
-            start: 44.d,
+            bottom: 180.d,
+            end: 32.d,
             child: Widgets.button(
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupInbox.routeName))),
-        _building(state.account, Buildings.defense, 0, -440),
-        _building(state.account, Buildings.offense, -340, -280),
-        _building(state.account, Buildings.base, 0, -60),
-        _building(state.account, Buildings.treasury, -280, 200),
-        _building(state.account, Buildings.mine, 330, -250),
-        _building(state.account, Buildings.park, 340, 160),
-        _building(state.account, Buildings.quest, 140, 490),
+        _building(state.account, Buildings.defense, 0, -470),
+        _building(state.account, Buildings.offense, -340, -330),
+        _building(state.account, Buildings.base, 0, -110),
+        _building(state.account, Buildings.treasury, -280, 150),
+        _building(state.account, Buildings.mine, 330, -300),
+        _building(state.account, Buildings.park, 340, 140),
+        _building(state.account, Buildings.quest, 140, 440),
         if (state.account.deadlines.isNotEmpty)
           for (var i = 0; i < state.account.deadlines.length; i++)
             Positioned(

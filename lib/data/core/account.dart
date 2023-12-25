@@ -65,6 +65,7 @@ class Account extends Player with ServiceProvider {
   static const Map<String, int> availablityLevels = {
     'ads': 4,
     'name': 4,
+    'park': 4,
     'bank': 5,
     'tribe': 6,
     'league': 8,
@@ -268,7 +269,7 @@ class Account extends Player with ServiceProvider {
         map['gold_building_assigned_cards']);
     addBuilding(Buildings.treasury, map['bank_building_level']);
     addBuilding(Buildings.park);
-    addBuilding(Buildings.quest);
+    addBuilding(Buildings.quest, 1);
 
     // Tribe
     installTribe(map['tribe']);
