@@ -73,17 +73,19 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         });
   }
 
-  Widget animationBuilder(String fileName, {String? stateMachinName}) {
+  Widget animationBuilder(String fileName, {String? stateMachineName}) {
     return LoaderWidget(AssetType.animation, "feast_$fileName",
+        fit: BoxFit.cover,
         riveAssetLoader: onRiveAssetLoad,
         onRiveInit: (artboard) =>
-            onRiveInit(artboard, stateMachinName ?? "State Machine 1"));
+            onRiveInit(artboard, stateMachineName ?? "State Machine 1"));
   }
 
-  StateMachineController onRiveInit(Artboard artboard, String stateMachinName) {
+  StateMachineController onRiveInit(
+      Artboard artboard, String stateMachineName) {
     _artboard = artboard;
     var controller =
-        StateMachineController.fromArtboard(artboard, stateMachinName)!;
+        StateMachineController.fromArtboard(artboard, stateMachineName)!;
     startInput = controller.findInput<bool>("start") as SMITrigger;
     skipInput = controller.findInput<bool>("skip") as SMITrigger;
     closeInput = controller.findInput<bool>("close") as SMITrigger;
