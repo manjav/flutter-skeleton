@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/result.dart';
 import '../../main.dart';
-import '../../mixins/ilogger.dart';
+import '../../mixins/logger.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';

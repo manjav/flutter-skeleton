@@ -59,8 +59,8 @@ class _BuildingBalloonState extends State<BuildingBalloon>
   }
 
   int collectableGold(Account account) {
-    var goldPerdSec = widget.building.getCardsBenefit(account) / 3600;
-    return ((account.getTime() - account.last_gold_collect_at) * goldPerdSec)
+    var goldPerSec = widget.building.getCardsBenefit(account) / 3600;
+    return ((account.getTime() - account.last_gold_collect_at) * goldPerSec)
         .clamp(0, widget.building.benefit)
         .floor();
   }

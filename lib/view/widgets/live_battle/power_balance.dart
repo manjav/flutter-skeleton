@@ -6,9 +6,9 @@ import '../../../services/theme.dart';
 
 import '../../widgets.dart';
 
-class Powerbalance extends StatelessWidget {
+class PowerBalance extends StatelessWidget {
   final int value, maxValue;
-  const Powerbalance(this.value, this.maxValue, {super.key});
+  const PowerBalance(this.value, this.maxValue, {super.key});
 
   @override
   Widget build(BuildContext context) {

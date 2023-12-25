@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/ilogger.dart';
+import '../../mixins/logger.dart';
 import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
 import '../../view/overlays/confirm_overlay.dart';
@@ -57,7 +57,7 @@ extension Overlays on OverlayType {
       "/feastLevelup" =>
         LevelupFeastOverlay(args: args ?? {}, onClose: onClose),
       "/feastOpenpack" =>
-        OpenpackFeastOverlay(args: args ?? {}, onClose: onClose),
+        OpenPackFeastOverlay(args: args ?? {}, onClose: onClose),
       "/feastEnhance" =>
         EnhanceFeastOverlay(args: args ?? {}, onClose: onClose),
       "/feastEnhancemax" =>

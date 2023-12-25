@@ -10,7 +10,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../data/core/account.dart';
-import '../mixins/ilogger.dart';
+import '../mixins/logger.dart';
 import 'services.dart';
 import '../services/localization.dart';
 
@@ -100,7 +100,7 @@ class Notifications extends IService {
       // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
     await _requestPermissions();
-    skedule(account);
+    schedule(account);
   }
 
   _requestPermissions() async {
@@ -132,12 +132,12 @@ class Notifications extends IService {
     }
   }
 
-  void skedule(Account account) async {
+  void schedule(Account account) async {
     int nextDailyGiftAt = account.dailyReward["next_reward_at"] ?? 0;
     int maxCooldown = account.calculateMaxCooldown();
 
     tz.initializeTimeZones();
-    // Set localation
+    // Set location
     var now = DateTime.now();
     var locations = tz.timeZoneDatabase.locations.values;
     var tzo = now.timeZoneOffset.inMilliseconds;

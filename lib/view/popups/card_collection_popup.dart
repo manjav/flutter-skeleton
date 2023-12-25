@@ -22,14 +22,14 @@ class CollectionPopup extends AbstractPopup {
 class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
     with KeyProvider {
   late List<Fruit> _fruits;
-  late Set<int> _avaibledCards;
+  late Set<int> _availableCards;
   late final ValueNotifier<Fruit> _selectedFruit;
 
   @override
   void initState() {
     var account = accountBloc.account!;
     _fruits = account.loadingData.fruits.values.toList();
-    _avaibledCards = Set<int>.from(account.collection);
+    _availableCards = Set<int>.from(account.collection);
     _selectedFruit = ValueNotifier(_fruits[0]);
     super.initState();
   }
@@ -104,7 +104,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   Widget? _cardItemBuilder(int index, FruitCard card, double itemSize) {
     return Stack(alignment: Alignment.center, children: [
       CardItem.getCardBackground(card.fruit.category, card.rarity),
-      _avaibledCards.contains(card.id)
+      _availableCards.contains(card.id)
           ? CardItem.getCardImage(card, itemSize * 0.9,
               key: getGlobalKey(card.id))
           : Asset.load<Image>("deck_placeholder_card", width: itemSize * 0.6),

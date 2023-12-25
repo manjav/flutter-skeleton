@@ -22,7 +22,7 @@ class _InvitePopupState extends AbstractPopupState<InvitePopup> {
   late Account _account;
   @override
   BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
+      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   void initState() {

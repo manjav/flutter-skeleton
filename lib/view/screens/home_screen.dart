@@ -242,8 +242,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     await Future.delayed(const Duration(milliseconds: 10));
     for (var element in result[side]) {
       element["owner_team_id"] = attackerId;
-      var messae = NoobCardMessage(account, element);
-      getService<NoobSocket>().dispatchMessage(messae);
+      var message = NoobCardMessage(account, element);
+      getService<NoobSocket>().dispatchMessage(message);
     }
   }
 

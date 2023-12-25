@@ -29,7 +29,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
   Widget titleTextFactory() => const SizedBox();
   @override
   BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
+      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   EdgeInsets get contentPadding =>
@@ -62,7 +62,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
                     SizedBox(width: 24.d),
                     Widgets.rect(
                       padding: EdgeInsets.only(right: 12.d),
-                      decoration: Widgets.imageDecore(
+                      decoration: Widgets.imageDecorator(
                           "frame_hatch_button", ImageCenterSliceData(42)),
                       child: Row(textDirection: TextDirection.ltr, children: [
                         Asset.load<Image>("icon_nectar", height: 76.d),

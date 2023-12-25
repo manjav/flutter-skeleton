@@ -57,7 +57,7 @@ class FruitCard {
       veteranLevel,
       heroType,
       potionLimit;
-  Map<HeroAttribute, int> attribuites = {};
+  Map<HeroAttribute, int> attributes = {};
 
   double virtualRarity = 1.0;
 
@@ -77,9 +77,9 @@ class FruitCard {
     powerLimit = Utils.toInt(data["powerLimit"]);
     veteranLevel = Utils.toInt(data["veteran_level"]);
 
-    attribuites[HeroAttribute.power] = Utils.toInt(data["powerAttribute"]);
-    attribuites[HeroAttribute.wisdom] = Utils.toInt(data["wisdomAttribute"]);
-    attribuites[HeroAttribute.blessing] =
+    attributes[HeroAttribute.power] = Utils.toInt(data["powerAttribute"]);
+    attributes[HeroAttribute.wisdom] = Utils.toInt(data["wisdomAttribute"]);
+    attributes[HeroAttribute.blessing] =
         Utils.toInt(data["blessingAttribute"]);
     potionLimit = Utils.toInt(data["potion_limit"]);
   }
@@ -370,7 +370,7 @@ class HeroCard with ServiceProvider {
     }
 
     diff(HeroAttribute f) =>
-        nextLevelCard.attribuites[f]! - card.base.attribuites[f]!;
+        nextLevelCard.attributes[f]! - card.base.attributes[f]!;
     values[HeroAttribute.power] = diff(HeroAttribute.power);
     values[HeroAttribute.wisdom] = diff(HeroAttribute.wisdom);
     values[HeroAttribute.blessing] = diff(HeroAttribute.blessing);

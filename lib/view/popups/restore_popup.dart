@@ -23,7 +23,7 @@ class RestorePopup extends AbstractPopup {
 class _RestorePopupState extends AbstractPopupState<RestorePopup> {
   @override
   BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
+      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   late Account _account;
   late TextEditingController _textController;

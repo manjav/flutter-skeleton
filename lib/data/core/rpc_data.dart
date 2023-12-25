@@ -15,7 +15,7 @@ class LoadingData {
   late Map<int, FruitCard> baseCards;
   late Map<int, BaseHeroItem> baseHeroItems;
   late Map<ShopSections, List<ShopItem>> shopItems;
-  late Map<AchivementType, AchievementLine> achievements;
+  late Map<AchievementType, AchievementLine> achievements;
   Map<ShopSections, List<ShopItemVM>>? shopProceedItems;
 
   LoadingData();

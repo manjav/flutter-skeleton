@@ -64,7 +64,7 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
                               child: Widgets.rect(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 40.d),
-                                  decoration: Widgets.imageDecore("ui_shadow"),
+                                  decoration: Widgets.imageDecorator("ui_shadow"),
                                   child: SkinnedText(widget.message,
                                       style: TStyles.large))),
                         ));

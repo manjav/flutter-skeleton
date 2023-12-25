@@ -53,7 +53,7 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
           margin: EdgeInsets.symmetric(horizontal: 6.d),
           padding: EdgeInsets.zero,
           height: 118.d,
-          decoration: Widgets.imageDecore(
+          decoration: Widgets.imageDecorator(
               "popup_tab_$imageName", ImageCenterSliceData(68, 42)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

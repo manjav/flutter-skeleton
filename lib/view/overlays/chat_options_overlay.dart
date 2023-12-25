@@ -36,7 +36,7 @@ class _ChatOptionsOverlayState
                   top: widget.y,
                   child: Widgets.rect(
                     padding: EdgeInsets.fromLTRB(16.d, 16.d, 16.d, 16.d),
-                    decoration: Widgets.imageDecore(
+                    decoration: Widgets.imageDecorator(
                         "tribe_item_bg", ImageCenterSliceData(56)),
                     child: Column(children: [
                       for (var option in widget.options) _button(option)

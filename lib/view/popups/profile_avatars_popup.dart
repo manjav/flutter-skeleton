@@ -26,7 +26,7 @@ class _ProfileAvatarsPopupState
   Widget titleTextFactory() => const SizedBox();
   @override
   BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
+      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(50.d, 180.d, 50.d, 80.d);

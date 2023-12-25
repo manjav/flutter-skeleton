@@ -107,11 +107,11 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
         Widgets.skinnedButton(
             color: ButtonColor.teal,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              SkinnedText("fillout_l".l(), style: TStyles.large),
+              SkinnedText("fill_out".l(), style: TStyles.large),
               SizedBox(width: 16.d),
               Widgets.rect(
                 padding: EdgeInsets.only(right: 12.d),
-                decoration: Widgets.imageDecore(
+                decoration: Widgets.imageDecorator(
                     "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_nectar", height: 72.d),

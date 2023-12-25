@@ -123,7 +123,7 @@ class Trackers extends IService {
   //   GameAnalytics.addProgressionEvent(map);
   // }
 
-  funnle(String type, [String? name]) {
+  funnel(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";
     var step = Prefs.increase(name, 1);
 
@@ -132,15 +132,15 @@ class Trackers extends IService {
       var values = _funnelConfigs[type];
       for (var value in values!) {
         if (value == step) {
-          _funnle("${name}_$step");
+          _funnel("${name}_$step");
           break;
         }
       }
     }
-    _funnle(name, step);
+    _funnel(name, step);
   }
 
-  _funnle(String name, [int step = -1]) {
+  _funnel(String name, [int step = -1]) {
     var args = step > 0 ? {"step": '$step'} : null;
     design(name, parameters: args);
   }

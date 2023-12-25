@@ -113,7 +113,7 @@ class Tribe with ServiceProvider {
       pinnedMessage.value = NoobChatMessage({
         "id": msg["id"],
         "text": msg["text_fa"],
-        "cannel": "pin",
+        "channel": "pin",
         "creationDate": msg["created_at"],
         "messageType": msg["message_type"],
         "timestamp": (DateTime.now().microsecondsSinceEpoch -

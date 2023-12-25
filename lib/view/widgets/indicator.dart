@@ -5,7 +5,7 @@ import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
-import '../../mixins/ilogger.dart';
+import '../../mixins/logger.dart';
 import '../../mixins/service_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/theme.dart';
@@ -81,7 +81,7 @@ class _IndicatorState extends State<Indicator>
                       break;
                   }
                 }
-                // widget.services.get<Analytics>().funnle("shopclicks");
+                // widget.services.get<Analytics>().funnel("shopclicks");
                 // widget.services
                 //     .get<Analytics>()
                 //     .design('guiClick:shop:${widget.source}');
@@ -103,7 +103,7 @@ class _IndicatorState extends State<Indicator>
           child: Widgets.rect(
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 8.d, left: height * 0.1),
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "ui_indicator_bg", ImageCenterSliceData(104, 69)),
             child: _getText(value, left, right),
           )),

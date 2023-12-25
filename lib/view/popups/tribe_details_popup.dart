@@ -100,7 +100,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         height: 144.d,
         margin: EdgeInsets.all(2.d),
         padding: EdgeInsets.fromLTRB(20.d, 0, 22.d, 10.d),
-        decoration: Widgets.imageDecore(
+        decoration: Widgets.imageDecorator(
             "iconed_item_bg${member.itsMe ? "_selected" : ""}",
             ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
         child: Row(children: [
@@ -111,7 +111,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
               width: 90.d,
               height: 90.d,
               padding: EdgeInsets.all(6.d),
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "frame_hatch_button", ImageCenterSliceData(42)),
               child: LoaderWidget(
                   AssetType.image, "avatar_${member.avatarId + 1}",
@@ -160,7 +160,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         height: 64.d,
         padding: padding ?? EdgeInsets.only(left: 16.d, right: 16.d),
         decoration:
-            Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
+            Widgets.imageDecorator("frame_hatch_button", ImageCenterSliceData(42)),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Asset.load<Image>(icon, height: iconSize),
           SizedBox(width: 2.d),
@@ -257,7 +257,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
       isEnable: cost <= tribe.gold,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SkinnedText("tribe_upgarde".l(),
+          SkinnedText("tribe_upgrade".l(),
               style: TStyles.small.copyWith(height: 3.d)),
           SkinnedText(
               "$newBenefit${id == Buildings.base.id ? "ˡ" : "%"}".convert(),
@@ -266,7 +266,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         SizedBox(width: 20.d),
         Widgets.rect(
           padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
-          decoration: Widgets.imageDecore(
+          decoration: Widgets.imageDecorator(
               "frame_hatch_button", ImageCenterSliceData(42)),
           child: Row(textDirection: TextDirection.ltr, children: [
             Asset.load<Image>("icon_gold", height: 76.d),

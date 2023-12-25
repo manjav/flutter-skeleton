@@ -114,7 +114,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
     var selected = _selectedLevelIndex == index;
     return Widgets.button(
         padding: EdgeInsets.all(8.d),
-        decoration: selected ? Widgets.imageDecore("level_badge_border") : null,
+        decoration: selected ? Widgets.imageDecorator("level_badge_border") : null,
         child: Asset.load<Image>(
             "level_badge_${fruit.cards[index].rarity}",
             width: 100.d),

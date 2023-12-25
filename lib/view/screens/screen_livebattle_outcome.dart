@@ -81,8 +81,8 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
         width: DeviceInfo.size.width,
         height: 130.d,
         margin: EdgeInsets.all(44.d),
-        decoration: Widgets.imageDecore("ui_ribbon_$color"),
-        child: SkinnedText("fight_lebel_$color".l()));
+        decoration: Widgets.imageDecorator("ui_ribbon_$color"),
+        child: SkinnedText("fight_label_$color".l()));
   }
 
   Widget _vsBuilder() {
@@ -105,7 +105,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
   Widget _fractionBuilder(LiveWarrior opponent, List<LiveWarrior> team) {
     return Widgets.rect(
         padding: EdgeInsets.fromLTRB(80.d, 90.d, 80.d, 60.d),
-        decoration: Widgets.imageDecore(
+        decoration: Widgets.imageDecorator(
             "liveout_bg_${opponent.side.name}", ImageCenterSliceData(201, 158)),
         height: 580.d,
         child: Stack(
@@ -133,7 +133,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
         height: 70.d,
         child: Widgets.rect(
             padding: EdgeInsets.fromLTRB(64.d, 0, 64.d, 12.d),
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "liveout_bg_header", ImageCenterSliceData(64, 59)),
             child: SkinnedText(opponent.tribeName,
                 style: TStyles.medium.copyWith(height: 1))));

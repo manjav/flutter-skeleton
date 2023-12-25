@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/infra.dart';
-import '../../mixins/ilogger.dart';
+import '../../mixins/logger.dart';
 import '../../mixins/service_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';

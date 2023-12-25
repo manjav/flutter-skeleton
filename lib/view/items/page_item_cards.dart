@@ -56,11 +56,11 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                 onPressed: () {
                   // Show unavailable message
                   if (state.account.level <
-                      Account.availablityLevels["tribe"]!) {
+                      Account.availabilityLevels["tribe"]!) {
                     Overlays.insert(context, OverlayType.toast,
                         args: "unavailable_l".l([
                           "popupcombo".l(),
-                          Account.availablityLevels["combo"]
+                          Account.availabilityLevels["combo"]
                         ]));
                   } else {
                     Navigator.pushNamed(context, Routes.popupCombo.routeName);

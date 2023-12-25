@@ -11,16 +11,14 @@ import '../../data/core/building.dart';
 import '../../data/core/infra.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
-import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets/building_balloon.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/indicator_dedline.dart';
-import '../widgets/loader_widget.dart';
-import '../widgets/skinned_text.dart';
+import '../../view/widgets/indicator_deadline.dart';
 import '../map_elements/building_widget.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/loader_widget.dart';
 import 'page_item.dart';
 
 class MainMapPageItem extends AbstractPageItem {
@@ -100,13 +98,13 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   }
 
   _onBuildingTap(Account account, Building building) {
-    if (account.level < Account.availablityLevels["liveBattle"]!) {
+    if (account.level < Account.availabilityLevels["liveBattle"]!) {
       toast("unavailable_l"
-          .l(["battle_l".l(), Account.availablityLevels["liveBattle"]]));
+          .l(["battle_l".l(), Account.availabilityLevels["liveBattle"]]));
       return;
     }
     if (building.level < 1) {
-      toast(account.level < Account.availablityLevels["tribe"]!
+      toast(account.level < Account.availabilityLevels["tribe"]!
           ? "coming_soon".l()
           : "error_149".l());
       return;
@@ -127,7 +125,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   }
 
   void _riveEventsListener(RiveEvent event) {
-    Timer(Duration(milliseconds: 100), () {
+    Timer(const Duration(milliseconds: 100), () {
       setState(
           () => _buildingPositions = jsonDecode(event.properties["buildings"]));
     });

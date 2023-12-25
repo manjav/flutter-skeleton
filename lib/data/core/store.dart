@@ -5,7 +5,7 @@ import '../../utils/utils.dart';
 enum ShopSections { none, card, gold, boost, nectar, subscription }
 
 extension ShopSectionsExtrension on ShopSections {
-  String getCurrecy() {
+  String getCurrency() {
     return switch (this) {
       ShopSections.gold ||
       ShopSections.nectar ||
@@ -90,7 +90,7 @@ class ShopItem {
     ratio = data["ratio"] ?? 1.0;
     reward = data["reward"] ?? "";
     isPopular = data.containsKey("pop");
-    currency = data["currency"] ?? section.getCurrecy();
+    currency = data["currency"] ?? section.getCurrency();
   }
 
   String get productID => "${section.name}_$id";

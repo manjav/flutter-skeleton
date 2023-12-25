@@ -28,12 +28,12 @@ class _LiveTribeState extends State<LiveTribe>
     with TickerProviderStateMixin, ServiceProviderMixin {
   late Timer _timer;
   final double _helpTimeout = 38;
-  late AnimationController _animationControler;
+  late AnimationController _animationController;
   bool _requestSent = false;
 
   @override
   void initState() {
-    _animationControler = AnimationController(
+    _animationController = AnimationController(
         vsync: this, upperBound: _helpTimeout, value: _helpTimeout);
     const duration = Duration(seconds: 1);
     _timer = Timer.periodic(duration, (t) {
@@ -41,7 +41,7 @@ class _LiveTribeState extends State<LiveTribe>
         t.cancel();
         setState(() {});
       }
-      _animationControler.animateTo(_helpTimeout - t.tick.toDouble(),
+      _animationController.animateTo(_helpTimeout - t.tick.toDouble(),
           curve: Curves.easeInOutSine, duration: duration);
     });
     super.initState();
@@ -79,7 +79,7 @@ class _LiveTribeState extends State<LiveTribe>
         height: 190.d,
         child: Widgets.rect(
             padding: EdgeInsets.symmetric(horizontal: 12.d),
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "live_tribe_${side.name}", ImageCenterSliceData(101, 92)),
             child: Row(
                 mainAxisAlignment: side == WarriorSide.opposites
@@ -104,7 +104,7 @@ class _LiveTribeState extends State<LiveTribe>
             SizedBox(width: 12.d),
             Widgets.rect(
                 padding: EdgeInsets.symmetric(horizontal: 8.d),
-                decoration: Widgets.imageDecore(
+                decoration: Widgets.imageDecorator(
                     "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_gold", height: 76.d),
@@ -113,9 +113,9 @@ class _LiveTribeState extends State<LiveTribe>
           ]),
           SizedBox(height: 12.d),
           AnimatedBuilder(
-              animation: _animationControler,
+              animation: _animationController,
               builder: (context, child) => Widgets.slider(
-                  0, _animationControler.value, _helpTimeout,
+                  0, _animationController.value, _helpTimeout,
                   width: 270.d,
                   height: 22.d,
                   border: 2,

@@ -34,7 +34,7 @@ class LiveOpponentView extends StatelessWidget {
         width: 400.d,
         alignment: Alignment.center,
         padding: EdgeInsets.fromLTRB(12.d, 12.d, 12.d, 0),
-        decoration: Widgets.imageDecore("liveout_frame",
+        decoration: Widgets.imageDecorator("liveout_frame",
             ImageCenterSliceData(68, 92, const Rect.fromLTWH(32, 34, 4, 4))),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center, children: items));

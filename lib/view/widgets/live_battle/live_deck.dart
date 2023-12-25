@@ -73,7 +73,7 @@ class LiveDeck extends StatelessWidget with KeyProvider {
                           size: size,
                           key: getGlobalKey(item.id),
                           showCooldown: false,
-                          showCooloff: true)),
+                          showCoolOff: true)),
                 ),
               ),
             ),

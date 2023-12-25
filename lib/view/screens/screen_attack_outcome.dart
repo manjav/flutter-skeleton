@@ -103,8 +103,8 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                         child: Widgets.rect(
                             alignment: Alignment.center,
                             decoration:
-                                Widgets.imageDecore("ui_ribbon_$_color"),
-                            child: SkinnedText("fight_lebel_$_color".l())))),
+                                Widgets.imageDecorator("ui_ribbon_$_color"),
+                            child: SkinnedText("fight_label_$_color".l())))),
                 Positioned(
                     bottom: -180.d,
                     width: 1050.d,
@@ -229,7 +229,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
               width: 100.d,
               height: 130.d,
               padding: EdgeInsets.all(16.d),
-              decoration: Widgets.imageDecore("ui_prize_frame"),
+              decoration: Widgets.imageDecorator("ui_prize_frame"),
               child: Asset.load<Image>("icon_$type")),
           SkinnedText(" ${value > 0 ? '+' : ""}${value.compact()}")
         ]));

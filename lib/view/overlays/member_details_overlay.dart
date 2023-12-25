@@ -56,7 +56,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
                   height: 192.d + (items.length / 2).ceil() * 125.d,
                   child: Widgets.rect(
                     padding: EdgeInsets.fromLTRB(16.d, 16.d, 16.d, 32.d),
-                    decoration: Widgets.imageDecore(
+                    decoration: Widgets.imageDecorator(
                         "tribe_item_bg", ImageCenterSliceData(56)),
                     child: Column(children: [
                       Row(

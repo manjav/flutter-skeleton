@@ -29,7 +29,7 @@ class _EnhanceFeastOverlayState
   void initState() {
     super.initState();
     children = [backgroundBuilder(), animationBuilder("enhance")];
-    _sacrificedCards = widget.args["sacrifiedCards"] ??
+    _sacrificedCards = widget.args["sacrificedCards"] ??
         [accountBloc.account!.cards.values.last];
     _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
     _oldPower = _card.power;
@@ -54,9 +54,9 @@ class _EnhanceFeastOverlayState
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     var diff = _card.power - _oldPower;
-    if (state == RewardAniationState.started) {
+    if (state == RewardAnimationState.started) {
       updateRiveText("addedPowerText", "+ ˢ${diff.compact()}");
-    } else if (state == RewardAniationState.shown) {
+    } else if (state == RewardAnimationState.shown) {
       updateRiveText("cardPowerText", "ˢ${_card.power.compact()}");
     } else if (event.name == "powerUp") {
       ++_sacrificeStep;

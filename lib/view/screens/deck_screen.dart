@@ -131,7 +131,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         }
       },
       child: CardItem(card,
-          showCooloff: true, size: itemSize, key: getGlobalKey(card.id)),
+          showCoolOff: true, size: itemSize, key: getGlobalKey(card.id)),
     );
   }
 
@@ -145,12 +145,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         }, 0);
     return Widgets.rect(
         padding: EdgeInsets.symmetric(horizontal: 10.d, vertical: 7.d),
-        decoration: Widgets.imageDecore("frame_header_cheese",
+        decoration: Widgets.imageDecorator("frame_header_cheese",
             ImageCenterSliceData(114, 174, const Rect.fromLTWH(58, 48, 2, 2))),
         child: Stack(children: [
           Widgets.rect(
               height: 192.d,
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "frame_hatch",
                   ImageCenterSliceData(
                       80, 100, const Rect.fromLTWH(37, 64, 2, 2)))),
@@ -252,7 +252,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var costPowerRatio = 230;
     var bossPowerMultiplier = 2;
 // var purgeStep = 30;
-    var coef = 0.4761;
+    var coefficient = 0.4761;
     var exponent = 1.0786;
     var defenceMin = 40;
     var defenceValue = <int>[0, 0, 0];
@@ -264,7 +264,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
               .floor() *
           multiplier;
     } else {
-      defenceValue[1] = (coef * math.pow(q, exponent)).floor().min(defenceMin);
+      defenceValue[1] = (coefficient * math.pow(q, exponent)).floor().min(defenceMin);
     }
     var random = Random();
     defenceValue[0] = (defenceValue[1] - random.nextInt(10) - 10).min(0);
@@ -300,7 +300,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         }
       }
       // Reset reminder notifications ....
-      getService<Notifications>().skedule(account);
+      getService<Notifications>().schedule(account);
       _attackStarted = false;
     });
   }

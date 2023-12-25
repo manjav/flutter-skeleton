@@ -70,7 +70,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
-    if (state == RewardAniationState.started) {
+    if (state == RewardAnimationState.started) {
       // updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_title".l());
       // updateRiveText("cardLevelText3", _newCard.base.rarity.convert());
       // updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");

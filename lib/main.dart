@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp>
 
   void restartApp() {
     Ranks.lists.clear();
-    LoaderWidget.cacshedLoders.clear();
+    LoaderWidget.cachedLoaders.clear();
     setState(() => _initialize());
   }
 

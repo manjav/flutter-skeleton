@@ -38,9 +38,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       // Show unavailable message
-      if (state.account.level < Account.availablityLevels["tribe"]!) {
+      if (state.account.level < Account.availabilityLevels["tribe"]!) {
         return SkinnedText("unavailable_l"
-            .l(["tribe_l".l(), Account.availablityLevels["tribe"]]));
+            .l(["tribe_l".l(), Account.availabilityLevels["tribe"]]));
       }
 
       if (state.account.tribe == null || state.account.tribe!.id <= 0) {
@@ -79,7 +79,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           left: margin,
           bottom: margin * 1.5,
           child: Widgets.rect(
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "tribe_header", ImageCenterSliceData(267, 256)))),
       Widgets.button(
         onPressed: () async {
@@ -137,7 +137,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             SizedBox(width: 16.d),
             Widgets.rect(
                 padding: EdgeInsets.all(10.d),
-                decoration: Widgets.imageDecore(
+                decoration: Widgets.imageDecorator(
                     "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Asset.load<Image>("tribe_edit", width: 42.d))
           ]),
@@ -199,7 +199,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         height: 64.d,
         padding: padding ?? EdgeInsets.only(left: 16.d, right: 16.d),
         decoration:
-            Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
+            Widgets.imageDecorator("frame_hatch_button", ImageCenterSliceData(42)),
         child: Row(
             textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -240,7 +240,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           return Widgets.rect(
               margin: EdgeInsets.fromLTRB(32.d, 16.d, 32.d, 0),
               padding: EdgeInsets.fromLTRB(32.d, 32.d, 32.d, 44.d),
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "iconed_item_bg_selected",
                   ImageCenterSliceData(
                       132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
@@ -305,7 +305,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           ]);
         },
         decoration:
-            Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
+            Widgets.imageDecorator("frame_hatch_button", ImageCenterSliceData(42)),
         child: LoaderWidget(AssetType.image, "avatar_${message.avatarId}",
             width: 76.d, height: 76.d, subFolder: "avatars"));
     return Column(children: [
@@ -317,7 +317,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             Expanded(
                 child: Widgets.button(
                     padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 16.d),
-                    decoration: Widgets.imageDecore(
+                    decoration: Widgets.imageDecorator(
                         "chat_balloon_${message.itsMe ? "right" : "left"}",
                         ImageCenterSliceData(
                             80, 78, const Rect.fromLTWH(39, 16, 2, 2))),
@@ -351,7 +351,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         margin: EdgeInsets.only(bottom: 48.d),
         padding: EdgeInsets.fromLTRB(32.d, 26.d, 16.d, 16.d),
         decoration:
-            Widgets.imageDecore("ui_popup_group", ImageCenterSliceData(144)),
+            Widgets.imageDecorator("ui_popup_group", ImageCenterSliceData(144)),
         child: Column(
             crossAxisAlignment: getService<Localization>().columnAlign,
             children: [

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/ilogger.dart';
+import '../../mixins/logger.dart';
 import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';

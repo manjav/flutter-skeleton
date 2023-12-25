@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/ilogger.dart';
+import '../../mixins/logger.dart';
 import '../localization.dart';
 
 enum AdSDKName { none, adivery, applovin, google, unity }
@@ -24,7 +24,7 @@ enum AdType {
 }
 
 extension AdTypeExtension on AdType {
-  bool get isIntrestitial =>
+  bool get isInterstitial =>
       this == AdType.interstitial || this == AdType.interstitialVideo;
 }
 

@@ -42,7 +42,7 @@ class HeroPopup extends AbstractPopup {
       HeroCard hero, MapEntry<HeroAttribute, int> attribute) {
     return Row(children: [
       Asset.load<Image>("benefit_${attribute.key.benefit}", width: 56.d),
-      SkinnedText(" ${hero.card.base.attribuites[attribute.key]}"),
+      SkinnedText(" ${hero.card.base.attributes[attribute.key]}"),
       SkinnedText(" + ${attribute.value}",
           style: TStyles.medium.copyWith(color: TColors.green)),
     ]);
@@ -176,7 +176,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
             height: 144.d,
             padding: EdgeInsets.all(12.d),
             decoration:
-                Widgets.imageDecore("rect_${item == null ? "add" : "remove"}"),
+                Widgets.imageDecorator("rect_${item == null ? "add" : "remove"}"),
             child: item == null
                 ? const SizedBox()
                 : Asset.load<Image>("heroitem_${item.base.image}"),
@@ -223,7 +223,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
 
   Widget? _itemBuilder(BaseHeroItem item, int position) {
     var host = item.getHost(_heroes);
-    var heroItem = item.getUsage(_account.heroitems.values.toList());
+    var heroItem = item.getUsage(_account.heroItems.values.toList());
     var isActive = host == null || heroItem != null;
     return Widgets.button(
         radius: 44.d,
@@ -354,7 +354,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       var result =
           await _tryRPC(RpcId.buyHeroItem, {RpcParams.id.name: item.id});
       int id = result["heroitem_id"];
-      _account.heroitems[id] = HeroItem(id, item, 0);
+      _account.heroItems[id] = HeroItem(id, item, 0);
       if (mounted) {
         Navigator.pop(context);
       }

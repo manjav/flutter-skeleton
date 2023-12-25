@@ -71,7 +71,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
       margin: EdgeInsets.all(4.d),
       padding: EdgeInsets.all(22.d),
       decoration:
-          Widgets.imageDecore("tribe_item_bg", ImageCenterSliceData(56, 56)),
+          Widgets.imageDecorator("tribe_item_bg", ImageCenterSliceData(56, 56)),
       child: Column(children: [
         Row(
           children: [
@@ -115,7 +115,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
               height: 120.d,
               width: 210.d,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 24.d),
-              decoration: Widgets.buttonDecore(
+              decoration: Widgets.buttonDecorator(
                   tribe.status == 1 ? ButtonColor.teal : ButtonColor.green),
               child: SkinnedText(
                   textAlign: TextAlign.center,

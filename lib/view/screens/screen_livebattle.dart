@@ -138,7 +138,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
                 child: ValueListenableBuilder<int>(
                     valueListenable: _powerBalance,
                     builder: (context, value, child) =>
-                        Powerbalance(value, _maxPower))),
+                        PowerBalance(value, _maxPower))),
             LiveSlot(0, -0.75, -0.20, 0.20, _slotState, oppositesHeadCards),
             LiveSlot(1, -0.26, -0.17, 0.07, _slotState, oppositesHeadCards),
             LiveSlot(2, 0.26, -0.17, -0.07, _slotState, oppositesHeadCards),
@@ -356,7 +356,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
 
     // Reset reminder notifications ....
-    getService<Notifications>().skedule(accountBloc.account!);
+    getService<Notifications>().schedule(accountBloc.account!);
 
     Navigator.pushNamed(context, Routes.livebattleOut.routeName, arguments: {
       "friendsId": _friendsHead.id,

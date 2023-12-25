@@ -175,7 +175,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   Widget _header(ShopSections section) {
     return Container(
         clipBehavior: Clip.none,
-        decoration: Widgets.imageDecore("shop_header_${section.name}",
+        decoration: Widgets.imageDecorator("shop_header_${section.name}",
             ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 58, 2, 2))),
         width: 1000.d,
         height: 188.d,
@@ -189,7 +189,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                 height: 170.d,
                 child: section == ShopSections.gold
                     ? Widgets.rect(
-                        decoration: Widgets.imageDecore("icon_star"),
+                        decoration: Widgets.imageDecorator("icon_star"),
                         child: SkinnedText(
                             "x${ShopData.getMultiplier(_account.level).round()}"))
                     : null),
@@ -227,7 +227,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   Widget _itemGoldBuilder(int index, ShopItemVM item) {
     var title = item.getTitle();
-    return _baseItemBilder(
+    return _baseItemBuilder(
         index,
         title,
         "",
@@ -257,7 +257,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   Widget _itemNectarBuilder(int index, ShopItemVM item) {
     var title = item.getTitle();
-    return _baseItemBilder(
+    return _baseItemBuilder(
         index,
         title,
         "",
@@ -277,13 +277,13 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   Widget _itemCardBuilder(int index, ShopItemVM item) {
     var title = item.getTitle();
-    return _baseItemBilder(index, title, title, item,
+    return _baseItemBuilder(index, title, title, item,
         LoaderWidget(AssetType.image, title, subFolder: 'shop'));
   }
 
   Widget _itemBoostBuilder(int index, ShopItemVM item) {
     var title = item.base.id < 22 ? "shop_boost_xp" : "shop_boost_power";
-    return _baseItemBilder(
+    return _baseItemBuilder(
         index,
         title,
         title,
@@ -294,7 +294,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         ]));
   }
 
-  Widget _baseItemBilder(int index, String title, String description,
+  Widget _baseItemBuilder(int index, String title, String description,
       ShopItemVM item, Widget child) {
     return Widgets.button(
         color: TColors.primary90,
@@ -333,7 +333,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           width: 100.d,
           height: 100.d,
           transform: Matrix4.rotationZ(-0.15),
-          decoration: Widgets.imageDecore("badge_ribbon"),
+          decoration: Widgets.imageDecorator("badge_ribbon"),
           child: SkinnedText("+${(ratio * 100).round()}%", style: TStyles.tiny),
         ));
   }

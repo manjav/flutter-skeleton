@@ -56,7 +56,7 @@ class AdAdivery extends AbstractAdSDK {
 
   @override
   void request(AdType type) {
-    if (type.isIntrestitial) {
+    if (type.isInterstitial) {
       AdiveryPlugin.prepareInterstitialAd(placements[type]!.id);
     } else {
       AdiveryPlugin.prepareRewardedAd(placements[type]!.id);
