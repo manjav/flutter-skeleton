@@ -177,7 +177,6 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       }
     } on RpcException catch (e) {
       if (context.mounted) {
-        dismiss();
         await Future.delayed(const Duration(milliseconds: 10));
         if (mounted) {
           Navigator.pushNamed(context, Routes.popupMessage.routeName,
@@ -187,6 +186,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
               });
         }
       }
+      dismiss();
     }
   }
 
