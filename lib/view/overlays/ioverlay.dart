@@ -5,6 +5,7 @@ import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
 import '../../view/overlays/confirm_overlay.dart';
 import 'chat_options_overlay.dart';
+import 'feast_attack_overlay.dart';
 import 'feast_enhance_overlay.dart';
 import 'feast_evolve_overlay.dart';
 import 'feast_levelup_overlay.dart';
@@ -25,10 +26,11 @@ enum OverlayType {
   toast,
   waiting,
 
-  feastOpenpack,
+  feastAttack,
+  feastEvolve,
   feastLevelup,
   feastEnhance,
-  feastEvolve,
+  feastOpenpack,
   feastPurchase,
   feastUpgradeCard,
 }

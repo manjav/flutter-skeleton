@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:math';
 import 'dart:math' as math;
+import 'dart:math';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,7 +9,6 @@ import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
-import '../../data/core/rpc.dart';
 import '../../mixins/key_provider.dart';
 import '../../services/deviceinfo.dart';
 import '../../services/localization.dart';
@@ -24,6 +21,7 @@ import '../../view/widgets/card_holder.dart';
 import '../../view/widgets/indicator.dart';
 import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
+import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
@@ -287,38 +285,21 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   _attack(Account account) async {
     if (_attackStarted) return;
     _attackStarted = true;
-    var params = <String, dynamic>{
-      RpcParams.cards.name: _selectedCards.getIds(),
-      RpcParams.check.name: md5.convert(utf8.encode("${account.q}")).toString()
-    };
-    var isBattle = widget.opponent != null;
-    var route = isBattle ? Routes.battleOut : Routes.questOut;
-    if (isBattle) {
-      params[RpcParams.opponent_id.name] = widget.opponent!.id;
-      params[RpcParams.attacks_in_today.name] =
-          widget.opponent!.todayAttacksCount;
-    }
-    if (_selectedCards.value[2] != null) {
-      params[RpcParams.hero_id.name] = _selectedCards.value[2]!.id;
-    }
-
-    try {
-      var data =
-          await rpc(isBattle ? RpcId.battle : RpcId.quest, params: params);
-      if (mounted) {
-        account.update(context, data);
-      }
+    Overlays.insert(context, OverlayType.feastAttack,
+        args: {"opponent": widget.args["opponent"], "cards": _selectedCards},
+        onClose: (data) async {
       _selectedCards.clear(setNull: true);
-
-      // Reset reminder notifications ....
-      getService<Notifications>().skedule(account);
       if (mounted) {
         accountBloc.add(SetAccount(account: account));
+        var route = widget.args["opponent"] != null
+            ? Routes.battleOut
+            : Routes.questOut;
         await Navigator.pushNamed(context, route.routeName, arguments: data);
         if (mounted) Navigator.pop(context);
       }
-    } finally {
+      // Reset reminder notifications ....
+      getService<Notifications>().skedule(account);
       _attackStarted = false;
-    }
+    });
   }
 }
