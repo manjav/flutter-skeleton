@@ -526,7 +526,7 @@ class Account extends Player with ServiceProvider {
       return card;
     }
 
-    if (data.containsKey("achieveCards")) {
+    if (data["achieveCards"] != null) {
       for (var card in data["achieveCards"]) {
         addCard(card);
       }
