@@ -1,15 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/core/account.dart';
-import '../../data/core/adam.dart';
-import '../../data/core/rpc.dart';
-import '../../mixins/background_mixin.dart';
-import '../../view/widgets/tab_navigator.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
+import '../../data/core/account.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
+import '../../data/core/rpc.dart';
+import '../../mixins/background_mixin.dart';
 import '../../mixins/key_provider.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/deviceinfo.dart';
@@ -18,6 +19,7 @@ import '../../services/sounds.dart';
 import '../../utils/assets.dart';
 import '../../view/items/page_item_auction.dart';
 import '../../view/items/page_item_tribe.dart';
+import '../../view/widgets/tab_navigator.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
@@ -54,7 +56,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     var bloc = BlocProvider.of<ServicesBloc>(context);
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
     bloc.get<NoobSocket>().onReceive.add(_onNoobReceive);
-
     if (accountBloc.account!.dailyReward.containsKey("next_reward_at")) {
       Navigator.pushNamed(context, Routes.popupDailyGift.routeName);
     }
@@ -123,6 +124,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
                   _selectTap(state.data as int);
                 } else if (state.initState == ServicesInitState.punch) {
                   _punchIndex.value = state.data as int;
+                  Timer(
+                      const Duration(seconds: 1), () => _punchIndex.value = -1);
                 }
               })
         ],
