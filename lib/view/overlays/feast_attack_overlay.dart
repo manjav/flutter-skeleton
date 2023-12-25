@@ -49,6 +49,9 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     process(() async {
       var data =
           await rpc(isBattle ? RpcId.battle : RpcId.quest, params: params);
+      if (mounted) {
+        accountBloc.account!.update(context, data);
+      }
       return data;
     });
   }

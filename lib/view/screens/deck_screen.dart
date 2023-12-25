@@ -264,7 +264,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
               .floor() *
           multiplier;
     } else {
-      defenceValue[1] = (coefficient * math.pow(q, exponent)).floor().min(defenceMin);
+      defenceValue[1] =
+          (coefficient * math.pow(q, exponent)).floor().min(defenceMin);
     }
     var random = Random();
     defenceValue[0] = (defenceValue[1] - random.nextInt(10) - 10).min(0);
@@ -286,15 +287,14 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     if (_attackStarted) return;
     _attackStarted = true;
     Overlays.insert(context, OverlayType.feastAttack,
-        args: {"opponent": widget.args["opponent"], "cards": _selectedCards},
+        args: {"opponent": widget.opponent, "cards": _selectedCards},
         onClose: (data) async {
       _selectedCards.clear(setNull: true);
       if (mounted) {
         accountBloc.add(SetAccount(account: account));
-        var route = widget.args["opponent"] != null
-            ? Routes.battleOut
-            : Routes.questOut;
-        if(data != null){
+        var route =
+            widget.opponent != null ? Routes.battleOut : Routes.questOut;
+        if (data != null) {
           await Navigator.pushNamed(context, route.routeName, arguments: data);
           if (mounted) Navigator.pop(context);
         }
