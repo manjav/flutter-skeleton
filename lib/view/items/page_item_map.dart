@@ -69,34 +69,6 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     });
   }
 
-  _button(String icon, String text, double x, double bottom, double width,
-      [Function()? onPressed]) {
-    return Positioned(
-        left: x.d,
-        bottom: bottom.d,
-        width: width.d,
-        height: 202.d,
-        child: Widgets.button(
-          onPressed: onPressed,
-          decoration: Widgets.imageDecore(
-              "button_map",
-              ImageCenterSliceData(422, 202,
-                  const Rect.fromLTWH(85, 85, 422 - 85 * 2, 202 - 85 * 2))),
-          child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                Positioned(
-                    top: -80.d,
-                    width: 148.d,
-                    child: LoaderWidget(AssetType.image, "icon_$icon")),
-                Positioned(
-                    bottom: -10.d,
-                    child: SkinnedText(text.l(), style: TStyles.large))
-              ]),
-        ));
-  }
-
   Widget _building(Account account, Buildings type, double x, double y) {
     var building = account.buildings[type]!;
     Widget child =
