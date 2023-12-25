@@ -34,7 +34,11 @@ enum OverlayType {
 }
 
 extension Overlays on OverlayType {
-  static AbstractOverlay getWidget(String routeName, {dynamic args}) {
+  static AbstractOverlay getWidget(
+    String routeName, {
+    dynamic args,
+    Function(dynamic data)? onClose,
+  }) {
     return switch (routeName) {
       "/loading" => const LoadingOverlay(),
       "/chatOptions" =>
@@ -47,13 +51,20 @@ extension Overlays on OverlayType {
       "/member" => MemberOverlay(args[0], args[1], args[2]),
       "/toast" => ToastOverlay(args as String),
       "/waiting" => ToastOverlay(args as String),
-      "/feastLevelup" => LevelupFeastOverlay(args: args ?? {}),
-      "/feastOpenpack" => OpenpackFeastOverlay(args: args ?? {}),
-      "/feastEnhance" => EnhanceFeastOverlay(args: args ?? {}),
-      "/feastEnhancemax" => PurchaseFeastOverlay(args: args ?? {}),
-      "/feastEvolve" => EvolveFeastOverlay(args: args ?? {}),
-      "/feastPurchase" => PurchaseFeastOverlay(args: args ?? {}),
-      "/feastUpgradeCard" => UpgradeCardFeastOverlay(args: args ?? {}),
+      "/feastAttack" => AttackFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastLevelup" =>
+        LevelupFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastOpenpack" =>
+        OpenpackFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastEnhance" =>
+        EnhanceFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastEnhancemax" =>
+        PurchaseFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastEvolve" => EvolveFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastPurchase" =>
+        PurchaseFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastUpgradeCard" =>
+        UpgradeCardFeastOverlay(args: args ?? {}, onClose: onClose),
       _ => const AbstractOverlay(),
     };
   }
@@ -61,15 +72,12 @@ extension Overlays on OverlayType {
   String get routeName => "/$name";
 
   static final _entries = <OverlayType, OverlayEntry>{};
-  static final _callbacks = <OverlayType, Function()>{};
   static insert(BuildContext context, OverlayType type,
-      {dynamic args, Function()? onClose}) {
+      {dynamic args, Function(dynamic)? onClose}) {
     if (!_entries.containsKey(type)) {
-      _entries[type] =
-          OverlayEntry(builder: (c) => getWidget(type.routeName, args: args));
-    }
-    if (onClose != null) {
-      _callbacks[type] = onClose;
+      _entries[type] = OverlayEntry(
+          builder: (c) =>
+              getWidget(type.routeName, args: args, onClose: onClose));
     }
     Overlay.of(context).insert(_entries[type]!);
   }
@@ -78,15 +86,15 @@ extension Overlays on OverlayType {
     if (_entries.containsKey(type)) {
       _entries[type]?.remove();
       _entries.remove(type);
-      _callbacks[type]?.call();
-      _callbacks.remove(type);
     }
   }
 }
 
 class AbstractOverlay extends StatefulWidget {
   final OverlayType type;
-  const AbstractOverlay({this.type = OverlayType.none, super.key});
+  final Function(dynamic data)? onClose;
+  const AbstractOverlay(
+      {this.type = OverlayType.none, this.onClose, super.key});
 
   @override
   createState() => AbstractOverlayState();

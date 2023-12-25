@@ -14,7 +14,7 @@ import '../overlays/ioverlay.dart';
 
 class EvolveFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
-  const EvolveFeastOverlay({required this.args, super.key})
+  const EvolveFeastOverlay({required this.args, super.onClose, super.key})
       : super(type: OverlayType.feastEvolve);
 
   @override

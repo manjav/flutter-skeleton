@@ -187,7 +187,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
 
   _evolve() {
     Overlays.insert(context, OverlayType.feastEvolve,
-        args: {"cards": selectedCards}, onClose: () async {
+        args: {"cards": selectedCards}, onClose: (d) async {
       cards = getCards(account);
       if (cards.length < 2) {
         // Show other mergable cards

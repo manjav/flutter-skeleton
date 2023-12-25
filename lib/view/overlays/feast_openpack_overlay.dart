@@ -17,7 +17,7 @@ import '../overlays/ioverlay.dart';
 
 class OpenpackFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
-  const OpenpackFeastOverlay({required this.args, super.key})
+  const OpenpackFeastOverlay({required this.args, super.onClose, super.key})
       : super(type: OverlayType.feastOpenpack);
 
   @override
