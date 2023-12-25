@@ -429,8 +429,8 @@ class Account extends Player with ServiceProvider {
       myCards.add(getCard(card));
     }
     myCards.sort((AccountCard a, AccountCard b) =>
-        a.power * (b.base.isHero ? 1 : -1) -
-        b.power * (a.base.isHero ? 1 : -1));
+        b.power * (b.base.isHero ? 9999999999 : 1) -
+        a.power * (a.base.isHero ? 9999999999 : 1));
     return myCards;
   }
 
