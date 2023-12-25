@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
+import 'popup.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 

@@ -10,7 +10,7 @@ import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
 import '../../services/trackers/trackers.dart';
 import '../../utils/utils.dart';
-import '../../view/overlays/ioverlay.dart';
+import '../../view/overlays/overlay.dart';
 import 'adam.dart';
 import 'building.dart';
 import 'fruit.dart';

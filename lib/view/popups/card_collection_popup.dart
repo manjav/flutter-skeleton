@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
 import '../../mixins/key_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
-import 'ipopup.dart';
+import 'popup.dart';
 
 class CollectionPopup extends AbstractPopup {
   CollectionPopup({super.key}) : super(Routes.popupCollection, args: {});

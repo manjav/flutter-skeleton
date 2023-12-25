@@ -4,16 +4,16 @@ import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
 import '../../mixins/tab_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/loaderwidget.dart';
+import 'popup.dart';
+import '../widgets/loader_widget.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 
 class LeaguePopup extends AbstractPopup {
   LeaguePopup({super.key}) : super(Routes.popupLeague, args: {});

@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
 import '../../mixins/card_edit_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/overlays/ioverlay.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../overlays/overlay.dart';
+import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import 'ipopup.dart';
+import 'popup.dart';
 
 class CardEnhancePopup extends AbstractPopup {
   const CardEnhancePopup({super.key, required super.args})

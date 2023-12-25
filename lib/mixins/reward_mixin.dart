@@ -7,17 +7,17 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../view/overlays/ioverlay.dart';
+import '../view/overlays/overlay.dart';
 import '../blocs/services_bloc.dart';
 import '../data/core/fruit.dart';
 import '../data/core/result.dart';
-import '../services/deviceinfo.dart';
+import '../services/device_info.dart';
 import '../services/localization.dart';
 import '../services/sounds.dart';
 import '../utils/assets.dart';
 import '../view/route_provider.dart';
 import '../view/widgets.dart';
-import '../view/widgets/loaderwidget.dart';
+import '../view/widgets/loader_widget.dart';
 
 enum RewardAniationState {
   none,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/services_bloc.dart';
-import '../../view/screens/iscreen.dart';
-import '../overlays/ioverlay.dart';
+import 'screen.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 
 class LoadingScreen extends AbstractScreen {

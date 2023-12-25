@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/core/message.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/inbox.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../../view/widgets.dart';
 import '../route_provider.dart';
 

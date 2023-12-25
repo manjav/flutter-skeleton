@@ -4,8 +4,8 @@ import '../../mixins/ilogger.dart';
 import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import '../overlays/overlay.dart';
 
 class AbstractPageItem extends StatefulWidget {
   final String name;

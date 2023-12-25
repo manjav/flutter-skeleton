@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../route_provider.dart';
 
 class MessagePopup extends AbstractPopup {

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/ilogger.dart';
 import '../../mixins/service_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
-import '../overlays/ioverlay.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 
 class AbstractScreen extends StatefulWidget {

@@ -5,16 +5,16 @@ import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/key_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
+import 'popup.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 
 class ComboPopup extends AbstractPopup {
   ComboPopup({super.key}) : super(Routes.popupCombo, args: {});

@@ -13,7 +13,7 @@ import '../../data/core/rpc.dart';
 import '../../mixins/background_mixin.dart';
 import '../../mixins/key_provider.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../utils/assets.dart';
@@ -23,12 +23,12 @@ import '../../view/widgets/tab_navigator.dart';
 import '../items/page_item_cards.dart';
 import '../items/page_item_map.dart';
 import '../items/page_item_shop.dart';
-import '../overlays/ioverlay.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
 import '../widgets/indicator_level.dart';
-import 'iscreen.dart';
+import 'screen.dart';
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Routes.home, args: {});

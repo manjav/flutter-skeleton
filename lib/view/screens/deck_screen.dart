@@ -10,22 +10,22 @@ import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/key_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/notifications.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/screens/iscreen.dart';
+import 'screen.dart';
 import '../../view/widgets/card_holder.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
-import '../overlays/ioverlay.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;

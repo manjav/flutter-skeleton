@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
 import '../../mixins/key_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../widgets.dart';
-import 'loaderwidget.dart';
+import 'loader_widget.dart';
 
 class CardHolder extends StatefulWidget {
   final AccountCard? card;

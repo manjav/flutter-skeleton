@@ -10,14 +10,14 @@ import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/store.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/widgets/loaderwidget.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import '../overlays/overlay.dart';
 import '../widgets.dart';
 import 'page_item.dart';
 

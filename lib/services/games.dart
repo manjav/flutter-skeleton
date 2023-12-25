@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:games_services/games_services.dart';
 
-import 'iservices.dart';
+import 'services.dart';
 
 abstract class IGames extends IService {}
 

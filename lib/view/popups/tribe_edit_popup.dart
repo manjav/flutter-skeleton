@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import 'ipopup.dart';
+import 'popup.dart';
 
 class TribeEditPopup extends AbstractPopup {
   TribeEditPopup({super.key}) : super(Routes.popupTribeEdit, args: {});

@@ -5,15 +5,15 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
 import '../../view/widgets/indicator_level.dart';
-import '../../view/widgets/skinnedtext.dart';
-import 'ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import 'overlay.dart';
 
 class MemberOverlay extends AbstractOverlay {
   final double y;

@@ -6,17 +6,17 @@ import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
 import '../../mixins/tab_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import 'popup.dart';
+import '../widgets/skinned_text.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 
 class TribeDetailsPopup extends AbstractPopup {
   const TribeDetailsPopup({required super.args, super.key})

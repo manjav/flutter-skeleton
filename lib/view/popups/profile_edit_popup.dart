@@ -5,15 +5,15 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../../view/widgets.dart';
 import '../route_provider.dart';
-import '../widgets/loaderwidget.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 
 class ProfileEditPopup extends AbstractPopup {
   ProfileEditPopup({super.key}) : super(Routes.popupProfile, args: {});

@@ -7,12 +7,12 @@ import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/ilogger.dart';
 import '../../mixins/service_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';
-import '../../view/widgets/skinnedtext.dart';
+import 'skinned_text.dart';
 import '../widgets.dart';
 
 class Indicator extends StatefulWidget {

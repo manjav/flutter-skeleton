@@ -7,7 +7,7 @@ import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../../view/overlays/ioverlay.dart';
+import 'overlay.dart';
 
 class LevelupFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;

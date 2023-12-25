@@ -7,14 +7,14 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../mixins/service_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../widgets.dart';
-import 'loaderwidget.dart';
-import 'skinnedtext.dart';
+import 'loader_widget.dart';
+import 'skinned_text.dart';
 
 class TabNavigator extends StatefulWidget {
   final int tabsCount;

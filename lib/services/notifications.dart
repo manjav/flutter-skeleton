@@ -11,7 +11,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../data/core/account.dart';
 import '../mixins/ilogger.dart';
-import '../services/iservices.dart';
+import 'services.dart';
 import '../services/localization.dart';
 
 class Notifications extends IService {

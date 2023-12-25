@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/adam.dart';
 import '../../mixins/background_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets/live_battle/live_warrior.dart';
-import 'iscreen.dart';
+import 'screen.dart';
 
 class LiveOutScreen extends AbstractScreen {
   LiveOutScreen({required super.args, super.key}) : super(Routes.livebattleOut);

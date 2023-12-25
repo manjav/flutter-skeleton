@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../mixins/ilogger.dart';
-import 'iservices.dart';
+import 'services.dart';
 
 class Localization extends IService {
   static var locales = const [Locale("en"), Locale("fa")];

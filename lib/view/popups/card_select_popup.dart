@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../data/core/building.dart';
 import '../../data/core/fruit.dart';
 import '../../mixins/key_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/card_holder.dart';
-import 'ipopup.dart';
+import 'popup.dart';
 
 class CardSelectPopup extends AbstractPopup {
   const CardSelectPopup({super.key, required super.args})

@@ -4,7 +4,7 @@ import '../../data/core/account.dart';
 import '../../data/core/message.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
-import 'iservices.dart';
+import 'services.dart';
 
 class Inbox extends IService {
   List<Message> messages = [];

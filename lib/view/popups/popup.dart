@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/ilogger.dart';
 import '../../mixins/service_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 

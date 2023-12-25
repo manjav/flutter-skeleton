@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../widgets/skinnedtext.dart';
-import 'ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import 'overlay.dart';
 
 enum ChatOptions { pin, reply }
 

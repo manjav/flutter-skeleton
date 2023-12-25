@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../services/deviceinfo.dart';
+import '../services/device_info.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
 import '../blocs/account_bloc.dart';
@@ -14,9 +14,9 @@ import '../services/localization.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';
 import '../view/map_elements/building_widget.dart';
-import '../view/overlays/ioverlay.dart';
-import '../view/popups/ipopup.dart';
-import '../view/widgets/skinnedtext.dart';
+import '../view/overlays/overlay.dart';
+import '../view/popups/popup.dart';
+import '../view/widgets/skinned_text.dart';
 
 @optionalTypeArgs
 mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {

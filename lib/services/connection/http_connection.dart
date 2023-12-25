@@ -14,9 +14,9 @@ import '../../services/prefs.dart';
 import '../../utils/loader.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';
-import '../../view/widgets/loaderwidget.dart';
-import '../deviceinfo.dart';
-import '../iservices.dart';
+import '../../view/widgets/loader_widget.dart';
+import '../device_info.dart';
+import '../services.dart';
 
 class HttpConnection extends IService {
   LoadingData loadData = LoadingData();

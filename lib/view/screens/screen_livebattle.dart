@@ -10,7 +10,7 @@ import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/notifications.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/card_holder.dart';
@@ -21,7 +21,7 @@ import '../widgets/live_battle/live_hero.dart';
 import '../widgets/live_battle/live_slot.dart';
 import '../widgets/live_battle/live_tribe.dart';
 import '../widgets/live_battle/power_balance.dart';
-import 'iscreen.dart';
+import 'screen.dart';
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [];

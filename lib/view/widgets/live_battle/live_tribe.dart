@@ -5,11 +5,11 @@ import 'package:flutter/widgets.dart';
 import '../../../data/core/adam.dart';
 import '../../../data/core/rpc.dart';
 import '../../../mixins/service_provider.dart';
-import '../../../services/deviceinfo.dart';
+import '../../../services/device_info.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
 import '../../../view/widgets/indicator_level.dart';
-import '../../../view/widgets/skinnedtext.dart';
+import '../skinned_text.dart';
 import '../../widgets.dart';
 import 'live_warrior.dart';
 

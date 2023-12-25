@@ -7,9 +7,9 @@ import '../../data/core/account.dart';
 import '../../mixins/key_provider.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/widgets/loaderwidget.dart';
+import 'loader_widget.dart';
 import '../widgets.dart';
-import 'skinnedtext.dart';
+import 'skinned_text.dart';
 
 class LevelIndicator extends StatefulWidget {
   final int? xp;

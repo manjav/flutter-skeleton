@@ -9,11 +9,11 @@ import '../../data/core/fruit.dart';
 import '../../data/core/store.dart';
 import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
 import '../items/card_item.dart';
-import '../overlays/ioverlay.dart';
+import 'overlay.dart';
 
 class OpenpackFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;

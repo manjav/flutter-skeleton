@@ -9,8 +9,8 @@ import '../data/core/building.dart';
 import '../data/core/fruit.dart';
 import '../data/core/rpc.dart';
 import '../services/connection/http_connection.dart';
-import '../view/overlays/ioverlay.dart';
-import '../view/popups/ipopup.dart';
+import '../view/overlays/overlay.dart';
+import '../view/popups/popup.dart';
 import '../view/route_provider.dart';
 import '../view/widgets/card_holder.dart';
 

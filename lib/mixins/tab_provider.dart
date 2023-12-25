@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../services/device_info.dart';
+import '../view/widgets/skinned_text.dart';
 import '../utils/assets.dart';
 import '../view/widgets.dart';
 

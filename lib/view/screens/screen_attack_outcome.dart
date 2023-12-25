@@ -4,7 +4,7 @@ import 'package:rive/rive.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../mixins/background_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
@@ -13,9 +13,9 @@ import '../../utils/utils.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loaderwidget.dart';
-import '../widgets/skinnedtext.dart';
-import 'iscreen.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'screen.dart';
 
 enum FightMode { quest, battle }
 

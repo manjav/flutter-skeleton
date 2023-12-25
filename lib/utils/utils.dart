@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../data/core/result.dart';
-import '../services/deviceinfo.dart';
+import '../services/device_info.dart';
 import '../services/localization.dart';
 
 extension IntExt on int {

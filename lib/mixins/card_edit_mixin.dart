@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/core/account.dart';
-import '../../services/deviceinfo.dart';
+import '../services/device_info.dart';
 import '../blocs/account_bloc.dart';
 import '../data/core/fruit.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';
 import '../view/items/card_item.dart';
-import '../view/popups/ipopup.dart';
+import '../view/popups/popup.dart';
 import '../view/widgets.dart';
 import '../view/widgets/card_holder.dart';
 

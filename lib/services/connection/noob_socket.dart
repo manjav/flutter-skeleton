@@ -9,7 +9,7 @@ import '../../data/core/message.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc_data.dart';
 import '../../data/core/tribe.dart';
-import '../../services/iservices.dart';
+import '../services.dart';
 import '../../utils/utils.dart';
 
 enum NoobCommand { subscribe, unsubscribe }

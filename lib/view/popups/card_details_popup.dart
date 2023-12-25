@@ -5,17 +5,17 @@ import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/card_item.dart';
-import '../../view/overlays/ioverlay.dart';
-import '../../view/popups/ipopup.dart';
+import '../overlays/overlay.dart';
+import 'popup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 
 class CardDetailsPopup extends AbstractPopup {
   const CardDetailsPopup({super.key, required super.args})

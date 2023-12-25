@@ -9,7 +9,7 @@ import '../../data/core/building.dart';
 import '../../data/core/message.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/inbox.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -17,11 +17,11 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/overlays/chat_options_overlay.dart';
 import '../../view/popups/tribe_search_popup.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 import 'page_item.dart';
 
 class TribePageItem extends AbstractPageItem {
