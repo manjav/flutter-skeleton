@@ -172,7 +172,6 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       mySlots.setAtCard(slot.i, null);
       mySlots.setAtCard(4, focusedCard);
     } else {
-      mySlots.setAtCard(slot.i, focusedCard);
       if (mySlots.value[4] != null && !mySlots.value[4]!.isDeployed) {
         mySlots.setAtCard(4, null);
       }
@@ -188,13 +187,18 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     if (!_isDeckActive) return;
     try {
       _isDeckActive = false;
+      var round = _slotState.value.i + 1;
+      if (selectedCard.base.isHero) {
+        round = 5;
+      } else if (round > 4) {
+        return;
+      }
       var params = {
         RpcParams.battle_id.name: _battleId,
         RpcParams.card.name: selectedCard.id,
-        RpcParams.round.name: _slotState.value.i + 1,
+        RpcParams.round.name: round,
       };
       var result = await rpc(RpcId.battleSetCard, params: params);
-
       selectedCard.lastUsedAt = result["last_used_at"];
       _deployCard(index, selectedCard);
     } finally {}
@@ -290,7 +294,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void _handleCardMessage(NoobCardMessage message) {
     var cardOwnerId = message.card!.ownerId;
     _addWarrior(message.teamOwnerId, cardOwnerId, message.ownerName);
-    var index = message.round >= 5 ? 2 : message.round - 1;
+    var index = message.round.max(5) - 1;
     _warriors[cardOwnerId]?.cards.setAtCard(index, message.card);
     _updatePowerBalance();
   }
