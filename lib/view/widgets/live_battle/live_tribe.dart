@@ -10,14 +10,15 @@ import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
 import '../../../view/widgets/indicator_level.dart';
 import '../../../view/widgets/skinnedtext.dart';
+import '../../screens/screen_livebattle.dart';
 import '../../widgets.dart';
 import 'live_warrior.dart';
 
 class LiveTribe extends StatefulWidget {
   final int ownerId, battleId, helpCost;
-  final Map<int, LiveWarrior> opponents;
+  final Warriors warriors;
 
-  const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.opponents,
+  const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.warriors,
       {super.key});
 
   @override
@@ -136,11 +137,5 @@ class _LiveTribeState extends State<LiveTribe>
       _requestSent = false;
     }
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _timer.cancel();
   }
 }
