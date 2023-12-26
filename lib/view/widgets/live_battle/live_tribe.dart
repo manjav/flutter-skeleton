@@ -8,16 +8,17 @@ import '../../../mixins/service_provider.dart';
 import '../../../services/device_info.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
-import '../../../view/widgets/indicator_level.dart';
-import '../skinned_text.dart';
+import '../../screens/screen_livebattle.dart';
 import '../../widgets.dart';
+import '../indicator_level.dart';
+import '../skinned_text.dart';
 import 'live_warrior.dart';
 
 class LiveTribe extends StatefulWidget {
   final int ownerId, battleId, helpCost;
-  final Map<int, LiveWarrior> opponents;
+  final Warriors warriors;
 
-  const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.opponents,
+  const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.warriors,
       {super.key});
 
   @override
@@ -39,7 +40,9 @@ class _LiveTribeState extends State<LiveTribe>
     _timer = Timer.periodic(duration, (t) {
       if (t.tick > _helpTimeout) {
         t.cancel();
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       }
       _animationController.animateTo(_helpTimeout - t.tick.toDouble(),
           curve: Curves.easeInOutSine, duration: duration);
@@ -49,47 +52,52 @@ class _LiveTribeState extends State<LiveTribe>
 
   @override
   Widget build(BuildContext context) {
-    var side = widget.opponents[widget.ownerId]!.side;
-    var team = widget.opponents.values.where((o) {
-      if (side != o.side) return false;
-      if (side == WarriorSide.friends) {
-        return !o.base.itsMe;
-      } else {
-        return o.base.id != widget.ownerId;
-      }
-    });
-    var items = <Widget>[
-      LevelIndicator(
-          size: 150.d,
-          level: widget.opponents.values.first.base.level,
-          xp: widget.opponents.values.first.base.score,
-          avatarId: widget.opponents.values.first.base.avatarId),
-      Widgets.divider(margin: 16.d, height: 56.d, direction: Axis.vertical)
-    ];
-    if (team.isEmpty && side == WarriorSide.friends) {
-      items.add(_hornButton());
-    }
-    for (var opponent in team) {
-      items.add(SizedBox(
-          width: 260.d, height: 174.d, child: LiveOpponentView(opponent)));
-    }
+    var owner = widget.warriors.value[widget.ownerId]!;
+    var avatar = owner.side == WarriorSide.friends
+        ? widget.warriors.value[accountBloc.account!.id]!
+        : owner;
     return Positioned(
-        top: side == WarriorSide.opposites ? 0 : null,
-        bottom: side == WarriorSide.friends ? 0 : null,
-        height: 190.d,
-        child: Widgets.rect(
-            padding: EdgeInsets.symmetric(horizontal: 12.d),
-            decoration: Widgets.imageDecorator(
-                "live_tribe_${side.name}", ImageCenterSliceData(101, 92)),
-            child: Row(
-                mainAxisAlignment: side == WarriorSide.opposites
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
-                children: items)));
+      top: owner.side == WarriorSide.opposites ? 0 : null,
+      bottom: owner.side == WarriorSide.friends ? 0 : null,
+      height: 190.d,
+      child: Widgets.rect(
+        padding: EdgeInsets.symmetric(horizontal: 12.d),
+        decoration: Widgets.imageDecorator(
+            "live_tribe_${owner.side.name}", ImageCenterSliceData(101, 92)),
+        child: ValueListenableBuilder(
+            valueListenable: widget.warriors,
+            builder: (context, value, child) {
+              var team = value.values
+                  .where((o) => owner.side == o.side && o != avatar);
+              var items = <Widget>[
+                LevelIndicator(
+                    size: 150.d,
+                    xp: avatar.base.score,
+                    level: avatar.base.level,
+                    avatarId: avatar.base.avatarId),
+                Widgets.divider(
+                    margin: 16.d, height: 56.d, direction: Axis.vertical),
+                _hornButton(owner, team)
+              ];
+
+              for (var warrior in team) {
+                items.add(SizedBox(
+                    width: 260.d,
+                    height: 174.d,
+                    child: LiveOpponentView(warrior)));
+              }
+              return Row(
+                  mainAxisAlignment: owner.side == WarriorSide.opposites
+                      ? MainAxisAlignment.end
+                      : MainAxisAlignment.start,
+                  children: items);
+            }),
+      ),
+    );
   }
 
-  Widget _hornButton() {
-    if (widget.helpCost == 0 || _requestSent) {
+  Widget _hornButton(LiveWarrior owner, Iterable<LiveWarrior> team) {
+    if (!owner.base.itsMe || _requestSent || team.isNotEmpty) {
       return const SizedBox();
     }
     return Widgets.skinnedButton(
@@ -136,11 +144,5 @@ class _LiveTribeState extends State<LiveTribe>
       _requestSent = false;
     }
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _timer.cancel();
   }
 }

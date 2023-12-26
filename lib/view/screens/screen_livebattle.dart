@@ -35,7 +35,8 @@ class LiveBattleScreen extends AbstractScreen {
 class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   late Account _account;
   late PageController _pageController;
-  final Map<int, LiveWarrior> _warriors = {};
+  final Warriors _warriorsNotifier = Warriors();
+  Map<int, LiveWarrior> get _warriors => _warriorsNotifier.value;
   final SelectedCards _deckCards = SelectedCards([]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));
@@ -55,7 +56,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void initState() {
     _account = accountBloc.account!;
     _battleId = widget.args["battle_id"] ?? 0;
-    _helpCost = widget.args["helpCost"] ?? 1550;
+    _helpCost = widget.args["help_cost"] ?? 33;
     if (widget.args.containsKey("created_at")) {
       _seconds = (_account.getTime() -
               _account.getTime(time: widget.args["created_at"]))
@@ -75,17 +76,17 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           "id": 1,
           "level": 10,
           "xp": 1200,
-          "name": "Test",
+          "name": "Tester",
           "tribe_name": "tribe"
         }, _account.id);
 
-    _warriors[_friendsHead.id] =
-        LiveWarrior(WarriorSide.friends, _friendsHead.id, _friendsHead);
-    _warriors[_oppositesHead.id] =
-        LiveWarrior(WarriorSide.opposites, _oppositesHead.id, _oppositesHead);
+    _warriorsNotifier.add(_friendsHead.id,
+        LiveWarrior(WarriorSide.friends, _friendsHead.id, _friendsHead));
+    _warriorsNotifier.add(_oppositesHead.id,
+        LiveWarrior(WarriorSide.opposites, _oppositesHead.id, _oppositesHead));
     if (!_friendsHead.itsMe) {
-      _warriors[_account.id] =
-          LiveWarrior(WarriorSide.friends, _friendsHead.id, _account);
+      _warriorsNotifier.add(_account.id,
+          LiveWarrior(WarriorSide.friends, _friendsHead.id, _account));
     }
 
     _deckCards.value = _account.getReadyCards(isClone: true);
@@ -102,8 +103,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       _pageController.jumpToPage(4);
     });
     if (_battleId == 0) {
-      _warriors[1] =
-          LiveWarrior(WarriorSide.opposites, _oppositesHead.id, _oppositesHead);
+      _warriorsNotifier.add(
+          1,
+          LiveWarrior(
+              WarriorSide.opposites, _oppositesHead.id, _oppositesHead));
       var cards = _account.getReadyCards(removeHeroes: true);
       Timer.periodic(const Duration(seconds: 4), (timer) {
         var index = timer.tick - 1;
@@ -150,8 +153,9 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             LiveHero(_battleId, -0.35, oppositesHeadCards),
             LiveHero(_battleId, 0.45, myCards),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
-            LiveTribe(_oppositesHead.id, _battleId, _helpCost, _warriors),
-            LiveTribe(_friendsHead.id, _battleId, _helpCost, _warriors),
+            LiveTribe(
+                _oppositesHead.id, _battleId, _helpCost, _warriorsNotifier),
+            LiveTribe(_friendsHead.id, _battleId, _helpCost, _warriorsNotifier),
             Positioned(
                 width: 120.d,
                 right: 40.d,
@@ -263,41 +267,39 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     if (message.id != _battleId) {
       return;
     }
-    return switch (message.type) {
-      Noobs.battleJoin => _handleJoinMessage(message as NoobJoinBattleMessage),
-      Noobs.deployCard => _handleCardMessage(message as NoobCardMessage),
-      Noobs.heroAbility => _handleAbilityMessage(message as NoobAbilityMessage),
-      Noobs.help => _handleHelpMessage(message as NoobHelpMessage),
-      Noobs.battleEnd => _handleEndingMessage(message as NoobEndBattleMessage),
-      _ => debugPrint(message.type.toString())
-    };
+    if (message.type == Noobs.battleJoin) {
+      var msg = message as NoobJoinBattleMessage;
+      _addWarrior(msg.teamOwnerId, msg.warriorId, msg.warriorName);
+    } else if (message.type == Noobs.deployCard) {
+      _handleCardMessage(message as NoobCardMessage);
+    } else if (message.type == Noobs.heroAbility) {
+      _handleAbilityMessage(message as NoobAbilityMessage);
+    } else if (message.type == Noobs.battleEnd) {
+      _handleEndingMessage(message as NoobEndBattleMessage);
+    }
   }
 
-  void _handleJoinMessage(NoobJoinBattleMessage message) {
-    if (_warriors.containsKey(message.warriorId)) return;
-    _warriors[message.warriorId] = LiveWarrior(
-        _warriors[message.teamOwnerId]!.side,
-        message.teamOwnerId,
-        Opponent.create(message.warriorId, message.warriorName, _account.id));
+  void _addWarrior(int teamOwnerId, int id, String name) {
+    if (_warriors.containsKey(id)) return;
+    _warriorsNotifier.add(
+        id,
+        LiveWarrior(_warriors[teamOwnerId]!.side, teamOwnerId,
+            Opponent.create(id, name, _account.id)));
   }
 
   void _handleCardMessage(NoobCardMessage message) {
     var cardOwnerId = message.card!.ownerId;
-    if (!_warriors.containsKey(cardOwnerId)) {
-      _warriors[cardOwnerId] = LiveWarrior(
-          _warriors[message.teamOwnerId]!.side,
-          message.teamOwnerId,
-          Opponent.create(cardOwnerId, message.ownerName, _account.id));
-    }
-    _warriors[cardOwnerId]?.cards.setAtCard(message.round - 1, message.card);
+    _addWarrior(message.teamOwnerId, cardOwnerId, message.ownerName);
+    var index = message.round >= 5 ? 2 : message.round - 1;
+    _warriors[cardOwnerId]?.cards.setAtCard(index, message.card);
     _updatePowerBalance();
   }
 
   void _updatePowerBalance() {
     var powerBalance = 0; // _account.calculatePower(_mySlots.value);
-    for (var opponent in _warriors.values) {
-      var coef = opponent.teamOwnerId == _friendsHead.id ? 1 : -1;
-      for (var card in opponent.cards.value) {
+    for (var warrior in _warriors.values) {
+      var coef = warrior.teamOwnerId == _friendsHead.id ? 1 : -1;
+      for (var card in warrior.cards.value) {
         if (card != null) powerBalance += card.power * coef;
       }
     }
@@ -327,10 +329,6 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         _updatePowerBalance();
       }
     }
-  }
-
-  void _handleHelpMessage(NoobHelpMessage message) {
-    debugPrint(message.toString());
   }
 
   void _handleEndingMessage(NoobEndBattleMessage message) {
@@ -370,5 +368,13 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _timer.cancel();
     _pageController.dispose();
     Navigator.pop(context);
+  }
+}
+
+class Warriors extends ValueNotifier<Map<int, LiveWarrior>> {
+  Warriors() : super({});
+  void add(int id, LiveWarrior warrior) {
+    value[id] = warrior;
+    notifyListeners();
   }
 }
