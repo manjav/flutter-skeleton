@@ -50,43 +50,48 @@ class _LiveTribeState extends State<LiveTribe>
 
   @override
   Widget build(BuildContext context) {
-    var side = widget.opponents[widget.ownerId]!.side;
-    var team = widget.opponents.values.where((o) {
-      if (side != o.side) return false;
-      if (side == WarriorSide.friends) {
-        return !o.base.itsMe;
-      } else {
-        return o.base.id != widget.ownerId;
-      }
-    });
-    var items = <Widget>[
-      LevelIndicator(
-          size: 150.d,
-          level: widget.opponents.values.first.base.level,
-          xp: widget.opponents.values.first.base.score,
-          avatarId: widget.opponents.values.first.base.avatarId),
-      Widgets.divider(margin: 16.d, height: 56.d, direction: Axis.vertical)
-    ];
-    if (team.isEmpty && side == WarriorSide.friends) {
-      items.add(_hornButton());
-    }
-    for (var opponent in team) {
-      items.add(SizedBox(
-          width: 260.d, height: 174.d, child: LiveOpponentView(opponent)));
-    }
+    var owner = widget.warriors.value[widget.ownerId]!;
+    var avatar = owner.side == WarriorSide.friends
+        ? widget.warriors.value[accountBloc.account!.id]!
+        : owner;
     return Positioned(
-        top: side == WarriorSide.opposites ? 0 : null,
-        bottom: side == WarriorSide.friends ? 0 : null,
+      top: owner.side == WarriorSide.opposites ? 0 : null,
+      bottom: owner.side == WarriorSide.friends ? 0 : null,
         height: 190.d,
         child: Widgets.rect(
             padding: EdgeInsets.symmetric(horizontal: 12.d),
             decoration: Widgets.imageDecore(
-                "live_tribe_${side.name}", ImageCenterSliceData(101, 92)),
-            child: Row(
-                mainAxisAlignment: side == WarriorSide.opposites
+            "live_tribe_${owner.side.name}", ImageCenterSliceData(101, 92)),
+        child: ValueListenableBuilder(
+            valueListenable: widget.warriors,
+            builder: (context, value, child) {
+              var team = value.values
+                  .where((o) => owner.side == o.side && o != avatar);
+              var items = <Widget>[
+                LevelIndicator(
+                    size: 150.d,
+                    xp: avatar.base.score,
+                    level: avatar.base.level,
+                    avatarId: avatar.base.avatarId),
+                Widgets.divider(
+                    margin: 16.d, height: 56.d, direction: Axis.vertical),
+                _hornButton(owner, team)
+              ];
+
+              for (var warrior in team) {
+                items.add(SizedBox(
+                    width: 260.d,
+                    height: 174.d,
+                    child: LiveOpponentView(warrior)));
+              }
+              return Row(
+                  mainAxisAlignment: owner.side == WarriorSide.opposites
                     ? MainAxisAlignment.end
                     : MainAxisAlignment.start,
-                children: items)));
+                  children: items);
+            }),
+      ),
+    );
   }
 
   Widget _hornButton() {

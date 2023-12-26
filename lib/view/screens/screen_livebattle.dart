@@ -290,6 +290,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void _handleCardMessage(NoobCardMessage message) {
     var cardOwnerId = message.card!.ownerId;
     _addWarrior(message.teamOwnerId, cardOwnerId, message.ownerName);
+    var index = message.round >= 5 ? 2 : message.round - 1;
+    _warriors[cardOwnerId]?.cards.setAtCard(index, message.card);
     _updatePowerBalance();
   }
 
@@ -327,10 +329,6 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         _updatePowerBalance();
       }
     }
-  }
-
-  void _handleHelpMessage(NoobHelpMessage message) {
-    debugPrint(message.toString());
   }
 
   void _handleEndingMessage(NoobEndBattleMessage message) {
