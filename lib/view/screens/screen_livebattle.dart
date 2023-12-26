@@ -56,7 +56,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void initState() {
     _account = accountBloc.account!;
     _battleId = widget.args["battle_id"] ?? 0;
-    _helpCost = widget.args["helpCost"] ?? 33;
+    _helpCost = widget.args["help_cost"] ?? 33;
     if (widget.args.containsKey("created_at")) {
       _seconds = (_account.getTime() -
               _account.getTime(time: widget.args["created_at"]))
