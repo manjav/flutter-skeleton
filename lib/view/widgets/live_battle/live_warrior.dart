@@ -10,10 +10,10 @@ import '../../widgets.dart';
 import '../loader_widget.dart';
 import '../skinned_text.dart';
 
-class LiveOpponentView extends StatelessWidget {
+class LiveWarriorView extends StatelessWidget {
   final bool isExpanded;
   final LiveWarrior warrior;
-  const LiveOpponentView(this.warrior, {this.isExpanded = false, super.key});
+  const LiveWarriorView(this.warrior, {this.isExpanded = false, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -66,15 +66,16 @@ class LiveOpponentView extends StatelessWidget {
     return SizedBox(
       height: 48.d,
       width: 112.d,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
+      child: ValueListenableBuilder(
+        valueListenable: warrior.cards,
+        builder: (context, value, child) =>
+            Stack(clipBehavior: Clip.none, children: [
           _usedCard(warrior.side, cards[0], -0.15, 0, 2.d),
           _usedCard(warrior.side, cards[1], -0.05, 16.d, 0),
           _usedCard(warrior.side, cards[4], 0.05, 37.d, 0),
           _usedCard(warrior.side, cards[2], 0.15, 60.d, 1.d),
           _usedCard(warrior.side, cards[3], 0.25, 86.d, 5.d),
-        ],
+        ]),
       ),
     );
   }

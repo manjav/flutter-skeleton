@@ -14,10 +14,10 @@ import '../../services/localization.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets/building_balloon.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/indicator_deadline.dart';
 import '../map_elements/building_widget.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/indicator_deadline.dart';
 import '../widgets/loader_widget.dart';
 import 'page_item.dart';
 

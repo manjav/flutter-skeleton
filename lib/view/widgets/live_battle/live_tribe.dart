@@ -84,7 +84,7 @@ class _LiveTribeState extends State<LiveTribe>
                 items.add(SizedBox(
                     width: 260.d,
                     height: 174.d,
-                    child: LiveOpponentView(warrior)));
+                    child: LiveWarriorView(warrior)));
               }
               return Row(
                   mainAxisAlignment: owner.side == WarriorSide.opposites

@@ -8,9 +8,9 @@ import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets/live_battle/live_warrior.dart';
+import '../widgets/skinned_text.dart';
 import 'screen.dart';
 
 class LiveOutScreen extends AbstractScreen {
@@ -113,11 +113,11 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
           clipBehavior: Clip.none,
           children: [
             team.isEmpty
-                ? LiveOpponentView(opponent, isExpanded: true)
+                ? LiveWarriorView(opponent, isExpanded: true)
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      LiveOpponentView(opponent, isExpanded: true),
+                      LiveWarriorView(opponent, isExpanded: true),
                       SizedBox(width: 20.d),
                       _helpersBuilder(team),
                     ],
@@ -147,7 +147,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 0.65, crossAxisCount: 2),
       itemCount: team.length,
-      itemBuilder: (context, index) => LiveOpponentView(team[index]),
+      itemBuilder: (context, index) => LiveWarriorView(team[index]),
     ));
   }
 }
