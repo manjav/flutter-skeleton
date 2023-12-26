@@ -181,7 +181,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
                 request.id,
                 account,
                 Opponent.create(
-                    request.attackerId, request.attackerName, account.id));
+                    request.attackerId, request.attackerName, account.id),
+                result["help_cost"]);
           } finally {}
         }
       });
@@ -252,7 +253,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       "oppositesHead": oppositesHead
     };
     if (helpCost > -1) {
-      args["helpCost"] = helpCost;
+      args["help_cost"] = helpCost;
     }
     Navigator.pushNamed(context, Routes.livebattle.routeName, arguments: args);
   }
