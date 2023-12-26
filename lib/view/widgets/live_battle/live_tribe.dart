@@ -40,7 +40,9 @@ class _LiveTribeState extends State<LiveTribe>
     _timer = Timer.periodic(duration, (t) {
       if (t.tick > _helpTimeout) {
         t.cancel();
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       }
       _animationControler.animateTo(_helpTimeout - t.tick.toDouble(),
           curve: Curves.easeInOutSine, duration: duration);
@@ -57,10 +59,10 @@ class _LiveTribeState extends State<LiveTribe>
     return Positioned(
       top: owner.side == WarriorSide.opposites ? 0 : null,
       bottom: owner.side == WarriorSide.friends ? 0 : null,
-        height: 190.d,
-        child: Widgets.rect(
-            padding: EdgeInsets.symmetric(horizontal: 12.d),
-            decoration: Widgets.imageDecore(
+      height: 190.d,
+      child: Widgets.rect(
+        padding: EdgeInsets.symmetric(horizontal: 12.d),
+        decoration: Widgets.imageDecore(
             "live_tribe_${owner.side.name}", ImageCenterSliceData(101, 92)),
         child: ValueListenableBuilder(
             valueListenable: widget.warriors,
@@ -86,16 +88,16 @@ class _LiveTribeState extends State<LiveTribe>
               }
               return Row(
                   mainAxisAlignment: owner.side == WarriorSide.opposites
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
+                      ? MainAxisAlignment.end
+                      : MainAxisAlignment.start,
                   children: items);
             }),
       ),
     );
   }
 
-  Widget _hornButton() {
-    if (widget.helpCost == 0 || _requestSent) {
+  Widget _hornButton(LiveWarrior owner, Iterable<LiveWarrior> team) {
+    if (!owner.base.itsMe || _requestSent || team.isNotEmpty) {
       return const SizedBox();
     }
     return Widgets.skinnedButton(
