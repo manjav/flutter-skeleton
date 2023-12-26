@@ -5,15 +5,15 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
 import '../../view/widgets/indicator_level.dart';
-import '../../view/widgets/skinnedtext.dart';
-import 'ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import 'overlay.dart';
 
 class MemberOverlay extends AbstractOverlay {
   final double y;
@@ -56,7 +56,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
                   height: 192.d + (items.length / 2).ceil() * 125.d,
                   child: Widgets.rect(
                     padding: EdgeInsets.fromLTRB(16.d, 16.d, 16.d, 32.d),
-                    decoration: Widgets.imageDecore(
+                    decoration: Widgets.imageDecorator(
                         "tribe_item_bg", ImageCenterSliceData(56)),
                     child: Column(children: [
                       Row(

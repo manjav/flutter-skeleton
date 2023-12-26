@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../mixins/card_edit_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
-import '../overlays/ioverlay.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import 'ipopup.dart';
+import 'popup.dart';
 
 class CardEvolvePopup extends AbstractPopup {
   const CardEvolvePopup({super.key, required super.args})
@@ -139,7 +139,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
             SizedBox(width: 24.d),
             Widgets.rect(
               padding: EdgeInsets.only(right: 12.d),
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "frame_hatch_button", ImageCenterSliceData(42)),
               child: Row(textDirection: TextDirection.ltr, children: [
                 Asset.load<Image>("icon_gold", height: 76.d),
@@ -187,20 +187,20 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
 
   _evolve() {
     Overlays.insert(context, OverlayType.feastEvolve,
-        args: {"cards": selectedCards}, onClose: () async {
+        args: {"cards": selectedCards}, onClose: (d) async {
       cards = getCards(account);
       if (cards.length < 2) {
-        // Show other mergable cards
+        // Show other mergeable cards
         selectedCards.clear();
         if (cards.isNotEmpty) selectedCards.addCard(cards[0]);
         await Future.delayed(const Duration(milliseconds: 50));
-        // Close if mergable cards not available
+        // Close if mergeable cards not available
         if (mounted && cards.length < 2) {
           Navigator.popUntil(context, (route) => route.isFirst);
           return;
         }
       } else {
-        // Add onother same-type mergable card
+        // Add another same-type mergeable card
         selectedCards.value.clear();
         selectedCards.addCard(cards[0]);
       }

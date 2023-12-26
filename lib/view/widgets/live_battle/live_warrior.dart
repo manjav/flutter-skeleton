@@ -2,13 +2,13 @@ import 'package:flutter/widgets.dart';
 
 import '../../../data/core/adam.dart';
 import '../../../data/core/fruit.dart';
-import '../../../services/deviceinfo.dart';
+import '../../../services/device_info.dart';
 import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
 import '../../widgets.dart';
-import '../loaderwidget.dart';
-import '../skinnedtext.dart';
+import '../loader_widget.dart';
+import '../skinned_text.dart';
 
 class LiveOpponentView extends StatelessWidget {
   final bool isExpanded;
@@ -34,7 +34,7 @@ class LiveOpponentView extends StatelessWidget {
         width: 400.d,
         alignment: Alignment.center,
         padding: EdgeInsets.fromLTRB(12.d, 12.d, 12.d, 0),
-        decoration: Widgets.imageDecore("liveout_frame",
+        decoration: Widgets.imageDecorator("liveout_frame",
             ImageCenterSliceData(68, 92, const Rect.fromLTWH(32, 34, 4, 4))),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center, children: items));

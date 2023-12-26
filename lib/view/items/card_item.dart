@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
-import '../widgets/loaderwidget.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 
 class CardItem extends StatefulWidget {
   static const aspectRatio = 0.74;
   final double size;
-  final bool showCooloff;
+  final bool showCoolOff;
   final bool showCooldown;
   final bool showPower;
   final bool showTitle;
@@ -25,7 +25,7 @@ class CardItem extends StatefulWidget {
   final AbstractCard card;
   const CardItem(this.card,
       {this.size = 400,
-      this.showCooloff = false,
+      this.showCoolOff = false,
       this.showCooldown = true,
       this.showPower = true,
       this.showTitle = true,
@@ -86,7 +86,7 @@ class _CardItemState extends State<CardItem> {
     var level = baseCard.rarity;
     var cooldown = baseCard.cooldown;
     _remainingCooldown.value = widget.card.getRemainingCooldown();
-    if (widget.showCooloff && _remainingCooldown.value > 0) {
+    if (widget.showCoolOff && _remainingCooldown.value > 0) {
       _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _remainingCooldown.value = widget.card.getRemainingCooldown();
         if (_remainingCooldown.value <= 0) {
@@ -143,7 +143,7 @@ class _CardItemState extends State<CardItem> {
                 : const SizedBox(),
           ])));
     }
-    if (widget.showCooloff && _remainingCooldown.value > 0) {
+    if (widget.showCoolOff && _remainingCooldown.value > 0) {
       items.add(Positioned(
           top: 1 * s,
           left: 6 * s,

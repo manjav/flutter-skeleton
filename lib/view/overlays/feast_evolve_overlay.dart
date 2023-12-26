@@ -10,11 +10,11 @@ import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../overlays/ioverlay.dart';
+import 'overlay.dart';
 
 class EvolveFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
-  const EvolveFeastOverlay({required this.args, super.key})
+  const EvolveFeastOverlay({required this.args, super.onClose, super.key})
       : super(type: OverlayType.feastEvolve);
 
   @override
@@ -59,7 +59,7 @@ class _EvolveFeastOverlayState extends AbstractOverlayState<EvolveFeastOverlay>
   @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
-    if (state == RewardAniationState.started) {
+    if (state == RewardAnimationState.started) {
       updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_title".l());
       updateRiveText("cardLevelText3", _newCard.base.rarity.convert());
       updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");

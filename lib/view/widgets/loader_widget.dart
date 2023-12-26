@@ -38,7 +38,7 @@ class LoaderWidget extends StatefulWidget {
 
   @override
   createState() => _LoaderWidgetState();
-  static final Map<String, Loader> cacshedLoders = {};
+  static final Map<String, Loader> cachedLoaders = {};
 
   static Future<Loader> load(AssetType type, String name,
       {String? baseUrl,
@@ -46,7 +46,7 @@ class LoaderWidget extends StatefulWidget {
       Future<bool> Function(rive.FileAsset asset, Uint8List? embeddedBytes)?
           riveAssetLoader}) async {
     var key = "${type.name}_$name";
-    var loader = cacshedLoders[key] ?? Loader();
+    var loader = cachedLoaders[key] ?? Loader();
     var url =
         baseUrl ?? "${LoaderWidget.baseURL}/${type.folder(subFolder ?? "")}";
     var netPath = "$name.${type.extension}";
@@ -65,7 +65,7 @@ class LoaderWidget extends StatefulWidget {
               ? CallbackAssetLoader(riveAssetLoader)
               : null);
     }
-    cacshedLoders[key] = loader;
+    cachedLoaders[key] = loader;
     return loader;
   }
 }
@@ -97,7 +97,7 @@ class _LoaderWidgetState extends State<LoaderWidget> {
 
   Widget? _getResult() {
     var loader =
-        LoaderWidget.cacshedLoders["${widget.type.name}_${widget.name}"]!;
+        LoaderWidget.cachedLoaders["${widget.type.name}_${widget.name}"]!;
 
     if (loader.bytes == null) return null;
     switch (widget.type) {

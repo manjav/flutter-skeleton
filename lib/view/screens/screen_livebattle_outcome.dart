@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/adam.dart';
 import '../../mixins/background_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets/live_battle/live_warrior.dart';
-import 'iscreen.dart';
+import 'screen.dart';
 
 class LiveOutScreen extends AbstractScreen {
   LiveOutScreen({required super.args, super.key}) : super(Routes.livebattleOut);
@@ -81,8 +81,8 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
         width: DeviceInfo.size.width,
         height: 130.d,
         margin: EdgeInsets.all(44.d),
-        decoration: Widgets.imageDecore("ui_ribbon_$color"),
-        child: SkinnedText("fight_lebel_$color".l()));
+        decoration: Widgets.imageDecorator("ui_ribbon_$color"),
+        child: SkinnedText("fight_label_$color".l()));
   }
 
   Widget _vsBuilder() {
@@ -105,7 +105,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
   Widget _fractionBuilder(LiveWarrior opponent, List<LiveWarrior> team) {
     return Widgets.rect(
         padding: EdgeInsets.fromLTRB(80.d, 90.d, 80.d, 60.d),
-        decoration: Widgets.imageDecore(
+        decoration: Widgets.imageDecorator(
             "liveout_bg_${opponent.side.name}", ImageCenterSliceData(201, 158)),
         height: 580.d,
         child: Stack(
@@ -133,7 +133,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
         height: 70.d,
         child: Widgets.rect(
             padding: EdgeInsets.fromLTRB(64.d, 0, 64.d, 12.d),
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "liveout_bg_header", ImageCenterSliceData(64, 59)),
             child: SkinnedText(opponent.tribeName,
                 style: TStyles.medium.copyWith(height: 1))));

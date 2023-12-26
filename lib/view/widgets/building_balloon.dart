@@ -8,7 +8,7 @@ import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../mixins/service_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
@@ -59,8 +59,8 @@ class _BuildingBalloonState extends State<BuildingBalloon>
   }
 
   int collectableGold(Account account) {
-    var goldPerdSec = widget.building.getCardsBenefit(account) / 3600;
-    return ((account.getTime() - account.last_gold_collect_at) * goldPerdSec)
+    var goldPerSec = widget.building.getCardsBenefit(account) / 3600;
+    return ((account.getTime() - account.last_gold_collect_at) * goldPerSec)
         .clamp(0, widget.building.benefit)
         .floor();
   }

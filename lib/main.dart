@@ -10,13 +10,13 @@ import 'blocs/opponents_bloc.dart';
 import 'blocs/services_bloc.dart';
 import 'data/core/adam.dart';
 import 'mixins/service_provider.dart';
-import 'services/deviceinfo.dart';
+import 'services/device_info.dart';
 import 'services/localization.dart';
 import 'services/prefs.dart';
 import 'services/sounds.dart';
 import 'services/theme.dart';
 import 'view/route_provider.dart';
-import 'view/widgets/loaderwidget.dart';
+import 'view/widgets/loader_widget.dart';
 
 void main() async {
   MyApp.startTime = DateTime.now();
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp>
 
   void restartApp() {
     Ranks.lists.clear();
-    LoaderWidget.cacshedLoders.clear();
+    LoaderWidget.cachedLoaders.clear();
     setState(() => _initialize());
   }
 

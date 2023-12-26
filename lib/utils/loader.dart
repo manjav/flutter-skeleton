@@ -5,7 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../mixins/ilogger.dart';
+import '../mixins/logger.dart';
 
 class Loader with ILogger {
   static String? _appDir;

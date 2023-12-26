@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
 import '../../mixins/card_edit_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/overlays/ioverlay.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../overlays/overlay.dart';
+import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import 'ipopup.dart';
+import 'popup.dart';
 
 class CardEnhancePopup extends AbstractPopup {
   const CardEnhancePopup({super.key, required super.args})
@@ -134,7 +134,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
           SizedBox(width: 12.d),
           Widgets.rect(
               padding: EdgeInsets.all(12.d),
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "frame_hatch_button", ImageCenterSliceData(42)),
               child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -148,7 +148,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   _sacrifice() async {
     if (!_isSacrificeAvailable) return;
     Overlays.insert(context, OverlayType.feastEnhance,
-        args: {"card": card, "sacrifiedCards": selectedCards});
+        args: {"card": card, "sacrificedCards": selectedCards});
     if (mounted) {
       Navigator.pop(context);
     }
@@ -165,10 +165,10 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     for (var card in selectedCards.value) {
       // if there is active power boost, we use non-boost power as power in formula.
       // var power = card.powerBeforeBoost or element.power
-      var verteranLevel = card!.base.veteranLevel;
-      if (verteranLevel > 0) {
+      var veteranLevel = card!.base.veteranLevel;
+      if (veteranLevel > 0) {
         cardPowers +=
-            card.base.power * veteranSacrificePowerModifier * verteranLevel;
+            card.base.power * veteranSacrificePowerModifier * veteranLevel;
       } else {
         cardPowers += card.base.power;
       }
@@ -229,7 +229,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   _enhanceMax() async {
     Overlays.insert(context, OverlayType.feastUpgradeCard,
-        args: {"card": account.cards[card.id]}, onClose: () {
+        args: {"card": account.cards[card.id]}, onClose: (d) {
       if (mounted) Navigator.pop(context);
     });
   }

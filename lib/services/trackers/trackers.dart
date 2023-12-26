@@ -3,8 +3,8 @@ import '../../services/trackers/tracker_metrix.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../services/ads/ads_abstract.dart';
-import '../deviceinfo.dart';
-import '../iservices.dart';
+import '../device_info.dart';
+import '../services.dart';
 import '../prefs.dart';
 import 'tracker_abstract.dart';
 import 'tracker_firebase.dart';
@@ -123,7 +123,7 @@ class Trackers extends IService {
   //   GameAnalytics.addProgressionEvent(map);
   // }
 
-  funnle(String type, [String? name]) {
+  funnel(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";
     var step = Prefs.increase(name, 1);
 
@@ -132,15 +132,15 @@ class Trackers extends IService {
       var values = _funnelConfigs[type];
       for (var value in values!) {
         if (value == step) {
-          _funnle("${name}_$step");
+          _funnel("${name}_$step");
           break;
         }
       }
     }
-    _funnle(name, step);
+    _funnel(name, step);
   }
 
-  _funnle(String name, [int step = -1]) {
+  _funnel(String name, [int step = -1]) {
     var args = step > 0 ? {"step": '$step'} : null;
     design(name, parameters: args);
   }

@@ -1,4 +1,4 @@
-import '../mixins/ilogger.dart';
+import '../mixins/logger.dart';
 import '../mixins/service_provider.dart';
 
 abstract class IService with ILogger, ServiceProvider {

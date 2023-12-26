@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/core/fruit.dart';
 import '../../../mixins/key_provider.dart';
-import '../../../services/deviceinfo.dart';
+import '../../../services/device_info.dart';
 import '../../items/card_item.dart';
 import '../../widgets.dart';
 import '../card_holder.dart';
@@ -73,7 +73,7 @@ class LiveDeck extends StatelessWidget with KeyProvider {
                           size: size,
                           key: getGlobalKey(item.id),
                           showCooldown: false,
-                          showCooloff: true)),
+                          showCoolOff: true)),
                 ),
               ),
             ),

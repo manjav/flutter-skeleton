@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:math';
 import 'dart:math' as math;
+import 'dart:math';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,23 +9,23 @@ import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
-import '../../data/core/rpc.dart';
 import '../../mixins/key_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/notifications.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/screens/iscreen.dart';
+import 'screen.dart';
 import '../../view/widgets/card_holder.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;
@@ -133,7 +131,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         }
       },
       child: CardItem(card,
-          showCooloff: true, size: itemSize, key: getGlobalKey(card.id)),
+          showCoolOff: true, size: itemSize, key: getGlobalKey(card.id)),
     );
   }
 
@@ -147,12 +145,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         }, 0);
     return Widgets.rect(
         padding: EdgeInsets.symmetric(horizontal: 10.d, vertical: 7.d),
-        decoration: Widgets.imageDecore("frame_header_cheese",
+        decoration: Widgets.imageDecorator("frame_header_cheese",
             ImageCenterSliceData(114, 174, const Rect.fromLTWH(58, 48, 2, 2))),
         child: Stack(children: [
           Widgets.rect(
               height: 192.d,
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "frame_hatch",
                   ImageCenterSliceData(
                       80, 100, const Rect.fromLTWH(37, 64, 2, 2)))),
@@ -254,7 +252,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var costPowerRatio = 230;
     var bossPowerMultiplier = 2;
 // var purgeStep = 30;
-    var coef = 0.4761;
+    var coefficient = 0.4761;
     var exponent = 1.0786;
     var defenceMin = 40;
     var defenceValue = <int>[0, 0, 0];
@@ -266,7 +264,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
               .floor() *
           multiplier;
     } else {
-      defenceValue[1] = (coef * math.pow(q, exponent)).floor().min(defenceMin);
+      defenceValue[1] =
+          (coefficient * math.pow(q, exponent)).floor().min(defenceMin);
     }
     var random = Random();
     defenceValue[0] = (defenceValue[1] - random.nextInt(10) - 10).min(0);
@@ -287,38 +286,22 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   _attack(Account account) async {
     if (_attackStarted) return;
     _attackStarted = true;
-    var params = <String, dynamic>{
-      RpcParams.cards.name: _selectedCards.getIds(),
-      RpcParams.check.name: md5.convert(utf8.encode("${account.q}")).toString()
-    };
-    var isBattle = widget.opponent != null;
-    var route = isBattle ? Routes.battleOut : Routes.questOut;
-    if (isBattle) {
-      params[RpcParams.opponent_id.name] = widget.opponent!.id;
-      params[RpcParams.attacks_in_today.name] =
-          widget.opponent!.todayAttacksCount;
-    }
-    if (_selectedCards.value[2] != null) {
-      params[RpcParams.hero_id.name] = _selectedCards.value[2]!.id;
-    }
-
-    try {
-      var data =
-          await rpc(isBattle ? RpcId.battle : RpcId.quest, params: params);
-      if (mounted) {
-        account.update(context, data);
-      }
+    Overlays.insert(context, OverlayType.feastAttack,
+        args: {"opponent": widget.opponent, "cards": _selectedCards},
+        onClose: (data) async {
       _selectedCards.clear(setNull: true);
-
-      // Reset reminder notifications ....
-      getService<Notifications>().skedule(account);
       if (mounted) {
         accountBloc.add(SetAccount(account: account));
-        await Navigator.pushNamed(context, route.routeName, arguments: data);
-        if (mounted) Navigator.pop(context);
+        var route =
+            widget.opponent != null ? Routes.battleOut : Routes.questOut;
+        if (data != null) {
+          await Navigator.pushNamed(context, route.routeName, arguments: data);
+          if (mounted) Navigator.pop(context);
+        }
       }
-    } finally {
+      // Reset reminder notifications ....
+      getService<Notifications>().schedule(account);
       _attackStarted = false;
-    }
+    });
   }
 }

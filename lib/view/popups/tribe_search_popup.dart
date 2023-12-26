@@ -5,13 +5,13 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
+import 'popup.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -71,7 +71,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
       margin: EdgeInsets.all(4.d),
       padding: EdgeInsets.all(22.d),
       decoration:
-          Widgets.imageDecore("tribe_item_bg", ImageCenterSliceData(56, 56)),
+          Widgets.imageDecorator("tribe_item_bg", ImageCenterSliceData(56, 56)),
       child: Column(children: [
         Row(
           children: [
@@ -115,7 +115,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
               height: 120.d,
               width: 210.d,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 24.d),
-              decoration: Widgets.buttonDecore(
+              decoration: Widgets.buttonDecorator(
                   tribe.status == 1 ? ButtonColor.teal : ButtonColor.green),
               child: SkinnedText(
                   textAlign: TextAlign.center,

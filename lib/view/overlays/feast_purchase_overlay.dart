@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import '../../mixins/background_mixin.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/store.dart';
+import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../overlays/ioverlay.dart';
+import 'overlay.dart';
 
 class PurchaseFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
-  const PurchaseFeastOverlay({required this.args, super.key})
+  const PurchaseFeastOverlay({required this.args, super.onClose, super.key})
       : super(type: OverlayType.feastPurchase);
 
   @override

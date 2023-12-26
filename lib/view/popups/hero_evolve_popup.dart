@@ -5,19 +5,19 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/popups/hero_popup.dart';
 import '../items/card_item.dart';
-import '../overlays/ioverlay.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
-import '../widgets/skinnedtext.dart';
-import 'ipopup.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class HeroEvolvePopup extends AbstractPopup {
   const HeroEvolvePopup({super.key, required super.args})
@@ -107,11 +107,11 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
         Widgets.skinnedButton(
             color: ButtonColor.teal,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              SkinnedText("fillout_l".l(), style: TStyles.large),
+              SkinnedText("fill_out".l(), style: TStyles.large),
               SizedBox(width: 16.d),
               Widgets.rect(
                 padding: EdgeInsets.only(right: 12.d),
-                decoration: Widgets.imageDecore(
+                decoration: Widgets.imageDecorator(
                     "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_nectar", height: 72.d),

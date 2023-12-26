@@ -9,22 +9,22 @@ import '../../data/core/fruit.dart';
 import '../../data/core/store.dart';
 import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
 import '../items/card_item.dart';
-import '../overlays/ioverlay.dart';
+import 'overlay.dart';
 
-class OpenpackFeastOverlay extends AbstractOverlay {
+class OpenPackFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
-  const OpenpackFeastOverlay({required this.args, super.key})
+  const OpenPackFeastOverlay({required this.args, super.onClose, super.key})
       : super(type: OverlayType.feastOpenpack);
 
   @override
   createState() => _OpenPackScreenState();
 }
 
-class _OpenPackScreenState extends AbstractOverlayState<OpenpackFeastOverlay>
+class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     with RewardScreenMixin, TickerProviderStateMixin, BackgroundMixin {
   late ShopItem _pack;
   SMIInput<double>? _countInput;
@@ -77,7 +77,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenpackFeastOverlay>
   @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
-    if (state == RewardAniationState.started) {
+    if (state == RewardAnimationState.started) {
       var count = _cards.length > 2 ? 0 : _cards.length;
       for (var i = 0; i < count; i++) {
         var card = _cards[i];
@@ -87,7 +87,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenpackFeastOverlay>
         loadCardIcon(_cardIconAssets[i]!, card.base.getName());
         loadCardFrame(_cardFrameAssets[i]!, card.base);
       }
-    } else if (state == RewardAniationState.closing) {
+    } else if (state == RewardAnimationState.closing) {
       _opacityBackgroundAnimationController.reverse();
     }
   }

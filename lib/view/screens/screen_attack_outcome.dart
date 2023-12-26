@@ -4,7 +4,7 @@ import 'package:rive/rive.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../mixins/background_mixin.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
@@ -13,9 +13,9 @@ import '../../utils/utils.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loaderwidget.dart';
-import '../widgets/skinnedtext.dart';
-import 'iscreen.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'screen.dart';
 
 enum FightMode { quest, battle }
 
@@ -103,8 +103,8 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                         child: Widgets.rect(
                             alignment: Alignment.center,
                             decoration:
-                                Widgets.imageDecore("ui_ribbon_$_color"),
-                            child: SkinnedText("fight_lebel_$_color".l())))),
+                                Widgets.imageDecorator("ui_ribbon_$_color"),
+                            child: SkinnedText("fight_label_$_color".l())))),
                 Positioned(
                     bottom: -180.d,
                     width: 1050.d,
@@ -166,7 +166,8 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                   ],
                 ),
                 onPressed: () {
-                  if (widget.type == Routes.battleOut) {
+                  if (widget.type == Routes.battleOut ||
+                      widget.type == Routes.questOut) {
                     Navigator.pushReplacementNamed(
                         context, Routes.deck.routeName);
                   } else {
@@ -228,7 +229,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
               width: 100.d,
               height: 130.d,
               padding: EdgeInsets.all(16.d),
-              decoration: Widgets.imageDecore("ui_prize_frame"),
+              decoration: Widgets.imageDecorator("ui_prize_frame"),
               child: Asset.load<Image>("icon_$type")),
           SkinnedText(" ${value > 0 ? '+' : ""}${value.compact()}")
         ]));

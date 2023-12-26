@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import '../../mixins/background_mixin.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
+import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
-import '../overlays/ioverlay.dart';
+import 'overlay.dart';
 
 class UpgradeCardFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
-  const UpgradeCardFeastOverlay({required this.args, super.key})
+  const UpgradeCardFeastOverlay({required this.args, super.onClose, super.key})
       : super(type: OverlayType.feastUpgradeCard);
 
   @override
@@ -57,10 +57,10 @@ class _UpgradeCardFeastOverlayState
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     var diff = _newCard.power - _oldPower;
-    if (state == RewardAniationState.started) {
+    if (state == RewardAnimationState.started) {
       updateRiveText("cardLevelText", _newCard.base.rarity.convert());
       updateRiveText("cardPowerText", "ˢ${(_newCard.power).compact()}");
-    } else if (state == RewardAniationState.shown) {
+    } else if (state == RewardAnimationState.shown) {
       updateRiveText("addedPowerText", "+ ˢ${diff.compact()}");
     } else if (event.name == "powerUp") {
       ++_evolveStep;

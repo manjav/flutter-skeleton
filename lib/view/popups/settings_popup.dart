@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 
 class SettingsPopup extends AbstractPopup {
   SettingsPopup({super.key}) : super(Routes.popupSettings, args: {});
@@ -25,7 +25,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(60.d, 200.d, 60.d, 80.d);
   @override
   BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
+      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   Widget contentFactory() {

@@ -10,7 +10,7 @@ import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/notifications.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets/card_holder.dart';
@@ -21,7 +21,7 @@ import '../widgets/live_battle/live_hero.dart';
 import '../widgets/live_battle/live_slot.dart';
 import '../widgets/live_battle/live_tribe.dart';
 import '../widgets/live_battle/power_balance.dart';
-import 'iscreen.dart';
+import 'screen.dart';
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [];
@@ -141,7 +141,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
                 child: ValueListenableBuilder<int>(
                     valueListenable: _powerBalance,
                     builder: (context, value, child) =>
-                        Powerbalance(value, _maxPower))),
+                        PowerBalance(value, _maxPower))),
             LiveSlot(0, -0.75, -0.20, 0.20, _slotState, oppositesHeadCards),
             LiveSlot(1, -0.26, -0.17, 0.07, _slotState, oppositesHeadCards),
             LiveSlot(2, 0.26, -0.17, -0.07, _slotState, oppositesHeadCards),
@@ -354,7 +354,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
 
     // Reset reminder notifications ....
-    getService<Notifications>().skedule(accountBloc.account!);
+    getService<Notifications>().schedule(accountBloc.account!);
 
     Navigator.pushNamed(context, Routes.livebattleOut.routeName, arguments: {
       "friendsId": _friendsHead.id,

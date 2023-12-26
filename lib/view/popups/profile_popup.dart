@@ -11,15 +11,15 @@ import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../mixins/key_provider.dart';
 import '../../mixins/tab_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../../view/widgets/indicator_level.dart';
-import '../../view/widgets/loaderwidget.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -100,7 +100,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
   Widget _headerBuilder() {
     return Widgets.rect(
         padding: EdgeInsets.symmetric(horizontal: 10.d, vertical: 7.d),
-        decoration: Widgets.imageDecore("frame_header_cheese",
+        decoration: Widgets.imageDecorator("frame_header_cheese",
             ImageCenterSliceData(114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
         width: 940.d,
         height: 480.d,
@@ -112,7 +112,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
           return Stack(clipBehavior: Clip.none, children: [
             Widgets.rect(
                 height: 192.d,
-                decoration: Widgets.imageDecore(
+                decoration: Widgets.imageDecorator(
                     "frame_hatch", ImageCenterSliceData(80, 100))),
             PositionedDirectional(
                 top: -48.d,
@@ -182,7 +182,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
       constraints: BoxConstraints(minWidth: 250.d),
       height: 90.d,
       padding: EdgeInsets.zero,
-      decoration: Widgets.imageDecore("frame_hatch", ImageCenterSliceData(60)),
+      decoration: Widgets.imageDecorator("frame_hatch", ImageCenterSliceData(60)),
       child: Stack(
           alignment: const Alignment(0, -0.2),
           clipBehavior: Clip.none,
@@ -234,7 +234,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                   height: 71.d,
                   width: 880.d,
                   margin: EdgeInsets.fromLTRB(16.d, 44.d, 16.d, 0),
-                  decoration: Widgets.imageDecore(
+                  decoration: Widgets.imageDecorator(
                       "shelf", ImageCenterSliceData(108, 71)))),
           Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -270,7 +270,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
     var battleRate = battles == 0 ? 0 : _player!.wonBattlesCount / battles;
     return Widgets.rect(
         margin: EdgeInsets.only(top: 30.d),
-        decoration: Widgets.imageDecore("frame_header_cheese",
+        decoration: Widgets.imageDecorator("frame_header_cheese",
             ImageCenterSliceData(114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
         width: 940.d,
         height: 340.d,
@@ -338,7 +338,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         builder: (context, value, child) {
           return Widgets.rect(
               margin: EdgeInsets.only(top: 60.d),
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "frame_header_cheese",
                   ImageCenterSliceData(
                       114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
@@ -396,7 +396,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
               Opacity(
                   opacity: isSelected ? 1 : 0.4,
                   child: Widgets.rect(
-                      decoration: Widgets.imageDecore(
+                      decoration: Widgets.imageDecorator(
                           "frame_hatch", ImageCenterSliceData(80, 100)))),
               Opacity(
                   opacity: isSelected ? 1 : 0.7,

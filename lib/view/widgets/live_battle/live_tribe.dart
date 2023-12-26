@@ -5,13 +5,13 @@ import 'package:flutter/widgets.dart';
 import '../../../data/core/adam.dart';
 import '../../../data/core/rpc.dart';
 import '../../../mixins/service_provider.dart';
-import '../../../services/deviceinfo.dart';
+import '../../../services/device_info.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
-import '../../../view/widgets/indicator_level.dart';
-import '../../../view/widgets/skinnedtext.dart';
 import '../../screens/screen_livebattle.dart';
 import '../../widgets.dart';
+import '../indicator_level.dart';
+import '../skinned_text.dart';
 import 'live_warrior.dart';
 
 class LiveTribe extends StatefulWidget {
@@ -29,12 +29,12 @@ class _LiveTribeState extends State<LiveTribe>
     with TickerProviderStateMixin, ServiceProviderMixin {
   late Timer _timer;
   final double _helpTimeout = 38;
-  late AnimationController _animationControler;
+  late AnimationController _animationController;
   bool _requestSent = false;
 
   @override
   void initState() {
-    _animationControler = AnimationController(
+    _animationController = AnimationController(
         vsync: this, upperBound: _helpTimeout, value: _helpTimeout);
     const duration = Duration(seconds: 1);
     _timer = Timer.periodic(duration, (t) {
@@ -44,7 +44,7 @@ class _LiveTribeState extends State<LiveTribe>
           setState(() {});
         }
       }
-      _animationControler.animateTo(_helpTimeout - t.tick.toDouble(),
+      _animationController.animateTo(_helpTimeout - t.tick.toDouble(),
           curve: Curves.easeInOutSine, duration: duration);
     });
     super.initState();
@@ -62,7 +62,7 @@ class _LiveTribeState extends State<LiveTribe>
       height: 190.d,
       child: Widgets.rect(
         padding: EdgeInsets.symmetric(horizontal: 12.d),
-        decoration: Widgets.imageDecore(
+        decoration: Widgets.imageDecorator(
             "live_tribe_${owner.side.name}", ImageCenterSliceData(101, 92)),
         child: ValueListenableBuilder(
             valueListenable: widget.warriors,
@@ -112,7 +112,7 @@ class _LiveTribeState extends State<LiveTribe>
             SizedBox(width: 12.d),
             Widgets.rect(
                 padding: EdgeInsets.symmetric(horizontal: 8.d),
-                decoration: Widgets.imageDecore(
+                decoration: Widgets.imageDecorator(
                     "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_gold", height: 76.d),
@@ -121,9 +121,9 @@ class _LiveTribeState extends State<LiveTribe>
           ]),
           SizedBox(height: 12.d),
           AnimatedBuilder(
-              animation: _animationControler,
+              animation: _animationController,
               builder: (context, child) => Widgets.slider(
-                  0, _animationControler.value, _helpTimeout,
+                  0, _animationController.value, _helpTimeout,
                   width: 270.d,
                   height: 22.d,
                   border: 2,

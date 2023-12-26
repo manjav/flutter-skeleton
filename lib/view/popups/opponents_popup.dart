@@ -9,18 +9,18 @@ import '../../data/core/account.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../../view/widgets/indicator.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loaderwidget.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 
 class OpponentsPopup extends AbstractPopup {
   OpponentsPopup({super.key}) : super(Routes.popupOpponents, args: {});
@@ -229,7 +229,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     return Expanded(
         child: Widgets.rect(
             alignment: Alignment.center,
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "ui_popup_group", ImageCenterSliceData(144)),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [

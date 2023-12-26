@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
+import 'popup.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -97,7 +97,7 @@ class _RewardPopupState extends AbstractPopupState<DailyGiftPopup> {
     return Widgets.rect(
         padding: EdgeInsets.only(right: mid == "last" ? 0 : 16.d),
         width: _itemWidth,
-        decoration: Widgets.imageDecore("daily_${mid}_$state",
+        decoration: Widgets.imageDecorator("daily_${mid}_$state",
             ImageCenterSliceData(98, 206, const Rect.fromLTWH(44, 19, 2, 2))),
         child: Stack(
           alignment: Alignment.center,

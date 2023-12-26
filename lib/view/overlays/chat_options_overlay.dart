@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../widgets/skinnedtext.dart';
-import 'ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import 'overlay.dart';
 
 enum ChatOptions { pin, reply }
 
@@ -36,7 +36,7 @@ class _ChatOptionsOverlayState
                   top: widget.y,
                   child: Widgets.rect(
                     padding: EdgeInsets.fromLTRB(16.d, 16.d, 16.d, 16.d),
-                    decoration: Widgets.imageDecore(
+                    decoration: Widgets.imageDecorator(
                         "tribe_item_bg", ImageCenterSliceData(56)),
                     child: Column(children: [
                       for (var option in widget.options) _button(option)

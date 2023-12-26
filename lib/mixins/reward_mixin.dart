@@ -7,19 +7,19 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../view/overlays/ioverlay.dart';
+import '../view/overlays/overlay.dart';
 import '../blocs/services_bloc.dart';
 import '../data/core/fruit.dart';
 import '../data/core/result.dart';
-import '../services/deviceinfo.dart';
+import '../services/device_info.dart';
 import '../services/localization.dart';
 import '../services/sounds.dart';
 import '../utils/assets.dart';
 import '../view/route_provider.dart';
 import '../view/widgets.dart';
-import '../view/widgets/loaderwidget.dart';
+import '../view/widgets/loader_widget.dart';
 
-enum RewardAniationState {
+enum RewardAnimationState {
   none,
   waiting,
   started,
@@ -35,7 +35,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   List<Widget> children = [];
   String waitingSFX = "waiting", startSFX = "levelup";
   SMITrigger? startInput, skipInput, closeInput;
-  RewardAniationState state = RewardAniationState.none;
+  RewardAnimationState state = RewardAnimationState.none;
   final ValueNotifier<bool> _progressbarNotifier = ValueNotifier(true);
 
   List<Widget> appBarElementsLeft() => [];
@@ -62,10 +62,10 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         height: DeviceInfo.size.height,
         child: Stack(children: items),
         onPressed: () {
-          if (state.index <= RewardAniationState.waiting.index) return;
-          if (state == RewardAniationState.started) {
+          if (state.index <= RewardAnimationState.waiting.index) return;
+          if (state == RewardAnimationState.started) {
             skipInput?.value = true;
-          } else if (state == RewardAniationState.shown) {
+          } else if (state == RewardAnimationState.shown) {
             onRiveEvent(const RiveEvent(
                 name: "closing", secondsDelay: 0, properties: {}));
             closeInput?.value = true;
@@ -73,17 +73,19 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         });
   }
 
-  Widget animationBuilder(String fileName, {String? stateMachinName}) {
+  Widget animationBuilder(String fileName, {String? stateMachineName}) {
     return LoaderWidget(AssetType.animation, "feast_$fileName",
+        fit: BoxFit.cover,
         riveAssetLoader: onRiveAssetLoad,
         onRiveInit: (artboard) =>
-            onRiveInit(artboard, stateMachinName ?? "State Machine 1"));
+            onRiveInit(artboard, stateMachineName ?? "State Machine 1"));
   }
 
-  StateMachineController onRiveInit(Artboard artboard, String stateMachinName) {
+  StateMachineController onRiveInit(
+      Artboard artboard, String stateMachineName) {
     _artboard = artboard;
     var controller =
-        StateMachineController.fromArtboard(artboard, stateMachinName)!;
+        StateMachineController.fromArtboard(artboard, stateMachineName)!;
     startInput = controller.findInput<bool>("start") as SMITrigger;
     skipInput = controller.findInput<bool>("skip") as SMITrigger;
     closeInput = controller.findInput<bool>("close") as SMITrigger;
@@ -119,25 +121,25 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
 
   void onRiveEvent(RiveEvent event) {
     var state = switch (event.name) {
-      "waiting" => RewardAniationState.waiting,
-      "started" => RewardAniationState.started,
-      "shown" => RewardAniationState.shown,
-      "closing" => RewardAniationState.closing,
-      "closed" => RewardAniationState.closed,
-      _ => RewardAniationState.none,
+      "waiting" => RewardAnimationState.waiting,
+      "started" => RewardAnimationState.started,
+      "shown" => RewardAnimationState.shown,
+      "closing" => RewardAnimationState.closing,
+      "closed" => RewardAnimationState.closed,
+      _ => RewardAnimationState.none,
     };
-    if (state == RewardAniationState.none) return;
+    if (state == RewardAnimationState.none) return;
     this.state = state;
-    if (state == RewardAniationState.waiting) {
+    if (state == RewardAnimationState.waiting) {
       if (result != null) {
         startInput?.value = true;
       }
-    } else if (state == RewardAniationState.started) {
+    } else if (state == RewardAnimationState.started) {
       BlocProvider.of<ServicesBloc>(context).get<Sounds>().stop("reward");
       BlocProvider.of<ServicesBloc>(context).get<Sounds>().play(startSFX);
       WidgetsBinding.instance
           .addPostFrameCallback((t) => _progressbarNotifier.value = false);
-    } else if (state == RewardAniationState.closed) {
+    } else if (state == RewardAnimationState.closed) {
       WidgetsBinding.instance.addPostFrameCallback((t) => dismiss());
     }
   }
@@ -172,7 +174,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   process(Future<dynamic> Function() callback) async {
     try {
       result = await callback.call();
-      if (state == RewardAniationState.waiting) {
+      if (state == RewardAnimationState.waiting) {
         startInput?.value = true;
       }
     } on RpcException catch (e) {
@@ -191,9 +193,10 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   }
 
   void dismiss() {
-    if (state.index < RewardAniationState.disposed.index) {
+    widget.onClose?.call(result);
+    if (state.index < RewardAnimationState.disposed.index) {
       Overlays.remove(widget.type);
-      state = RewardAniationState.disposed;
+      state = RewardAnimationState.disposed;
     }
   }
 

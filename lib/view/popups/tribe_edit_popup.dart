@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import 'ipopup.dart';
+import 'popup.dart';
 
 class TribeEditPopup extends AbstractPopup {
   TribeEditPopup({super.key}) : super(Routes.popupTribeEdit, args: {});
@@ -115,7 +115,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
                         ? Widgets.rect(
                             padding: EdgeInsets.symmetric(
                                 vertical: 6.d, horizontal: 12.d),
-                            decoration: Widgets.imageDecore(
+                            decoration: Widgets.imageDecorator(
                                 "frame_hatch_button", ImageCenterSliceData(42)),
                             child: Row(children: [
                               Asset.load<Image>("icon_gold", height: 76.d),

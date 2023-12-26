@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/building.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 
 class BuildingWidget extends StatefulWidget {
   final Building building;

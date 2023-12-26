@@ -5,13 +5,13 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../../view/widgets.dart';
 import '../route_provider.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 
 class ProfileAvatarsPopup extends AbstractPopup {
   ProfileAvatarsPopup({super.key}) : super(Routes.popupProfile, args: {});
@@ -26,7 +26,7 @@ class _ProfileAvatarsPopupState
   Widget titleTextFactory() => const SizedBox();
   @override
   BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
+      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(50.d, 180.d, 50.d, 80.d);

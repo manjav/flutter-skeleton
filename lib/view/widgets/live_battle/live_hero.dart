@@ -4,7 +4,7 @@ import '../../../data/core/fruit.dart';
 import '../../../data/core/rpc.dart';
 import '../../../mixins/key_provider.dart';
 import '../../../mixins/service_provider.dart';
-import '../../../services/deviceinfo.dart';
+import '../../../services/device_info.dart';
 import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
 import '../../items/card_item.dart';

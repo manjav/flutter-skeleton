@@ -43,7 +43,7 @@ class AdGoogle extends AbstractAdSDK {
   @override
   void request(AdType type) {
     var placement = placements[type]!;
-    if (type.isIntrestitial) {
+    if (type.isInterstitial) {
       InterstitialAd.load(
           adUnitId: placement.id,
           request: _request,
@@ -91,7 +91,7 @@ class AdGoogle extends AbstractAdSDK {
     if (placement == null) {
       return null;
     }
-    if (type.isIntrestitial) {
+    if (type.isInterstitial) {
       var nativeAd = placement.data as InterstitialAd;
       nativeAd.fullScreenContentCallback = FullScreenContentCallback(
           onAdDismissedFullScreenContent: (InterstitialAd ad) =>

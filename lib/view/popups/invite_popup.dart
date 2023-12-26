@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 
 class InvitePopup extends AbstractPopup {
   InvitePopup({super.key}) : super(Routes.popupInvite, args: {});
@@ -22,7 +22,7 @@ class _InvitePopupState extends AbstractPopupState<InvitePopup> {
   late Account _account;
   @override
   BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecore("popup_chrome_pink", ImageCenterSliceData(410, 460));
+      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   void initState() {

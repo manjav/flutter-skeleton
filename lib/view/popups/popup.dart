@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/infra.dart';
-import '../../mixins/ilogger.dart';
+import '../../mixins/logger.dart';
 import '../../mixins/service_provider.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -34,7 +34,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   Alignment alignment = Alignment.center;
 
   BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecore("popup_chrome", ImageCenterSliceData(410, 460));
+      Widgets.imageDecorator("popup_chrome", ImageCenterSliceData(410, 460));
 
   @override
   void initState() {
@@ -92,7 +92,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         height: 130.d,
         padding: EdgeInsets.only(bottom: 14.d),
         decoration:
-            Widgets.imageDecore("popup_title", ImageCenterSliceData(562, 130)),
+            Widgets.imageDecorator("popup_title", ImageCenterSliceData(562, 130)),
         child: SkinnedText(titleBuilder(), style: TStyles.large));
   }
 

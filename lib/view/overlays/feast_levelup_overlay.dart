@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import '../../mixins/background_mixin.dart';
-import '../../view/overlays/ioverlay.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
+import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
 import '../../utils/utils.dart';
+import 'overlay.dart';
 
 class LevelupFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
-  const LevelupFeastOverlay({required this.args, super.key})
+  const LevelupFeastOverlay({required this.args, super.onClose, super.key})
       : super(type: OverlayType.feastLevelup);
 
   @override

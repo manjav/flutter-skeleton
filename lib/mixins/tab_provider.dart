@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../services/device_info.dart';
+import '../view/widgets/skinned_text.dart';
 import '../utils/assets.dart';
 import '../view/widgets.dart';
 
@@ -53,7 +53,7 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
           margin: EdgeInsets.symmetric(horizontal: 6.d),
           padding: EdgeInsets.zero,
           height: 118.d,
-          decoration: Widgets.imageDecore(
+          decoration: Widgets.imageDecorator(
               "popup_tab_$imageName", ImageCenterSliceData(68, 42)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

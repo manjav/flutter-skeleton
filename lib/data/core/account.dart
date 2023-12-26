@@ -10,7 +10,7 @@ import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
 import '../../services/trackers/trackers.dart';
 import '../../utils/utils.dart';
-import '../../view/overlays/ioverlay.dart';
+import '../../view/overlays/overlay.dart';
 import 'adam.dart';
 import 'building.dart';
 import 'fruit.dart';
@@ -27,12 +27,12 @@ class Player extends Opponent {
       moodId,
       updatedAt,
       lastLoadAt,
-      tribeRanklastLoadAt,
+      tribeRankLastLoadAt,
       tribeRank,
       prevLeagueId,
       prevLeagueRank;
 
-  late String realname, address, phone;
+  late String realName, address, phone;
   Map<int, int> medals = {};
 
   Player.initialize(Map<String, dynamic> map, int ownerId)
@@ -50,7 +50,7 @@ class Player extends Opponent {
 
     phone = map["phone"] ?? "";
     address = map["address"] ?? "";
-    realname = map["realname"] ?? "";
+    realName = map["realname"] ?? "";
 
     if (map.containsKey("medals") && map["medals"].isNotEmpty) {
       for (var e in map["medals"].entries) {
@@ -62,7 +62,7 @@ class Player extends Opponent {
 
 class Account extends Player with ServiceProvider {
   Account() : super.initialize({}, 0);
-  static const Map<String, int> availablityLevels = {
+  static const Map<String, int> availabilityLevels = {
     'ads': 4,
     'name': 4,
     'park': 4,
@@ -76,7 +76,7 @@ class Account extends Player with ServiceProvider {
   static const levelExpo = 2.7;
   static const levelMultiplier = 1.3;
 
-  static int getXpRequiered(int level) {
+  static int getXpRequired(int level) {
     if (level <= 0) return 0;
     return (math.pow(level, levelExpo) * levelMultiplier).ceil();
   }
@@ -117,10 +117,10 @@ class Account extends Player with ServiceProvider {
       wheel_of_fortune_opens_in = 0,
       latest_constants_version = 0,
       deltaTime = 0,
-      xpboostCreatedAt = 0,
-      pwboostCreatedAt = 0,
-      xpboostId = 0,
-      pwboostId = 0;
+      xpBoostCreatedAt = 0,
+      pwBoostCreatedAt = 0,
+      xpBoostId = 0,
+      pwBoostId = 0;
 
   late bool needs_captcha,
       has_email,
@@ -129,7 +129,7 @@ class Account extends Player with ServiceProvider {
       is_name_temp,
       better_vitrin_promotion,
       can_use_vitrin,
-      can_watch_advertisment,
+      can_watch_advertisement,
       purchase_deposits_to_bank,
       better_choose_deck,
       better_quest_map,
@@ -178,8 +178,8 @@ class Account extends Player with ServiceProvider {
   List<Deadline> deadlines = [];
   Map<int, HeroCard> heroes = {};
   Map<int, AccountCard> cards = {};
-  Map<int, HeroItem> heroitems = {};
-  Map<String, int> achivementMap = {};
+  Map<int, HeroItem> heroItems = {};
+  Map<String, int> achievementMap = {};
   Map<Buildings, Building> buildings = {};
 
   int getTime({int? time}) =>
@@ -199,7 +199,7 @@ class Account extends Player with ServiceProvider {
     is_name_temp = map["is_name_temp"];
     better_vitrin_promotion = map["better_vitrin_promotion"];
     can_use_vitrin = map["can_use_vitrin"];
-    can_watch_advertisment = map["can_watch_advertisment"];
+    can_watch_advertisement = map["can_watch_advertisment"];
     purchase_deposits_to_bank = map["purchase_deposits_to_bank"];
     better_choose_deck = map["better_choose_deck"];
     better_quest_map = map["better_quest_map"];
@@ -253,8 +253,8 @@ class Account extends Player with ServiceProvider {
     }
 
     collection = List.castFrom(map["collection"]);
-    _addDeadline(map, xpboostCreatedAt, xpboostId);
-    _addDeadline(map, pwboostCreatedAt, pwboostId);
+    _addDeadline(map, xpBoostCreatedAt, xpBoostId);
+    _addDeadline(map, pwBoostCreatedAt, pwBoostId);
 
     addBuilding(Buildings type, [int level = 0, List? cards]) =>
         buildings[type] = Building(this, type, level, cards ?? []);
@@ -275,12 +275,12 @@ class Account extends Player with ServiceProvider {
     installTribe(map['tribe']);
 
     // Heroes
-    heroitems = {};
+    heroItems = {};
     for (var item in map["heroitems"]) {
-      var heroitem = HeroItem(item['id'],
+      var heroItem = HeroItem(item['id'],
           loadingData.baseHeroItems[item['base_heroitem_id']]!, item['state']);
-      heroitem.position = item['position'];
-      heroitems[item['id']] = heroitem;
+      heroItem.position = item['position'];
+      heroItems[item['id']] = heroItem;
     }
 
     heroes = {};
@@ -289,7 +289,7 @@ class Account extends Player with ServiceProvider {
         var hero = HeroCard(cards[h['id']]!, h['potion']);
         hero.items = <HeroItem>[];
         for (var item in h['items']) {
-          var heroItem = heroitems[item["id"]! as int];
+          var heroItem = heroItems[item["id"]! as int];
           if (heroItem != null) {
             hero.items.add(heroItem);
           }
@@ -304,7 +304,7 @@ class Account extends Player with ServiceProvider {
 
     if (map["achievements_blob"] != null) {
       var achievementText = utf8.fuse(base64).decode(map["achievements_blob"]);
-      achivementMap = Map.castFrom(jsonDecode(achievementText));
+      achievementMap = Map.castFrom(jsonDecode(achievementText));
     }
     for (var line in loadingData.achievements.values) {
       line.updateCurrents(this);
@@ -350,10 +350,10 @@ class Account extends Player with ServiceProvider {
     latest_constants_version =
         Utils.toInt(map["latest_constants_version"], latest_constants_version);
     deltaTime = Utils.toInt(map["delta_time"], deltaTime);
-    xpboostCreatedAt = Utils.toInt(map["xpboost_created_at"], xpboostCreatedAt);
-    pwboostCreatedAt = Utils.toInt(map["pwboost_created_at"], pwboostCreatedAt);
-    xpboostId = Utils.toInt(map["xpboost_id"], xpboostId);
-    pwboostId = Utils.toInt(map["pwboost_id"], pwboostId);
+    xpBoostCreatedAt = Utils.toInt(map["xpboost_created_at"], xpBoostCreatedAt);
+    pwBoostCreatedAt = Utils.toInt(map["pwboost_created_at"], pwBoostCreatedAt);
+    xpBoostId = Utils.toInt(map["xpboost_id"], xpBoostId);
+    pwBoostId = Utils.toInt(map["pwboost_id"], pwBoostId);
   }
 
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
@@ -548,8 +548,8 @@ class Account extends Player with ServiceProvider {
     }
 
     data["achieveCards"] = achieveCards;
-    _addDeadline(data, xpboostCreatedAt, xpboostId);
-    _addDeadline(data, pwboostCreatedAt, pwboostId);
+    _addDeadline(data, xpBoostCreatedAt, xpBoostId);
+    _addDeadline(data, pwBoostCreatedAt, pwBoostId);
     return data;
   }
 
@@ -562,7 +562,7 @@ class Account extends Player with ServiceProvider {
         .firstWhere((item) => item.id == id);
     deadlines.add(Deadline(deadline, boost));
 
-    if (id == pwboostId) {
+    if (id == pwBoostId) {
       for (var card in cards.entries) {
         card.value.power = (card.value.power * boost.ratio).round();
       }

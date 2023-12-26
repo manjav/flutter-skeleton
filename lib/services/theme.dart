@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'deviceinfo.dart';
-import 'iservices.dart';
+import 'device_info.dart';
+import 'services.dart';
 
 class TColors {
   static const accent = Color(0xFFFF5D54);

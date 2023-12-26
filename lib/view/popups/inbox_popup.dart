@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/core/message.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/inbox.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../../view/widgets.dart';
 import '../route_provider.dart';
 
@@ -52,7 +52,7 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
     return Column(children: [
       Widgets.rect(
         padding: EdgeInsets.fromLTRB(24.d, 10.d, 16.d, 16.d),
-        decoration: Widgets.imageDecore("iconed_item_bg",
+        decoration: Widgets.imageDecorator("iconed_item_bg",
             ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
         child: Row(children: [
           Asset.load<Image>("inbox_item_${message.type.subject.name}",

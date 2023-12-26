@@ -7,15 +7,15 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../blocs/services_bloc.dart';
 import '../../data/core/result.dart';
 import '../../main.dart';
-import '../../mixins/ilogger.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/logger.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import 'ioverlay.dart';
+import 'overlay.dart';
 
 class LoadingOverlay extends AbstractOverlay {
   const LoadingOverlay({super.key}) : super(type: OverlayType.loading);

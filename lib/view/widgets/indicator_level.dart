@@ -7,9 +7,9 @@ import '../../data/core/account.dart';
 import '../../mixins/key_provider.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/widgets/loaderwidget.dart';
+import 'loader_widget.dart';
 import '../widgets.dart';
-import 'skinnedtext.dart';
+import 'skinned_text.dart';
 
 class LevelIndicator extends StatefulWidget {
   final int? xp;
@@ -46,8 +46,8 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
     _xp = xp;
     _level = level;
     _avatarId = avatarId;
-    _minXp = Account.getXpRequiered(level - 1);
-    _maxXp = Account.getXpRequiered(level);
+    _minXp = Account.getXpRequired(level - 1);
+    _maxXp = Account.getXpRequired(level);
   }
 
   @override
@@ -71,7 +71,7 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
     return Widgets.button(
       radius: 54 * s,
       onPressed: widget.onPressed,
-      decoration: Widgets.imageDecore("ui_frame_wood_big"),
+      decoration: Widgets.imageDecorator("ui_frame_wood_big"),
       width: widget.size,
       height: widget.size,
       padding: EdgeInsets.all(28 * s),

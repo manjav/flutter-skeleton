@@ -363,7 +363,7 @@ class Building {
       // adds benefit(blessing items + base blessing) of each assigned hero
       for (var e in heroCardBenefits.entries) {
         blessingBenefit += e.value[HeroAttribute.blessing]! +
-            e.key.attribuites[HeroAttribute.blessing]!;
+            e.key.attributes[HeroAttribute.blessing]!;
       }
 
       // modifies the final blessing benefit with related modifiers.
@@ -392,7 +392,7 @@ class Building {
       // adds blessing benefit( blessing from items + base blessing) of each assigned hero
       for (var e in heroCardBenefits.entries) {
         powerBenefit += e.value[HeroAttribute.power]! +
-            e.key.attribuites[HeroAttribute.power]!;
+            e.key.attributes[HeroAttribute.power]!;
       }
 
       // modifies the final blessing benefit with related modifiers.
