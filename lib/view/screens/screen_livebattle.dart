@@ -267,14 +267,16 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     if (message.id != _battleId) {
       return;
     }
-    return switch (message.type) {
-      Noobs.battleJoin => _handleJoinMessage(message as NoobJoinBattleMessage),
-      Noobs.deployCard => _handleCardMessage(message as NoobCardMessage),
-      Noobs.heroAbility => _handleAbilityMessage(message as NoobAbilityMessage),
-      Noobs.help => _handleHelpMessage(message as NoobHelpMessage),
-      Noobs.battleEnd => _handleEndingMessage(message as NoobEndBattleMessage),
-      _ => debugPrint(message.type.toString())
-    };
+    if (message.type == Noobs.battleJoin) {
+      var msg = message as NoobJoinBattleMessage;
+      _addWarrior(msg.teamOwnerId, msg.warriorId, msg.warriorName);
+    } else if (message.type == Noobs.deployCard) {
+      _handleCardMessage(message as NoobCardMessage);
+    } else if (message.type == Noobs.heroAbility) {
+      _handleAbilityMessage(message as NoobAbilityMessage);
+    } else if (message.type == Noobs.battleEnd) {
+      _handleEndingMessage(message as NoobEndBattleMessage);
+    }
   }
 
   void _addWarrior(int teamOwnerId, int id, String name) {
