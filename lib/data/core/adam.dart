@@ -264,19 +264,17 @@ class Opponent extends Record {
 }
 
 class LiveWarrior {
+  bool won = false;
   final Opponent base;
   String tribeName = "";
   final int teamOwnerId;
   final WarriorSide side;
   Map<String, dynamic> map = {};
-  late final SelectedCards cards;
   int gold = 0, xp = 0, power = 0, score = 0;
   Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
-  bool won = false;
+  final SelectedCards cards = SelectedCards([null, null, null, null, null]);
 
-  LiveWarrior(this.side, this.teamOwnerId, this.base) {
-    cards = SelectedCards([null, null, null, null, null]);
-  }
+  LiveWarrior(this.side, this.teamOwnerId, this.base);
   void addResult(Map<String, dynamic> map) {
     this.map = map;
     xp = map["added_xp"];
