@@ -40,15 +40,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
         vsync: this, upperBound: 3, duration: const Duration(seconds: 3));
     _opacityBackgroundAnimationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300), value: 1);
-    children = [
-      AnimatedBuilder(
-          animation: _opacityBackgroundAnimationController,
-          builder: (context, child) => Opacity(
-              opacity: _opacityBackgroundAnimationController.value,
-              child: backgroundBuilder())),
-      _cardsList(),
-      IgnorePointer(child: animationBuilder("openpack")),
-    ];
+    _updateChildren();
     _pack = widget.args["pack"] ??
         accountBloc.account!.loadingData.shopItems[ShopSections.card]![0];
 
@@ -58,9 +50,24 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     process(() async {
       _cards = await accountBloc.openPack(context, _pack);
       var count = _cards.length > 2 ? 0 : _cards.length;
+      if (count == 0) {
+        setState(() => _updateChildren());
+      }
       _countInput?.value = count.toDouble();
       return _cards;
     });
+  }
+
+  void _updateChildren() {
+    children = [
+      AnimatedBuilder(
+          animation: _opacityBackgroundAnimationController,
+          builder: (context, child) => Opacity(
+              opacity: _opacityBackgroundAnimationController.value,
+              child: backgroundBuilder())),
+      _cardsList(),
+      IgnorePointer(child: animationBuilder("openpack")),
+    ];
   }
 
   @override
@@ -68,7 +75,6 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
     _countInput = controller.findInput<double>("cards");
-
     updateRiveText("packNameText", "shop_card_${_pack.id}".l());
     updateRiveText("packDescriptionText", "shop_card_${_pack.id}_desc".l());
     return controller;
@@ -88,6 +94,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
         loadCardFrame(_cardFrameAssets[i]!, card.base);
       }
     } else if (state == RewardAnimationState.closing) {
+      _opacityAnimationController.animateBack(0,
+          duration: const Duration(milliseconds: 500));
       _opacityBackgroundAnimationController.reverse();
     }
   }
@@ -122,20 +130,20 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     var gap = 8.d;
     var crossAxisCount = 2;
     var itemSize = 240.d;
-    return Positioned(
-        left: 22.d,
-        right: 22.d,
-        height: itemSize / CardItem.aspectRatio * crossAxisCount +
-            gap * (crossAxisCount - 1),
-        child: GridView.builder(
-          itemCount: len,
-          scrollDirection: Axis.horizontal,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: 1 / CardItem.aspectRatio,
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: gap,
-              mainAxisSpacing: gap),
-          itemBuilder: (c, i) => _cardItemBuilder(len, i, itemSize),
+    return Container(
+          alignment: Alignment.center,
+          width: DeviceInfo.size.width * 0.94,
+          height: itemSize / CardItem.aspectRatio * crossAxisCount +
+              gap * (crossAxisCount - 1),
+          child: GridView.builder(
+            itemCount: len,
+            scrollDirection: Axis.horizontal,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 1 / CardItem.aspectRatio,
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: gap,
+                mainAxisSpacing: gap),
+            itemBuilder: (c, i) => _cardItemBuilder(len, i, itemSize),
         ));
   }
 

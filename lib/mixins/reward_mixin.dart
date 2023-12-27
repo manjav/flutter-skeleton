@@ -60,7 +60,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         alignment: Alignment.center,
         width: DeviceInfo.size.width,
         height: DeviceInfo.size.height,
-        child: Stack(children: items),
+        child: Stack(alignment: Alignment.center, children: items),
         onPressed: () {
           if (state.index <= RewardAnimationState.waiting.index) return;
           if (state == RewardAnimationState.started) {
