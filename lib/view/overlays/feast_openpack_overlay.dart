@@ -29,8 +29,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   late ShopItem _pack;
   SMIInput<double>? _countInput;
   List<AccountCard> _cards = [];
-  late AnimationController _opacityBackgroundAnimationController;
   late AnimationController _opacityAnimationController;
+  late AnimationController _opacityBackgroundAnimationController;
   final Map<int, ImageAsset> _cardIconAssets = {}, _cardFrameAssets = {};
 
   @override
@@ -130,7 +130,9 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     var gap = 8.d;
     var crossAxisCount = 2;
     var itemSize = 240.d;
-    return Container(
+    return Material(
+      color: Colors.transparent,
+      child: Container(
           alignment: Alignment.center,
           width: DeviceInfo.size.width * 0.94,
           height: itemSize / CardItem.aspectRatio * crossAxisCount +
@@ -144,7 +146,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
                 crossAxisSpacing: gap,
                 mainAxisSpacing: gap),
             itemBuilder: (c, i) => _cardItemBuilder(len, i, itemSize),
-        ));
+          )),
+    );
   }
 
   Widget _cardItemBuilder(int len, int index, double size) {
