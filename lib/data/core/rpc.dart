@@ -95,7 +95,7 @@ extension RpcIdEx on RpcId {
       RpcId.battleJoin => "live-battle/livebattlejoin",
       RpcId.battleLive => "live-battle/livebattle",
       RpcId.battleHelp => "live-battle/help",
-      RpcId.battleDefense => "live-battle/livebattleack",
+      RpcId.battleDefense => "live-battle/livebattlechoose", //livebattleack",
       RpcId.battleSetCard => "live-battle/setcardforlivebattle",
       RpcId.triggerAbility => "live-battle/triggerability",
       RpcId.playerLoad => "player/load",
