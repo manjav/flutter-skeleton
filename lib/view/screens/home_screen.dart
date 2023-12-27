@@ -175,17 +175,15 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         "message": "battle_request".l([request.attackerName]),
         "onAccept": () async {
           try {
-            var result = await rpc(RpcId.battleDefense, params: {
-              "battle_id": request.id,
-              "already_in_game": 0,
-              "mainEnemy": request.attackerId
-            });
+            var result = await rpc(RpcId.battleDefense,
+                params: {"battle_id": request.id, "choice": 1});
             _joinBattle(
                 request.id,
                 account,
                 Opponent.create(
                     request.attackerId, request.attackerName, account.id),
-                result["help_cost"]);
+                result["help_cost"],
+                result["created_at"]);
           } finally {}
         }
       });
@@ -228,7 +226,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     var result = await rpc(RpcId.battleJoin,
         params: {"battle_id": help.id, "mainEnemy": getOpposite().id});
     if (!mounted) return;
-    _joinBattle(help.id, getFriend(), getOpposite(), 0);
+    _joinBattle(help.id, getFriend(), getOpposite(), 0, result["created_at"]);
     _addBattleCard(account, result, help.attackerId, "attacker_cards_set");
     _addBattleCard(account, result, help.defenderId, "defender_cards_set");
   }
@@ -249,7 +247,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   void _joinBattle(int id, Opponent friendsHead, Opponent oppositesHead,
-      [int helpCost = -1]) {
+      [int helpCost = -1, int createAt = 0]) {
     var args = {
       "battle_id": id,
       "friendsHead": friendsHead,
@@ -257,6 +255,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     };
     if (helpCost > -1) {
       args["help_cost"] = helpCost;
+    }
+    if (createAt > 0) {
+      args["created_at"] = createAt;
     }
     Navigator.pushNamed(context, Routes.livebattle.routeName, arguments: args);
   }
