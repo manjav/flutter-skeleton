@@ -162,4 +162,11 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
                   width: size, child: CardItem(_cards[index], size: size)));
         });
   }
+
+  @override
+  void dispose() {
+    _opacityBackgroundAnimationController.dispose();
+    _opacityAnimationController.dispose();
+    super.dispose();
+  }
 }
