@@ -116,7 +116,7 @@ extension RouteProvider on Routes {
       "/popupProfileEdit" => ProfileEditPopup(),
       "/popupProfileAvatars" => ProfileAvatarsPopup(),
       "/popupSettings" => SettingsPopup(),
-      "/popupRestore" => RestorePopup(),
+      "/popupRestore" => RestorePopup(args: args ?? {}),
       "/popupInvite" => InvitePopup(),
       "/popupRedeemGift" => RedeemGiftPopup(),
       "/popupDailyGift" => DailyGiftPopup(),
