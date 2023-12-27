@@ -140,13 +140,8 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                                   ? "update_l".l()
                                   : "retry_l".l(),
                               buttonId: -1,
-                              onPressed: () {
-                                if (isUpdateError) {
-                                  _update(isForceUpdate);
-                                } else {
-                                  _reload();
-                                }
-                              }),
+                              onPressed: () => _retry(
+                                  _exception, isUpdateError, isForceUpdate)),
                         ])
                   ],
                 )),
@@ -162,5 +157,17 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   void _reload() {
     close();
     MyApp.restartApp(context);
+  }
+
+  void _retry(RpcException? exception, bool isUpdateError, bool isForceUpdate) {
+    if (_exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY) {
+      close();
+      Navigator.pushNamed(context, Routes.popupRestore.routeName,
+          arguments: {"onlySet": true});
+    } else if (isUpdateError) {
+      _update(isForceUpdate);
+    } else {
+      _reload();
+    }
   }
 }
