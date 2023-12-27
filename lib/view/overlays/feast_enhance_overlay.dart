@@ -55,10 +55,11 @@ class _EnhanceFeastOverlayState
     super.onRiveEvent(event);
     var diff = _card.power - _oldPower;
     if (state == RewardAnimationState.started) {
-      updateRiveText("addedPowerText", "+ ˢ${diff.compact()}");
+      updateRiveText("addedPowerText", "+ ˢ0");
     } else if (state == RewardAnimationState.shown) {
       updateRiveText("cardPowerText", "ˢ${_card.power.compact()}");
-    } else if (event.name == "powerUp") {
+    }
+    if (event.name == "powerUp") {
       ++_sacrificeStep;
       var addedPower =
           (diff * (_sacrificeStep / _sacrificedCards.count)).round();
