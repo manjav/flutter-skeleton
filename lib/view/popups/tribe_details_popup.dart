@@ -103,7 +103,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         decoration: Widgets.imageDecorator(
             "iconed_item_bg${member.itsMe ? "_selected" : ""}",
             ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
-        child: Row(children: [
+        child: Row(textDirection: TextDirection.ltr, children: [
           SizedBox(width: 70.d, child: SkinnedText("${index + 1}")),
           SizedBox(width: 12.d),
           Widgets.rect(
@@ -121,7 +121,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
+                Row(textDirection: TextDirection.ltr, children: [
                   member.status == 1
                       ? Asset.load<Image>("tribe_online", height: 32.d)
                       : const SizedBox(),
@@ -130,7 +130,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
                       style: TStyles.medium.copyWith(height: 1.1)),
                 ]),
                 SizedBox(height: 8.d),
-                Row(children: [
+                Row(textDirection: TextDirection.ltr, children: [
                   member.tribePosition.index < 2
                       ? const SizedBox()
                       : Asset.load<Image>(
@@ -159,9 +159,12 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
     return Widgets.rect(
         height: 64.d,
         padding: padding ?? EdgeInsets.only(left: 16.d, right: 16.d),
-        decoration:
-            Widgets.imageDecorator("frame_hatch_button", ImageCenterSliceData(42)),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        decoration: Widgets.imageDecorator(
+            "frame_hatch_button", ImageCenterSliceData(42)),
+        child: Row(
+            textDirection: TextDirection.ltr,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
           Asset.load<Image>(icon, height: iconSize),
           SizedBox(width: 2.d),
           SkinnedText(label)
