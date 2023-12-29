@@ -120,13 +120,15 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       if (asset.name == "playerAvatar") {
         asset.image = await loadImage("avatar_${_account.avatarId}",
             subFolder: "avatars");
+        return true;
       } else if (asset.name == "opponentAvatar") {
         asset.image = await loadImage("avatar_${_opponent.avatarId}",
             subFolder: "avatars");
-      } else {
+        return true;
+      } else if (asset.name.startsWith("card")) {
         _imageAssets[asset.name] = asset;
+        return true;
       }
-      return true;
     }
     return super.onRiveAssetLoad(asset, embeddedBytes);
   }
