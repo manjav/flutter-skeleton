@@ -76,8 +76,10 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         SizedBox(width: 12.d),
         Text("tribe_visibility".l()),
         const Expanded(child: SizedBox()),
-        _indicator("icon_population",
-            "${tribe.population}/${tribe.getOption(Buildings.base.id)}", 40.d),
+        _indicator(
+            "icon_population",
+            " ${tribe.population}/${tribe.getOption(Buildings.base.id)} ",
+            40.d),
       ]),
       SizedBox(height: 20.d),
       Widgets.skinnedButton(
