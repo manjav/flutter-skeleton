@@ -45,18 +45,18 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       var isBattle = widget.args.containsKey("opponent");
       Map<String, dynamic> data;
       if (cards != null) {
-    var params = {
-      "cards": cards.getIds(),
+        var params = {
+          "cards": cards.getIds(),
           "check":
               md5.convert(utf8.encode("${accountBloc.account!.q}")).toString()
-    };
-    if (cards.value[2] != null) {
+        };
+        if (cards.value[2] != null) {
           params["hero_id"] = cards.value[2]!.id;
-    }
-    if (isBattle) {
+        }
+        if (isBattle) {
           params["opponent_id"] = _opponent.id;
           params["attacks_in_today"] = _opponent.todayAttacksCount;
-    }
+        }
         data = await rpc(isBattle ? RpcId.battle : RpcId.quest, params: params);
       } else {
         await Future.delayed(const Duration(milliseconds: 200));
@@ -102,7 +102,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
         updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
         loadCardIcon(_imageAssets["cardIcon$i"]!, card.base.getName());
         loadCardFrame(_imageAssets["cardFrame$i"]!, card.base);
-    }
+      }
 
       for (var i = 0; i < _playerCards.length; i++) {
         updateCard(i, _playerCards[i]);
@@ -113,4 +113,21 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     }
   }
 
+  @override
+  Future<bool> onRiveAssetLoad(
+      FileAsset asset, Uint8List? embeddedBytes) async {
+    if (asset is ImageAsset) {
+      if (asset.name == "playerAvatar") {
+        asset.image = await loadImage("avatar_${_account.avatarId}",
+            subFolder: "avatars");
+      } else if (asset.name == "opponentAvatar") {
+        asset.image = await loadImage("avatar_${_opponent.avatarId}",
+            subFolder: "avatars");
+      } else {
+        _imageAssets[asset.name] = asset;
+      }
+      return true;
+    }
+    return super.onRiveAssetLoad(asset, embeddedBytes);
+  }
 }
