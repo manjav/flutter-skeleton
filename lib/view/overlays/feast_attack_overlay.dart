@@ -96,34 +96,21 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
-      // updateRiveText("cardNameText3", "${_newCard.base.fruit.name}_title".l());
-      // updateRiveText("cardLevelText3", _newCard.base.rarity.convert());
-      // updateRiveText("cardPowerText3", "ˢ${_newCard.power.compact()}");
-      // super.loadCardIcon(_cardIconAsset!, _newCard.base.getName());
-      // super.loadCardFrame(_cardBackgroundAsset!, _newCard.base);
+      updateCard(i, AccountCard card) {
+        updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
+        updateRiveText("cardLevelText$i", card.base.rarity.convert());
+        updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
+        loadCardIcon(_imageAssets["cardIcon$i"]!, card.base.getName());
+        loadCardFrame(_imageAssets["cardFrame$i"]!, card.base);
+    }
+
+      for (var i = 0; i < _playerCards.length; i++) {
+        updateCard(i, _playerCards[i]);
+      }
+      for (var i = 0; i < _oppositeCards.length; i++) {
+        updateCard(10 + i, _oppositeCards[i]);
+      }
     }
   }
 
-  // @override
-  // Future<void> loadCardIcon(ImageAsset asset, String name) async =>
-  //     super.loadCardIcon(asset, _mergedCard.base.getName());
-
-  // @override
-  // Future<void> loadCardFrame(ImageAsset asset, FruitCard? card) async =>
-  //     super.loadCardFrame(asset, _mergedCard.base);
-
-  // @override
-  // Future<bool> onRiveAssetLoad(
-  //     FileAsset asset, Uint8List? embeddedBytes) async {
-  //   if (asset is ImageAsset) {
-  //     if (asset.name == "newCardIcon") {
-  //       _cardIconAsset = asset;
-  //       return true;
-  //     } else if (asset.name == "newCardFrame") {
-  //       _cardBackgroundAsset = asset;
-  //       return true;
-  //     }
-  //   }
-  //   return super.onRiveAssetLoad(asset, embeddedBytes);
-  // }
 }
