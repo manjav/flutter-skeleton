@@ -42,7 +42,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
 
     process(() async {
       SelectedCards? cards = widget.args["cards"];
-      var isBattle = widget.args.containsKey("opponent");
+      var isBattle = widget.args["opponent"] != null;
       Map<String, dynamic> data;
       if (cards != null) {
         var params = {
@@ -70,7 +70,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
       _playerCardsCount?.value = _playerCards.length.toDouble();
 
-      for (var card in data["opponent_cards"]) {
+      for (var card in data["opponent_cards"] ?? []) {
         _oppositeCards.add(AccountCard(_account, card));
       }
       _oppositeCards
