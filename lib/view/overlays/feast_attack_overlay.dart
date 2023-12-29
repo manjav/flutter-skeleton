@@ -84,13 +84,11 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
-    for (var i = 1; i < 3; i++) {
-      // updateRiveText(
-      //     "cardNameText$i", "${_mergedCard.base.fruit.name}_title".l());
-      // updateRiveText("cardLevelText$i", _mergedCard.base.rarity.convert());
-      // updateRiveText("cardPowerText$i", "ˢ${_mergedCard.power.compact()}");
-    }
-    updateRiveText("titleText", "evolve_l".l());
+    _playerCardsCount = controller.findInput<double>("playerCards");
+    _oppositeCardsCount = controller.findInput<double>("opponentCards");
+    updateRiveText("playerNameText", "you_l".l());
+    updateRiveText("opponentNameText", _opponent.name);
+    artboard.addController(controller);
     return controller;
   }
 
