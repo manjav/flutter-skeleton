@@ -115,8 +115,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
               padding: EdgeInsets.all(6.d),
               decoration: Widgets.imageDecorator(
                   "frame_hatch_button", ImageCenterSliceData(42)),
-              child: LoaderWidget(
-                  AssetType.image, "avatar_${member.avatarId + 1}",
+              child: LoaderWidget(AssetType.image, "avatar_${member.avatarId}",
                   width: 76.d, height: 76.d, subFolder: "avatars")),
           SizedBox(width: 20.d),
           Column(
@@ -167,10 +166,10 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-          Asset.load<Image>(icon, height: iconSize),
-          SizedBox(width: 2.d),
-          SkinnedText(label)
-        ]));
+              Asset.load<Image>(icon, height: iconSize),
+              SizedBox(width: 2.d),
+              SkinnedText(label)
+            ]));
   }
 
   void _changeVisibility(bool value) {
