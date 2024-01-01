@@ -20,6 +20,7 @@ import '../services.dart';
 
 class HttpConnection extends IService {
   LoadingData loadData = LoadingData();
+  int _version = 0;
   Map<String, dynamic> _config = {};
 
   @override
@@ -48,6 +49,14 @@ class HttpConnection extends IService {
     }
     var data = await rpc(RpcId.playerLoad, params: params);
     loadData.account = Account.initialize(data, loadData);
+
+    // Check internal version, public users avoidance
+    var test = _config["updates"]["test"];
+    if (test["version"] < _version) {
+      if (!test["testers"].contains(loadData.account.id)) {
+        throw RpcException(StatusCode.C702_UPDATE_TEST, "");
+      }
+    }
     Pref.restoreKey.setString(loadData.account.restoreKey);
     super.initialize();
     return loadData;

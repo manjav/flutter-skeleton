@@ -646,6 +646,7 @@
     "error_503": "Server Unavailable!",
     "error_700": "New version is available!\n%s",
     "error_701": "Your game must be Updated!\n%s",
+    "error_702": "Internal Version!\nGet the latest version from stores.%s",
     "error_999": "Unknown Error!",
     "ago_moments": "Moments ago",
     "ago_minutes": "%s minutes ago",
