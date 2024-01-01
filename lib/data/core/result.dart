@@ -174,6 +174,7 @@ enum StatusCode {
   C503_SERVICE_UNAVAILABLE,
   C700_UPDATE_NOTICE,
   C701_UPDATE_FORCE,
+  C702_UPDATE_TEST,
   C901_ENCRYPTION_ERROR,
   C999_UNKNOWN_ERROR,
 }
@@ -361,6 +362,7 @@ extension StatusCodeEx on StatusCode {
       StatusCode.C503_SERVICE_UNAVAILABLE => 503,
       StatusCode.C700_UPDATE_NOTICE => 700,
       StatusCode.C701_UPDATE_FORCE => 701,
+      StatusCode.C702_UPDATE_TEST => 702,
       _ => 999
     };
   }

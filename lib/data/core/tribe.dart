@@ -69,9 +69,8 @@ class Tribe with ServiceProvider {
     } finally {}
   }
 
-  int get onlineMembersCount {
-    return members.value.where((member) => member.status > 0).length;
-  }
+  int get onlineMembersCount =>
+      members.value.where((member) => member.status > 0).length;
 
   sendMessage(BuildContext context, Account account, String text) async {
     if (text.isEmpty) return;
