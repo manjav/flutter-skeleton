@@ -49,23 +49,21 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     appBarElements.addAll(appBarElementsLeft());
     appBarElements.add(const Expanded(child: SizedBox()));
     appBarElements.addAll(appBarElementsRight());
-    return SafeArea(
-      child: Scaffold(
-        body: PopScope(
-          onPopInvoked: (i) async => widget.closable,
-          child: Stack(children: [
-            Positioned(
-                top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
-            PositionedDirectional(
-                top: 44.d,
-                start: 54.d,
-                end: 32.d,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: appBarElements)),
-          ]),
-        ),
+    return Scaffold(
+      body: PopScope(
+        onPopInvoked: (i) async => widget.closable,
+        child: Stack(children: [
+          Positioned(
+              top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
+          PositionedDirectional(
+              top: 60.d,
+              start: 54.d,
+              end: 32.d,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: appBarElements)),
+        ]),
       ),
     );
   }
