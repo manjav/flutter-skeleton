@@ -29,6 +29,7 @@ class LiveDeck extends StatelessWidget with KeyProvider {
           valueListenable: items,
           builder: (context, value, child) {
             return PageView.builder(
+                reverse: Localization.isRTL,
                 clipBehavior: Clip.none,
                 onPageChanged: (index) => onFocus(index, items.value[index]!),
                 controller: pageController,

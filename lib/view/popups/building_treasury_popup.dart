@@ -51,6 +51,7 @@ class _TreasuryBuildingPopupState
               progressColor: TColors.orange),
           SizedBox(height: 32.d),
           Row(
+            textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _transactionButton(
