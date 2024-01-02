@@ -72,7 +72,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                       ]),
                 )),
             Positioned(
-                top: 16.d,
+                top: 56.d,
                 left: 32.d,
                 right: 32.d,
                 child: Row(

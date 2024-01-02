@@ -98,7 +98,7 @@ class _RewardPopupState extends AbstractPopupState<DailyGiftPopup> {
         padding: EdgeInsets.only(right: mid == "last" ? 0 : 16.d),
         width: _itemWidth,
         decoration: Widgets.imageDecorator("daily_${mid}_$state",
-            ImageCenterSliceData(98, 206, const Rect.fromLTWH(44, 19, 2, 2))),
+            ImageCenterSliceData(98, 206, const Rect.fromLTWH(45, 19, 2, 2))),
         child: Stack(
           alignment: Alignment.center,
           children: [

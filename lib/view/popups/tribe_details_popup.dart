@@ -220,15 +220,15 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           alignment: Alignment.center,
           children: [
             Positioned(
-                top: -80.d,
+                top: -90.d,
                 child: Asset.load<Image>("tribe_upgrade_$id",
                     width: 220.d, height: 180.d)),
             Positioned(
-                top: 90.d,
+                top: 80.d,
                 child: SkinnedText("tribe_upgrade_t_$id".l(),
                     style: TStyles.large)),
             Positioned(
-                top: 170.d,
+                top: 160.d,
                 width: 400.d,
                 child: Text(
                     "tribe_upgrade_d_$id".l([tribe.getOption(id).convert()]),
@@ -246,10 +246,12 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
   Widget _upgradeButton(Tribe tribe, int id) {
     if (tribe.levels[id]! >= Building.get_maxLevel(id.toBuildings())) {
       return Column(children: [
-        Asset.load<Image>("tick", height: 80.d),
-        SizedBox(height: 25.d),
+        Asset.load<Image>("tick", height: 70.d),
+        SizedBox(height: 10.d),
         SkinnedText("max_level".l(["tribe_upgrade_t_$id".l()]),
-            textAlign: TextAlign.center)
+            style: TStyles.medium.copyWith(height: 1),
+            textAlign: TextAlign.center),
+        SizedBox(height: 10.d),
       ]);
     }
     var cost = tribe.getOptionCost(id);
