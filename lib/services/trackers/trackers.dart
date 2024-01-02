@@ -1,17 +1,19 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import '../../services/trackers/tracker_metrix.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+import '../../data/core/account.dart';
 import '../../services/ads/ads_abstract.dart';
+import '../../services/trackers/tracker_metrix.dart';
+import '../../services/trackers/tracker_smartlook.dart';
 import '../device_info.dart';
-import '../services.dart';
 import '../prefs.dart';
+import '../services.dart';
 import 'tracker_abstract.dart';
 import 'tracker_firebase.dart';
 import 'tracker_gameanalytics.dart';
 import 'tracker_kochava.dart';
 
-enum TrackerSDK { none, firebase, gameAnalytics, kochava, metrix }
+enum TrackerSDK { none, firebase, gameAnalytics, kochava, metrix, smartlook }
 
 enum BuildType { installed, instant }
 
@@ -31,11 +33,12 @@ class Trackers extends IService {
     TrackerSDK.gameAnalytics: GATracker(),
     TrackerSDK.kochava: KochavaaTracker(),
     TrackerSDK.metrix: MetrixTracker(),
+    TrackerSDK.smartlook: SmartlookTracker(),
   };
-  final FirebaseAnalytics firebaseAnalytics;
-  final _buildType = BuildType.installed;
-  final _testName = "_";
   int variant = 1;
+  final _testName = "_";
+  final _buildType = BuildType.installed;
+  final FirebaseAnalytics firebaseAnalytics;
 
   Trackers(this.firebaseAnalytics);
 
