@@ -49,13 +49,16 @@ class Trackers extends IService {
       var variant = await sdk.getVariantId(_testName);
       if (variant != 0) this.variant = variant;
     }
+    }
 
+  void setAccount(Account account) {
     // Set user data
     for (var sdk in _sdks.values) {
       sdk.setProperties({
         "buildType": _buildType.name,
         "build_type": _buildType.name,
-        "userId": "",
+        "userId": account.id.toString(),
+        "userName": account.name,
         "deviceId": DeviceInfo.adId,
         "test_name": _testName,
         "test_variant": variant.toString(),

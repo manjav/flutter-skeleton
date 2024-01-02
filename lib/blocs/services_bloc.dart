@@ -125,6 +125,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       // Load server data
       var data =
           await _map[ServiceType.connection]!.initialize() as LoadingData;
+      get<Trackers>().setAccount(data.account);
       if (context.mounted) {
         BlocProvider.of<AccountBloc>(context)
             .add(SetAccount(account: data.account));
