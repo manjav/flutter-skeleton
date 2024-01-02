@@ -160,7 +160,8 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   }
 
   void _retry(RpcException? exception, bool isUpdateError, bool isForceUpdate) {
-    if (_exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY) {
+    if (_exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY ||
+        _exception!.statusCode == StatusCode.C702_UPDATE_TEST) {
       close();
       Navigator.pushNamed(context, Routes.popupRestore.routeName,
           arguments: {"onlySet": true});
