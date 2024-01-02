@@ -173,6 +173,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       mySlots.setAtCard(slot.i, null);
       mySlots.setAtCard(4, focusedCard);
     } else {
+      mySlots.setAtCard(slot.i, focusedCard);
       if (mySlots.value[4] != null && !mySlots.value[4]!.isDeployed) {
         mySlots.setAtCard(4, null);
       }
