@@ -10,11 +10,11 @@ import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'popup.dart';
-import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class HeroPopup extends AbstractPopup {
   final int selectedHero;
@@ -175,8 +175,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
             width: 144.d,
             height: 144.d,
             padding: EdgeInsets.all(12.d),
-            decoration:
-                Widgets.imageDecorator("rect_${item == null ? "add" : "remove"}"),
+            decoration: Widgets.imageDecorator(
+                "rect_${item == null ? "add" : "remove"}"),
             child: item == null
                 ? const SizedBox()
                 : Asset.load<Image>("heroitem_${item.base.image}"),

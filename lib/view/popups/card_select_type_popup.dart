@@ -8,12 +8,12 @@ import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'popup.dart';
-import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class SelectCardTypePopup extends AbstractPopup {
   SelectCardTypePopup({super.key})
@@ -81,8 +81,8 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
           Widgets.skinnedButton(
               label: "search_l".l(),
               width: 340.d,
-              onPressed: () => Navigator.pop(context,
-                  fruit.cards[_selectedLevelIndex].id)),
+              onPressed: () =>
+                  Navigator.pop(context, fruit.cards[_selectedLevelIndex].id)),
         ]));
   }
 
@@ -114,9 +114,9 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
     var selected = _selectedLevelIndex == index;
     return Widgets.button(
         padding: EdgeInsets.all(8.d),
-        decoration: selected ? Widgets.imageDecorator("level_badge_border") : null,
-        child: Asset.load<Image>(
-            "level_badge_${fruit.cards[index].rarity}",
+        decoration:
+            selected ? Widgets.imageDecorator("level_badge_border") : null,
+        child: Asset.load<Image>("level_badge_${fruit.cards[index].rarity}",
             width: 100.d),
         onPressed: () => setState(() => _selectedLevelIndex = index));
   }

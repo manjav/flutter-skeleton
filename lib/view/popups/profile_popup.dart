@@ -16,12 +16,12 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import 'popup.dart';
 import '../../view/widgets/indicator_level.dart';
-import '../widgets/loader_widget.dart';
-import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class ProfilePopup extends AbstractPopup {
   final int playerId;
@@ -182,7 +182,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
       constraints: BoxConstraints(minWidth: 250.d),
       height: 90.d,
       padding: EdgeInsets.zero,
-      decoration: Widgets.imageDecorator("frame_hatch", ImageCenterSliceData(60)),
+      decoration:
+          Widgets.imageDecorator("frame_hatch", ImageCenterSliceData(60)),
       child: Stack(
           alignment: const Alignment(0, -0.2),
           clipBehavior: Clip.none,
