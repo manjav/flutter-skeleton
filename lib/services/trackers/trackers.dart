@@ -54,7 +54,7 @@ class Trackers extends IService {
     }
   }
 
-  void setAccount(Account account) {
+  void sendUserData(Account account) {
     // Set user data
     for (var sdk in _sdks.values) {
       sdk.setProperties({
@@ -65,6 +65,10 @@ class Trackers extends IService {
         "deviceId": DeviceInfo.adId,
         "test_name": _testName,
         "test_variant": variant.toString(),
+        "appName": DeviceInfo.packageInfo.appName,
+        "version": DeviceInfo.packageInfo.version,
+        "buildNumber": DeviceInfo.packageInfo.buildNumber,
+        "packageName": DeviceInfo.packageInfo.packageName,
       });
     }
   }

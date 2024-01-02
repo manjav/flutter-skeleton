@@ -11,10 +11,10 @@ import '../services/connection/noob_socket.dart';
 import '../services/device_info.dart';
 import '../services/games.dart';
 import '../services/inbox.dart';
-import '../services/services.dart';
 import '../services/localization.dart';
 import '../services/notifications.dart';
 import '../services/prefs.dart';
+import '../services/services.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
@@ -125,7 +125,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       // Load server data
       var data =
           await _map[ServiceType.connection]!.initialize() as LoadingData;
-      get<Trackers>().setAccount(data.account);
+      get<Trackers>().sendUserData(data.account);
       if (context.mounted) {
         BlocProvider.of<AccountBloc>(context)
             .add(SetAccount(account: data.account));
