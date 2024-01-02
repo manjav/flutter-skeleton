@@ -30,7 +30,7 @@ class Trackers extends IService {
 
   final _sdks = <TrackerSDK, AbstractTracker>{
     TrackerSDK.firebase: FirebaseTracker(),
-    TrackerSDK.gameAnalytics: GATracker(),
+    TrackerSDK.gameAnalytics: GameAnalyticsTracker(),
     TrackerSDK.kochava: KochavaaTracker(),
     TrackerSDK.metrix: MetrixTracker(),
     TrackerSDK.smartlook: SmartlookTracker(),
@@ -52,7 +52,7 @@ class Trackers extends IService {
       var variant = await sdk.getVariantId(_testName);
       if (variant != 0) this.variant = variant;
     }
-    }
+  }
 
   void setAccount(Account account) {
     // Set user data

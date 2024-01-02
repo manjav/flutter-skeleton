@@ -8,7 +8,7 @@ import '../prefs.dart';
 import 'tracker_abstract.dart';
 import 'trackers.dart';
 
-class GATracker extends AbstractTracker {
+class GameAnalyticsTracker extends AbstractTracker {
   @override
   initialize({List? args, Function(dynamic)? logCallback}) {
     super.initialize(args: args, logCallback: logCallback);
