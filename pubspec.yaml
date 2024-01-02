@@ -4,7 +4,7 @@ description: A new Flutter project.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.0.0+100000
+version: 1.0.2+100002
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
@@ -38,6 +38,7 @@ dependencies:
   kochava_tracker: ^2.4.0
   metrix_plugin: ^1.5.0
   onesignal_flutter: ^5.0.3 
+  package_info_plus: ^5.0.1
   path_provider: ^2.1.0
   rive: ^0.12.3
   shared_preferences: ^2.2.0

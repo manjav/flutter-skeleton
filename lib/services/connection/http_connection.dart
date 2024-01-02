@@ -20,12 +20,12 @@ import '../services.dart';
 
 class HttpConnection extends IService {
   LoadingData loadData = LoadingData();
-  int _version = 0;
   Map<String, dynamic> _config = {};
 
   @override
   initialize({List<Object>? args}) async {
-    await _loadConfigs();
+    var version = int.parse(DeviceInfo.packageInfo.buildNumber);
+    await _loadConfigs(version);
 
     var loader = Loader();
     await loader.load(
@@ -40,7 +40,7 @@ class HttpConnection extends IService {
       RpcParams.udid.name: DeviceInfo.adId,
       RpcParams.model.name: DeviceInfo.model,
       RpcParams.device_name.name: DeviceInfo.model,
-      RpcParams.game_version.name: 'app_version'.l(),
+      RpcParams.game_version.name: version,
       RpcParams.os_version.name: DeviceInfo.osVersion,
       RpcParams.store_type.name: "google",
     };
@@ -52,7 +52,7 @@ class HttpConnection extends IService {
 
     // Check internal version, public users avoidance
     var test = _config["updates"]["test"];
-    if (test["version"] < _version) {
+    if (test["version"] < version) {
       if (!test["testers"].contains(loadData.account.id)) {
         throw RpcException(StatusCode.C702_UPDATE_TEST, "");
       }
@@ -62,7 +62,7 @@ class HttpConnection extends IService {
     return loadData;
   }
 
-  _loadConfigs() async {
+  _loadConfigs(int version) async {
     http.Response? response;
     try {
       response = await http
@@ -75,13 +75,12 @@ class HttpConnection extends IService {
     }
     if (response!.statusCode == 200) {
       _config = json.decode(response.body);
-      _version = int.parse("app_version".l());
       var updates = _config["updates"];
-      if (updates["force"]["version"] > _version) {
+      if (updates["force"]["version"] > version) {
         throw RpcException(
             StatusCode.C701_UPDATE_FORCE, updates["force"]["message"]);
       } else if (!Pref.skipUpdate.getBool() &&
-          updates["notice"]["version"] > _version) {
+          updates["notice"]["version"] > version) {
         throw RpcException(
             StatusCode.C700_UPDATE_NOTICE, updates["notice"]["message"]);
       }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
 import '../../services/ads/ads_abstract.dart';
+import '../device_info.dart';
 import '../localization.dart';
 import '../prefs.dart';
 import 'tracker_abstract.dart';
@@ -32,7 +33,7 @@ class GameAnalyticsTracker extends AbstractTracker {
   @override
   Future<int> getVariantId(String testName) async {
     var testVersion = ""; //PrefsService.testVersion.getString();
-    var version = "app_version".l();
+    var version = DeviceInfo.packageInfo.buildNumber;
     log("version ==> $version testVersion ==> $testVersion");
     if (testVersion.isNotEmpty && testVersion != version) {
       return 0;

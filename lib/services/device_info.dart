@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'services.dart';
 
@@ -16,6 +17,7 @@ class DeviceInfo extends IService {
   static String model = "";
   static double osVersion = 0;
   static String baseVersion = "";
+  static late PackageInfo packageInfo;
   static Map<String, dynamic> _deviceData = {};
 
   @override
@@ -26,6 +28,7 @@ class DeviceInfo extends IService {
     ratio = width / 1080;
     aspectRatio = width / height;
     log("◢◤◢◤◢◤◢◤◢◤◢ ${args[0]} ${args[1]} $ratio ◢◤◢◤◢◤◢◤◢◤◢");
+    packageInfo = await PackageInfo.fromPlatform();
     var deviceInfoPlugin = DeviceInfoPlugin();
     try {
       if (kIsWeb) {
