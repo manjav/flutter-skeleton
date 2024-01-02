@@ -2,16 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../widgets/skinned_text.dart';
 import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/skinned_text.dart';
 import 'popup.dart';
 
 class TribeEditPopup extends AbstractPopup {
@@ -100,9 +101,11 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
         children: [
           Widgets.skinnedButton(
               height: 160.d,
-              isEnable: _nameController.text.isNotEmpty &&
-                  _descriptionController.text.isNotEmpty &&
-                  cost <= _account.gold,
+              isEnable:
+                  _account.tribePosition.index >= TribePosition.elder.index &&
+                      _nameController.text.isNotEmpty &&
+                      _descriptionController.text.isNotEmpty &&
+                      cost <= _account.gold,
               color: ButtonColor.green,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,9 +129,12 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
                   ]),
               onPressed: () => _submit(),
               onDisablePressed: () {
-                var message = cost > _account.gold
-                    ? "error_183".l()
-                    : "fill_requirements_l".l();
+                var message = "fill_requirements_l";
+                if (_account.tribePosition.index < TribePosition.elder.index) {
+                  message = "error_211".l();
+                } else if (cost > _account.gold) {
+                  message = "error_183".l();
+                }
                 Overlays.insert(context, OverlayType.toast, args: message);
               })
         ]);
