@@ -10,14 +10,13 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import 'popup.dart';
-import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class TribeSearchPopup extends AbstractPopup {
-  TribeSearchPopup({super.key})
-      : super(Routes.popupTribeSearch, args: {}, barrierDismissible: false);
+  TribeSearchPopup({super.key}) : super(Routes.popupTribeSearch, args: {});
 
   @override
   createState() => _TribeSearchPopupState();
@@ -26,6 +25,12 @@ class TribeSearchPopup extends AbstractPopup {
 class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
   List<Tribe> _tribes = [];
   final TextEditingController _inputController = TextEditingController();
+
+  @override
+  void initState() {
+    barrierDismissible = false;
+    super.initState();
+  }
 
   @override
   List<Widget> appBarElements() => [];

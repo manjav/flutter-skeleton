@@ -1,17 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
 import '../../main.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'popup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class RestorePopup extends AbstractPopup {
   const RestorePopup({required super.args, super.key})
@@ -31,6 +30,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
   @override
   void initState() {
     _textController = TextEditingController();
+    barrierDismissible = canPop = !widget.args.containsKey("onlySet");
     super.initState();
   }
 
@@ -38,9 +38,18 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
   String titleBuilder() => "settings_restore".l();
 
   @override
+  closeButtonFactory() {
+    if (canPop) {
+      return super.closeButtonFactory();
+    }
+    return const SizedBox();
+  }
+
+  @override
   contentFactory() {
     var style = TStyles.medium.copyWith(height: 1);
     var items = <Widget>[];
+
     if (!widget.args.containsKey("onlySet")) {
       items.addAll([
         Text("settings_restore_get".l(), style: style),

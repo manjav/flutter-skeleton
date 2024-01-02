@@ -17,12 +17,10 @@ import '../widgets.dart';
 class AbstractPopup extends StatefulWidget {
   final Routes type;
   final Map<String, dynamic> args;
-  final bool barrierDismissible;
 
   const AbstractPopup(
     this.type, {
     required this.args,
-    this.barrierDismissible = true,
     super.key,
   });
   @override
@@ -32,6 +30,7 @@ class AbstractPopup extends StatefulWidget {
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
     with ILogger, ServiceProviderMixin {
   Alignment alignment = Alignment.center;
+  bool barrierDismissible = true, canPop = true;
 
   BoxDecoration get chromeSkinBuilder =>
       Widgets.imageDecorator("popup_chrome", ImageCenterSliceData(410, 460));
@@ -44,41 +43,44 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: backgroundColor,
-      body: Stack(children: [
-        Widgets.touchable(
-            onTap: widget.barrierDismissible
-                ? () => Navigator.pop(context)
-                : null),
-        Align(
-            alignment: alignment,
-            child: Widgets.rect(
-              margin: chromeMargin,
-              padding: EdgeInsets.symmetric(horizontal: 24.d),
-              decoration: chromeSkinBuilder,
-              child: Stack(
-                  alignment: Alignment.topCenter,
-                  fit: StackFit.loose,
-                  children: [
-                    innerChromeFactory(),
-                    titleTextFactory(),
-                    Padding(padding: contentPadding, child: contentFactory()),
-                    Positioned(
-                        top: 60.d, right: -12.d, child: closeButtonFactory()),
-                  ]),
-            )),
-        Positioned(
-            top: 16.d,
-            left: 32.d,
-            right: 32.d,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: appBarElements())),
-      ]),
-    ));
+    return Scaffold(
+        backgroundColor: backgroundColor,
+        body: PopScope(
+          canPop: canPop,
+          child: Stack(children: [
+            Widgets.touchable(
+                onTap:
+                    barrierDismissible ? () => Navigator.pop(context) : null),
+            Align(
+                alignment: alignment,
+                child: Widgets.rect(
+                  margin: chromeMargin,
+                  padding: EdgeInsets.symmetric(horizontal: 24.d),
+                  decoration: chromeSkinBuilder,
+                  child: Stack(
+                      alignment: Alignment.topCenter,
+                      fit: StackFit.loose,
+                      children: [
+                        innerChromeFactory(),
+                        titleTextFactory(),
+                        Padding(
+                            padding: contentPadding, child: contentFactory()),
+                        Positioned(
+                            top: 60.d,
+                            right: -12.d,
+                            child: closeButtonFactory()),
+                      ]),
+                )),
+            Positioned(
+                top: 16.d,
+                left: 32.d,
+                right: 32.d,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: appBarElements())),
+          ]),
+        ));
   }
 
   Color get backgroundColor => TColors.black80;
@@ -91,8 +93,8 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         width: 562.d,
         height: 130.d,
         padding: EdgeInsets.only(bottom: 14.d),
-        decoration:
-            Widgets.imageDecorator("popup_title", ImageCenterSliceData(562, 130)),
+        decoration: Widgets.imageDecorator(
+            "popup_title", ImageCenterSliceData(562, 130)),
         child: SkinnedText(titleBuilder(), style: TStyles.large));
   }
 

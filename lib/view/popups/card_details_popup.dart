@@ -12,10 +12,10 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/card_item.dart';
 import '../overlays/overlay.dart';
-import 'popup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class CardDetailsPopup extends AbstractPopup {
   const CardDetailsPopup({super.key, required super.args})
@@ -48,9 +48,8 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
             backgroundColor: backgroundColor,
             body: Stack(children: [
               Widgets.touchable(
-                  onTap: widget.barrierDismissible
-                      ? () => Navigator.pop(context)
-                      : null),
+                  onTap:
+                      barrierDismissible ? () => Navigator.pop(context) : null),
               Container(
                   alignment: alignment,
                   padding: EdgeInsets.all(100.d),
