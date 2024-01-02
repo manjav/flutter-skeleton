@@ -123,7 +123,10 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
     return SizedBox(
         width: size,
         child: CardItem(card,
-            size: size, showCooldown: false, heroTag: "hero_${card.id}"));
+            size: size,
+            showCooldown: false,
+            heroTag: "hero_${card.id}",
+            key: getGlobalKey(card.id * -1)));
   }
 
   _submitButton() {
@@ -192,7 +195,11 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
       if (cards.length < 2) {
         // Show other mergeable cards
         selectedCards.clear();
-        if (cards.isNotEmpty) selectedCards.addCard(cards[0]);
+        cards = getCards(account);
+        if (cards.isNotEmpty) {
+          selectedCards.addCard(cards[0]);
+        }
+        cards = getCards(account);
         await Future.delayed(const Duration(milliseconds: 50));
         // Close if mergeable cards not available
         if (mounted && cards.length < 2) {
