@@ -84,8 +84,8 @@ class _MyAppState extends State<MyApp>
         child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                  create: (context) => ServicesBloc(
-                      firebaseAnalytics: MyApp._firebaseAnalytics)),
+                  create: (context) =>
+                      ServicesBloc(context, MyApp._firebaseAnalytics)),
               BlocProvider(create: (context) => AccountBloc()),
               BlocProvider(create: (context) => OpponentsBloc())
             ],
