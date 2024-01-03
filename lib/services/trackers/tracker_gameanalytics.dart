@@ -32,21 +32,21 @@ class GameAnalyticsTracker extends AbstractTracker {
 
   @override
   Future<int> getVariantId(String testName) async {
-    var testVersion = ""; //PrefsService.testVersion.getString();
-    var version = DeviceInfo.packageInfo.buildNumber;
-    log("version ==> $version testVersion ==> $testVersion");
-    if (testVersion.isNotEmpty && testVersion != version) {
-      return 0;
-    }
-    if (testVersion.isEmpty) {
-      Pref.testVersion.setString(version);
-    }
-    var variantId =
-        await GameAnalytics.getRemoteConfigsValueAsString(testName, "0");
-    var variant = int.parse(variantId ?? "0");
-    log("testVariantId ==> $variant");
+    // var testVersion = Pref.testVersion.getString();
+    // var version = DeviceInfo.packageInfo.buildNumber;
+    // log("version ==> $version testVersion ==> $testVersion");
+    // if (testVersion.isNotEmpty && testVersion != version) {
+    //   return 0;
+    // }
+    // if (testVersion.isEmpty) {
+    //   Pref.testVersion.setString(version);
+    // }
+    // var variantId =
+    //     await GameAnalytics.getRemoteConfigsValueAsString(testName, "0");
+    // var variant = int.parse(variantId ?? "0");
+    // log("testVariantId ==> $variant");
 
-    return variant;
+    return 0; //variant;
   }
 
   @override
