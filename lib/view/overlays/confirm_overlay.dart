@@ -9,10 +9,11 @@ import 'overlay.dart';
 class ConfirmOverlay extends AbstractOverlay {
   final String message, acceptLabel, declineLabel;
   final Function()? onAccept;
+  final bool barrierDismissible;
 
   const ConfirmOverlay(
       this.message, this.acceptLabel, this.declineLabel, this.onAccept,
-      {super.key})
+      {this.barrierDismissible = true, super.key})
       : super(type: OverlayType.confirm);
 
   @override
@@ -37,7 +38,11 @@ class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
                           "tribe_item_bg", ImageCenterSliceData(56)),
                       child: _contentFactory()))
             ]),
-            onPressed: close));
+            onPressed: () {
+              if (widget.barrierDismissible) {
+                close();
+              }
+            }));
   }
 
   Widget _contentFactory() {
