@@ -56,7 +56,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     var bloc = BlocProvider.of<ServicesBloc>(context);
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
     bloc.get<NoobSocket>().onReceive.add(_onNoobReceive);
-    if (accountBloc.account!.dailyReward.containsKey("next_reward_at")) {
+    if (accountBloc.account!.dailyReward.containsKey("day_index")) {
       Navigator.pushNamed(context, Routes.popupDailyGift.routeName);
     }
     getService<Sounds>().playMusic();
@@ -162,30 +162,26 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
       var help = message as NoobHelpMessage;
       if (help.ownerTribeId == account.tribeId && help.ownerId != account.id) {
-        Overlays.insert(context, OverlayType.confirm, args: {
-          "message": "tribe_help".l([help.attackerName, help.defenderName]),
-          "onAccept": () => _onAcceptHelp(help, account)
-        });
+        _showConfirmOverlay(
+            "tribe_help".l([help.attackerName, help.defenderName]),
+            () => _onAcceptHelp(help, account));
       }
       return;
     }
     if (message.type == Noobs.battleRequest) {
       var request = message as NoobRequestBattleMessage;
-      Overlays.insert(context, OverlayType.confirm, args: {
-        "message": "battle_request".l([request.attackerName]),
-        "onAccept": () async {
-          try {
-            var result = await rpc(RpcId.battleDefense,
-                params: {"battle_id": request.id, "choice": 1});
-            _joinBattle(
-                request.id,
-                account,
-                Opponent.create(
-                    request.attackerId, request.attackerName, account.id),
-                result["help_cost"],
-                result["created_at"]);
-          } finally {}
-        }
+      _showConfirmOverlay("battle_request".l([request.attackerName]), () async {
+        try {
+          var result = await rpc(RpcId.battleDefense,
+              params: {"battle_id": request.id, "choice": 1});
+          _joinBattle(
+              request.id,
+              account,
+              Opponent.create(
+                  request.attackerId, request.attackerName, account.id),
+              result["help_cost"],
+              result["created_at"]);
+        } finally {}
       });
       return;
     }
@@ -197,11 +193,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         var text = bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deal";
         bloc.account!.gold = bid.card.lastBidderGold;
         bloc.add(SetAccount(account: bloc.account!));
-        Overlays.insert(context, OverlayType.confirm, args: {
-          "message": text.l([bid.card.maxBidderName]),
-          "acceptLabel": "go_l".l(),
-          "onAccept": () => _selectTap(4)
-        });
+        _showConfirmOverlay(text.l([bid.card.maxBidderName]), _selectTap(4));
       }
     } else if (message.type == Noobs.auctionSold) {
       var bid = message as NoobAuctionMessage;
@@ -244,6 +236,16 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       var message = NoobCardMessage(account, element);
       getService<NoobSocket>().dispatchMessage(message);
     }
+  }
+
+  void _showConfirmOverlay(String message, Function() onAccept) {
+    Overlays.insert(context, OverlayType.confirm, args: {
+      "barrierDismissible": false,
+      "message": message,
+      "onAccept": onAccept
+    });
+    Timer(const Duration(seconds: 10),
+        () => Overlays.remove(OverlayType.confirm));
   }
 
   void _joinBattle(int id, Opponent friendsHead, Opponent oppositesHead,
