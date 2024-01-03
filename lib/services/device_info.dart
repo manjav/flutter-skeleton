@@ -19,18 +19,26 @@ class DeviceInfo extends IService {
   static String model = "";
   static double osVersion = 0;
   static String baseVersion = "";
-  static late PackageInfo packageInfo;
   static Map<String, dynamic> _deviceData = {};
+  static String packageName = "";
+  static String buildNumber = "";
+  static String version = "";
+  static String appName = "";
+  static bool isPreInitialized = false;
 
-  DeviceInfo(BuildContext context) {
-    _preInitialize();
+  static Future<bool> preInitialize(BuildContext context,
+      [bool forced = false]) async {
+    if (!forced && isPreInitialized) return false;
     var q = MediaQuery.of(context);
     DeviceInfo.size = q.size;
     DeviceInfo.devicePixelRatio = q.devicePixelRatio;
-  }
-
-  _preInitialize() async {
-    packageInfo = await PackageInfo.fromPlatform();
+    var packageInfo = await PackageInfo.fromPlatform();
+    packageName = packageInfo.packageName;
+    buildNumber = packageInfo.buildNumber;
+    version = packageInfo.version;
+    appName = packageInfo.appName;
+    isPreInitialized = true;
+    return true;
   }
 
   @override

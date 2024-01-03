@@ -65,10 +65,10 @@ class Trackers extends IService {
         "deviceId": DeviceInfo.adId,
         "test_name": _testName,
         "test_variant": variant.toString(),
-        "appName": DeviceInfo.packageInfo.appName,
-        "version": DeviceInfo.packageInfo.version,
-        "buildNumber": DeviceInfo.packageInfo.buildNumber,
-        "packageName": DeviceInfo.packageInfo.packageName,
+        "appName": DeviceInfo.appName,
+        "version": DeviceInfo.version,
+        "buildNumber": DeviceInfo.buildNumber,
+        "packageName": DeviceInfo.packageName,
       });
     }
   }

@@ -91,6 +91,8 @@ extension Overlays on OverlayType {
       _entries.remove(type);
     }
   }
+
+  static void clear() => _entries.clear();
 }
 
 class AbstractOverlay extends StatefulWidget {

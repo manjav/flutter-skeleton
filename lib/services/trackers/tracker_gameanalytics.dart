@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
 import '../../services/ads/ads_abstract.dart';
-import '../device_info.dart';
 import '../localization.dart';
-import '../prefs.dart';
 import 'tracker_abstract.dart';
 import 'trackers.dart';
 

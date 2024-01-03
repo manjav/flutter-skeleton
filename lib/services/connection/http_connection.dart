@@ -24,7 +24,7 @@ class HttpConnection extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    var version = int.parse(DeviceInfo.packageInfo.buildNumber);
+    var version = int.parse(DeviceInfo.buildNumber);
     await _loadConfigs(version);
 
     var loader = Loader();

@@ -15,6 +15,7 @@ import 'services/localization.dart';
 import 'services/prefs.dart';
 import 'services/sounds.dart';
 import 'services/theme.dart';
+import 'view/overlays/overlay.dart';
 import 'view/route_provider.dart';
 import 'view/widgets/loader_widget.dart';
 
@@ -51,7 +52,6 @@ class _MyAppState extends State<MyApp>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    _initialize();
     super.initState();
   }
 
@@ -67,25 +67,30 @@ class _MyAppState extends State<MyApp>
 
   void restartApp() {
     Ranks.lists.clear();
+    Overlays.clear();
     LoaderWidget.cachedLoaders.clear();
-    setState(() => _initialize());
+    if (Navigator.canPop(context)) Navigator.pop(context);
+    _initialize(true);
   }
 
-  void _initialize() {
-    if (Navigator.canPop(context)) Navigator.pop(context);
+  _initialize([bool forced = false]) async {
     key = UniqueKey();
-    DeviceInfo.size = Size.zero;
+    var result = await DeviceInfo.preInitialize(context, forced);
+    if (result) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    _initialize();
+    if (!DeviceInfo.isPreInitialized) return const SizedBox();
     return KeyedSubtree(
         key: key,
         child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                  create: (context) =>
-                      ServicesBloc(context, MyApp._firebaseAnalytics)),
+                  create: (context) => ServicesBloc(MyApp._firebaseAnalytics)),
               BlocProvider(create: (context) => AccountBloc()),
               BlocProvider(create: (context) => OpponentsBloc())
             ],

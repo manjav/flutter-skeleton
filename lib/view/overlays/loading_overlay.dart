@@ -79,7 +79,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
         Positioned(
             bottom: 4.d,
             right: 16.d,
-            child: Text("v.${DeviceInfo.packageInfo.buildNumber}",
+            child: Text("v.${DeviceInfo.buildNumber}",
                 style: logStyle)),
         Positioned(
             bottom: 4.d,

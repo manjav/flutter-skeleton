@@ -97,14 +97,14 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     emit(ServicesUpdate(event.initState, event.data));
   }
 
-  ServicesBloc(BuildContext context, this.firebaseAnalytics)
+  ServicesBloc(this.firebaseAnalytics)
       : super(ServicesInit(ServicesInitState.none, null)) {
     on<ServicesEvent>(updateService);
 
     _map[ServiceType.ads] = Ads();
     _map[ServiceType.games] = Games();
     _map[ServiceType.connection] = HttpConnection();
-    _map[ServiceType.device] = DeviceInfo(context);
+    _map[ServiceType.device] = DeviceInfo();
     _map[ServiceType.inbox] = Inbox();
     _map[ServiceType.localization] = Localization();
     _map[ServiceType.notifications] = Notifications();
