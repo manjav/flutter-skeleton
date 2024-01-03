@@ -74,7 +74,9 @@ class _MyAppState extends State<MyApp>
   }
 
   _initialize([bool forced = false]) async {
-    key = UniqueKey();
+    if (forced) {
+      key = UniqueKey();
+    }
     var result = await DeviceInfo.preInitialize(context, forced);
     if (result) {
       setState(() {});
