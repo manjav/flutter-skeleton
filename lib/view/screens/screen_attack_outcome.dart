@@ -73,7 +73,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
 
   @override
   Widget contentFactory() {
-    return Stack(alignment: const Alignment(0, 0.5), children: [
+    return Stack(alignment: Alignment(0, _isWin ? 0.5 : 0.2), children: [
       backgroundBuilder(animated: true, color: _isWin ? 4 : 2),
       _isWin
           ? Positioned(
