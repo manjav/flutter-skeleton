@@ -51,7 +51,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     appBarElements.addAll(appBarElementsRight());
     return Scaffold(
       body: PopScope(
-        onPopInvoked: (i) async => widget.closable,
+        canPop: widget.closable,
         child: Stack(children: [
           Positioned(
               top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
