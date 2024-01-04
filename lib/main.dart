@@ -47,7 +47,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp>
     with WidgetsBindingObserver, ServiceProvider {
-  late UniqueKey key;
+  UniqueKey? key;
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp>
   }
 
   _initialize([bool forced = false]) async {
-    if (forced) {
+    if (key == null || forced) {
       key = UniqueKey();
     }
     var result = await DeviceInfo.preInitialize(context, forced);
