@@ -287,18 +287,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         args: {"opponent": widget.opponent, "cards": _selectedCards},
         onClose: (data) async {
       _selectedCards.clear(setNull: true);
-      if (mounted) {
-        var route =
-            widget.opponent != null ? Routes.battleOut : Routes.questOut;
-        if (data != null) {
-          await Navigator.pushNamed(context, route.routeName, arguments: data);
-          if (mounted) {
-            accountBloc.account!.update(context, data);
-          }
-          accountBloc.add(SetAccount(account: account));
-          if (mounted) Navigator.pop(context);
-        }
-      }
       // Reset reminder notifications ....
       getService<Notifications>().schedule(account);
     });

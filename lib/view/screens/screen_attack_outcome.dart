@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
+import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../mixins/background_mixin.dart';
@@ -20,7 +21,8 @@ import 'screen.dart';
 enum FightMode { quest, battle }
 
 class AttackOutScreen extends AbstractScreen {
-  AttackOutScreen(super.mode, {required super.args, super.key});
+  AttackOutScreen(super.mode,
+      {required super.args, super.closable = false, super.key});
   @override
   createState() => _AttackOutScreenState();
 }
@@ -139,7 +141,15 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                 child: Asset.load<Image>("ui_arrow_back"),
                 width: 160.d,
                 color: ButtonColor.green,
-                onPressed: () => Navigator.pop(context)),
+                onPressed: () {
+                  accountBloc.account!.update(context, widget.args);
+                  accountBloc.add(SetAccount(account: accountBloc.account!));
+                  var lastRoute = widget.type == Routes.questOut
+                      ? Routes.quest
+                      : Routes.popupOpponents;
+                  Navigator.popUntil(context,
+                      (route) => route.settings.name == lastRoute.routeName);
+                }),
             SizedBox(width: 20.d),
             Widgets.skinnedButton(
                 padding: EdgeInsets.fromLTRB(32.d, 32.d, 48.d, 48.d),
@@ -152,13 +162,9 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
                   ],
                 ),
                 onPressed: () {
-                  if (widget.type == Routes.battleOut ||
-                      widget.type == Routes.questOut) {
-                    Navigator.pushReplacementNamed(
-                        context, Routes.deck.routeName);
-                  } else {
-                    Navigator.pop(context);
-                  }
+                  accountBloc.account!.update(context, widget.args);
+                  accountBloc.add(SetAccount(account: accountBloc.account!));
+                  Navigator.pop(context);
                 })
           ]))
     ]);
