@@ -73,80 +73,66 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
 
   @override
   Widget contentFactory() {
-    return Stack(alignment: Alignment.center, children: [
+    return Stack(alignment: const Alignment(0, 0.5), children: [
       backgroundBuilder(animated: true, color: _isWin ? 4 : 2),
       _isWin
           ? Positioned(
-              top: 0,
+              top: 120.d,
               width: 600.d,
               height: 600.d,
               child: LoaderWidget(AssetType.animation, "outcome_crown",
                   onRiveInit: (Artboard artboard) {
-                final controller =
-                    StateMachineController.fromArtboard(artboard, 'Crown');
-                // _closeInput = controller!.findInput<bool>('close') as SMIBool;
-                artboard.addController(controller!);
+                artboard.addController(
+                    StateMachineController.fromArtboard(artboard, 'Crown')!);
               }))
           : const SizedBox(),
-      AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) => Widgets.rect(
-              height: DeviceInfo.size.width,
-              alignment: Alignment.center,
-              child: Stack(alignment: Alignment.center, children: [
-                Positioned(
-                    top: 60.d,
-                    width: 622.d,
-                    height: 114.d,
-                    child: Opacity(
-                        opacity: (_animationController.value / 2).clamp(0, 1),
-                        child: Widgets.rect(
-                            alignment: Alignment.center,
-                            decoration:
-                                Widgets.imageDecorator("ui_ribbon_$_color"),
-                            child: SkinnedText("fight_label_$_color".l())))),
-                Positioned(
-                    bottom: -180.d,
-                    width: 1050.d,
-                    height: 980.d,
-                    child: LoaderWidget(AssetType.animation, "outcome_panel",
-                        onRiveInit: (Artboard artboard) {
-                      var controller = StateMachineController.fromArtboard(
-                          artboard, "State Machine 1")!;
-                      controller.findInput<double>("color")?.value =
-                          _isWin ? 1 : 0;
-                      artboard.addController(controller);
-                    }, fit: BoxFit.fitWidth)),
-                Positioned(
-                    bottom: 660.d,
-                    height: 240.d,
-                    width: 800.d,
-                    child: _outResults()),
-                Positioned(
-                    height: 322.d,
-                    left: 180.d,
-                    right: 180.d,
-                    bottom: 250.d,
-                    child: _prizeList()),
-                Positioned(
-                    height: 322.d,
-                    width: 720.d,
-                    bottom: 12.d,
-                    child: Opacity(
-                        opacity: (_animationController.value - 1.9).clamp(0, 1),
-                        child: SkinnedText("card_available".l()))),
-                Positioned(
-                    height: 322.d,
-                    width: 720.d,
-                    bottom: -42.d,
-                    child: Opacity(
-                        opacity: (_animationController.value - 2).clamp(0, 1),
-                        child: SkinnedText("${_account.getReadyCards().length}",
-                            style: TStyles.large))),
-              ]))),
+      SizedBox(
+          height: 700.d,
+          child: Stack(children: [
+            LoaderWidget(AssetType.animation, "outcome_panel",
+                onRiveInit: (Artboard artboard) {
+              var controller = StateMachineController.fromArtboard(
+                  artboard, "State Machine 1")!;
+              controller.findInput<double>("color")?.value = _isWin ? 1 : 0;
+              artboard.addController(controller);
+            }, fit: BoxFit.fitWidth),
+            Widgets.rect(
+                child: AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) => Stack(
+                  alignment: Alignment.center,
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned(top: -360.d, child: _ribbonTopBuilder()),
+                    Positioned(
+                        top: -210.d, width: 800.d, child: _profileBuilder()),
+                    Align(
+                        alignment: const Alignment(0, -0.3),
+                        child: _prizeList(700.d)),
+                    Positioned(
+                        height: 322.d,
+                        width: 720.d,
+                        bottom: 50.d,
+                        child: Opacity(
+                            opacity:
+                                (_animationController.value - 1.9).clamp(0, 1),
+                            child: SkinnedText("card_available".l()))),
+                    Positioned(
+                        height: 322.d,
+                        width: 720.d,
+                        bottom: 0,
+                        child: Opacity(
+                            opacity:
+                                (_animationController.value - 2).clamp(0, 1),
+                            child: SkinnedText(
+                                "${_account.getReadyCards().length}",
+                                style: TStyles.large))),
+                  ]),
+            ))
+          ])),
       Positioned(
           height: 180.d,
-          bottom: 180.d,
+          bottom: 150.d,
           child: Row(textDirection: TextDirection.ltr, children: [
             Widgets.skinnedButton(
                 padding: EdgeInsets.fromLTRB(48.d, 48.d, 48.d, 60.d),
@@ -178,7 +164,18 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
     ]);
   }
 
-  _outResults() {
+  Widget _ribbonTopBuilder() {
+    return Opacity(
+        opacity: (_animationController.value / 2).clamp(0, 1),
+        child: Widgets.rect(
+            width: 622.d,
+            height: 114.d,
+            alignment: Alignment.center,
+            decoration: Widgets.imageDecorator("ui_ribbon_$_color"),
+            child: SkinnedText("fight_label_$_color".l())));
+  }
+
+  Widget _profileBuilder() {
     var hasBenefits = _isWin && _heroBenefits.isNotEmpty;
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -209,13 +206,21 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
         ]);
   }
 
-  _prizeList() {
-    return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, mainAxisExtent: 130.d),
-        itemCount: _prizes.length,
-        itemBuilder: (c, i) =>
-            _prizeItemBuilder(_prizes[i].key, _prizes[i].value));
+  Widget _prizeList(double width) {
+    var crossAxisCount = 3.max(_prizes.length);
+    return SizedBox(
+        height: 300.d,
+        width: 700.d,
+        child: GridView.builder(
+            padding: EdgeInsets.zero,
+            // physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 1.7,
+              crossAxisCount: crossAxisCount,
+            ),
+            itemCount: _prizes.length,
+            itemBuilder: (c, i) =>
+                _prizeItemBuilder(_prizes[i].key, _prizes[i].value)));
   }
 
   Widget? _prizeItemBuilder(String type, int value) {
