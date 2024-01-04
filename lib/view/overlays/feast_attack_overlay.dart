@@ -36,6 +36,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   @override
   void initState() {
     super.initState();
+    waitingSFX = "attack";
     _account = accountBloc.account!;
     children = [animationBuilder("attack")];
     _opponent = widget.args["opponent"] ?? Opponent.create(1, "دشمن", 0);
