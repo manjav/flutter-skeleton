@@ -170,19 +170,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     }
     if (message.type == Noobs.battleRequest) {
       var request = message as NoobRequestBattleMessage;
-      _showConfirmOverlay("battle_request".l([request.attackerName]), () async {
-        try {
-          var result = await rpc(RpcId.battleDefense,
-              params: {"battle_id": request.id, "choice": 1});
-          _joinBattle(
-              request.id,
-              account,
-              Opponent.create(
-                  request.attackerId, request.attackerName, account.id),
-              result["help_cost"],
-              result["created_at"]);
-        } finally {}
-      });
+      _showConfirmOverlay("battle_request".l([request.attackerName]),
+          () => _onAcceptAttack(request, account));
       return;
     }
     var bloc = accountBloc;
@@ -193,7 +182,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         var text = bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deal";
         bloc.account!.gold = bid.card.lastBidderGold;
         bloc.add(SetAccount(account: bloc.account!));
-        _showConfirmOverlay(text.l([bid.card.maxBidderName]), _selectTap(4));
+        _showConfirmOverlay(
+            text.l([bid.card.maxBidderName]), () => _selectTap(4));
       }
     } else if (message.type == Noobs.auctionSold) {
       var bid = message as NoobAuctionMessage;
@@ -206,6 +196,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       }
       bloc.add(SetAccount(account: bloc.account!));
     }
+  }
+
+  _onAcceptAttack(NoobRequestBattleMessage request, Account account) async {
+    try {
+      var result = await rpc(RpcId.battleDefense,
+          params: {"battle_id": request.id, "choice": 1});
+      _joinBattle(
+          request.id,
+          account,
+          Opponent.create(request.attackerId, request.attackerName, account.id),
+          result["help_cost"],
+          result["created_at"]);
+    } finally {}
   }
 
   _onAcceptHelp(NoobHelpMessage help, Account account) async {
