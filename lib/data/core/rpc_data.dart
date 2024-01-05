@@ -31,7 +31,18 @@ class LoadingData {
         {
           "changeNameMinLevel": 100,
           "changeNameCost": 1000,
-          "maxDailyGifts": 30
+          "maxDailyGifts": 30,
+          "availabilityLevels": {
+            'ads': 4,
+            'name': 4,
+            'park': -1,
+            'tribe': 6,
+            'league': 8,
+            'combo': 15,
+            'treasury': 5,
+            'popupOpponents': 9,
+            'tribeChange': 150,
+          }
         };
   }
 }

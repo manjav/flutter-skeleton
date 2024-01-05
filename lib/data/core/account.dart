@@ -62,17 +62,6 @@ class Player extends Opponent {
 
 class Account extends Player with ServiceProvider {
   Account() : super.initialize({}, 0);
-  static const Map<String, int> availabilityLevels = {
-    'ads': 4,
-    'name': 4,
-    'park': 4,
-    'bank': 5,
-    'tribe': 6,
-    'league': 8,
-    'liveBattle': 9,
-    'combo': 15,
-    'tribeChange': 150,
-  };
   static const levelExpo = 2.7;
   static const levelMultiplier = 1.3;
 

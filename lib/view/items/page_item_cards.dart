@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../mixins/key_provider.dart';
 import '../../services/device_info.dart';
@@ -55,13 +54,12 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                 icon: "icon_combo",
                 onPressed: () {
                   // Show unavailable message
-                  if (state.account.level <
-                      Account.availabilityLevels["tribe"]!) {
+                  var levels =
+                      state.account.loadingData.rules["availabilityLevels"]!;
+                  if (state.account.level < levels["combo"]) {
                     Overlays.insert(context, OverlayType.toast,
-                        args: "unavailable_l".l([
-                          "popupcombo".l(),
-                          Account.availabilityLevels["combo"]
-                        ]));
+                        args: "unavailable_l"
+                            .l(["popupcombo".l(), levels["combo"]]));
                   } else {
                     Navigator.pushNamed(context, Routes.popupCombo.routeName);
                   }

@@ -17,11 +17,11 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/overlays/chat_options_overlay.dart';
 import '../../view/popups/tribe_search_popup.dart';
-import '../widgets/skinned_text.dart';
 import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 import 'page_item.dart';
 
 class TribePageItem extends AbstractPageItem {
@@ -38,9 +38,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       // Show unavailable message
-      if (state.account.level < Account.availabilityLevels["tribe"]!) {
-        return SkinnedText("unavailable_l"
-            .l(["tribe_l".l(), Account.availabilityLevels["tribe"]]));
+      var levels = state.account.loadingData.rules["availabilityLevels"]!;
+      if (state.account.level < levels["tribe"]!) {
+        return SkinnedText("unavailable_l".l(["tribe_l".l(), levels["tribe"]]));
       }
 
       if (state.account.tribe == null || state.account.tribe!.id <= 0) {
@@ -198,8 +198,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     return Widgets.rect(
         height: 64.d,
         padding: padding ?? EdgeInsets.only(left: 16.d, right: 16.d),
-        decoration:
-            Widgets.imageDecorator("frame_hatch_button", ImageCenterSliceData(42)),
+        decoration: Widgets.imageDecorator(
+            "frame_hatch_button", ImageCenterSliceData(42)),
         child: Row(
             textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -304,8 +304,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             details.globalPosition.dy - 220.d
           ]);
         },
-        decoration:
-            Widgets.imageDecorator("frame_hatch_button", ImageCenterSliceData(42)),
+        decoration: Widgets.imageDecorator(
+            "frame_hatch_button", ImageCenterSliceData(42)),
         child: LoaderWidget(AssetType.image, "avatar_${message.avatarId}",
             width: 76.d, height: 76.d, subFolder: "avatars"));
     return Column(children: [

@@ -98,17 +98,6 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   }
 
   _onBuildingTap(Account account, Building building) {
-    if (account.level < Account.availabilityLevels["liveBattle"]!) {
-      toast("unavailable_l"
-          .l(["battle_l".l(), Account.availabilityLevels["liveBattle"]]));
-      return;
-    }
-    if (building.level < 1) {
-      toast(account.level < Account.availabilityLevels["tribe"]!
-          ? "coming_soon".l()
-          : "error_149".l());
-      return;
-    }
     var type = switch (building.type) {
       Buildings.quest => Routes.quest,
       Buildings.base => Routes.popupOpponents,
@@ -117,6 +106,25 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
       _ => Routes.none,
     };
+    // Offense and defense buildings need tribe membership.
+    if (type == Routes.popupSupportiveBuilding &&
+        (account.tribe == null || account.tribe!.id <= 0)) {
+      toast("error_149".l());
+      return;
+    }
+    // Get availability level from account
+    var levels = account.loadingData.rules["availabilityLevels"]!;
+    if (levels.containsKey(building.type.name)) {
+      var availableAt = levels[building.type.name]!;
+      if (availableAt == -1) {
+        toast("coming_soon".l());
+        return;
+      } else if (account.level < availableAt) {
+        toast("unavailable_l".l(["${building.type.name}_l".l(), availableAt]));
+        return;
+      }
+    }
+
     if (type == Routes.none) {
       return;
     }
