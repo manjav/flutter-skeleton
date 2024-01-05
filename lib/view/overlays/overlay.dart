@@ -47,9 +47,9 @@ extension Overlays on OverlayType {
         ChatOptionsOverlay(y: args[0], options: args[1], onSelect: args[2]),
       "/confirm" => ConfirmOverlay(
           args["message"],
-          args["onAccept"],
           args["acceptLabel"] ?? "accept_l".l(),
           args["declineLabel"] ?? "decline_l".l(),
+          args["onAccept"],
           barrierDismissible: args["barrierDismissible"] ?? true),
       "/member" => MemberOverlay(args[0], args[1], args[2]),
       "/toast" => ToastOverlay(args as String),
