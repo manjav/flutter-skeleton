@@ -68,7 +68,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
               await Future.delayed(
                   Duration(milliseconds: _minAnimationTime - elapsedTime));
               if (mounted) {
-                Navigator.pushReplacementNamed(context, Routes.home.routeName);
+                Routes.home.replace(context);
               }
             } else if (state.initState == ServicesInitState.error) {
               _exception = state.data as RpcException;
@@ -162,8 +162,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
     if (_exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY ||
         _exception!.statusCode == StatusCode.C702_UPDATE_TEST) {
       close();
-      Navigator.pushNamed(context, Routes.popupRestore.routeName,
-          arguments: {"onlySet": true});
+      Routes.popupRestore.navigate(context, args: {"onlySet": true});
     } else if (isUpdateError) {
       _update(isForceUpdate);
     } else {

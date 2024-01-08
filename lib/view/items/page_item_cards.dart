@@ -48,8 +48,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             width: 132.d,
             child: Widgets.skinnedButton(context,
                 icon: "icon_collection",
-                onPressed: () => Navigator.pushNamed(
-                    context, Routes.popupCollection.routeName))),
+                onPressed: () => Routes.popupCollection.navigate(context))),
         PositionedDirectional(
             top: paddingTop,
             width: 132.d,
@@ -64,7 +63,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                     args:
                         "unavailable_l".l(["popupcombo".l(), levels["combo"]]));
               } else {
-                Navigator.pushNamed(context, Routes.popupCombo.routeName);
+                Routes.popupCombo.navigate(context);
               }
             }))
       ]);
@@ -75,9 +74,8 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.touchable(
       context,
-      onTap: () => Navigator.pushNamed(
-          context, Routes.popupCardDetails.routeName,
-          arguments: {'card': card}),
+      onTap: () =>
+          Routes.popupCardDetails.navigate(context, args: {'card': card}),
       child: CardItem(card,
           size: itemSize,
           key: getGlobalKey(card.id),

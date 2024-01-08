@@ -59,7 +59,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     bloc.add(ServicesEvent(ServicesInitState.complete, null));
     bloc.get<NoobSocket>().onReceive.add(_onNoobReceive);
     if (accountBloc.account!.dailyReward.containsKey("day_index")) {
-      Navigator.pushNamed(context, Routes.popupDailyGift.routeName);
+      Routes.popupDailyGift.navigate(context);
     }
     getService<Sounds>().playMusic();
   }
@@ -73,7 +73,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         height: 200.d,
         child: LevelIndicator(
             onPressed: () =>
-                Navigator.pushNamed(context, Routes.popupProfile.routeName)),
+                Routes.popupProfile.navigate(context)),
       )
     ];
   }
@@ -94,8 +94,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
               height: 110.d,
               padding: EdgeInsets.all(16.d),
               child: Asset.load<Image>("ui_settings"),
-              onPressed: () => Navigator.pushNamed(
-                  context, Routes.popupSettings.routeName))),
+              onPressed: () => 
+                  Routes.popupSettings.navigate(context))),
       ];
     }
     return super.appBarElementsRight();
@@ -108,8 +108,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
           if (Platform.isAndroid) {
-            var result = await Navigator.pushNamed(
-                context, Routes.popupMessage.routeName, arguments: {
+            var result = await 
+                 Routes.popupMessage.navigate(context,  args: {
               "title": "quit_title".l(),
               "message": "quit_message".l(),
               "isConfirm": () {}
@@ -284,6 +284,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     if (createAt > 0) {
       args["created_at"] = createAt;
     }
-    Navigator.pushNamed(context, Routes.livebattle.routeName, arguments: args);
+    Routes.livebattle.navigate(context,  args: args);
   }
 }

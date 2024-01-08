@@ -38,9 +38,8 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
           ]));
       return;
     }
-    var returnValue = await Navigator.pushNamed(
-        context, Routes.popupCardSelect.routeName,
-        arguments: {'building': building});
+    var returnValue = await Routes.popupCardSelect
+        .navigate(context, args: {'building': building});
     if (returnValue == null) return;
     var selectedCards = returnValue as List<AccountCard?>;
     if (const ListEquality().equals(selectedCards, building.cards) ||

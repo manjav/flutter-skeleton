@@ -87,9 +87,8 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                         isVisible: _card.fruit.isHero,
                         color: ButtonColor.violet,
                         label: "˩  ${"hero_edit".l()}",
-                        onPressed: () => Navigator.pushNamed(
-                            context, Routes.popupHero.routeName,
-                            arguments: {"card": _card.fruit.id})),
+                        onPressed: () => Routes.popupHero
+                            .navigate(context, args: {"card": _card.fruit.id})),
                     _button(
                         isVisible: _card.fruit.isSalable,
                         color: ButtonColor.green,
@@ -149,8 +148,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   }
 
   _onButtonsTap(Routes route) async {
-    await Navigator.pushNamed(context, route.routeName,
-        arguments: {"card": _card});
+    await route.navigate(context, args: {"card": _card});
     if (mounted && !accountBloc.account!.cards.containsKey(_card.id)) {
       Navigator.popUntil(context, (route) => route.isFirst);
     }

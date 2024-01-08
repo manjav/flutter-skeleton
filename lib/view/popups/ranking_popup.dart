@@ -162,8 +162,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
           Text(score.compact(), style: TStyles.small),
         ]), onPressed: () async {
       if (rpcId == RpcId.rankingGlobal && !record.itsMe) {
-        Navigator.pushNamed(context, Routes.popupProfile.routeName,
-            arguments: {"id": record.id});
+        Routes.popupProfile.navigate(context, args: {"id": record.id});
       }
     });
   }

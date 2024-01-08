@@ -138,7 +138,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
   void _riveEventsListener(RiveEvent event) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
       if (event.name == "click") {
-        await Navigator.pushNamed(context, Routes.deck.routeName);
+        await Routes.deck.navigate(context);
         _questsCount = accountBloc.account!.questsCount - 1;
         // Update city levels after quest
         for (var i = 0; i < widget.arena.value.length; i++) {

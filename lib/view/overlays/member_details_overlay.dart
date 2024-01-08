@@ -109,8 +109,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
   _onButtonsPressed(RpcId id) async {
     var bloc = accountBloc;
     if (id == RpcId.getProfileInfo) {
-      Navigator.pushNamed(context, Routes.popupProfile.routeName,
-          arguments: {"id": widget.member.id});
+      Routes.popupProfile.navigate(context, args: {"id": widget.member.id});
       close();
       return;
     }

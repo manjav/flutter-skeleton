@@ -15,7 +15,6 @@ import '../../utils/assets.dart';
 import '../../view/widgets/building_balloon.dart';
 import '../../view/widgets/indicator.dart';
 import '../map_elements/building_widget.dart';
-import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_deadline.dart';
@@ -47,22 +46,19 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             start: 32.d,
             child: Indicator("home", Values.leagueRank,
                 hasPlusIcon: false,
-                onTap: () => Navigator.pushNamed(
-                    context, Routes.popupLeague.routeName))),
+                onTap: () => Routes.popupLeague.navigate(context))),
         PositionedDirectional(
             bottom: 220.d,
             start: 32.d,
             child: Indicator("home", Values.rank,
                 hasPlusIcon: false,
-                onTap: () => Navigator.pushNamed(
-                    context, Routes.popupRanking.routeName))),
+                onTap: () => Routes.popupRanking.navigate(context))),
         PositionedDirectional(
             bottom: 180.d,
             end: 32.d,
             child: Widgets.button(context,
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
-                onPressed: () =>
-                    Navigator.pushNamed(context, Routes.popupInbox.routeName))),
+                onPressed: () => Routes.popupInbox.navigate(context))),
         _building(state.account, Buildings.defense),
         _building(state.account, Buildings.offense),
         _building(state.account, Buildings.base),
@@ -129,8 +125,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     if (type == Routes.none) {
       return;
     }
-    Navigator.pushNamed(context, type.routeName,
-        arguments: {"building": building});
+    type.navigate(context, args: {"building": building});
   }
 
   void _riveEventsListener(RiveEvent event) {

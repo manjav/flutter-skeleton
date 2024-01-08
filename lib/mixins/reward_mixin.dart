@@ -174,11 +174,10 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       if (context.mounted) {
         await Future.delayed(const Duration(milliseconds: 10));
         if (mounted) {
-          Navigator.pushNamed(context, Routes.popupMessage.routeName,
-              arguments: {
-                "title": "Error",
-                "message": "error_${e.statusCode.value}".l()
-              });
+          Routes.popupMessage.navigate(context, args: {
+            "title": "Error",
+            "message": "error_${e.statusCode.value}".l()
+          });
         }
       }
       dismiss();

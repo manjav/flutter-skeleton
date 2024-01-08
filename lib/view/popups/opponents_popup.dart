@@ -320,13 +320,11 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         if (mounted) {
           result["friendsHead"] = accountBloc.account;
           result["oppositesHead"] = opponent;
-          Navigator.pushNamed(context, Routes.livebattle.routeName,
-              arguments: result);
+          Routes.livebattle.navigate(context, args: result);
         }
       } finally {}
       return;
     }
-    Navigator.pushNamed(context, Routes.deck.routeName,
-        arguments: {"opponent": opponent});
+    Routes.deck.navigate(context, args: {"opponent": opponent});
   }
 }

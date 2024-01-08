@@ -126,7 +126,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
 
   void _fill(Account account, HeroCard hero, int step) {
     if (account.potion < step) {
-      Navigator.pushNamed(context, Routes.popupPotion.routeName);
+      Routes.popupPotion.navigate(context);
     } else {
       hero.fillPotion(context, step);
     }

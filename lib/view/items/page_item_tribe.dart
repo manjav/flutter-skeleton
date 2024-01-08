@@ -48,7 +48,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           Expanded(child: TribeSearchPopup()),
           Widgets.skinnedButton(context, label: "tribe_new".l(), width: 380.d,
               onPressed: () async {
-            await Navigator.pushNamed(context, Routes.popupTribeEdit.routeName);
+            await Routes.popupTribeEdit.navigate(context);
             setState(() {});
           }),
           SizedBox(height: 200.d),
@@ -81,9 +81,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       Widgets.button(
         context,
         onPressed: () async {
-          await Navigator.of(context).pushNamed(
-              Routes.popupTribeOptions.routeName,
-              arguments: {"index": 0});
+          await Routes.popupTribeOptions.navigate(context, args: {"index": 0});
           setState(() {});
         },
         padding: EdgeInsets.fromLTRB(48.d, 44.d, 48.d, 0),
@@ -125,7 +123,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     }
     return Widgets.button(context, padding: EdgeInsets.zero,
         onPressed: () async {
-      await Navigator.pushNamed(context, Routes.popupTribeEdit.routeName);
+      await Routes.popupTribeEdit.navigate(context);
       setState(() {});
     },
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -219,8 +217,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               SizedBox(width: 12.d),
               SkinnedText(label.convert()),
             ]), onPressed: () async {
-      await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
-          arguments: {"index": 1});
+      await Routes.popupTribeOptions.navigate(context, args: {"index": 1});
       setState(() {});
     });
   }

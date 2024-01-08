@@ -86,8 +86,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           color: ButtonColor.teal,
           label: "tribe_invite".l(),
           icon: "tribe_invite",
-          onPressed: () => Navigator.of(context)
-              .pushNamed(Routes.popupTribeInvite.routeName)),
+          onPressed: () => Routes.popupTribeInvite.navigate(context)),
       SizedBox(height: 20.d),
       Expanded(
           child: ListView.builder(
@@ -192,7 +191,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             label: "tribe_donate".l(),
             padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
             onPressed: () async {
-          await Navigator.pushNamed(context, Routes.popupTribeDonate.routeName);
+          await Routes.popupTribeDonate.navigate(context);
           setState(() {});
         })
       ]),

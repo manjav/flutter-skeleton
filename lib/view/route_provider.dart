@@ -165,6 +165,15 @@ extension RouteProvider on Routes {
       _ => true,
     };
   }
+
+  dynamic navigate(BuildContext context, {Map<String, dynamic>? args}) async {
+    return await Navigator.pushNamed(context, routeName, arguments: args);
+  }
+
+  dynamic replace(BuildContext context, {Map<String, dynamic>? args}) async {
+    return await Navigator.pushReplacementNamed(context, routeName,
+        arguments: args);
+  }
 }
 
 class MaterialTransparentRoute<T> extends PageRoute<T>

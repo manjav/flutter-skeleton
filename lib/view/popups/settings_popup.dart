@@ -124,7 +124,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
       "invite" => Routes.popupInvite,
       _ => Routes.popupRedeemGift,
     };
-    Navigator.pushNamed(context, route.routeName);
+    route.navigate(context);
   }
 
   void _showLocales() {

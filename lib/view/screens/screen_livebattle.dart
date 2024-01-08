@@ -363,7 +363,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     // Reset reminder notifications ....
     getService<Notifications>().schedule(accountBloc.account!);
 
-    Navigator.pushNamed(context, Routes.livebattleOut.routeName, arguments: {
+    Routes.livebattleOut.navigate(context, args: {
       "friendsId": _friendsHead.id,
       "oppositesId": _oppositesHead.id,
       "warriors": _warriors.values.toList()

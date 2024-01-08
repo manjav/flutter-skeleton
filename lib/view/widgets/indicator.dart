@@ -72,7 +72,7 @@ class _IndicatorState extends State<Indicator>
                   log("Go to shop");
                   break;
                 case Values.potion:
-                  Navigator.pushNamed(context, Routes.popupPotion.routeName);
+                  Routes.popupPotion.navigate(context);
                   break;
                 default:
                   break;
