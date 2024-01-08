@@ -32,6 +32,10 @@ class DeviceInfo extends IService {
     var q = MediaQuery.of(context);
     DeviceInfo.size = q.size;
     DeviceInfo.devicePixelRatio = q.devicePixelRatio;
+    var width = math.min(size.width, size.height);
+    var height = math.max(size.width, size.height);
+    ratio = width / 1080;
+    aspectRatio = width / height;
     var packageInfo = await PackageInfo.fromPlatform();
     packageName = packageInfo.packageName;
     buildNumber = packageInfo.buildNumber;
@@ -43,10 +47,6 @@ class DeviceInfo extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    var width = math.min(size.width, size.height);
-    var height = math.max(size.width, size.height);
-    ratio = width / 1080;
-    aspectRatio = width / height;
     log("◢◤◢◤◢◤◢◤◢◤◢ ${DeviceInfo.size} ${DeviceInfo.devicePixelRatio} $ratio ◢◤◢◤◢◤◢◤◢◤◢");
     var deviceInfoPlugin = DeviceInfoPlugin();
     try {
