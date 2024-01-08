@@ -221,17 +221,17 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           children: [
             Positioned(
                 top: -90.d,
-                child: Asset.load<Image>("tribe_upgrade_$id",
+                child: Asset.load<Image>("upgrade_$id",
                     width: 220.d, height: 180.d)),
             Positioned(
                 top: 80.d,
-                child: SkinnedText("tribe_upgrade_t_$id".l(),
+                child: SkinnedText("upgrade_t_$id".l(),
                     style: TStyles.large)),
             Positioned(
                 top: 160.d,
                 width: 400.d,
                 child: Text(
-                    "tribe_upgrade_d_$id".l([tribe.getOption(id).convert()]),
+                    "upgrade_d_$id".l([tribe.getOption(id).convert()]),
                     textAlign: TextAlign.center,
                     style: TStyles.medium.copyWith(height: 1))),
             Positioned(

@@ -180,11 +180,11 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         height: 102.d,
         child: Row(
           children: [
-            _upgradable(ButtonColor.wooden, "tribe_upgrade_1002",
+            _upgradable(ButtonColor.wooden, "upgrade_1002",
                 "${tribe.getOption(Buildings.offense.id)}%"),
-            _upgradable(ButtonColor.wooden, "tribe_upgrade_1003",
+            _upgradable(ButtonColor.wooden, "upgrade_1003",
                 "${tribe.getOption(Buildings.defense.id)}%"),
-            _upgradable(ButtonColor.wooden, "tribe_upgrade_1004",
+            _upgradable(ButtonColor.wooden, "upgrade_1004",
                 "${tribe.getOption(Buildings.cards.id)}%"),
             Expanded(
                 child: _upgradable(

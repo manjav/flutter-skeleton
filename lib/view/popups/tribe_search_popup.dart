@@ -28,8 +28,8 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
 
   @override
   void initState() {
-    barrierDismissible = false;
     super.initState();
+    barrierDismissible = false;
   }
 
   @override
