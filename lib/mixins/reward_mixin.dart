@@ -62,16 +62,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         width: DeviceInfo.size.width,
         height: DeviceInfo.size.height,
         child: Stack(alignment: Alignment.center, children: items),
-        onPressed: () {
-          if (state.index <= RewardAnimationState.waiting.index) return;
-          if (state == RewardAnimationState.started) {
-            skipInput?.value = true;
-          } else if (state == RewardAnimationState.shown) {
-            onRiveEvent(const RiveEvent(
-                name: "closing", secondsDelay: 0, properties: {}));
-            closeInput?.value = true;
-          }
-        });
+        onPressed: onScreenTouched);
   }
 
   Widget animationBuilder(String fileName, {String? stateMachineName}) {
@@ -213,4 +204,15 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         }
         return const SizedBox();
       });
+
+  void onScreenTouched() {
+    if (state.index <= RewardAnimationState.waiting.index) return;
+    if (state == RewardAnimationState.started) {
+      skipInput?.value = true;
+    } else if (state == RewardAnimationState.shown) {
+      onRiveEvent(
+          const RiveEvent(name: "closing", secondsDelay: 0, properties: {}));
+      closeInput?.value = true;
+    }
+  }
 }
