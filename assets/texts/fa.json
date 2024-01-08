@@ -103,6 +103,8 @@
     "rank_tab_2": "قبایل قوی",
     "rank_near": "نزدیک تو",
     "tribe_help": "%s و %s\nدرخواست کمک در نبرد!",
+    "quit_title": "خروج",
+    "quit_message": "آیا می‌خواهی از بازی خارج شوی؟",
     "battle_request": "%s به تو حمله کرد!",
     "opponent_select": "انتخاب حریف",
     "popupcollection": "کلکسیون کارت",

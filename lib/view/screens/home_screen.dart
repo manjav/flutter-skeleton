@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
@@ -101,36 +103,54 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
 
   @override
   Widget contentFactory() {
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-      return Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          backgroundBuilder(color: 2, animated: false),
-          PageView.builder(
-            controller: _pageController,
-            itemCount: _tabsCont,
-            itemBuilder: _pageItemBuilder,
-            onPageChanged: (value) => _selectTap(value, pageChange: false),
-          ),
-          TabNavigator(
-              tabsCount: _tabsCont,
-              selectedIndex: _selectedTab,
-              punchIndex: _punchIndex,
-              onChange: (i) => _selectTap(i, tabsChange: false)),
-          BlocConsumer<ServicesBloc, ServicesState>(
-              builder: (context, state) => const SizedBox(),
-              listener: (context, state) {
-                if (state.initState == ServicesInitState.changeTab) {
-                  _selectTap(state.data as int);
-                } else if (state.initState == ServicesInitState.punch) {
-                  _punchIndex.value = state.data as int;
-                  Timer(
-                      const Duration(seconds: 1), () => _punchIndex.value = -1);
-                }
-              })
-        ],
-      );
-    });
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        if (!didPop) {
+          if (Platform.isAndroid) {
+            var result = await Navigator.pushNamed(
+                context, Routes.popupMessage.routeName, arguments: {
+              "title": "quit_title".l(),
+              "message": "quit_message".l(),
+              "isConfirm": () {}
+            });
+            if (result != null) {
+              SystemNavigator.pop();
+            }
+          }
+        }
+      },
+      child: BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+        return Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            backgroundBuilder(color: 2, animated: false),
+            PageView.builder(
+              controller: _pageController,
+              itemCount: _tabsCont,
+              itemBuilder: _pageItemBuilder,
+              onPageChanged: (value) => _selectTap(value, pageChange: false),
+            ),
+            TabNavigator(
+                tabsCount: _tabsCont,
+                selectedIndex: _selectedTab,
+                punchIndex: _punchIndex,
+                onChange: (i) => _selectTap(i, tabsChange: false)),
+            BlocConsumer<ServicesBloc, ServicesState>(
+                builder: (context, state) => const SizedBox(),
+                listener: (context, state) {
+                  if (state.initState == ServicesInitState.changeTab) {
+                    _selectTap(state.data as int);
+                  } else if (state.initState == ServicesInitState.punch) {
+                    _punchIndex.value = state.data as int;
+                    Timer(const Duration(seconds: 1),
+                        () => _punchIndex.value = -1);
+                  }
+                })
+          ],
+        );
+      }),
+    );
   }
 
   Widget? _pageItemBuilder(BuildContext context, int index) {
