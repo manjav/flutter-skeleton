@@ -79,8 +79,7 @@ class FruitCard {
 
     attributes[HeroAttribute.power] = Utils.toInt(data["powerAttribute"]);
     attributes[HeroAttribute.wisdom] = Utils.toInt(data["wisdomAttribute"]);
-    attributes[HeroAttribute.blessing] =
-        Utils.toInt(data["blessingAttribute"]);
+    attributes[HeroAttribute.blessing] = Utils.toInt(data["blessingAttribute"]);
     potionLimit = Utils.toInt(data["potion_limit"]);
   }
 
@@ -117,7 +116,7 @@ class AbstractCard with ServiceProvider {
   final Account account;
 
   AbstractCard(this.account, this.map) {
-    power = map['power'].round() ?? 0;
+    power = map['power'] != null ? map['power'].round() : 0;
     base = account.loadingData.baseCards[map['base_card_id']]!;
   }
   int get basePrice => (power * powerToGoldRatio * minPriceRatio).round();
