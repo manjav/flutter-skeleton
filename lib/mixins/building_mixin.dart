@@ -71,19 +71,10 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
   }
 
   _upgrade(Account account, Building building) async {
-    var params = {RpcParams.type.name: building.type.id};
-    if (account.tribe != null) {
-      params[RpcParams.tribe_id.name] = account.tribe!.id;
-    }
     try {
-      var data = await BlocProvider.of<ServicesBloc>(context)
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.upgrade, params: params);
-      if (!mounted) return;
-      var accountBloc = BlocProvider.of<AccountBloc>(context);
-      accountBloc.account!.update(context, data);
-      building.level = data["level"];
-      accountBloc.add(SetAccount(account: accountBloc.account!));
+      var result = await BlocProvider.of<AccountBloc>(context)
+          .upgrade(context, building.type.id);
+      building.level = result["level"];
     } finally {}
   }
 }

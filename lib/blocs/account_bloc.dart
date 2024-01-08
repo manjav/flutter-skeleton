@@ -6,6 +6,7 @@ import '../../data/core/store.dart';
 import '../../services/connection/http_connection.dart';
 import '../data/core/account.dart';
 import '../data/core/rpc.dart';
+import '../data/core/tribe.dart';
 import '../mixins/service_provider.dart';
 import '../view/widgets/card_holder.dart';
 
@@ -112,10 +113,22 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     return result["card"];
   }
 
-  Future<List<AccountCard>> openPack(
-      BuildContext context, ShopItem pack) async {
+  Future<List<AccountCard>> openPack(BuildContext context, ShopItem pack,
+      {int selectedCardId = -1}) async {
+    var params = {RpcParams.type.name: pack.id};
+    if (selectedCardId > -1) {
+      params["base_card_id"] = selectedCardId;
+    }
     var result = await getService<HttpConnection>(context)
-        .rpc(RpcId.buyCardPack, params: {RpcParams.type.name: pack.id});
+        .rpc(RpcId.buyCardPack, params: params);
+    if (result.containsKey("base_card_id_set")) {
+      var cards = <AccountCard>[];
+
+      for (var heroId in result["base_card_id_set"]) {
+        cards.add(AccountCard(account!, {"base_card_id": heroId}));
+      }
+      return cards;
+    }
     result["achieveCards"] = result["cards"];
     result.remove("cards");
     if (context.mounted) {
@@ -123,5 +136,21 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
       add(SetAccount(account: account!));
     }
     return result["achieveCards"];
+  }
+
+  upgrade(BuildContext context, int id, {Tribe? tribe}) async {
+    var params = {RpcParams.type.name: id};
+    if (tribe != null) {
+      params[RpcParams.tribe_id.name] = tribe.id;
+    }
+    var result = await getService<HttpConnection>(context).rpc(
+        tribe != null ? RpcId.tribeUpgrade : RpcId.upgrade,
+        params: params);
+
+    if (context.mounted) {
+      account!.update(context, result);
+      add(SetAccount(account: account!));
+    }
+    return result;
   }
 }

@@ -11,12 +11,12 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import 'popup.dart';
-import '../widgets/skinned_text.dart';
 import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class TribeDetailsPopup extends AbstractPopup {
   const TribeDetailsPopup({required super.args, super.key})
@@ -293,13 +293,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
 
   _upgrade(int id, Tribe tribe) async {
     try {
-      var result = await rpc(RpcId.tribeUpgrade, params: {
-        RpcParams.tribe_id.name: tribe.id,
-        RpcParams.type.name: id,
-      });
-      if (mounted) {
-        _account.update(context, result);
-      }
+      await accountBloc.upgrade(context, id, tribe: tribe);
       _account.buildings[id.toBuildings()]!.level++;
       tribe.levels[id] = tribe.levels[id]! + 1;
       setState(() {});
