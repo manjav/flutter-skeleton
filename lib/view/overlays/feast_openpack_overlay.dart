@@ -5,6 +5,7 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
+import '../../blocs/account_bloc.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/store.dart';
 import '../../mixins/background_mixin.dart';
@@ -27,6 +28,7 @@ class OpenPackFeastOverlay extends AbstractOverlay {
 class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     with RewardScreenMixin, TickerProviderStateMixin, BackgroundMixin {
   late ShopItem _pack;
+  SMIInput<bool>? _heroInput;
   SMIInput<double>? _countInput;
   List<AccountCard> _cards = [];
   late AnimationController _opacityAnimationController;
@@ -49,7 +51,11 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
 
     process(() async {
       _cards = await accountBloc.openPack(context, _pack);
-      var count = _cards.length > 2 ? 0 : _cards.length;
+      var maxCards = _cards.first.base.isHero ? 4 : 2;
+      if (_cards.first.base.isHero) {
+        _heroInput?.value = true;
+      }
+      var count = _cards.length > maxCards ? 0 : _cards.length;
       if (count == 0) {
         setState(() => _updateChildren());
       }
@@ -57,6 +63,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       return _cards;
     });
   }
+//   {"base_card_id":515,"type":32}
+// {"cards":[{"id":559815886,"last_used_at":0,"power":46,"base_card_id":515,"player_id":8169489}],"gold":10619953,"nectar":783}
 
   void _updateChildren() {
     children = [
@@ -65,8 +73,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
           builder: (context, child) => Opacity(
               opacity: _opacityBackgroundAnimationController.value,
               child: backgroundBuilder())),
+      animationBuilder("openpack"),
       _cardsList(),
-      IgnorePointer(child: animationBuilder("openpack")),
     ];
   }
 
@@ -75,6 +83,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
     _countInput = controller.findInput<double>("cards");
+    _heroInput = controller.findInput<bool>("isHero");
     updateRiveText("packNameText", "shop_card_${_pack.id}".l());
     updateRiveText("packDescriptionText", "shop_card_${_pack.id}_desc".l());
     return controller;
@@ -82,6 +91,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
 
   @override
   void onRiveEvent(RiveEvent event) {
+    print(event);
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
       var count = _cards.length > 2 ? 0 : _cards.length;
@@ -97,6 +107,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       _opacityAnimationController.animateBack(0,
           duration: const Duration(milliseconds: 500));
       _opacityBackgroundAnimationController.reverse();
+    } else if (state == RewardAnimationState.choose) {
+      _chooseHero(event.properties["card"].toInt());
     }
   }
 
@@ -164,9 +176,45 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   }
 
   @override
+  void onScreenTouched() {
+    if (state.index <= RewardAnimationState.waiting.index) return;
+    if (state == RewardAnimationState.started) {
+      skipInput?.value = true;
+    } else if (state == RewardAnimationState.shown) {
+      if (_heroInput!.value) {
+        return;
+      }
+      onRiveEvent(
+          const RiveEvent(name: "closing", secondsDelay: 0, properties: {}));
+      closeInput?.value = true;
+    }
+  }
+
+  @override
   void dispose() {
     _opacityBackgroundAnimationController.dispose();
     _opacityAnimationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _chooseHero(int index) async {
+    // _cards = await accountBloc.openPack(context, _pack,
+    //     selectedCardId: _cards[index].base.id);
+    var result = {
+      "achieveCards": [
+        {
+          "id": 559815886,
+          "last_used_at": 0,
+          "power": 46,
+          "base_card_id": 715,
+          "player_id": 8169489
+        }
+      ]
+    };
+
+    if (context.mounted) {
+      accountBloc.account!.update(context, result);
+      accountBloc.add(SetAccount(account: accountBloc.account!));
+    }
   }
 }
