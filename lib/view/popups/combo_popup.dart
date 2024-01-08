@@ -9,12 +9,12 @@ import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'popup.dart';
-import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
 import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class ComboPopup extends AbstractPopup {
   ComboPopup({super.key}) : super(Routes.popupCombo, args: {});
@@ -117,7 +117,7 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
     var combo = _account.loadingData.comboHints[index];
     return Opacity(
         opacity: combo.isAvailable ? 1 : 0.6,
-        child: Widgets.button(
+        child: Widgets.button(context,
             height: 110.d,
             radius: 32.d,
             color: selected ? TColors.primary80 : TColors.primary90,

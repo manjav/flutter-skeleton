@@ -74,7 +74,7 @@ class _TabNavigatorState extends State<TabNavigator> with ServiceProviderMixin {
   }
 
   Widget? _tabItemBuilder(Account account, int index, double size) {
-    return Widgets.touchable(
+    return Widgets.touchable(context,
         onTap: () => widget.onChange?.call(index),
         child: Stack(
           clipBehavior: Clip.none,

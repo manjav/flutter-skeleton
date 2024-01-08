@@ -56,7 +56,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     var items = <Widget>[];
     items.addAll(children);
     items.add(_progressbarBuilder());
-    return Widgets.button(
+    return Widgets.button(context,
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
         width: DeviceInfo.size.width,

@@ -51,7 +51,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         body: PopScope(
           canPop: canPop,
           child: Stack(children: [
-            Widgets.touchable(
+            Widgets.touchable(context,
                 onTap:
                     barrierDismissible ? () => Navigator.pop(context) : null),
             Align(
@@ -102,7 +102,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   }
 
   Widget closeButtonFactory() {
-    return Widgets.button(
+    return Widgets.button(context,
         alignment: Alignment.center,
         width: 160.d,
         height: 160.d,

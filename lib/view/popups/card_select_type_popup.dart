@@ -78,7 +78,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
               _levelItemBuilder(i, fruit)
           ]),
           SizedBox(height: 48.d),
-          Widgets.skinnedButton(
+          Widgets.skinnedButton(context,
               label: "search_l".l(),
               width: 340.d,
               onPressed: () =>
@@ -88,7 +88,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
 
   Widget _cardItemBuilder(int index, Fruit fruit) {
     var selected = _selectedCardIndex == index;
-    return Widgets.button(
+    return Widgets.button(context,
         height: 100.d,
         margin: EdgeInsets.all(10.d),
         padding: EdgeInsets.only(right: 24.d, left: 8.d),
@@ -112,7 +112,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
 
   Widget _levelItemBuilder(int index, Fruit fruit) {
     var selected = _selectedLevelIndex == index;
-    return Widgets.button(
+    return Widgets.button(context,
         padding: EdgeInsets.all(8.d),
         decoration:
             selected ? Widgets.imageDecorator("level_badge_border") : null,

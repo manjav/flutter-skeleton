@@ -7,8 +7,8 @@ import '../../data/core/account.dart';
 import '../../mixins/key_provider.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'loader_widget.dart';
 import '../widgets.dart';
+import 'loader_widget.dart';
 import 'skinned_text.dart';
 
 class LevelIndicator extends StatefulWidget {
@@ -69,6 +69,7 @@ class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
   _elementsBuilder() {
     var s = widget.size / 200;
     return Widgets.button(
+      context,
       radius: 54 * s,
       onPressed: widget.onPressed,
       decoration: Widgets.imageDecorator("ui_frame_wood_big"),

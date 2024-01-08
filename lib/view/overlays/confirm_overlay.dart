@@ -25,7 +25,7 @@ class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
   Widget build(BuildContext context) {
     return Material(
         color: TColors.transparent,
-        child: Widgets.button(
+        child: Widgets.button(context,
             padding: EdgeInsets.zero,
             child: Stack(children: [
               Positioned(
@@ -37,12 +37,11 @@ class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
                       decoration: Widgets.imageDecorator(
                           "tribe_item_bg", ImageCenterSliceData(56)),
                       child: _contentFactory()))
-            ]),
-            onPressed: () {
-              if (widget.barrierDismissible) {
-                close();
-              }
-            }));
+            ]), onPressed: () {
+          if (widget.barrierDismissible) {
+            close();
+          }
+        }));
   }
 
   Widget _contentFactory() {
@@ -59,13 +58,12 @@ class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
 
   Widget _button(String label,
       {ButtonColor color = ButtonColor.green, Function()? onPressed}) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         color: color,
         padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 32.d),
-        label: label,
-        onPressed: () {
-          onPressed?.call();
-          close();
-        });
+        label: label, onPressed: () {
+      onPressed?.call();
+      close();
+    });
   }
 }

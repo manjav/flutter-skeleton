@@ -25,8 +25,8 @@ class _ProfileAvatarsPopupState
   @override
   Widget titleTextFactory() => const SizedBox();
   @override
-  BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
+  BoxDecoration get chromeSkinBuilder => Widgets.imageDecorator(
+      "popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(50.d, 180.d, 50.d, 80.d);
@@ -53,6 +53,7 @@ class _ProfileAvatarsPopupState
   Widget? _avatarItemBuilder(Account account, int index) {
     var id = index;
     return Widgets.button(
+      context,
       radius: 32.d,
       color: account.avatarId == id ? TColors.green : TColors.primary80,
       margin: EdgeInsets.all(8.d),

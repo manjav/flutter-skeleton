@@ -41,7 +41,7 @@ class _MessagePopupState extends AbstractPopupState<MessagePopup> {
   }
 
   _button(ButtonColor color, String label, dynamic result) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         width: 360.d,
         label: label,
         color: color,

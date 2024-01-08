@@ -23,6 +23,7 @@ class _BuildingWidgetState extends State<BuildingWidget> {
   @override
   Widget build(BuildContext context) {
     return Widgets.touchable(
+      context,
       onTap: () {
         widget.onTap?.call();
       },

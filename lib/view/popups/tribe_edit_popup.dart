@@ -68,7 +68,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
       ]),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         SkinnedText("status_l".l()),
-        Widgets.button(
+        Widgets.button(context,
             padding: EdgeInsets.all(22.d),
             width: 120.d,
             height: 120.d,
@@ -76,7 +76,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
             child: Asset.load<Image>(
                 "arrow_${Localization.isRTL ? "right" : "left"}")),
         SkinnedText("tribe_stats_$status".l()),
-        Widgets.button(
+        Widgets.button(context,
             padding: EdgeInsets.all(22.d),
             width: 120.d,
             height: 120.d,
@@ -99,7 +99,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Widgets.skinnedButton(
+          Widgets.skinnedButton(context,
               height: 160.d,
               isEnable:
                   _account.tribePosition.index >= TribePosition.elder.index &&

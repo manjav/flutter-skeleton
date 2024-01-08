@@ -10,8 +10,8 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
-import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
+import '../widgets/skinned_text.dart';
 import 'card_item.dart';
 import 'page_item.dart';
 
@@ -73,7 +73,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
   Widget _tabItemRenderer(int index, String tabName) {
     var isSelected = index == _selectedTab;
     var title = "auction_$tabName";
-    return Widgets.button(
+    return Widgets.button(context,
         radius: 20.d,
         alignment: Alignment.center,
         margin: EdgeInsets.all(8.d),
@@ -134,7 +134,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       bidderName +=
           "\n${card.maxBidderId == _account.id ? "you_l".l() : card.maxBidderName}\n";
     }
-    return Widgets.button(
+    return Widgets.button(context,
         radius: radius.x,
         padding: EdgeInsets.zero,
         margin: EdgeInsets.all(8.d),
@@ -179,7 +179,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                         ]),
                     SizedBox(height: 8.d),
                     bidable
-                        ? Widgets.skinnedButton(
+                        ? Widgets.skinnedButton(context,
                             padding: EdgeInsets.fromLTRB(0, 12.d, 8.d, 32.d),
                             color: ButtonColor.green,
                             child: Row(

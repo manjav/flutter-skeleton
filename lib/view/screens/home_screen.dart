@@ -89,7 +89,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     if (_selectedTab.value == 2) {
       return <Widget>[
         ...super.appBarElementsRight()
-          ..add(Widgets.button(
+          ..add(Widgets.button(context,
               width: 110.d,
               height: 110.d,
               padding: EdgeInsets.all(16.d),

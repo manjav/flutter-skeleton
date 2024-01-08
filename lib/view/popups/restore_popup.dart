@@ -55,7 +55,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
         Text("settings_restore_get".l(), style: style),
         SizedBox(height: 20.d),
         SkinnedText("settings_restore_yours".l()),
-        Widgets.clipboardGetter(accountBloc.account!.restoreKey),
+        Widgets.clipboardGetter(context, accountBloc.account!.restoreKey),
         Widgets.divider(width: 120.d, margin: 32.d),
       ]);
     }
@@ -68,7 +68,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
           hintText: "settings_restore_hint".l(),
           onChange: (t) => setState(() {})),
       SizedBox(height: 30.d),
-      Widgets.skinnedButton(
+      Widgets.skinnedButton(context,
           width: 590.d,
           color: ButtonColor.green,
           icon: "icon_restore",

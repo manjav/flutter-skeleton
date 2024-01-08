@@ -100,7 +100,7 @@ class _LiveTribeState extends State<LiveTribe>
     if (!owner.base.itsMe || _requestSent || team.isNotEmpty) {
       return const SizedBox();
     }
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         width: 320.d,
         height: 150.d,
         isEnable: _timer.isActive,

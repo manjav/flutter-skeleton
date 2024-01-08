@@ -46,7 +46,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             top: paddingTop,
             start: 20.d,
             width: 132.d,
-            child: Widgets.skinnedButton(
+            child: Widgets.skinnedButton(context,
                 icon: "icon_collection",
                 onPressed: () => Navigator.pushNamed(
                     context, Routes.popupCollection.routeName))),
@@ -54,20 +54,19 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             top: paddingTop,
             width: 132.d,
             start: 150.d,
-            child: Widgets.skinnedButton(
-                icon: "icon_combo",
+            child: Widgets.skinnedButton(context, icon: "icon_combo",
                 onPressed: () {
-                  // Show unavailable message
-                  var levels =
-                      state.account.loadingData.rules["availabilityLevels"]!;
-                  if (state.account.level < levels["combo"]) {
-                    Overlays.insert(context, OverlayType.toast,
-                        args: "unavailable_l"
-                            .l(["popupcombo".l(), levels["combo"]]));
-                  } else {
-                    Navigator.pushNamed(context, Routes.popupCombo.routeName);
-                  }
-                }))
+              // Show unavailable message
+              var levels =
+                  state.account.loadingData.rules["availabilityLevels"]!;
+              if (state.account.level < levels["combo"]) {
+                Overlays.insert(context, OverlayType.toast,
+                    args:
+                        "unavailable_l".l(["popupcombo".l(), levels["combo"]]));
+              } else {
+                Navigator.pushNamed(context, Routes.popupCombo.routeName);
+              }
+            }))
       ]);
     });
   }
@@ -75,6 +74,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
   Widget? cardItemBuilder(
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.touchable(
+      context,
       onTap: () => Navigator.pushNamed(
           context, Routes.popupCardDetails.routeName,
           arguments: {'card': card}),

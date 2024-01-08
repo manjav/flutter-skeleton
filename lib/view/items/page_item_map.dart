@@ -15,6 +15,7 @@ import '../../utils/assets.dart';
 import '../../view/widgets/building_balloon.dart';
 import '../../view/widgets/indicator.dart';
 import '../map_elements/building_widget.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_deadline.dart';
@@ -58,7 +59,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         PositionedDirectional(
             bottom: 180.d,
             end: 32.d,
-            child: Widgets.button(
+            child: Widgets.button(context,
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
                 onPressed: () =>
                     Navigator.pushNamed(context, Routes.popupInbox.routeName))),
@@ -125,7 +126,8 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       }
     }
 
-    if (type == Routes.none) {
+    if (type == Routes.quest) {
+      Overlays.insert(context, OverlayType.feastUpgrade);
       return;
     }
     Navigator.pushNamed(context, type.routeName,

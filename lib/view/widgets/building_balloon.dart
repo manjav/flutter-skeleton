@@ -31,7 +31,7 @@ class _BuildingBalloonState extends State<BuildingBalloon>
       if (!isCollectable(state.account)) {
         return const SizedBox();
       }
-      return Widgets.button(
+      return Widgets.button(context,
           radius: 40.d,
           color: TColors.primary,
           padding: EdgeInsets.all(12.d),

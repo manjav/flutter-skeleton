@@ -92,7 +92,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             height: 214.d,
             width: 420.d,
             bottom: 24.d,
-            child: Widgets.skinnedButton(
+            child: Widgets.skinnedButton(context,
                 padding: EdgeInsets.fromLTRB(56.d, 48.d, 56.d, 64.d),
                 alignment: Alignment.center,
                 child: Row(
@@ -112,6 +112,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   Widget? _cardItemBuilder(BuildContext context, int index, Account account,
       AccountCard card, double itemSize) {
     return Widgets.button(
+      context,
       foregroundDecoration: _selectedCards.value.contains(card)
           ? BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(28.d)),

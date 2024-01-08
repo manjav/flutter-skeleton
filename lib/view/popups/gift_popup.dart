@@ -8,9 +8,9 @@ import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'popup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import 'popup.dart';
 
 class RedeemGiftPopup extends AbstractPopup {
   RedeemGiftPopup({super.key}) : super(Routes.popupRedeemGift, args: {});
@@ -33,8 +33,8 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
   @override
   String titleBuilder() => "settings_gift".l();
   @override
-  BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
+  BoxDecoration get chromeSkinBuilder => Widgets.imageDecorator(
+      "popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   contentFactory() {
@@ -52,7 +52,7 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
             hintText: "settings_gift_hint".l(),
             onChange: (t) => setState(() {})),
         SizedBox(height: 40.d),
-        Widgets.skinnedButton(
+        Widgets.skinnedButton(context,
             width: 540.d,
             icon: "icon_gift",
             label: "settings_gift".l(),

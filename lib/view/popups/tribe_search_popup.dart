@@ -53,7 +53,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
                   controller: _inputController,
                   onSubmit: (t) => _search())),
           SizedBox(width: 20.d),
-          Widgets.skinnedButton(
+          Widgets.skinnedButton(context,
               label: "search_l".l(),
               color: ButtonColor.green,
               onPressed: _search)
@@ -73,6 +73,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
   Widget? _listItemBuilder(BuildContext context, int index) {
     var tribe = _tribes[index];
     return Widgets.button(
+      context,
       margin: EdgeInsets.all(4.d),
       padding: EdgeInsets.all(22.d),
       decoration:

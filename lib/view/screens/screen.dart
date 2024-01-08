@@ -74,7 +74,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   List<Widget> appBarElementsLeft() {
     return [
-      Widgets.button(
+      Widgets.button(context,
           height: 117.d,
           padding: EdgeInsets.all(22.d),
           child: Asset.load<Image>(

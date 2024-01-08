@@ -47,7 +47,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
     var items = buttons.entries.toList();
     return Material(
         color: TColors.transparent,
-        child: Widgets.button(
+        child: Widgets.button(context,
             child: Stack(children: [
               PositionedDirectional(
                   top: widget.y,
@@ -99,7 +99,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
     if (id == RpcId.none) {
       return const SizedBox();
     }
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         padding: EdgeInsets.only(bottom: 20.d),
         color: color,
         label: "${id.name.toLowerCase()}_l".l(),

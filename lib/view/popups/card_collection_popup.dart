@@ -7,9 +7,9 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
+import '../widgets/skinned_text.dart';
 import 'popup.dart';
 
 class CollectionPopup extends AbstractPopup {
@@ -136,7 +136,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   Widget _fruitItemBuilder(int index, Fruit fruit) {
     var selected = _selectedFruit.value == fruit;
 
-    return Widgets.button(
+    return Widgets.button(context,
         margin: EdgeInsets.all(10.d),
         padding: EdgeInsets.all(16.d),
         decoration: BoxDecoration(

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../services/device_info.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
 import '../blocs/account_bloc.dart';
-import '../blocs/services_bloc.dart';
 import '../data/core/account.dart';
 import '../data/core/building.dart';
-import '../data/core/rpc.dart';
-import '../services/connection/http_connection.dart';
+import '../services/device_info.dart';
 import '../services/localization.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';
@@ -40,6 +37,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Widgets.skinnedButton(
+            context,
             height: 160.d,
             isEnable: building.level < building.maxLevel,
             color: ButtonColor.green,

@@ -7,7 +7,8 @@ import '../services/theme.dart';
 import '../utils/assets.dart';
 
 class Widgets {
-  static GestureDetector touchable({
+  static GestureDetector touchable(
+    BuildContext context, {
     String? sfx,
     int id = 30,
     Function()? onTap,
@@ -118,7 +119,8 @@ class Widgets {
     );
   }
 
-  static Widget button({
+  static Widget button(
+    BuildContext context, {
     Function()? onPressed,
     Function(TapUpDetails)? onTapUp,
     int buttonId = 30,
@@ -138,7 +140,7 @@ class Widgets {
     BoxConstraints? constraints,
     required Widget child,
   }) {
-    return touchable(
+    return touchable(context,
         id: buttonId,
         onTap: onPressed,
         onTapUp: onTapUp,
@@ -170,7 +172,8 @@ class Widgets {
             centerSlice: sliceData?.centerSlice));
   }
 
-  static skinnedButton({
+  static skinnedButton(
+    BuildContext context, {
     String? label,
     String? icon,
     ButtonColor color = ButtonColor.yellow,
@@ -190,7 +193,7 @@ class Widgets {
     if (!isEnable) {
       color = ButtonColor.gray;
     }
-    return Widgets.button(
+    return button(context,
         onPressed: isEnable ? onPressed : onDisablePressed,
         width: width,
         height: height,
@@ -215,7 +218,8 @@ class Widgets {
                 : child!));
   }
 
-  static buttonDecorator(ButtonColor color, [ButtonSize size = ButtonSize.small]) {
+  static buttonDecorator(ButtonColor color,
+      [ButtonSize size = ButtonSize.small]) {
     var slicingData = switch (size) {
       ButtonSize.small =>
         ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 4, 20)),
@@ -318,8 +322,9 @@ class Widgets {
             )));
   }
 
-  static Widget clipboardGetter(String text, {double? width, double? height}) {
-    return button(
+  static Widget clipboardGetter(BuildContext context, String text,
+      {double? width, double? height}) {
+    return button(context,
         width: width ?? 720.d,
         height: height ?? 120.d,
         margin: EdgeInsets.all(8.d),
@@ -334,8 +339,9 @@ class Widgets {
         onPressed: () => Clipboard.setData(ClipboardData(text: text)));
   }
 
-  static checkbox(String label, bool isSelected, {Function()? onSelect}) {
-    return button(
+  static checkbox(BuildContext context, String label, bool isSelected,
+      {Function()? onSelect}) {
+    return button(context,
         onPressed: onSelect,
         child: Row(children: [
           SkinnedText(label),

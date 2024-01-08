@@ -91,7 +91,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
                       width: 420.d,
                       height: 160.d,
                       bottom: 24.d,
-                      child: Widgets.skinnedButton(
+                      child: Widgets.skinnedButton(context,
                           label: "card_select".l(),
                           onPressed: () =>
                               Navigator.pop(context, _selectedCards.value)))
@@ -103,6 +103,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
   Widget? _cardItemBuilder(
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.button(
+      context,
       padding: EdgeInsets.zero,
       foregroundDecoration: _selectedCards.value.contains(card)
           ? BoxDecoration(

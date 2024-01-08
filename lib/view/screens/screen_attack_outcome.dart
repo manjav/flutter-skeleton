@@ -75,7 +75,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
 
   @override
   Widget contentFactory() {
-    return Widgets.touchable(
+    return Widgets.touchable(context,
         child: Stack(alignment: Alignment(0, _isWin ? 0.5 : 0.2), children: [
           backgroundBuilder(animated: true, color: _isWin ? 4 : 2),
           _isWin

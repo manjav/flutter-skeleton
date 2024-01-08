@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../services/device_info.dart';
-import '../view/widgets/skinned_text.dart';
 import '../utils/assets.dart';
 import '../view/widgets.dart';
+import '../view/widgets/skinned_text.dart';
 
 @optionalTypeArgs
 mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
@@ -49,7 +49,7 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
   Widget _tabItemBuilder(int index, TabData data) {
     var imageName = index == selectedTabIndex ? 'selected' : 'normal';
     return Expanded(
-      child: Widgets.button(
+      child: Widgets.button(context,
           margin: EdgeInsets.symmetric(horizontal: 6.d),
           padding: EdgeInsets.zero,
           height: 118.d,
@@ -64,10 +64,9 @@ mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
               SizedBox(width: data.icon == null ? 0 : 32.d),
               SkinnedText(data.title),
             ],
-          ),
-          onPressed: () {
-            selectedTabIndex = index;
-          }),
+          ), onPressed: () {
+        selectedTabIndex = index;
+      }),
     );
   }
 

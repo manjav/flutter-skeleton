@@ -6,10 +6,10 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import 'popup.dart';
-import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class DailyGiftPopup extends AbstractPopup {
   DailyGiftPopup({super.key}) : super(Routes.popupDailyGift, args: {});
@@ -64,7 +64,7 @@ class _RewardPopupState extends AbstractPopupState<DailyGiftPopup> {
               itemBuilder: _daysItemBuilder,
             )),
         SizedBox(height: 40.d),
-        Widgets.skinnedButton(
+        Widgets.skinnedButton(context,
             width: 440.d,
             label: "claim_l".l(),
             color: ButtonColor.green,

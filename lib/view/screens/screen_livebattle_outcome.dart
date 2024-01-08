@@ -59,7 +59,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
   @override
   Widget contentFactory() {
     getService<Sounds>().play(_friendsHead.won ? "won" : "lose");
-    return Widgets.button(
+    return Widgets.button(context,
         padding: EdgeInsets.all(32.d),
         child: Stack(alignment: Alignment.center, children: [
           backgroundBuilder(),

@@ -139,8 +139,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             Align(
                 alignment: const Alignment(-1.1, -0.28),
                 child: ValueListenableBuilder<int>(
-                    valueListenable: _powerBalance,
-                    builder: (context, value, child) =>
+                  valueListenable: _powerBalance,
+                  builder: (context, value, child) =>
                       PowerBalance(value, _maxPower),
                 )),
             LiveSlot(0, -0.75, -0.30, 0.20, _slotState, oppositesHeadCards),
@@ -160,7 +160,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             Positioned(
                 width: 120.d,
                 right: 40.d,
-                child: Widgets.skinnedButton(label: "x", onPressed: _close))
+                child: Widgets.skinnedButton(context,
+                    label: "x", onPressed: _close))
           ],
         ));
   }

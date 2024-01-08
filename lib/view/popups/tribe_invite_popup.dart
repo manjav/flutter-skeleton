@@ -34,7 +34,7 @@ class _TribeInvitePopupState extends AbstractPopupState<TribeInvitePopup> {
           controller: _textController,
           onChange: (t) => setState(() {})),
       SizedBox(height: 40.d),
-      Widgets.skinnedButton(
+      Widgets.skinnedButton(context,
           height: 160.d,
           color: ButtonColor.teal,
           label: "tribe_invite".l(),

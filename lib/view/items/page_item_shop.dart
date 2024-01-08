@@ -15,10 +15,10 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../widgets/loader_widget.dart';
-import '../widgets/skinned_text.dart';
 import '../overlays/overlay.dart';
 import '../widgets.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 import 'page_item.dart';
 
 class ShopPageItem extends AbstractPageItem {
@@ -296,7 +296,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   Widget _baseItemBuilder(int index, String title, String description,
       ShopItemVM item, Widget child) {
-    return Widgets.button(
+    return Widgets.button(context,
         color: TColors.primary90,
         radius: 30.d,
         alignment: Alignment.center,
@@ -314,7 +314,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                   textAlign: TextAlign.center),
           SizedBox(height: description.isEmpty ? 0 : 20.d),
           IgnorePointer(
-              child: Widgets.skinnedButton(
+              child: Widgets.skinnedButton(context,
                   color: ButtonColor.green,
                   padding: EdgeInsets.only(bottom: 10.d),
                   icon: item.inStore ? null : "icon_${item.base.currency}",

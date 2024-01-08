@@ -28,8 +28,8 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
   @override
   Widget titleTextFactory() => const SizedBox();
   @override
-  BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
+  BoxDecoration get chromeSkinBuilder => Widgets.imageDecorator(
+      "popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   EdgeInsets get contentPadding =>
@@ -48,7 +48,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
               hintText: account.name,
               onChange: (t) => setState(() {})),
           SizedBox(height: 12.d),
-          Widgets.skinnedButton(
+          Widgets.skinnedButton(context,
               isEnable: _textController.text.length >= 6 &&
                   _textController.text != account.name,
               height: 160.d,
@@ -108,6 +108,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
   Widget? _moodItemBuilder(Account account, int index) {
     var id = index + 1;
     return Widgets.button(
+      context,
       radius: 32.d,
       color: account.moodId == id ? TColors.green : TColors.primary80,
       margin: EdgeInsets.all(10.d),

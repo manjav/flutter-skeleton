@@ -61,7 +61,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
   }
 
   Widget _row(Pref setting, Widget action, Function(Pref) onPressed) {
-    return Widgets.button(
+    return Widgets.button(context,
         height: 120.d,
         padding: EdgeInsets.all(30.d),
         child: Row(children: [
@@ -95,7 +95,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
   Widget _button(String title,
       {ButtonColor color = ButtonColor.teal, double? width}) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         width: width,
         color: color,
         icon: "icon_$title",
@@ -163,6 +163,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
   Widget _localeItemBuilder(Locale local) {
     return Widgets.button(
+      context,
       child: SkinnedText("settings_${local.languageCode}".l()),
       onPressed: () {
         Pref.language.setString(local.languageCode);

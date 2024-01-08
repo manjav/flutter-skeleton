@@ -170,7 +170,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
       record.name = record.itsMe ? "You" : record.name;
     }
 
-    return Widgets.button(
+    return Widgets.button(context,
         height: 100.d,
         radius: 0,
         color: color,
@@ -195,13 +195,12 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
                   textAlign: TextAlign.center)),
           SizedBox(width: 100.d),
           Text(record.weeklyScore.compact(), style: TStyles.small),
-        ]),
-        onPressed: () async {
-          if (!record.itsMe) {
-            Navigator.pushNamed(context, Routes.popupProfile.routeName,
-                arguments: {"id": record.id});
-          }
-        });
+        ]), onPressed: () async {
+      if (!record.itsMe) {
+        Navigator.pushNamed(context, Routes.popupProfile.routeName,
+            arguments: {"id": record.id});
+      }
+    });
   }
 
   Widget _roadMap() {

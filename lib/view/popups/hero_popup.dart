@@ -107,7 +107,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _heroes.length > 1
-                      ? Widgets.button(
+                      ? Widgets.button(context,
                           padding: EdgeInsets.all(22.d),
                           width: 120.d,
                           height: 120.d,
@@ -121,7 +121,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                     for (var i = 0; i < 4; i++) _itemHolder(i, items[i])
                   ]),
                   _heroes.length > 1
-                      ? Widgets.button(
+                      ? Widgets.button(context,
                           padding: EdgeInsets.all(22.d),
                           width: 120.d,
                           height: 120.d,
@@ -141,14 +141,14 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Widgets.skinnedButton(
+                        Widgets.skinnedButton(context,
                             color: ButtonColor.cream,
                             label: "cancel_l".l(),
                             width: 340.d,
                             padding: EdgeInsets.only(bottom: 12.d),
                             onPressed: () => Navigator.pop(context)),
                         SizedBox(width: 12.d),
-                        Widgets.skinnedButton(
+                        Widgets.skinnedButton(context,
                             label: "save_l".l(),
                             width: 340.d,
                             color: ButtonColor.green,
@@ -171,7 +171,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
         top: index == 0 || index == 1 ? padding - 2 : null,
         right: index == 1 || index == 3 ? padding : null,
         bottom: index == 2 || index == 3 ? padding + 3 : null,
-        child: Widgets.button(
+        child: Widgets.button(context,
             width: 144.d,
             height: 144.d,
             padding: EdgeInsets.all(12.d),
@@ -181,18 +181,17 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                 ? const SizedBox()
                 : Asset.load<Image>("heroitem_${item.base.image}"),
             onPressed: () {
-              if (item != null) {
-                _heroes[_selectedIndex.value].items.remove(item);
-                setState(() {});
-                return;
-              }
-              showModalBottomSheet<void>(
-                  context: context,
-                  backgroundColor: TColors.transparent,
-                  barrierColor: TColors.transparent,
-                  builder: (BuildContext context) =>
-                      _itemListBottomSheet(index));
-            }));
+          if (item != null) {
+            _heroes[_selectedIndex.value].items.remove(item);
+            setState(() {});
+            return;
+          }
+          showModalBottomSheet<void>(
+              context: context,
+              backgroundColor: TColors.transparent,
+              barrierColor: TColors.transparent,
+              builder: (BuildContext context) => _itemListBottomSheet(index));
+        }));
   }
 
   _itemListBottomSheet(int index) {
@@ -225,7 +224,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     var host = item.getHost(_heroes);
     var heroItem = item.getUsage(_account.heroItems.values.toList());
     var isActive = host == null || heroItem != null;
-    return Widgets.button(
+    return Widgets.button(context,
         radius: 44.d,
         color: TColors.primary80,
         margin: EdgeInsets.all(12.d),
@@ -277,6 +276,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
         return _lockItem("icon_used", "${host.card.fruit.name}_t".l());
       }
       return Widgets.skinnedButton(
+        context,
         width: 320.d,
         height: 120.d,
         label: "use_l".l(),
@@ -289,6 +289,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       return _lockItem("icon_locked", "level_l".l([item.unlockLevel]));
     }
     return Widgets.skinnedButton(
+      context,
       height: 120.d,
       icon: "icon_nectar",
       label: "${item.cost}",

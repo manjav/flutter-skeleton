@@ -134,7 +134,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
         ? (record as TribeRank).weeklyScore
         : record.score;
 
-    return Widgets.button(
+    return Widgets.button(context,
         height: 100.d,
         radius: 0,
         color: color,
@@ -160,12 +160,11 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
                   : null),
           SizedBox(width: 79.d),
           Text(score.compact(), style: TStyles.small),
-        ]),
-        onPressed: () async {
-          if (rpcId == RpcId.rankingGlobal && !record.itsMe) {
-            Navigator.pushNamed(context, Routes.popupProfile.routeName,
-                arguments: {"id": record.id});
-          }
-        });
+        ]), onPressed: () async {
+      if (rpcId == RpcId.rankingGlobal && !record.itsMe) {
+        Navigator.pushNamed(context, Routes.popupProfile.routeName,
+            arguments: {"id": record.id});
+      }
+    });
   }
 }

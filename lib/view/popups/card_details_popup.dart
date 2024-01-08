@@ -47,7 +47,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         child: Scaffold(
             backgroundColor: backgroundColor,
             body: Stack(children: [
-              Widgets.touchable(
+              Widgets.touchable(context,
                   onTap:
                       barrierDismissible ? () => Navigator.pop(context) : null),
               Container(
@@ -135,7 +135,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
     if (!isVisible) {
       return const SizedBox();
     }
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         margin: EdgeInsets.all(8.d),
         icon: icon,
         color: color,

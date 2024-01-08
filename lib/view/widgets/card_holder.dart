@@ -43,7 +43,7 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
                       50, 57, const Rect.fromLTWH(11, 11, 2, 2))),
               child: Text(widget.card!.power.compact(),
                   style: TStyles.mediumInvert)),
-      Widgets.button(
+      Widgets.button(context,
           onPressed: () => widget.onTap?.call(),
           width: widget.heroMode ? 202.d : 184.d,
           height: widget.heroMode ? 202.d : 184.d,

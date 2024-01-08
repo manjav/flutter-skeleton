@@ -10,10 +10,10 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import 'popup.dart';
 import '../../view/widgets.dart';
-import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class TreasuryBuildingPopup extends AbstractPopup {
   const TreasuryBuildingPopup({required super.args, super.key})
@@ -82,7 +82,7 @@ class _TreasuryBuildingPopupState
 
   Widget _transactionButton(ButtonColor color, bool isEnable,
       List<Widget> children, Function() onTap) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         color: color,
         isEnable: isEnable,
         height: 150.d,

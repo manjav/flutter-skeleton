@@ -8,12 +8,12 @@ import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'popup.dart';
-import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class SelectCardCategoryPopup extends AbstractPopup {
   SelectCardCategoryPopup({super.key})
@@ -77,7 +77,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
           mainAxisSize: MainAxisSize.min,
           children: [_checkbox("asc", 0), _checkbox("desc", 1)]),
       SizedBox(height: 48.d),
-      Widgets.skinnedButton(
+      Widgets.skinnedButton(context,
           width: 340.d,
           label: "search_l".l(),
           onPressed: () => Navigator.pop(context, {
@@ -90,7 +90,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
 
   Widget _categoryItemBuilder(int category) {
     var selected = _selectedCategory == category;
-    return Widgets.button(
+    return Widgets.button(context,
         margin: EdgeInsets.all(8.d),
         padding: EdgeInsets.zero,
         decoration: BoxDecoration(
@@ -114,16 +114,17 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
 
   Widget _levelItemBuilder(int index, Fruit fruit) {
     var selected = _selectedLevelIndex == index;
-    return Widgets.button(
+    return Widgets.button(context,
         padding: EdgeInsets.all(8.d),
-        decoration: selected ? Widgets.imageDecorator("level_badge_border") : null,
+        decoration:
+            selected ? Widgets.imageDecorator("level_badge_border") : null,
         child: Asset.load<Image>("level_badge_${fruit.cards[index].rarity}",
             width: 100.d),
         onPressed: () => setState(() => _selectedLevelIndex = index));
   }
 
   Widget _checkbox(String label, int mode) {
-    return Widgets.checkbox("auction_price_$label".l(), _cheapestMode == mode,
+    return Widgets.checkbox(context, "auction_price_$label".l(), _cheapestMode == mode,
         onSelect: () => setState(() => _cheapestMode = mode));
   }
 }

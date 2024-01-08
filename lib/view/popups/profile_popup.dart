@@ -146,6 +146,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                     width: 100.d,
                     height: 100.d,
                     child: Widgets.skinnedButton(
+                      context,
                       padding: EdgeInsets.fromLTRB(16.d, 10.d, 16.d, 24.d),
                       color: ButtonColor.wooden,
                       child: Asset.load<Image>("tribe_edit"),
@@ -385,7 +386,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
               (line.steps[index].max - line.steps[index].min))
           .clamp(0, 1);
     }
-    return Widgets.button(
+    return Widgets.button(context,
         width: 183.d,
         margin: EdgeInsets.fromLTRB(16.d, 18.d, 16.d, 12.d),
         padding: EdgeInsets.zero,

@@ -68,7 +68,7 @@ class LiveDeck extends StatelessWidget with KeyProvider {
                 scale: scale,
                 child: Opacity(
                   opacity: 1 - normal,
-                  child: Widgets.button(
+                  child: Widgets.button(context,
                       padding: EdgeInsets.zero,
                       onPressed: () => _onCardTap(context, index, item),
                       child: CardItem(item,

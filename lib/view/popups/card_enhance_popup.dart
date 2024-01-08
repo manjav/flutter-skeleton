@@ -9,11 +9,11 @@ import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../overlays/overlay.dart';
-import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/skinned_text.dart';
 import 'popup.dart';
 
 class CardEnhancePopup extends AbstractPopup {
@@ -122,7 +122,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   Widget _enhanceButton(ButtonColor color, String text, List<Widget> children,
       bool isEnable, Function() onTap) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         width: 460.d,
         height: 200.d,
         color: color,

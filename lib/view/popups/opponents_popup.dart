@@ -6,21 +6,21 @@ import 'package:rive/rive.dart';
 
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
-import '../../data/core/infra.dart';
 import '../../data/core/adam.dart';
+import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import 'popup.dart';
 import '../../view/widgets/indicator.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
 import '../widgets/loader_widget.dart';
 import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class OpponentsPopup extends AbstractPopup {
   OpponentsPopup({super.key}) : super(Routes.popupOpponents, args: {});
@@ -204,7 +204,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                                 .copyWith(color: TColors.accent, height: 3.d)))
                     : _group(
                         "scout_l".l(),
-                        Widgets.skinnedButton(
+                        Widgets.skinnedButton(context,
                             width: 320.d,
                             color: ButtonColor.green,
                             padding: EdgeInsets.fromLTRB(16.d, 8.d, 16.d, 22.d),
@@ -246,7 +246,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             height: 196.d,
             padding: EdgeInsets.symmetric(horizontal: 24.d),
             child: Row(children: [
-              Widgets.skinnedButton(
+              Widgets.skinnedButton(context,
                   alignment: Alignment.center,
                   width: 230.d,
                   size: ButtonSize.medium,
@@ -259,7 +259,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                       _selectMap(opponents, _pageController.page! - 1)),
               SizedBox(width: 8.d),
               Expanded(
-                  child: Widgets.skinnedButton(
+                  child: Widgets.skinnedButton(context,
                       padding: EdgeInsets.fromLTRB(32.d, 28.d, 42.d, 42.d),
                       alignment: Alignment.center,
                       child: Row(
@@ -272,7 +272,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                       size: ButtonSize.medium,
                       onPressed: _attack)),
               SizedBox(width: 8.d),
-              Widgets.skinnedButton(
+              Widgets.skinnedButton(context,
                   width: 230.d,
                   alignment: Alignment.center,
                   size: ButtonSize.medium,

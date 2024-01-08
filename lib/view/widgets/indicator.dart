@@ -12,8 +12,8 @@ import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';
-import 'skinned_text.dart';
 import '../widgets.dart';
+import 'skinned_text.dart';
 
 class Indicator extends StatefulWidget {
   final String origin;
@@ -49,7 +49,7 @@ class _IndicatorState extends State<Indicator>
         height: height,
         child: Hero(
           tag: widget.type.name,
-          child: Widgets.touchable(
+          child: Widgets.touchable(context,
               child: Material(
                 color: TColors.transparent,
                 child: widget.value == null
@@ -59,33 +59,30 @@ class _IndicatorState extends State<Indicator>
                             state.account.getValue(widget.type),
                             state.account.leagueId))
                     : _getElements(height, widget.value!, widget.data as int),
-              ),
-              onTap: () {
-                if (widget.onTap != null) {
-                  widget.onTap?.call();
-                } else {
-                  switch (widget.type) {
-                    case Values.gold:
-                    case Values.nectar:
-                      Navigator.popUntil(context, (route) => route.isFirst);
-                      services
-                          .add(ServicesEvent(ServicesInitState.changeTab, 0));
+              ), onTap: () {
+            if (widget.onTap != null) {
+              widget.onTap?.call();
+            } else {
+              switch (widget.type) {
+                case Values.gold:
+                case Values.nectar:
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  services.add(ServicesEvent(ServicesInitState.changeTab, 0));
 
-                      log("Go to shop");
-                      break;
-                    case Values.potion:
-                      Navigator.pushNamed(
-                          context, Routes.popupPotion.routeName);
-                      break;
-                    default:
-                      break;
-                  }
-                }
-                // widget.services.get<Analytics>().funnel("shopclicks");
-                // widget.services
-                //     .get<Analytics>()
-                //     .design('guiClick:shop:${widget.source}');
-              }),
+                  log("Go to shop");
+                  break;
+                case Values.potion:
+                  Navigator.pushNamed(context, Routes.popupPotion.routeName);
+                  break;
+                default:
+                  break;
+              }
+            }
+            // widget.services.get<Analytics>().funnel("shopclicks");
+            // widget.services
+            //     .get<Analytics>()
+            //     .design('guiClick:shop:${widget.source}');
+          }),
         ));
   }
 

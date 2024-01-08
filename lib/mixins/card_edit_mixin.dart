@@ -80,7 +80,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
 
   Widget? cardItemBuilder(BuildContext context, int index, AccountCard card,
       double itemSize, bool showCardTitle) {
-    return Widgets.button(
+    return Widgets.button(context,
         padding: EdgeInsets.zero,
         onPressed: () => onSelectCard(index, card),
         child: Stack(children: [

@@ -28,7 +28,7 @@ class _ChatOptionsOverlayState
   Widget build(BuildContext context) {
     return Material(
         color: TColors.transparent,
-        child: Widgets.button(
+        child: Widgets.button(context,
             child: Stack(children: [
               Positioned(
                   left: 540.d,
@@ -47,7 +47,7 @@ class _ChatOptionsOverlayState
   }
 
   Widget _button(ChatOptions option) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         height: 110.d,
         padding: EdgeInsets.only(bottom: 20.d, left: 32.d),
         color:
@@ -56,10 +56,9 @@ class _ChatOptionsOverlayState
           Asset.load<Image>("icon_${option.name}", height: 52.d),
           SizedBox(width: 18.d),
           SkinnedText("chat_${option.name}".l(), style: TStyles.large),
-        ]),
-        onPressed: () {
-          close();
-          widget.onSelect?.call(option);
-        });
+        ]), onPressed: () {
+      close();
+      widget.onSelect?.call(option);
+    });
   }
 }

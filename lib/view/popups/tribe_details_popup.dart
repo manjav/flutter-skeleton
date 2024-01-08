@@ -82,7 +82,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             40.d),
       ]),
       SizedBox(height: 20.d),
-      Widgets.skinnedButton(
+      Widgets.skinnedButton(context,
           color: ButtonColor.teal,
           label: "tribe_invite".l(),
           icon: "tribe_invite",
@@ -98,7 +98,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
   }
 
   Widget? _memberItemBuilder(Tribe tribe, Opponent member, int index) {
-    return Widgets.button(
+    return Widgets.button(context,
         height: 144.d,
         margin: EdgeInsets.all(2.d),
         padding: EdgeInsets.fromLTRB(20.d, 0, 22.d, 10.d),
@@ -145,14 +145,13 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           const Expanded(child: SizedBox()),
           _indicator("icon_xp", member.xp.compact(), 60.d,
               EdgeInsets.only(right: 16.d)),
-        ]),
-        onTapUp: (details) {
-          Overlays.insert(context, OverlayType.member, args: [
-            member,
-            tribe.members.value.firstWhere((m) => m.itsMe),
-            details.globalPosition.dy - 220.d
-          ]);
-        });
+        ]), onTapUp: (details) {
+      Overlays.insert(context, OverlayType.member, args: [
+        member,
+        tribe.members.value.firstWhere((m) => m.itsMe),
+        details.globalPosition.dy - 220.d
+      ]);
+    });
   }
 
   Widget _indicator(String icon, String label, double iconSize,
@@ -189,14 +188,13 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         SizedBox(width: 4.d),
         SkinnedText(tribe.gold.compact(), style: TStyles.large),
         const Expanded(child: SizedBox()),
-        Widgets.skinnedButton(
+        Widgets.skinnedButton(context,
             label: "tribe_donate".l(),
             padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
             onPressed: () async {
-              await Navigator.pushNamed(
-                  context, Routes.popupTribeDonate.routeName);
-              setState(() {});
-            })
+          await Navigator.pushNamed(context, Routes.popupTribeDonate.routeName);
+          setState(() {});
+        })
       ]),
       Widgets.divider(width: 900.d, margin: 8.d),
       Expanded(
@@ -225,13 +223,11 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
                     width: 220.d, height: 180.d)),
             Positioned(
                 top: 80.d,
-                child: SkinnedText("upgrade_t_$id".l(),
-                    style: TStyles.large)),
+                child: SkinnedText("upgrade_t_$id".l(), style: TStyles.large)),
             Positioned(
                 top: 160.d,
                 width: 400.d,
-                child: Text(
-                    "upgrade_d_$id".l([tribe.getOption(id).convert()]),
+                child: Text("upgrade_d_$id".l([tribe.getOption(id).convert()]),
                     textAlign: TextAlign.center,
                     style: TStyles.medium.copyWith(height: 1))),
             Positioned(
@@ -257,6 +253,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
     var cost = tribe.getOptionCost(id);
     var newBenefit = tribe.getOption(id, tribe.levels[id]! + 1);
     return Widgets.skinnedButton(
+      context,
       height: 150.d,
       color: ButtonColor.green,
       padding: EdgeInsets.fromLTRB(28.d, 18.d, 22.d, 28.d),
