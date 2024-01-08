@@ -75,99 +75,77 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
 
   @override
   Widget contentFactory() {
-    return Stack(alignment: Alignment(0, _isWin ? 0.5 : 0.2), children: [
-      backgroundBuilder(animated: true, color: _isWin ? 4 : 2),
-      _isWin
-          ? Positioned(
-              top: 120.d,
-              width: 600.d,
-              height: 600.d,
-              child: LoaderWidget(AssetType.animation, "outcome_crown",
-                  onRiveInit: (Artboard artboard) {
-                artboard.addController(
-                    StateMachineController.fromArtboard(artboard, 'Crown')!);
-              }))
-          : const SizedBox(),
-      SizedBox(
-          height: 700.d,
-          child: Stack(children: [
-            LoaderWidget(AssetType.animation, "outcome_panel",
-                onRiveInit: (Artboard artboard) {
-              var controller = StateMachineController.fromArtboard(
-                  artboard, "State Machine 1")!;
-              controller.findInput<double>("color")?.value = _isWin ? 1 : 0;
-              artboard.addController(controller);
-            }, fit: BoxFit.fitWidth),
-            Widgets.rect(
-                child: AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) => Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Positioned(top: -360.d, child: _ribbonTopBuilder()),
-                    Positioned(
-                        top: -210.d, width: 800.d, child: _profileBuilder()),
-                    Align(
-                        alignment: const Alignment(0, -0.3),
-                        child: _prizeList(700.d)),
-                    Positioned(
-                        height: 322.d,
-                        width: 720.d,
-                        bottom: 50.d,
-                        child: Opacity(
-                            opacity:
-                                (_animationController.value - 1.9).clamp(0, 1),
-                            child: SkinnedText("card_available".l()))),
-                    Positioned(
-                        height: 322.d,
-                        width: 720.d,
-                        bottom: 0,
-                        child: Opacity(
-                            opacity:
-                                (_animationController.value - 2).clamp(0, 1),
-                            child: SkinnedText(
-                                "${_account.getReadyCards().length}",
-                                style: TStyles.large))),
-                  ]),
-            ))
-          ])),
-      Positioned(
-          height: 180.d,
-          bottom: 150.d,
-          child: Row(textDirection: TextDirection.ltr, children: [
-            Widgets.skinnedButton(
-                padding: EdgeInsets.fromLTRB(48.d, 48.d, 48.d, 60.d),
-                child: Asset.load<Image>("ui_arrow_back"),
-                width: 160.d,
-                color: ButtonColor.green,
-                onPressed: () {
-                  accountBloc.account!.update(context, widget.args);
-                  accountBloc.add(SetAccount(account: accountBloc.account!));
-                  var lastRoute = widget.type == Routes.questOut
-                      ? Routes.quest
-                      : Routes.popupOpponents;
-                  Navigator.popUntil(context,
-                      (route) => route.settings.name == lastRoute.routeName);
-                }),
-            SizedBox(width: 20.d),
-            Widgets.skinnedButton(
-                padding: EdgeInsets.fromLTRB(32.d, 32.d, 48.d, 48.d),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const LoaderWidget(AssetType.image, "icon_battle"),
-                    SizedBox(width: 32.d),
-                    SkinnedText("battle_more".l(), style: TStyles.large),
-                  ],
-                ),
-                onPressed: () {
-                  accountBloc.account!.update(context, widget.args);
-                  accountBloc.add(SetAccount(account: accountBloc.account!));
-                  Navigator.pop(context);
-                })
-          ]))
-    ]);
+    return Widgets.touchable(
+        child: Stack(alignment: Alignment(0, _isWin ? 0.5 : 0.2), children: [
+          backgroundBuilder(animated: true, color: _isWin ? 4 : 2),
+          _isWin
+              ? Positioned(
+                  top: 120.d,
+                  width: 600.d,
+                  height: 600.d,
+                  child: LoaderWidget(AssetType.animation, "outcome_crown",
+                      onRiveInit: (Artboard artboard) {
+                    artboard.addController(StateMachineController.fromArtboard(
+                        artboard, 'Crown')!);
+                  }))
+              : const SizedBox(),
+          SizedBox(
+              height: 700.d,
+              child: Stack(children: [
+                LoaderWidget(AssetType.animation, "outcome_panel",
+                    onRiveInit: (Artboard artboard) {
+                  var controller = StateMachineController.fromArtboard(
+                      artboard, "State Machine 1")!;
+                  controller.findInput<double>("color")?.value = _isWin ? 1 : 0;
+                  artboard.addController(controller);
+                }, fit: BoxFit.fitWidth),
+                Widgets.rect(
+                    child: AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) => Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(top: -360.d, child: _ribbonTopBuilder()),
+                        Positioned(
+                            top: -210.d,
+                            width: 800.d,
+                            child: _profileBuilder()),
+                        Align(
+                            alignment: const Alignment(0, -0.3),
+                            child: _prizeList(700.d)),
+                        Positioned(
+                            height: 322.d,
+                            width: 720.d,
+                            bottom: 50.d,
+                            child: Opacity(
+                                opacity: (_animationController.value - 1.9)
+                                    .clamp(0, 1),
+                                child: SkinnedText("card_available".l()))),
+                        Positioned(
+                            height: 322.d,
+                            width: 720.d,
+                            bottom: 0,
+                            child: Opacity(
+                                opacity: (_animationController.value - 2)
+                                    .clamp(0, 1),
+                                child: SkinnedText(
+                                    "${_account.getReadyCards().length}",
+                                    style: TStyles.large))),
+                      ]),
+                ))
+              ])),
+        ]),
+        onTap: _close);
+  }
+
+  void _close() {
+    accountBloc.account!.update(context, widget.args);
+    accountBloc.add(SetAccount(account: accountBloc.account!));
+    var lastRoute =
+        widget.type == Routes.questOut ? Routes.quest : Routes.popupOpponents;
+    Navigator.popUntil(
+        context, (route) => route.settings.name == lastRoute.routeName);
   }
 
   Widget _ribbonTopBuilder() {
