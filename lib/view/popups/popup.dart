@@ -43,6 +43,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   @override
   Widget build(BuildContext context) {
+    var paddingTop = MediaQuery.of(context).viewPadding.top;
     return Scaffold(
         backgroundColor: backgroundColor,
         body: PopScope(
@@ -72,7 +73,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
                       ]),
                 )),
             Positioned(
-                top: 56.d,
+                top: paddingTop > 0 ? paddingTop : 24.d,
                 left: 32.d,
                 right: 32.d,
                 child: Row(

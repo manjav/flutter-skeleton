@@ -49,6 +49,10 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     appBarElements.addAll(appBarElementsLeft());
     appBarElements.add(const Expanded(child: SizedBox()));
     appBarElements.addAll(appBarElementsRight());
+    var paddingTop = MediaQuery.of(context).viewPadding.top;
+    if (paddingTop <= 0) {
+      paddingTop = 24.d;
+    }
     return Scaffold(
       body: PopScope(
         canPop: widget.closable,
@@ -56,9 +60,9 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
           Positioned(
               top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
           PositionedDirectional(
-              top: 60.d,
-              start: 54.d,
-              end: 32.d,
+              top: paddingTop,
+              start: 24.d,
+              end: 24.d,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
