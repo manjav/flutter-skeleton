@@ -126,8 +126,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       }
     }
 
-    if (type == Routes.quest) {
-      Overlays.insert(context, OverlayType.feastUpgrade);
+    if (type == Routes.none) {
       return;
     }
     Navigator.pushNamed(context, type.routeName,
