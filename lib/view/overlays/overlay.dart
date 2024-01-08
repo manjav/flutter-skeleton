@@ -32,6 +32,7 @@ enum OverlayType {
   feastEnhance,
   feastOpenpack,
   feastPurchase,
+  feastUpgrade,
   feastUpgradeCard,
 }
 
@@ -81,8 +82,8 @@ extension Overlays on OverlayType {
       _entries[type] = OverlayEntry(
           builder: (c) =>
               getWidget(type.routeName, args: args, onClose: onClose));
+      Overlay.of(context).insert(_entries[type]!);
     }
-    Overlay.of(context).insert(_entries[type]!);
   }
 
   static remove(OverlayType type) {
