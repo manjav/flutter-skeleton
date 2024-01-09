@@ -11,6 +11,7 @@ import 'feast_evolve_overlay.dart';
 import 'feast_levelup_overlay.dart';
 import 'feast_openpack_overlay.dart';
 import 'feast_purchase_overlay.dart';
+import 'feast_uggrade_overlay.dart';
 import 'feast_upgrade_card_overlay.dart';
 import 'loading_overlay.dart';
 import 'member_details_overlay.dart';
@@ -67,6 +68,8 @@ extension Overlays on OverlayType {
       "/feastEvolve" => EvolveFeastOverlay(args: args ?? {}, onClose: onClose),
       "/feastPurchase" =>
         PurchaseFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastUpgrade" =>
+        UpgradeFeastOverlay(args: args ?? {}, onClose: onClose),
       "/feastUpgradeCard" =>
         UpgradeCardFeastOverlay(args: args ?? {}, onClose: onClose),
       _ => const AbstractOverlay(),
