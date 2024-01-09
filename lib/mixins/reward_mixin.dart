@@ -24,7 +24,6 @@ enum RewardAnimationState {
   waiting,
   started,
   shown,
-  choose,
   closing,
   closed,
   disposed
@@ -116,7 +115,6 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       "waiting" => RewardAnimationState.waiting,
       "started" => RewardAnimationState.started,
       "shown" => RewardAnimationState.shown,
-      "choose" => RewardAnimationState.choose,
       "closing" => RewardAnimationState.closing,
       "closed" => RewardAnimationState.closed,
       _ => RewardAnimationState.none,

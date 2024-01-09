@@ -107,7 +107,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       _opacityAnimationController.animateBack(0,
           duration: const Duration(milliseconds: 500));
       _opacityBackgroundAnimationController.reverse();
-    } else if (state == RewardAnimationState.choose) {
+    }
+    if (event.name == "choose") {
       _chooseHero(event.properties["card"].toInt());
     }
   }
