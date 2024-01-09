@@ -42,6 +42,7 @@
     "arena_l": "Arena %s",
     "tap_close": "Tap to close ...",
     "request_l": "Send\nRequest",
+    "requested_l": "Request\nSent",
     "tribeleave_l": "Leave",
     "getprofileinfo_l": "Profile",
     "tribekick_l": "Kick",

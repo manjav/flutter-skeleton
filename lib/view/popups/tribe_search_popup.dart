@@ -126,7 +126,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
               child: SkinnedText(
                   textAlign: TextAlign.center,
                   style: TStyles.medium.copyWith(height: 1),
-                  tribe.status == 1 ? "join_l".l() : "request_l".l()))
+                  _actionTitleBuilder(tribe)))
         ]),
       ]),
       onPressed: () => _join(tribe),
@@ -152,5 +152,14 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
         bloc.add(SetAccount(account: bloc.account!));
       }
     } finally {}
+  }
+
+  String _actionTitleBuilder(tribe) {
+    return switch (tribe.status) {
+      0 => "requested_l",
+      2 => "request_l",
+      _ => "join_l",
+    }
+        .l();
   }
 }
