@@ -23,7 +23,7 @@ class TribeEditPopup extends AbstractPopup {
 }
 
 class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
-  int status = -1;
+  int status = 0;
   late Account _account;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
