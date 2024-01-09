@@ -101,11 +101,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
         children: [
           Widgets.skinnedButton(context,
               height: 160.d,
-              isEnable:
-                  _account.tribePosition.index >= TribePosition.elder.index &&
-                      _nameController.text.isNotEmpty &&
-                      _descriptionController.text.isNotEmpty &&
-                      cost <= _account.gold,
+              isEnable: _isSubmitEnable(cost),
               color: ButtonColor.green,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,5 +155,18 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
         Navigator.pop(context, true);
       }
     } finally {}
+  }
+
+  bool _isSubmitEnable(int cost) {
+    if (_account.tribe != null &&
+        _account.tribePosition.index < TribePosition.elder.index) {
+      return false;
+    }
+    if (_nameController.text.isEmpty ||
+        _descriptionController.text.isEmpty ||
+        cost > _account.gold) {
+      return false;
+    }
+    return true;
   }
 }
