@@ -146,11 +146,10 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
       params[RpcParams.tribe_id.name] = _account.tribe!.id;
     }
     try {
-      await rpc(_account.tribe == null ? RpcId.tribeCreate : RpcId.tribeEdit,
+      var result = await rpc(
+          _account.tribe == null ? RpcId.tribeCreate : RpcId.tribeEdit,
           params: params);
-      _account.tribe!.name = _nameController.text;
-      _account.tribe!.description = _descriptionController.text;
-      _account.tribe!.status = status + 1;
+      _account.installTribe(result["tribe"]);
       if (mounted) {
         Navigator.pop(context, true);
       }
