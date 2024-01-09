@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_skeleton/blocs/services_bloc.dart';
+import 'package:flutter_skeleton/services/sounds.dart';
 
-import 'widgets/skinned_text.dart';
 import '../services/device_info.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';
+import 'widgets/skinned_text.dart';
 
 class Widgets {
   static GestureDetector touchable(
@@ -45,7 +48,9 @@ class Widgets {
               },
         onTap: () {
           if (_isActive(id)) {
-            // services.get<Sounds>().play(sfx ?? "click");
+            BlocProvider.of<ServicesBloc>(context)
+                .get<Sounds>()
+                .play(sfx ?? "click");
             onTap?.call();
           }
         },
