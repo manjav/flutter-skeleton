@@ -138,7 +138,8 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     return result["achieveCards"];
   }
 
-  upgrade(BuildContext context, int id, {Tribe? tribe}) async {
+  upgrade(BuildContext context, Building building, {Tribe? tribe}) async {
+    var id = building.type.id;
     var params = {RpcParams.type.name: id};
     if (tribe != null) {
       params[RpcParams.tribe_id.name] = tribe.id;
@@ -147,6 +148,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         tribe != null ? RpcId.tribeUpgrade : RpcId.upgrade,
         params: params);
 
+    if (tribe != null) {
+      building.level++;
+      tribe.levels[id] = tribe.levels[id]! + 1;
+    } else {
+      building.level = result["level"];
+    }
     if (context.mounted) {
       account!.update(context, result);
       add(SetAccount(account: account!));
