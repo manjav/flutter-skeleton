@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/blocs/services_bloc.dart';
-import 'package:flutter_skeleton/services/sounds.dart';
+import '../../blocs/services_bloc.dart';
+import '../../services/sounds.dart';
 
 import '../services/device_info.dart';
 import '../services/theme.dart';

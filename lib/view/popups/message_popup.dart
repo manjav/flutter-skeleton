@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/services/localization.dart';
-import 'package:flutter_skeleton/view/widgets.dart';
+import '../../services/localization.dart';
+import '../../view/widgets.dart';
 
 import '../../services/device_info.dart';
 import '../../services/theme.dart';
