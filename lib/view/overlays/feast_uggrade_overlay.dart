@@ -22,12 +22,13 @@ class _UpgradeFeastOverlayState
     with RewardScreenMixin, BackgroundMixin, TickerProviderStateMixin {
   late int _buildingId;
   late Building _building;
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
 
-    children = [backgroundBuilder(), animationBuilder("evolvehero")];
+    _animationController = AnimationController(vsync: this, upperBound: 2);
     _buildingId = widget.args["id"] ?? 1002;
     _building = accountBloc.account!.buildings[_buildingId.toBuildings()]!;
     var tribe = widget.args["tribe"] ?? accountBloc.account!.tribe;
@@ -48,10 +49,28 @@ class _UpgradeFeastOverlayState
     return controller;
   }
 
+  @override
+  void onRiveEvent(RiveEvent event) {
+    print(state);
+    super.onRiveEvent(event);
+    if (state == RewardAnimationState.started) {
+      _updateTexts();
+      _animationController.animateTo(2,
+          curve: Curves.easeOutBack, duration: const Duration(seconds: 1));
+    } else if (state == RewardAnimationState.closing) {
+      _animationController.animateTo(0,
+          curve: Curves.easeInBack,
+          duration: const Duration(milliseconds: 300));
+    }
+  }
 
   Widget _buildingWidget() {
     return IgnorePointer(
-        child: BuildingWidget(_building));
+        child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) => Transform.scale(
+                scale: _animationController.value,
+                child: BuildingWidget(_building))));
   }
 
   void _updateTexts() {
@@ -61,5 +80,11 @@ class _UpgradeFeastOverlayState
     var benefit = _building.benefit.convert();
     updateRiveText(
         "upToText", "$benefit${_buildingId == Buildings.tribe.id ? "ˡ" : "%"}");
+  }
+
+  @override
+  void dismiss() {
+    super.dismiss();
+    _animationController.dispose();
   }
 }
