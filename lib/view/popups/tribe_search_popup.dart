@@ -106,7 +106,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
                     children: [
                       Asset.load<Image>("icon_population", width: 50.d),
                       SkinnedText(
-                          " ${tribe.population}/${tribe.getOption(Buildings.base.id)}")
+                          " ${tribe.population}/${tribe.getOption(Buildings.tribe.id)}")
                     ]))
           ],
         ),

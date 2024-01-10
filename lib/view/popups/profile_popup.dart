@@ -213,7 +213,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         final controller = StateMachineController.fromArtboard(artboard, "Tab");
         var level = _player!.tribeName == accountBloc.account!.tribeName &&
                 _player!.tribeId > 0
-            ? accountBloc.account!.tribe!.levels[Buildings.base.id]!.toDouble()
+            ? accountBloc.account!.tribe!.levels[Buildings.tribe.id]!.toDouble()
             : 0.0;
         controller?.findInput<double>("level")!.value = level;
         controller?.findInput<bool>("hideBackground")!.value = true;

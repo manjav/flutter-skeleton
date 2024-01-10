@@ -78,7 +78,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         const Expanded(child: SizedBox()),
         _indicator(
             "icon_population",
-            " ${tribe.population}/${tribe.getOption(Buildings.base.id)} ",
+            " ${tribe.population}/${tribe.getOption(Buildings.tribe.id)} ",
             40.d),
       ]),
       SizedBox(height: 20.d),
@@ -262,7 +262,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           SkinnedText("tribe_upgrade".l(),
               style: TStyles.small.copyWith(height: 3.d)),
           SkinnedText(
-              "$newBenefit${id == Buildings.base.id ? "ˡ" : "%"}".convert(),
+              "$newBenefit${id == Buildings.tribe.id ? "ˡ" : "%"}".convert(),
               style: TStyles.large.copyWith(height: 3.5.d)),
         ]),
         SizedBox(width: 20.d),

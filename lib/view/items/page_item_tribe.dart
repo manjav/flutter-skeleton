@@ -92,7 +92,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               final controller =
                   StateMachineController.fromArtboard(artboard, "Tab");
               controller?.findInput<double>("level")!.value =
-                  account.tribe!.levels[Buildings.base.id]!.toDouble();
+                  account.tribe!.levels[Buildings.tribe.id]!.toDouble();
               controller?.findInput<bool>("hideBackground")!.value = true;
               controller?.findInput<bool>("active")!.value = true;
 
@@ -157,7 +157,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                   children: [
                     _indicator(
                         "icon_population",
-                        "${tribe.population}/${tribe.getOption(Buildings.base.id)}"
+                        "${tribe.population}/${tribe.getOption(Buildings.tribe.id)}"
                             .convert(),
                         40.d),
                     SizedBox(height: 8.d),

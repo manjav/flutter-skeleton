@@ -37,7 +37,7 @@ class Tribe with ServiceProvider {
     levels[Buildings.offense.id] = map["offense_building_level"];
     levels[Buildings.defense.id] = map["defense_building_level"];
     levels[Buildings.cards.id] = map["cooldown_building_level"];
-    levels[Buildings.base.id] = map["mainhall_building_level"];
+    levels[Buildings.tribe.id] = map["mainhall_building_level"];
     donatesCount = map["donates_number"];
     score = Utils.toInt(map["score"]);
     weeklyScore = Utils.toInt(map["weekly_score"]);

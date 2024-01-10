@@ -9,18 +9,17 @@ import 'fruit.dart';
 enum Buildings {
   none,
   base,
+  tribe,
   cards,
   defense,
-  // message,
   mine,
   offense,
-  // shop,
   treasury,
-  // tribe,
-  // quest,
   auction,
   park,
   quest,
+  // message,
+  // shop,
 }
 
 extension BuildingIntExtension on int {
@@ -30,7 +29,7 @@ extension BuildingIntExtension on int {
       1002 => Buildings.offense,
       1003 => Buildings.defense,
       1004 => Buildings.cards,
-      1005 => Buildings.base,
+      1005 => Buildings.tribe,
       1007 => Buildings.treasury,
       _ => Buildings.none,
     };
@@ -44,7 +43,7 @@ extension BuildingExtension on Buildings {
       Buildings.offense => 1002,
       Buildings.defense => 1003,
       Buildings.cards => 1004,
-      Buildings.base => 1005,
+      Buildings.tribe => 1005,
       Buildings.treasury => 1007,
       _ => 1000,
     };
@@ -191,11 +190,11 @@ class Building {
       9000000,
       12500000
     ],
-    Buildings.base: [0, 30, 80, 120, 180, 270, 400, 1350],
+    Buildings.tribe: [0, 30, 80, 120, 180, 270, 400, 1350],
     Buildings.treasury: [0, 2, 5, 30, 100, 250, 1000]
   };
   static const Map<Buildings, List<int>> _benefits = {
-    Buildings.base: [0, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+    Buildings.tribe: [0, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
     Buildings.mine: [0, 200, 1000, 3000, 10000, 40000, 100000, 300000, 500000],
     Buildings.offense: [
       0,

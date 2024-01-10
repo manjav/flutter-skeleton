@@ -102,7 +102,8 @@ class _TabNavigatorState extends State<TabNavigator> with ServiceProviderMixin {
                       var input =
                           controller.findInput<double>("level") as SMINumber;
                       input.value = account.tribe != null
-                          ? account.tribe!.levels[Buildings.base.id]!.toDouble()
+                          ? account.tribe!.levels[Buildings.tribe.id]!
+                              .toDouble()
                           : 0.0;
                     }
                     artboard.addController(controller);

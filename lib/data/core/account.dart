@@ -249,16 +249,17 @@ class Account extends Player with ServiceProvider {
         buildings[type] = Building(this, type, level, cards ?? []);
 
     buildings = {};
-    addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
+    addBuilding(Buildings.park);
     addBuilding(Buildings.base);
     addBuilding(Buildings.cards);
+    addBuilding(Buildings.tribe);
+    addBuilding(Buildings.quest, 1);
+    addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
     addBuilding(Buildings.defense, 0, map['defense_building_assigned_cards']);
     addBuilding(Buildings.offense, 0, map['offense_building_assigned_cards']);
     addBuilding(Buildings.mine, map['gold_building_level'],
         map['gold_building_assigned_cards']);
     addBuilding(Buildings.treasury, map['bank_building_level']);
-    addBuilding(Buildings.park);
-    addBuilding(Buildings.quest, 1);
 
     // Tribe
     installTribe(map['tribe']);
@@ -400,7 +401,7 @@ class Account extends Player with ServiceProvider {
           Buildings.auction,
           Buildings.offense,
           Buildings.cards,
-          Buildings.base
+          Buildings.tribe
         ];
     var origin = cards.values.toList();
     var myCards = <AccountCard>[];
@@ -436,7 +437,7 @@ class Account extends Player with ServiceProvider {
     tribeId = tribe!.id;
     tribeName = tribe!.name;
     var types = [
-      Buildings.base,
+      Buildings.tribe,
       Buildings.cards,
       Buildings.defense,
       Buildings.offense
