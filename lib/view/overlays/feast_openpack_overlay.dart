@@ -177,21 +177,6 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   }
 
   @override
-  void onScreenTouched() {
-    if (state.index <= RewardAnimationState.waiting.index) return;
-    if (state == RewardAnimationState.started) {
-      skipInput?.value = true;
-    } else if (state == RewardAnimationState.shown) {
-      if (_heroInput!.value) {
-        return;
-      }
-      onRiveEvent(
-          const RiveEvent(name: "closing", secondsDelay: 0, properties: {}));
-      closeInput?.value = true;
-    }
-  }
-
-  @override
   void dispose() {
     _opacityBackgroundAnimationController.dispose();
     _opacityAnimationController.dispose();
@@ -213,6 +198,11 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       ]
     };
 
+    process(() async {
+      var result = await accountBloc.openPack(context, _pack,
+          selectedCardId: _cards[index].base.id);
+      return result;
+    });
     if (context.mounted) {
       accountBloc.account!.update(context, result);
       accountBloc.add(SetAccount(account: accountBloc.account!));
