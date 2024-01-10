@@ -243,7 +243,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
       return Column(children: [
         Asset.load<Image>("tick", height: 70.d),
         SizedBox(height: 10.d),
-        SkinnedText("max_level".l(["tribe_upgrade_t_$id".l()]),
+        SkinnedText("max_level".l(["upgrade_t_$id".l()]),
             style: TStyles.medium.copyWith(height: 1),
             textAlign: TextAlign.center),
         SizedBox(height: 10.d),
@@ -277,7 +277,8 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           ]),
         )
       ]),
-      onPressed: () => _upgrade(id, tribe),
+      onPressed: () => Overlays.insert(context, OverlayType.feastUpgrade,
+          args: {"id": id, "tribe": tribe}, onClose: (data) => setState(() {})),
       onDisablePressed: () {
         var message = cost > tribe.gold
             ? "error_227".l()
@@ -285,14 +286,5 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         Overlays.insert(context, OverlayType.toast, args: message);
       },
     );
-  }
-
-  _upgrade(int id, Tribe tribe) async {
-    try {
-      await accountBloc.upgrade(context, id, tribe: tribe);
-      _account.buildings[id.toBuildings()]!.level++;
-      tribe.levels[id] = tribe.levels[id]! + 1;
-      setState(() {});
-    } finally {}
   }
 }

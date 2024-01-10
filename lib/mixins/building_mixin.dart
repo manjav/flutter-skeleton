@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
-import '../blocs/account_bloc.dart';
 import '../data/core/account.dart';
 import '../data/core/building.dart';
 import '../services/device_info.dart';
@@ -61,18 +59,11 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
                 )
               ],
             ),
-            onPressed: () => _upgrade(account, building),
+            onPressed: () => Overlays.insert(context, OverlayType.feastUpgrade,
+                args: {"id": building.type.id}),
             onDisablePressed: () => Overlays.insert(context, OverlayType.toast,
                 args: "max_level".l(["building_${building.type.name}_t".l()])),
           )
         ]);
-  }
-
-  _upgrade(Account account, Building building) async {
-    try {
-      var result = await BlocProvider.of<AccountBloc>(context)
-          .upgrade(context, building.type.id);
-      building.level = result["level"];
-    } finally {}
   }
 }
