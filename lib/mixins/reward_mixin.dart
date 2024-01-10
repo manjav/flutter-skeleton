@@ -31,7 +31,7 @@ enum RewardAnimationState {
 
 mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   dynamic result;
-  late Artboard _artboard;
+  Artboard? _artboard;
   List<Widget> children = [];
   String waitingSFX = "waiting", startSFX = "levelup";
   SMITrigger? startInput, skipInput, closeInput;
@@ -105,9 +105,10 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   }
 
   void updateRiveText(String name, String value) {
-    _artboard.component<TextValueRun>(name)?.text = value;
-    _artboard.component<TextValueRun>("${name}_stroke")?.text = value;
-    _artboard.component<TextValueRun>("${name}_shadow")?.text = value;
+    if (_artboard == null) return;
+    _artboard!.component<TextValueRun>(name)?.text = value;
+    _artboard!.component<TextValueRun>("${name}_stroke")?.text = value;
+    _artboard!.component<TextValueRun>("${name}_shadow")?.text = value;
   }
 
   void onRiveEvent(RiveEvent event) {
