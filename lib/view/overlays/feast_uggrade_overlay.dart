@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/building.dart';
 import '../../mixins/background_mixin.dart';
 import '../../mixins/reward_mixin.dart';
 import '../../services/localization.dart';
+import '../../view/map_elements/building_widget.dart';
 import 'overlay.dart';
 
 class UpgradeFeastOverlay extends AbstractOverlay {
@@ -17,7 +19,8 @@ class UpgradeFeastOverlay extends AbstractOverlay {
 
 class _UpgradeFeastOverlayState
     extends AbstractOverlayState<UpgradeFeastOverlay>
-    with RewardScreenMixin, BackgroundMixin {
+    with RewardScreenMixin, BackgroundMixin, TickerProviderStateMixin {
+  late int _buildingId;
   late Building _building;
 
   @override
@@ -25,42 +28,38 @@ class _UpgradeFeastOverlayState
     super.initState();
 
     children = [backgroundBuilder(), animationBuilder("evolvehero")];
-    var buildingId = widget.args["id"] ?? 1002;
-    _building = accountBloc.account!.buildings[buildingId.toBuildings()]!;
+    _buildingId = widget.args["id"] ?? 1002;
+    _building = accountBloc.account!.buildings[_buildingId.toBuildings()]!;
     var tribe = widget.args["tribe"] ?? accountBloc.account!.tribe;
-    process(() async {
-      var result = await accountBloc.upgrade(context, buildingId, tribe: tribe);
-      if (tribe != null) {
-        _building.level++;
-        tribe.levels[buildingId] = tribe.levels[buildingId]! + 1;
-      } else {
-        _building.level = result["level"];
-      }
-      return result;
-    });
+    children = [
+      backgroundBuilder(),
+      animationBuilder("upgrade"),
+      _buildingWidget()
+    ];
+    process(() async =>
+        await accountBloc.upgrade(context, _building, tribe: tribe));
   }
 
   @override
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
-    updateRiveText("headerText", "upgrade_l".l());
-    updateRiveText("upToCaptionText", "upgrade_l".l());
+    _updateTexts();
     return controller;
   }
 
-  // @override
-  // Future<bool> onRiveAssetLoad(
-  //     FileAsset asset, Uint8List? embeddedBytes) async {
-  //   if (asset is ImageAsset) {
-  //     if (asset.name == "reward") {
-  //       _loadRewardIcon(asset, "avatar_109");
-  //       return true;
-  //     } else if (asset.name == "item") {
-  //       _loadItemIcon(asset);
-  //       return true;
-  //     }
-  //   }
-  //   return super.onRiveAssetLoad(asset, embeddedBytes);
-  // }
+
+  Widget _buildingWidget() {
+    return IgnorePointer(
+        child: BuildingWidget(_building));
+  }
+
+  void _updateTexts() {
+    updateRiveText("headerText", "upgrade_l".l());
+    // updateRiveText("upToCaptionText", "upgraded_l".l([_building.level]));
+    updateRiveText("upToCaptionText", "upgrade_t_$_buildingId".l());
+    var benefit = _building.benefit.convert();
+    updateRiveText(
+        "upToText", "$benefit${_buildingId == Buildings.tribe.id ? "ˡ" : "%"}");
+  }
 }
