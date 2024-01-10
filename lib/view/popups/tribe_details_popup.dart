@@ -230,10 +230,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
                     textAlign: TextAlign.center,
                     style: TStyles.medium.copyWith(height: 1))),
             Positioned(
-                bottom: 0,
-                right: 8.d,
-                left: 8.d,
-                child: _upgradeButton(tribe, id))
+                bottom: 0, right: 0, left: 0, child: _upgradeButton(tribe, id))
           ]),
     );
   }
