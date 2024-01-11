@@ -121,8 +121,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
               height: 120.d,
               width: 210.d,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 24.d),
-              decoration: Widgets.buttonDecorator(
-                  tribe.status == 1 ? ButtonColor.teal : ButtonColor.green),
+              decoration: Widgets.buttonDecorator(_actionColorBuilder(tribe)),
               child: SkinnedText(
                   textAlign: TextAlign.center,
                   style: TStyles.medium.copyWith(height: 1),
@@ -146,10 +145,14 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
     try {
       var result = await rpc(RpcId.tribeJoin,
           params: {RpcParams.tribe_id.name: tribe.id});
-      if (mounted) {
-        var bloc = accountBloc;
-        bloc.account!.installTribe(result["tribe"]);
-        bloc.add(SetAccount(account: bloc.account!));
+      if (tribe.status == 2) {
+        setState(() => tribe.status = 0);
+      } else {
+        if (mounted) {
+          var bloc = accountBloc;
+          bloc.account!.installTribe(result["tribe"]);
+          bloc.add(SetAccount(account: bloc.account!));
+        }
       }
     } finally {}
   }
@@ -161,5 +164,13 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
       _ => "join_l",
     }
         .l();
+  }
+
+  ButtonColor _actionColorBuilder(Tribe tribe) {
+    return switch (tribe.status) {
+      1 => ButtonColor.teal,
+      2 => ButtonColor.green,
+      _ => ButtonColor.gray,
+    };
   }
 }

@@ -428,13 +428,14 @@ class Account extends Player with ServiceProvider {
   void installTribe(dynamic data) {
     if (data == null) {
       tribeId = -1;
+    } else {
+      tribe = data is Tribe ? data : Tribe(data);
+      tribeId = tribe!.id;
     }
     if (tribeId < 0) {
       tribeName = "no_tribe".l();
       return;
     }
-    tribe = Tribe(data);
-    tribeId = tribe!.id;
     tribeName = tribe!.name;
     var types = [
       Buildings.tribe,
