@@ -97,7 +97,10 @@ class _LiveTribeState extends State<LiveTribe>
   }
 
   Widget _hornButton(LiveWarrior owner, Iterable<LiveWarrior> team) {
-    if (!owner.base.itsMe || _requestSent || team.isNotEmpty) {
+    if (!owner.base.itsMe ||
+        owner.base.tribeId <= 0 ||
+        _requestSent ||
+        team.isNotEmpty) {
       return const SizedBox();
     }
     return Widgets.skinnedButton(context,
