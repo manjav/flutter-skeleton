@@ -99,7 +99,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               artboard.addController(controller!);
             }, width: 160.d, height: 160.d),
             SizedBox(width: 16.d),
-            _informationBuilder(account.tribe!),
+            _informationBuilder(account, account.tribe!),
             const Expanded(child: SizedBox()),
             _membersButtonBuilder(account.tribe!),
           ]),
@@ -116,25 +116,29 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     ]);
   }
 
-  Widget _informationBuilder(Tribe tribe) {
+  Widget _informationBuilder(Account account, Tribe tribe) {
+    var hasPermission =
+        account.tribePosition.index > TribePosition.member.index;
     var name = tribe.name.substring(0, tribe.name.length.max(18));
     if (tribe.name.length > 18) {
       name += " ...";
     }
-    return Widgets.button(context, padding: EdgeInsets.zero,
-        onPressed: () async {
-      await Routes.popupTribeEdit.navigate(context);
-      setState(() {});
-    },
+    return IgnorePointer(
+      ignoring: !hasPermission,
+      child: Widgets.button(
+        context,
+        padding: EdgeInsets.zero,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             SkinnedText(name, style: TStyles.large),
             SizedBox(width: 16.d),
-            Widgets.rect(
-                padding: EdgeInsets.all(10.d),
-                decoration: Widgets.imageDecorator(
-                    "frame_hatch_button", ImageCenterSliceData(42)),
-                child: Asset.load<Image>("tribe_edit", width: 42.d))
+            hasPermission
+                ? Widgets.rect(
+                    padding: EdgeInsets.all(10.d),
+                    decoration: Widgets.imageDecorator(
+                        "frame_hatch_button", ImageCenterSliceData(42)),
+                    child: Asset.load<Image>("tribe_edit", width: 42.d))
+                : const SizedBox()
           ]),
           Row(children: [
             _indicator("icon_score", tribe.rank.compact(), 100.d,
@@ -143,7 +147,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             _indicator("icon_gold", tribe.gold.compact(), 100.d,
                 EdgeInsets.only(right: 16.d)),
           ]),
-        ]));
+        ]),
+        onPressed: () async {
+          await Routes.popupTribeEdit.navigate(context);
+          setState(() {});
+        },
+      ),
+    );
   }
 
   Widget _membersButtonBuilder(Tribe tribe) {
