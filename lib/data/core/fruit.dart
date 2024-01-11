@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/rpc.dart';
+import '../../mixins/service_provider.dart';
 import '../../services/connection/http_connection.dart';
-import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
 import 'building.dart';
@@ -57,7 +57,7 @@ class FruitCard {
       veteranLevel,
       heroType,
       potionLimit;
-  Map<HeroAttribute, int> attribuites = {};
+  Map<HeroAttribute, int> attributes = {};
 
   double virtualRarity = 1.0;
 
@@ -77,10 +77,9 @@ class FruitCard {
     powerLimit = Utils.toInt(data["powerLimit"]);
     veteranLevel = Utils.toInt(data["veteran_level"]);
 
-    attribuites[HeroAttribute.power] = Utils.toInt(data["powerAttribute"]);
-    attribuites[HeroAttribute.wisdom] = Utils.toInt(data["wisdomAttribute"]);
-    attribuites[HeroAttribute.blessing] =
-        Utils.toInt(data["blessingAttribute"]);
+    attributes[HeroAttribute.power] = Utils.toInt(data["powerAttribute"]);
+    attributes[HeroAttribute.wisdom] = Utils.toInt(data["wisdomAttribute"]);
+    attributes[HeroAttribute.blessing] = Utils.toInt(data["blessingAttribute"]);
     potionLimit = Utils.toInt(data["potion_limit"]);
   }
 
@@ -117,7 +116,7 @@ class AbstractCard with ServiceProvider {
   final Account account;
 
   AbstractCard(this.account, this.map) {
-    power = map['power'].round() ?? 0;
+    power = map['power'] != null ? map['power'].round() : 0;
     base = account.loadingData.baseCards[map['base_card_id']]!;
   }
   int get basePrice => (power * powerToGoldRatio * minPriceRatio).round();
@@ -128,7 +127,7 @@ class AbstractCard with ServiceProvider {
     var benefit = account.tribe != null
         ? account.buildings[Buildings.cards]!.getBenefit()
         : 1.0;
-    var delta = account.now - lastUsedAt;
+    var delta = account.getTime() - lastUsedAt;
     var cooldownTime = base.cooldown * benefit;
     return (cooldownTime - delta).ceil().min(0);
   }
@@ -225,12 +224,12 @@ class AccountCard extends AbstractCard {
       var data = await getService<HttpConnection>(context)
           .tryRpc(context, RpcId.coolOff, params: {RpcParams.card_id.name: id});
       lastUsedAt = 0;
-      account.update(data);
       if (context.mounted) {
+        account.update(context, data);
         getAccountBloc(context).add(SetAccount(account: account));
       }
     } on RpcException catch (e) {
-      if (e.statusCode == StatusCode.C178_COOL_ENOUGH) {
+      if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL) {
         lastUsedAt = 0;
       }
     }
@@ -370,7 +369,7 @@ class HeroCard with ServiceProvider {
     }
 
     diff(HeroAttribute f) =>
-        nextLevelCard.attribuites[f]! - card.base.attribuites[f]!;
+        nextLevelCard.attributes[f]! - card.base.attributes[f]!;
     values[HeroAttribute.power] = diff(HeroAttribute.power);
     values[HeroAttribute.wisdom] = diff(HeroAttribute.wisdom);
     values[HeroAttribute.blessing] = diff(HeroAttribute.blessing);
@@ -388,7 +387,7 @@ class HeroCard with ServiceProvider {
       if (!context.mounted) return;
       data["hero_id"] = card.id;
       var accountBloc = getAccountBloc(context);
-      accountBloc.account!.update(data);
+      accountBloc.account!.update(context, data);
       accountBloc.add(SetAccount(account: accountBloc.account!));
     } finally {}
   }

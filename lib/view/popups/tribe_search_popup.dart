@@ -5,19 +5,18 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class TribeSearchPopup extends AbstractPopup {
-  TribeSearchPopup({super.key})
-      : super(Routes.popupTribeSearch, args: {}, barrierDismissible: false);
+  TribeSearchPopup({super.key}) : super(Routes.popupTribeSearch, args: {});
 
   @override
   createState() => _TribeSearchPopupState();
@@ -26,6 +25,12 @@ class TribeSearchPopup extends AbstractPopup {
 class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
   List<Tribe> _tribes = [];
   final TextEditingController _inputController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    barrierDismissible = false;
+  }
 
   @override
   List<Widget> appBarElements() => [];
@@ -48,7 +53,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
                   controller: _inputController,
                   onSubmit: (t) => _search())),
           SizedBox(width: 20.d),
-          Widgets.skinnedButton(
+          Widgets.skinnedButton(context,
               label: "search_l".l(),
               color: ButtonColor.green,
               onPressed: _search)
@@ -68,10 +73,11 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
   Widget? _listItemBuilder(BuildContext context, int index) {
     var tribe = _tribes[index];
     return Widgets.button(
+      context,
       margin: EdgeInsets.all(4.d),
       padding: EdgeInsets.all(22.d),
       decoration:
-          Widgets.imageDecore("tribe_item_bg", ImageCenterSliceData(56, 56)),
+          Widgets.imageDecorator("tribe_item_bg", ImageCenterSliceData(56, 56)),
       child: Column(children: [
         Row(
           children: [
@@ -100,7 +106,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
                     children: [
                       Asset.load<Image>("icon_population", width: 50.d),
                       SkinnedText(
-                          " ${tribe.population}/${tribe.getOption(Buildings.base.id)}")
+                          " ${tribe.population}/${tribe.getOption(Buildings.tribe.id)}")
                     ]))
           ],
         ),
@@ -115,12 +121,12 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
               height: 120.d,
               width: 210.d,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 24.d),
-              decoration: Widgets.buttonDecore(
+              decoration: Widgets.buttonDecorator(
                   tribe.status == 1 ? ButtonColor.teal : ButtonColor.green),
               child: SkinnedText(
                   textAlign: TextAlign.center,
                   style: TStyles.medium.copyWith(height: 1),
-                  tribe.status == 1 ? "join_l".l() : "request_l".l()))
+                  _actionTitleBuilder(tribe)))
         ]),
       ]),
       onPressed: () => _join(tribe),
@@ -146,5 +152,14 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
         bloc.add(SetAccount(account: bloc.account!));
       }
     } finally {}
+  }
+
+  String _actionTitleBuilder(tribe) {
+    return switch (tribe.status) {
+      0 => "requested_l",
+      2 => "request_l",
+      _ => "join_l",
+    }
+        .l();
   }
 }

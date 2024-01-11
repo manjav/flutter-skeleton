@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/skinnedtext.dart';
-import 'ioverlay.dart';
+import '../widgets/skinned_text.dart';
+import 'overlay.dart';
 
 class ToastOverlay extends AbstractOverlay {
   final String message;
@@ -42,7 +42,6 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-        ignoring: true,
         child: Scaffold(
             backgroundColor: TColors.transparent,
             body: Stack(alignment: Alignment.center, children: [
@@ -65,7 +64,8 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
                               child: Widgets.rect(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 40.d),
-                                  decoration: Widgets.imageDecore("ui_shadow"),
+                                  decoration:
+                                      Widgets.imageDecorator("ui_shadow"),
                                   child: SkinnedText(widget.message,
                                       style: TStyles.large))),
                         ));

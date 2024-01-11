@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/key_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../view/route_provider.dart';
-import '../key_provider.dart';
-import '../overlays/ioverlay.dart';
+import '../overlays/overlay.dart';
 import '../widgets.dart';
 import 'card_item.dart';
 import 'page_item.dart';
@@ -29,10 +28,14 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       var cards = state.account.getReadyCards();
+      var paddingTop = MediaQuery.of(context).viewPadding.top;
+      if (paddingTop <= 0) {
+        paddingTop = 24.d;
+      }
       return Stack(children: [
         GridView.builder(
             itemCount: cards.length,
-            padding: EdgeInsets.fromLTRB(gap, 200.d, gap, 210.d),
+            padding: EdgeInsets.fromLTRB(gap, paddingTop + 150.d, gap, 210.d),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 childAspectRatio: CardItem.aspectRatio,
                 crossAxisCount: 4,
@@ -40,32 +43,29 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                 mainAxisSpacing: gap),
             itemBuilder: (c, i) => cardItemBuilder(c, i, cards[i], itemSize)),
         PositionedDirectional(
-            top: 28.d,
-            start: 12.d,
+            top: paddingTop,
+            start: 20.d,
             width: 132.d,
-            child: Widgets.skinnedButton(
+            child: Widgets.skinnedButton(context,
                 icon: "icon_collection",
-                onPressed: () => Navigator.pushNamed(
-                    context, Routes.popupCollection.routeName))),
+                onPressed: () => Routes.popupCollection.navigate(context))),
         PositionedDirectional(
-            top: 28.d,
+            top: paddingTop,
             width: 132.d,
-            start: 144.d,
-            child: Widgets.skinnedButton(
-                icon: "icon_combo",
+            start: 150.d,
+            child: Widgets.skinnedButton(context, icon: "icon_combo",
                 onPressed: () {
-                  // Show unavailable message
-                  if (state.account.level <
-                      Account.availablityLevels["tribe"]!) {
-                    Overlays.insert(context, OverlayType.toast,
-                        args: "unavailable_l".l([
-                          "popupcombo".l(),
-                          Account.availablityLevels["combo"]
-                        ]));
-                  } else {
-                    Navigator.pushNamed(context, Routes.popupCombo.routeName);
-                  }
-                }))
+              // Show unavailable message
+              var levels =
+                  state.account.loadingData.rules["availabilityLevels"]!;
+              if (state.account.level < levels["combo"]) {
+                Overlays.insert(context, OverlayType.toast,
+                    args:
+                        "unavailable_l".l(["popupcombo".l(), levels["combo"]]));
+              } else {
+                Routes.popupCombo.navigate(context);
+              }
+            }))
       ]);
     });
   }
@@ -73,9 +73,9 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
   Widget? cardItemBuilder(
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.touchable(
-      onTap: () => Navigator.pushNamed(
-          context, Routes.popupCardDetails.routeName,
-          arguments: {'card': card}),
+      context,
+      onTap: () =>
+          Routes.popupCardDetails.navigate(context, args: {'card': card}),
       child: CardItem(card,
           size: itemSize,
           key: getGlobalKey(card.id),

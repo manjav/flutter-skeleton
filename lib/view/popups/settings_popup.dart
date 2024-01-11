@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
 import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/popups/ipopup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class SettingsPopup extends AbstractPopup {
   SettingsPopup({super.key}) : super(Routes.popupSettings, args: {});
@@ -23,6 +23,9 @@ class SettingsPopup extends AbstractPopup {
 class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(60.d, 200.d, 60.d, 80.d);
+  @override
+  BoxDecoration get chromeSkinBuilder => Widgets.imageDecorator(
+      "popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   Widget contentFactory() {
@@ -58,7 +61,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
   }
 
   Widget _row(Pref setting, Widget action, Function(Pref) onPressed) {
-    return Widgets.button(
+    return Widgets.button(context,
         height: 120.d,
         padding: EdgeInsets.all(30.d),
         child: Row(children: [
@@ -66,7 +69,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
           SizedBox(width: 20.d),
           Text("settings_${setting.name}".l()),
           const Expanded(child: SizedBox()),
-          IgnorePointer(ignoring: true, child: action),
+          IgnorePointer(child: action),
         ]),
         onPressed: () => onPressed(setting));
   }
@@ -92,7 +95,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
   Widget _button(String title,
       {ButtonColor color = ButtonColor.teal, double? width}) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         width: width,
         color: color,
         icon: "icon_$title",
@@ -121,7 +124,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
       "invite" => Routes.popupInvite,
       _ => Routes.popupRedeemGift,
     };
-    Navigator.pushNamed(context, route.routeName);
+    route.navigate(context);
   }
 
   void _showLocales() {
@@ -160,6 +163,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
   Widget _localeItemBuilder(Locale local) {
     return Widgets.button(
+      context,
       child: SkinnedText("settings_${local.languageCode}".l()),
       onPressed: () {
         Pref.language.setString(local.languageCode);

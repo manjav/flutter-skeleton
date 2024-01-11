@@ -1,23 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/store.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/widgets/loaderwidget.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
-import '../route_provider.dart';
+import '../overlays/overlay.dart';
 import '../widgets.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 import 'page_item.dart';
 
 class ShopPageItem extends AbstractPageItem {
@@ -30,7 +31,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   late Account _account;
   final Map<ShopSections, List<ShopItemVM>> _items = {};
   late StreamSubscription<List<PurchaseDetails>> _subscription;
-  final bool _hackMode = false;
+  // final bool _hackMode = false;
 
   final Map<String, ProductDetails> _productDetails = {};
 
@@ -142,6 +143,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         // var result = await rpc(RpcId.buyGoldPack, params: params);
         // accountBloc.account!.update({section.name: item.base.value});
         // accountBloc.add(SetAccount(account: accountBloc.account!));
+
+        Overlays.insert(context, OverlayType.feastPurchase,
+            args: {"item": item});
         return;
       }
     }
@@ -171,7 +175,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   Widget _header(ShopSections section) {
     return Container(
         clipBehavior: Clip.none,
-        decoration: Widgets.imageDecore("shop_header_${section.name}",
+        decoration: Widgets.imageDecorator("shop_header_${section.name}",
             ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 58, 2, 2))),
         width: 1000.d,
         height: 188.d,
@@ -185,8 +189,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                 height: 170.d,
                 child: section == ShopSections.gold
                     ? Widgets.rect(
-                        decoration: Widgets.imageDecore("icon_star"),
-                        child: SkinnedText("x${_getShopMultiplier().toInt()}"))
+                        decoration: Widgets.imageDecorator("icon_star"),
+                        child: SkinnedText(
+                            "x${ShopData.getMultiplier(_account.level).round()}"))
                     : null),
             SizedBox(width: 130.d),
             const Expanded(child: SizedBox()),
@@ -221,8 +226,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _itemGoldBuilder(int index, ShopItemVM item) {
-    var title = _getTitle(item.base);
-    return _baseItemBilder(
+    var title = item.getTitle();
+    return _baseItemBuilder(
         index,
         title,
         "",
@@ -240,7 +245,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 Asset.load<Image>("icon_gold", width: 76.d),
                 SkinnedText(
-                    (item.base.value * _getShopMultiplier()).round().compact(),
+                    (item.base.value * ShopData.getMultiplier(_account.level))
+                        .round()
+                        .compact(),
                     style: TStyles.large.copyWith(color: TColors.orange))
               ])),
           _percentageBadge(item.base.ratio),
@@ -249,8 +256,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _itemNectarBuilder(int index, ShopItemVM item) {
-    var title = _getTitle(item.base);
-    return _baseItemBilder(
+    var title = item.getTitle();
+    return _baseItemBuilder(
         index,
         title,
         "",
@@ -269,14 +276,14 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   Widget _itemCardBuilder(int index, ShopItemVM item) {
-    var title = _getTitle(item.base);
-    return _baseItemBilder(index, title, title, item,
+    var title = item.getTitle();
+    return _baseItemBuilder(index, title, title, item,
         LoaderWidget(AssetType.image, title, subFolder: 'shop'));
   }
 
   Widget _itemBoostBuilder(int index, ShopItemVM item) {
     var title = item.base.id < 22 ? "shop_boost_xp" : "shop_boost_power";
-    return _baseItemBilder(
+    return _baseItemBuilder(
         index,
         title,
         title,
@@ -287,9 +294,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         ]));
   }
 
-  Widget _baseItemBilder(int index, String title, String description,
+  Widget _baseItemBuilder(int index, String title, String description,
       ShopItemVM item, Widget child) {
-    return Widgets.button(
+    return Widgets.button(context,
         color: TColors.primary90,
         radius: 30.d,
         alignment: Alignment.center,
@@ -307,15 +314,15 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                   textAlign: TextAlign.center),
           SizedBox(height: description.isEmpty ? 0 : 20.d),
           IgnorePointer(
-              ignoring: true,
-              child: Widgets.skinnedButton(
+              child: Widgets.skinnedButton(context,
                   color: ButtonColor.green,
                   padding: EdgeInsets.only(bottom: 10.d),
                   icon: item.inStore ? null : "icon_${item.base.currency}",
-                  label: _getItemPrice(item),
+                  label: ShopData.calculatePrice(_account.level,
+                      _account.nectarPrice, _productDetails, item),
                   height: 120.d))
         ]),
-        onPressed: () => _onItemPressed(item.base));
+        onPressed: () => _onItemPressed(item));
   }
 
   Widget _percentageBadge(double ratio) {
@@ -326,7 +333,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           width: 100.d,
           height: 100.d,
           transform: Matrix4.rotationZ(-0.15),
-          decoration: Widgets.imageDecore("badge_ribbon"),
+          decoration: Widgets.imageDecorator("badge_ribbon"),
           child: SkinnedText("+${(ratio * 100).round()}%", style: TStyles.tiny),
         ));
   }
@@ -340,76 +347,38 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             child: Asset.load<Image>("reward_$reward", width: 76.d)));
   }
 
-  String _getTitle(ShopItem item) => "shop_${item.section.name}_${item.id}";
-
-  double _getShopMultiplier() {
-    const goldMultiplier = 3;
-    const veteranGoldDivider = 20;
-    const veteranGoldMultiplier = 80;
-    return switch (_account.level) {
-      < 10 => 1.0,
-      < 20 => 2.5,
-      < 30 => 4.5,
-      < 40 => 7.0,
-      < 50 => 10.0,
-      < 60 => 12.5,
-      < 70 => 16.0,
-      < 80 => 20.0,
-      < 90 => 25.0,
-      < 100 => 30.0,
-      < 300 =>
-        30.0 + (((_account.level - 90) / 10).floor() * goldMultiplier).floor(),
-      _ => 93.0 +
-          (((_account.level - 300) / veteranGoldDivider).floor() *
-                  veteranGoldMultiplier)
-              .floor(),
-    };
-  }
-
-  String _getItemPrice(ShopItemVM item) {
-    var price = item.base.value;
-    if (item.inStore && _productDetails.containsKey(item.base.productID)) {
-      return _productDetails[item.base.productID]!.price;
-    }
-    if (item.base.section == ShopSections.boost) {
-      // Converts gold multiplier to nectar for boost packs
-      var boostNectarMultiplier = _getShopMultiplier() / _account.nectarPrice;
-      return switch (price) {
-        10 => (30000 * boostNectarMultiplier).round(),
-        20 => (90000 * boostNectarMultiplier).round(),
-        50 => (300000 * boostNectarMultiplier).round(),
-        100 => (1000000 * boostNectarMultiplier).round(),
-        _ => price,
-      }
-          .compact();
-    }
-    return price.compact();
-  }
-
-  _onItemPressed(ShopItem item) async {
+  _onItemPressed(ShopItemVM item) async {
     if (item.inStore) {
-      InAppPurchase.instance.buyConsumable(
-          purchaseParam:
-              PurchaseParam(productDetails: _productDetails[item.productID]!));
+      if (kDebugMode) {
+        _deliverProduct(
+            item.base.section,
+            PurchaseDetails(
+                purchaseID: "",
+                productID: item.base.productID,
+                status: PurchaseStatus.purchased,
+                verificationData: PurchaseVerificationData(
+                    localVerificationData: '{"purchaseState":0}',
+                    serverVerificationData: "{}",
+                    source: ""),
+                transactionDate: ""));
+      } else {
+        InAppPurchase.instance.buyConsumable(
+            purchaseParam: PurchaseParam(
+                productDetails: _productDetails[item.base.productID]!));
+      }
       return;
     }
 
-    var params = {RpcParams.type.name: item.id};
-    try {
-      var result = await rpc(RpcId.buyCardPack, params: params);
-      result["achieveCards"] = result['cards'];
-      result.remove('cards');
-      _account.update(result);
-      if (mounted) {
-        if (_hackMode) {
-          await Future.delayed(const Duration(milliseconds: 1750));
-          if (mounted) _onItemPressed(item);
-        } else {
-          Navigator.pushNamed(context, Routes.openPack.routeName,
-              arguments: result);
-        }
-      }
-    } finally {}
+    if (item.base.section == ShopSections.boost) {
+      Overlays.insert(context, OverlayType.feastPurchase, args: {"item": item});
+    } else {
+      Overlays.insert(
+        context,
+        OverlayType.feastOpenpack,
+        args: {"pack": item.base},
+        onClose: (d) => services.add(ServicesEvent(ServicesInitState.punch, 1)),
+      );
+    }
   }
 
   @override

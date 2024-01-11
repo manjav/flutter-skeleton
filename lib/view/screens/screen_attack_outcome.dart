@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
+import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/background_mixin.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
+import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loaderwidget.dart';
-import '../widgets/skinnedtext.dart';
-import 'iscreen.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'screen.dart';
 
 enum FightMode { quest, battle }
 
 class AttackOutScreen extends AbstractScreen {
-  AttackOutScreen(super.mode, {required super.args, super.key});
+  AttackOutScreen(super.mode,
+      {required super.args, super.closable = false, super.key});
   @override
   createState() => _AttackOutScreenState();
 }
 
-class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
+class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
+    with BackgroundMixin {
   bool _isWin = false;
   String _color = "green";
 
@@ -46,7 +51,9 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
     _account = accountBloc.account!;
     _isWin = widget.args['outcome'];
     _color = _isWin ? "green" : "red";
-    if (widget.args["attacker_hero_benefits_info"].length > 0) {
+    getService<Sounds>().play(_isWin ? "won" : "lose");
+    if (widget.args.containsKey("attacker_hero_benefits_info") &&
+        widget.args["attacker_hero_benefits_info"].length > 0) {
       var benefits = widget.args["attacker_hero_benefits_info"];
       var map = <String, int>{
         "benefit_gold": benefits['gold_benefit'] ?? 0,
@@ -68,109 +75,91 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
 
   @override
   Widget contentFactory() {
-    return Stack(alignment: Alignment.center, children: [
-      _isWin
-          ? Positioned(
-              top: 20.d,
-              width: 780.d,
-              height: 780.d,
-              child: LoaderWidget(AssetType.animation, "outcome_crown",
-                  onRiveInit: (Artboard artboard) {
-                final controller =
-                    StateMachineController.fromArtboard(artboard, 'Crown');
-                // _closeInput = controller!.findInput<bool>('close') as SMIBool;
-                artboard.addController(controller!);
-              }))
-          : const SizedBox(),
-      AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) => Widgets.rect(
-              height: DeviceInfo.size.width,
-              alignment: Alignment.center,
-              child: Stack(alignment: Alignment.center, children: [
-                Positioned(
-                    top: 32.d,
-                    width: 622.d,
-                    height: 114.d,
-                    child: Opacity(
-                        opacity: (_animationController.value / 2).clamp(0, 1),
-                        child: Widgets.rect(
-                            alignment: Alignment.center,
-                            decoration:
-                                Widgets.imageDecore("ui_ribbon_$_color"),
-                            child: SkinnedText("fight_lebel_$_color".l())))),
-                Positioned(
-                    bottom: -180.d,
-                    width: 1050.d,
-                    height: 980.d,
-                    child: LoaderWidget(
-                        AssetType.animation, "outcome_panel_$_color",
-                        onRiveInit: (Artboard artboard) {
-                      artboard.addController(
-                          StateMachineController.fromArtboard(
-                              artboard, 'Panel')!);
-                    }, fit: BoxFit.fitWidth)),
-                Positioned(
-                    bottom: 660.d,
-                    height: 240.d,
-                    width: 800.d,
-                    child: _outResults()),
-                PositionedDirectional(
-                    height: 322.d,
-                    end: 60.d,
-                    start: 180.d,
-                    bottom: 180.d,
-                    child: _prizeList()),
-                Positioned(
-                    height: 322.d,
-                    width: 720.d,
-                    bottom: 12.d,
-                    child: Opacity(
-                        opacity: (_animationController.value - 1.9).clamp(0, 1),
-                        child: SkinnedText("card_available".l()))),
-                Positioned(
-                    height: 322.d,
-                    width: 720.d,
-                    bottom: -42.d,
-                    child: Opacity(
-                        opacity: (_animationController.value - 2).clamp(0, 1),
-                        child: SkinnedText("${_account.getReadyCards().length}",
-                            style: TStyles.large))),
-              ]))),
-      Positioned(
-          height: 180.d,
-          bottom: 240.d,
-          child: Row(children: [
-            Widgets.skinnedButton(
-                padding: EdgeInsets.fromLTRB(48.d, 48.d, 48.d, 60.d),
-                child: Asset.load<Image>("ui_arrow_back"),
-                width: 160.d,
-                color: ButtonColor.green,
-                onPressed: () => Navigator.pop(context)),
-            SizedBox(width: 20.d),
-            Widgets.skinnedButton(
-                padding: EdgeInsets.fromLTRB(32.d, 32.d, 48.d, 48.d),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const LoaderWidget(AssetType.image, "icon_battle"),
-                    SizedBox(width: 32.d),
-                    SkinnedText("battle_more".l(), style: TStyles.large),
-                  ],
-                ),
-                onPressed: () {
-                  if (widget.type == Routes.battleOut) {
-                    Navigator.pop(context);
-                  } else {
-                    Navigator.pushReplacementNamed(
-                        context, Routes.deck.routeName);
-                  }
-                })
-          ]))
-    ]);
+    return Widgets.touchable(context,
+        child: Stack(alignment: Alignment(0, _isWin ? 0.5 : 0.2), children: [
+          backgroundBuilder(animated: true, color: _isWin ? 4 : 2),
+          _isWin
+              ? Positioned(
+                  top: 120.d,
+                  width: 600.d,
+                  height: 600.d,
+                  child: LoaderWidget(AssetType.animation, "outcome_crown",
+                      onRiveInit: (Artboard artboard) {
+                    artboard.addController(StateMachineController.fromArtboard(
+                        artboard, 'Crown')!);
+                  }))
+              : const SizedBox(),
+          SizedBox(
+              height: 700.d,
+              child: Stack(children: [
+                LoaderWidget(AssetType.animation, "outcome_panel",
+                    onRiveInit: (Artboard artboard) {
+                  var controller = StateMachineController.fromArtboard(
+                      artboard, "State Machine 1")!;
+                  controller.findInput<double>("color")?.value = _isWin ? 1 : 0;
+                  artboard.addController(controller);
+                }, fit: BoxFit.fitWidth),
+                Widgets.rect(
+                    child: AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) => Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(top: -360.d, child: _ribbonTopBuilder()),
+                        Positioned(
+                            top: -210.d,
+                            width: 800.d,
+                            child: _profileBuilder()),
+                        Align(
+                            alignment: const Alignment(0, -0.3),
+                            child: _prizeList(700.d)),
+                        Positioned(
+                            height: 322.d,
+                            width: 720.d,
+                            bottom: 50.d,
+                            child: Opacity(
+                                opacity: (_animationController.value - 1.9)
+                                    .clamp(0, 1),
+                                child: SkinnedText("card_available".l()))),
+                        Positioned(
+                            height: 322.d,
+                            width: 720.d,
+                            bottom: 0,
+                            child: Opacity(
+                                opacity: (_animationController.value - 2)
+                                    .clamp(0, 1),
+                                child: SkinnedText(
+                                    "${_account.getReadyCards().length}",
+                                    style: TStyles.large))),
+                      ]),
+                ))
+              ])),
+        ]),
+        onTap: _close);
   }
 
-  _outResults() {
+  void _close() {
+    accountBloc.account!.update(context, widget.args);
+    accountBloc.add(SetAccount(account: accountBloc.account!));
+    var lastRoute =
+        widget.type == Routes.questOut ? Routes.quest : Routes.popupOpponents;
+    Navigator.popUntil(
+        context, (route) => route.settings.name == lastRoute.routeName);
+  }
+
+  Widget _ribbonTopBuilder() {
+    return Opacity(
+        opacity: (_animationController.value / 2).clamp(0, 1),
+        child: Widgets.rect(
+            width: 622.d,
+            height: 114.d,
+            alignment: Alignment.center,
+            decoration: Widgets.imageDecorator("ui_ribbon_$_color"),
+            child: SkinnedText("fight_label_$_color".l())));
+  }
+
+  Widget _profileBuilder() {
     var hasBenefits = _isWin && _heroBenefits.isNotEmpty;
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -184,8 +173,8 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
             children: [
               SizedBox(height: 36.d),
               SkinnedText(_account.name),
-              _account.tribe != null
-                  ? SkinnedText(_account.tribe!.name)
+              _account.tribeId > 0
+                  ? SkinnedText(_account.tribeName)
                   : const SizedBox(),
             ],
           ),
@@ -201,13 +190,21 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
         ]);
   }
 
-  _prizeList() {
-    return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, mainAxisExtent: 130.d),
-        itemCount: _prizes.length,
-        itemBuilder: (c, i) =>
-            _prizeItemBuilder(_prizes[i].key, _prizes[i].value));
+  Widget _prizeList(double width) {
+    var crossAxisCount = 3.max(_prizes.length);
+    return SizedBox(
+        height: 300.d,
+        width: 700.d,
+        child: GridView.builder(
+            padding: EdgeInsets.zero,
+            // physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 1.7,
+              crossAxisCount: crossAxisCount,
+            ),
+            itemCount: _prizes.length,
+            itemBuilder: (c, i) =>
+                _prizeItemBuilder(_prizes[i].key, _prizes[i].value)));
   }
 
   Widget? _prizeItemBuilder(String type, int value) {
@@ -221,9 +218,9 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
               width: 100.d,
               height: 130.d,
               padding: EdgeInsets.all(16.d),
-              decoration: Widgets.imageDecore("ui_prize_frame"),
+              decoration: Widgets.imageDecorator("ui_prize_frame"),
               child: Asset.load<Image>("icon_$type")),
-          SkinnedText(" ${value > 0 ? '+' : ''}${value.compact()}")
+          SkinnedText(" ${value > 0 ? '+' : ""}${value.compact()}")
         ]));
   }
 
@@ -232,7 +229,13 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen> {
         height: 76.d,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Asset.load<Image>(type, height: 62.d),
-          SkinnedText("  ${value > 0 ? '+' : ''}${value.compact()}")
+          SkinnedText("  ${value > 0 ? '+' : ""}${value.compact()}")
         ]));
+  }
+
+  @override
+  void dispose() {
+    _animationController.stop();
+    super.dispose();
   }
 }

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/building_mixin.dart';
+import '../../mixins/building_supportive_mixin.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/utils.dart';
-import '../../view/building_supportive_mixin.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../building_mixin.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 
 class SupportiveBuildingPopup extends AbstractPopup {

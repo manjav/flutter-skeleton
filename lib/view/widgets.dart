@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/services_bloc.dart';
+import '../../services/sounds.dart';
 
-import '../../view/widgets/skinnedtext.dart';
-import '../services/deviceinfo.dart';
+import '../services/device_info.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';
+import 'widgets/skinned_text.dart';
 
 class Widgets {
-  static GestureDetector touchable({
+  static GestureDetector touchable(
+    BuildContext context, {
     String? sfx,
     int id = 30,
     Function()? onTap,
@@ -44,7 +48,9 @@ class Widgets {
               },
         onTap: () {
           if (_isActive(id)) {
-            // services.get<Sounds>().play(sfx ?? "click");
+            BlocProvider.of<ServicesBloc>(context)
+                .get<Sounds>()
+                .play(sfx ?? "click");
             onTap?.call();
           }
         },
@@ -118,7 +124,8 @@ class Widgets {
     );
   }
 
-  static Widget button({
+  static Widget button(
+    BuildContext context, {
     Function()? onPressed,
     Function(TapUpDetails)? onTapUp,
     int buttonId = 30,
@@ -138,7 +145,7 @@ class Widgets {
     BoxConstraints? constraints,
     required Widget child,
   }) {
-    return touchable(
+    return touchable(context,
         id: buttonId,
         onTap: onPressed,
         onTapUp: onTapUp,
@@ -161,7 +168,7 @@ class Widgets {
         ));
   }
 
-  static BoxDecoration imageDecore(String path,
+  static BoxDecoration imageDecorator(String path,
       [ImageCenterSliceData? sliceData]) {
     return BoxDecoration(
         image: DecorationImage(
@@ -170,7 +177,8 @@ class Widgets {
             centerSlice: sliceData?.centerSlice));
   }
 
-  static skinnedButton({
+  static skinnedButton(
+    BuildContext context, {
     String? label,
     String? icon,
     ButtonColor color = ButtonColor.yellow,
@@ -190,7 +198,7 @@ class Widgets {
     if (!isEnable) {
       color = ButtonColor.gray;
     }
-    return Widgets.button(
+    return button(context,
         onPressed: isEnable ? onPressed : onDisablePressed,
         width: width,
         height: height,
@@ -199,7 +207,7 @@ class Widgets {
         constraints: constraints,
         margin: margin,
         padding: padding ?? EdgeInsets.fromLTRB(28.d, 25.d, 28.d, 40.d),
-        decoration: buttonDecore(color, size),
+        decoration: buttonDecorator(color, size),
         child: Opacity(
             opacity: isEnable ? 1 : 0.7,
             child: label != null || icon != null
@@ -215,13 +223,14 @@ class Widgets {
                 : child!));
   }
 
-  static buttonDecore(ButtonColor color, [ButtonSize size = ButtonSize.small]) {
+  static buttonDecorator(ButtonColor color,
+      [ButtonSize size = ButtonSize.small]) {
     var slicingData = switch (size) {
       ButtonSize.small =>
         ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 4, 20)),
       _ => ImageCenterSliceData(130, 158),
     };
-    return imageDecore("button_${size.name}_${color.name}", slicingData);
+    return imageDecorator("button_${size.name}_${color.name}", slicingData);
   }
 
   static divider(
@@ -236,7 +245,7 @@ class Widgets {
         height: height ?? 16.d,
         margin: EdgeInsets.all(margin),
         decoration: decoration ??
-            imageDecore("ui_divider_${v ? 'v' : 'h'}",
+            imageDecorator("ui_divider_${v ? 'v' : 'h'}",
                 ImageCenterSliceData(v ? 16 : 38, v ? 38 : 16)));
   }
 
@@ -294,17 +303,20 @@ class Widgets {
     Function(String)? onSubmit,
   }) {
     var style = TStyles.medium.copyWith(height: 1.5);
-    return SizedBox(
-        width: width ?? 570.d,
+    return rect(
+        radius: radius,
+        color: TColors.primary,
+        width: width ?? 720.d,
         child: TextField(
+            style: style,
             maxLines: maxLines,
             autofocus: autofocus,
             maxLength: maxLength == 1 ? null : maxLength,
             controller: controller,
-            style: style,
             textAlign: TextAlign.center,
             onChanged: onChange,
             onSubmitted: onSubmit,
+            onTapOutside: (p) => FocusManager.instance.primaryFocus?.unfocus(),
             decoration: InputDecoration(
               hintStyle: style,
               hintText: hintText,
@@ -315,8 +327,9 @@ class Widgets {
             )));
   }
 
-  static Widget clipboardGetter(String text, {double? width, double? height}) {
-    return button(
+  static Widget clipboardGetter(BuildContext context, String text,
+      {double? width, double? height}) {
+    return button(context,
         width: width ?? 720.d,
         height: height ?? 120.d,
         margin: EdgeInsets.all(8.d),
@@ -331,11 +344,12 @@ class Widgets {
         onPressed: () => Clipboard.setData(ClipboardData(text: text)));
   }
 
-  static checkbox(String lebel, bool isSelected, {Function()? onSelect}) {
-    return button(
+  static checkbox(BuildContext context, String label, bool isSelected,
+      {Function()? onSelect}) {
+    return button(context,
         onPressed: onSelect,
         child: Row(children: [
-          SkinnedText(lebel),
+          SkinnedText(label),
           SizedBox(width: 12.d),
           Asset.load<Image>("checkbox_${isSelected ? "on" : "off"}",
               width: 64.d)

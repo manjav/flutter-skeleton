@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/key_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
-import '../key_provider.dart';
 import '../route_provider.dart';
-import 'ipopup.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class CollectionPopup extends AbstractPopup {
   CollectionPopup({super.key}) : super(Routes.popupCollection, args: {});
@@ -22,14 +22,14 @@ class CollectionPopup extends AbstractPopup {
 class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
     with KeyProvider {
   late List<Fruit> _fruits;
-  late Set<int> _avaibledCards;
+  late Set<int> _availableCards;
   late final ValueNotifier<Fruit> _selectedFruit;
 
   @override
   void initState() {
     var account = accountBloc.account!;
     _fruits = account.loadingData.fruits.values.toList();
-    _avaibledCards = Set<int>.from(account.collection);
+    _availableCards = Set<int>.from(account.collection);
     _selectedFruit = ValueNotifier(_fruits[0]);
     super.initState();
   }
@@ -69,8 +69,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
                     radius: 16.d,
                     color: TColors.primary70,
                     padding: EdgeInsets.symmetric(horizontal: 30.d),
-                    child: SkinnedText("${value.name}_t".l(),
-                        style: TStyles.large))),
+                    child: SkinnedText(value.name.l(), style: TStyles.large))),
             _fruitsListBuilder(),
           ]);
         });
@@ -105,7 +104,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   Widget? _cardItemBuilder(int index, FruitCard card, double itemSize) {
     return Stack(alignment: Alignment.center, children: [
       CardItem.getCardBackground(card.fruit.category, card.rarity),
-      _avaibledCards.contains(card.id)
+      _availableCards.contains(card.id)
           ? CardItem.getCardImage(card, itemSize * 0.9,
               key: getGlobalKey(card.id))
           : Asset.load<Image>("deck_placeholder_card", width: itemSize * 0.6),
@@ -137,7 +136,7 @@ class _CollectionPopupState extends AbstractPopupState<CollectionPopup>
   Widget _fruitItemBuilder(int index, Fruit fruit) {
     var selected = _selectedFruit.value == fruit;
 
-    return Widgets.button(
+    return Widgets.button(context,
         margin: EdgeInsets.all(10.d),
         padding: EdgeInsets.all(16.d),
         decoration: BoxDecoration(

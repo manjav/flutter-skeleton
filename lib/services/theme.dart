@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'deviceinfo.dart';
-import 'iservices.dart';
+import 'device_info.dart';
+import 'services.dart';
 
 class TColors {
   static const accent = Color(0xFFFF5D54);
@@ -92,6 +92,10 @@ class Themes extends IService {
     );
 
     return ThemeData(
+      colorScheme: const ColorScheme.dark(
+          background: TColors.black,
+          primary: TColors.primary30,
+          outline: TColors.primary70),
       brightness: Brightness.dark,
       textTheme: textTheme,
       useMaterial3: true,

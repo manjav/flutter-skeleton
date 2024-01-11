@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/building.dart';
 import '../../data/core/fruit.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/key_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../items/card_item.dart';
-import '../key_provider.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/card_holder.dart';
-import 'ipopup.dart';
+import 'popup.dart';
 
 class CardSelectPopup extends AbstractPopup {
   const CardSelectPopup({super.key, required super.args})
@@ -91,7 +91,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
                       width: 420.d,
                       height: 160.d,
                       bottom: 24.d,
-                      child: Widgets.skinnedButton(
+                      child: Widgets.skinnedButton(context,
                           label: "card_select".l(),
                           onPressed: () =>
                               Navigator.pop(context, _selectedCards.value)))
@@ -103,6 +103,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
   Widget? _cardItemBuilder(
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.button(
+      context,
       padding: EdgeInsets.zero,
       foregroundDecoration: _selectedCards.value.contains(card)
           ? BoxDecoration(
@@ -112,7 +113,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
       onPressed: () => _onCardSelect(card),
       child: CardItem(card,
           size: itemSize,
-          showCooloff: true,
+          showCoolOff: true,
           showCooldown: false,
           key: getGlobalKey(card.id)),
     );
@@ -124,6 +125,6 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
       setState(() {});
       return;
     }
-    _selectedCards.setCard(card, lenght: _building.maxCards);
+    _selectedCards.setCard(card, length: _building.maxCards);
   }
 }

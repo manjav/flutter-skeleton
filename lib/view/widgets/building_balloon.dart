@@ -7,8 +7,8 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
-import '../../services/service_provider.dart';
+import '../../mixins/service_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
@@ -31,7 +31,7 @@ class _BuildingBalloonState extends State<BuildingBalloon>
       if (!isCollectable(state.account)) {
         return const SizedBox();
       }
-      return Widgets.button(
+      return Widgets.button(context,
           radius: 40.d,
           color: TColors.primary,
           padding: EdgeInsets.all(12.d),
@@ -51,20 +51,20 @@ class _BuildingBalloonState extends State<BuildingBalloon>
     try {
       var result = await rpc(RpcId.collectGold, params: params);
       if (result is List) return;
-      account.update(result);
       if (mounted) {
+        account.update(context, result);
         accountBloc.add(SetAccount(account: account));
       }
     } finally {}
   }
 
   int collectableGold(Account account) {
-    var goldPerdSec = widget.building.getCardsBenefit(account) / 3600;
-    return ((account.now - account.last_gold_collect_at) * goldPerdSec)
+    var goldPerSec = widget.building.getCardsBenefit(account) / 3600;
+    return ((account.getTime() - account.last_gold_collect_at) * goldPerSec)
         .clamp(0, widget.building.benefit)
         .floor();
   }
 
   bool isCollectable(Account account) =>
-      account.now >= account.gold_collection_allowed_at;
+      account.getTime() >= account.gold_collection_allowed_at;
 }

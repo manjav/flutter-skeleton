@@ -5,17 +5,17 @@ import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/items/card_item.dart';
-import '../../view/overlays/ioverlay.dart';
-import '../../view/popups/ipopup.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class CardDetailsPopup extends AbstractPopup {
   const CardDetailsPopup({super.key, required super.args})
@@ -47,10 +47,9 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         child: Scaffold(
             backgroundColor: backgroundColor,
             body: Stack(children: [
-              Widgets.touchable(
-                  onTap: widget.barrierDismissible
-                      ? () => Navigator.pop(context)
-                      : null),
+              Widgets.touchable(context,
+                  onTap:
+                      barrierDismissible ? () => Navigator.pop(context) : null),
               Container(
                   alignment: alignment,
                   padding: EdgeInsets.all(100.d),
@@ -60,13 +59,13 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                         child: CardItem(_card,
                             size: 500.d, heroTag: "hero_${_card.id}")),
                     SizedBox(height: 70.d),
-                    Text("${_name}_d".l(),
+                    Text("${_name}_description".l(),
                         style: TStyles.mediumInvert.copyWith(height: 2.7.d)),
                     SizedBox(height: 100.d),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       _button(
                         width: 420.d,
-                        label: "˧  ${"popupcardenhance".l()}",
+                        label: "˧  ${"enhance_l".l()}",
                         isEnable: _card.power < _card.base.powerLimit,
                         onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
                         onDisablePressed: () => toast("card_max_power".l()),
@@ -74,11 +73,10 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                       _button(
                           width: 420.d,
                           isEnable: isUpgradable,
-                          label:
-                              "˨  ${"popupcard${_card.base.isHero ? "upgrade" : "merge"}".l()}",
+                          label: "˨  ${"evolve_l".l()}",
                           onPressed: () => _onButtonsTap(_card.base.isHero
-                              ? Routes.popupCardUpgrade
-                              : Routes.popupCardMerge),
+                              ? Routes.popupHeroEvolve
+                              : Routes.popupCardEvolve),
                           onDisablePressed: () {
                             toast(_card.isUpgradable
                                 ? "card_no_sibling".l()
@@ -89,9 +87,8 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                         isVisible: _card.fruit.isHero,
                         color: ButtonColor.violet,
                         label: "˩  ${"hero_edit".l()}",
-                        onPressed: () => Navigator.pushNamed(
-                            context, Routes.popupHero.routeName,
-                            arguments: {"card": _card.fruit.id})),
+                        onPressed: () => Routes.popupHero
+                            .navigate(context, args: {"card": _card.fruit.id})),
                     _button(
                         isVisible: _card.fruit.isSalable,
                         color: ButtonColor.green,
@@ -101,7 +98,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                           SizedBox(width: 20.d),
                           Widgets.rect(
                             padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
-                            decoration: Widgets.imageDecore(
+                            decoration: Widgets.imageDecorator(
                                 "frame_hatch_button", ImageCenterSliceData(42)),
                             child: Row(
                                 textDirection: TextDirection.ltr,
@@ -137,7 +134,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
     if (!isVisible) {
       return const SizedBox();
     }
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         margin: EdgeInsets.all(8.d),
         icon: icon,
         color: color,
@@ -151,8 +148,10 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   }
 
   _onButtonsTap(Routes route) async {
-    await Navigator.pushNamed(context, route.routeName,
-        arguments: {"card": _card});
+    await route.navigate(context, args: {"card": _card});
+    if (mounted && !accountBloc.account!.cards.containsKey(_card.id)) {
+      Navigator.popUntil(context, (route) => route.isFirst);
+    }
     setState(() {});
   }
 

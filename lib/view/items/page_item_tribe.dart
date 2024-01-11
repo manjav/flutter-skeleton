@@ -9,7 +9,7 @@ import '../../data/core/building.dart';
 import '../../data/core/message.dart';
 import '../../data/core/tribe.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/inbox.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -17,11 +17,11 @@ import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/overlays/chat_options_overlay.dart';
 import '../../view/popups/tribe_search_popup.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 import 'page_item.dart';
 
 class TribePageItem extends AbstractPageItem {
@@ -38,22 +38,19 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       // Show unavailable message
-      if (state.account.level < Account.availablityLevels["tribe"]!) {
-        return SkinnedText("unavailable_l"
-            .l(["tribe_l".l(), Account.availablityLevels["tribe"]]));
+      var levels = state.account.loadingData.rules["availabilityLevels"]!;
+      if (state.account.level < levels["tribe"]!) {
+        return SkinnedText("unavailable_l".l(["tribe_l".l(), levels["tribe"]]));
       }
 
       if (state.account.tribe == null || state.account.tribe!.id <= 0) {
         return Column(children: [
           Expanded(child: TribeSearchPopup()),
-          Widgets.skinnedButton(
-              label: "tribe_new".l(),
-              width: 380.d,
+          Widgets.skinnedButton(context, label: "tribe_new".l(), width: 380.d,
               onPressed: () async {
-                await Navigator.pushNamed(
-                    context, Routes.popupTribeEdit.routeName);
-                setState(() {});
-              }),
+            await Routes.popupTribeEdit.navigate(context);
+            setState(() {});
+          }),
           SizedBox(height: 200.d),
         ]);
       }
@@ -79,13 +76,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           left: margin,
           bottom: margin * 1.5,
           child: Widgets.rect(
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "tribe_header", ImageCenterSliceData(267, 256)))),
       Widgets.button(
+        context,
         onPressed: () async {
-          await Navigator.of(context).pushNamed(
-              Routes.popupTribeOptions.routeName,
-              arguments: {"index": 0});
+          await Routes.popupTribeOptions.navigate(context, args: {"index": 0});
           setState(() {});
         },
         padding: EdgeInsets.fromLTRB(48.d, 44.d, 48.d, 0),
@@ -96,7 +92,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               final controller =
                   StateMachineController.fromArtboard(artboard, "Tab");
               controller?.findInput<double>("level")!.value =
-                  account.tribe!.levels[Buildings.base.id]!.toDouble();
+                  account.tribe!.levels[Buildings.tribe.id]!.toDouble();
               controller?.findInput<bool>("hideBackground")!.value = true;
               controller?.findInput<bool>("active")!.value = true;
 
@@ -125,19 +121,18 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     if (tribe.name.length > 18) {
       name += " ...";
     }
-    return Widgets.button(
-        padding: EdgeInsets.zero,
+    return Widgets.button(context, padding: EdgeInsets.zero,
         onPressed: () async {
-          await Navigator.pushNamed(context, Routes.popupTribeEdit.routeName);
-          setState(() {});
-        },
+      await Routes.popupTribeEdit.navigate(context);
+      setState(() {});
+    },
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             SkinnedText(name, style: TStyles.large),
             SizedBox(width: 16.d),
             Widgets.rect(
                 padding: EdgeInsets.all(10.d),
-                decoration: Widgets.imageDecore(
+                decoration: Widgets.imageDecorator(
                     "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Asset.load<Image>("tribe_edit", width: 42.d))
           ]),
@@ -152,16 +147,26 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   }
 
   Widget _membersButtonBuilder(Tribe tribe) {
-    return Widgets.rect(
-      width: 260.d,
-      padding: EdgeInsets.zero,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        _indicator("icon_population",
-            "${tribe.population}/${tribe.getOption(Buildings.base.id)}", 40.d),
-        SizedBox(height: 8.d),
-        _indicator("tribe_online", "2 onlines", 32.d),
-      ]),
-    );
+    return ValueListenableBuilder<List<Opponent>>(
+        valueListenable: tribe.members,
+        builder: (context, value, child) => Widgets.rect(
+              width: 260.d,
+              padding: EdgeInsets.zero,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _indicator(
+                        "icon_population",
+                        "${tribe.population}/${tribe.getOption(Buildings.tribe.id)}"
+                            .convert(),
+                        40.d),
+                    SizedBox(height: 8.d),
+                    _indicator(
+                        "tribe_online",
+                        "tribe_onlines".l([tribe.onlineMembersCount.convert()]),
+                        32.d),
+                  ]),
+            ));
   }
 
   Widget _upgradeLineBuilder(Tribe tribe) {
@@ -170,11 +175,11 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         height: 102.d,
         child: Row(
           children: [
-            _upgradable(ButtonColor.wooden, "tribe_upgrade_1002",
+            _upgradable(ButtonColor.wooden, "upgrade_1002",
                 "${tribe.getOption(Buildings.offense.id)}%"),
-            _upgradable(ButtonColor.wooden, "tribe_upgrade_1003",
+            _upgradable(ButtonColor.wooden, "upgrade_1003",
                 "${tribe.getOption(Buildings.defense.id)}%"),
-            _upgradable(ButtonColor.wooden, "tribe_upgrade_1004",
+            _upgradable(ButtonColor.wooden, "upgrade_1004",
                 "${tribe.getOption(Buildings.cards.id)}%"),
             Expanded(
                 child: _upgradable(
@@ -188,8 +193,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     return Widgets.rect(
         height: 64.d,
         padding: padding ?? EdgeInsets.only(left: 16.d, right: 16.d),
-        decoration:
-            Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
+        decoration: Widgets.imageDecorator(
+            "frame_hatch_button", ImageCenterSliceData(42)),
         child: Row(
             textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -201,7 +206,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   }
 
   Widget _upgradable(ButtonColor color, String icon, String label) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         padding: EdgeInsets.fromLTRB(24.d, 0, 28.d, 20.d),
         color: color,
         child: Row(
@@ -210,13 +215,11 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             children: [
               Asset.load<Image>(icon, width: 50.d),
               SizedBox(width: 12.d),
-              SkinnedText(label),
-            ]),
-        onPressed: () async {
-          await Navigator.pushNamed(context, Routes.popupTribeOptions.routeName,
-              arguments: {"index": 1});
-          setState(() {});
-        });
+              SkinnedText(label.convert()),
+            ]), onPressed: () async {
+      await Routes.popupTribeOptions.navigate(context, args: {"index": 1});
+      setState(() {});
+    });
   }
 
   Widget _pinnedMessage(Account account) {
@@ -230,7 +233,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           return Widgets.rect(
               margin: EdgeInsets.fromLTRB(32.d, 16.d, 32.d, 0),
               padding: EdgeInsets.fromLTRB(32.d, 32.d, 32.d, 44.d),
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "iconed_item_bg_selected",
                   ImageCenterSliceData(
                       132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
@@ -279,48 +282,52 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     }
     if (message.messageType != Messages.text) return _logItemRenderer(message);
     var padding = 120.d;
-    var avatar = Widgets.button(
+    var avatar = Widgets.button(context,
         width: padding,
         height: padding,
         radius: padding,
-        padding: EdgeInsets.all(6.d),
-        onTapUp: (details) async {
-          await account.tribe!.loadMembers(context, account);
-          if (!mounted) return;
-          Overlays.insert(context, OverlayType.member, args: [
-            account.tribe!.members.firstWhere((m) => m.name == message.sender),
-            account,
-            details.globalPosition.dy - 220.d
-          ]);
-        },
-        decoration:
-            Widgets.imageDecore("frame_hatch_button", ImageCenterSliceData(42)),
-        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId + 1}",
+        padding: EdgeInsets.all(6.d), onTapUp: (details) async {
+      await account.tribe!.loadMembers(context, account);
+      if (!mounted) return;
+      Overlays.insert(context, OverlayType.member, args: [
+        account.tribe!.members.value
+            .firstWhere((m) => m.name == message.sender),
+        account,
+        details.globalPosition.dy - 220.d
+      ]);
+    },
+        decoration: Widgets.imageDecorator(
+            "frame_hatch_button", ImageCenterSliceData(42)),
+        child: LoaderWidget(AssetType.image, "avatar_${message.avatarId}",
             width: 76.d, height: 76.d, subFolder: "avatars"));
     return Column(children: [
-      Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        message.itsMe ? SizedBox(width: padding) : avatar,
-        Expanded(
-            child: Widgets.button(
-                padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 16.d),
-                decoration: Widgets.imageDecore(
-                    "chat_balloon_${message.itsMe ? "right" : "left"}",
-                    ImageCenterSliceData(
-                        80, 78, const Rect.fromLTWH(39, 16, 2, 2))),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(message.sender,
-                          style: titleStyle,
-                          textAlign:
-                              message.itsMe ? TextAlign.right : TextAlign.left),
-                      Text(message.text,
-                          textDirection: message.text.getDirection())
-                    ]),
-                onTapUp: (details) =>
-                    _onChatItemTap(account, details, message))),
-        message.itsMe ? avatar : SizedBox(width: padding),
-      ]),
+      Row(
+          textDirection: TextDirection.ltr,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            message.itsMe ? SizedBox(width: padding) : avatar,
+            Expanded(
+                child: Widgets.button(context,
+                    padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 16.d),
+                    decoration: Widgets.imageDecorator(
+                        "chat_balloon_${message.itsMe ? "right" : "left"}",
+                        ImageCenterSliceData(
+                            80, 78, const Rect.fromLTWH(39, 16, 2, 2))),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(message.sender,
+                              style: titleStyle,
+                              textAlign: message.itsMe
+                                  ? TextAlign.right
+                                  : TextAlign.left),
+                          Text(message.text,
+                              textDirection: message.text.getDirection())
+                        ]),
+                    onTapUp: (details) =>
+                        _onChatItemTap(account, details, message))),
+            message.itsMe ? avatar : SizedBox(width: padding),
+          ]),
       Row(children: [
         SizedBox(width: padding + 24.d),
         Text((now - message.creationDate).toElapsedTime(),
@@ -336,20 +343,20 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         margin: EdgeInsets.only(bottom: 48.d),
         padding: EdgeInsets.fromLTRB(32.d, 26.d, 16.d, 16.d),
         decoration:
-            Widgets.imageDecore("ui_popup_group", ImageCenterSliceData(144)),
+            Widgets.imageDecorator("ui_popup_group", ImageCenterSliceData(144)),
         child: Column(
             crossAxisAlignment: getService<Localization>().columnAlign,
             children: [
               Text(message.text),
               SizedBox(height: 16.d),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                Widgets.skinnedButton(
+                Widgets.skinnedButton(context,
                     padding: padding,
                     label: "reject_l".l(),
                     color: ButtonColor.yellow,
                     onPressed: () => _decide(account.tribe!, message, false)),
                 SizedBox(width: 24.d),
-                Widgets.skinnedButton(
+                Widgets.skinnedButton(context,
                     padding: padding,
                     label: "accept_l".l(),
                     color: ButtonColor.green,
@@ -367,7 +374,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   void _onChatItemTap(
       Account account, TapUpDetails details, NoobChatMessage message) {
     var options = <ChatOptions>[];
-    if (account.tribe!.members.firstWhere((m) => m.itsMe).tribePosition.index >=
+    if (account.tribe!.members.value
+            .firstWhere((m) => m.itsMe)
+            .tribePosition
+            .index >=
         TribePosition.owner.index) {
       options.add(ChatOptions.pin);
     }
@@ -383,7 +393,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             account.tribe!.pinMessage(context, account, message);
           } else if (option == ChatOptions.reply) {
             _inputController.text =
-                "@${message.sender}: ${message.text.truncate(16)}...\n";
+                "@${message.sender}: ${message.text.truncate(16)}...\n${_inputController.text}";
             setState(() {});
           }
         }
@@ -406,16 +416,22 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         margin: EdgeInsets.symmetric(horizontal: 32.d),
         padding: EdgeInsets.all(12.d),
         color: TColors.white,
-        child: Row(children: [
+        child: Row(textDirection: TextDirection.ltr, children: [
           Expanded(
               child: Widgets.skinnedInput(
             radius: 56.d,
             maxLines: null,
             controller: _inputController,
+            onChange: (text) {
+              if (text.contains("\n")) {
+                _inputController.text = text.substring(0, text.length - 1);
+                _sendMessage(account);
+              }
+            },
             onSubmit: (text) => _sendMessage(account),
           )),
           SizedBox(width: 12.d),
-          Widgets.button(
+          Widgets.button(context,
               color: TColors.primary80,
               height: 128.d,
               radius: 200.d,

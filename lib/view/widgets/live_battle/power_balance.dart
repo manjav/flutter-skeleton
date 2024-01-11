@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../utils/utils.dart';
-import '../skinnedtext.dart';
-import '../../../services/deviceinfo.dart';
+import '../skinned_text.dart';
+import '../../../services/device_info.dart';
 import '../../../services/theme.dart';
 
 import '../../widgets.dart';
 
-class Powerbalance extends StatelessWidget {
+class PowerBalance extends StatelessWidget {
   final int value, maxValue;
-  const Powerbalance(this.value, this.maxValue, {super.key});
+  const PowerBalance(this.value, this.maxValue, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,10 @@ class Powerbalance extends StatelessWidget {
               duration: const Duration(seconds: 1),
               child:
                   Widgets.rect(width: w - p * 2, color: color, radius: r - p)),
-          Positioned(left: 132.d, child: SkinnedText(value.compact()))
+          Positioned(
+              left: 132.d,
+              child: SkinnedText(value.compact(),
+                  textDirection: TextDirection.ltr))
         ]);
   }
 }

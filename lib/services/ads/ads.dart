@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../services/ads/ads_adivery.dart';
-import '../iservices.dart';
+import '../services.dart';
 import 'ads_abstract.dart';
 
 class Ads extends IService {
@@ -11,9 +10,9 @@ class Ads extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    _sdks[_selectedSDK] = AdAdivery();
-    _sdks[_selectedSDK]!.initialize(_selectedSDK);
-    _sdks[_selectedSDK]!.onUpdate = (p) => onUpdate?.call(p);
+    // _sdks[_selectedSDK] = AdAdivery();
+    // _sdks[_selectedSDK]!.initialize(_selectedSDK);
+    // _sdks[_selectedSDK]!.onUpdate = (p) => onUpdate?.call(p);
     super.initialize();
   }
 

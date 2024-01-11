@@ -1,24 +1,12 @@
-import '../../utils/ilogger.dart';
 import '../ads/ads_abstract.dart';
 import 'trackers.dart';
 
-abstract class AbstractTracker with ILogger {
-  var sdk = TrackerSDK.none;
-  initialize({List? args});
-  // AppMetrica.runZoneGuarded(() {
-  //   WidgetsFlutterBinding.ensureInitialized();
-  //   AppMetrica.activate(AppMetricaConfig('am_key'.l(), logs: true));
-  // });
-  //   AppMetrica.reportEvent("type_$type");
-  //   // Smartlook initialize
-  //   if (Pref.visitCount.getInt() <= 1 && Device.osVersion > 10) {
-  //     // Smartlook.instance.log.enableLogging();
-  //     await Smartlook.instance.preferences.setProjectKey("sl_key_$os".l());
-  //     await Smartlook.instance.start();
-  //     // Smartlook.instance.registerIntegrationListener(CustomIntegrationListener());
-  //     // await Smartlook.instance.preferences.setWebViewEnabled(true);
-  //   }
-  // }
+abstract class AbstractTracker {
+  TrackerSDK sdk = TrackerSDK.none;
+  Function(dynamic)? logCallback;
+  initialize({List? args, Function(dynamic)? logCallback}) {
+    this.logCallback = logCallback;
+  }
 
   Future<String?> getDeviceId() async => null;
   Future<int> getVariantId(String testName) async => 0;
@@ -47,14 +35,13 @@ abstract class AbstractTracker with ILogger {
   // _appsflyerSdk.validateAndLogInAppAndroidPurchase("shop_base64".l(),
 
   ad(Placement placement, AdState state);
-  // AppMetrica.reportEventWithMap("ads", map);
-  // AppMetrica.reportEventWithMap("ad_$placementID", map);
 
   resource(ResourceFlowType type, String currency, int amount, String itemType,
       String itemId);
 
   design(String name, {Map<String, dynamic>? parameters});
-  // AppMetrica.reportEventWithMap(name, data);
 
   setScreen(String screenName);
+
+  log(dynamic input) => logCallback?.call(input);
 }

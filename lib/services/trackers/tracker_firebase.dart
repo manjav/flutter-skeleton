@@ -10,7 +10,8 @@ class FirebaseTracker extends AbstractTracker {
   late FirebaseAnalytics _firebaseAnalytics;
 
   @override
-  initialize({List? args}) {
+  initialize({List? args, Function(dynamic)? logCallback}) {
+    super.initialize(args: args, logCallback: logCallback);
     sdk = TrackerSDK.gameAnalytics;
     _firebaseAnalytics = args![0] as FirebaseAnalytics;
   }

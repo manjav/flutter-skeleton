@@ -4,15 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
+import 'popup.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 
 class PotionPopup extends AbstractPopup {
   PotionPopup({super.key}) : super(Routes.popupPotion, args: {});
@@ -69,7 +69,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
 
   Widget _fillButton(ButtonColor color, bool isEnable, String label, int cost,
       Function() onTap) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         color: color,
         isEnable: isEnable,
         width: 420.d,
@@ -82,7 +82,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
           SizedBox(width: 16.d),
           Widgets.rect(
             padding: EdgeInsets.only(right: 12.d),
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "frame_hatch_button", ImageCenterSliceData(42)),
             child: Row(children: [
               Asset.load<Image>("icon_gold", height: 66.d),
@@ -97,8 +97,8 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
     try {
       var data =
           await rpc(RpcId.fillPotion, params: {RpcParams.amount.name: amount});
-      account.update(data);
       if (!mounted) return;
+      account.update(context, data);
       accountBloc.add(SetAccount(account: account));
     } finally {}
   }

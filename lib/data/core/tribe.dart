@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../main.dart';
+import '../../mixins/service_provider.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
 import 'adam.dart';
 import 'rpc.dart';
@@ -24,8 +24,8 @@ class Tribe with ServiceProvider {
       weeklyRank;
   late String name, description;
   final Map<int, int> levels = {};
-  List<Opponent> members = [];
   ChatNotifier chat = ChatNotifier([]);
+  ValueNotifier<List<Opponent>> members = ValueNotifier([]);
   ValueNotifier<NoobChatMessage?> pinnedMessage = ValueNotifier(null);
 
   Tribe(Map? map) : super() {
@@ -37,7 +37,7 @@ class Tribe with ServiceProvider {
     levels[Buildings.offense.id] = map["offense_building_level"];
     levels[Buildings.defense.id] = map["defense_building_level"];
     levels[Buildings.cards.id] = map["cooldown_building_level"];
-    levels[Buildings.base.id] = map["mainhall_building_level"];
+    levels[Buildings.tribe.id] = map["mainhall_building_level"];
     donatesCount = map["donates_number"];
     score = Utils.toInt(map["score"]);
     weeklyScore = Utils.toInt(map["weekly_score"]);
@@ -61,13 +61,16 @@ class Tribe with ServiceProvider {
   }
 
   loadMembers(BuildContext context, Account account) async {
-    if (members.isNotEmpty) return;
+    if (members.value.isNotEmpty) return;
     try {
       var result = await getService<HttpConnection>(context)
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
-      members = Opponent.createList(result["members"], account.id);
+      members.value = Opponent.createList(result["members"], account.id);
     } finally {}
   }
+
+  int get onlineMembersCount =>
+      members.value.where((member) => member.status > 0).length;
 
   sendMessage(BuildContext context, Account account, String text) async {
     if (text.isEmpty) return;
@@ -109,7 +112,7 @@ class Tribe with ServiceProvider {
       pinnedMessage.value = NoobChatMessage({
         "id": msg["id"],
         "text": msg["text_fa"],
-        "cannel": "pin",
+        "channel": "pin",
         "creationDate": msg["created_at"],
         "messageType": msg["message_type"],
         "timestamp": (DateTime.now().microsecondsSinceEpoch -

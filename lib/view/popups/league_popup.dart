@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/tab_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/tab_provider.dart';
-import '../../view/widgets/loaderwidget.dart';
+import 'popup.dart';
+import '../widgets/loader_widget.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 
 class LeaguePopup extends AbstractPopup {
   LeaguePopup({super.key}) : super(Routes.popupLeague, args: {});
@@ -170,7 +170,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
       record.name = record.itsMe ? "You" : record.name;
     }
 
-    return Widgets.button(
+    return Widgets.button(context,
         height: 100.d,
         radius: 0,
         color: color,
@@ -195,13 +195,11 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
                   textAlign: TextAlign.center)),
           SizedBox(width: 100.d),
           Text(record.weeklyScore.compact(), style: TStyles.small),
-        ]),
-        onPressed: () async {
-          if (!record.itsMe) {
-            Navigator.pushNamed(context, Routes.popupProfile.routeName,
-                arguments: {"id": record.id});
-          }
-        });
+        ]), onPressed: () async {
+      if (!record.itsMe) {
+        Routes.popupProfile.navigate(context, args: {"id": record.id});
+      }
+    });
   }
 
   Widget _roadMap() {

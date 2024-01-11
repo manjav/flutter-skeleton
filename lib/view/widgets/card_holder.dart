@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/key_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../key_provider.dart';
 import '../widgets.dart';
-import 'loaderwidget.dart';
+import 'loader_widget.dart';
 
 class CardHolder extends StatefulWidget {
   final AccountCard? card;
@@ -37,18 +37,18 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
           ? const SizedBox()
           : Widgets.rect(
               padding: EdgeInsets.all(12.d),
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "deck_balloon",
                   ImageCenterSliceData(
                       50, 57, const Rect.fromLTWH(11, 11, 2, 2))),
               child: Text(widget.card!.power.compact(),
                   style: TStyles.mediumInvert)),
-      Widgets.button(
+      Widgets.button(context,
           onPressed: () => widget.onTap?.call(),
           width: widget.heroMode ? 202.d : 184.d,
           height: widget.heroMode ? 202.d : 184.d,
           padding: EdgeInsets.all(12.d),
-          decoration: Widgets.imageDecore(
+          decoration: Widgets.imageDecorator(
               "deck_placeholder", ImageCenterSliceData(117, 117)),
           child: widget.card == null ? _emptyCard() : _filledCard())
     ]);
@@ -76,6 +76,7 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
 
 class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   SelectedCards(super.value);
+  double get count => value.length.toDouble();
   setAtCard(int index, AccountCard? card, {bool toggleMode = true}) {
     value[index] = toggleMode && value[index] == card ? null : card;
     notifyListeners();
@@ -84,14 +85,14 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
   getIds() =>
       "[${value.map((c) => c?.id).where((id) => id != null).join(',')}]";
 
-  bool setCard(AccountCard card, {int exception = -1, int? lenght}) {
+  bool setCard(AccountCard card, {int exception = -1, int? length}) {
     var index = value.indexOf(card);
     if (index > -1) {
       setAtCard(index, null);
       return true;
     }
 
-    var len = lenght ?? value.length;
+    var len = length ?? value.length;
     for (var i = 0; i < len; i++) {
       if (i != exception && value[i] == null) {
         setAtCard(i, card);

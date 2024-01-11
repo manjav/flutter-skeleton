@@ -14,9 +14,9 @@ import '../../services/prefs.dart';
 import '../../utils/loader.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';
-import '../../view/widgets/loaderwidget.dart';
-import '../deviceinfo.dart';
-import '../iservices.dart';
+import '../../view/widgets/loader_widget.dart';
+import '../device_info.dart';
+import '../services.dart';
 
 class HttpConnection extends IService {
   LoadingData loadData = LoadingData();
@@ -24,7 +24,8 @@ class HttpConnection extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    await _loadConfigs();
+    var version = int.parse(DeviceInfo.buildNumber);
+    await _loadConfigs(version);
 
     var loader = Loader();
     await loader.load(
@@ -39,7 +40,7 @@ class HttpConnection extends IService {
       RpcParams.udid.name: DeviceInfo.adId,
       RpcParams.model.name: DeviceInfo.model,
       RpcParams.device_name.name: DeviceInfo.model,
-      RpcParams.game_version.name: 'app_version'.l(),
+      RpcParams.game_version.name: version,
       RpcParams.os_version.name: DeviceInfo.osVersion,
       RpcParams.store_type.name: "google",
     };
@@ -48,11 +49,20 @@ class HttpConnection extends IService {
     }
     var data = await rpc(RpcId.playerLoad, params: params);
     loadData.account = Account.initialize(data, loadData);
+
+    // Check internal version, public users avoidance
+    var test = _config["updates"]["test"];
+    if (test["version"] < version) {
+      if (!test["testers"].contains(loadData.account.id)) {
+        throw RpcException(StatusCode.C702_UPDATE_TEST, "");
+      }
+    }
+    Pref.restoreKey.setString(loadData.account.restoreKey);
     super.initialize();
     return loadData;
   }
 
-  _loadConfigs() async {
+  _loadConfigs(int version) async {
     http.Response? response;
     try {
       response = await http
@@ -65,6 +75,16 @@ class HttpConnection extends IService {
     }
     if (response!.statusCode == 200) {
       _config = json.decode(response.body);
+      var updates = _config["updates"];
+      if (updates["force"]["version"] > version) {
+        throw RpcException(
+            StatusCode.C701_UPDATE_FORCE, updates["force"]["message"]);
+      } else if (!Pref.skipUpdate.getBool() &&
+          updates["notice"]["version"] > version) {
+        throw RpcException(
+            StatusCode.C700_UPDATE_NOTICE, updates["notice"]["message"]);
+      }
+      Pref.skipUpdate.setBool(false);
       LoadingData.baseURL = "http://${_config['ip']}";
       LoadingData.chatIp = _config['chatIp'];
       LoadingData.chatPort = _config['chatPort'];
@@ -83,7 +103,7 @@ class HttpConnection extends IService {
       result = await rpc(id, params: params);
     } on RpcException catch (e) {
       if (context.mounted) {
-        Navigator.pushNamed(context, Routes.popupMessage.routeName, arguments: {
+        Routes.popupMessage.navigate(context, args: {
           "title": "Error",
           "message": "error_${e.statusCode.value}".l()
         });

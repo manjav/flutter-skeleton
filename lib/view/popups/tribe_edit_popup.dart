@@ -2,17 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../overlays/ioverlay.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import 'ipopup.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class TribeEditPopup extends AbstractPopup {
   TribeEditPopup({super.key}) : super(Routes.popupTribeEdit, args: {});
@@ -22,7 +23,7 @@ class TribeEditPopup extends AbstractPopup {
 }
 
 class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
-  int status = -1;
+  int status = 0;
   late Account _account;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -67,19 +68,21 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
       ]),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         SkinnedText("status_l".l()),
-        Widgets.button(
+        Widgets.button(context,
             padding: EdgeInsets.all(22.d),
             width: 120.d,
             height: 120.d,
             onPressed: () => setState(() => status = (status - 1) % 3),
-            child: Asset.load<Image>('arrow_left')),
+            child: Asset.load<Image>(
+                "arrow_${Localization.isRTL ? "right" : "left"}")),
         SkinnedText("tribe_stats_$status".l()),
-        Widgets.button(
+        Widgets.button(context,
             padding: EdgeInsets.all(22.d),
             width: 120.d,
             height: 120.d,
             onPressed: () => setState(() => status = (status + 1) % 3),
-            child: Asset.load<Image>('arrow_right')),
+            child: Asset.load<Image>(
+                "arrow_${Localization.isRTL ? "left" : "right"}")),
       ]),
       SizedBox(height: 24.d),
       Text("tribe_help_${_account.tribe == null ? "new" : "edit"}".l(),
@@ -96,11 +99,9 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Widgets.skinnedButton(
+          Widgets.skinnedButton(context,
               height: 160.d,
-              isEnable: _nameController.text.isNotEmpty &&
-                  _descriptionController.text.isNotEmpty &&
-                  cost <= _account.gold,
+              isEnable: _isSubmitEnable(cost),
               color: ButtonColor.green,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,7 +114,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
                         ? Widgets.rect(
                             padding: EdgeInsets.symmetric(
                                 vertical: 6.d, horizontal: 12.d),
-                            decoration: Widgets.imageDecore(
+                            decoration: Widgets.imageDecorator(
                                 "frame_hatch_button", ImageCenterSliceData(42)),
                             child: Row(children: [
                               Asset.load<Image>("icon_gold", height: 76.d),
@@ -124,9 +125,12 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
                   ]),
               onPressed: () => _submit(),
               onDisablePressed: () {
-                var message = cost > _account.gold
-                    ? "error_183".l()
-                    : "fill_requirements_l".l();
+                var message = "fill_requirements_l";
+                if (_account.tribePosition.index < TribePosition.elder.index) {
+                  message = "error_211".l();
+                } else if (cost > _account.gold) {
+                  message = "error_183".l();
+                }
                 Overlays.insert(context, OverlayType.toast, args: message);
               })
         ]);
@@ -142,14 +146,26 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
       params[RpcParams.tribe_id.name] = _account.tribe!.id;
     }
     try {
-      await rpc(_account.tribe == null ? RpcId.tribeCreate : RpcId.tribeEdit,
+      var result = await rpc(
+          _account.tribe == null ? RpcId.tribeCreate : RpcId.tribeEdit,
           params: params);
-      _account.tribe!.name = _nameController.text;
-      _account.tribe!.description = _descriptionController.text;
-      _account.tribe!.status = status + 1;
+      _account.installTribe(result["tribe"]);
       if (mounted) {
         Navigator.pop(context, true);
       }
     } finally {}
+  }
+
+  bool _isSubmitEnable(int cost) {
+    if (_account.tribe != null &&
+        _account.tribePosition.index < TribePosition.elder.index) {
+      return false;
+    }
+    if (_nameController.text.isEmpty ||
+        _descriptionController.text.isEmpty ||
+        cost > _account.gold) {
+      return false;
+    }
+    return true;
   }
 }

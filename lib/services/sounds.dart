@@ -2,8 +2,8 @@ import 'package:audioplayers/audioplayers.dart';
 
 import '../../utils/assets.dart';
 import '../utils/loader.dart';
-import '../view/widgets/loaderwidget.dart';
-import 'iservices.dart';
+import '../view/widgets/loader_widget.dart';
+import 'services.dart';
 import 'prefs.dart';
 
 abstract class ISounds extends IService {
@@ -16,7 +16,6 @@ abstract class ISounds extends IService {
 class Sounds extends ISounds {
   @override
   initialize({List<Object>? args}) {
-    playMusic();
     super.initialize();
   }
 
@@ -30,6 +29,7 @@ class Sounds extends ISounds {
   @override
   Future<void> play(String name, {String? channel}) async {
     AudioPlayer player;
+    if (name.isEmpty) return;
     if (channel == null) {
       if (!Pref.sfx.getBool()) return;
       player = _findPlayer();

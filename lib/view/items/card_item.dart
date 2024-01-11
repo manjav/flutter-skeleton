@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
-import '../widgets/loaderwidget.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
 
 class CardItem extends StatefulWidget {
   static const aspectRatio = 0.74;
   final double size;
-  final bool showCooloff;
+  final bool showCoolOff;
   final bool showCooldown;
   final bool showPower;
   final bool showTitle;
@@ -25,7 +25,7 @@ class CardItem extends StatefulWidget {
   final AbstractCard card;
   const CardItem(this.card,
       {this.size = 400,
-      this.showCooloff = false,
+      this.showCoolOff = false,
       this.showCooldown = true,
       this.showPower = true,
       this.showTitle = true,
@@ -37,11 +37,11 @@ class CardItem extends StatefulWidget {
   State<CardItem> createState() => _CardItemState();
 
   static Image getCardBackground(int category, int rarity) {
-    var lavel = category == 0 ? "_$rarity" : "";
-    return Asset.load<Image>("card_frame_$category$lavel");
+    var level = category == 0 ? "_$rarity" : "";
+    return Asset.load<Image>("card_frame_$category$level");
   }
 
-  static getCardImage(FruitCard card, double size, {Key? key}) {
+  static LoaderWidget getCardImage(FruitCard card, double size, {Key? key}) {
     return LoaderWidget(AssetType.image, card.getName(),
         key: key, subFolder: "cards", width: size);
   }
@@ -86,7 +86,7 @@ class _CardItemState extends State<CardItem> {
     var level = baseCard.rarity;
     var cooldown = baseCard.cooldown;
     _remainingCooldown.value = widget.card.getRemainingCooldown();
-    if (widget.showCooloff && _remainingCooldown.value > 0) {
+    if (widget.showCoolOff && _remainingCooldown.value > 0) {
       _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _remainingCooldown.value = widget.card.getRemainingCooldown();
         if (_remainingCooldown.value <= 0) {
@@ -110,37 +110,40 @@ class _CardItemState extends State<CardItem> {
           top: (level > 9 ? 8 : 2) * s,
           right: 13 * s,
           width: 48 * s,
-          child: SkinnedText(level.toString(),
-              style: level > 9 ? _small : _medium))
+          child:
+              SkinnedText(level.convert(), style: level > 9 ? _small : _medium))
     ];
     if (widget.showTitle) {
       items.add(Positioned(
           top: 6 * s,
           left: 22 * s,
           height: 52 * s,
-          child: SkinnedText("${baseCard.fruit.name}_t".l(),
+          child: SkinnedText("${baseCard.fruit.name}_title".l(),
               style: _small!.autoSize(baseCard.name.length, 8, 36 * s))));
     }
     if (widget.showCooldown) {
       items.add(Positioned(
           bottom: 20 * s,
           right: 20 * s,
-          child: SkinnedText("ˣ${cooldown.toRemainingTime()}", style: _tiny)));
+          child: SkinnedText("ˣ${cooldown.toRemainingTime().convert()}",
+              style: _tiny)));
     }
 
     if (widget.showPower) {
       items.add(Positioned(
           bottom: 16 * s,
           left: 16 * s,
-          child: Row(children: [
-            SkinnedText("ˢ${widget.card.power.compact()}", style: _small),
+          child: Row(textDirection: TextDirection.ltr, children: [
+            SkinnedText("ˢ${widget.card.power.compact().convert()}",
+                style: _small),
             widget.extraPower > 0
-                ? SkinnedText("+${widget.extraPower.compact()}",
+                ? SkinnedText("+${widget.extraPower.compact().convert()}",
+                    textDirection: TextDirection.ltr,
                     style: _small!.copyWith(color: TColors.orange))
                 : const SizedBox(),
           ])));
     }
-    if (widget.showCooloff && _remainingCooldown.value > 0) {
+    if (widget.showCoolOff && _remainingCooldown.value > 0) {
       items.add(Positioned(
           top: 1 * s,
           left: 6 * s,
@@ -155,10 +158,11 @@ class _CardItemState extends State<CardItem> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Expanded(child: SizedBox()),
-                        SkinnedText(_remainingCooldown.value.toRemainingTime()),
+                        SkinnedText(_remainingCooldown.value
+                            .toRemainingTime()
+                            .convert()),
                         IgnorePointer(
-                            ignoring: true,
-                            child: Widgets.skinnedButton(
+                            child: Widgets.skinnedButton(context,
                                 height: 128.d,
                                 color: ButtonColor.teal,
                                 padding: EdgeInsets.only(bottom: 12.d),

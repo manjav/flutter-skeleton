@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'account.dart';
 import '../../utils/utils.dart';
 
-enum AchivementType {
+enum AchievementType {
   none,
   pirtul,
   battle,
@@ -24,13 +24,13 @@ enum AchivementType {
   t153,
 }
 
-extension AchivementTypeExtension on AchivementType {
+extension AchivementTypeExtension on AchievementType {
   int get id {
     return switch (this) {
-      AchivementType.t150 => 150,
-      AchivementType.t151 => 151,
-      AchivementType.t152 => 152,
-      AchivementType.t153 => 153,
+      AchievementType.t150 => 150,
+      AchievementType.t151 => 151,
+      AchievementType.t152 => 152,
+      AchievementType.t153 => 153,
       _ => index
     };
   }
@@ -38,36 +38,36 @@ extension AchivementTypeExtension on AchivementType {
 
 class AchievementLine {
   ValueNotifier<int> selectedIndex = ValueNotifier(0);
-  final AchivementType type;
+  final AchievementType type;
   List<AchievementStep> steps = [];
   late AchievementStep currentStep;
 
   AchievementLine(this.type);
   int getAccountValue(Account account) {
-    var map = account.achivementMap;
+    var map = account.achievementMap;
     return switch (type) {
-      AchivementType.pirtul => Utils.toInt(map["numberOfsquashedPirtul"]),
-      AchivementType.battle => Utils.toInt(map["numberOfWonBattle"]),
-      AchivementType.quest => Utils.toInt(map["numberOfWonQuest"]),
-      AchivementType.merge => Utils.toInt(map["numberOfEvolvedCards"]),
-      AchivementType.enhance => Utils.toInt(map["numberOfEnhancedCards"]),
-      AchivementType.donation => Utils.toInt(map["numberOfCollectedGold"]),
-      AchivementType.collection => account.collection.length,
-      AchivementType.playTime => Utils.toInt(map["timeOfPlaying"]),
-      AchivementType.levelup => account.level,
-      // AchivementType.birds => Utils.toInt(map["numberOfEvolvedCards"]),
-      // AchivementType.facebook => Utils.toInt(map["numberOfEvolvedCards"]),
-      // AchivementType.invitation => Utils.toInt(map["numberOfEvolvedCards"]),
-      // AchivementType.instagram => Utils.toInt(map["numberOfEvolvedCards"]),
+      AchievementType.pirtul => Utils.toInt(map["numberOfsquashedPirtul"]),
+      AchievementType.battle => Utils.toInt(map["numberOfWonBattle"]),
+      AchievementType.quest => Utils.toInt(map["numberOfWonQuest"]),
+      AchievementType.merge => Utils.toInt(map["numberOfEvolvedCards"]),
+      AchievementType.enhance => Utils.toInt(map["numberOfEnhancedCards"]),
+      AchievementType.donation => Utils.toInt(map["numberOfCollectedGold"]),
+      AchievementType.collection => account.collection.length,
+      AchievementType.playTime => Utils.toInt(map["timeOfPlaying"]),
+      AchievementType.levelup => account.level,
+      // AchievementType.birds => Utils.toInt(map["numberOfEvolvedCards"]),
+      // AchievementType.facebook => Utils.toInt(map["numberOfEvolvedCards"]),
+      // AchievementType.invitation => Utils.toInt(map["numberOfEvolvedCards"]),
+      // AchievementType.instagram => Utils.toInt(map["numberOfEvolvedCards"]),
       _ => 0,
     };
   }
 
   String format(int value) {
     return switch (type) {
-      AchivementType.donation => value.compact(),
-      AchivementType.playTime => value.round().toRemainingTime(),
-      AchivementType.collection =>
+      AchievementType.donation => value.compact(),
+      AchievementType.playTime => value.round().toRemainingTime(),
+      AchievementType.collection =>
         "${(value / steps[3].max * 100).floor().max(100)}%",
       _ => value.toString(),
     };
@@ -75,24 +75,24 @@ class AchievementLine {
 
   String countFormat(int value) {
     return switch (type) {
-      AchivementType.donation => value.compact(),
-      AchivementType.playTime => value.round().toRemainingTime(),
+      AchievementType.donation => value.compact(),
+      AchievementType.playTime => value.round().toRemainingTime(),
       _ => value.toString(),
     };
   }
 
-  static AchivementType getType(int id) {
+  static AchievementType getType(int id) {
     return switch (id) {
-      150 => AchivementType.t150,
-      151 => AchivementType.t151,
-      152 => AchivementType.t152,
-      153 => AchivementType.t153,
-      _ => AchivementType.values[id],
+      150 => AchievementType.t150,
+      151 => AchievementType.t151,
+      152 => AchievementType.t152,
+      153 => AchievementType.t153,
+      _ => AchievementType.values[id],
     };
   }
 
-  static Map<AchivementType, AchievementLine> init(Map map) {
-    var result = <AchivementType, AchievementLine>{};
+  static Map<AchievementType, AchievementLine> init(Map map) {
+    var result = <AchievementType, AchievementLine>{};
     for (var e in map.entries) {
       var type = getType(int.parse(e.key));
       result[type] = AchievementLine(type);

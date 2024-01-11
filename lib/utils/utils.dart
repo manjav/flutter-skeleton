@@ -4,7 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../services/deviceinfo.dart';
+import '../data/core/result.dart';
+import '../services/device_info.dart';
 import '../services/localization.dart';
 
 extension IntExt on int {
@@ -97,7 +98,11 @@ extension StringExt on String {
 
   String xorDecrypt({String? secret}) {
     var b64 = utf8.fuse(base64);
-    return b64.decode(b64.decode(this).xorEncrypt(secret: secret));
+    try {
+      return b64.decode(b64.decode(this).xorEncrypt(secret: secret));
+    } catch (e) {
+      throw RpcException(StatusCode.C901_ENCRYPTION_ERROR, "");
+    }
   }
 
   String _getDefaultSecret() {

@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/key_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../key_provider.dart';
 import '../route_provider.dart';
+import '../widgets/skinned_text.dart';
 import 'card_item.dart';
 import 'page_item.dart';
 
@@ -73,7 +73,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
   Widget _tabItemRenderer(int index, String tabName) {
     var isSelected = index == _selectedTab;
     var title = "auction_$tabName";
-    return Widgets.button(
+    return Widgets.button(context,
         radius: 20.d,
         alignment: Alignment.center,
         margin: EdgeInsets.all(8.d),
@@ -97,12 +97,10 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     };
     var params = {};
     if (tabName == "fruit" || tabName == "price") {
-      dynamic result = await Navigator.pushNamed(
-          context,
-          (tabName == "fruit"
-                  ? Routes.popupCardSelectType
-                  : Routes.popupCardSelectCategory)
-              .routeName);
+      dynamic result = await (tabName == "fruit"
+              ? Routes.popupCardSelectType
+              : Routes.popupCardSelectCategory)
+          .navigate(context);
       if (result == null) return;
       if (tabName == "price") {
         params.addAll(result);
@@ -134,7 +132,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       bidderName +=
           "\n${card.maxBidderId == _account.id ? "you_l".l() : card.maxBidderName}\n";
     }
-    return Widgets.button(
+    return Widgets.button(context,
         radius: radius.x,
         padding: EdgeInsets.zero,
         margin: EdgeInsets.all(8.d),
@@ -168,24 +166,30 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                   bottom: 8.d,
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Text(bidderName, style: TStyles.medium.copyWith(height: 1)),
-                    Row(mainAxisSize: MainAxisSize.min, children: [
-                      Asset.load<Image>("icon_gold", width: 60.d),
-                      SizedBox(width: 8.d),
-                      SkinnedText(card.maxBid.compact(), style: TStyles.large)
-                    ]),
+                    Row(
+                        mainAxisSize: MainAxisSize.min,
+                        textDirection: TextDirection.ltr,
+                        children: [
+                          Asset.load<Image>("icon_gold", width: 60.d),
+                          SizedBox(width: 8.d),
+                          SkinnedText(card.maxBid.compact(),
+                              style: TStyles.large)
+                        ]),
                     SizedBox(height: 8.d),
                     bidable
-                        ? Widgets.skinnedButton(
+                        ? Widgets.skinnedButton(context,
                             padding: EdgeInsets.fromLTRB(0, 12.d, 8.d, 32.d),
                             color: ButtonColor.green,
-                            child:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              Asset.load<Image>("icon_gold", width: 60.d),
-                              SizedBox(width: 4.d),
-                              SkinnedText("+${card.bidStep.compact()}",
-                                  style: TStyles.large)
-                            ]),
-                            onPressed: () => _bid(card))
+                            child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                textDirection: TextDirection.ltr,
+                                children: [
+                                  Asset.load<Image>("icon_gold", width: 60.d),
+                                  SizedBox(width: 4.d),
+                                  SkinnedText("+${card.bidStep.compact()}",
+                                      style: TStyles.large)
+                                ]),
+                            onPressed: () => _bid(context, card))
                         : const SizedBox(),
                   ])),
             ],
@@ -193,7 +197,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
         ]));
   }
 
-  _bid(AuctionCard card) async {
+  _bid(BuildContext context, AuctionCard card) async {
     try {
       var data = await rpc(RpcId.auctionBid, params: {"auction_id": card.id});
       var auction = AuctionCard(_account, data["auction"]);
@@ -201,7 +205,9 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       if (index > -1) {
         setState(() => _cards[index] = auction);
       }
-      _account.update(data);
+      if (context.mounted) {
+        _account.update(context, data);
+      }
       toast("auction_added".l());
     } finally {}
   }

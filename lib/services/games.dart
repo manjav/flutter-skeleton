@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:games_services/games_services.dart';
 
-import 'iservices.dart';
+import 'services.dart';
 
 abstract class IGames extends IService {}
 
@@ -24,7 +24,7 @@ class Games extends IGames {
         playerName = await GamesServices.getPlayerName();
         // playerToken = await GamesServices.getPlayerToken();
       } else {
-        playerId = '';
+        playerId = "";
       }
     } catch (e) {
       log(e.toString());

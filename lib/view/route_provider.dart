@@ -6,13 +6,14 @@ import 'popups/building_treasury_popup.dart';
 import 'popups/card_collection_popup.dart';
 import 'popups/card_details_popup.dart';
 import 'popups/card_enhance_popup.dart';
-import 'popups/card_merge_popup.dart';
+import 'popups/card_evolve_popup.dart';
 import 'popups/card_select_category_popup.dart';
 import 'popups/card_select_popup.dart';
 import 'popups/card_select_type_popup.dart';
-import 'popups/card_upgrade_popup.dart';
 import 'popups/combo_popup.dart';
+import 'popups/daily_gift_popup.dart';
 import 'popups/gift_popup.dart';
+import 'popups/hero_evolve_popup.dart';
 import 'popups/hero_popup.dart';
 import 'popups/inbox_popup.dart';
 import 'popups/invite_popup.dart';
@@ -20,6 +21,8 @@ import 'popups/league_popup.dart';
 import 'popups/message_popup.dart';
 import 'popups/opponents_popup.dart';
 import 'popups/potion_popup.dart';
+import 'popups/profile_avatars_popup.dart';
+import 'popups/profile_edit_popup.dart';
 import 'popups/profile_popup.dart';
 import 'popups/ranking_popup.dart';
 import 'popups/restore_popup.dart';
@@ -35,7 +38,6 @@ import 'screens/quest_screen.dart';
 import 'screens/screen_attack_outcome.dart';
 import 'screens/screen_livebattle.dart';
 import 'screens/screen_livebattle_outcome.dart';
-import 'screens/screen_open_pack.dart';
 
 enum Routes {
   none,
@@ -47,14 +49,13 @@ enum Routes {
   home,
   loading,
   livebattle,
-  openPack,
 
   popupNone,
   popupMessage,
   popupCardDetails,
   popupCardEnhance,
-  popupCardUpgrade,
-  popupCardMerge,
+  popupHeroEvolve,
+  popupCardEvolve,
   popupCollection,
   popupCardSelect,
   popupLeague,
@@ -68,10 +69,13 @@ enum Routes {
   popupHero,
   popupInbox,
   popupProfile,
+  popupProfileEdit,
+  popupProfileAvatars,
   popupSettings,
   popupRestore,
   popupInvite,
   popupRedeemGift,
+  popupDailyGift,
   popupTribeSearch,
   popupTribeOptions,
   popupTribeInvite,
@@ -91,11 +95,10 @@ extension RouteProvider on Routes {
       "/battleOut" => AttackOutScreen(Routes.battleOut, args: args ?? {}),
       "/livebattleOut" => LiveOutScreen(args: args ?? {}),
       "/livebattle" => LiveBattleScreen(args: args ?? {}),
-      "/openPack" => OpenPackScreen(args: args ?? {}),
       "/popupCardDetails" => CardDetailsPopup(args: args ?? {}),
       "/popupCardEnhance" => CardEnhancePopup(args: args ?? {}),
-      "/popupCardMerge" => CardMergePopup(args: args ?? {}),
-      "/popupCardUpgrade" => CardUpgradePopup(args: args ?? {}),
+      "/popupCardEvolve" => CardEvolvePopup(args: args ?? {}),
+      "/popupHeroEvolve" => HeroEvolvePopup(args: args ?? {}),
       "/popupCollection" => CollectionPopup(),
       "/popupCardSelect" => CardSelectPopup(args: args ?? {}),
       "/popupMessage" => MessagePopup(args: args ?? {}),
@@ -110,10 +113,13 @@ extension RouteProvider on Routes {
       "/popupHero" => HeroPopup(args?["card"] as int),
       "/popupInbox" => InboxPopup(),
       "/popupProfile" => ProfilePopup(args?["id"] ?? -1),
+      "/popupProfileEdit" => ProfileEditPopup(),
+      "/popupProfileAvatars" => ProfileAvatarsPopup(),
       "/popupSettings" => SettingsPopup(),
-      "/popupRestore" => RestorePopup(),
+      "/popupRestore" => RestorePopup(args: args ?? {}),
       "/popupInvite" => InvitePopup(),
       "/popupRedeemGift" => RedeemGiftPopup(),
+      "/popupDailyGift" => DailyGiftPopup(),
       "/popupTribeOptions" => TribeDetailsPopup(args: args ?? {}),
       "/popupTribeInvite" => TribeInvitePopup(),
       "/popupTribeEdit" => TribeEditPopup(),
@@ -142,9 +148,12 @@ extension RouteProvider on Routes {
       "/popupInbox" ||
       "/popupSettings" ||
       "/popupProfile" ||
+      "/popupProfileEdit" ||
+      "/popupProfileAvatars" ||
       "/popupRestore" ||
       "/popupInvite" ||
       "/popupRedeemGift" ||
+      "/popupDailyGift" ||
       "/popupMineBuilding" ||
       "/popupTribeOptions" ||
       "/popupTribeEdit" ||
@@ -155,6 +164,15 @@ extension RouteProvider on Routes {
         false,
       _ => true,
     };
+  }
+
+  dynamic navigate(BuildContext context, {Map<String, dynamic>? args}) async {
+    return await Navigator.pushNamed(context, routeName, arguments: args);
+  }
+
+  dynamic replace(BuildContext context, {Map<String, dynamic>? args}) async {
+    return await Navigator.pushReplacementNamed(context, routeName,
+        arguments: args);
   }
 }
 

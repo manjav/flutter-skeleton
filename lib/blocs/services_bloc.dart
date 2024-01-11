@@ -8,13 +8,13 @@ import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
 import '../services/connection/http_connection.dart';
 import '../services/connection/noob_socket.dart';
-import '../services/deviceinfo.dart';
+import '../services/device_info.dart';
 import '../services/games.dart';
 import '../services/inbox.dart';
-import '../services/iservices.dart';
 import '../services/localization.dart';
 import '../services/notifications.dart';
 import '../services/prefs.dart';
+import '../services/services.dart';
 import '../services/sounds.dart';
 import '../services/theme.dart';
 import '../services/trackers/trackers.dart';
@@ -26,6 +26,7 @@ enum ServicesInitState {
   initialize,
   complete,
   changeTab,
+  punch,
   error,
 }
 
@@ -96,7 +97,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     emit(ServicesUpdate(event.initState, event.data));
   }
 
-  ServicesBloc({required this.firebaseAnalytics})
+  ServicesBloc(this.firebaseAnalytics)
       : super(ServicesInit(ServicesInitState.none, null)) {
     on<ServicesEvent>(updateService);
 
@@ -114,8 +115,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   }
 
   initialize(BuildContext context) async {
-    var q = MediaQuery.of(context);
-    _map[ServiceType.device]!.initialize(args: [q.size, q.devicePixelRatio]);
+    _map[ServiceType.device]!.initialize();
     _map[ServiceType.themes]!.initialize();
     await _map[ServiceType.localization]!.initialize(args: [context]);
     await _map[ServiceType.trackers]!.initialize();
@@ -124,6 +124,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
       // Load server data
       var data =
           await _map[ServiceType.connection]!.initialize() as LoadingData;
+      get<Trackers>().sendUserData(data.account);
       if (context.mounted) {
         BlocProvider.of<AccountBloc>(context)
             .add(SetAccount(account: data.account));

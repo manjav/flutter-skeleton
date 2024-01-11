@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/building.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 
 class BuildingWidget extends StatefulWidget {
   final Building building;
@@ -23,6 +23,7 @@ class _BuildingWidgetState extends State<BuildingWidget> {
   @override
   Widget build(BuildContext context) {
     return Widgets.touchable(
+      context,
       onTap: () {
         widget.onTap?.call();
       },
@@ -38,9 +39,8 @@ class _BuildingWidgetState extends State<BuildingWidget> {
                 fit: BoxFit.fitWidth,
                 onRiveInit: (Artboard artboard) {
                   final controller = StateMachineController.fromArtboard(
-                      artboard, 'Building')!;
+                      artboard, "State Machine 1")!;
                   var input = controller.findInput<double>('level');
-                  // controller.stateMachine.listeners.
                   if (input != null) {
                     _levelInput = input as SMINumber;
                     _levelInput!.value = widget.building.level.toDouble();

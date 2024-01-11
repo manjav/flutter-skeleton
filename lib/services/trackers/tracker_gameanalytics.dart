@@ -4,13 +4,13 @@ import 'package:gameanalytics_sdk/gameanalytics.dart';
 
 import '../../services/ads/ads_abstract.dart';
 import '../localization.dart';
-import '../prefs.dart';
 import 'tracker_abstract.dart';
 import 'trackers.dart';
 
-class GATracker extends AbstractTracker {
+class GameAnalyticsTracker extends AbstractTracker {
   @override
-  initialize({List? args}) {
+  initialize({List? args, Function(dynamic)? logCallback}) {
+    super.initialize(args: args, logCallback: logCallback);
     sdk = TrackerSDK.gameAnalytics;
 
     GameAnalytics.setEnabledInfoLog(false);
@@ -30,21 +30,21 @@ class GATracker extends AbstractTracker {
 
   @override
   Future<int> getVariantId(String testName) async {
-    var testVersion = ''; //PrefsService.testVersion.getString();
-    var version = "app_version".l();
-    log("Analytics version ==> $version testVersion ==> $testVersion");
-    if (testVersion.isNotEmpty && testVersion != version) {
-      return 0;
-    }
-    if (testVersion.isEmpty) {
-      Pref.testVersion.setString(version);
-    }
-    var variantId =
-        await GameAnalytics.getRemoteConfigsValueAsString(testName, "0");
-    var variant = int.parse(variantId ?? "0");
-    log("Analytics testVariantId ==> $variant");
+    // var testVersion = Pref.testVersion.getString();
+    // var version = DeviceInfo.packageInfo.buildNumber;
+    // log("version ==> $version testVersion ==> $testVersion");
+    // if (testVersion.isNotEmpty && testVersion != version) {
+    //   return 0;
+    // }
+    // if (testVersion.isEmpty) {
+    //   Pref.testVersion.setString(version);
+    // }
+    // var variantId =
+    //     await GameAnalytics.getRemoteConfigsValueAsString(testName, "0");
+    // var variant = int.parse(variantId ?? "0");
+    // log("testVariantId ==> $variant");
 
-    return variant;
+    return 0; //variant;
   }
 
   @override

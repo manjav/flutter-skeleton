@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
-import '../../view/popups/ipopup.dart';
-import '../overlays/ioverlay.dart';
+import 'popup.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -34,7 +34,7 @@ class _TribeInvitePopupState extends AbstractPopupState<TribeInvitePopup> {
           controller: _textController,
           onChange: (t) => setState(() {})),
       SizedBox(height: 40.d),
-      Widgets.skinnedButton(
+      Widgets.skinnedButton(context,
           height: 160.d,
           color: ButtonColor.teal,
           label: "tribe_invite".l(),

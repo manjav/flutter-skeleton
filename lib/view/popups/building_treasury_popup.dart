@@ -4,16 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/building_mixin.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/skinnedtext.dart';
-import '../building_mixin.dart';
 import '../route_provider.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class TreasuryBuildingPopup extends AbstractPopup {
   const TreasuryBuildingPopup({required super.args, super.key})
@@ -51,6 +51,7 @@ class _TreasuryBuildingPopupState
               progressColor: TColors.orange),
           SizedBox(height: 32.d),
           Row(
+            textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _transactionButton(
@@ -81,7 +82,7 @@ class _TreasuryBuildingPopupState
 
   Widget _transactionButton(ButtonColor color, bool isEnable,
       List<Widget> children, Function() onTap) {
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         color: color,
         isEnable: isEnable,
         height: 150.d,
@@ -95,7 +96,9 @@ class _TreasuryBuildingPopupState
     try {
       var data = await rpc(id, params: {RpcParams.amount.name: amount});
       account.bank_account_balance = data["bank_account_balance"];
-      account.update(data);
+      if (mounted) {
+        account.update(context, data);
+      }
       accountBloc.add(SetAccount(account: account));
     } finally {}
   }

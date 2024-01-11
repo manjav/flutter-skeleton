@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/core/fruit.dart';
-import '../../../services/deviceinfo.dart';
-import '../../../view/key_provider.dart';
+import '../../../mixins/key_provider.dart';
+import '../../../services/device_info.dart';
+import '../../../services/localization.dart';
 import '../../items/card_item.dart';
 import '../../widgets.dart';
 import '../card_holder.dart';
@@ -28,6 +29,7 @@ class LiveDeck extends StatelessWidget with KeyProvider {
           valueListenable: items,
           builder: (context, value, child) {
             return PageView.builder(
+                reverse: Localization.isRTL,
                 clipBehavior: Clip.none,
                 onPageChanged: (index) => onFocus(index, items.value[index]!),
                 controller: pageController,
@@ -50,7 +52,7 @@ class LiveDeck extends StatelessWidget with KeyProvider {
         builder: (context, child) {
           if (pageController.position.haveDimensions) {
             delta = (pageController.page! - index);
-            angle = delta / -10;
+            angle = delta / (Localization.isRTL ? 10 : -10);
             normal = (delta.abs() / 3).clamp(0, 1);
             scale = 1 - Curves.easeInCirc.transform(normal);
             deltaX = Curves.easeInSine.transform(normal) *
@@ -66,14 +68,14 @@ class LiveDeck extends StatelessWidget with KeyProvider {
                 scale: scale,
                 child: Opacity(
                   opacity: 1 - normal,
-                  child: Widgets.button(
+                  child: Widgets.button(context,
                       padding: EdgeInsets.zero,
                       onPressed: () => _onCardTap(context, index, item),
                       child: CardItem(item,
                           size: size,
                           key: getGlobalKey(item.id),
                           showCooldown: false,
-                          showCooloff: true)),
+                          showCoolOff: true)),
                 ),
               ),
             ),

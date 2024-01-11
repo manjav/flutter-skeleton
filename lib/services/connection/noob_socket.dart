@@ -9,7 +9,7 @@ import '../../data/core/message.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc_data.dart';
 import '../../data/core/tribe.dart';
-import '../../services/iservices.dart';
+import '../services.dart';
 import '../../utils/utils.dart';
 
 enum NoobCommand { subscribe, unsubscribe }
@@ -28,7 +28,7 @@ class NoobSocket extends IService {
 
   String get _secret => "floatint201412bool23string";
   bool get isConnected =>
-      DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 500;
+      DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 60;
 
   @override
   initialize({List<Object>? args}) async {
@@ -43,6 +43,7 @@ class NoobSocket extends IService {
         TcpSocketConnection(LoadingData.chatIp, LoadingData.chatPort);
     // _socketConnection.enableConsolePrint(true);
     await _socketConnection.connect(500, _messageReceived, attempts: 3);
+    _lastMessageReceiveTime = DateTime.now().secondsSinceEpoch;
     subscribe("user${_account.id}");
     if (_account.tribe != null) subscribe("tribe${_account.tribe?.id}");
   }
@@ -66,11 +67,9 @@ class NoobSocket extends IService {
 
       var noobMessage = NoobMessage.getProperMessage(
           _account, jsonDecode(trimmedMessage), _account.tribe);
-      if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
+      // if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
       _updateStatus(noobMessage);
-      for (var method in onReceive) {
-        method.call(noobMessage);
-      }
+      dispatchMessage(noobMessage);
       _messageStream = _messageStream.substring(endIndex + 12);
       _decodeMessage();
     } catch (e) {
@@ -89,7 +88,7 @@ class NoobSocket extends IService {
   void subscribe(String channel) => _run(NoobCommand.subscribe, channel);
   void unsubscribe(String channel) => _run(NoobCommand.unsubscribe, channel);
   publish(String message) async {
-    if (!_socketConnection.isConnected()) {
+    if (!isConnected) {
       await connect();
     }
     var b64 = utf8.fuse(base64);
@@ -120,7 +119,13 @@ class NoobSocket extends IService {
 
     // Update tribe members status
     if (_account.tribe != null) {
-      loopPlayers(_account.tribe!.members);
+      loopPlayers(_account.tribe!.members.value);
+    }
+  }
+
+  void dispatchMessage(NoobMessage noobMessage) {
+    for (var method in onReceive) {
+      method.call(noobMessage);
     }
   }
 }
@@ -130,6 +135,8 @@ enum Noobs {
   playerStatus,
   deployCard,
   battleEnd,
+  battleJoin,
+  battleRequest,
   heroAbility,
   help,
   chat,
@@ -139,12 +146,14 @@ enum Noobs {
 
 class NoobMessage {
   int id = 0;
-  String channel = '';
+  String channel = "";
   static NoobMessage getProperMessage(
       Account account, Map<String, dynamic> map, Tribe? tribe) {
     var message = switch (map["push_message_type"] ?? "") {
       "player_status" || "tribe_player_status" => NoobStatusMessage(map),
       "battle_update" => NoobCardMessage(account, map),
+      "battle_request" => NoobRequestBattleMessage(map),
+      "battle_join" => NoobJoinBattleMessage(account, map),
       "battle_hero_ability" => NoobAbilityMessage(map),
       "battle_help" => NoobHelpMessage(map),
       "battle_finished" => NoobEndBattleMessage(map, account),
@@ -166,6 +175,13 @@ class NoobMessage {
   }
 }
 
+class NoobBattleMessage extends NoobMessage {
+  int teamOwnerId = 0;
+  NoobBattleMessage(super.type, super.map) {
+    teamOwnerId = map["owner_team_id"] ?? 0;
+  }
+}
+
 class NoobStatusMessage extends NoobMessage {
   late int playerId, status;
   NoobStatusMessage(Map<String, dynamic> map) : super(Noobs.playerStatus, map) {
@@ -175,14 +191,35 @@ class NoobStatusMessage extends NoobMessage {
   }
 }
 
-class NoobCardMessage extends NoobMessage {
+class NoobRequestBattleMessage extends NoobBattleMessage {
+  late int attackerId;
+  late String attackerName, attackerTribeName;
+  NoobRequestBattleMessage(Map<String, dynamic> map)
+      : super(Noobs.battleRequest, map) {
+    id = map["battle_id"];
+    attackerTribeName = map["tribe_name"];
+    attackerId = map["attacker_id"];
+    attackerName = map["attacker_name"];
+  }
+}
+
+class NoobJoinBattleMessage extends NoobBattleMessage {
+  late int warriorId;
+  late String warriorName;
+  NoobJoinBattleMessage(Account account, Map<String, dynamic> map)
+      : super(Noobs.battleJoin, map) {
+    warriorId = map["player_id"];
+    warriorName = map["player_name"];
+  }
+}
+
+class NoobCardMessage extends NoobBattleMessage {
+  int round = 0;
   AccountCard? card;
   String ownerName = "";
-  int round = 0, teamOwnerId = 0;
   NoobCardMessage(Account account, Map<String, dynamic> map)
       : super(Noobs.deployCard, map) {
     round = map["round"];
-    teamOwnerId = map["owner_team_id"];
     ownerName = map["card_owner_name"];
     card = map["card"] == null
         ? null
@@ -200,14 +237,13 @@ extension AbilitiesExtrension on Abilities {
       };
 }
 
-class NoobAbilityMessage extends NoobMessage {
-  late int teamOwnerId, ownerId, heroId;
+class NoobAbilityMessage extends NoobBattleMessage {
+  late int ownerId, heroId;
   Abilities ability = Abilities.none;
   Map<String, int> cards = {};
   NoobAbilityMessage(Map<String, dynamic> map) : super(Noobs.heroAbility, map) {
     heroId = map["hero_id"];
     ownerId = map["hero_owner_id"];
-    teamOwnerId = map["owner_team_id"];
     ability = Abilities.values[map["ability_type"]];
     for (var card in map["hero_benefits_info"]["cards"]) {
       cards[card["id"]] = card[ability.value];
@@ -226,14 +262,15 @@ class NoobHelpMessage extends NoobMessage {
     attackerName = map["attacker_name"];
     defenderName = map["defender_name"];
   }
+  bool get isAttacker => ownerId == attackerId;
 }
 
 // battle_id = self.battle_id,
 // mainEnemy = mainEnemyID ,
 class NoobChatMessage extends NoobMessage {
   Message? base;
-  bool itsMe = false;
   int timestamp = 0;
+  bool itsMe = false;
   String sender = "", text = "";
   int avatarId = 0, creationDate = 0;
   Messages messageType = Messages.none;

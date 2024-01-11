@@ -1,16 +1,19 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+import '../../data/core/account.dart';
 import '../../services/ads/ads_abstract.dart';
-import '../deviceinfo.dart';
-import '../iservices.dart';
+import '../../services/trackers/tracker_metrix.dart';
+import '../../services/trackers/tracker_smartlook.dart';
+import '../device_info.dart';
 import '../prefs.dart';
+import '../services.dart';
 import 'tracker_abstract.dart';
 import 'tracker_firebase.dart';
 import 'tracker_gameanalytics.dart';
 import 'tracker_kochava.dart';
 
-enum TrackerSDK { none, firebase, gameAnalytics, kochava }
+enum TrackerSDK { none, firebase, gameAnalytics, kochava, metrix, smartlook }
 
 enum BuildType { installed, instant }
 
@@ -27,13 +30,15 @@ class Trackers extends IService {
 
   final _sdks = <TrackerSDK, AbstractTracker>{
     TrackerSDK.firebase: FirebaseTracker(),
-    TrackerSDK.gameAnalytics: GATracker(),
-    TrackerSDK.kochava: KochavaaTracker()
+    TrackerSDK.gameAnalytics: GameAnalyticsTracker(),
+    TrackerSDK.kochava: KochavaaTracker(),
+    TrackerSDK.metrix: MetrixTracker(),
+    TrackerSDK.smartlook: SmartlookTracker(),
   };
-  final FirebaseAnalytics firebaseAnalytics;
-  final _buildType = BuildType.installed;
-  final _testName = "_";
   int variant = 1;
+  final _testName = "_";
+  final _buildType = BuildType.installed;
+  final FirebaseAnalytics firebaseAnalytics;
 
   Trackers(this.firebaseAnalytics);
 
@@ -41,22 +46,29 @@ class Trackers extends IService {
   initialize({List<Object>? args}) async {
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
-      await sdk.initialize(args: [firebaseAnalytics]);
+      sdk.initialize(args: [firebaseAnalytics], logCallback: log);
       var deviceId = await sdk.getDeviceId();
       if (deviceId != null) DeviceInfo.adId = deviceId;
       var variant = await sdk.getVariantId(_testName);
       if (variant != 0) this.variant = variant;
     }
+  }
 
+  void sendUserData(Account account) {
     // Set user data
     for (var sdk in _sdks.values) {
       sdk.setProperties({
-        'buildType': _buildType.name,
-        'build_type': _buildType.name,
-        'userId': '',
-        'deviceId': DeviceInfo.adId,
-        'test_name': _testName,
-        'test_variant': variant.toString(),
+        "buildType": _buildType.name,
+        "build_type": _buildType.name,
+        "userId": account.id.toString(),
+        "userName": account.name,
+        "deviceId": DeviceInfo.adId,
+        "test_name": _testName,
+        "test_variant": variant.toString(),
+        "appName": DeviceInfo.appName,
+        "version": DeviceInfo.version,
+        "buildNumber": DeviceInfo.buildNumber,
+        "packageName": DeviceInfo.packageName,
       });
     }
   }
@@ -121,7 +133,7 @@ class Trackers extends IService {
   //   GameAnalytics.addProgressionEvent(map);
   // }
 
-  funnle(String type, [String? name]) {
+  funnel(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";
     var step = Prefs.increase(name, 1);
 
@@ -130,15 +142,15 @@ class Trackers extends IService {
       var values = _funnelConfigs[type];
       for (var value in values!) {
         if (value == step) {
-          _funnle("${name}_$step");
+          _funnel("${name}_$step");
           break;
         }
       }
     }
-    _funnle(name, step);
+    _funnel(name, step);
   }
 
-  _funnle(String name, [int step = -1]) {
+  _funnel(String name, [int step = -1]) {
     var args = step > 0 ? {"step": '$step'} : null;
     design(name, parameters: args);
   }

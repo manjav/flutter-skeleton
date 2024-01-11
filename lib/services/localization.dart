@@ -4,15 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../utils/ilogger.dart';
-import 'iservices.dart';
+import '../mixins/logger.dart';
+import 'services.dart';
 
 class Localization extends IService {
-  static var locales = const [Locale('en'), Locale('fa')];
+  static var locales = const [Locale("en"), Locale("fa")];
   static Map<String, dynamic>? _sentences;
-  var dir = TextDirection.ltr;
-  var languageCode = "en";
-  var isRTL = false;
+  static String languageCode = "en";
+  static TextDirection dir = TextDirection.ltr;
+  static bool isRTL = false;
 
   Localization();
 
@@ -22,20 +22,36 @@ class Localization extends IService {
   @override
   initialize({List<Object>? args}) async {
     var locale = Localizations.localeOf(args![0] as BuildContext);
-    isRTL = locale.languageCode == "fa" || locale.languageCode == "ar";
+    languageCode = locale.languageCode;
+    isRTL = languageCode == "fa" || languageCode == "ar";
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
-    await _getData('keys.json');
-    await _getData('${locale.languageCode}.json');
+    await _getData("keys.json");
+    await _getData("$languageCode.json");
     super.initialize();
   }
 
   static _getData(String file) async {
-    var data = await rootBundle.loadString('assets/texts/$file');
+    var data = await rootBundle.loadString("assets/texts/$file");
     var result = json.decode(data);
     result.forEach((String key, dynamic value) {
       _sentences![key] = value.toString();
     });
+  }
+
+  static String convert(String input) {
+    if (!Localization.isRTL) return input;
+    return input
+        .replaceAll('0', '٠')
+        .replaceAll('1', '١')
+        .replaceAll('2', '٢')
+        .replaceAll('3', '٣')
+        .replaceAll('4', '۴')
+        .replaceAll('5', '۵')
+        .replaceAll('6', '۶')
+        .replaceAll('7', '٧')
+        .replaceAll('8', '٨')
+        .replaceAll('9', '٩');
   }
 }
 
@@ -44,7 +60,7 @@ extension LocalizationExtension on String {
     final key = this;
     if (Localization._sentences == null) {
       ILogger.slog(this, "sentences = null");
-      return '';
+      return "";
     }
     var result = Localization._sentences![key];
     if (result == null) {
@@ -62,4 +78,10 @@ extension LocalizationExtension on String {
   TextDirection getDirection() => intl.Bidi.detectRtlDirectionality(this)
       ? TextDirection.rtl
       : TextDirection.ltr;
+
+  String convert() => Localization.convert(this);
+}
+
+extension LocalizationIntExtension on int {
+  String convert() => Localization.convert(toString());
 }

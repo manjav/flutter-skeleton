@@ -63,8 +63,8 @@ class AdUnity extends AbstractAdSDK {
         placement.reward = {"reward": true};
         updateState(placement, AdState.closed);
       },
-      onFailed: (id, e, messaeg) =>
-          updateState(placement, AdState.failedShow, messaeg),
+      onFailed: (id, e, message) =>
+          updateState(placement, AdState.failedShow, message),
     );
 
     placement.state = AdState.show;

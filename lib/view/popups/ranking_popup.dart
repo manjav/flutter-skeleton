@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/tab_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/tab_provider.dart';
-import '../../view/widgets/skinnedtext.dart';
+import 'popup.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -91,7 +91,6 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
   }
 
   _loadRanking(RpcId api) async {
-    if (Ranks.lists[api] != null) return;
     try {
       var data = await rpc(api);
       if (api == RpcId.rankingGlobal) {
@@ -135,7 +134,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
         ? (record as TribeRank).weeklyScore
         : record.score;
 
-    return Widgets.button(
+    return Widgets.button(context,
         height: 100.d,
         radius: 0,
         color: color,
@@ -161,12 +160,10 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
                   : null),
           SizedBox(width: 79.d),
           Text(score.compact(), style: TStyles.small),
-        ]),
-        onPressed: () async {
-          if (rpcId == RpcId.rankingGlobal && !record.itsMe) {
-            Navigator.pushNamed(context, Routes.popupProfile.routeName,
-                arguments: {"id": record.id});
-          }
-        });
+        ]), onPressed: () async {
+      if (rpcId == RpcId.rankingGlobal && !record.itsMe) {
+        Routes.popupProfile.navigate(context, args: {"id": record.id});
+      }
+    });
   }
 }

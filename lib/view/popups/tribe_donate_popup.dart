@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
+import 'popup.dart';
+import '../widgets/skinned_text.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 
@@ -46,7 +46,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
               itemCount: _donates.length,
               itemBuilder: _gridItemBuilder)),
       SizedBox(height: 40.d),
-      Widgets.skinnedButton(
+      Widgets.skinnedButton(context,
           color: ButtonColor.green,
           height: 160.d,
           // width: 400.d,
@@ -57,7 +57,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
             SizedBox(width: 20.d),
             Widgets.rect(
               padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "frame_hatch_button", ImageCenterSliceData(42)),
               child: Row(children: [
                 Asset.load<Image>("icon_gold", height: 76.d),
@@ -71,7 +71,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
   }
 
   Widget? _gridItemBuilder(BuildContext context, int index) {
-    return Widgets.button(
+    return Widgets.button(context,
         color: TColors.primary90,
         margin: EdgeInsets.all(10.d),
         padding: EdgeInsets.all(1.d),
@@ -88,8 +88,10 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
         RpcParams.gold.name: _donateValue,
       });
 
-      account.update(result);
-      if (mounted) Navigator.pop(context);
+      if (mounted) {
+        account.update(context, result);
+        Navigator.pop(context);
+      }
     } finally {}
   }
 }

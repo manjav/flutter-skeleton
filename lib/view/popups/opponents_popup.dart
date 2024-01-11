@@ -6,21 +6,21 @@ import 'package:rive/rive.dart';
 
 import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
-import '../../data/core/infra.dart';
 import '../../data/core/adam.dart';
+import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/popups/ipopup.dart';
 import '../../view/widgets/indicator.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loaderwidget.dart';
-import '../widgets/skinnedtext.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class OpponentsPopup extends AbstractPopup {
   OpponentsPopup({super.key}) : super(Routes.popupOpponents, args: {});
@@ -61,7 +61,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(12.d, 210.d, 12.d, 64.d);
 
   _findOpponents() async {
-    var deltaTime = _account.now - _fetchAt;
+    var deltaTime = _account.getTime() - _fetchAt;
     var opponentBloc = BlocProvider.of<OpponentsBloc>(context);
     if ((deltaTime > 30 && _requestsCount % 5 == 0) || deltaTime > 120) {
       var data = await rpc(RpcId.getOpponents);
@@ -71,7 +71,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         BlocProvider.of<OpponentsBloc>(context)
             .add(SetOpponents(list: opponentBloc.list!));
       }
-      _fetchAt = _account.now;
+      _fetchAt = _account.getTime();
     }
     ++_requestsCount;
     _selectedOpponent.value = opponentBloc.list![0];
@@ -204,7 +204,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                                 .copyWith(color: TColors.accent, height: 3.d)))
                     : _group(
                         "scout_l".l(),
-                        Widgets.skinnedButton(
+                        Widgets.skinnedButton(context,
                             width: 320.d,
                             color: ButtonColor.green,
                             padding: EdgeInsets.fromLTRB(16.d, 8.d, 16.d, 22.d),
@@ -229,7 +229,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     return Expanded(
         child: Widgets.rect(
             alignment: Alignment.center,
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "ui_popup_group", ImageCenterSliceData(144)),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -239,7 +239,6 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   Widget _buttons(List<Opponent> opponents) {
-    var isRTL = getService<Localization>().isRTL;
     return ValueListenableBuilder<Opponent>(
         valueListenable: _selectedOpponent,
         builder: (context, value, child) {
@@ -247,20 +246,20 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             height: 196.d,
             padding: EdgeInsets.symmetric(horizontal: 24.d),
             child: Row(children: [
-              Widgets.skinnedButton(
+              Widgets.skinnedButton(context,
                   alignment: Alignment.center,
                   width: 230.d,
                   size: ButtonSize.medium,
                   color: ButtonColor.green,
                   isEnable: value.index > 0,
                   child: Asset.load<Image>(
-                      "ui_arrow_${isRTL ? "forward" : "back"}",
+                      "ui_arrow_${Localization.isRTL ? "forward" : "back"}",
                       width: 68.d),
                   onPressed: () =>
                       _selectMap(opponents, _pageController.page! - 1)),
               SizedBox(width: 8.d),
               Expanded(
-                  child: Widgets.skinnedButton(
+                  child: Widgets.skinnedButton(context,
                       padding: EdgeInsets.fromLTRB(32.d, 28.d, 42.d, 42.d),
                       alignment: Alignment.center,
                       child: Row(
@@ -273,14 +272,14 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                       size: ButtonSize.medium,
                       onPressed: _attack)),
               SizedBox(width: 8.d),
-              Widgets.skinnedButton(
+              Widgets.skinnedButton(context,
                   width: 230.d,
                   alignment: Alignment.center,
                   size: ButtonSize.medium,
                   color: ButtonColor.green,
                   isEnable: value.index < opponents.length - 1,
                   child: Asset.load<Image>(
-                      "ui_arrow_${isRTL ? "back" : "forward"}",
+                      "ui_arrow_${Localization.isRTL ? "back" : "forward"}",
                       width: 68.d),
                   onPressed: () =>
                       _selectMap(opponents, _pageController.page! + 1)),
@@ -319,14 +318,13 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         var result = await rpc(RpcId.battleLive,
             params: {RpcParams.opponent_id.name: opponent.id});
         if (mounted) {
-          result["opponent"] = opponent;
-          Navigator.pushNamed(context, Routes.livebattle.routeName,
-              arguments: result);
+          result["friendsHead"] = accountBloc.account;
+          result["oppositesHead"] = opponent;
+          Routes.livebattle.navigate(context, args: result);
         }
       } finally {}
       return;
     }
-    Navigator.pushNamed(context, Routes.deck.routeName,
-        arguments: {"opponent": opponent});
+    Routes.deck.navigate(context, args: {"opponent": opponent});
   }
 }

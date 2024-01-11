@@ -9,7 +9,8 @@ import 'trackers.dart';
 
 class KochavaaTracker extends AbstractTracker {
   @override
-  initialize({List? args}) {
+  initialize({List? args, Function(dynamic)? logCallback}) {
+    super.initialize(args: args, logCallback: logCallback);
     sdk = TrackerSDK.kochava;
     if (Platform.isAndroid) {
       KochavaTracker.instance.registerAndroidAppGuid(

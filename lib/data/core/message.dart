@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../mixins/service_provider.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/localization.dart';
-import '../../services/service_provider.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
 import 'rpc.dart';

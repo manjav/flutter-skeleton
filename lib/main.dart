@@ -9,19 +9,21 @@ import 'blocs/account_bloc.dart';
 import 'blocs/opponents_bloc.dart';
 import 'blocs/services_bloc.dart';
 import 'data/core/adam.dart';
-import 'services/deviceinfo.dart';
+import 'mixins/service_provider.dart';
+import 'services/device_info.dart';
 import 'services/localization.dart';
 import 'services/prefs.dart';
-import 'services/service_provider.dart';
 import 'services/sounds.dart';
 import 'services/theme.dart';
+import 'view/overlays/overlay.dart';
 import 'view/route_provider.dart';
-import 'view/widgets/loaderwidget.dart';
+import 'view/widgets/loader_widget.dart';
 
 void main() async {
   MyApp.startTime = DateTime.now();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   await Firebase.initializeApp();
   await Prefs().initialize();
   runApp(const MyApp());
@@ -45,12 +47,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp>
     with WidgetsBindingObserver, ServiceProvider {
-  late UniqueKey key;
+  UniqueKey? key;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    _initialize();
     super.initState();
   }
 
@@ -66,25 +67,32 @@ class _MyAppState extends State<MyApp>
 
   void restartApp() {
     Ranks.lists.clear();
-    LoaderWidget.cacshedLoders.clear();
-    setState(() => _initialize());
+    Overlays.clear();
+    LoaderWidget.cachedLoaders.clear();
+    if (Navigator.canPop(context)) Navigator.pop(context);
+    _initialize(true);
   }
 
-  void _initialize() {
-    if (Navigator.canPop(context)) Navigator.pop(context);
-    key = UniqueKey();
-    DeviceInfo.size = Size.zero;
+  _initialize([bool forced = false]) async {
+    if (key == null || forced) {
+      key = UniqueKey();
+    }
+    var result = await DeviceInfo.preInitialize(context, forced);
+    if (result) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    _initialize();
+    if (!DeviceInfo.isPreInitialized) return const SizedBox();
     return KeyedSubtree(
         key: key,
         child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                  create: (context) => ServicesBloc(
-                      firebaseAnalytics: MyApp._firebaseAnalytics)),
+                  create: (context) => ServicesBloc(MyApp._firebaseAnalytics)),
               BlocProvider(create: (context) => AccountBloc()),
               BlocProvider(create: (context) => OpponentsBloc())
             ],
@@ -92,9 +100,6 @@ class _MyAppState extends State<MyApp>
                 navigatorObservers: [
                   MyApp._observer
                 ],
-                // Provide the generated AppLocalizations to the MaterialApp. This
-                // allows descendant Widgets to display the correct translations
-                // depending on the user's locale.
                 localizationsDelegates: const [
                   // AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,
@@ -102,18 +107,6 @@ class _MyAppState extends State<MyApp>
                   GlobalMaterialLocalizations.delegate,
                 ],
                 supportedLocales: Localization.locales,
-
-                // Use AppLocalizations to configure the correct application title
-                // depending on the user's locale.
-                //
-                // The appTitle is defined in .arb files found in the localization
-                // directory.
-                /* onGenerateTitle: (BuildContext context) =>
-                    AppLocalizations.of(context)!.appTitle, */
-
-                // Define a light and dark color theme. Then, read the user's
-                // preferred ThemeMode (light, dark, or system default) from the
-                // SettingsController to display the correct theme.
                 theme: Themes.darkData,
                 locale: Localization.locales.firstWhere((l) =>
                     l.languageCode ==

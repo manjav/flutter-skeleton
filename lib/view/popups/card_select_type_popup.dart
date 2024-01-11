@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/key_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/key_provider.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
 import '../items/card_item.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class SelectCardTypePopup extends AbstractPopup {
   SelectCardTypePopup({super.key})
@@ -78,17 +78,17 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
               _levelItemBuilder(i, fruit)
           ]),
           SizedBox(height: 48.d),
-          Widgets.skinnedButton(
+          Widgets.skinnedButton(context,
               label: "search_l".l(),
               width: 340.d,
-              onPressed: () => Navigator.pop(context,
-                  fruit.cards[_selectedLevelIndex].id)),
+              onPressed: () =>
+                  Navigator.pop(context, fruit.cards[_selectedLevelIndex].id)),
         ]));
   }
 
   Widget _cardItemBuilder(int index, Fruit fruit) {
     var selected = _selectedCardIndex == index;
-    return Widgets.button(
+    return Widgets.button(context,
         height: 100.d,
         margin: EdgeInsets.all(10.d),
         padding: EdgeInsets.only(right: 24.d, left: 8.d),
@@ -112,11 +112,11 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
 
   Widget _levelItemBuilder(int index, Fruit fruit) {
     var selected = _selectedLevelIndex == index;
-    return Widgets.button(
+    return Widgets.button(context,
         padding: EdgeInsets.all(8.d),
-        decoration: selected ? Widgets.imageDecore("level_badge_border") : null,
-        child: Asset.load<Image>(
-            "level_badge_${fruit.cards[index].rarity}",
+        decoration:
+            selected ? Widgets.imageDecorator("level_badge_border") : null,
+        child: Asset.load<Image>("level_badge_${fruit.cards[index].rarity}",
             width: 100.d),
         onPressed: () => setState(() => _selectedLevelIndex = index));
   }

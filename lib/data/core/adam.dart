@@ -81,7 +81,7 @@ class TribeRank extends Rank {
 
 class Record extends Rank {
   String tribeName = "";
-  int level = 0, tribeId = 0, avatarId = 1;
+  int level = 1, tribeId = 0, avatarId = 1;
   Record.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
@@ -184,11 +184,14 @@ class LeagueData {
   }
 }
 
-enum OpponentSide { allies, axis }
+enum WarriorSide { friends, opposites }
 
 enum TribePosition { none, member, elder, owner }
 
 class Opponent extends Record {
+  static Opponent create(int id, String name, [int? ownerId]) =>
+      Opponent.initialize({"id": id, "name": name}, ownerId ?? id);
+
   static int scoutCost = 0;
   static Map<String, dynamic> _attackLogs = {};
   int gold = 0,
@@ -260,21 +263,18 @@ class Opponent extends Record {
   }
 }
 
-class LiveOpponent {
+class LiveWarrior {
+  bool won = false;
   final Opponent base;
   String tribeName = "";
-  final int id, teamOwnerId;
-  final OpponentSide fraction;
+  final int teamOwnerId;
+  final WarriorSide side;
   Map<String, dynamic> map = {};
-  late final SelectedCards cards;
   int gold = 0, xp = 0, power = 0, score = 0;
   Map<String, int> heroBenefits = {"power": 0, "gold": 0, "cooldown": 0};
-  bool won = false;
+  final SelectedCards cards = SelectedCards([null, null, null, null, null]);
 
-  LiveOpponent(this.fraction, this.id, this.teamOwnerId, this.base) {
-    cards = SelectedCards([null, null, null, null, null]);
-  }
-
+  LiveWarrior(this.side, this.teamOwnerId, this.base);
   void addResult(Map<String, dynamic> map) {
     this.map = map;
     xp = map["added_xp"];

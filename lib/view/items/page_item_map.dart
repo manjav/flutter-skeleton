@@ -1,23 +1,24 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rive/rive.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/infra.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
-import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets/building_balloon.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/indicator_dedline.dart';
-import '../../view/widgets/loaderwidget.dart';
-import '../../view/widgets/skinnedtext.dart';
 import '../map_elements/building_widget.dart';
-import '../overlays/ioverlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
+import '../widgets/indicator_deadline.dart';
+import '../widgets/loader_widget.dart';
 import 'page_item.dart';
 
 class MainMapPageItem extends AbstractPageItem {
@@ -27,49 +28,44 @@ class MainMapPageItem extends AbstractPageItem {
 }
 
 class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
+  Map<String, dynamic> _buildingPositions = {};
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
       return Stack(alignment: Alignment.topLeft, children: [
-        const LoaderWidget(AssetType.animation, "map_home",
-            fit: BoxFit.fitWidth),
+        LoaderWidget(AssetType.animation, "map_home", fit: BoxFit.cover,
+            onRiveInit: (Artboard artboard) {
+          var controller =
+              StateMachineController.fromArtboard(artboard, "State Machine 1");
+          controller?.addEventListener((event) => _riveEventsListener(event));
+          artboard.addController(controller!);
+        }),
         PositionedDirectional(
-            top: 380.d,
+            bottom: 350.d,
             start: 32.d,
             child: Indicator("home", Values.leagueRank,
                 hasPlusIcon: false,
-                onTap: () => Navigator.pushNamed(
-                    context, Routes.popupLeague.routeName))),
+                onTap: () => Routes.popupLeague.navigate(context))),
         PositionedDirectional(
-            top: 240.d,
+            bottom: 220.d,
             start: 32.d,
             child: Indicator("home", Values.rank,
                 hasPlusIcon: false,
-                onTap: () => Navigator.pushNamed(
-                    context, Routes.popupRanking.routeName))),
+                onTap: () => Routes.popupRanking.navigate(context))),
         PositionedDirectional(
-            top: 150.d,
-            end: 24.d,
-            child: Widgets.button(
+            bottom: 180.d,
+            end: 32.d,
+            child: Widgets.button(context,
                 child: Asset.load<Image>("icon_notifications", width: 60.d),
-                onPressed: () =>
-                    Navigator.pushNamed(context, Routes.popupInbox.routeName))),
-        _building(state.account, Buildings.defense, 400, 300),
-        _building(state.account, Buildings.offense, 95, 670),
-        _building(state.account, Buildings.base, 400, 840),
-        _building(state.account, Buildings.treasury, 130, 1140),
-        _building(state.account, Buildings.mine, 754, 1140),
-        _button("battle", "battle_l", 150, 270, 442, () {
-          if (state.account.level < Account.availablityLevels["liveBattle"]!) {
-            Overlays.insert(context, OverlayType.toast,
-                args: "unavailable_l".l(
-                    ["battle_l".l(), Account.availablityLevels["liveBattle"]]));
-          } else {
-            Navigator.pushNamed(context, Routes.popupOpponents.routeName);
-          }
-        }),
-        _button("quest", "quest_l", 620, 270, 310,
-            () => Navigator.pushNamed(context, Routes.quest.routeName)),
+                onPressed: () => Routes.popupInbox.navigate(context))),
+        _building(state.account, Buildings.defense),
+        _building(state.account, Buildings.offense),
+        _building(state.account, Buildings.base),
+        _building(state.account, Buildings.treasury),
+        _building(state.account, Buildings.mine),
+        _building(state.account, Buildings.park),
+        _building(state.account, Buildings.quest),
         if (state.account.deadlines.isNotEmpty)
           for (var i = 0; i < state.account.deadlines.length; i++)
             Positioned(
@@ -80,66 +76,62 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     });
   }
 
-  _button(String icon, String text, double x, double bottom, double width,
-      [Function()? onPressed]) {
-    return Positioned(
-        left: x.d,
-        bottom: bottom.d,
-        width: width.d,
-        height: 202.d,
-        child: Widgets.button(
-          onPressed: onPressed,
-          decoration: Widgets.imageDecore(
-              "button_map",
-              ImageCenterSliceData(422, 202,
-                  const Rect.fromLTWH(85, 85, 422 - 85 * 2, 202 - 85 * 2))),
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              Positioned(
-                  top: -80.d,
-                  width: 148.d,
-                  child: LoaderWidget(AssetType.image, "icon_$icon")),
-              Positioned(
-                  bottom: -10.d,
-                  child: SkinnedText(text.l(), style: TStyles.large))
-            ],
-          ),
-        ));
-  }
+  Widget _building(Account account, Buildings type) {
+    if (!_buildingPositions.containsKey(type.name)) return const SizedBox();
 
-  Widget _building(Account account, Buildings type, double x, double y) {
     var building = account.buildings[type]!;
+    var position = _buildingPositions[type.name]!;
     Widget child =
         type == Buildings.mine ? BuildingBalloon(building) : const SizedBox();
+    var center = DeviceInfo.size.center(Offset.zero);
+    var size = Size(280.d, 300.d);
     return Positioned(
-        left: x.d,
-        top: y.d,
-        width: 280.d,
-        height: 300.d,
+        left: center.dx + position[0] * DeviceInfo.ratio - size.width * 0.5,
+        top: center.dy + position[1] * DeviceInfo.ratio - size.height * 0.5,
+        width: size.width,
+        height: size.height,
         child: BuildingWidget(building,
             child: child, onTap: () => _onBuildingTap(account, building)));
   }
 
   _onBuildingTap(Account account, Building building) {
-    if (building.level < 1) {
-      Overlays.insert(context, OverlayType.toast,
-          args: account.level < Account.availablityLevels["tribe"]!
-              ? "coming_soon".l()
-              : "error_149".l());
-      return;
-    }
     var type = switch (building.type) {
+      Buildings.quest => Routes.quest,
+      Buildings.base => Routes.popupOpponents,
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
       _ => Routes.none,
     };
+    // Offense and defense buildings need tribe membership.
+    if (type == Routes.popupSupportiveBuilding &&
+        (account.tribe == null || account.tribe!.id <= 0)) {
+      toast("error_149".l());
+      return;
+    }
+    // Get availability level from account
+    var levels = account.loadingData.rules["availabilityLevels"]!;
+    if (levels.containsKey(building.type.name)) {
+      var availableAt = levels[building.type.name]!;
+      if (availableAt == -1) {
+        toast("coming_soon".l());
+        return;
+      } else if (account.level < availableAt) {
+        toast("unavailable_l".l(["${building.type.name}_l".l(), availableAt]));
+        return;
+      }
+    }
+
     if (type == Routes.none) {
       return;
     }
-    Navigator.pushNamed(context, type.routeName,
-        arguments: {"building": building});
+    type.navigate(context, args: {"building": building});
+  }
+
+  void _riveEventsListener(RiveEvent event) {
+    Timer(const Duration(milliseconds: 100), () {
+      setState(
+          () => _buildingPositions = jsonDecode(event.properties["buildings"]));
+    });
   }
 }

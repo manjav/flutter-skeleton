@@ -4,20 +4,21 @@ import 'package:flutter/widgets.dart';
 
 import '../../../data/core/adam.dart';
 import '../../../data/core/rpc.dart';
-import '../../../services/deviceinfo.dart';
-import '../../../services/service_provider.dart';
+import '../../../mixins/service_provider.dart';
+import '../../../services/device_info.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
-import '../../../view/widgets/indicator_level.dart';
-import '../../../view/widgets/live_battle/live_opponent.dart';
-import '../../../view/widgets/skinnedtext.dart';
+import '../../screens/screen_livebattle.dart';
 import '../../widgets.dart';
+import '../indicator_level.dart';
+import '../skinned_text.dart';
+import 'live_warrior.dart';
 
 class LiveTribe extends StatefulWidget {
   final int ownerId, battleId, helpCost;
-  final Map<int, LiveOpponent> opponents;
+  final Warriors warriors;
 
-  const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.opponents,
+  const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.warriors,
       {super.key});
 
   @override
@@ -28,20 +29,22 @@ class _LiveTribeState extends State<LiveTribe>
     with TickerProviderStateMixin, ServiceProviderMixin {
   late Timer _timer;
   final double _helpTimeout = 38;
-  late AnimationController _animationControler;
+  late AnimationController _animationController;
   bool _requestSent = false;
 
   @override
   void initState() {
-    _animationControler = AnimationController(
+    _animationController = AnimationController(
         vsync: this, upperBound: _helpTimeout, value: _helpTimeout);
     const duration = Duration(seconds: 1);
     _timer = Timer.periodic(duration, (t) {
       if (t.tick > _helpTimeout) {
         t.cancel();
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       }
-      _animationControler.animateTo(_helpTimeout - t.tick.toDouble(),
+      _animationController.animateTo(_helpTimeout - t.tick.toDouble(),
           curve: Curves.easeInOutSine, duration: duration);
     });
     super.initState();
@@ -49,44 +52,55 @@ class _LiveTribeState extends State<LiveTribe>
 
   @override
   Widget build(BuildContext context) {
-    var side = widget.opponents[widget.ownerId]!.fraction;
-    var team = widget.opponents.values.where(
-        (o) => o.fraction == side && o != widget.opponents[widget.ownerId]!);
-    var items = <Widget>[
-      LevelIndicator(
-          size: 150.d,
-          level: widget.opponents.values.first.base.level,
-          xp: widget.opponents.values.first.base.score,
-          avatarId: widget.opponents.values.first.base.avatarId),
-      Widgets.divider(margin: 16.d, height: 56.d, direction: Axis.vertical)
-    ];
-    if (team.isEmpty && side == OpponentSide.allies) {
-      items.add(_hornButton());
-    }
-    for (var opponent in team) {
-      items.add(SizedBox(
-          width: 260.d, height: 174.d, child: LiveOpponentView(opponent)));
-    }
+    var owner = widget.warriors.value[widget.ownerId]!;
+    var avatar = owner.side == WarriorSide.friends
+        ? widget.warriors.value[accountBloc.account!.id]!
+        : owner;
     return Positioned(
-        top: side == OpponentSide.axis ? 0 : null,
-        bottom: side == OpponentSide.allies ? 0 : null,
-        height: 190.d,
-        child: Widgets.rect(
-            padding: EdgeInsets.symmetric(horizontal: 12.d),
-            decoration: Widgets.imageDecore(
-                "live_tribe_${side.name}", ImageCenterSliceData(101, 92)),
-            child: Row(
-                mainAxisAlignment: side == OpponentSide.axis
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
-                children: items)));
+      top: owner.side == WarriorSide.opposites ? 0 : null,
+      bottom: owner.side == WarriorSide.friends ? 0 : null,
+      height: 190.d,
+      child: Widgets.rect(
+        padding: EdgeInsets.symmetric(horizontal: 12.d),
+        decoration: Widgets.imageDecorator(
+            "live_tribe_${owner.side.name}", ImageCenterSliceData(101, 92)),
+        child: ValueListenableBuilder(
+            valueListenable: widget.warriors,
+            builder: (context, value, child) {
+              var team = value.values
+                  .where((o) => owner.side == o.side && o != avatar);
+              var items = <Widget>[
+                LevelIndicator(
+                    size: 150.d,
+                    xp: avatar.base.score,
+                    level: avatar.base.level,
+                    avatarId: avatar.base.avatarId),
+                Widgets.divider(
+                    margin: 16.d, height: 56.d, direction: Axis.vertical),
+                _hornButton(owner, team)
+              ];
+
+              for (var warrior in team) {
+                items.add(SizedBox(
+                    width: 260.d,
+                    height: 174.d,
+                    child: LiveWarriorView(warrior)));
+              }
+              return Row(
+                  mainAxisAlignment: owner.side == WarriorSide.opposites
+                      ? MainAxisAlignment.end
+                      : MainAxisAlignment.start,
+                  children: items);
+            }),
+      ),
+    );
   }
 
-  Widget _hornButton() {
-    if (_requestSent) {
+  Widget _hornButton(LiveWarrior owner, Iterable<LiveWarrior> team) {
+    if (!owner.base.itsMe || _requestSent || team.isNotEmpty) {
       return const SizedBox();
     }
-    return Widgets.skinnedButton(
+    return Widgets.skinnedButton(context,
         width: 320.d,
         height: 150.d,
         isEnable: _timer.isActive,
@@ -98,7 +112,7 @@ class _LiveTribeState extends State<LiveTribe>
             SizedBox(width: 12.d),
             Widgets.rect(
                 padding: EdgeInsets.symmetric(horizontal: 8.d),
-                decoration: Widgets.imageDecore(
+                decoration: Widgets.imageDecorator(
                     "frame_hatch_button", ImageCenterSliceData(42)),
                 child: Row(children: [
                   Asset.load<Image>("icon_gold", height: 76.d),
@@ -107,9 +121,9 @@ class _LiveTribeState extends State<LiveTribe>
           ]),
           SizedBox(height: 12.d),
           AnimatedBuilder(
-              animation: _animationControler,
+              animation: _animationController,
               builder: (context, child) => Widgets.slider(
-                  0, _animationControler.value, _helpTimeout,
+                  0, _animationController.value, _helpTimeout,
                   width: 270.d,
                   height: 22.d,
                   border: 2,
@@ -130,11 +144,5 @@ class _LiveTribeState extends State<LiveTribe>
       _requestSent = false;
     }
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _timer.cancel();
   }
 }

@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:math';
 import 'dart:math' as math;
+import 'dart:math';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,23 +9,23 @@ import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
-import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/key_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/notifications.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import '../../view/screens/iscreen.dart';
+import 'screen.dart';
 import '../../view/widgets/card_holder.dart';
 import '../../view/widgets/indicator.dart';
-import '../../view/widgets/skinnedtext.dart';
+import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
-import '../key_provider.dart';
+import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
 
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;
@@ -94,7 +92,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             height: 214.d,
             width: 420.d,
             bottom: 24.d,
-            child: Widgets.skinnedButton(
+            child: Widgets.skinnedButton(context,
                 padding: EdgeInsets.fromLTRB(56.d, 48.d, 56.d, 64.d),
                 alignment: Alignment.center,
                 child: Row(
@@ -114,6 +112,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   Widget? _cardItemBuilder(BuildContext context, int index, Account account,
       AccountCard card, double itemSize) {
     return Widgets.button(
+      context,
       foregroundDecoration: _selectedCards.value.contains(card)
           ? BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(28.d)),
@@ -132,22 +131,29 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         }
       },
       child: CardItem(card,
-          showCooloff: true, size: itemSize, key: getGlobalKey(card.id)),
+          showCoolOff: true, size: itemSize, key: getGlobalKey(card.id)),
     );
   }
 
   Widget _header(Account account) {
+    var opponent = widget.opponent ??
+        Opponent.initialize({
+          "name": "enemy_l".l(),
+          "def_power": getQuestPower(account)[2],
+          "level": account.level,
+          "xp": account.xp * (0.9 + Random().nextDouble() * 0.2)
+        }, 0);
     return Widgets.rect(
         padding: EdgeInsets.symmetric(horizontal: 10.d, vertical: 7.d),
-        decoration: Widgets.imageDecore("frame_header_cheese",
+        decoration: Widgets.imageDecorator("frame_header_cheese",
             ImageCenterSliceData(114, 174, const Rect.fromLTWH(58, 48, 2, 2))),
         child: Stack(children: [
           Widgets.rect(
               height: 192.d,
-              decoration: Widgets.imageDecore(
+              decoration: Widgets.imageDecorator(
                   "frame_hatch",
                   ImageCenterSliceData(
-                      80, 100, const Rect.fromLTWH(38, 64, 2, 2)))),
+                      80, 100, const Rect.fromLTWH(37, 64, 2, 2)))),
           Positioned(
               left: 16.d,
               top: 2,
@@ -160,14 +166,16 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                         height: 168.d,
                         child: Row(
                           children: [
-                            _avatar(TextAlign.left),
+                            _avatar(TextAlign.left, account),
                             SizedBox(width: 8.d),
-                            _opponentInfo(CrossAxisAlignment.start, account),
+                            _opponentInfo(
+                                CrossAxisAlignment.start, account, account),
                             Asset.load<Image>("deck_battle_icon",
                                 height: 136.d),
-                            _opponentInfo(CrossAxisAlignment.end, account),
+                            _opponentInfo(
+                                CrossAxisAlignment.end, account, opponent),
                             SizedBox(width: 8.d),
-                            _avatar(TextAlign.right),
+                            _avatar(TextAlign.right, opponent),
                           ],
                         )),
                     ValueListenableBuilder<List<AccountCard?>>(
@@ -192,33 +200,40 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         ]));
   }
 
-  Widget _avatar(TextAlign align) => LevelIndicator(align: align, size: 160.d);
+  Widget _avatar(TextAlign align, Opponent opponent) => LevelIndicator(
+        size: 160.d,
+        align: align,
+        xp: opponent.xp,
+        level: opponent.level,
+        avatarId: opponent.avatarId,
+      );
 
-  Widget _opponentInfo(CrossAxisAlignment align, Account account) {
+  Widget _opponentInfo(
+      CrossAxisAlignment align, Account account, Opponent opponent) {
     var itsMe = align == CrossAxisAlignment.start;
-    var opponent = widget.opponent ??
-        Opponent.initialize({
-          "name": (itsMe ? "you_l" : "enemy_l").l(),
-          "def_power": getQuestPower(account)[2]
-        }, 0);
+    var opponentPower = "????";
+    if (opponent.isRevealed) {
+      opponentPower = opponent.defPower.compact();
+    } else if (widget.opponent == null) {
+      opponentPower = "~${opponent.defPower.compact()}";
+    }
     return Expanded(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: align,
-        children: [
-          SkinnedText(opponent.name,
-              style: TStyles.small.copyWith(
-                  height: 0.8, color: TColors.primary10, fontSize: 36.d)),
-          itsMe
-              ? ValueListenableBuilder<List<AccountCard?>>(
-                  valueListenable: _selectedCards,
-                  builder: (context, value, child) => SkinnedText(
-                      account.calculatePower(_selectedCards.value).compact()),
-                )
-              : SkinnedText("~${opponent.defPower.compact()}"),
-          SizedBox(height: 16.d)
-        ],
-      ),
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: align,
+          children: [
+            SkinnedText(opponent.name,
+                style: TStyles.small.copyWith(
+                    height: 0.8, color: TColors.primary10, fontSize: 36.d)),
+            itsMe
+                ? ValueListenableBuilder<List<AccountCard?>>(
+                    valueListenable: _selectedCards,
+                    builder: (context, value, child) => SkinnedText(
+                        account.calculatePower(_selectedCards.value).compact()),
+                  )
+                : SkinnedText(opponentPower, textDirection: TextDirection.ltr),
+            SizedBox(height: 16.d)
+          ]),
     );
   }
 
@@ -237,7 +252,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var costPowerRatio = 230;
     var bossPowerMultiplier = 2;
 // var purgeStep = 30;
-    var coef = 0.4761;
+    var coefficient = 0.4761;
     var exponent = 1.0786;
     var defenceMin = 40;
     var defenceValue = <int>[0, 0, 0];
@@ -249,7 +264,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
               .floor() *
           multiplier;
     } else {
-      defenceValue[1] = (coef * math.pow(q, exponent)).floor().min(defenceMin);
+      defenceValue[1] =
+          (coefficient * math.pow(q, exponent)).floor().min(defenceMin);
     }
     var random = Random();
     defenceValue[0] = (defenceValue[1] - random.nextInt(10) - 10).min(0);
@@ -268,32 +284,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   bool isBossQuest(Account account) => ((account.questsCount / 10) % 1 == 0);
 
   _attack(Account account) async {
-    var params = <String, dynamic>{
-      RpcParams.cards.name: _selectedCards.getIds(),
-      RpcParams.check.name: md5.convert(utf8.encode("${account.q}")).toString()
-    };
-    var route = widget.opponent == null ? Routes.questOut : Routes.battleOut;
-    if (route == Routes.battleOut) {
-      params[RpcParams.opponent_id.name] = widget.opponent!.id;
-      params[RpcParams.attacks_in_today.name] =
-          widget.opponent!.todayAttacksCount;
-    }
-    if (_selectedCards.value[2] != null) {
-      params[RpcParams.hero_id.name] = _selectedCards.value[2]!.id;
-    }
-
-    try {
-      var data = await rpc(RpcId.quest, params: params);
-      account.update(data);
+    Overlays.insert(context, OverlayType.feastAttack,
+        args: {"opponent": widget.opponent, "cards": _selectedCards},
+        onClose: (data) async {
       _selectedCards.clear(setNull: true);
-
       // Reset reminder notifications ....
-      getService<Notifications>().skedule(account);
-      if (mounted) {
-        accountBloc.add(SetAccount(account: account));
-        await Navigator.pushNamed(context, route.routeName, arguments: data);
-        if (mounted) Navigator.pop(context);
-      }
-    } finally {}
+      getService<Notifications>().schedule(account);
+    });
   }
 }

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/adam.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/background_mixin.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
+import '../../services/sounds.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../view/widgets.dart';
-import '../../view/widgets/live_battle/live_opponent.dart';
-import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
-import 'iscreen.dart';
+import '../widgets/live_battle/live_warrior.dart';
+import '../widgets/skinned_text.dart';
+import 'screen.dart';
 
 class LiveOutScreen extends AbstractScreen {
   LiveOutScreen({required super.args, super.key}) : super(Routes.livebattleOut);
@@ -17,10 +19,11 @@ class LiveOutScreen extends AbstractScreen {
   createState() => _LiveOutScreenState();
 }
 
-class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
+class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
+    with BackgroundMixin {
   // late AnimationController _animationController;
-  late LiveOpponent _alliseOwner, _axisOwner;
-  final List<LiveOpponent> _allise = [], _axis = [];
+  late LiveWarrior _friendsHead, _oppositeHead;
+  final List<LiveWarrior> _friends = [], _opposites = [];
 
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -29,19 +32,19 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   void initState() {
-    var opponents = widget.args["opponents"] as List<LiveOpponent>;
-    for (var opponent in opponents) {
-      if (opponent.teamOwnerId == widget.args["alliseId"]) {
-        if (opponent.id == widget.args["alliseId"]) {
-          _alliseOwner = opponent;
+    var warriors = widget.args["warriors"] as List<LiveWarrior>;
+    for (var warrior in warriors) {
+      if (warrior.teamOwnerId == widget.args["friendsId"]) {
+        if (warrior.base.id == widget.args["friendsId"]) {
+          _friendsHead = warrior;
         } else {
-          _allise.add(opponent);
+          _friends.add(warrior);
         }
       } else {
-        if (opponent.id == widget.args["axisId"]) {
-          _axisOwner = opponent;
+        if (warrior.base.id == widget.args["oppositesId"]) {
+          _oppositeHead = warrior;
         } else {
-          _axis.add(opponent);
+          _opposites.add(warrior);
         }
       }
     }
@@ -55,25 +58,31 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
 
   @override
   Widget contentFactory() {
-    var color = _alliseOwner.won ? "green" : "red";
-    return Widgets.button(
+    getService<Sounds>().play(_friendsHead.won ? "won" : "lose");
+    return Widgets.button(context,
         padding: EdgeInsets.all(32.d),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _fractionBuilder(_axisOwner, _axis),
-              SizedBox(height: 40.d),
-              _vsBuilder(),
-              SizedBox(height: 40.d),
-              _fractionBuilder(_alliseOwner, _allise),
-              Widgets.rect(
-                  margin: EdgeInsets.all(44.d),
-                  height: 130.d,
-                  decoration: Widgets.imageDecore("ui_ribbon_$color"),
-                  child: SkinnedText("fight_lebel_$color".l()))
-            ]),
+        child: Stack(alignment: Alignment.center, children: [
+          backgroundBuilder(),
+          _positioned(-740.d, _ribbon(_friendsHead.won ? "green" : "red")),
+          _positioned(-500.d, _fractionBuilder(_oppositeHead, _opposites)),
+          _positioned(180.d, _fractionBuilder(_friendsHead, _friends)),
+          _positioned(100.d, _vsBuilder()),
+        ]),
         onPressed: () => Navigator.popUntil(context, (route) => route.isFirst));
+  }
+
+  Widget _positioned(double top, Widget child) => Positioned(
+      width: DeviceInfo.size.width * 0.9,
+      top: DeviceInfo.size.height * 0.5 + top,
+      child: child);
+
+  Widget _ribbon(String color) {
+    return Widgets.rect(
+        width: DeviceInfo.size.width,
+        height: 130.d,
+        margin: EdgeInsets.all(44.d),
+        decoration: Widgets.imageDecorator("ui_ribbon_$color"),
+        child: SkinnedText("fight_label_$color".l()));
   }
 
   Widget _vsBuilder() {
@@ -93,22 +102,22 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         ]);
   }
 
-  Widget _fractionBuilder(LiveOpponent opponent, List<LiveOpponent> team) {
+  Widget _fractionBuilder(LiveWarrior opponent, List<LiveWarrior> team) {
     return Widgets.rect(
         padding: EdgeInsets.fromLTRB(80.d, 90.d, 80.d, 60.d),
-        decoration: Widgets.imageDecore("liveout_bg_${opponent.fraction.name}",
-            ImageCenterSliceData(201, 158)),
+        decoration: Widgets.imageDecorator(
+            "liveout_bg_${opponent.side.name}", ImageCenterSliceData(201, 158)),
         height: 580.d,
         child: Stack(
           alignment: Alignment.center,
           clipBehavior: Clip.none,
           children: [
             team.isEmpty
-                ? LiveOpponentView(opponent, isExpanded: true)
+                ? LiveWarriorView(opponent, isExpanded: true)
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      LiveOpponentView(opponent, isExpanded: true),
+                      LiveWarriorView(opponent, isExpanded: true),
                       SizedBox(width: 20.d),
                       _helpersBuilder(team),
                     ],
@@ -118,19 +127,19 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
         ));
   }
 
-  Widget _headerBuilder(LiveOpponent opponent) {
+  Widget _headerBuilder(LiveWarrior opponent) {
     return Positioned(
         top: -80.d,
         height: 70.d,
         child: Widgets.rect(
             padding: EdgeInsets.fromLTRB(64.d, 0, 64.d, 12.d),
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "liveout_bg_header", ImageCenterSliceData(64, 59)),
             child: SkinnedText(opponent.tribeName,
                 style: TStyles.medium.copyWith(height: 1))));
   }
 
-  Widget _helpersBuilder(List<LiveOpponent> team) {
+  Widget _helpersBuilder(List<LiveWarrior> team) {
     return Expanded(
         child: GridView.builder(
       padding: EdgeInsets.symmetric(vertical: 42.d),
@@ -138,7 +147,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen> {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 0.65, crossAxisCount: 2),
       itemCount: team.length,
-      itemBuilder: (context, index) => LiveOpponentView(team[index]),
+      itemBuilder: (context, index) => LiveWarriorView(team[index]),
     ));
   }
 }

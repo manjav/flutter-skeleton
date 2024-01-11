@@ -6,15 +6,15 @@ import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/rpc.dart';
-import '../../services/deviceinfo.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/popups/ipopup.dart';
-import '../../view/widgets/skinnedtext.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import '../widgets/loaderwidget.dart';
+import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class HeroPopup extends AbstractPopup {
   final int selectedHero;
@@ -42,7 +42,7 @@ class HeroPopup extends AbstractPopup {
       HeroCard hero, MapEntry<HeroAttribute, int> attribute) {
     return Row(children: [
       Asset.load<Image>("benefit_${attribute.key.benefit}", width: 56.d),
-      SkinnedText(" ${hero.card.base.attribuites[attribute.key]}"),
+      SkinnedText(" ${hero.card.base.attributes[attribute.key]}"),
       SkinnedText(" + ${attribute.value}",
           style: TStyles.medium.copyWith(color: TColors.green)),
     ]);
@@ -107,7 +107,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _heroes.length > 1
-                      ? Widgets.button(
+                      ? Widgets.button(context,
                           padding: EdgeInsets.all(22.d),
                           width: 120.d,
                           height: 120.d,
@@ -121,7 +121,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                     for (var i = 0; i < 4; i++) _itemHolder(i, items[i])
                   ]),
                   _heroes.length > 1
-                      ? Widgets.button(
+                      ? Widgets.button(context,
                           padding: EdgeInsets.all(22.d),
                           width: 120.d,
                           height: 120.d,
@@ -141,14 +141,14 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Widgets.skinnedButton(
+                        Widgets.skinnedButton(context,
                             color: ButtonColor.cream,
                             label: "cancel_l".l(),
                             width: 340.d,
                             padding: EdgeInsets.only(bottom: 12.d),
                             onPressed: () => Navigator.pop(context)),
                         SizedBox(width: 12.d),
-                        Widgets.skinnedButton(
+                        Widgets.skinnedButton(context,
                             label: "save_l".l(),
                             width: 340.d,
                             color: ButtonColor.green,
@@ -171,28 +171,27 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
         top: index == 0 || index == 1 ? padding - 2 : null,
         right: index == 1 || index == 3 ? padding : null,
         bottom: index == 2 || index == 3 ? padding + 3 : null,
-        child: Widgets.button(
+        child: Widgets.button(context,
             width: 144.d,
             height: 144.d,
             padding: EdgeInsets.all(12.d),
-            decoration:
-                Widgets.imageDecore("rect_${item == null ? "add" : "remove"}"),
+            decoration: Widgets.imageDecorator(
+                "rect_${item == null ? "add" : "remove"}"),
             child: item == null
                 ? const SizedBox()
                 : Asset.load<Image>("heroitem_${item.base.image}"),
             onPressed: () {
-              if (item != null) {
-                _heroes[_selectedIndex.value].items.remove(item);
-                setState(() {});
-                return;
-              }
-              showModalBottomSheet<void>(
-                  context: context,
-                  backgroundColor: TColors.transparent,
-                  barrierColor: TColors.transparent,
-                  builder: (BuildContext context) =>
-                      _itemListBottomSheet(index));
-            }));
+          if (item != null) {
+            _heroes[_selectedIndex.value].items.remove(item);
+            setState(() {});
+            return;
+          }
+          showModalBottomSheet<void>(
+              context: context,
+              backgroundColor: TColors.transparent,
+              barrierColor: TColors.transparent,
+              builder: (BuildContext context) => _itemListBottomSheet(index));
+        }));
   }
 
   _itemListBottomSheet(int index) {
@@ -223,9 +222,9 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
 
   Widget? _itemBuilder(BaseHeroItem item, int position) {
     var host = item.getHost(_heroes);
-    var heroItem = item.getUsage(_account.heroitems.values.toList());
+    var heroItem = item.getUsage(_account.heroItems.values.toList());
     var isActive = host == null || heroItem != null;
-    return Widgets.button(
+    return Widgets.button(context,
         radius: 44.d,
         color: TColors.primary80,
         margin: EdgeInsets.all(12.d),
@@ -259,7 +258,6 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
               alignment: Alignment.center,
               width: 200.d,
               child: IgnorePointer(
-                  ignoring: true,
                   child: _itemActionBuilder(item, heroItem != null, host))),
         ]),
         onPressed: () => _setItem(item, position, heroItem, host));
@@ -278,6 +276,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
         return _lockItem("icon_used", "${host.card.fruit.name}_t".l());
       }
       return Widgets.skinnedButton(
+        context,
         width: 320.d,
         height: 120.d,
         label: "use_l".l(),
@@ -290,6 +289,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       return _lockItem("icon_locked", "level_l".l([item.unlockLevel]));
     }
     return Widgets.skinnedButton(
+      context,
       height: 120.d,
       icon: "icon_nectar",
       label: "${item.cost}",
@@ -355,7 +355,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       var result =
           await _tryRPC(RpcId.buyHeroItem, {RpcParams.id.name: item.id});
       int id = result["heroitem_id"];
-      _account.heroitems[id] = HeroItem(id, item, 0);
+      _account.heroItems[id] = HeroItem(id, item, 0);
       if (mounted) {
         Navigator.pop(context);
       }
@@ -365,8 +365,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   _tryRPC(RpcId id, Map<String, dynamic> params) async {
     try {
       var data = await rpc(id, params: params);
-      _account.update(data);
       if (!mounted) return;
+      _account.update(context, data);
       accountBloc.add(SetAccount(account: _account));
       setState(() {});
       return data;

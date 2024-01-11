@@ -1,10 +1,16 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+
+import '../../mixins/service_provider.dart';
 import '../../services/localization.dart';
+import '../../services/trackers/trackers.dart';
 import '../../utils/utils.dart';
+import '../../view/overlays/overlay.dart';
 import 'adam.dart';
 import 'building.dart';
 import 'fruit.dart';
@@ -21,12 +27,12 @@ class Player extends Opponent {
       moodId,
       updatedAt,
       lastLoadAt,
-      tribeRanklastLoadAt,
+      tribeRankLastLoadAt,
       tribeRank,
       prevLeagueId,
       prevLeagueRank;
 
-  late String realname, address, phone;
+  late String realName, address, phone;
   Map<int, int> medals = {};
 
   Player.initialize(Map<String, dynamic> map, int ownerId)
@@ -44,7 +50,7 @@ class Player extends Opponent {
 
     phone = map["phone"] ?? "";
     address = map["address"] ?? "";
-    realname = map["realname"] ?? "";
+    realName = map["realname"] ?? "";
 
     if (map.containsKey("medals") && map["medals"].isNotEmpty) {
       for (var e in map["medals"].entries) {
@@ -54,23 +60,16 @@ class Player extends Opponent {
   }
 }
 
-class Account extends Player {
+class Account extends Player with ServiceProvider {
   Account() : super.initialize({}, 0);
-  static const Map<String, int> availablityLevels = {
-    'ads': 4,
-    'name': 4,
-    'bank': 5,
-    'tribe': 6,
-    'league': 8,
-    'liveBattle': 9,
-    'combo': 15,
-    'tribeChange': 150,
-  };
   static const levelExpo = 2.7;
   static const levelMultiplier = 1.3;
 
-  static int getXpRequiered(int level) =>
-      (math.pow(level, levelExpo) * levelMultiplier).ceil();
+  static int getXpRequired(int level) {
+    if (level <= 0) return 0;
+    return (math.pow(level, levelExpo) * levelMultiplier).ceil();
+  }
+
   late LoadingData loadingData;
 
   late String restoreKey,
@@ -107,10 +106,10 @@ class Account extends Player {
       wheel_of_fortune_opens_in = 0,
       latest_constants_version = 0,
       deltaTime = 0,
-      xpboostCreatedAt = 0,
-      pwboostCreatedAt = 0,
-      xpboostId = 0,
-      pwboostId = 0;
+      xpBoostCreatedAt = 0,
+      pwBoostCreatedAt = 0,
+      xpBoostId = 0,
+      pwBoostId = 0;
 
   late bool needs_captcha,
       has_email,
@@ -119,7 +118,7 @@ class Account extends Player {
       is_name_temp,
       better_vitrin_promotion,
       can_use_vitrin,
-      can_watch_advertisment,
+      can_watch_advertisement,
       purchase_deposits_to_bank,
       better_choose_deck,
       better_quest_map,
@@ -157,22 +156,23 @@ class Account extends Player {
       owned_avatars,
       sale_info,
       bundles,
-      dailyReward,
       coach_info,
       coaching,
       modules_version,
       available_combo_id_set;
 
   Tribe? tribe;
+  Map dailyReward = {};
   List<int> collection = [];
   List<Deadline> deadlines = [];
   Map<int, HeroCard> heroes = {};
   Map<int, AccountCard> cards = {};
-  Map<int, HeroItem> heroitems = {};
-  Map<String, int> achivementMap = {};
+  Map<int, HeroItem> heroItems = {};
+  Map<String, int> achievementMap = {};
   Map<Buildings, Building> buildings = {};
 
-  int get now => DateTime.now().secondsSinceEpoch + deltaTime;
+  int getTime({int? time}) =>
+      (time ?? DateTime.now().secondsSinceEpoch) + deltaTime;
 
   Account.initialize(Map<String, dynamic> map, this.loadingData)
       : super.initialize(map, map["id"]) {
@@ -188,7 +188,7 @@ class Account extends Player {
     is_name_temp = map["is_name_temp"];
     better_vitrin_promotion = map["better_vitrin_promotion"];
     can_use_vitrin = map["can_use_vitrin"];
-    can_watch_advertisment = map["can_watch_advertisment"];
+    can_watch_advertisement = map["can_watch_advertisment"];
     purchase_deposits_to_bank = map["purchase_deposits_to_bank"];
     better_choose_deck = map["better_choose_deck"];
     better_quest_map = map["better_quest_map"];
@@ -229,26 +229,32 @@ class Account extends Player {
     name = map["name"];
     restoreKey = map["restore_key"];
     inviteKey = map["invite_key"];
+    if (map.containsKey("daily_reward") && map["daily_reward"] is Map) {
+      dailyReward = map["daily_reward"];
+    }
     emergency_message = map["emergency_message"];
     update_message = map["update_message"];
-    latest_app_version = map["latest_app_version"];
-    latest_app_version_for_notice = map["latest_app_version_for_notice"];
+    // latest_app_version = map["latest_app_version"];
+    // latest_app_version_for_notice = map["latest_app_version_for_notice"];
 
     for (var card in map['cards']) {
       cards[card['id']] = AccountCard(this, card);
     }
 
     collection = List.castFrom(map["collection"]);
-    _addDeadline(map, xpboostCreatedAt, xpboostId);
-    _addDeadline(map, pwboostCreatedAt, pwboostId);
+    _addDeadline(map, xpBoostCreatedAt, xpBoostId);
+    _addDeadline(map, pwBoostCreatedAt, pwBoostId);
 
     addBuilding(Buildings type, [int level = 0, List? cards]) =>
         buildings[type] = Building(this, type, level, cards ?? []);
 
     buildings = {};
-    addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
+    addBuilding(Buildings.park);
     addBuilding(Buildings.base);
     addBuilding(Buildings.cards);
+    addBuilding(Buildings.tribe);
+    addBuilding(Buildings.quest, 1);
+    addBuilding(Buildings.auction, 1, map['auction_building_assigned_cards']);
     addBuilding(Buildings.defense, 0, map['defense_building_assigned_cards']);
     addBuilding(Buildings.offense, 0, map['offense_building_assigned_cards']);
     addBuilding(Buildings.mine, map['gold_building_level'],
@@ -259,12 +265,12 @@ class Account extends Player {
     installTribe(map['tribe']);
 
     // Heroes
-    heroitems = {};
+    heroItems = {};
     for (var item in map["heroitems"]) {
-      var heroitem = HeroItem(item['id'],
+      var heroItem = HeroItem(item['id'],
           loadingData.baseHeroItems[item['base_heroitem_id']]!, item['state']);
-      heroitem.position = item['position'];
-      heroitems[item['id']] = heroitem;
+      heroItem.position = item['position'];
+      heroItems[item['id']] = heroItem;
     }
 
     heroes = {};
@@ -273,7 +279,7 @@ class Account extends Player {
         var hero = HeroCard(cards[h['id']]!, h['potion']);
         hero.items = <HeroItem>[];
         for (var item in h['items']) {
-          var heroItem = heroitems[item["id"]! as int];
+          var heroItem = heroItems[item["id"]! as int];
           if (heroItem != null) {
             hero.items.add(heroItem);
           }
@@ -288,7 +294,7 @@ class Account extends Player {
 
     if (map["achievements_blob"] != null) {
       var achievementText = utf8.fuse(base64).decode(map["achievements_blob"]);
-      achivementMap = Map.castFrom(jsonDecode(achievementText));
+      achievementMap = Map.castFrom(jsonDecode(achievementText));
     }
     for (var line in loadingData.achievements.values) {
       line.updateCurrents(this);
@@ -298,6 +304,7 @@ class Account extends Player {
   void _updateInteger(Map<String, dynamic> map) {
     q = Utils.toInt(map["q"], q);
     xp = Utils.toInt(map["xp"], xp);
+    gold = Utils.toInt(map["gold"], xp);
     nectar = Utils.toInt(map["nectar"], nectar);
     potion = Utils.toInt(map["potion_number"], potion);
     activity_status = Utils.toInt(map["activity_status"], activity_status);
@@ -333,10 +340,10 @@ class Account extends Player {
     latest_constants_version =
         Utils.toInt(map["latest_constants_version"], latest_constants_version);
     deltaTime = Utils.toInt(map["delta_time"], deltaTime);
-    xpboostCreatedAt = Utils.toInt(map["xpboost_created_at"], xpboostCreatedAt);
-    pwboostCreatedAt = Utils.toInt(map["pwboost_created_at"], pwboostCreatedAt);
-    xpboostId = Utils.toInt(map["xpboost_id"], xpboostId);
-    pwboostId = Utils.toInt(map["pwboost_id"], pwboostId);
+    xpBoostCreatedAt = Utils.toInt(map["xpboost_created_at"], xpBoostCreatedAt);
+    pwBoostCreatedAt = Utils.toInt(map["pwboost_created_at"], pwBoostCreatedAt);
+    xpBoostId = Utils.toInt(map["xpboost_id"], xpBoostId);
+    pwBoostId = Utils.toInt(map["pwboost_id"], pwBoostId);
   }
 
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
@@ -394,7 +401,7 @@ class Account extends Player {
           Buildings.auction,
           Buildings.offense,
           Buildings.cards,
-          Buildings.base
+          Buildings.tribe
         ];
     var origin = cards.values.toList();
     var myCards = <AccountCard>[];
@@ -413,14 +420,16 @@ class Account extends Player {
       myCards.add(getCard(card));
     }
     myCards.sort((AccountCard a, AccountCard b) =>
-        a.power * (b.base.isHero ? 1 : -1) -
-        b.power * (a.base.isHero ? 1 : -1));
+        b.power * (b.base.isHero ? 9999999999 : 1) -
+        a.power * (a.base.isHero ? 9999999999 : 1));
     return myCards;
   }
 
   void installTribe(dynamic data) {
     if (data == null) {
       tribeId = -1;
+    }
+    if (tribeId < 0) {
       tribeName = "no_tribe".l();
       return;
     }
@@ -428,7 +437,7 @@ class Account extends Player {
     tribeId = tribe!.id;
     tribeName = tribe!.name;
     var types = [
-      Buildings.base,
+      Buildings.tribe,
       Buildings.cards,
       Buildings.defense,
       Buildings.offense
@@ -438,8 +447,18 @@ class Account extends Player {
     }
   }
 
-  Map<String, dynamic> update(Map<String, dynamic> data) {
+  Map<String, dynamic> update(BuildContext context, Map<String, dynamic> data) {
     _updateInteger(data);
+    if (data.containsKey("level")) {
+      level = Utils.toInt(data["level"], level);
+    }
+    if (data.containsKey("rank")) {
+      rank = data["rank"];
+    }
+    if (data.containsKey("league_rank")) {
+      leagueRank = Utils.toInt(data["league_rank"], leagueRank);
+    }
+
     if (!data.containsKey("gold")) {
       if (data.containsKey("player_gold")) {
         gold = Utils.toInt(data["player_gold"]);
@@ -484,17 +503,8 @@ class Account extends Player {
     }
 
     var achieveCards = <AccountCard>[];
-    if (data.containsKey("achieveCards")) {
-      for (var card in data["achieveCards"]) {
-        var accountCard = AccountCard(this, card);
-        cards[card['id']] = accountCard;
-        achieveCards.add(accountCard);
-      }
-    }
-    data["achieveCards"] = achieveCards;
-
-    if (data.containsKey("card")) {
-      var newCard = data["card"];
+    addCard(dynamic newCard) {
+      if (newCard == null) return null;
       var card = cards[newCard["id"]];
       if (card == null) {
         cards[newCard["id"]] = card = AccountCard(this, newCard);
@@ -503,24 +513,46 @@ class Account extends Player {
         card.lastUsedAt = newCard["last_used_at"];
         card.base = loadingData.baseCards[newCard['base_card_id']]!;
       }
-      data["card"] = card;
+      achieveCards.add(card);
+      return card;
     }
 
-    _addDeadline(data, xpboostCreatedAt, xpboostId);
-    _addDeadline(data, pwboostCreatedAt, pwboostId);
+    if (data["achieveCards"] != null) {
+      for (var card in data["achieveCards"]) {
+        addCard(card);
+      }
+    }
+
+    if (data.containsKey("card")) {
+      data["card"] = addCard(data["card"]);
+    }
+
+    // Level Up
+    data["gift_card"] = addCard(data["gift_card"]);
+    if ((data["levelup_gold_added"] ?? 0) > 0) {
+      if (data["level"] == 5) {
+        getService<Trackers>(context).design("level_5");
+      }
+      Timer(const Duration(milliseconds: 100),
+          () => Overlays.insert(context, OverlayType.feastLevelup, args: data));
+    }
+
+    data["achieveCards"] = achieveCards;
+    _addDeadline(data, xpBoostCreatedAt, xpBoostId);
+    _addDeadline(data, pwBoostCreatedAt, pwBoostId);
     return data;
   }
 
   void _addDeadline(Map<String, dynamic> data, int startAt, int id) {
     if (startAt <= 0) return;
     var deadline = startAt + ShopData.boostDeadline;
-    if (deadline <= now) return;
+    if (deadline <= getTime()) return;
 
     var boost = loadingData.shopItems[ShopSections.boost]!
         .firstWhere((item) => item.id == id);
     deadlines.add(Deadline(deadline, boost));
 
-    if (id == pwboostId) {
+    if (id == pwBoostId) {
       for (var card in cards.entries) {
         card.value.power = (card.value.power * boost.ratio).round();
       }

@@ -3,16 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../blocs/services_bloc.dart';
-import '../../data/core/infra.dart';
 import '../../data/core/adam.dart';
-import '../../services/deviceinfo.dart';
+import '../../data/core/infra.dart';
+import '../../mixins/logger.dart';
+import '../../mixins/service_provider.dart';
+import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../utils/ilogger.dart';
 import '../../utils/utils.dart';
 import '../../view/route_provider.dart';
-import '../../view/widgets/skinnedtext.dart';
 import '../widgets.dart';
+import 'skinned_text.dart';
 
 class Indicator extends StatefulWidget {
   final String origin;
@@ -38,7 +39,7 @@ class Indicator extends StatefulWidget {
 }
 
 class _IndicatorState extends State<Indicator>
-    with TickerProviderStateMixin, ILogger {
+    with TickerProviderStateMixin, ILogger, ServiceProviderMixin {
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();
@@ -48,7 +49,7 @@ class _IndicatorState extends State<Indicator>
         height: height,
         child: Hero(
           tag: widget.type.name,
-          child: Widgets.touchable(
+          child: Widgets.touchable(context,
               child: Material(
                 color: TColors.transparent,
                 child: widget.value == null
@@ -58,33 +59,30 @@ class _IndicatorState extends State<Indicator>
                             state.account.getValue(widget.type),
                             state.account.leagueId))
                     : _getElements(height, widget.value!, widget.data as int),
-              ),
-              onTap: () {
-                if (widget.onTap != null) {
-                  widget.onTap?.call();
-                } else {
-                  switch (widget.type) {
-                    case Values.gold:
-                    case Values.nectar:
-                      Navigator.popUntil(context, (route) => route.isFirst);
-                      BlocProvider.of<ServicesBloc>(context)
-                          .add(ServicesEvent(ServicesInitState.changeTab, 0));
+              ), onTap: () {
+            if (widget.onTap != null) {
+              widget.onTap?.call();
+            } else {
+              switch (widget.type) {
+                case Values.gold:
+                case Values.nectar:
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  services.add(ServicesEvent(ServicesInitState.changeTab, 0));
 
-                      log("Go to shop");
-                      break;
-                    case Values.potion:
-                      Navigator.pushNamed(
-                          context, Routes.popupPotion.routeName);
-                      break;
-                    default:
-                      break;
-                  }
-                }
-                // widget.services.get<Analytics>().funnle("shopclicks");
-                // widget.services
-                //     .get<Analytics>()
-                //     .design('guiClick:shop:${widget.source}');
-              }),
+                  log("Go to shop");
+                  break;
+                case Values.potion:
+                  Routes.popupPotion.navigate(context);
+                  break;
+                default:
+                  break;
+              }
+            }
+            // widget.services.get<Analytics>().funnel("shopclicks");
+            // widget.services
+            //     .get<Analytics>()
+            //     .design('guiClick:shop:${widget.source}');
+          }),
         ));
   }
 
@@ -102,7 +100,7 @@ class _IndicatorState extends State<Indicator>
           child: Widgets.rect(
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 8.d, left: height * 0.1),
-            decoration: Widgets.imageDecore(
+            decoration: Widgets.imageDecorator(
                 "ui_indicator_bg", ImageCenterSliceData(104, 69)),
             child: _getText(value, left, right),
           )),

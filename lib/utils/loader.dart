@@ -5,7 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../utils/ilogger.dart';
+import '../mixins/logger.dart';
 
 class Loader with ILogger {
   static String? _appDir;
@@ -14,6 +14,7 @@ class Loader with ILogger {
   File? file;
   List<int>? bytes;
   String path = "";
+  dynamic metadata;
 
   Future<File?> load(String path, String url,
       {Function(double)? onProgress,
@@ -52,7 +53,7 @@ class Loader with ILogger {
         return null;
       }
       await file!.writeAsBytes(bytes!);
-      log("Complete downloading $url");
+      // log("Complete downloading $url");
       if (!exists || !forceUpdate) {
         return file!;
       }

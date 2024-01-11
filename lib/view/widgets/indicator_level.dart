@@ -4,11 +4,12 @@ import 'package:square_percent_indicater/square_percent_indicater.dart';
 
 import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
+import '../../mixins/key_provider.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../view/widgets/loaderwidget.dart';
 import '../widgets.dart';
-import 'skinnedtext.dart';
+import 'loader_widget.dart';
+import 'skinned_text.dart';
 
 class LevelIndicator extends StatefulWidget {
   final int? xp;
@@ -34,9 +35,9 @@ class LevelIndicator extends StatefulWidget {
   State<LevelIndicator> createState() => _LevelIndicatorState();
 }
 
-class _LevelIndicatorState extends State<LevelIndicator> {
+class _LevelIndicatorState extends State<LevelIndicator> with KeyProvider {
   int _xp = 0;
-  int _level = 0;
+  int _level = 1;
   int _avatarId = 0;
   int _minXp = 0;
   int _maxXp = 0;
@@ -44,9 +45,9 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   void _updateParams(int xp, int level, int avatarId) {
     _xp = xp;
     _level = level;
-    _avatarId = avatarId + 1;
-    _minXp = Account.getXpRequiered(level - 1);
-    _maxXp = Account.getXpRequiered(level);
+    _avatarId = avatarId;
+    _minXp = Account.getXpRequired(level - 1);
+    _maxXp = Account.getXpRequired(level);
   }
 
   @override
@@ -68,9 +69,10 @@ class _LevelIndicatorState extends State<LevelIndicator> {
   _elementsBuilder() {
     var s = widget.size / 200;
     return Widgets.button(
+      context,
       radius: 54 * s,
       onPressed: widget.onPressed,
-      decoration: Widgets.imageDecore("ui_frame_wood_big"),
+      decoration: Widgets.imageDecorator("ui_frame_wood_big"),
       width: widget.size,
       height: widget.size,
       padding: EdgeInsets.all(28 * s),
@@ -82,8 +84,10 @@ class _LevelIndicatorState extends State<LevelIndicator> {
             progress: (_xp - _minXp) / (_maxXp - _minXp),
             shadowWidth: 20 * s,
             progressWidth: 8 * s,
-            borderRadius: 40 * s,
-            startAngle: StartAngle.topRight,
+            borderRadius: 30 * s,
+            startAngle: widget.align == TextAlign.left
+                ? StartAngle.topRight
+                : StartAngle.topLeft,
             shadowColor: TColors.primary20,
             progressColor: TColors.green,
           ),
@@ -91,18 +95,15 @@ class _LevelIndicatorState extends State<LevelIndicator> {
               radius: 20 * s,
               margin: EdgeInsets.all(14 * s),
               child: LoaderWidget(AssetType.image, 'avatar_$_avatarId',
-                  subFolder: 'avatars')),
+                  subFolder: 'avatars', key: getGlobalKey(_avatarId))),
           widget.showLevel
               ? PositionedDirectional(
-                  top: -24 * s,
-                  width: 110 * s,
-                  start: widget.align == TextAlign.left
-                      ? widget.size - 120 * s
-                      : null,
-                  end: widget.align == TextAlign.right
-                      ? widget.size - 120 * s
-                      : null,
-                  child: SkinnedText(_level.toString()))
+                  top: -20 * s,
+                  width: 100 * s,
+                  end: widget.align == TextAlign.left ? -50 * s : null,
+                  start: widget.align == TextAlign.right ? -50 * s : null,
+                  child: SkinnedText("$_level",
+                      style: TStyles.small.copyWith(fontSize: 40 * s)))
               : const SizedBox(),
         ],
       ),

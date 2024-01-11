@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../blocs/services_bloc.dart';
 import '../../data/core/result.dart';
 import '../../main.dart';
-import '../../services/deviceinfo.dart';
+import '../../mixins/logger.dart';
+import '../../services/device_info.dart';
 import '../../services/localization.dart';
+import '../../services/prefs.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import '../../utils/ilogger.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
-import 'ioverlay.dart';
+import 'overlay.dart';
 
 class LoadingOverlay extends AbstractOverlay {
   const LoadingOverlay({super.key}) : super(type: OverlayType.loading);
@@ -36,6 +39,11 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    var isUpdateError =
+        _exception?.statusCode == StatusCode.C700_UPDATE_NOTICE ||
+            _exception?.statusCode == StatusCode.C701_UPDATE_FORCE;
+    var isForceUpdate = _exception?.statusCode == StatusCode.C701_UPDATE_FORCE;
+    var logStyle = TStyles.tiny.copyWith(color: TColors.gray);
     return Scaffold(
       body: Stack(alignment: Alignment.center, children: [
         Asset.load<RiveAnimation>('loading', onRiveInit: (Artboard artboard) {
@@ -60,7 +68,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
               await Future.delayed(
                   Duration(milliseconds: _minAnimationTime - elapsedTime));
               if (mounted) {
-                Navigator.pushReplacementNamed(context, Routes.home.routeName);
+                Routes.home.replace(context);
               }
             } else if (state.initState == ServicesInitState.error) {
               _exception = state.data as RpcException;
@@ -71,11 +79,11 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
         Positioned(
             bottom: 4.d,
             right: 16.d,
-            child: Text("v.${'app_version'.l()}", style: TStyles.smallInvert)),
+            child: Text("v.${DeviceInfo.buildNumber}", style: logStyle)),
         Positioned(
             bottom: 4.d,
             left: 16.d,
-            child: Text(DeviceInfo.adId, style: TStyles.tinyInvert)),
+            child: Text(DeviceInfo.adId, style: logStyle)),
         Positioned(
             top: 4.d,
             right: 4.d,
@@ -97,29 +105,68 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                 child: Column(
                   children: [
                     Text(
-                      "${'error_${_exception!.statusCode.value}'.l()}\nPlease try again.",
+                      "${'error_${_exception!.statusCode.value}'.l([
+                            _exception!.message
+                          ])}\n${isUpdateError ? "" : "try_again".l()}",
                       textAlign: TextAlign.center,
                       style: TStyles.mediumInvert,
                       softWrap: true,
                     ),
                     SizedBox(height: 48.d),
-                    Widgets.skinnedButton(
-                        width: 440.d,
-                        height: 160.d,
-                        padding: EdgeInsets.only(bottom: 16.d),
-                        label: 'Retry',
-                        buttonId: -1,
-                        onPressed: () {
-                          _reload();
-                        })
+                    Row(
+                        textDirection: TextDirection.ltr,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          isUpdateError && !isForceUpdate
+                              ? Widgets.skinnedButton(context,
+                                  height: 160.d,
+                                  padding:
+                                      EdgeInsets.fromLTRB(42.d, 0, 42.d, 16.d),
+                                  label: "play_l".l(),
+                                  buttonId: -1, onPressed: () {
+                                  Pref.skipUpdate.setBool(true);
+                                  _reload();
+                                })
+                              : const SizedBox(),
+                          SizedBox(width: 12.d),
+                          Widgets.skinnedButton(context,
+                              color: isUpdateError
+                                  ? ButtonColor.green
+                                  : ButtonColor.yellow,
+                              height: 160.d,
+                              padding: EdgeInsets.fromLTRB(42.d, 0, 42.d, 16.d),
+                              label: isUpdateError
+                                  ? "update_l".l()
+                                  : "retry_l".l(),
+                              buttonId: -1,
+                              onPressed: () => _retry(
+                                  _exception, isUpdateError, isForceUpdate)),
+                        ])
                   ],
                 )),
       ]),
     );
   }
 
+  void _update(bool isForceUpdate) {
+    launchUrl(Uri.parse("app_url".l()));
+    SystemNavigator.pop();
+  }
+
   void _reload() {
     close();
     MyApp.restartApp(context);
+  }
+
+  void _retry(RpcException? exception, bool isUpdateError, bool isForceUpdate) {
+    if (_exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY ||
+        _exception!.statusCode == StatusCode.C702_UPDATE_TEST) {
+      close();
+      Routes.popupRestore.navigate(context, args: {"onlySet": true});
+    } else if (isUpdateError) {
+      _update(isForceUpdate);
+    } else {
+      _reload();
+    }
   }
 }
