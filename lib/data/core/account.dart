@@ -433,6 +433,7 @@ class Account extends Player with ServiceProvider {
       tribeId = tribe!.id;
     }
     if (tribeId < 0) {
+      tribe = null;
       tribeName = "no_tribe".l();
       return;
     }

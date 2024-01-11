@@ -120,7 +120,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
       });
       if (id == RpcId.tribePoke) toast("tribe_poke_success".l());
       if (mounted && id == RpcId.tribeLeave) {
-        bloc.account!.tribe = null;
+        bloc.account!.installTribe(null);
         bloc.add(SetAccount(account: bloc.account!));
         Navigator.pop(context);
       }
