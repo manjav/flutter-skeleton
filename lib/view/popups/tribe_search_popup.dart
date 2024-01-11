@@ -150,6 +150,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
         var bloc = accountBloc;
         bloc.account!.installTribe(result["tribe"]);
         bloc.add(SetAccount(account: bloc.account!));
+        }
       }
     } finally {}
   }
@@ -161,5 +162,13 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
       _ => "join_l",
     }
         .l();
+  }
+
+  ButtonColor _actionColorBuilder(Tribe tribe) {
+    return switch (tribe.status) {
+      1 => ButtonColor.teal,
+      2 => ButtonColor.green,
+      _ => ButtonColor.gray,
+    };
   }
 }
