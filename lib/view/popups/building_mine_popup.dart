@@ -4,14 +4,14 @@ import 'package:provider/provider.dart';
 import '../../mixins/building_mixin.dart';
 import '../../mixins/building_supportive_mixin.dart';
 import '../../providers/account_provider.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/utils.dart';
-import '../../view/widgets.dart';
-import '../route_provider.dart';
-import '../widgets/skinned_text.dart';
-import 'popup.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/popups/popup.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 
 class MineBuildingPopup extends AbstractPopup {
   const MineBuildingPopup({required super.args, super.key})

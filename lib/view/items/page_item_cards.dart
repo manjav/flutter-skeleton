@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/account_provider.dart';
 import '../../data/core/fruit.dart';
-import '../../mixins/key_provider.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../view/route_provider.dart';
-import '../overlays/overlay.dart';
-import '../widgets.dart';
+import '../../skeleton/mixins/key_provider.dart';
+import '../../providers/account_provider.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/views/overlays/overlay.dart';
+import '../../skeleton/views/widgets.dart';
 import 'card_item.dart';
 import 'page_item.dart';
 

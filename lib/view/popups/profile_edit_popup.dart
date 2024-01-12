@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../view/widgets.dart';
-import '../route_provider.dart';
-import '../widgets/loader_widget.dart';
-import '../widgets/skinned_text.dart';
-import 'popup.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/views/popups/popup.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/loader_widget.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 
 class ProfileEditPopup extends AbstractPopup {
   ProfileEditPopup({super.key}) : super(Routes.popupProfile, args: {});

@@ -3,19 +3,19 @@ import 'package:rive/rive.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
-import '../../mixins/background_mixin.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/sounds.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../route_provider.dart';
-import '../widgets.dart';
+import '../../skeleton/mixins/background_mixin.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/services/sounds.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/screens/screen.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/loader_widget.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 import '../widgets/indicator_level.dart';
-import '../widgets/loader_widget.dart';
-import '../widgets/skinned_text.dart';
-import 'screen.dart';
 
 enum FightMode { quest, battle }
 

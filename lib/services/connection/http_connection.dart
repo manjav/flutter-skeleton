@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../data/core/account.dart';
-import '../../data/core/result.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/rpc_data.dart';
-import '../../services/localization.dart';
-import '../../services/prefs.dart';
-import '../../utils/loader.dart';
-import '../../utils/utils.dart';
-import '../../view/route_provider.dart';
-import '../../view/widgets/loader_widget.dart';
-import '../device_info.dart';
-import '../services.dart';
+import '../../skeleton/data/result.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/prefs.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/services/services.dart';
+import '../../skeleton/utils/loader.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/widgets/loader_widget.dart';
 
 class HttpConnection extends IService {
   LoadingData loadData = LoadingData();

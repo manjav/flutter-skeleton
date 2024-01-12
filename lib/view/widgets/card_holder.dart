@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
-import '../../mixins/key_provider.dart';
-import '../../services/device_info.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../widgets.dart';
-import 'loader_widget.dart';
+import '../../skeleton/mixins/key_provider.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/loader_widget.dart';
 
 class CardHolder extends StatefulWidget {
   final AccountCard? card;
@@ -74,71 +74,3 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
   }
 }
 
-class SelectedCards extends ValueNotifier<List<AccountCard?>> {
-  SelectedCards(super.value);
-  double get count => value.length.toDouble();
-  setAtCard(int index, AccountCard? card, {bool toggleMode = true}) {
-    value[index] = toggleMode && value[index] == card ? null : card;
-    notifyListeners();
-  }
-
-  getIds() =>
-      "[${value.map((c) => c?.id).where((id) => id != null).join(',')}]";
-
-  bool setCard(AccountCard card, {int exception = -1, int? length}) {
-    var index = value.indexOf(card);
-    if (index > -1) {
-      setAtCard(index, null);
-      return true;
-    }
-
-    var len = length ?? value.length;
-    for (var i = 0; i < len; i++) {
-      if (i != exception && value[i] == null) {
-        setAtCard(i, card);
-        return true;
-      }
-    }
-
-    var weakest = double.infinity;
-    var weakestPosition = 3;
-    for (var i = 0; i < len; i++) {
-      if (i != exception && value[i]!.power < weakest) {
-        weakest = value[i]!.power.toDouble();
-        weakestPosition = i;
-      }
-    }
-    setAtCard(weakestPosition, card);
-    return false;
-  }
-
-  void addCard(AccountCard card) {
-    if (value.contains(card)) {
-      value.remove(card);
-    } else {
-      value.add(card);
-    }
-    notifyListeners();
-  }
-
-  void clear({bool setNull = false}) {
-    if (setNull) {
-      for (var i = 0; i < value.length; i++) {
-        value[i] = null;
-      }
-    } else {
-      value.clear();
-    }
-    notifyListeners();
-  }
-
-  void remove(AccountCard card) {
-    value.remove(card);
-    notifyListeners();
-  }
-
-  void removeWhere(bool Function(AccountCard?) test) {
-    value.removeWhere(test);
-    notifyListeners();
-  }
-}

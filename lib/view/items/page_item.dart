@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/logger.dart';
-import '../../mixins/service_finder_mixin.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../widgets/skinned_text.dart';
-import '../overlays/overlay.dart';
+import '../../skeleton/mixins/logger.dart';
+import '../../skeleton/mixins/service_finder_mixin.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/views/overlays/overlay.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 
 class AbstractPageItem extends StatefulWidget {
   final String name;

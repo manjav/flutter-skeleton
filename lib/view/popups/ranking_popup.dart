@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
-import '../../mixins/tab_builder_mixin.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import 'popup.dart';
-import '../widgets/skinned_text.dart';
-import '../route_provider.dart';
-import '../widgets.dart';
+import '../../skeleton/mixins/tab_builder_mixin.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/popups/popup.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 
 class RankingPopup extends AbstractPopup {
   RankingPopup({super.key}) : super(Routes.popupRanking, args: {});

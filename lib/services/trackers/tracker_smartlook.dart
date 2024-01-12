@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 
-import '../../services/ads/ads_abstract.dart';
-import '../../services/localization.dart';
-import 'tracker_abstract.dart';
-import 'trackers.dart';
+import '../../skeleton/services/ads/ads_abstract.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/trackers/tracker_abstract.dart';
+import '../../skeleton/services/trackers/trackers.dart';
 
 class SmartlookTracker extends AbstractTracker {
   @override

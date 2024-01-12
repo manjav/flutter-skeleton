@@ -10,12 +10,11 @@ import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/rpc.dart';
-import '../../mixins/reward_mixin.dart';
-import '../../services/localization.dart';
-import '../../utils/utils.dart';
-import '../route_provider.dart';
-import '../widgets/card_holder.dart';
-import 'overlay.dart';
+import '../../skeleton/mixins/reward_mixin.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/overlays/overlay.dart';
 
 class AttackFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;

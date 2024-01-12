@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
-import '../../mixins/background_mixin.dart';
-import '../../mixins/reward_mixin.dart';
-import '../../services/localization.dart';
-import '../../utils/utils.dart';
-import '../../view/widgets/card_holder.dart';
-import 'overlay.dart';
+import '../../skeleton/mixins/background_mixin.dart';
+import '../../skeleton/mixins/reward_mixin.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/overlays/overlay.dart';
 
 class EnhanceFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;

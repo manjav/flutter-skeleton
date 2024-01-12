@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/utils.dart';
-import '../../view/widgets.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/utils/utils.dart';
 import '../data/core/account.dart';
 import '../data/core/building.dart';
-import '../services/device_info.dart';
-import '../services/localization.dart';
-import '../services/theme.dart';
-import '../utils/assets.dart';
+import '../skeleton/services/theme.dart';
+import '../skeleton/utils/assets.dart';
+import '../skeleton/views/overlays/overlay.dart';
+import '../skeleton/views/popups/popup.dart';
+import '../skeleton/views/widgets.dart';
+import '../skeleton/views/widgets/skinned_text.dart';
 import '../view/map_elements/building_widget.dart';
-import '../view/overlays/overlay.dart';
-import '../view/popups/popup.dart';
-import '../view/widgets/skinned_text.dart';
 
 @optionalTypeArgs
 mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
@@ -40,25 +40,24 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
             isEnable: building.level < building.maxLevel,
             color: ButtonColor.green,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(width: 8.d),
-                SkinnedText("upgrade_l".l(),
-                    style: TStyles.large.copyWith(height: 3.d)),
-                SizedBox(width: 24.d),
-                Widgets.rect(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 6.d, horizontal: 12.d),
-                  decoration: Widgets.imageDecorator(
-                      "frame_hatch_button", ImageCenterSliceData(42)),
-                  child: Row(children: [
-                    Asset.load<Image>("icon_gold", height: 76.d),
-                    SkinnedText(building.upgradeCost.compact(),
-                        style: TStyles.large),
-                  ]),
-                )
-              ],
-            ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(width: 8.d),
+                  SkinnedText("upgrade_l".l(),
+                      style: TStyles.large.copyWith(height: 3.d)),
+                  SizedBox(width: 24.d),
+                  Widgets.rect(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 6.d, horizontal: 12.d),
+                    decoration: Widgets.imageDecorator(
+                        "frame_hatch_button", ImageCenterSliceData(42)),
+                    child: Row(children: [
+                      Asset.load<Image>("icon_gold", height: 76.d),
+                      SkinnedText(building.upgradeCost.compact(),
+                          style: TStyles.large),
+                    ]),
+                  )
+                ]),
             onPressed: () => Overlays.insert(context, OverlayType.feastUpgrade,
                 args: {"id": building.type.id}),
             onDisablePressed: () => Overlays.insert(context, OverlayType.toast,

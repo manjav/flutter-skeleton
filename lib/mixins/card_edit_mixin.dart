@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/core/account.dart';
+import '../../skeleton/services/device_info.dart';
 import '../data/core/fruit.dart';
 import '../providers/account_provider.dart';
-import '../services/device_info.dart';
-import '../services/theme.dart';
-import '../utils/assets.dart';
+import '../skeleton/services/theme.dart';
+import '../skeleton/utils/assets.dart';
+import '../skeleton/views/popups/popup.dart';
+import '../skeleton/views/widgets.dart';
 import '../view/items/card_item.dart';
-import '../view/popups/popup.dart';
-import '../view/widgets.dart';
-import '../view/widgets/card_holder.dart';
 
 @optionalTypeArgs
 mixin CardEditMixin<T extends AbstractPopup> on State<T> {

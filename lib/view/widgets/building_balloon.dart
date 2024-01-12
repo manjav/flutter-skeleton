@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../skeleton/mixins/service_finder_mixin.dart';
 import '../../providers/account_provider.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
-import '../../mixins/service_finder_mixin.dart';
-import '../../services/device_info.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../widgets.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/widgets.dart';
 
 class BuildingBalloon extends StatefulWidget {
   final Building building;

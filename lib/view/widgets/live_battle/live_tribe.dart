@@ -4,14 +4,14 @@ import 'package:flutter/widgets.dart';
 
 import '../../../data/core/adam.dart';
 import '../../../data/core/rpc.dart';
-import '../../../mixins/service_finder_mixin.dart';
-import '../../../services/device_info.dart';
-import '../../../utils/assets.dart';
-import '../../../utils/utils.dart';
+import '../../../skeleton/mixins/service_finder_mixin.dart';
+import '../../../skeleton/services/device_info.dart';
+import '../../../skeleton/utils/assets.dart';
+import '../../../skeleton/utils/utils.dart';
+import '../../../skeleton/views/widgets.dart';
+import '../../../skeleton/views/widgets/skinned_text.dart';
 import '../../screens/screen_livebattle.dart';
-import '../../widgets.dart';
 import '../indicator_level.dart';
-import '../skinned_text.dart';
 import 'live_warrior.dart';
 
 class LiveTribe extends StatefulWidget {

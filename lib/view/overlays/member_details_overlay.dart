@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/adam.dart';
-import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../view/route_provider.dart';
-import '../../view/widgets.dart';
-import '../../view/widgets/indicator.dart';
+import '../../skeleton/data/infra.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/views/overlays/overlay.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/indicator.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 import '../../view/widgets/indicator_level.dart';
-import '../widgets/skinned_text.dart';
-import 'overlay.dart';
 
 class MemberOverlay extends AbstractOverlay {
   final double y;

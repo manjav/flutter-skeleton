@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 
-import '../../providers/opponents_provider.dart';
 import '../../data/core/account.dart';
+import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/message.dart';
-import '../../data/core/adam.dart';
 import '../../data/core/rpc_data.dart';
 import '../../data/core/tribe.dart';
-import '../services.dart';
-import '../../utils/utils.dart';
+import '../../providers/opponents_provider.dart';
+import '../../skeleton/services/services.dart';
+import '../../skeleton/utils/utils.dart';
 
 enum NoobCommand { subscribe, unsubscribe }
 
