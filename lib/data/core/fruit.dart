@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
-import '../../skeleton/data/result.dart';
+import '../../skeleton/data/responses.dart';
 import '../../skeleton/mixins/service_finder_mixin.dart';
 import '../../skeleton/utils/utils.dart';
 import 'account.dart';

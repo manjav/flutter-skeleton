@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../data/result.dart';
+import '../data/responses.dart';
 import '../services/device_info.dart';
 import '../services/localization.dart';
 

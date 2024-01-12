@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../data/core/rpc_data.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
-import '../data/result.dart';
+import '../data/responses.dart';
 import '../services/ads/ads.dart';
 import '../services/ads/ads_abstract.dart';
 import '../services/device_info.dart';
