@@ -2,14 +2,14 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
-import 'blocs/account_bloc.dart';
-import 'blocs/opponents_bloc.dart';
-import 'blocs/services_bloc.dart';
 import 'data/core/adam.dart';
-import 'mixins/service_provider.dart';
+import 'mixins/service_finder_mixin.dart';
+import 'providers/account_provider.dart';
+import 'providers/opponents_provider.dart';
+import 'providers/services_provider.dart';
 import 'services/device_info.dart';
 import 'services/localization.dart';
 import 'services/prefs.dart';
@@ -89,12 +89,12 @@ class _MyAppState extends State<MyApp>
     if (!DeviceInfo.isPreInitialized) return const SizedBox();
     return KeyedSubtree(
         key: key,
-        child: MultiBlocProvider(
+        child: MultiProvider(
             providers: [
-              BlocProvider(
-                  create: (context) => ServicesBloc(MyApp._firebaseAnalytics)),
-              BlocProvider(create: (context) => AccountBloc()),
-              BlocProvider(create: (context) => OpponentsBloc())
+              ChangeNotifierProvider(
+                  create: (_) => ServicesProvider(MyApp._firebaseAnalytics)),
+              ChangeNotifierProvider(create: (_) => AccountProvider()),
+              ChangeNotifierProvider(create: (_) => OpponentsProvider())
             ],
             child: MaterialApp(
                 navigatorObservers: [
