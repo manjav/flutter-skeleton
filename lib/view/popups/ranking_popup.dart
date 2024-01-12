@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
-import '../../mixins/tab_provider.dart';
+import '../../mixins/tab_builder_mixin.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -22,13 +22,13 @@ class RankingPopup extends AbstractPopup {
 }
 
 class _RankingPopupState extends AbstractPopupState<RankingPopup>
-    with TabProviderMixin {
+    with TabBuilderMixin {
   late Account _account;
 
   @override
   void initState() {
     selectedTabIndex = 0;
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     if (Ranks.lists.isEmpty) {
       Ranks.lists.addAll({
         RpcId.rankingGlobal: null,

@@ -45,7 +45,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   @override
   Widget contentFactory() {
-    var account = accountBloc.account!;
+    var account = accountProvider.account;
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: selectedCards,
         builder: (context, value, child) {

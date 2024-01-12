@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -33,7 +33,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 
   @override
   void initState() {
-    _questsCount = accountBloc.account!.questsCount - 1;
+    _questsCount = accountProvider.account.questsCount - 1;
     _mapHeight = DeviceInfo.size.width * 2.105;
     var arenaIndex = (_questsCount / 130).floor();
     var location = _questsCount % 130;
@@ -87,7 +87,7 @@ class ArenaItemRenderer extends StatefulWidget {
 }
 
 class _ArenaItemRendererState extends State<ArenaItemRenderer>
-    with ServiceProviderMixin {
+    with ServiceFinderWidgetMixin {
   int _questsCount = 0;
   bool _waitingMode = true;
   @override
@@ -139,7 +139,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     WidgetsBinding.instance.addPostFrameCallback((d) async {
       if (event.name == "click") {
         await Routes.deck.navigate(context);
-        _questsCount = accountBloc.account!.questsCount - 1;
+        _questsCount = accountProvider.account.questsCount - 1;
         // Update city levels after quest
         for (var i = 0; i < widget.arena.value.length; i++) {
           widget.arena.value[i].state?.value =

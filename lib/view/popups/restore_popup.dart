@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -55,7 +54,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
         Text("settings_restore_get".l(), style: style),
         SizedBox(height: 20.d),
         SkinnedText("settings_restore_yours".l()),
-        Widgets.clipboardGetter(context, accountBloc.account!.restoreKey),
+        Widgets.clipboardGetter(context, accountProvider.account.restoreKey),
         Widgets.divider(width: 120.d, margin: 32.d),
       ]);
     }

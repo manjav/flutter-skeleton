@@ -39,7 +39,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0.d, 142.d, 0.d, 32.d);
 
   List<AccountCard> get allReadyCards =>
-      accountBloc.account!.getReadyCards(removeMaxLevels: true);
+      accountProvider.account.getReadyCards(removeMaxLevels: true);
   @override
   getCards(Account account) {
     var all = allReadyCards;
@@ -54,7 +54,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
 
   @override
   Widget contentFactory() {
-    var account = accountBloc.account!;
+    var account = accountProvider.account;
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: selectedCards,
         builder: (context, value, child) {

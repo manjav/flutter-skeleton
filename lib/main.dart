@@ -46,7 +46,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp>
-    with WidgetsBindingObserver, ServiceProvider {
+    with WidgetsBindingObserver, ServiceFinderWidgetMixin {
   UniqueKey? key;
 
   @override
@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp>
         state == AppLifecycleState.inactive) {
       // getService<Sounds>(context).stopAll();
     } else if (state == AppLifecycleState.resumed) {
-      getService<Sounds>(context).playMusic();
+      getService<Sounds>().playMusic();
     }
   }
 

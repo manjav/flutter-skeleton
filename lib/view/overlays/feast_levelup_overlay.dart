@@ -28,7 +28,8 @@ class _LevelupScreenState extends AbstractOverlayState<LevelupFeastOverlay>
     super.initState();
     children = [backgroundBuilder(), animationBuilder("levelup")];
     _gold = widget.args["levelup_gold_added"] ?? 100;
-    _card = widget.args["gift_card"] ?? accountBloc.account!.cards.values.last;
+    _card =
+        widget.args["gift_card"] ?? accountProvider.account.cards.values.last;
     process(() async {
       await Future.delayed(const Duration(milliseconds: 100));
       return true;

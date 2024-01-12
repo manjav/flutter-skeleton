@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/core/rpc.dart';
@@ -81,7 +80,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
   }
 
   _donate() async {
-    var account = accountBloc.account!;
+    var account = accountProvider.account;
     try {
       var result = await rpc(RpcId.tribeDonate, params: {
         RpcParams.tribe_id.name: account.tribe!.id,

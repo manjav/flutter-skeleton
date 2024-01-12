@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/account_bloc.dart';
+import '../../providers/account_provider.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../services/device_info.dart';
@@ -25,7 +25,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
   static const capacity = 50.0;
   @override
   contentFactory() {
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       var potion = state.account.potion;
       var price = state.account.potionPrice;
       return Column(
@@ -97,9 +97,9 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
     try {
       var data =
           await rpc(RpcId.fillPotion, params: {RpcParams.amount.name: amount});
-      if (!mounted) return;
-      account.update(context, data);
-      accountBloc.add(SetAccount(account: account));
+      if (mounted) {
+        accountProvider.update(context, data);
+      }
     } finally {}
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../mixins/logger.dart';
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../widgets/skinned_text.dart';
@@ -16,7 +16,7 @@ class AbstractPageItem extends StatefulWidget {
 }
 
 class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
-    with ILogger, ServiceProviderMixin {
+    with ILogger, ServiceFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
     return Center(child: SkinnedText("coming_soon".l(), style: TStyles.large));

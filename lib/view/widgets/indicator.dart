@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/logger.dart';
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
+import '../../providers/account_provider.dart';
+import '../../providers/services_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -40,7 +40,7 @@ class Indicator extends StatefulWidget {
 }
 
 class _IndicatorState extends State<Indicator>
-    with TickerProviderStateMixin, ILogger, ServiceProviderMixin {
+    with TickerProviderStateMixin, ILogger, ServiceFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();
@@ -54,8 +54,8 @@ class _IndicatorState extends State<Indicator>
               child: Material(
                 color: TColors.transparent,
                 child: widget.value == null
-                    ? BlocBuilder<AccountBloc, AccountState>(
-                        builder: (context, state) => _getElements(
+                    ? Consumer<AccountProvider>(
+                        builder: (_, state, child) => _getElements(
                             height,
                             state.account.getValue(widget.type),
                             state.account.leagueId))
@@ -68,8 +68,7 @@ class _IndicatorState extends State<Indicator>
                 case Values.gold:
                 case Values.nectar:
                   Navigator.popUntil(context, (route) => route.isFirst);
-                  services.add(ServicesEvent(ServicesInitState.changeTab, 0));
-
+                  services.changeState(ServiceStatus.changeTab, data: 0);
                   log("Go to shop");
                   break;
                 case Values.potion:

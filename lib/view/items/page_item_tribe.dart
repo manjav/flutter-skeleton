@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/building.dart';
 import '../../data/core/message.dart';
 import '../../data/core/tribe.dart';
+import '../../providers/account_provider.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/device_info.dart';
 import '../../services/inbox.dart';
@@ -36,7 +36,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       // Show unavailable message
       var levels = state.account.loadingData.rules["availabilityLevels"]!;
       if (state.account.level < levels["tribe"]!) {

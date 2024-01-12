@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/account_bloc.dart';
+import '../../providers/account_provider.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
@@ -24,10 +24,10 @@ class BuildingBalloon extends StatefulWidget {
 }
 
 class _BuildingBalloonState extends State<BuildingBalloon>
-    with ServiceProviderMixin {
+    with ServiceFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       if (!isCollectable(state.account)) {
         return const SizedBox();
       }
@@ -52,8 +52,7 @@ class _BuildingBalloonState extends State<BuildingBalloon>
       var result = await rpc(RpcId.collectGold, params: params);
       if (result is List) return;
       if (mounted) {
-        account.update(context, result);
-        accountBloc.add(SetAccount(account: account));
+        accountProvider.update(context, result);
       }
     } finally {}
   }

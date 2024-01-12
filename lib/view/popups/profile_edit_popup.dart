@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
@@ -9,11 +7,11 @@ import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'popup.dart';
 import '../../view/widgets.dart';
 import '../route_provider.dart';
 import '../widgets/loader_widget.dart';
 import '../widgets/skinned_text.dart';
+import 'popup.dart';
 
 class ProfileEditPopup extends AbstractPopup {
   ProfileEditPopup({super.key}) : super(Routes.popupProfile, args: {});
@@ -37,7 +35,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
 
   @override
   Widget contentFactory() {
-    var account = accountBloc.account!;
+    var account = accountProvider.account;
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,9 +96,8 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
     if (result["name_changed"]) {
       if (mounted) {
         account.name = _textController.text;
-        account.update(context, result);
+        accountProvider.update(context, result);
       }
-      accountBloc.add(SetAccount(account: account));
     }
     // setState(() => account.name = id);
   }
@@ -118,7 +115,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
         await getService<HttpConnection>()
             .tryRpc(context, RpcId.setProfileInfo, params: {"mood_id": id});
         setState(() => account.moodId = id);
-        accountBloc.add(SetAccount(account: account));
+        accountProvider.update();
       },
     );
   }

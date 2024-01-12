@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../blocs/services_bloc.dart';
 import '../../data/core/result.dart';
 import '../../main.dart';
 import '../../mixins/logger.dart';
+import '../../providers/services_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/prefs.dart';
@@ -26,23 +26,27 @@ class LoadingOverlay extends AbstractOverlay {
 
 class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   bool _logViewVisibility = false;
-  RpcException? _exception;
   SMIBool? _closeInput;
   int _startTime = 0;
   final _minAnimationTime = 3000;
+  ServiceState _serviceState = ServiceState(ServiceStatus.none);
 
   @override
   void initState() {
     _startTime = DateTime.now().millisecondsSinceEpoch;
+    context.read<ServicesProvider>().addListener(_serviceListener);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var isUpdateError =
-        _exception?.statusCode == StatusCode.C700_UPDATE_NOTICE ||
-            _exception?.statusCode == StatusCode.C701_UPDATE_FORCE;
-    var isForceUpdate = _exception?.statusCode == StatusCode.C701_UPDATE_FORCE;
+    var isForceUpdate = _serviceState.exception != null &&
+        _serviceState.exception!.statusCode == StatusCode.C701_UPDATE_FORCE;
+    var isUpdateError = _serviceState.exception != null &&
+            _serviceState.exception!.statusCode ==
+                StatusCode.C700_UPDATE_NOTICE ||
+        isForceUpdate;
     var logStyle = TStyles.tiny.copyWith(color: TColors.gray);
     return Scaffold(
       body: Stack(alignment: Alignment.center, children: [
@@ -56,26 +60,6 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
           _closeInput = controller!.findInput<bool>('close') as SMIBool;
           artboard.addController(controller);
         }, fit: BoxFit.fitWidth),
-        BlocConsumer<ServicesBloc, ServicesState>(
-          builder: (context, state) => const SizedBox(),
-          listener: (context, state) async {
-            if (state.initState == ServicesInitState.complete) {
-              _closeInput?.value = true;
-            } else if (state.initState == ServicesInitState.initialize) {
-              // wait for minimum animation time
-              var elapsedTime =
-                  DateTime.now().millisecondsSinceEpoch - _startTime;
-              await Future.delayed(
-                  Duration(milliseconds: _minAnimationTime - elapsedTime));
-              if (mounted) {
-                Routes.home.replace(context);
-              }
-            } else if (state.initState == ServicesInitState.error) {
-              _exception = state.data as RpcException;
-              setState(() {});
-            }
-          },
-        ),
         Positioned(
             bottom: 4.d,
             right: 16.d,
@@ -96,7 +80,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                 child: _logViewVisibility
                     ? Text(ILogger.accumulatedLog, style: TStyles.tiny)
                     : Widgets.rect(color: TColors.transparent))),
-        _exception == null
+        _serviceState.exception == null
             ? const SizedBox()
             : Positioned(
                 left: 20.d,
@@ -105,8 +89,8 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                 child: Column(
                   children: [
                     Text(
-                      "${'error_${_exception!.statusCode.value}'.l([
-                            _exception!.message
+                      "${'error_${_serviceState.exception!.statusCode.value}'.l([
+                            _serviceState.exception!.message
                           ])}\n${isUpdateError ? "" : "try_again".l()}",
                       textAlign: TextAlign.center,
                       style: TStyles.mediumInvert,
@@ -139,8 +123,8 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                                   ? "update_l".l()
                                   : "retry_l".l(),
                               buttonId: -1,
-                              onPressed: () => _retry(
-                                  _exception, isUpdateError, isForceUpdate)),
+                              onPressed: () => _retry(_serviceState.exception,
+                                  isUpdateError, isForceUpdate)),
                         ])
                   ],
                 )),
@@ -159,14 +143,32 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   }
 
   void _retry(RpcException? exception, bool isUpdateError, bool isForceUpdate) {
-    if (_exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY ||
-        _exception!.statusCode == StatusCode.C702_UPDATE_TEST) {
+    if (exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY ||
+        exception.statusCode == StatusCode.C702_UPDATE_TEST) {
       close();
       Routes.popupRestore.navigate(context, args: {"onlySet": true});
     } else if (isUpdateError) {
       _update(isForceUpdate);
     } else {
       _reload();
+    }
+  }
+
+  Future<void> _serviceListener() async {
+    if (services.state.status == ServiceStatus.complete) {
+      _closeInput?.value = true;
+      context.read<ServicesProvider>().removeListener(_serviceListener);
+    } else if (services.state.status == ServiceStatus.initialize) {
+      // wait for minimum animation time
+      var elapsedTime = DateTime.now().millisecondsSinceEpoch - _startTime;
+      await Future.delayed(
+          Duration(milliseconds: _minAnimationTime - elapsedTime));
+      if (mounted) {
+        Routes.home.replace(context);
+      }
+    } else if (services.state.status == ServiceStatus.error) {
+      _serviceState = services.state;
+      setState(() {});
     }
   }
 }

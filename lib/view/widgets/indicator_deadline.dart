@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/device_info.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
@@ -18,7 +18,7 @@ class DeadlineIndicator extends StatefulWidget {
 }
 
 class _DeadlineIndicatorState extends State<DeadlineIndicator>
-    with ServiceProviderMixin {
+    with ServiceFinderWidgetMixin {
   Timer? _timer;
 
   @override
@@ -36,7 +36,7 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator>
 
   @override
   Widget build(BuildContext context) {
-    var remaining = widget.deadline.time - accountBloc.account!.getTime();
+    var remaining = widget.deadline.time - accountProvider.account.getTime();
     return SizedBox(
         width: 230.d,
         height: 230.d,

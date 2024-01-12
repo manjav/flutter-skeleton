@@ -5,7 +5,7 @@ import '../../data/core/adam.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
-import '../../mixins/tab_provider.dart';
+import '../../mixins/tab_builder_mixin.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -27,13 +27,13 @@ class TribeDetailsPopup extends AbstractPopup {
 }
 
 class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
-    with TabProviderMixin {
+    with TabBuilderMixin {
   Opponent? _member;
   late Account _account;
   @override
   void initState() {
     selectedTabIndex = widget.args["index"] ?? 0;
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     var index =
         _account.tribe!.members.value.indexWhere((member) => member.itsMe);
     if (index > -1) {

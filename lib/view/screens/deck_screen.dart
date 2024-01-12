@@ -2,30 +2,30 @@ import 'dart:math' as math;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
 import '../../mixins/key_provider.dart';
+import '../../providers/account_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/notifications.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
 import '../../utils/utils.dart';
-import 'screen.dart';
 import '../../view/widgets/card_holder.dart';
 import '../../view/widgets/indicator.dart';
-import '../widgets/skinned_text.dart';
 import '../items/card_item.dart';
 import '../overlays/overlay.dart';
 import '../route_provider.dart';
 import '../widgets.dart';
 import '../widgets/indicator_level.dart';
 import '../widgets/loader_widget.dart';
+import '../widgets/skinned_text.dart';
+import 'screen.dart';
 
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;
@@ -56,7 +56,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var crossAxisCount = 4;
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       var cards = state.account.getReadyCards();
       for (var card in cards) {
         card.isDeployed = false;

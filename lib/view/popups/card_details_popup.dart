@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/fruit.dart';
@@ -34,7 +33,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   void initState() {
     _card = widget.args['card'];
     _name = _card.fruit.name;
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     super.initState();
   }
 
@@ -149,7 +148,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
 
   _onButtonsTap(Routes route) async {
     await route.navigate(context, args: {"card": _card});
-    if (mounted && !accountBloc.account!.cards.containsKey(_card.id)) {
+    if (mounted && !accountProvider.account.cards.containsKey(_card.id)) {
       Navigator.popUntil(context, (route) => route.isFirst);
     }
     setState(() {});
@@ -160,7 +159,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
       await rpc(RpcId.auctionSell, params: {RpcParams.card_id.name: _card.id});
       _account.buildings[Buildings.auction]!.cards.add(_card);
       if (!mounted) return;
-      accountBloc.add(SetAccount(account: _account));
+      accountProvider.update();
       Navigator.pop(context);
     } finally {}
   }

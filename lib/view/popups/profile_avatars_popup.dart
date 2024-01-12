@@ -1,17 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/device_info.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
-import 'popup.dart';
 import '../../view/widgets.dart';
 import '../route_provider.dart';
 import '../widgets/loader_widget.dart';
+import 'popup.dart';
 
 class ProfileAvatarsPopup extends AbstractPopup {
   ProfileAvatarsPopup({super.key}) : super(Routes.popupProfile, args: {});
@@ -33,7 +31,7 @@ class _ProfileAvatarsPopupState
 
   @override
   Widget contentFactory() {
-    var account = accountBloc.account!;
+    var account = accountProvider.account;
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,7 +61,7 @@ class _ProfileAvatarsPopupState
         await getService<HttpConnection>()
             .tryRpc(context, RpcId.setProfileInfo, params: {"avatar_id": id});
         setState(() => account.avatarId = id);
-        accountBloc.add(SetAccount(account: account));
+        accountProvider.update();
       },
     );
   }

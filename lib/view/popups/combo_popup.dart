@@ -30,7 +30,7 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
   @override
   void initState() {
     super.initState();
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
   }
 
   @override

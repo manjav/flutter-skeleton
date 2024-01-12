@@ -6,7 +6,7 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -34,7 +34,8 @@ class TabNavigator extends StatefulWidget {
   State<TabNavigator> createState() => _TabNavigatorState();
 }
 
-class _TabNavigatorState extends State<TabNavigator> with ServiceProviderMixin {
+class _TabNavigatorState extends State<TabNavigator>
+    with ServiceFinderWidgetMixin {
   final double _navbarHeight = 210.d;
   final List<SMITrigger?> _punchInputs = [];
   final List<SMIBool?> _selectionInputs = [];
@@ -61,7 +62,7 @@ class _TabNavigatorState extends State<TabNavigator> with ServiceProviderMixin {
 
   @override
   Widget build(BuildContext context) {
-    var account = accountBloc.account!;
+    var account = accountProvider.account;
     var tabSize = DeviceInfo.size.width / _selectionInputs.length;
     return SizedBox(
         height: _navbarHeight,

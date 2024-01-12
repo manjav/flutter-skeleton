@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
@@ -21,12 +20,12 @@ class InvitePopup extends AbstractPopup {
 class _InvitePopupState extends AbstractPopupState<InvitePopup> {
   late Account _account;
   @override
-  BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecorator("popup_chrome_pink", ImageCenterSliceData(410, 460));
+  BoxDecoration get chromeSkinBuilder => Widgets.imageDecorator(
+      "popup_chrome_pink", ImageCenterSliceData(410, 460));
 
   @override
   void initState() {
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     super.initState();
   }
 

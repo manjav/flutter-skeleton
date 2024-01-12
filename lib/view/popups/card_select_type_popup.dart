@@ -33,7 +33,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
   @override
   void initState() {
     super.initState();
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     _fruits = _account.loadingData.fruits.values
         .where((f) => f.category < 3)
         .toList();

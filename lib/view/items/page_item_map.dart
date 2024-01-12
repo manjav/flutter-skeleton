@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../data/core/infra.dart';
+import '../../providers/account_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../utils/assets.dart';
@@ -32,7 +32,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       return Stack(alignment: Alignment.topLeft, children: [
         LoaderWidget(AssetType.animation, "map_home", fit: BoxFit.cover,
             onRiveInit: (Artboard artboard) {

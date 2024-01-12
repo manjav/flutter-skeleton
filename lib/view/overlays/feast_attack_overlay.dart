@@ -39,7 +39,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   void initState() {
     super.initState();
     waitingSFX = "attack";
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     children = [animationBuilder("attack")];
     _opponent = widget.args["opponent"] ?? Opponent.create(1, "دشمن", 0);
 
@@ -49,8 +49,9 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       if (cards != null) {
         var params = {
           "cards": cards.getIds(),
-          "check":
-              md5.convert(utf8.encode("${accountBloc.account!.q}")).toString()
+          "check": md5
+              .convert(utf8.encode("${accountProvider.account.q}"))
+              .toString()
         };
         if (cards.value[2] != null) {
           params["hero_id"] = cards.value[2]!.id;

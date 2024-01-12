@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/rpc.dart';
-import '../../mixins/tab_provider.dart';
+import '../../mixins/tab_builder_mixin.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -23,14 +23,14 @@ class LeaguePopup extends AbstractPopup {
 }
 
 class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
-    with TabProviderMixin {
+    with TabBuilderMixin {
   late Account _account;
   LeagueData? _leagueData;
   LeagueHistory? _leagueHistory;
 
   @override
   void initState() {
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     selectedTabIndex = 0;
     super.initState();
   }

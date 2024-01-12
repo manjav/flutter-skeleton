@@ -37,7 +37,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   @override
   void initState() {
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     _selectTab("power", 2);
     super.initState();
   }

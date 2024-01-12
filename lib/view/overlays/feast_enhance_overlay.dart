@@ -30,12 +30,12 @@ class _EnhanceFeastOverlayState
     super.initState();
     children = [backgroundBuilder(), animationBuilder("enhance")];
     _sacrificedCards = widget.args["sacrificedCards"] ??
-        [accountBloc.account!.cards.values.last];
-    _card = widget.args["card"] ?? accountBloc.account!.cards.values.first;
+        [accountProvider.account.cards.values.last];
+    _card = widget.args["card"] ?? accountProvider.account.cards.values.first;
     _oldPower = _card.power;
     process(() async {
       return _card =
-          await accountBloc.enhance(context, _card, _sacrificedCards);
+          await accountProvider.enhance(context, _card, _sacrificedCards);
     });
   }
 
