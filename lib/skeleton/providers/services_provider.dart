@@ -49,7 +49,7 @@ enum ServiceType {
 class ServiceState {
   final dynamic data;
   final ServiceStatus status;
-  final RpcException? exception;
+  final SkeletonException? exception;
   ServiceState(this.status, {this.data, this.exception});
 }
 
@@ -115,7 +115,7 @@ class ServicesProvider extends ChangeNotifier {
         _map[ServiceType.socket]!.initialize(
             args: [data.account, context.read<OpponentsProvider>()]);
       }
-    } on RpcException catch (e) {
+    } on SkeletonException catch (e) {
       if (context.mounted) {
         changeState(ServiceStatus.error, exception: e);
       }
@@ -142,7 +142,7 @@ class ServicesProvider extends ChangeNotifier {
   }
 
   void changeState(ServiceStatus state,
-      {RpcException? exception, dynamic data}) {
+      {SkeletonException? exception, dynamic data}) {
     this.state = ServiceState(state, data: data, exception: exception);
     notifyListeners();
   }

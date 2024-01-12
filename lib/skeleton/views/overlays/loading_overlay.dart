@@ -142,7 +142,8 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
     MyApp.restartApp(context);
   }
 
-  void _retry(RpcException? exception, bool isUpdateError, bool isForceUpdate) {
+  void _retry(
+      SkeletonException? exception, bool isUpdateError, bool isForceUpdate) {
     if (exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY ||
         exception.statusCode == StatusCode.C702_UPDATE_TEST) {
       close();
