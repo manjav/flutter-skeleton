@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/infra.dart';
 import '../../mixins/logger.dart';
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/sounds.dart';
@@ -28,7 +28,7 @@ class AbstractPopup extends StatefulWidget {
 }
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
-    with ILogger, ServiceProviderMixin {
+    with ILogger, ServiceFinderWidgetMixin {
   Alignment alignment = Alignment.center;
   bool barrierDismissible = true, canPop = true;
 

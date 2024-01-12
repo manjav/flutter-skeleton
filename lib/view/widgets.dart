@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/services_bloc.dart';
+import 'package:provider/provider.dart';
+import '../providers/services_provider.dart';
 import '../../services/sounds.dart';
 
 import '../services/device_info.dart';
@@ -48,9 +48,7 @@ class Widgets {
               },
         onTap: () {
           if (_isActive(id)) {
-            BlocProvider.of<ServicesBloc>(context)
-                .get<Sounds>()
-                .play(sfx ?? "click");
+            context.read<ServicesProvider>().get<Sounds>().play(sfx ?? "click");
             onTap?.call();
           }
         },

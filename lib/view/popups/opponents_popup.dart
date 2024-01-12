@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/opponents_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
+import '../../providers/opponents_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -52,7 +52,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   @override
   void initState() {
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     _findOpponents();
     super.initState();
   }
@@ -62,19 +62,18 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   _findOpponents() async {
     var deltaTime = _account.getTime() - _fetchAt;
-    var opponentBloc = BlocProvider.of<OpponentsBloc>(context);
+    var opponentBloc = context.read<OpponentsProvider>();
     if ((deltaTime > 30 && _requestsCount % 5 == 0) || deltaTime > 120) {
       var data = await rpc(RpcId.getOpponents);
 
       opponentBloc.list = Opponent.fromMap(data, 0);
       if (mounted) {
-        BlocProvider.of<OpponentsBloc>(context)
-            .add(SetOpponents(list: opponentBloc.list!));
+        context.read<OpponentsProvider>().update();
       }
       _fetchAt = _account.getTime();
     }
     ++_requestsCount;
-    _selectedOpponent.value = opponentBloc.list![0];
+    _selectedOpponent.value = opponentBloc.list[0];
     if (mounted) setState(() {});
   }
 
@@ -83,12 +82,10 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   @override
   contentFactory() {
-    return BlocBuilder<OpponentsBloc, OpponentsState>(
-        builder: (BuildContext context, OpponentsState state) {
-      return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [_maps(state.list), _groups(), _buttons(state.list)]);
-    });
+    return Consumer<OpponentsProvider>(
+        builder: (_, state, child) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [_maps(state.list), _groups(), _buttons(state.list)]));
   }
 
   _maps(List<Opponent> opponents) {
@@ -318,7 +315,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         var result = await rpc(RpcId.battleLive,
             params: {RpcParams.opponent_id.name: opponent.id});
         if (mounted) {
-          result["friendsHead"] = accountBloc.account;
+          result["friendsHead"] = accountProvider.account;
           result["oppositesHead"] = opponent;
           Routes.livebattle.navigate(context, args: result);
         }

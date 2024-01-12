@@ -54,7 +54,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   @override
   void initState() {
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     _battleId = widget.args["battle_id"] ?? 0;
     _helpCost = widget.args["help_cost"] ?? 33;
     if (widget.args.containsKey("created_at")) {
@@ -361,7 +361,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
 
     // Reset reminder notifications ....
-    getService<Notifications>().schedule(accountBloc.account!);
+    getService<Notifications>().schedule(accountProvider.account);
 
     Routes.livebattleOut.navigate(context, args: {
       "friendsId": _friendsHead.id,

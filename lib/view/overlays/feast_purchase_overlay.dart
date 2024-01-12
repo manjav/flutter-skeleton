@@ -32,12 +32,12 @@ class _PurchaseFeastOverlayState
     startSFX = "prize";
     children = [backgroundBuilder(), animationBuilder("purchase")];
     _item = widget.args["item"] ??
-        accountBloc
-            .account!.loadingData.shopProceedItems![ShopSections.gold]![1];
+        accountProvider
+            .account.loadingData.shopProceedItems![ShopSections.gold]![1];
 
     process(() async {
       if (!_item.inStore) {
-        await accountBloc.openPack(context, widget.args["item"].base);
+        await accountProvider.openPack(context, widget.args["item"].base);
       } else {
         await Future.delayed(const Duration(milliseconds: 500));
       }

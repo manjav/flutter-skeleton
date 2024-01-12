@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +29,8 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
   }
 
   _loadMessages() async {
-    await getService<Inbox>().initialize(args: [context, accountBloc.account!]);
+    await getService<Inbox>()
+        .initialize(args: [context, accountProvider.account]);
     setState(() {});
   }
 
@@ -100,13 +100,13 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
           padding: padding,
           color: ButtonColor.green,
           label: "˥", onPressed: () async {
-        if (accountBloc.account!.tribe != null) {
+        if (accountProvider.account.tribe != null) {
           toast("error_195".l());
           return;
         }
         var data =
             await message.decideTribeRequest(context, message.intData[0], true);
-        accountBloc.account!.installTribe(data["tribe"]);
+        accountProvider.account.installTribe(data["tribe"]);
         if (mounted) Navigator.pop(context);
       }),
     ]);

@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/store.dart';
+import '../../providers/services_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -37,7 +37,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   @override
   void initState() {
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     _fetchData();
     super.initState();
   }
@@ -141,8 +141,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         // };
 
         // var result = await rpc(RpcId.buyGoldPack, params: params);
-        // accountBloc.account!.update({section.name: item.base.value});
-        // accountBloc.add(SetAccount(account: accountBloc.account!));
+        // accountBloc.account.update({section.name: item.base.value});
+        // accountBloc.add(SetAccount(account: accountBloc.account));
 
         Overlays.insert(context, OverlayType.feastPurchase,
             args: {"item": item});
@@ -376,7 +376,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         context,
         OverlayType.feastOpenpack,
         args: {"pack": item.base},
-        onClose: (d) => services.add(ServicesEvent(ServicesInitState.punch, 1)),
+        onClose: (d) => services.changeState(ServiceStatus.punch, data: 1),
       );
     }
   }

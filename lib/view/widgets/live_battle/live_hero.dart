@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/core/fruit.dart';
 import '../../../data/core/rpc.dart';
 import '../../../mixins/key_provider.dart';
-import '../../../mixins/service_provider.dart';
+import '../../../mixins/service_finder_mixin.dart';
 import '../../../services/device_info.dart';
 import '../../../services/theme.dart';
 import '../../../utils/assets.dart';
@@ -24,7 +24,7 @@ class LiveHero extends StatefulWidget {
 }
 
 class _LiveHeroState extends State<LiveHero>
-    with TickerProviderStateMixin, KeyProvider, ServiceProviderMixin {
+    with TickerProviderStateMixin, KeyProvider, ServiceFinderWidgetMixin {
   final List<bool> _enables = [true, true, true, true];
   late AnimationController _animationController;
 

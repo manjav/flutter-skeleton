@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../view/route_provider.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
@@ -9,6 +7,7 @@ import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
 import '../../utils/assets.dart';
+import '../../view/route_provider.dart';
 import '../../view/widgets.dart';
 import '../../view/widgets/indicator.dart';
 import '../../view/widgets/indicator_level.dart';
@@ -107,7 +106,6 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
   }
 
   _onButtonsPressed(RpcId id) async {
-    var bloc = accountBloc;
     if (id == RpcId.getProfileInfo) {
       Routes.popupProfile.navigate(context, args: {"id": widget.member.id});
       close();
@@ -115,13 +113,12 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
     }
     try {
       await rpc(id, params: {
-        RpcParams.tribe_id.name: bloc.account!.tribe!.id,
+        RpcParams.tribe_id.name: accountProvider.account.tribe!.id,
         RpcParams.member_id.name: widget.member.id,
       });
       if (id == RpcId.tribePoke) toast("tribe_poke_success".l());
       if (mounted && id == RpcId.tribeLeave) {
-        bloc.account!.installTribe(null);
-        bloc.add(SetAccount(account: bloc.account!));
+        accountProvider.installTribe(null);
         Navigator.pop(context);
       }
       close();

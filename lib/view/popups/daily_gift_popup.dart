@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/device_info.dart';
@@ -27,7 +26,7 @@ class _RewardPopupState extends AbstractPopupState<DailyGiftPopup> {
   @override
   void initState() {
     _itemWidth = 222.d;
-    var account = accountBloc.account!;
+    var account = accountProvider.account;
     _baseReward = account.dailyReward["base_gold"] ?? 1000;
     _currentDay = account.dailyReward["day_index"] ?? 30;
     super.initState();

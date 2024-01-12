@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
@@ -30,7 +29,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
 
   @override
   void initState() {
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     if (_account.tribe != null && _account.tribe!.id < 0) _account.tribe = null;
     if (_account.tribe != null) {
       _nameController.text = _account.tribe!.name;

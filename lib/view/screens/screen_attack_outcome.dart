@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
 import '../../mixins/background_mixin.dart';
@@ -48,7 +47,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
         vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
     _animationController.forward();
 
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     _isWin = widget.args['outcome'];
     _color = _isWin ? "green" : "red";
     getService<Sounds>().play(_isWin ? "won" : "lose");
@@ -140,8 +139,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
   }
 
   void _close() {
-    accountBloc.account!.update(context, widget.args);
-    accountBloc.add(SetAccount(account: accountBloc.account!));
+    accountProvider.update(context, widget.args);
     var lastRoute =
         widget.type == Routes.questOut ? Routes.quest : Routes.popupOpponents;
     Navigator.popUntil(

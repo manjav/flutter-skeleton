@@ -31,10 +31,10 @@ class _EvolveFeastOverlayState extends AbstractOverlayState<EvolveFeastOverlay>
     super.initState();
     children = [backgroundBuilder(), animationBuilder("merge")];
     _mergedCard = widget.args["cards"].value[0] ??
-        accountBloc.account!.cards.values.first;
+        accountProvider.account.cards.values.first;
 
     process(() async {
-      var card = await accountBloc.evolve(context, widget.args["cards"]);
+      var card = await accountProvider.evolve(context, widget.args["cards"]);
       if (card != null) {
         return _newCard = card;
       }

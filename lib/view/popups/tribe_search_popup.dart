@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
@@ -149,9 +147,7 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
         setState(() => tribe.status = 0);
       } else {
         if (mounted) {
-          var bloc = accountBloc;
-          bloc.account!.installTribe(result["tribe"]);
-          bloc.add(SetAccount(account: bloc.account!));
+          accountProvider.installTribe(result["tribe"]);
         }
       }
     } finally {}

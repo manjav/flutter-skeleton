@@ -34,7 +34,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
   @override
   void initState() {
     super.initState();
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     _fruits = _account.loadingData.fruits.values
         .where((f) => f.category < 3)
         .toList();
@@ -124,7 +124,8 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
   }
 
   Widget _checkbox(String label, int mode) {
-    return Widgets.checkbox(context, "auction_price_$label".l(), _cheapestMode == mode,
+    return Widgets.checkbox(
+        context, "auction_price_$label".l(), _cheapestMode == mode,
         onSelect: () => setState(() => _cheapestMode = mode));
   }
 }

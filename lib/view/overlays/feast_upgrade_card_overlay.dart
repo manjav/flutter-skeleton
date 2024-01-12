@@ -31,13 +31,14 @@ class _UpgradeCardFeastOverlayState
     super.initState();
     children = [backgroundBuilder(), animationBuilder("evolvehero")];
     _isHero = widget.args["isHero"] ?? false;
-    _oldCard = widget.args["card"] ?? accountBloc.account!.cards.values.first;
+    _oldCard =
+        widget.args["card"] ?? accountProvider.account.cards.values.first;
     _oldPower = _oldPower;
     process(() async {
       if (_isHero) {
-        return _newCard = await accountBloc.evolveHero(context, _oldCard);
+        return _newCard = await accountProvider.evolveHero(context, _oldCard);
       }
-      return _newCard = await accountBloc.enhanceMax(context, _oldCard);
+      return _newCard = await accountProvider.enhanceMax(context, _oldCard);
     });
   }
 

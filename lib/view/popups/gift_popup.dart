@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../blocs/account_bloc.dart';
-import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
@@ -20,13 +17,11 @@ class RedeemGiftPopup extends AbstractPopup {
 }
 
 class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
-  late Account _account;
   late TextEditingController _textController;
 
   @override
   void initState() {
     _textController = TextEditingController();
-    _account = accountBloc.account!;
     super.initState();
   }
 
@@ -67,8 +62,7 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
       var data = await rpc(RpcId.redeemGift,
           params: {RpcParams.code.name: _textController.text});
       if (!mounted) return;
-      _account.update(context, data);
-      accountBloc.add(SetAccount(account: _account));
+      accountProvider.update(context, data);
     } finally {}
   }
 }

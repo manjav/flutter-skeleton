@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../mixins/building_mixin.dart';
+import '../../providers/account_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -27,7 +27,7 @@ class _TreasuryBuildingPopupState
     extends AbstractPopupState<TreasuryBuildingPopup> with BuildingPopupMixin {
   @override
   contentFactory() {
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       var gold = state.account.bank_account_balance;
       var step = (building.benefit / 5).round();
       return Column(
@@ -97,9 +97,8 @@ class _TreasuryBuildingPopupState
       var data = await rpc(id, params: {RpcParams.amount.name: amount});
       account.bank_account_balance = data["bank_account_balance"];
       if (mounted) {
-        account.update(context, data);
+        accountProvider.update(context, data);
       }
-      accountBloc.add(SetAccount(account: account));
     } finally {}
   }
 }

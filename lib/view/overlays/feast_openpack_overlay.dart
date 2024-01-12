@@ -5,7 +5,6 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/store.dart';
 import '../../mixins/background_mixin.dart';
@@ -44,13 +43,13 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
         vsync: this, duration: const Duration(milliseconds: 300), value: 1);
     _updateChildren();
     _pack = widget.args["pack"] ??
-        accountBloc.account!.loadingData.shopItems[ShopSections.card]![0];
+        accountProvider.account.loadingData.shopItems[ShopSections.card]![0];
 
     _opacityAnimationController.forward();
     super.initState();
 
     process(() async {
-      _cards = await accountBloc.openPack(context, _pack);
+      _cards = await accountProvider.openPack(context, _pack);
       var maxCards = _cards.first.base.isHero ? 4 : 2;
       if (_cards.first.base.isHero) {
         _heroInput?.value = true;
@@ -199,13 +198,9 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     };
 
     process(() async {
-      var result = await accountBloc.openPack(context, _pack,
+      var result = await accountProvider.openPack(context, _pack,
           selectedCardId: _cards[index].base.id);
       return result;
     });
-    if (context.mounted) {
-      accountBloc.account!.update(context, result);
-      accountBloc.add(SetAccount(account: accountBloc.account!));
-    }
   }
 }

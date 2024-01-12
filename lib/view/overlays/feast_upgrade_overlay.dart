@@ -30,15 +30,15 @@ class _UpgradeFeastOverlayState
 
     _animationController = AnimationController(vsync: this, upperBound: 2);
     _buildingId = widget.args["id"] ?? 1002;
-    _building = accountBloc.account!.buildings[_buildingId.toBuildings()]!;
-    var tribe = widget.args["tribe"] ?? accountBloc.account!.tribe;
+    _building = accountProvider.account.buildings[_buildingId.toBuildings()]!;
+    var tribe = widget.args["tribe"] ?? accountProvider.account.tribe;
     children = [
       backgroundBuilder(),
       animationBuilder("upgrade"),
       _buildingWidget()
     ];
     process(() async =>
-        await accountBloc.upgrade(context, _building, tribe: tribe));
+        await accountProvider.upgrade(context, _building, tribe: tribe));
   }
 
   @override

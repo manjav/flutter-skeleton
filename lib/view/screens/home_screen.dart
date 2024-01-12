@@ -3,17 +3,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/account_bloc.dart';
-import '../../blocs/services_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/adam.dart';
-import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
 import '../../data/core/rpc.dart';
 import '../../mixins/background_mixin.dart';
 import '../../mixins/key_provider.dart';
+import '../../providers/account_provider.dart';
+import '../../providers/services_provider.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
@@ -55,13 +54,21 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
-    var bloc = BlocProvider.of<ServicesBloc>(context);
-    bloc.add(ServicesEvent(ServicesInitState.complete, null));
-    bloc.get<NoobSocket>().onReceive.add(_onNoobReceive);
-    if (accountBloc.account!.dailyReward.containsKey("day_index")) {
+    services.changeState(ServiceStatus.complete);
+    getService<NoobSocket>().onReceive.add(_onNoobReceive);
+    if (accountProvider.account.dailyReward.containsKey("day_index")) {
       Routes.popupDailyGift.navigate(context);
     }
     getService<Sounds>().playMusic();
+    context.read<ServicesProvider>().addListener(() async {
+      var state = services.state;
+      if (state.status == ServiceStatus.changeTab) {
+        _selectTap(state.data as int);
+      } else if (state.status == ServiceStatus.punch) {
+        _punchIndex.value = state.data as int;
+        Timer(const Duration(seconds: 1), () => _punchIndex.value = -1);
+      }
+    });
   }
 
   @override
@@ -72,8 +79,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         width: 196.d,
         height: 200.d,
         child: LevelIndicator(
-            onPressed: () =>
-                Routes.popupProfile.navigate(context)),
+            onPressed: () => Routes.popupProfile.navigate(context)),
       )
     ];
   }
@@ -94,8 +100,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
               height: 110.d,
               padding: EdgeInsets.all(16.d),
               child: Asset.load<Image>("ui_settings"),
-              onPressed: () => 
-                  Routes.popupSettings.navigate(context))),
+              onPressed: () => Routes.popupSettings.navigate(context))),
       ];
     }
     return super.appBarElementsRight();
@@ -108,8 +113,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
           if (Platform.isAndroid) {
-            var result = await 
-                 Routes.popupMessage.navigate(context,  args: {
+            var result = await Routes.popupMessage.navigate(context, args: {
               "title": "quit_title".l(),
               "message": "quit_message".l(),
               "isConfirm": () {}
@@ -120,35 +124,21 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
           }
         }
       },
-      child: BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
-        return Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            backgroundBuilder(color: 2, animated: false),
-            PageView.builder(
-              controller: _pageController,
-              itemCount: _tabsCont,
-              itemBuilder: _pageItemBuilder,
-              onPageChanged: (value) => _selectTap(value, pageChange: false),
-            ),
-            TabNavigator(
-                tabsCount: _tabsCont,
-                selectedIndex: _selectedTab,
-                punchIndex: _punchIndex,
-                onChange: (i) => _selectTap(i, tabsChange: false)),
-            BlocConsumer<ServicesBloc, ServicesState>(
-                builder: (context, state) => const SizedBox(),
-                listener: (context, state) {
-                  if (state.initState == ServicesInitState.changeTab) {
-                    _selectTap(state.data as int);
-                  } else if (state.initState == ServicesInitState.punch) {
-                    _punchIndex.value = state.data as int;
-                    Timer(const Duration(seconds: 1),
-                        () => _punchIndex.value = -1);
-                  }
-                })
-          ],
-        );
+      child: Consumer<AccountProvider>(builder: (_, state, child) {
+        return Stack(alignment: Alignment.bottomCenter, children: [
+          backgroundBuilder(color: 2, animated: false),
+          PageView.builder(
+            controller: _pageController,
+            itemCount: _tabsCont,
+            itemBuilder: _pageItemBuilder,
+            onPageChanged: (value) => _selectTap(value, pageChange: false),
+          ),
+          TabNavigator(
+              tabsCount: _tabsCont,
+              selectedIndex: _selectedTab,
+              punchIndex: _punchIndex,
+              onChange: (i) => _selectTap(i, tabsChange: false)),
+        ]);
       }),
     );
   }
@@ -177,7 +167,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   void _onNoobReceive(NoobMessage message) {
-    var account = accountBloc.account!;
+    var account = accountProvider.account;
     if (message.type == Noobs.help &&
         ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
       var help = message as NoobHelpMessage;
@@ -194,27 +184,21 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
           () => _onAcceptAttack(request, account));
       return;
     }
-    var bloc = accountBloc;
     if (message.type == Noobs.auctionBid) {
       var bid = message as NoobAuctionMessage;
-      var bloc = accountBloc;
       if (bid.card.ownerIsMe && bid.card.loserIsMe) {
         var text = bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deal";
-        bloc.account!.gold = bid.card.lastBidderGold;
-        bloc.add(SetAccount(account: bloc.account!));
+        accountProvider.update(context, {"gold": bid.card.lastBidderGold});
         _showConfirmOverlay(
             text.l([bid.card.maxBidderName]), () => _selectTap(4));
       }
     } else if (message.type == Noobs.auctionSold) {
       var bid = message as NoobAuctionMessage;
       if (bid.card.loserIsMe) {
-        bloc.account!.gold = bid.card.lastBidderGold;
+        accountProvider.update(context, {"gold": bid.card.lastBidderGold});
       } else if (bid.card.winnerIsMe) {
-        var card = AccountCard(bloc.account!, bid.card.map);
-        card.id = bid.card.cardId;
-        bloc.account!.cards[card.id] = card;
+        accountProvider.update(context, {"card": bid.card.map});
       }
-      bloc.add(SetAccount(account: bloc.account!));
     }
   }
 
@@ -284,6 +268,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     if (createAt > 0) {
       args["created_at"] = createAt;
     }
-    Routes.livebattle.navigate(context,  args: args);
+    Routes.livebattle.navigate(context, args: args);
   }
 }

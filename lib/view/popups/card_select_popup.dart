@@ -50,7 +50,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
       Buildings.auction,
       Buildings.offense
     ]..remove(_building.type);
-    var cards = accountBloc.account!.getReadyCards(exceptions: exceptions);
+    var cards = accountProvider.account.getReadyCards(exceptions: exceptions);
     return ValueListenableBuilder<List<AccountCard?>>(
         valueListenable: _selectedCards,
         builder: (context, value, child) {

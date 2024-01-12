@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/rpc.dart';
@@ -61,7 +60,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   void initState() {
     alignment = const Alignment(0, -0.8);
     super.initState();
-    _account = accountBloc.account!;
+    _account = accountProvider.account;
     var heroes = _account.heroes.values.toList();
     _heroes = List.generate(heroes.length, (index) => heroes[index].clone());
     _selectedIndex.value =
@@ -366,8 +365,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     try {
       var data = await rpc(id, params: params);
       if (!mounted) return;
-      _account.update(context, data);
-      accountBloc.add(SetAccount(account: _account));
+      accountProvider.update(context, data);
       setState(() {});
       return data;
     } catch (e) {

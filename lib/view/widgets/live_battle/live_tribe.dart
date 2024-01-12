@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../../data/core/adam.dart';
 import '../../../data/core/rpc.dart';
-import '../../../mixins/service_provider.dart';
+import '../../../mixins/service_finder_mixin.dart';
 import '../../../services/device_info.dart';
 import '../../../utils/assets.dart';
 import '../../../utils/utils.dart';
@@ -26,7 +26,7 @@ class LiveTribe extends StatefulWidget {
 }
 
 class _LiveTribeState extends State<LiveTribe>
-    with TickerProviderStateMixin, ServiceProviderMixin {
+    with TickerProviderStateMixin, ServiceFinderWidgetMixin {
   late Timer _timer;
   final double _helpTimeout = 38;
   late AnimationController _animationController;
@@ -54,7 +54,7 @@ class _LiveTribeState extends State<LiveTribe>
   Widget build(BuildContext context) {
     var owner = widget.warriors.value[widget.ownerId]!;
     var avatar = owner.side == WarriorSide.friends
-        ? widget.warriors.value[accountBloc.account!.id]!
+        ? widget.warriors.value[accountProvider.account.id]!
         : owner;
     return Positioned(
       top: owner.side == WarriorSide.opposites ? 0 : null,

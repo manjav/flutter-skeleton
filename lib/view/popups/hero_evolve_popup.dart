@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/account_bloc.dart';
+import '../../providers/account_provider.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/infra.dart';
@@ -42,7 +42,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
 
   @override
   Widget contentFactory() {
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       var hero = state.account.heroes[(widget.args['card'] as AccountCard).id]!;
       var capacity = hero.card.base.potionLimit;
       return SizedBox(

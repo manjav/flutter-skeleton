@@ -1,16 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/account.dart';
 import '../../data/core/achievement.dart';
 import '../../data/core/adam.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../mixins/key_provider.dart';
-import '../../mixins/tab_provider.dart';
+import '../../mixins/tab_builder_mixin.dart';
+import '../../providers/account_provider.dart';
 import '../../services/device_info.dart';
 import '../../services/localization.dart';
 import '../../services/theme.dart';
@@ -34,7 +33,7 @@ class ProfilePopup extends AbstractPopup {
 }
 
 class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
-    with TabProviderMixin, KeyProvider {
+    with TabBuilderMixin, KeyProvider {
   Player? _player;
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(24.d, 190.d, 24.d, 60.d);
@@ -53,7 +52,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
     if (_player == null) {
       return SizedBox(width: 900.d, height: DeviceInfo.size.height * 0.6);
     }
-    if (_player != accountBloc.account!) {
+    if (_player != accountProvider.account) {
       return _profileSegment();
     }
     return Column(mainAxisSize: MainAxisSize.min, children: [
@@ -78,7 +77,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
       result["tribe_id"] = result["tribe_id"] ?? 1;
       setState(() => _player = Player.initialize(result, 0));
     } else {
-      _player = accountBloc.account!;
+      _player = accountProvider.account;
     }
   }
 
@@ -104,8 +103,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
             ImageCenterSliceData(114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
         width: 940.d,
         height: 480.d,
-        child:
-            BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+        child: Consumer<AccountProvider>(builder: (_, state, child) {
           if (_player!.itsMe) {
             _player = state.account;
           }
@@ -211,9 +209,10 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
       LoaderWidget(AssetType.animation, "tab_3", fit: BoxFit.fitWidth,
           onRiveInit: (Artboard artboard) {
         final controller = StateMachineController.fromArtboard(artboard, "Tab");
-        var level = _player!.tribeName == accountBloc.account!.tribeName &&
+        var level = _player!.tribeName == accountProvider.account.tribeName &&
                 _player!.tribeId > 0
-            ? accountBloc.account!.tribe!.levels[Buildings.tribe.id]!.toDouble()
+            ? accountProvider.account.tribe!.levels[Buildings.tribe.id]!
+                .toDouble()
             : 0.0;
         controller?.findInput<double>("level")!.value = level;
         controller?.findInput<bool>("hideBackground")!.value = true;
@@ -322,11 +321,11 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
 
   _achievementSegment() {
     var achievements =
-        accountBloc.account!.loadingData.achievements.values.toList();
+        accountProvider.account.loadingData.achievements.values.toList();
     return ListView.builder(
         itemCount: achievements.length,
         itemBuilder: (c, i) =>
-            _achievementsItemBuilder(accountBloc.account!, achievements[i]));
+            _achievementsItemBuilder(accountProvider.account, achievements[i]));
   }
 
   Widget _achievementsItemBuilder(Account account, AchievementLine line) {

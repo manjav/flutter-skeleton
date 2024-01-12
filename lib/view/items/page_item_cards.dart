@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/account_bloc.dart';
+import '../../providers/account_provider.dart';
 import '../../data/core/fruit.dart';
 import '../../mixins/key_provider.dart';
 import '../../services/device_info.dart';
@@ -26,7 +26,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
     var crossAxisCount = 4;
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
-    return BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       var cards = state.account.getReadyCards();
       var paddingTop = MediaQuery.of(context).viewPadding.top;
       if (paddingTop <= 0) {
