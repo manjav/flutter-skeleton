@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../../services/localization.dart';
-import '../blocs/account_bloc.dart';
-import '../blocs/services_bloc.dart';
+import '../providers/account_provider.dart';
+import '../providers/services_provider.dart';
 import '../data/core/building.dart';
 import '../data/core/fruit.dart';
 import '../data/core/rpc.dart';
@@ -53,7 +53,8 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
       RpcParams.type.name: building.type.id
     };
     if (context.mounted) {
-      await BlocProvider.of<ServicesBloc>(context)
+      await context
+          .read<ServicesProvider>()
           .get<HttpConnection>()
           .tryRpc(context, RpcId.assignCard, params: params);
     }
@@ -61,9 +62,8 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
       building.cards[i] = selectedCards[i];
     }
 
-    if (!mounted) return;
-    var accountBloc = BlocProvider.of<AccountBloc>(context);
-    accountBloc.account!.buildings[building.type] = building;
-    accountBloc.add(SetAccount(account: accountBloc.account!));
+    if (mounted) {
+      context.read<AccountProvider>().updateBuilding(building);
+    }
   }
 }

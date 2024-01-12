@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../../data/core/account.dart';
-import '../services/device_info.dart';
-import '../blocs/account_bloc.dart';
 import '../data/core/fruit.dart';
+import '../providers/account_provider.dart';
+import '../services/device_info.dart';
 import '../services/theme.dart';
 import '../utils/assets.dart';
 import '../view/items/card_item.dart';
@@ -24,7 +24,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
   @override
   void initState() {
     card = widget.args['card'];
-    account = BlocProvider.of<AccountBloc>(context).account!;
+    account = context.read<AccountProvider>().account;
     cards = getCards(account);
     super.initState();
   }
@@ -126,10 +126,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
     for (var card in selectedCards.value) {
       account.cards.remove(card!.id);
     }
-
-    account.update(context, data);
-    if (!mounted) return;
-    BlocProvider.of<AccountBloc>(context).add(SetAccount(account: account));
+    context.read<AccountProvider>().update(context, data);
   }
 
   GlobalKey getGlobalKey(int key) =>

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 
-import '../../blocs/opponents_bloc.dart';
+import '../../providers/opponents_provider.dart';
 import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/message.dart';
@@ -22,7 +22,7 @@ class NoobSocket extends IService {
   List<Function(NoobMessage)> onReceive = [];
   late TcpSocketConnection _socketConnection;
   late Account _account;
-  late OpponentsBloc _opponents;
+  late OpponentsProvider _opponents;
   int _lastMessageReceiveTime = 0;
   String _messageStream = "";
 
@@ -34,7 +34,7 @@ class NoobSocket extends IService {
   initialize({List<Object>? args}) async {
     super.initialize(args: args);
     _account = args![0] as Account;
-    _opponents = args[1] as OpponentsBloc;
+    _opponents = args[1] as OpponentsProvider;
     connect();
   }
 
@@ -97,29 +97,29 @@ class NoobSocket extends IService {
     _socketConnection.sendMessage(cmdMessage);
   }
 
+  bool _loopPlayers(List<Rank> list, NoobStatusMessage message) {
+    var index = list.indexWhere((o) => o.id == message.playerId);
+    if (index > -1) {
+      list[index].status = message.status;
+      log("${message.playerId} ==>  ${message.status}");
+      return true;
+    }
+    return false;
+  }
+
   void _updateStatus(NoobMessage noobMessage) {
     if (noobMessage.type != Noobs.playerStatus) {
       return;
     }
 
-    var statusMessage = noobMessage as NoobStatusMessage;
-    loopPlayers(List<Rank> list) {
-      var index = list.indexWhere((o) => o.id == statusMessage.playerId);
-      if (index > -1) {
-        list[index].status = statusMessage.status;
-        log("${noobMessage.playerId} ==>  ${noobMessage.status}");
-      }
-    }
-
     // Update opponent status
-    if (_opponents.list != null) {
-      loopPlayers(_opponents.list!);
-      _opponents.add(SetOpponents(list: _opponents.list!));
+    if (_loopPlayers(_opponents.list, noobMessage as NoobStatusMessage)) {
+      _opponents.update();
     }
 
     // Update tribe members status
     if (_account.tribe != null) {
-      loopPlayers(_account.tribe!.members.value);
+      _loopPlayers(_account.tribe!.members.value, noobMessage);
     }
   }
 

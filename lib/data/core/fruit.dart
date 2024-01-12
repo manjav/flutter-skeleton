@@ -4,9 +4,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../../blocs/account_bloc.dart';
 import '../../data/core/rpc.dart';
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/connection/http_connection.dart';
 import '../../utils/utils.dart';
 import 'account.dart';
@@ -104,7 +103,7 @@ class FruitCard {
   }
 }
 
-class AbstractCard with ServiceProvider {
+class AbstractCard with ServiceFinderMixin {
   static double powerToGoldRatio = 8.0;
   static double minPriceRatio = 0.75;
   static double maxPriceRatio = 1.5;
@@ -225,8 +224,7 @@ class AccountCard extends AbstractCard {
           .tryRpc(context, RpcId.coolOff, params: {RpcParams.card_id.name: id});
       lastUsedAt = 0;
       if (context.mounted) {
-        account.update(context, data);
-        getAccountBloc(context).add(SetAccount(account: account));
+        getAccountProvider(context).update(context, data);
       }
     } on RpcException catch (e) {
       if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL) {
@@ -299,7 +297,7 @@ extension HeroAttributesExtesion on HeroAttribute {
   }
 }
 
-class HeroCard with ServiceProvider {
+class HeroCard with ServiceFinderMixin {
   static const attributeMultiplier = 2;
   static const benefitModifier = 0.01;
   static const benefit_maxMultipliers = {
@@ -386,9 +384,7 @@ class HeroCard with ServiceProvider {
           .tryRpc(context, RpcId.potionize, params: params);
       if (!context.mounted) return;
       data["hero_id"] = card.id;
-      var accountBloc = getAccountBloc(context);
-      accountBloc.account!.update(context, data);
-      accountBloc.add(SetAccount(account: accountBloc.account!));
+      getAccountProvider(context).update(context, data);
     } finally {}
   }
 
