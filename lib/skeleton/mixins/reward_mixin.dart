@@ -8,7 +8,7 @@ import 'package:rive/rive.dart';
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/core/fruit.dart';
-import '../../skeleton/data/result.dart';
+import '../data/responses.dart';
 import '../../skeleton/services/device_info.dart';
 import '../../skeleton/services/localization.dart';
 import '../../skeleton/services/sounds.dart';

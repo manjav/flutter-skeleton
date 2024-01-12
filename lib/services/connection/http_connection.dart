@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/rpc_data.dart';
-import '../../skeleton/data/result.dart';
+import '../../skeleton/data/responses.dart';
 import '../../skeleton/services/device_info.dart';
 import '../../skeleton/services/localization.dart';
 import '../../skeleton/services/prefs.dart';
