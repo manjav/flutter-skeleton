@@ -48,13 +48,10 @@ class HomeScreen extends AbstractScreen {
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     with BackgroundMixin, KeyProvider {
-  final int _tabsCont = 5;
   late PageController _pageController;
-  // final ValueNotifier<int> _selectedTab = ValueNotifier(2);
-  // final ValueNotifier<int> _punchIndex = ValueNotifier(-1);
   int _selectedTabIndex = 2, punchIndex = -1;
-  final List<SMITrigger?> _punchInputs = [];
-  final List<SMIBool?> _selectionInputs = [];
+  final List<SMITrigger?> _punchInputs = List.generate(5, (index) => null);
+  final List<SMIBool?> _selectionInputs = List.generate(5, (index) => null);
 
   @override
   void initState() {
@@ -155,12 +152,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
           backgroundBuilder(color: 2, animated: false),
           PageView.builder(
             controller: _pageController,
-            itemCount: _tabsCont,
+            itemCount: _selectionInputs.length,
             itemBuilder: _pageItemBuilder,
             onPageChanged: (value) => _selectTap(value, pageChange: false),
           ),
           TabNavigator(
-              tabsCount: _tabsCont,
+              tabsCount: _selectionInputs.length,
               // selectedIndex: _selectedTab,
               // punchIndex: _punchIndex,
               itemBuilder: _tabItemBuilder)
@@ -171,9 +168,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
 
   Widget? _tabItemBuilder(int index, double size) {
     var account = accountProvider.account;
-    return Widgets.touchable(context, onTap: () {
-      _selectionInputs[index]!.value = index == _selectedTabIndex;
-    },
+    return Widgets.touchable(context,
+        onTap: () => _selectTap(index, tabsChange: false),
         child: Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,
@@ -238,6 +234,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
 
   void _selectTap(int index, {bool tabsChange = true, bool pageChange = true}) {
     changeBackgroundColor(index + 1);
+    for (var i = 0; i < _selectionInputs.length; i++) {
+      _selectionInputs[i]?.value = i == index;
+    }
 
     if (tabsChange) {
       setState(() => _selectedTabIndex = index);
