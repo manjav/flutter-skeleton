@@ -6,15 +6,15 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../mixins/service_finder_mixin.dart';
-import '../../services/localization.dart';
-import '../../services/trackers/trackers.dart';
-import '../../utils/utils.dart';
-import '../../view/overlays/overlay.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/data/infra.dart';
+import '../../skeleton/mixins/service_finder_mixin.dart';
+import '../../skeleton/services/trackers/trackers.dart';
+import '../../skeleton/views/overlays/overlay.dart';
+import '../../skeleton/utils/utils.dart';
 import 'adam.dart';
 import 'building.dart';
 import 'fruit.dart';
-import 'infra.dart';
 import 'rpc_data.dart';
 import 'store.dart';
 import 'tribe.dart';

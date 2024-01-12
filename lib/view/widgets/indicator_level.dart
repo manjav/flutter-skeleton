@@ -3,13 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
 
 import '../../data/core/account.dart';
-import '../../mixins/key_provider.dart';
+import '../../skeleton/mixins/key_provider.dart';
 import '../../providers/account_provider.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../widgets.dart';
-import 'loader_widget.dart';
-import 'skinned_text.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/loader_widget.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 
 class LevelIndicator extends StatefulWidget {
   final int? xp;

@@ -6,18 +6,18 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'data/core/adam.dart';
-import 'mixins/service_finder_mixin.dart';
+import 'skeleton/mixins/service_finder_mixin.dart';
 import 'providers/account_provider.dart';
 import 'providers/opponents_provider.dart';
-import 'providers/services_provider.dart';
-import 'services/device_info.dart';
-import 'services/localization.dart';
-import 'services/prefs.dart';
-import 'services/sounds.dart';
-import 'services/theme.dart';
-import 'view/overlays/overlay.dart';
-import 'view/route_provider.dart';
-import 'view/widgets/loader_widget.dart';
+import 'skeleton/providers/services_provider.dart';
+import 'skeleton/services/device_info.dart';
+import 'skeleton/services/localization.dart';
+import 'skeleton/services/prefs.dart';
+import 'skeleton/services/routes.dart';
+import 'skeleton/services/sounds.dart';
+import 'skeleton/services/theme.dart';
+import 'skeleton/views/overlays/overlay.dart';
+import 'skeleton/views/widgets/loader_widget.dart';
 
 void main() async {
   MyApp.startTime = DateTime.now();
@@ -118,10 +118,10 @@ class _MyAppState extends State<MyApp>
                 // Flutter web url navigation and deep linking.
                 onGenerateRoute: (RouteSettings routeSettings) {
                   return MaterialTransparentRoute(
-                      isOpaque: RouteProvider.getOpaque(routeSettings.name!),
+                      isOpaque: RoutesExtension.getOpaque(routeSettings.name!),
                       settings: routeSettings,
                       builder: (BuildContext context) =>
-                          RouteProvider.getWidget(routeSettings.name!,
+                          RoutesExtension.getWidget(routeSettings.name!,
                               args: routeSettings.arguments
                                   as Map<String, dynamic>?));
                 })));

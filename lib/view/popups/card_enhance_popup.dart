@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/fruit.dart';
 import '../../mixins/card_edit_mixin.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
 import '../items/card_item.dart';
-import '../overlays/overlay.dart';
-import '../route_provider.dart';
-import '../widgets.dart';
-import '../widgets/skinned_text.dart';
-import 'popup.dart';
+import '../../skeleton/views/overlays/overlay.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
+import '../../skeleton/views/popups/popup.dart';
 
 class CardEnhancePopup extends AbstractPopup {
   const CardEnhancePopup({super.key, required super.args})

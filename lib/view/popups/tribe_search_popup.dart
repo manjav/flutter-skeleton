@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import '../../data/core/building.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/tribe.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../route_provider.dart';
-import '../widgets.dart';
-import '../widgets/skinned_text.dart';
-import 'popup.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/popups/popup.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 
 class TribeSearchPopup extends AbstractPopup {
   TribeSearchPopup({super.key}) : super(Routes.popupTribeSearch, args: {});

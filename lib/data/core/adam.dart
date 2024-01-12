@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import '../../services/prefs.dart';
-import '../../utils/utils.dart';
-import '../../view/widgets/card_holder.dart';
+import '../../skeleton/services/prefs.dart';
+import '../../skeleton/utils/utils.dart';
+import 'fruit.dart';
 import 'rpc.dart';
 
 class Ranks {

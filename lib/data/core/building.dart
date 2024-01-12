@@ -3,7 +3,7 @@
 import 'dart:math' as math;
 
 import '../../data/core/account.dart';
-import '../../utils/utils.dart';
+import '../../skeleton/utils/utils.dart';
 import 'fruit.dart';
 
 enum Buildings {

@@ -1,5 +1,5 @@
+import '../../skeleton/data/achievement.dart';
 import 'account.dart';
-import 'achievement.dart';
 import 'fruit.dart';
 import 'store.dart';
 

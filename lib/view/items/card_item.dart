@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/core/fruit.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../../view/widgets.dart';
-import '../widgets/loader_widget.dart';
-import '../widgets/skinned_text.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/loader_widget.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 
 class CardItem extends StatefulWidget {
   static const aspectRatio = 0.74;

@@ -2,16 +2,16 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/localization.dart';
-import '../providers/account_provider.dart';
-import '../providers/services_provider.dart';
+import '../../skeleton/services/localization.dart';
 import '../data/core/building.dart';
 import '../data/core/fruit.dart';
 import '../data/core/rpc.dart';
+import '../providers/account_provider.dart';
 import '../services/connection/http_connection.dart';
-import '../view/overlays/overlay.dart';
-import '../view/popups/popup.dart';
-import '../view/route_provider.dart';
+import '../skeleton/providers/services_provider.dart';
+import '../skeleton/services/routes.dart';
+import '../skeleton/views/overlays/overlay.dart';
+import '../skeleton/views/popups/popup.dart';
 import '../view/widgets/card_holder.dart';
 
 mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {

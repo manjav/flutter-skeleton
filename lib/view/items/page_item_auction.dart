@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
 import '../../data/core/fruit.dart';
 import '../../data/core/rpc.dart';
-import '../../mixins/key_provider.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../../view/widgets.dart';
-import '../route_provider.dart';
-import '../widgets/skinned_text.dart';
+import '../../skeleton/mixins/key_provider.dart';
+import '../../skeleton/mixins/service_finder_mixin.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 import 'card_item.dart';
 import 'page_item.dart';
 
@@ -22,8 +22,7 @@ class AuctionPageItem extends AbstractPageItem {
 }
 
 class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
-    with KeyProvider {
-  late Account _account;
+    with KeyProvider, ServiceFinderWidgetMixin {
   List<AuctionCard> _cards = [];
   int _selectedTab = -1;
   final Map<String, int> _tabs = {
@@ -37,7 +36,6 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   @override
   void initState() {
-    _account = accountProvider.account;
     _selectTab("power", 2);
     super.initState();
   }
@@ -113,24 +111,26 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     try {
       var data = await rpc(rpcId, params: params);
       _selectedTab = index;
-      _cards = AuctionCard.getList(_account, data).values.toList();
+      _cards =
+          AuctionCard.getList(accountProvider.account, data).values.toList();
       setState(() {});
     } finally {}
   }
 
   Widget _cardItemBuilder(AuctionCard card, int secondsOffset) {
+    var account = accountProvider.account;
     var cardSize = 230.d;
     var radius = Radius.circular(36.d);
     var bidable = card.activityStatus > 0 &&
-        (card.ownerId != _account.id) &&
-        card.maxBidderId != _account.id;
+        (card.ownerId != account.id) &&
+        card.maxBidderId != account.id;
     var time = card.activityStatus > 0
         ? (card.createdAt + secondsOffset).toRemainingTime()
         : "closed_l".l();
     var bidderName = "auction_bid".l();
     if (!bidable) {
       bidderName +=
-          "\n${card.maxBidderId == _account.id ? "you_l".l() : card.maxBidderName}\n";
+          "\n${card.maxBidderId == account.id ? "you_l".l() : card.maxBidderName}\n";
     }
     return Widgets.button(context,
         radius: radius.x,
@@ -189,7 +189,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                                   SkinnedText("+${card.bidStep.compact()}",
                                       style: TStyles.large)
                                 ]),
-                            onPressed: () => _bid(context, card))
+                            onPressed: () => _bid(card))
                         : const SizedBox(),
                   ])),
             ],
@@ -197,16 +197,16 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
         ]));
   }
 
-  _bid(BuildContext context, AuctionCard card) async {
+  _bid(AuctionCard card) async {
     try {
       var data = await rpc(RpcId.auctionBid, params: {"auction_id": card.id});
-      var auction = AuctionCard(_account, data["auction"]);
+      var auction = AuctionCard(accountProvider.account, data["auction"]);
       var index = _cards.indexWhere((c) => c.id == auction.id);
       if (index > -1) {
         setState(() => _cards[index] = auction);
       }
       if (context.mounted) {
-        _account.update(context, data);
+        accountProvider.update(context, data);
       }
       toast("auction_added".l());
     } finally {}

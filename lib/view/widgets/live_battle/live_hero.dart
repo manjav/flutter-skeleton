@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../../data/core/fruit.dart';
 import '../../../data/core/rpc.dart';
-import '../../../mixins/key_provider.dart';
-import '../../../mixins/service_finder_mixin.dart';
-import '../../../services/device_info.dart';
-import '../../../services/theme.dart';
-import '../../../utils/assets.dart';
+import '../../../skeleton/mixins/key_provider.dart';
+import '../../../skeleton/mixins/service_finder_mixin.dart';
+import '../../../skeleton/services/device_info.dart';
+import '../../../skeleton/services/theme.dart';
+import '../../../skeleton/utils/assets.dart';
+import '../../../skeleton/views/widgets.dart';
 import '../../items/card_item.dart';
-import '../../widgets.dart';
-import '../card_holder.dart';
 
 class LiveHero extends StatefulWidget {
   final int battleId;

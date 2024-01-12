@@ -9,16 +9,16 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../../data/core/account.dart';
 import '../../data/core/rpc.dart';
 import '../../data/core/store.dart';
-import '../../providers/services_provider.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../overlays/overlay.dart';
-import '../widgets.dart';
-import '../widgets/loader_widget.dart';
-import '../widgets/skinned_text.dart';
+import '../../skeleton/providers/services_provider.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/theme.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/utils/utils.dart';
+import '../../skeleton/views/overlays/overlay.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/loader_widget.dart';
+import '../../skeleton/views/widgets/skinned_text.dart';
 import 'page_item.dart';
 
 class ShopPageItem extends AbstractPageItem {

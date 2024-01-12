@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/core/fruit.dart';
-import '../../../data/core/infra.dart';
-import '../../../mixins/key_provider.dart';
-import '../../../services/device_info.dart';
-import '../../../services/theme.dart';
-import '../../../utils/assets.dart';
-import '../skinned_text.dart';
+import '../../../skeleton/data/infra.dart';
+import '../../../skeleton/mixins/key_provider.dart';
+import '../../../skeleton/services/device_info.dart';
+import '../../../skeleton/services/theme.dart';
+import '../../../skeleton/utils/assets.dart';
+import '../../../skeleton/views/widgets.dart';
+import '../../../skeleton/views/widgets/skinned_text.dart';
 import '../../items/card_item.dart';
 import '../../screens/screen_livebattle.dart';
-import '../../widgets.dart';
-import '../card_holder.dart';
 
 class LiveSlot extends StatelessWidget with KeyProvider {
   final int index;

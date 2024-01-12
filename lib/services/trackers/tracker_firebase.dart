@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 
-import '../ads/ads_abstract.dart';
-import 'tracker_abstract.dart';
-import 'trackers.dart';
+import '../../skeleton/services/ads/ads_abstract.dart';
+import '../../skeleton/services/trackers/tracker_abstract.dart';
+import '../../skeleton/services/trackers/trackers.dart';
 
 class FirebaseTracker extends AbstractTracker {
   late FirebaseAnalytics _firebaseAnalytics;

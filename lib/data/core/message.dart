@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/service_finder_mixin.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../services/localization.dart';
-import '../../utils/utils.dart';
+import '../../skeleton/mixins/service_finder_mixin.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/utils/utils.dart';
 import 'account.dart';
 import 'rpc.dart';
 

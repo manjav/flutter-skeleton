@@ -7,18 +7,18 @@ import 'package:rive/rive.dart';
 
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
-import '../../data/core/infra.dart';
+import '../../skeleton/data/infra.dart';
 import '../../providers/account_provider.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../utils/assets.dart';
-import '../../view/widgets/building_balloon.dart';
-import '../../view/widgets/indicator.dart';
+import '../../skeleton/services/device_info.dart';
+import '../../skeleton/services/localization.dart';
+import '../../skeleton/services/routes.dart';
+import '../../skeleton/utils/assets.dart';
+import '../../skeleton/views/widgets.dart';
+import '../../skeleton/views/widgets/indicator.dart';
+import '../../skeleton/views/widgets/loader_widget.dart';
 import '../map_elements/building_widget.dart';
-import '../route_provider.dart';
-import '../widgets.dart';
+import '../widgets/building_balloon.dart';
 import '../widgets/indicator_deadline.dart';
-import '../widgets/loader_widget.dart';
 import 'page_item.dart';
 
 class MainMapPageItem extends AbstractPageItem {
