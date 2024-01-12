@@ -226,7 +226,7 @@ class AccountCard extends AbstractCard {
       if (context.mounted) {
         getAccountProvider(context).update(context, data);
       }
-    } on RpcException catch (e) {
+    } on SkeletonException catch (e) {
       if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL) {
         lastUsedAt = 0;
       }

@@ -170,7 +170,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       if (state == RewardAnimationState.waiting) {
         startInput?.value = true;
       }
-    } on RpcException catch (e) {
+    } on SkeletonException catch (e) {
       if (context.mounted) {
         await Future.delayed(const Duration(milliseconds: 10));
         if (mounted) {

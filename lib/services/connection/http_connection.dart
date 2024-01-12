@@ -54,7 +54,7 @@ class HttpConnection extends IService {
     var test = _config["updates"]["test"];
     if (test["version"] < version) {
       if (!test["testers"].contains(loadData.account.id)) {
-        throw RpcException(StatusCode.C702_UPDATE_TEST, "");
+        throw SkeletonException(StatusCode.C702_UPDATE_TEST, "");
       }
     }
     Pref.restoreKey.setString(loadData.account.restoreKey);
@@ -70,18 +70,18 @@ class HttpConnection extends IService {
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {
-        throw RpcException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
+        throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
       }
     }
     if (response!.statusCode == 200) {
       _config = json.decode(response.body);
       var updates = _config["updates"];
       if (updates["force"]["version"] > version) {
-        throw RpcException(
+        throw SkeletonException(
             StatusCode.C701_UPDATE_FORCE, updates["force"]["message"]);
       } else if (!Pref.skipUpdate.getBool() &&
           updates["notice"]["version"] > version) {
-        throw RpcException(
+        throw SkeletonException(
             StatusCode.C700_UPDATE_NOTICE, updates["notice"]["message"]);
       }
       Pref.skipUpdate.setBool(false);
@@ -92,7 +92,7 @@ class HttpConnection extends IService {
       LoaderWidget.hashMap = Map.castFrom(_config['files']);
       log("Config loaded.");
     } else {
-      throw RpcException(
+      throw SkeletonException(
           StatusCode.C100_UNEXPECTED_ERROR, 'Failed to load config file');
     }
   }
@@ -101,7 +101,7 @@ class HttpConnection extends IService {
     dynamic result;
     try {
       result = await rpc(id, params: params);
-    } on RpcException catch (e) {
+    } on SkeletonException catch (e) {
       if (context.mounted) {
         Routes.popupMessage.navigate(context, args: {
           "title": "Error",
@@ -133,12 +133,12 @@ class HttpConnection extends IService {
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {
-        throw RpcException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
+        throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
       }
     }
     final status = response!.statusCode;
     if (status != 200) {
-      throw RpcException(status.toStatus(),
+      throw SkeletonException(status.toStatus(),
           response.body.isNotEmpty ? response.body : "error_$status".l());
     }
 
@@ -150,7 +150,7 @@ class HttpConnection extends IService {
     var responseData = jsonDecode(body);
     if (!responseData['status']) {
       var statusCode = (responseData['data']['code'] as int).toStatus();
-      throw RpcException(statusCode, response.body);
+      throw SkeletonException(statusCode, response.body);
     }
     return responseData['data'];
   }

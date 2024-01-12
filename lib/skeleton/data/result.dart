@@ -188,7 +188,7 @@ extension StatusCodeintEx on int {
   }
 }
 
-extension StatusCodeEx on StatusCode {
+extension StatusCodeExtension on StatusCode {
   int get value {
     return switch (this) {
       StatusCode.C0_SUCCESS => 0,
@@ -368,9 +368,8 @@ extension StatusCodeEx on StatusCode {
   }
 }
 
-class RpcException implements Exception {
-  final StatusCode statusCode;
+class SkeletonException implements Exception {
   final String message;
-
-  RpcException(this.statusCode, this.message);
+  final StatusCode statusCode;
+  SkeletonException(this.statusCode, this.message);
 }
