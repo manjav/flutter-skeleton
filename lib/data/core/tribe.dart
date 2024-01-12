@@ -5,14 +5,14 @@ import 'package:flutter/widgets.dart';
 import '../../data/core/account.dart';
 import '../../data/core/building.dart';
 import '../../main.dart';
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../utils/utils.dart';
 import 'adam.dart';
 import 'rpc.dart';
 
-class Tribe with ServiceProvider {
+class Tribe with ServiceFinderMixin {
   late int id,
       gold,
       status,

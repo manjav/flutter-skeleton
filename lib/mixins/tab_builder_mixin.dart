@@ -6,7 +6,7 @@ import '../view/widgets.dart';
 import '../view/widgets/skinned_text.dart';
 
 @optionalTypeArgs
-mixin TabProviderMixin<T extends StatefulWidget> on State<T> {
+mixin TabBuilderMixin<T extends StatefulWidget> on State<T> {
   int _selectedTabIndex = -1;
 
   @protected

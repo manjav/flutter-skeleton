@@ -2,19 +2,19 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../view/overlays/overlay.dart';
-import '../blocs/services_bloc.dart';
 import '../data/core/fruit.dart';
 import '../data/core/result.dart';
+import '../providers/services_provider.dart';
 import '../services/device_info.dart';
 import '../services/localization.dart';
 import '../services/sounds.dart';
 import '../utils/assets.dart';
+import '../view/overlays/overlay.dart';
 import '../view/route_provider.dart';
 import '../view/widgets.dart';
 import '../view/widgets/loader_widget.dart';
@@ -43,7 +43,8 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   @override
   void initState() {
     if (waitingSFX.isNotEmpty) {
-      BlocProvider.of<ServicesBloc>(context)
+      context
+          .read<ServicesProvider>()
           .get<Sounds>()
           .play(waitingSFX, channel: "reward");
     }
@@ -127,8 +128,8 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         startInput?.value = true;
       }
     } else if (state == RewardAnimationState.started) {
-      BlocProvider.of<ServicesBloc>(context).get<Sounds>().stop("reward");
-      BlocProvider.of<ServicesBloc>(context).get<Sounds>().play(startSFX);
+      context.read<ServicesProvider>().get<Sounds>().stop("reward");
+      context.read<ServicesProvider>().get<Sounds>().play(startSFX);
       WidgetsBinding.instance
           .addPostFrameCallback((t) => _progressbarNotifier.value = false);
     } else if (state == RewardAnimationState.closed) {

@@ -6,7 +6,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/localization.dart';
 import '../../services/trackers/trackers.dart';
 import '../../utils/utils.dart';
@@ -60,7 +60,7 @@ class Player extends Opponent {
   }
 }
 
-class Account extends Player with ServiceProvider {
+class Account extends Player with ServiceFinderMixin {
   Account() : super.initialize({}, 0);
   static const levelExpo = 2.7;
   static const levelMultiplier = 1.3;

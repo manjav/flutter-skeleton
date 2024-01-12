@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/service_provider.dart';
+import '../../mixins/service_finder_mixin.dart';
 import '../../services/connection/http_connection.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../services/localization.dart';
@@ -67,7 +67,7 @@ extension MessagesExtenstion on Messages {
   }
 }
 
-class Message with ServiceProvider {
+class Message with ServiceFinderMixin {
   List<int> intData = [];
   Messages type = Messages.none;
   String text = "", metadata = "";
