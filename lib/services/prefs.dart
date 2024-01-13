@@ -64,7 +64,7 @@ enum Pref {
   skipUpdate,
 }
 
-extension PrefExt on Pref {
+extension PrefExtension on Pref {
   bool contains() => Prefs.contains(name);
 
   int setInt(int value) => Prefs.setInt(name, value);
@@ -95,7 +95,7 @@ enum TutorSteps {
   fine,
 }
 
-extension PTutorStapsExt on TutorSteps {
+extension PTutorStapsExtension on TutorSteps {
   int get value => switch (this) {
         TutorSteps.welcome => 0,
         TutorSteps.exploreFirst => 1,
