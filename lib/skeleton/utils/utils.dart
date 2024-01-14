@@ -8,7 +8,7 @@ import '../data/responses.dart';
 import '../services/device_info.dart';
 import '../services/localization.dart';
 
-extension IntExt on int {
+extension IntExtension on int {
   static final _separator = NumberFormat('###,###,###');
   String format() => _separator.format(this);
   static final _compactor = NumberFormat.compact();
@@ -81,7 +81,7 @@ extension IntExt on int {
   int max(int max) => this > max ? max : this;
 }
 
-extension StringExt on String {
+extension StringExtension on String {
   String toPascalCase() {
     return substring(0, 1).toUpperCase() + substring(1).toLowerCase();
   }
@@ -618,7 +618,7 @@ class Utils {
   };
 }
 
-extension DateExt on DateTime {
+extension DateExtension on DateTime {
   int get secondsSinceEpoch => (millisecondsSinceEpoch / 1000).round();
   int get daysSinceEpoch =>
       (millisecondsSinceEpoch / (24 * 3600 * 1000)).round();
