@@ -8,6 +8,7 @@ import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
 import '../../providers/account_provider.dart';
 import '../items/items.dart';
+import '../view.dart';
 import '../widgets/card_holder.dart';
 import '../widgets/indicator_level.dart';
 
