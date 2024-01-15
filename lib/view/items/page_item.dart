@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton/mixins/logger.dart';
-import '../../skeleton/mixins/service_finder_mixin.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
+import '../../app_export.dart';
 
 class AbstractPageItem extends StatefulWidget {
   final String name;

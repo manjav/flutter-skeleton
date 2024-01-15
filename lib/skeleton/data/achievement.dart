@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../../data/core/account.dart';
+import '../../data/data.dart';
 import '../utils/utils.dart';
 
 enum AchievementType {
@@ -46,19 +46,19 @@ class AchievementLine {
   int getAccountValue(Account account) {
     var map = account.achievementMap;
     return switch (type) {
-      AchievementType.pirtul => Utils.toInt(map["numberOfsquashedPirtul"]),
-      AchievementType.battle => Utils.toInt(map["numberOfWonBattle"]),
-      AchievementType.quest => Utils.toInt(map["numberOfWonQuest"]),
-      AchievementType.merge => Utils.toInt(map["numberOfEvolvedCards"]),
-      AchievementType.enhance => Utils.toInt(map["numberOfEnhancedCards"]),
-      AchievementType.donation => Utils.toInt(map["numberOfCollectedGold"]),
+      AchievementType.pirtul => Convert.toInt(map["numberOfsquashedPirtul"]),
+      AchievementType.battle => Convert.toInt(map["numberOfWonBattle"]),
+      AchievementType.quest => Convert.toInt(map["numberOfWonQuest"]),
+      AchievementType.merge => Convert.toInt(map["numberOfEvolvedCards"]),
+      AchievementType.enhance => Convert.toInt(map["numberOfEnhancedCards"]),
+      AchievementType.donation => Convert.toInt(map["numberOfCollectedGold"]),
       AchievementType.collection => account.collection.length,
-      AchievementType.playTime => Utils.toInt(map["timeOfPlaying"]),
+      AchievementType.playTime => Convert.toInt(map["timeOfPlaying"]),
       AchievementType.levelup => account.level,
-      // AchievementType.birds => Utils.toInt(map["numberOfEvolvedCards"]),
-      // AchievementType.facebook => Utils.toInt(map["numberOfEvolvedCards"]),
-      // AchievementType.invitation => Utils.toInt(map["numberOfEvolvedCards"]),
-      // AchievementType.instagram => Utils.toInt(map["numberOfEvolvedCards"]),
+      // AchievementType.birds => Convert.toInt(map["numberOfEvolvedCards"]),
+      // AchievementType.facebook => Convert.toInt(map["numberOfEvolvedCards"]),
+      // AchievementType.invitation => Convert.toInt(map["numberOfEvolvedCards"]),
+      // AchievementType.instagram => Convert.toInt(map["numberOfEvolvedCards"]),
       _ => 0,
     };
   }

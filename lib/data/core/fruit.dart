@@ -3,14 +3,7 @@
 //         -=-=-=-    Fruit    -=-=-=-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-
-import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
-import '../../skeleton/data/responses.dart';
-import '../../skeleton/mixins/service_finder_mixin.dart';
-import '../../skeleton/utils/utils.dart';
-import 'account.dart';
-import 'building.dart';
+import '../../app_export.dart';
 
 class Fruit {
   late String name;
@@ -25,18 +18,18 @@ class Fruit {
 
   Fruit.initialize(Map<String, dynamic> data) {
     name = data["name"];
-    id = Utils.toInt(data["id"]);
+    id = Convert.toInt(data["id"]);
     // smallImage = data["smallImage"];
     // description = data["description"];
-    maxLevel = Utils.toInt(data["maxLevel"]);
-    minLevel = Utils.toInt(data["minLevel"]);
-    category = Utils.toInt(data["category"]);
+    maxLevel = Convert.toInt(data["maxLevel"]);
+    minLevel = Convert.toInt(data["minLevel"]);
+    category = Convert.toInt(data["category"]);
   }
 
   static Map<int, Fruit> generateMap(Map<String, dynamic> data) {
     Map<int, Fruit> map = {};
     data.forEach((key, value) {
-      map[Utils.toInt(key)] = Fruit.initialize(value);
+      map[Convert.toInt(key)] = Fruit.initialize(value);
     });
     return map;
   }
@@ -67,19 +60,19 @@ class FruitCard {
   FruitCard.initialize(Map<String, dynamic> data, this.fruit) {
     name = data["name"];
     isHero = data["isHero"] ?? false;
-    id = Utils.toInt(data["id"]);
+    id = Convert.toInt(data["id"]);
     virtualRarity = data["virtualRarity"].toDouble();
-    power = Utils.toInt(data["power"]);
-    rarity = Utils.toInt(data["rarity"]);
-    heroType = Utils.toInt(data["heroType"], -1);
-    cooldown = Utils.toInt(data["cooldown"]);
-    powerLimit = Utils.toInt(data["powerLimit"]);
-    veteranLevel = Utils.toInt(data["veteran_level"]);
+    power = Convert.toInt(data["power"]);
+    rarity = Convert.toInt(data["rarity"]);
+    heroType = Convert.toInt(data["heroType"], -1);
+    cooldown = Convert.toInt(data["cooldown"]);
+    powerLimit = Convert.toInt(data["powerLimit"]);
+    veteranLevel = Convert.toInt(data["veteran_level"]);
 
-    attributes[HeroAttribute.power] = Utils.toInt(data["powerAttribute"]);
-    attributes[HeroAttribute.wisdom] = Utils.toInt(data["wisdomAttribute"]);
-    attributes[HeroAttribute.blessing] = Utils.toInt(data["blessingAttribute"]);
-    potionLimit = Utils.toInt(data["potion_limit"]);
+    attributes[HeroAttribute.power] = Convert.toInt(data["powerAttribute"]);
+    attributes[HeroAttribute.wisdom] = Convert.toInt(data["wisdomAttribute"]);
+    attributes[HeroAttribute.blessing] = Convert.toInt(data["blessingAttribute"]);
+    potionLimit = Convert.toInt(data["potion_limit"]);
   }
 
   String getName() => isHero ? fruit.name : name;
@@ -189,13 +182,13 @@ class AuctionCard extends AbstractCard {
     cardId = map["card_id"];
     bidCount = map["bid_count"];
     maxBid = map["max_bid"];
-    maxBidderId = Utils.toInt(map["max_bidder_id"]);
+    maxBidderId = Convert.toInt(map["max_bidder_id"]);
     maxBidderName = map["max_bidder_name"];
     ownerName = map["owner_name"];
     createdAt = map["created_at"];
     activityStatus = map["activity_status"];
-    lastBidderId = Utils.toInt(map["last_bidder_id"]);
-    lastBidderGold = Utils.toInt(map["last_bidder_gold"]);
+    lastBidderId = Convert.toInt(map["last_bidder_id"]);
+    lastBidderGold = Convert.toInt(map["last_bidder_gold"]);
     ownerIsMe = account.id == ownerId;
     winnerIsMe = account.id == maxBidderId;
     loserIsMe = account.id == lastBidderId;

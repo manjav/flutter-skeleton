@@ -55,13 +55,13 @@ abstract class Rank {
   Rank.initialize(Map<String, dynamic>? map, int ownerId) {
     if (map == null) return;
     name = map["name"] ?? "";
-    id = Utils.toInt(map["id"]);
+    id = Convert.toInt(map["id"]);
     if (map.containsKey("total_rank")) {
-      rank = Utils.toInt(map["total_rank"]);
+      rank = Convert.toInt(map["total_rank"]);
     } else {
-      rank = Utils.toInt(map["rank"]);
+      rank = Convert.toInt(map["rank"]);
     }
-    score = Utils.toInt(map["score"]);
+    score = Convert.toInt(map["score"]);
     itsMe = ownerId == id;
   }
 }
@@ -73,9 +73,9 @@ class TribeRank extends Rank {
       : super.initialize(map, ownerId) {
     if (map == null) return;
     description = map["description"] ?? "";
-    memberCount = Utils.toInt(map["member_count"]);
-    weeklyScore = Utils.toInt(map["weekly_score"]);
-    weeklyRank = Utils.toInt(map["weekly_rank"]);
+    memberCount = Convert.toInt(map["member_count"]);
+    weeklyScore = Convert.toInt(map["weekly_score"]);
+    weeklyRank = Convert.toInt(map["weekly_rank"]);
   }
 }
 
@@ -85,10 +85,10 @@ class Record extends Rank {
   Record.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    level = Utils.toInt(map["level"]);
-    tribeId = Utils.toInt(map["tribe_id"]);
+    level = Convert.toInt(map["level"]);
+    tribeId = Convert.toInt(map["tribe_id"]);
     tribeName = map["tribe_name"] ?? "";
-    avatarId = Utils.toInt(map["avatar_id"], 1);
+    avatarId = Convert.toInt(map["avatar_id"], 1);
   }
 }
 
@@ -97,9 +97,9 @@ class LeagueRank extends Record {
   LeagueRank.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    rank = Utils.toInt(map["league_rank"]);
-    score = Utils.toInt(map["overall_score"]);
-    weeklyScore = Utils.toInt(map["weekly_score"]);
+    rank = Convert.toInt(map["league_rank"]);
+    score = Convert.toInt(map["overall_score"]);
+    weeklyScore = Convert.toInt(map["weekly_score"]);
   }
 }
 
@@ -146,12 +146,12 @@ class LeagueData {
   LeagueData.initialize(Map<String, dynamic>? map, int ownerId) {
     if (map == null) return;
     var w = map["winner_ranges"];
-    id = Utils.toInt(w["league_id"]);
-    leagueRank = Utils.toInt(map["league_rank"]);
-    risingRank = Utils.toInt(map["league_rising_rank"]);
-    fallingRank = Utils.toInt(map["league_falling_rank"]);
-    currentBonus = Utils.toInt(map["current_league_bonus"]);
-    nextBonus = Utils.toInt(map["next_league_bonus"]);
+    id = Convert.toInt(w["league_id"]);
+    leagueRank = Convert.toInt(map["league_rank"]);
+    risingRank = Convert.toInt(map["league_rising_rank"]);
+    fallingRank = Convert.toInt(map["league_falling_rank"]);
+    currentBonus = Convert.toInt(map["current_league_bonus"]);
+    nextBonus = Convert.toInt(map["next_league_bonus"]);
     rewardAvgCardPower = map["reward_avg_card_power"] ?? 0.0;
 
     winnerRanges = [];
@@ -206,13 +206,13 @@ class Opponent extends Record {
   Opponent.initialize(Map<String, dynamic>? map, int ownerId)
       : super.initialize(map, ownerId) {
     if (map == null) return;
-    gold = Utils.toInt(map["gold"]);
-    status = Utils.toInt(map["status"]);
-    xp = Utils.toInt(map["xp"]);
-    defPower = Utils.toInt(map["def_power"]);
-    leagueId = Utils.toInt(map["league_id"]);
-    leagueRank = Utils.toInt(map["league_rank"]);
-    powerRatio = Utils.toInt(map["power_ratio"]);
+    gold = Convert.toInt(map["gold"]);
+    status = Convert.toInt(map["status"]);
+    xp = Convert.toInt(map["xp"]);
+    defPower = Convert.toInt(map["def_power"]);
+    leagueId = Convert.toInt(map["league_id"]);
+    leagueRank = Convert.toInt(map["league_rank"]);
+    powerRatio = Convert.toInt(map["power_ratio"]);
     pokeStatus = map["poke_status"] ?? false;
     if (map.containsKey("tribe_position")) {
       TribePosition.values[map["tribe_position"]];
@@ -233,7 +233,7 @@ class Opponent extends Record {
     for (var player in list) {
       var opponent = Opponent.initialize(player, ownerId);
       opponent.index = index++;
-      opponent.todayAttacksCount = Utils.toInt(_attackLogs["${opponent.id}"]);
+      opponent.todayAttacksCount = Convert.toInt(_attackLogs["${opponent.id}"]);
       result.add(opponent);
     }
     return result;
@@ -282,9 +282,9 @@ class LiveWarrior {
     gold = map["added_gold"];
     var benefits = map["hero_benefits_info"];
     if (benefits.length > 0) {
-      heroBenefits["power"] = Utils.toInt(benefits["power_benefit"]);
-      heroBenefits["gold"] = Utils.toInt(benefits["gold_benefit"]);
-      heroBenefits["cooldown"] = Utils.toInt(benefits["cooldown_benefit"]);
+      heroBenefits["power"] = Convert.toInt(benefits["power_benefit"]);
+      heroBenefits["gold"] = Convert.toInt(benefits["gold_benefit"]);
+      heroBenefits["cooldown"] = Convert.toInt(benefits["cooldown_benefit"]);
     }
   }
 }

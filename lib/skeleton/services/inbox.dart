@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/message.dart';
-import '../../data/core/rpc.dart';
-import '../../services/connection/http_connection.dart';
-import 'services.dart';
+import '../../data/data.dart';
+import '../../services/services.dart';
+import '../skeleton.dart';
 
 class Inbox extends IService {
   List<Message> messages = [];

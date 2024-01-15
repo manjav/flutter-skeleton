@@ -2,24 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/adam.dart';
-import '../../data/core/building.dart';
-import '../../data/core/rpc.dart';
-import '../../skeleton/data/achievement.dart';
-import '../../skeleton/mixins/key_provider.dart';
-import '../../skeleton/mixins/tab_builder_mixin.dart';
+import '../../data/data.dart';
+import '../../skeleton/skeleton.dart';
 import '../../providers/account_provider.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/utils/utils.dart';
-import '../../skeleton/views/popups/popup.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/loader_widget.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
 import '../widgets/indicator_level.dart';
 
 class ProfilePopup extends AbstractPopup {

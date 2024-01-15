@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/core/fruit.dart';
-import '../../../data/core/rpc.dart';
-import '../../../skeleton/mixins/key_provider.dart';
-import '../../../skeleton/mixins/service_finder_mixin.dart';
-import '../../../skeleton/services/device_info.dart';
-import '../../../skeleton/services/theme.dart';
-import '../../../skeleton/utils/assets.dart';
-import '../../../skeleton/views/widgets.dart';
+import '../../../data/data.dart';
+import '../../../skeleton/skeleton.dart';
 import '../../items/card_item.dart';
 
 class LiveHero extends StatefulWidget {

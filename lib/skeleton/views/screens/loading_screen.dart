@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/services_provider.dart';
-import '../../services/routes.dart';
-import '../overlays/overlay.dart';
-import 'screen.dart';
+import '../../skeleton.dart';
 
 class LoadingScreen extends AbstractScreen {
   LoadingScreen({super.key}) : super(Routes.home, args: {});

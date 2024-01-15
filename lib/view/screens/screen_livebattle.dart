@@ -4,23 +4,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/adam.dart';
-import '../../data/core/fruit.dart';
-import '../../data/core/rpc.dart';
+import '../../data/data.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../skeleton/data/infra.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/notifications.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/utils/utils.dart';
-import '../../skeleton/views/screens/screen.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../view/widgets/live_battle/live_deck.dart';
-import '../../view/widgets/live_battle/live_hero.dart';
-import '../../view/widgets/live_battle/live_slot.dart';
-import '../../view/widgets/live_battle/live_tribe.dart';
-import '../../view/widgets/live_battle/power_balance.dart';
+import '../../skeleton/skeleton.dart';
+import '../../view/view.dart';
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [];

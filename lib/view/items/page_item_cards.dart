@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/core/fruit.dart';
-import '../../skeleton/mixins/key_provider.dart';
-import '../../providers/account_provider.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/views/widgets.dart';
-import 'card_item.dart';
-import 'page_item.dart';
+import '../../app_export.dart';
 
 class CardsPageItem extends AbstractPageItem {
   const CardsPageItem({super.key}) : super("cards");

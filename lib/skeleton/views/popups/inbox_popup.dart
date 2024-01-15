@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../data/core/message.dart';
-import '../../services/device_info.dart';
-import '../../services/inbox.dart';
-import '../../services/localization.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../../services/routes.dart';
-import '../widgets.dart';
-import 'popup.dart';
+import '../../../data/data.dart';
+import '../../skeleton.dart';
 
 class InboxPopup extends AbstractPopup {
   InboxPopup({super.key}) : super(Routes.popupInbox, args: {});
@@ -54,7 +46,9 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
         padding: EdgeInsets.fromLTRB(24.d, 10.d, 16.d, 16.d),
         decoration: Widgets.imageDecorator("iconed_item_bg",
             ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
-        child: Row(children: [
+        child: Row(
+          textDirection: TextDirection.ltr,
+          children: [
           Asset.load<Image>("inbox_item_${message.type.subject.name}",
               width: 60.d),
           SizedBox(width: 32.d),

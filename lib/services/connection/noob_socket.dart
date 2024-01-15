@@ -2,15 +2,7 @@ import 'dart:convert';
 
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/adam.dart';
-import '../../data/core/fruit.dart';
-import '../../data/core/message.dart';
-import '../../data/core/rpc_data.dart';
-import '../../data/core/tribe.dart';
-import '../../providers/opponents_provider.dart';
-import '../../skeleton/services/services.dart';
-import '../../skeleton/utils/utils.dart';
+import '../../app_export.dart';
 
 enum NoobCommand { subscribe, unsubscribe }
 
@@ -279,10 +271,10 @@ class NoobChatMessage extends NoobMessage {
     text = map["text"] ?? "";
     sender = map["sender"] ?? "";
     channel = map["channel"] ?? "";
-    avatarId = Utils.toInt(map["avatar_id"]);
-    creationDate = Utils.toInt(map["creationDate"]);
-    timestamp = Utils.toInt(map["timestamp"]);
-    messageType = Messages.values[Utils.toInt(map["messageType"], 1)];
+    avatarId = Convert.toInt(map["avatar_id"]);
+    creationDate = Convert.toInt(map["creationDate"]);
+    timestamp = Convert.toInt(map["timestamp"]);
+    messageType = Messages.values[Convert.toInt(map["messageType"], 1)];
     itsMe = sender == account.name;
   }
 }

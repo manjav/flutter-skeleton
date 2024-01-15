@@ -2,24 +2,11 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/core/rpc_data.dart';
-import '../../services/connection/http_connection.dart';
-import '../../services/connection/noob_socket.dart';
-import '../data/responses.dart';
-import '../services/ads/ads.dart';
-import '../services/ads/ads_abstract.dart';
-import '../services/device_info.dart';
-import '../services/games.dart';
-import '../services/inbox.dart';
-import '../services/localization.dart';
-import '../services/notifications.dart';
-import '../services/prefs.dart';
+import '../../data/data.dart';
+import '../../services/services.dart';
+import '../data/data.dart';
 import '../services/services.dart';
-import '../services/sounds.dart';
-import '../services/theme.dart';
-import '../services/trackers/trackers.dart';
-import '../../providers/account_provider.dart';
-import '../../providers/opponents_provider.dart';
+import '../../providers/providers.dart';
 
 enum ServiceStatus {
   none,

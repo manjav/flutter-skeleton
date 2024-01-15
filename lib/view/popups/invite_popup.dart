@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/views/popups/popup.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
+import '../../skeleton/skeleton.dart';
 
 class InvitePopup extends AbstractPopup {
   InvitePopup({super.key}) : super(Routes.popupInvite, args: {});

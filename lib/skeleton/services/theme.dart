@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'device_info.dart';
 import 'services.dart';
 
 class TColors {
