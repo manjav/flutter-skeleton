@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp>
         child: MultiProvider(
             providers: [
               ChangeNotifierProvider(
-                  create: (_) => ServicesProvider(MyApp._firebaseAnalytics)),
+                  create: (_) => ServicesProvider()),
               ChangeNotifierProvider(create: (_) => AccountProvider()),
               ChangeNotifierProvider(create: (_) => OpponentsProvider())
             ],
