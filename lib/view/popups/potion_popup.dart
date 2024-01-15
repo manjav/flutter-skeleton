@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../data/data.dart';
 import '../../providers/account_provider.dart';
 import '../../skeleton/skeleton.dart';
-import '../view.dart';
 
 class PotionPopup extends AbstractPopup {
   PotionPopup({super.key}) : super(Routes.popupPotion, args: {});

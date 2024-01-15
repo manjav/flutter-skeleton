@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
-import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class SettingsPopup extends AbstractPopup {
-  //todo: check this because we dont have routes in skeleton anymore
   SettingsPopup({super.key}) : super(Routes.popupSettings, args: {});
 
   @override

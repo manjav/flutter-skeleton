@@ -6,6 +6,7 @@ export 'inbox.dart';
 export 'localization.dart';
 export 'notifications.dart';
 export 'prefs.dart';
+export 'routes.dart';
 export 'service.dart';
 export 'sounds.dart';
 export 'theme.dart';

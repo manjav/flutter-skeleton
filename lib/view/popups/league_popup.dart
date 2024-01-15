@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
-import '../view.dart';
 
 class LeaguePopup extends AbstractPopup {
   LeaguePopup({super.key}) : super(Routes.popupLeague, args: {});

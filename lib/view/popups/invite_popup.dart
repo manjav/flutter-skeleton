@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../data/core/account.dart';
 import '../../skeleton/skeleton.dart';
-import '../view.dart';
 
 class InvitePopup extends AbstractPopup {
   InvitePopup({super.key}) : super(Routes.popupInvite, args: {});
