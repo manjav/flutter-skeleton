@@ -1,4 +1,3 @@
-import '../../skeleton/skeleton.dart';
 import '../../app_export.dart';
 
 class LoadingData {
