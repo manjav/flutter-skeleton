@@ -59,7 +59,7 @@ class Themes extends IService {
   initialize({List<Object>? args}) {
     super.initialize(args: args);
 
-    TStyles.tiny = _style(size: 26.d, weight: FontWeight.w100);
+    TStyles.tiny = _style(size: 22.d, weight: FontWeight.w100);
     TStyles.small = _style(size: 30.d, weight: FontWeight.w300);
     TStyles.medium = _style(size: 38.d, weight: FontWeight.w600);
     TStyles.large = _style(size: 52.d, weight: FontWeight.w800);
