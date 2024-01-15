@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
 import '../items/card_item.dart';
+import '../view.dart';
 
 class SelectCardCategoryPopup extends AbstractPopup {
   SelectCardCategoryPopup({super.key})

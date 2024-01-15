@@ -9,6 +9,7 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
+import '../../view/view.dart';
 
 enum RewardAnimationState {
   none,
@@ -165,6 +166,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       if (context.mounted) {
         await Future.delayed(const Duration(milliseconds: 10));
         if (mounted) {
+          //todo: we need to remove this because our route is extract to project
           Routes.popupMessage.navigate(context, args: {
             "title": "Error",
             "message": "error_${e.statusCode.value}".l()
