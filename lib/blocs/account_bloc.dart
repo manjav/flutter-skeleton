@@ -150,11 +150,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         params: params);
 
     if (tribe != null) {
-      building.level++;
-      tribe.levels[id] = tribe.levels[id]! + 1;
-    } else {
-      building.level = result["level"];
+      tribe.levels[id] = result["level"];
     }
+    building.level = result["level"];
+    result.remove("level");
     if (context.mounted) {
       account!.update(context, result);
       add(SetAccount(account: account!));
