@@ -5,7 +5,6 @@ import 'package:rive/rive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../main.dart';
-import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class LoadingOverlay extends AbstractOverlay {
@@ -156,7 +155,6 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
       await Future.delayed(
           Duration(milliseconds: _minAnimationTime - elapsedTime));
       if (mounted) {
-        //todo: check this because we dont have routes in skeleton anymore
         Routes.home.replace(context);
       }
     } else if (services.state.status == ServiceStatus.error) {

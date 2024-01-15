@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/data.dart';
-import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class InboxPopup extends AbstractPopup {
-  //todo: check this because we dont have routes in skeleton anymore
   InboxPopup({super.key}) : super(Routes.popupInbox, args: {});
 
   @override

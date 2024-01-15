@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class MessagePopup extends AbstractPopup {
-  //todo: check this because we dont have routes in skeleton anymore
   const MessagePopup({super.key, required super.args})
       : super(Routes.popupMessage);
 

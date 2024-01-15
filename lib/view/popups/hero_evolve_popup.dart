@@ -5,7 +5,6 @@ import '../../data/data.dart';
 import '../../providers/account_provider.dart';
 import '../../skeleton/skeleton.dart';
 import '../items/card_item.dart';
-import '../view.dart';
 import 'hero_popup.dart';
 
 class HeroEvolvePopup extends AbstractPopup {

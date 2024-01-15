@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class AbstractPopup extends StatefulWidget {
-  //todo: check this because we dont have routes in skeleton anymore
   final Routes type;
   final Map<String, dynamic> args;
 
