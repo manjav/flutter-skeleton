@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../data/core/adam.dart';
 import '../../../providers/providers.dart';
+import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class Indicator extends StatefulWidget {
@@ -24,6 +25,7 @@ class Indicator extends StatefulWidget {
     this.data,
     this.hasPlusIcon = true,
   });
+
   @override
   createState() => _IndicatorState();
 }
@@ -61,6 +63,7 @@ class _IndicatorState extends State<Indicator>
                   log("Go to shop");
                   break;
                 case Values.potion:
+                  //todo: check this because we dont have routes in skeleton anymore
                   Routes.popupPotion.navigate(context);
                   break;
                 default:

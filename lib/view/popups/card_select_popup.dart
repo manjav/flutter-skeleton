@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
-import '../items/card_item.dart';
-import '../widgets/card_holder.dart';
+import '../view.dart';
 
 class CardSelectPopup extends AbstractPopup {
   const CardSelectPopup({super.key, required super.args})
