@@ -93,7 +93,7 @@ class _IndicatorState extends State<Indicator>
                 "ui_indicator_bg", ImageCenterSliceData(104, 69)),
             child: _getText(value, left, right),
           )),
-      Asset.load<Image>(_getIcon(league)),
+      _getIcon(league),
       Positioned(
           right: 0,
           height: 84.d,
@@ -111,10 +111,22 @@ class _IndicatorState extends State<Indicator>
         style: TStyles.large.autoSize(text.length, 5, 38.d));
   }
 
-  String _getIcon(int league) {
+  Widget _getIcon(int league) {
     if (widget.type == Values.leagueRank) {
-      return "icon_league_${LeagueData.getIndices(league).$1}";
+      var indices = LeagueData.getIndices(league);
+      return Stack(children: [
+        Asset.load<Image>("icon_league_${indices.$1}"),
+        Positioned(
+            top: 5.d,
+            width: 34.d,
+            right: 3.d,
+            child: Text(
+              "l_${indices.$2}".l(),
+              style: TStyles.tiny,
+              textAlign: TextAlign.center,
+            ))
+      ]);
     }
-    return "icon_${widget.type.name}";
+    return Asset.load<Image>("icon_${widget.type.name}");
   }
 }
