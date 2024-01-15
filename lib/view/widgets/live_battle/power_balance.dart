@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../skeleton/services/device_info.dart';
-import '../../../skeleton/services/theme.dart';
-import '../../../skeleton/utils/utils.dart';
-import '../../../skeleton/views/widgets.dart';
-import '../../../skeleton/views/widgets/skinned_text.dart';
+import '../../../skeleton/skeleton.dart';
 
 class PowerBalance extends StatelessWidget {
   final int value, maxValue;

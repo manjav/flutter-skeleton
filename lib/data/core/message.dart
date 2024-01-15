@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../services/connection/http_connection.dart';
-import '../../services/connection/noob_socket.dart';
-import '../../skeleton/mixins/service_finder_mixin.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/utils/utils.dart';
-import 'account.dart';
-import 'rpc.dart';
+import '../../app_export.dart';
 
 enum Messages {
   none,
@@ -78,8 +72,8 @@ class Message with ServiceFinderMixin {
     senderId = map["sender_id"];
     createdAt = map["created_at"];
     type = Messages.values[map["message_type"]];
-    intData.add(Utils.toInt(map["intmetadata1"]));
-    intData.add(Utils.toInt(map["intmetadata2"]));
+    intData.add(Convert.toInt(map["intmetadata1"]));
+    intData.add(Convert.toInt(map["intmetadata2"]));
     metadata = map["strmetadata"];
     senderId = map["sender_id"];
     text = map["text"].isNotEmpty ? map["text"] : map["text_fa"];

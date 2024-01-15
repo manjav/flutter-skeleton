@@ -8,35 +8,11 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/adam.dart';
-import '../../data/core/building.dart';
-import '../../data/core/rpc.dart';
+import '../../data/data.dart';
 import '../../providers/account_provider.dart';
 import '../../services/connection/noob_socket.dart';
-import '../../skeleton/data/infra.dart';
-import '../../skeleton/mixins/background_mixin.dart';
-import '../../skeleton/mixins/key_provider.dart';
-import '../../skeleton/providers/services_provider.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/sounds.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/utils/utils.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/views/screens/screen.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/indicator.dart';
-import '../../skeleton/views/widgets/loader_widget.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
-import '../../skeleton/views/widgets/tab_navigator.dart';
-import '../items/page_item_auction.dart';
-import '../items/page_item_cards.dart';
-import '../items/page_item_map.dart';
-import '../items/page_item_shop.dart';
-import '../items/page_item_tribe.dart';
+import '../../skeleton/skeleton.dart';
+import '../items/items.dart';
 import '../widgets/indicator_level.dart';
 
 class HomeScreen extends AbstractScreen {

@@ -1,43 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../view/popups/building_mine_popup.dart';
-import '../../view/popups/building_supportive_popup.dart';
-import '../../view/popups/building_treasury_popup.dart';
-import '../../view/popups/card_collection_popup.dart';
-import '../../view/popups/card_details_popup.dart';
-import '../../view/popups/card_enhance_popup.dart';
-import '../../view/popups/card_evolve_popup.dart';
-import '../../view/popups/card_select_category_popup.dart';
-import '../../view/popups/card_select_popup.dart';
-import '../../view/popups/card_select_type_popup.dart';
-import '../../view/popups/combo_popup.dart';
-import '../../view/popups/daily_gift_popup.dart';
-import '../../view/popups/gift_popup.dart';
-import '../../view/popups/hero_evolve_popup.dart';
-import '../../view/popups/hero_popup.dart';
-import '../../view/popups/invite_popup.dart';
-import '../../view/popups/league_popup.dart';
-import '../../view/popups/opponents_popup.dart';
-import '../../view/popups/potion_popup.dart';
-import '../../view/popups/profile_avatars_popup.dart';
-import '../../view/popups/profile_edit_popup.dart';
-import '../../view/popups/profile_popup.dart';
-import '../../view/popups/ranking_popup.dart';
-import '../../view/popups/restore_popup.dart';
-import '../../view/popups/tribe_details_popup.dart';
-import '../../view/popups/tribe_donate_popup.dart';
-import '../../view/popups/tribe_edit_popup.dart';
-import '../../view/popups/tribe_invite_popup.dart';
-import '../../view/screens/screen_attack_outcome.dart';
-import '../../view/screens/screen_deck.dart';
-import '../../view/screens/screen_home.dart';
-import '../../view/screens/screen_livebattle.dart';
-import '../../view/screens/screen_livebattle_outcome.dart';
-import '../../view/screens/screen_quest.dart';
-import '../views/popups/inbox_popup.dart';
-import '../views/popups/message_popup.dart';
-import '../views/popups/settings_popup.dart';
-import '../views/screens/loading_screen.dart';
+import '../../view/view.dart';
+import '../skeleton.dart';
 
 enum Routes {
   none,

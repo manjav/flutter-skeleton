@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/core/fruit.dart';
-import '../../../skeleton/data/infra.dart';
-import '../../../skeleton/mixins/key_provider.dart';
-import '../../../skeleton/services/device_info.dart';
-import '../../../skeleton/services/theme.dart';
-import '../../../skeleton/utils/assets.dart';
-import '../../../skeleton/views/widgets.dart';
-import '../../../skeleton/views/widgets/skinned_text.dart';
+import '../../../skeleton/skeleton.dart';
 import '../../items/card_item.dart';
 import '../../screens/screen_livebattle.dart';
 

@@ -1,6 +1,5 @@
 import 'package:in_app_purchase/in_app_purchase.dart';
-
-import '../../skeleton/utils/utils.dart';
+import '../../app_export.dart';
 
 enum ShopSections { none, card, gold, boost, nectar, subscription }
 

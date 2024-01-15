@@ -1,7 +1,5 @@
-import '../../skeleton/data/achievement.dart';
-import 'account.dart';
-import 'fruit.dart';
-import 'store.dart';
+import '../../skeleton/skeleton.dart';
+import '../../app_export.dart';
 
 class LoadingData {
   static String baseURL = "";

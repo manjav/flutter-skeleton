@@ -1,19 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/fruit.dart';
-import '../../data/core/rpc.dart';
-import '../../skeleton/mixins/key_provider.dart';
-import '../../skeleton/mixins/service_finder_mixin.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/utils/utils.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
-import 'card_item.dart';
-import 'page_item.dart';
+import '../../app_export.dart';
 
 class AuctionPageItem extends AbstractPageItem {
   const AuctionPageItem({super.key}) : super("cards");

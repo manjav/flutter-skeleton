@@ -5,12 +5,7 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../data/core/store.dart';
-import '../../skeleton/mixins/background_mixin.dart';
-import '../../skeleton/mixins/reward_mixin.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/utils/utils.dart';
-import '../../skeleton/views/overlays/overlay.dart';
+import '../../app_export.dart';
 
 class PurchaseFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;

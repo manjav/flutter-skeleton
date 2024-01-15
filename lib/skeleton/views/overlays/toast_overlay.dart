@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../services/device_info.dart';
-import '../../services/theme.dart';
-import '../widgets.dart';
-import '../widgets/skinned_text.dart';
-import 'overlay.dart';
+import '../../skeleton.dart';
 
 class ToastOverlay extends AbstractOverlay {
   final String message;

@@ -1,13 +1,7 @@
 import 'dart:async';
 
 import 'package:rive/rive.dart';
-
-import '../../data/core/fruit.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/mixins/background_mixin.dart';
-import '../../skeleton/mixins/reward_mixin.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/utils/utils.dart';
+import '../../app_export.dart';
 
 class LevelupFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;

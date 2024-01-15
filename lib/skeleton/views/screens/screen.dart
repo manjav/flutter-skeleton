@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../data/infra.dart';
-import '../../mixins/logger.dart';
-import '../../mixins/service_finder_mixin.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/routes.dart';
-import '../../utils/assets.dart';
-import '../overlays/overlay.dart';
-import '../widgets.dart';
-import '../widgets/indicator.dart';
+import '../../skeleton.dart';
 
 class AbstractScreen extends StatefulWidget {
   final Routes type;
   final Map<String, dynamic> args;
   final String? sfx;
   final bool closable;
+
   AbstractScreen(
     this.type, {
     required this.args,
@@ -23,6 +15,7 @@ class AbstractScreen extends StatefulWidget {
     this.sfx,
     this.closable = true,
   }) : super(key: key ??= Key(type.name));
+
   @override
   createState() => AbstractScreenState();
 }
@@ -56,18 +49,26 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     return Scaffold(
       body: PopScope(
         canPop: widget.closable,
-        child: Stack(children: [
-          Positioned(
-              top: 0, right: 0, bottom: 0, left: 0, child: contentFactory()),
-          PositionedDirectional(
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              child: contentFactory(),
+            ),
+            PositionedDirectional(
               top: paddingTop,
               start: 24.d,
               end: 24.d,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: appBarElements)),
-        ]),
+                  children: appBarElements),
+            ),
+          ],
+        ),
       ),
     );
   }

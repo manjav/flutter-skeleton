@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/rpc.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/views/popups/popup.dart';
-import '../../skeleton/views/widgets.dart';
+import '../../skeleton/skeleton.dart';
 
 class TribeInvitePopup extends AbstractPopup {
   TribeInvitePopup({super.key}) : super(Routes.popupTribeInvite, args: {});

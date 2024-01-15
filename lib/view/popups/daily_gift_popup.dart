@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/utils/utils.dart';
-import '../../skeleton/views/popups/popup.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
+import '../../skeleton/skeleton.dart';
 
 class DailyGiftPopup extends AbstractPopup {
   DailyGiftPopup({super.key}) : super(Routes.popupDailyGift, args: {});

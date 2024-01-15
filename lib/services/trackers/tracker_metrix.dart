@@ -2,10 +2,7 @@ import 'dart:io';
 
 import 'package:metrix_plugin/Metrix.dart';
 
-import '../../skeleton/services/ads/ads_abstract.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/trackers/tracker_abstract.dart';
-import '../../skeleton/services/trackers/trackers.dart';
+import '../../app_export.dart';
 
 class MetrixTracker extends AbstractTracker {
   static const _prefix = "tracker_metrix_";

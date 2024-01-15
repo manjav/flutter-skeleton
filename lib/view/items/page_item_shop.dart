@@ -6,20 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/rpc.dart';
-import '../../data/core/store.dart';
-import '../../skeleton/providers/services_provider.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/utils/utils.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/loader_widget.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
-import 'page_item.dart';
+import '../../app_export.dart';
 
 class ShopPageItem extends AbstractPageItem {
   const ShopPageItem({super.key}) : super("cards");

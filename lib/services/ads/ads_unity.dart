@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
-import '../../skeleton/services/ads/ads_abstract.dart';
-import '../../skeleton/services/localization.dart';
+import '../../app_export.dart';
 
 class AdUnity extends AbstractAdSDK {
   static String platform = Platform.isAndroid ? "Android" : "iOS";

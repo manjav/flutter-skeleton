@@ -2,16 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/prefs.dart';
-import '../../services/routes.dart';
-import '../../services/sounds.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../widgets.dart';
-import '../widgets/skinned_text.dart';
-import 'popup.dart';
+import '../../skeleton.dart';
 
 class SettingsPopup extends AbstractPopup {
   SettingsPopup({super.key}) : super(Routes.popupSettings, args: {});

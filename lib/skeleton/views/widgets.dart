@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/services_provider.dart';
-import '../services/device_info.dart';
-import '../services/sounds.dart';
-import '../services/theme.dart';
-import '../utils/assets.dart';
-import 'widgets/skinned_text.dart';
+import '../skeleton.dart';
 
 class Widgets {
   static GestureDetector touchable(

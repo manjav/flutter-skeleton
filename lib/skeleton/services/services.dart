@@ -1,10 +1,12 @@
-import '../mixins/logger.dart';
-import '../mixins/service_finder_mixin.dart';
-
-abstract class IService with ILogger, ServiceFinderMixin {
-  bool isInitialized = false;
-  initialize({List<Object>? args}) {
-    isInitialized = true;
-    log("=> Service $runtimeType initialized.");
-  }
-}
+export 'ads/ads.dart';
+export 'trackers/trackers.dart';
+export 'device_info.dart';
+export 'games.dart';
+export 'inbox.dart';
+export 'localization.dart';
+export 'notifications.dart';
+export 'prefs.dart';
+export 'routes.dart';
+export 'service.dart';
+export 'sounds.dart';
+export 'theme.dart';

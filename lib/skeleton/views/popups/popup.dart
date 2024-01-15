@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/infra.dart';
-import '../../mixins/logger.dart';
-import '../../mixins/service_finder_mixin.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/routes.dart';
-import '../../services/sounds.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../overlays/overlay.dart';
-import '../widgets.dart';
-import '../widgets/indicator.dart';
-import '../widgets/skinned_text.dart';
+import '../../skeleton.dart';
 
 class AbstractPopup extends StatefulWidget {
   final Routes type;

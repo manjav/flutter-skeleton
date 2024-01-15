@@ -2,15 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/building.dart';
 import '../../main.dart';
-import '../../services/connection/http_connection.dart';
-import '../../services/connection/noob_socket.dart';
-import '../../skeleton/mixins/service_finder_mixin.dart';
-import '../../skeleton/utils/utils.dart';
-import 'adam.dart';
-import 'rpc.dart';
+import '../../app_export.dart';
 
 class Tribe with ServiceFinderMixin {
   late int id,
@@ -39,10 +32,10 @@ class Tribe with ServiceFinderMixin {
     levels[Buildings.cards.id] = map["cooldown_building_level"];
     levels[Buildings.tribe.id] = map["mainhall_building_level"];
     donatesCount = map["donates_number"];
-    score = Utils.toInt(map["score"]);
-    weeklyScore = Utils.toInt(map["weekly_score"]);
-    rank = Utils.toInt(map["rank"]);
-    weeklyRank = Utils.toInt(map["weekly_rank"]);
+    score = Convert.toInt(map["score"]);
+    weeklyScore = Convert.toInt(map["weekly_score"]);
+    rank = Convert.toInt(map["rank"]);
+    weeklyRank = Convert.toInt(map["weekly_rank"]);
     name = map["name"];
     description = map["description"];
   }

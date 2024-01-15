@@ -2,19 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../data/core/fruit.dart';
-import '../../mixins/card_edit_mixin.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/utils/utils.dart';
-import '../items/card_item.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
-import '../../skeleton/views/popups/popup.dart';
+import '../../app_export.dart';
 
 class CardEnhancePopup extends AbstractPopup {
   const CardEnhancePopup({super.key, required super.args})
