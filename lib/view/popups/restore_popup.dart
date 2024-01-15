@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../main.dart';
 import '../../skeleton/skeleton.dart';
+import '../view.dart';
 
 class RestorePopup extends AbstractPopup {
   const RestorePopup({required super.args, super.key})
