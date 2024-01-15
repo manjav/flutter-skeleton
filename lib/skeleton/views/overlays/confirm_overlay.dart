@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../services/device_info.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../widgets.dart';
-import 'overlay.dart';
+import '../../skeleton.dart';
 
 class ConfirmOverlay extends AbstractOverlay {
   final String message, acceptLabel, declineLabel;

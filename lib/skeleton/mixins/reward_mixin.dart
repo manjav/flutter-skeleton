@@ -7,17 +7,8 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../data/core/fruit.dart';
-import '../data/responses.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/sounds.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/loader_widget.dart';
-import '../providers/services_provider.dart';
-import '../services/routes.dart';
-import '../utils/assets.dart';
+import '../../data/data.dart';
+import '../../skeleton/skeleton.dart';
 
 enum RewardAnimationState {
   none,

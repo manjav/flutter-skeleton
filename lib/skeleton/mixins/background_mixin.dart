@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../utils/assets.dart';
+import '../utils/utils.dart';
 
 mixin BackgroundMixin<S extends StatefulWidget> on State<S> {
   SMINumber? _colorInput;

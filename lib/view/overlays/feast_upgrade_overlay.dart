@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../../data/core/building.dart';
-import '../../skeleton/mixins/background_mixin.dart';
-import '../../skeleton/mixins/reward_mixin.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../map_elements/building_widget.dart';
+import '../../app_export.dart';
 
 class UpgradeFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;

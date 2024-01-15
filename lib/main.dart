@@ -6,18 +6,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'data/core/adam.dart';
-import 'skeleton/mixins/service_finder_mixin.dart';
 import 'providers/account_provider.dart';
 import 'providers/opponents_provider.dart';
-import 'skeleton/providers/services_provider.dart';
-import 'skeleton/services/device_info.dart';
-import 'skeleton/services/localization.dart';
-import 'skeleton/services/prefs.dart';
-import 'skeleton/services/routes.dart';
-import 'skeleton/services/sounds.dart';
-import 'skeleton/services/theme.dart';
-import 'skeleton/views/overlays/overlay.dart';
-import 'skeleton/views/widgets/loader_widget.dart';
+import 'skeleton/skeleton.dart';
 
 void main() async {
   MyApp.startTime = DateTime.now();

@@ -2,10 +2,7 @@ import 'dart:io';
 
 import 'package:kochava_tracker/kochava_tracker.dart';
 
-import '../../skeleton/services/ads/ads_abstract.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/trackers/tracker_abstract.dart';
-import '../../skeleton/services/trackers/trackers.dart';
+import '../../app_export.dart';
 
 class KochavaaTracker extends AbstractTracker {
   @override

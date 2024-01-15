@@ -1,21 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/fruit.dart';
-import '../../skeleton/data/infra.dart';
+import '../../data/data.dart';
 import '../../providers/account_provider.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/utils/utils.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/views/popups/popup.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/indicator.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
+import '../../skeleton/skeleton.dart';
 import '../items/card_item.dart';
 import 'hero_popup.dart';
 

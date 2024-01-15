@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'services.dart';
+import '../skeleton.dart';
 
 class Prefs extends IService {
   static SharedPreferences? _instance;

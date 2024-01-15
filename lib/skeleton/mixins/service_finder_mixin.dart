@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/core/rpc.dart';
-import '../../providers/account_provider.dart';
+import '../../data/data.dart';
+import '../../providers/providers.dart';
 import '../providers/services_provider.dart';
-import '../../services/connection/http_connection.dart';
+import '../../services/services.dart';
 
 mixin ServiceFinderMixin {
   ServicesProvider getServices(BuildContext context) =>

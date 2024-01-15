@@ -4,9 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart' as rive;
-
-import '../../utils/assets.dart';
-import '../../utils/loader.dart';
+import '../../skeleton.dart';
 
 class LoaderWidget extends StatefulWidget {
   static String baseURL = "";

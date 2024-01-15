@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/service_finder_mixin.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
+import '../../skeleton.dart';
 
 class TabNavigator extends StatefulWidget {
   final int tabsCount;

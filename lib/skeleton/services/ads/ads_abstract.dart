@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/logger.dart';
-import '../localization.dart';
+import '../../skeleton.dart';
 
 enum AdSDKName { none, adivery, applovin, google, unity }
 

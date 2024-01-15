@@ -1,19 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/fruit.dart';
-import '../../skeleton/data/infra.dart';
-import '../../skeleton/mixins/key_provider.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/views/popups/popup.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/indicator.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
-import '../items/card_item.dart';
+import '../../app_export.dart';
 
 class SelectCardTypePopup extends AbstractPopup {
   SelectCardTypePopup({super.key})

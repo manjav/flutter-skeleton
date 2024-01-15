@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton/services/device_info.dart';
-import '../utils/assets.dart';
-import '../views/widgets.dart';
-import '../views/widgets/skinned_text.dart';
+import '../../skeleton/skeleton.dart';
 
 @optionalTypeArgs
 mixin TabBuilderMixin<T extends StatefulWidget> on State<T> {

@@ -2,19 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/core/adam.dart';
-import '../../../providers/account_provider.dart';
-import '../../data/infra.dart';
-import '../../mixins/logger.dart';
-import '../../mixins/service_finder_mixin.dart';
-import '../../providers/services_provider.dart';
-import '../../services/device_info.dart';
-import '../../services/localization.dart';
-import '../../services/routes.dart';
-import '../../services/theme.dart';
-import '../../utils/assets.dart';
-import '../../utils/utils.dart';
-import '../widgets.dart';
-import 'skinned_text.dart';
+import '../../../providers/providers.dart';
+import '../../skeleton.dart';
 
 class Indicator extends StatefulWidget {
   final String origin;

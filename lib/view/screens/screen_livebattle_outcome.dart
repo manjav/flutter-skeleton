@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/core/adam.dart';
-import '../../skeleton/mixins/background_mixin.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/services/sounds.dart';
-import '../../skeleton/services/theme.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/views/screens/screen.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/skinned_text.dart';
+import '../../skeleton/skeleton.dart';
 import '../widgets/live_battle/live_warrior.dart';
 
 class LiveOutScreen extends AbstractScreen {

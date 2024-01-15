@@ -6,12 +6,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/data/infra.dart';
-import '../../skeleton/mixins/service_finder_mixin.dart';
-import '../../skeleton/services/trackers/trackers.dart';
-import '../../skeleton/views/overlays/overlay.dart';
-import '../../skeleton/utils/utils.dart';
+import '../../skeleton/skeleton.dart';
 import 'adam.dart';
 import 'building.dart';
 import 'fruit.dart';
@@ -37,16 +32,16 @@ class Player extends Opponent {
 
   Player.initialize(Map<String, dynamic> map, int ownerId)
       : super.initialize(map, ownerId) {
-    moodId = Utils.toInt(map["mood_id"]);
-    gender = Utils.toInt(map["gender"]);
-    birthYear = Utils.toInt(map["birth_year"]);
-    updatedAt = Utils.toInt(map["updated_at"]);
-    lastLoadAt = Utils.toInt(map["last_load_at"]);
-    tribeRank = Utils.toInt(map["tribe_rank"]);
-    prevLeagueId = Utils.toInt(map["prev_league_id"]);
-    prevLeagueRank = Utils.toInt(map["prev_league_rank"]);
-    wonBattlesCount = Utils.toInt(map["won_battle_num"]);
-    lostBattlesCount = Utils.toInt(map["lost_battle_num"]);
+    moodId = Convert.toInt(map["mood_id"]);
+    gender = Convert.toInt(map["gender"]);
+    birthYear = Convert.toInt(map["birth_year"]);
+    updatedAt = Convert.toInt(map["updated_at"]);
+    lastLoadAt = Convert.toInt(map["last_load_at"]);
+    tribeRank = Convert.toInt(map["tribe_rank"]);
+    prevLeagueId = Convert.toInt(map["prev_league_id"]);
+    prevLeagueRank = Convert.toInt(map["prev_league_rank"]);
+    wonBattlesCount = Convert.toInt(map["won_battle_num"]);
+    lostBattlesCount = Convert.toInt(map["lost_battle_num"]);
 
     phone = map["phone"] ?? "";
     address = map["address"] ?? "";
@@ -302,48 +297,48 @@ class Account extends Player with ServiceFinderMixin {
   }
 
   void _updateInteger(Map<String, dynamic> map) {
-    q = Utils.toInt(map["q"], q);
-    xp = Utils.toInt(map["xp"], xp);
-    gold = Utils.toInt(map["gold"], xp);
-    nectar = Utils.toInt(map["nectar"], nectar);
-    potion = Utils.toInt(map["potion_number"], potion);
-    activity_status = Utils.toInt(map["activity_status"], activity_status);
-    weekly_score = Utils.toInt(map["weekly_score"], weekly_score);
-    new_messages = Utils.toInt(map["new_messages"], new_messages);
+    q = Convert.toInt(map["q"], q);
+    xp = Convert.toInt(map["xp"], xp);
+    gold = Convert.toInt(map["gold"], xp);
+    nectar = Convert.toInt(map["nectar"], nectar);
+    potion = Convert.toInt(map["potion_number"], potion);
+    activity_status = Convert.toInt(map["activity_status"], activity_status);
+    weekly_score = Convert.toInt(map["weekly_score"], weekly_score);
+    new_messages = Convert.toInt(map["new_messages"], new_messages);
     cooldowns_bought_today =
-        Utils.toInt(map["cooldowns_bought_today"], cooldowns_bought_today);
-    questsCount = Utils.toInt(map["total_quests"], questsCount);
-    battlesCount = Utils.toInt(map["total_battles"], battlesCount);
+        Convert.toInt(map["cooldowns_bought_today"], cooldowns_bought_today);
+    questsCount = Convert.toInt(map["total_quests"], questsCount);
+    battlesCount = Convert.toInt(map["total_battles"], battlesCount);
     bank_account_balance =
-        Utils.toInt(map["bank_account_balance"], bank_account_balance);
+        Convert.toInt(map["bank_account_balance"], bank_account_balance);
     last_gold_collect_at =
-        Utils.toInt(map["last_gold_collect_at"], last_gold_collect_at);
-    tutorial_id = Utils.toInt(map["tutorial_id"], tutorial_id);
-    tutorial_index = Utils.toInt(map["tutorial_index"], tutorial_index);
-    avatar_slots = Utils.toInt(map["avatar_slots"], avatar_slots);
-    gold_collection_allowed_at = Utils.toInt(
+        Convert.toInt(map["last_gold_collect_at"], last_gold_collect_at);
+    tutorial_id = Convert.toInt(map["tutorial_id"], tutorial_id);
+    tutorial_index = Convert.toInt(map["tutorial_index"], tutorial_index);
+    avatar_slots = Convert.toInt(map["avatar_slots"], avatar_slots);
+    gold_collection_allowed_at = Convert.toInt(
         map["gold_collection_allowed_at"], gold_collection_allowed_at);
-    gold_collection_extraction = Utils.toInt(
+    gold_collection_extraction = Convert.toInt(
         map["gold_collection_extraction"], gold_collection_extraction);
-    cards_view = Utils.toInt(map["cards_view"], cards_view);
+    cards_view = Convert.toInt(map["cards_view"], cards_view);
     league_remaining_time =
-        Utils.toInt(map["league_remaining_time"], league_remaining_time);
+        Convert.toInt(map["league_remaining_time"], league_remaining_time);
     bonus_remaining_time =
-        Utils.toInt(map["bonus_remaining_time"], bonus_remaining_time);
-    potionPrice = Utils.toInt(map["potion_price"], potionPrice);
-    nectarPrice = Utils.toInt(map["nectar_price"], nectarPrice);
-    hero_id = Utils.toInt(map["hero_id"], hero_id);
-    hero_max_rarity = Utils.toInt(map["hero_max_rarity"], hero_max_rarity);
-    base_hero_id = Utils.toInt(map["base_hero_id"], base_hero_id);
-    wheel_of_fortune_opens_in = Utils.toInt(
+        Convert.toInt(map["bonus_remaining_time"], bonus_remaining_time);
+    potionPrice = Convert.toInt(map["potion_price"], potionPrice);
+    nectarPrice = Convert.toInt(map["nectar_price"], nectarPrice);
+    hero_id = Convert.toInt(map["hero_id"], hero_id);
+    hero_max_rarity = Convert.toInt(map["hero_max_rarity"], hero_max_rarity);
+    base_hero_id = Convert.toInt(map["base_hero_id"], base_hero_id);
+    wheel_of_fortune_opens_in = Convert.toInt(
         map["wheel_of_fortune_opens_in"], wheel_of_fortune_opens_in);
     latest_constants_version =
-        Utils.toInt(map["latest_constants_version"], latest_constants_version);
-    deltaTime = Utils.toInt(map["delta_time"], deltaTime);
-    xpBoostCreatedAt = Utils.toInt(map["xpboost_created_at"], xpBoostCreatedAt);
-    pwBoostCreatedAt = Utils.toInt(map["pwboost_created_at"], pwBoostCreatedAt);
-    xpBoostId = Utils.toInt(map["xpboost_id"], xpBoostId);
-    pwBoostId = Utils.toInt(map["pwboost_id"], pwBoostId);
+        Convert.toInt(map["latest_constants_version"], latest_constants_version);
+    deltaTime = Convert.toInt(map["delta_time"], deltaTime);
+    xpBoostCreatedAt = Convert.toInt(map["xpboost_created_at"], xpBoostCreatedAt);
+    pwBoostCreatedAt = Convert.toInt(map["pwboost_created_at"], pwBoostCreatedAt);
+    xpBoostId = Convert.toInt(map["xpboost_id"], xpBoostId);
+    pwBoostId = Convert.toInt(map["pwboost_id"], pwBoostId);
   }
 
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
@@ -452,38 +447,38 @@ class Account extends Player with ServiceFinderMixin {
   Map<String, dynamic> update(BuildContext context, Map<String, dynamic> data) {
     _updateInteger(data);
     if (data.containsKey("level")) {
-      level = Utils.toInt(data["level"], level);
+      level = Convert.toInt(data["level"], level);
     }
     if (data.containsKey("rank")) {
       rank = data["rank"];
     }
     if (data.containsKey("league_rank")) {
-      leagueRank = Utils.toInt(data["league_rank"], leagueRank);
+      leagueRank = Convert.toInt(data["league_rank"], leagueRank);
     }
 
     if (!data.containsKey("gold")) {
       if (data.containsKey("player_gold")) {
-        gold = Utils.toInt(data["player_gold"]);
+        gold = Convert.toInt(data["player_gold"]);
       }
-      gold += Utils.toInt(data["added_gold"]);
+      gold += Convert.toInt(data["added_gold"]);
     }
 
     if (!data.containsKey("nectar")) {
-      nectar += Utils.toInt(data["added_nectar"]);
+      nectar += Convert.toInt(data["added_nectar"]);
     }
 
     if (!data.containsKey("potion_number")) {
       if (data.containsKey("player_potion")) {
-        potion = Utils.toInt(data["player_potion"]);
+        potion = Convert.toInt(data["player_potion"]);
       }
       if (data.containsKey("potion")) {
-        potion = Utils.toInt(data["potion"]);
+        potion = Convert.toInt(data["potion"]);
       }
-      potion += Utils.toInt(data["added_potion"]);
+      potion += Convert.toInt(data["added_potion"]);
     }
 
     if (!data.containsKey("xp")) {
-      xp += Utils.toInt(data["xp_added"]);
+      xp += Convert.toInt(data["xp_added"]);
     }
 
     if (data.containsKey("attack_cards")) {
@@ -492,10 +487,10 @@ class Account extends Player with ServiceFinderMixin {
       }
     }
     if (data.containsKey("tribe_gold")) {
-      tribe?.gold = Utils.toInt(data["tribe_gold"]);
+      tribe?.gold = Convert.toInt(data["tribe_gold"]);
     }
     if (data.containsKey("tribe_rank")) {
-      tribeRank = Utils.toInt(data["tribe_rank"]);
+      tribeRank = Convert.toInt(data["tribe_rank"]);
     }
 
     if (data.containsKey("hero_potion")) {

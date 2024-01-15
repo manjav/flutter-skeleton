@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 
-import '../services/device_info.dart';
+import '../skeleton.dart';
 
 
 class Asset {

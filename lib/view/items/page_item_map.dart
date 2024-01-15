@@ -5,21 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-import '../../data/core/account.dart';
-import '../../data/core/building.dart';
-import '../../skeleton/data/infra.dart';
-import '../../providers/account_provider.dart';
-import '../../skeleton/services/device_info.dart';
-import '../../skeleton/services/localization.dart';
-import '../../skeleton/services/routes.dart';
-import '../../skeleton/utils/assets.dart';
-import '../../skeleton/views/widgets.dart';
-import '../../skeleton/views/widgets/indicator.dart';
-import '../../skeleton/views/widgets/loader_widget.dart';
-import '../map_elements/building_widget.dart';
-import '../widgets/building_balloon.dart';
-import '../widgets/indicator_deadline.dart';
-import 'page_item.dart';
+import '../../app_export.dart';
 
 class MainMapPageItem extends AbstractPageItem {
   const MainMapPageItem({super.key}) : super("battle");

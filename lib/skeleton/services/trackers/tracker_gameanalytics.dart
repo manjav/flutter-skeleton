@@ -2,10 +2,7 @@ import 'dart:io';
 
 import 'package:gameanalytics_sdk/gameanalytics.dart';
 
-import '../../services/ads/ads_abstract.dart';
-import '../localization.dart';
-import 'tracker_abstract.dart';
-import 'trackers.dart';
+import '../../skeleton.dart';
 
 class GameAnalyticsTracker extends AbstractTracker {
   @override
