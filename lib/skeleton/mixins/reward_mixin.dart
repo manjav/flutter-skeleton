@@ -167,7 +167,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         if (mounted) {
           Routes.popupMessage.navigate(context, args: {
             "title": "Error",
-            "message": "error_${e.statusCode.value}".l()
+            "message": "error_${e.statusCode}".l()
           });
         }
       }

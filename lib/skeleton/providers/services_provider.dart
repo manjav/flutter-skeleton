@@ -33,7 +33,7 @@ class ServicesProvider extends ChangeNotifier {
     try {
       _services.add(service);
     } catch (x) {
-      throw SkeletonException(StatusCode.C0_SUCCESS, "");
+      throw SkeletonException(400, "cannot add service");
     }
   }
 
