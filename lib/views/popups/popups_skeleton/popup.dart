@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
-
 class AbstractPopup extends StatefulWidget {
   //todo: check routes here
   final Routes type;
@@ -17,7 +16,7 @@ class AbstractPopup extends StatefulWidget {
 }
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin {
+    with ILogger, ServiceFinderWidgetMixin , ClassFinderWidgetMixin{
   Alignment alignment = Alignment.center;
   bool barrierDismissible = true, canPop = true;
 
@@ -99,7 +98,12 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         child: Asset.load<Image>('popup_close', height: 38.d));
   }
 
-  List<Widget> appBarElements() => [];
+  List<Widget> appBarElements() {
+    return [
+      Indicator(widget.type.name, Values.gold),
+      Indicator(widget.type.name, Values.nectar, width: 310.d)
+    ];
+  }
 
   Widget innerChromeFactory() => const SizedBox();
 

@@ -32,14 +32,33 @@ extension Overlays on OverlayType {
     //todo: check routes here
     return switch (routeName) {
       "/loading" => const LoadingOverlay(),
+      "/chatOptions" =>
+        ChatOptionsOverlay(y: args[0], options: args[1], onSelect: args[2]),
       "/confirm" => ConfirmOverlay(
           args["message"],
           args["acceptLabel"] ?? "accept_l".l(),
           args["declineLabel"] ?? "decline_l".l(),
           args["onAccept"],
           barrierDismissible: args["barrierDismissible"] ?? true),
+      "/member" => MemberOverlay(args[0], args[1], args[2]),
       "/toast" => ToastOverlay(args as String),
       "/waiting" => ToastOverlay(args as String),
+      "/feastAttack" => AttackFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastLevelup" =>
+        LevelupFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastOpenpack" =>
+        OpenPackFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastEnhance" =>
+        EnhanceFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastEnhancemax" =>
+        PurchaseFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastEvolve" => EvolveFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastPurchase" =>
+        PurchaseFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastUpgrade" =>
+        UpgradeFeastOverlay(args: args ?? {}, onClose: onClose),
+      "/feastUpgradeCard" =>
+        UpgradeCardFeastOverlay(args: args ?? {}, onClose: onClose),
       _ => const AbstractOverlay(),
     };
   }
@@ -78,7 +97,7 @@ class AbstractOverlay extends StatefulWidget {
 }
 
 class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin {
+    with ILogger, ServiceFinderWidgetMixin , ClassFinderWidgetMixin{
   @override
   Widget build(BuildContext context) {
     return const SizedBox();

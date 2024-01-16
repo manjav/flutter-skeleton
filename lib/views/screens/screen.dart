@@ -22,7 +22,7 @@ class AbstractScreen extends StatefulWidget {
 }
 
 class AbstractScreenState<T extends AbstractScreen> extends State<T>
-    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin {
+    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   List<Widget> stepChildren = <Widget>[];
 
   @override
@@ -85,7 +85,12 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     ];
   }
 
-  List<Widget> appBarElementsRight() => [];
+  List<Widget> appBarElementsRight() {
+    return [
+      Indicator(widget.type.name, Values.gold),
+      Indicator(widget.type.name, Values.nectar, width: 300.d)
+    ];
+  }
 
   Widget contentFactory() => const SizedBox();
 

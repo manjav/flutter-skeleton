@@ -16,30 +16,58 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   void onRender(Duration timeStamp) async {
     Overlays.insert(context, OverlayType.loading);
     var serviceProvider = context.read<ServicesProvider>();
+    var accountProvider = context.read<AccountProvider>();
 
     var firebaseAnalytics = FirebaseAnalytics.instance;
 
-    var deviceInfo = DeviceInfo();
-    deviceInfo.initialize();
-    serviceProvider.addService(deviceInfo);
+    try {
+      var deviceInfo = DeviceInfo();
+      deviceInfo.initialize();
+      serviceProvider.addService(deviceInfo);
 
-    var themes = Themes();
-    themes.initialize();
-    serviceProvider.addService(themes);
+      var themes = Themes();
+      themes.initialize();
+      serviceProvider.addService(themes);
 
-    var localization = Localization();
-    await localization.initialize(args: [context]);
-    serviceProvider.addService(localization);
+      var inbox = Inbox();
+      // await inbox.initialize(args: [context]);
+      serviceProvider.addService(inbox);
 
-    var trackers = Trackers(firebaseAnalytics);
-    await trackers.initialize();
-    serviceProvider.addService(trackers);
+      var localization = Localization();
+      await localization.initialize(args: [context]);
+      serviceProvider.addService(localization);
 
-    serviceProvider.changeState(ServiceStatus.initialize);
+      var trackers = Trackers(firebaseAnalytics);
+      await trackers.initialize();
+      serviceProvider.addService(trackers);
 
-    var notifications = Notifications();
-    notifications.initialize(args: ["", <String, int>{}]);
-    serviceProvider.addService(notifications);
+      var httpConnection = HttpConnection();
+      var data = await httpConnection.initialize() as LoadingData;
+      serviceProvider.addService(httpConnection);
+
+      trackers.sendUserData("${data.account.id}", data.account.name);
+
+      if (context.mounted) {
+        accountProvider.initialize(data.account);
+
+        serviceProvider.changeState(ServiceStatus.initialize);
+
+        var notifications = Notifications();
+        notifications.initialize(
+            args: ["${data.account.id}", data.account.getSchedules()]);
+        serviceProvider.addService(notifications);
+
+        var noobSocket = NoobSocket();
+        noobSocket.initialize(
+            args: [data.account, context.read<OpponentsProvider>()]);
+
+        serviceProvider.addService(noobSocket);
+      }
+    } on SkeletonException catch (e) {
+      if (context.mounted) {
+        serviceProvider.changeState(ServiceStatus.error, exception: e);
+      }
+    }
 
     var games = Games();
     games.initialize();
