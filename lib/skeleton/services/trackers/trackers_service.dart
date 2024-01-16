@@ -1,9 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import '../../data/data.dart';
-import '../services.dart';
-import '../../skeleton/skeleton.dart';
+import '../../skeleton.dart';
 
 enum TrackerSDK { none, firebase, gameAnalytics, kochava, metrix, smartlook }
 
@@ -46,14 +44,17 @@ class Trackers extends IService {
     }
   }
 
-  void sendUserData(Account account) {
+  void sendUserData(
+    String id,
+    String name,
+  ) {
     // Set user data
     for (var sdk in _sdks.values) {
       sdk.setProperties({
         "buildType": _buildType.name,
         "build_type": _buildType.name,
-        "userId": account.id.toString(),
-        "userName": account.name,
+        "userId": id,
+        "userName": name,
         "deviceId": DeviceInfo.adId,
         "test_name": _testName,
         "test_variant": variant.toString(),
