@@ -3,7 +3,7 @@ import 'package:rive/rive.dart';
 
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../views.dart';
 
 enum FightMode { quest, battle }
 

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../data/data.dart';
 import '../../providers/account_provider.dart';
 import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../views.dart';
 
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;
