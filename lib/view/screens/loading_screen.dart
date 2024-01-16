@@ -36,12 +36,12 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   initialize() async {
     var serviceProvider = context.read<ServicesProvider>();
 
-    serviceProvider.get<DeviceInfo>().initialize();
-    serviceProvider.get<Themes>().initialize();
-    await serviceProvider.get<Localization>().initialize();
-    await serviceProvider.get<Trackers>().initialize();
-
     try {
+      serviceProvider.get<DeviceInfo>().initialize();
+      serviceProvider.get<Themes>().initialize();
+      await serviceProvider.get<Localization>().initialize(args: [context]);
+      await serviceProvider.get<Trackers>().initialize();
+
       // Load server data
       var data = await serviceProvider.get<HttpConnection>().initialize()
           as LoadingData;
