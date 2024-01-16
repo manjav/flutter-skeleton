@@ -122,11 +122,10 @@ class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
         params: params);
 
     if (tribe != null) {
-      building.level++;
-      tribe.levels[id] = tribe.levels[id]! + 1;
-    } else {
-      building.level = result["level"];
+      tribe.levels[id] = result["level"];
     }
+    building.level = result["level"];
+    result.remove("level");
     if (context.mounted) {
       update(context, result);
     }

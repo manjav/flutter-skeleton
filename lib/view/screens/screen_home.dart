@@ -27,6 +27,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   int _selectedTabIndex = 2, punchIndex = -1;
   final List<SMITrigger?> _punchInputs = List.generate(5, (index) => null);
   final List<SMIBool?> _selectionInputs = List.generate(5, (index) => null);
+  SMINumber? _tribeLevelInput;
 
   @override
   void initState() {
@@ -123,6 +124,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         }
       },
       child: Consumer<AccountProvider>(builder: (_, state, child) {
+        _tribeLevelInput?.value = state.account.tribe != null
+            ? state.account.tribe!.levels[Buildings.tribe.id]!.toDouble()
+            : 0.0;
         return Stack(alignment: Alignment.bottomCenter, children: [
           backgroundBuilder(color: 2, animated: false),
           PageView.builder(
@@ -167,9 +171,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
                         controller.findInput<bool>("active") as SMIBool;
                     _selectionInputs[index]!.value = index == _selectedTabIndex;
                     if (index == 3) {
-                      var input =
+                      _tribeLevelInput =
                           controller.findInput<double>("level") as SMINumber;
-                      input.value = account.tribe != null
+                      _tribeLevelInput?.value = account.tribe != null
                           ? account.tribe!.levels[Buildings.tribe.id]!
                               .toDouble()
                           : 0.0;

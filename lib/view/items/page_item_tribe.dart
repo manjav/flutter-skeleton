@@ -11,12 +11,15 @@ class TribePageItem extends AbstractPageItem {
 }
 
 class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
+  SMIInput<double>? _tribeLevelInput;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _inputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AccountProvider>(builder: (_, state, child) {
+      _tribeLevelInput?.value =
+          state.account.tribe!.levels[Buildings.tribe.id]!.toDouble();
       // Show unavailable message
       var levels = state.account.loadingData.rules["availabilityLevels"]!;
       if (state.account.level < levels["tribe"]!) {
@@ -71,7 +74,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                 onRiveInit: (Artboard artboard) {
               final controller =
                   StateMachineController.fromArtboard(artboard, "Tab");
-              controller?.findInput<double>("level")!.value =
+              _tribeLevelInput = controller?.findInput<double>("level");
+              _tribeLevelInput?.value =
                   account.tribe!.levels[Buildings.tribe.id]!.toDouble();
               controller?.findInput<bool>("hideBackground")!.value = true;
               controller?.findInput<bool>("active")!.value = true;

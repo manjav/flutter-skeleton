@@ -267,9 +267,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
           Positioned(
               top: 40.d,
               left: 110.d,
-              child: Asset.load<Image>(
-                  "icon_league_${LeagueData.getIndices(_player!.prevLeagueId).$1}",
-                  width: 120.d)),
+              child: _getLeagueIcon(_player!.prevLeagueId)),
           Positioned(
               top: 210.d,
               left: 40.d,
@@ -281,11 +279,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
               left: 340.d,
               child: Widgets.divider(direction: Axis.vertical, height: 200.d)),
           Positioned(
-              top: 40.d,
-              left: 450.d,
-              child: Asset.load<Image>(
-                  "icon_league_${LeagueData.getIndices(_player!.leagueId).$1}",
-                  width: 120.d)),
+              top: 40.d, left: 450.d, child: _getLeagueIcon(_player!.leagueId)),
           Positioned(
               top: 210.d,
               left: 390.d,
@@ -303,6 +297,22 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                   "battles_win_rate".l(), "${(battleRate * 100).round()}%",
                   icon: "icon_attacks")),
         ]));
+  }
+
+  Widget _getLeagueIcon(int league) {
+    var indices = LeagueData.getIndices(league);
+    return Stack(children: [
+      Asset.load<Image>("icon_league_${indices.$1}", width: 120.d),
+      Positioned(
+          top: 8.d,
+          width: 34.d,
+          right: 3.d,
+          child: Text(
+            "l_${indices.$2}".l(),
+            style: TStyles.tiny,
+            textAlign: TextAlign.center,
+          ))
+    ]);
   }
 
   _achievementSegment() {

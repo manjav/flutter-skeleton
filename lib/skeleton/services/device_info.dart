@@ -29,6 +29,8 @@ class DeviceInfo extends IService {
   static Future<bool> preInitialize(BuildContext context,
       [bool forced = false]) async {
     if (!forced && isPreInitialized) return false;
+
+    // Get screen info
     var q = MediaQuery.of(context);
     DeviceInfo.size = q.size;
     DeviceInfo.devicePixelRatio = q.devicePixelRatio;
@@ -36,6 +38,8 @@ class DeviceInfo extends IService {
     var height = math.max(size.width, size.height);
     ratio = width / 1080;
     aspectRatio = width / height;
+
+    // Get app info
     var packageInfo = await PackageInfo.fromPlatform();
     packageName = packageInfo.packageName;
     buildNumber = packageInfo.buildNumber;
@@ -48,6 +52,7 @@ class DeviceInfo extends IService {
   @override
   initialize({List<Object>? args}) async {
     log("◢◤◢◤◢◤◢◤◢◤◢ ${DeviceInfo.size} ${DeviceInfo.devicePixelRatio} $ratio ◢◤◢◤◢◤◢◤◢◤◢");
+    // Get device info
     var deviceInfoPlugin = DeviceInfoPlugin();
     try {
       if (kIsWeb) {
