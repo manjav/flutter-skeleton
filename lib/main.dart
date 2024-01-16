@@ -54,7 +54,6 @@ class _MyAppState extends State<MyApp>
   }
 
   void restartApp() {
-    Ranks.lists.clear();
     Overlays.clear();
     LoaderWidget.cachedLoaders.clear();
     if (Navigator.canPop(context)) Navigator.pop(context);
@@ -80,8 +79,6 @@ class _MyAppState extends State<MyApp>
         child: MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => ServicesProvider()),
-              ChangeNotifierProvider(create: (_) => AccountProvider()),
-              ChangeNotifierProvider(create: (_) => OpponentsProvider())
             ],
             child: MaterialApp(
                 navigatorObservers: [
