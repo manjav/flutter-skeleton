@@ -97,7 +97,7 @@ class AbstractOverlay extends StatefulWidget {
 }
 
 class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin {
+    with ILogger, ServiceFinderWidgetMixin , ClassFinderWidgetMixin{
   @override
   Widget build(BuildContext context) {
     return const SizedBox();

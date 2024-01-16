@@ -80,7 +80,7 @@ class ArenaItemRenderer extends StatefulWidget {
 }
 
 class _ArenaItemRendererState extends State<ArenaItemRenderer>
-    with ServiceFinderWidgetMixin {
+    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   int _questsCount = 0;
   bool _waitingMode = true;
   @override

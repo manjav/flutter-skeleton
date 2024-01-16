@@ -18,7 +18,7 @@ class BuildingBalloon extends StatefulWidget {
 }
 
 class _BuildingBalloonState extends State<BuildingBalloon>
-    with ServiceFinderWidgetMixin {
+    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
     return Consumer<AccountProvider>(builder: (_, state, child) {

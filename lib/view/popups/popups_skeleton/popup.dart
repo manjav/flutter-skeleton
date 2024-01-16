@@ -16,7 +16,7 @@ class AbstractPopup extends StatefulWidget {
 }
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin {
+    with ILogger, ServiceFinderWidgetMixin , ClassFinderWidgetMixin{
   Alignment alignment = Alignment.center;
   bool barrierDismissible = true, canPop = true;
 

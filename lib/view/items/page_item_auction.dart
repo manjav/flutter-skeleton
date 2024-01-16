@@ -9,7 +9,7 @@ class AuctionPageItem extends AbstractPageItem {
 }
 
 class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
-    with KeyProvider, ServiceFinderWidgetMixin {
+    with KeyProvider, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   List<AuctionCard> _cards = [];
   int _selectedTab = -1;
   final Map<String, int> _tabs = {
