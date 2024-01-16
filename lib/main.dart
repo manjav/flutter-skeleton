@@ -79,8 +79,7 @@ class _MyAppState extends State<MyApp>
         key: key,
         child: MultiProvider(
             providers: [
-              ChangeNotifierProvider(
-                  create: (_) => ServicesProvider()),
+              ChangeNotifierProvider(create: (_) => ServicesProvider()),
               ChangeNotifierProvider(create: (_) => AccountProvider()),
               ChangeNotifierProvider(create: (_) => OpponentsProvider())
             ],

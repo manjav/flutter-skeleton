@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-import '../../data/data.dart';
-import '../../skeleton/skeleton.dart';
-import '../../providers/providers.dart';
-import '../view.dart';
+import '../../app_export.dart';
 
 class OpponentsPopup extends AbstractPopup {
   OpponentsPopup({super.key}) : super(Routes.popupOpponents, args: {});

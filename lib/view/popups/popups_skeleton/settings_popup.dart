@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../app_export.dart';
 import '../../../main.dart';
-import '../../view.dart';
-import '../../../skeleton/skeleton.dart';
 
 class SettingsPopup extends AbstractPopup {
   //todo: check routes here

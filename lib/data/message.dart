@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
-import '../../mixins/service_finder_mixin.dart';
 
 enum Messages {
   none,

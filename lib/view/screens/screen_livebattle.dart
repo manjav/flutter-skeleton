@@ -4,11 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../data/data.dart';
-import '../../services/connection/noob_socket.dart';
-import '../../services/services.dart';
-import '../../skeleton/skeleton.dart';
-import '../../view/view.dart';
+import '../../app_export.dart';
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [];
@@ -348,7 +344,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
 
     // Reset reminder notifications ....
-    getService<Notifications>().schedule(accountProvider.account);
+    getService<Notifications>()
+        .schedule(accountProvider.account.getSchedules());
 
     Routes.livebattleOut.navigate(context, args: {
       "friendsId": _friendsHead.id,

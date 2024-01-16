@@ -2,12 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
-import '../../../data/data.dart';
-import '../../../mixins/service_finder_mixin.dart';
-import '../../../skeleton/skeleton.dart';
-import '../../screens/screen_livebattle.dart';
-import '../indicator_level.dart';
-import 'live_warrior.dart';
+import '../../../app_export.dart';
 
 class LiveTribe extends StatefulWidget {
   final int ownerId, battleId, helpCost;
@@ -21,7 +16,10 @@ class LiveTribe extends StatefulWidget {
 }
 
 class _LiveTribeState extends State<LiveTribe>
-    with TickerProviderStateMixin, ServiceFinderWidgetMixin {
+    with
+        TickerProviderStateMixin,
+        ServiceFinderWidgetMixin,
+        ClassFinderWidgetMixin {
   late Timer _timer;
   final double _helpTimeout = 38;
   late AnimationController _animationController;

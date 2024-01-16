@@ -3,9 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../../mixins/service_finder_mixin.dart';
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
 
 class QuestScreen extends AbstractScreen {
   QuestScreen({required super.args, super.key}) : super(Routes.quest);
@@ -80,7 +78,7 @@ class ArenaItemRenderer extends StatefulWidget {
 }
 
 class _ArenaItemRendererState extends State<ArenaItemRenderer>
-    with ServiceFinderWidgetMixin {
+    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   int _questsCount = 0;
   bool _waitingMode = true;
   @override

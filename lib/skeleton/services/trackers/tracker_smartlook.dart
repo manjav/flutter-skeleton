@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 
-import '../../app_export.dart';
+import '../../skeleton.dart';
+
 
 class SmartlookTracker extends AbstractTracker {
   @override

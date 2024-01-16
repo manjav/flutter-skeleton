@@ -9,8 +9,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../data/data.dart';
-import '../skeleton/skeleton.dart';
+import '../skeleton.dart';
 
 class Notifications extends IService {
   static bool granted = false;
@@ -19,12 +18,11 @@ class Notifications extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    var account = args![0] as Account;
-    _initializeLocal(account);
-    _initializeRemote(account);
+    _initializeRemote(args![0] as String);
+    _initializeLocal(args[1] as Map<String, int>);
   }
 
-  _initializeLocal(Account account) async {
+  _initializeLocal(Map<String, int> schedules) async {
     final StreamController<String?> selectNotificationStream = StreamController<
         String?>.broadcast(); // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
 
@@ -98,7 +96,7 @@ class Notifications extends IService {
       // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
     await _requestPermissions();
-    schedule(account);
+    schedule(schedules);
   }
 
   _requestPermissions() async {
@@ -130,10 +128,7 @@ class Notifications extends IService {
     }
   }
 
-  void schedule(Account account) async {
-    int nextDailyGiftAt = account.dailyReward["next_reward_at"] ?? 0;
-    int maxCooldown = account.calculateMaxCooldown();
-
+  void schedule(Map<String, int> schedules) async {
     tz.initializeTimeZones();
     // Set location
     var now = DateTime.now();
@@ -167,16 +162,14 @@ class Notifications extends IService {
     for (var d = 10; d < 22; d += 3) {
       messages.add(_MSG("${_r(d)}", _getTime(d * 24 * hourSeconds)));
     }
-    if (maxCooldown > 0) {
-      messages.add(_MSG("cooldown", _getTime(maxCooldown)));
-    }
-    if (nextDailyGiftAt > 0) {
-      messages.add(_MSG("daily", _getTime(nextDailyGiftAt)));
-    }
     if (sleep.millisecondsSinceEpoch > now.millisecondsSinceEpoch) {
       messages.add(_MSG("sleep", sleep));
     }
     messages.add(_MSG("weekend", weekend));
+
+    for (var schedule in schedules.entries) {
+      messages.add(_MSG(schedule.key, _getTime(schedule.value)));
+    }
 
     // Schedule
     var index = 0;
@@ -260,7 +253,7 @@ class Notifications extends IService {
     return string;
   }
 
-  void _initializeRemote(Account account) {
+  void _initializeRemote(String userId) {
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
     OneSignal.Debug.setAlertLevel(OSLogLevel.none);
@@ -273,7 +266,7 @@ class Notifications extends IService {
     // OneSignal.Notifications.clearAll();
 
     OneSignal.initialize("onesignal_appid".l());
-    OneSignal.login("${account.id}");
+    OneSignal.login(userId);
     OneSignal.Notifications.requestPermission(true);
   }
 }

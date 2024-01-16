@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../mixins/service_finder_mixin.dart';
-import '../view.dart';
-import '../../skeleton/skeleton.dart';
+import '../../app_export.dart';
 
 class AbstractScreen extends StatefulWidget {
   //todo: check routes here
@@ -24,7 +22,7 @@ class AbstractScreen extends StatefulWidget {
 }
 
 class AbstractScreenState<T extends AbstractScreen> extends State<T>
-    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin {
+    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   List<Widget> stepChildren = <Widget>[];
 
   @override

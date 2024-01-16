@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
+
 import '../../app_export.dart';
 
 class AttackFeastOverlay extends AbstractOverlay {

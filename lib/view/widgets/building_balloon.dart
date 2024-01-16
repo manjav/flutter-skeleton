@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../mixins/service_finder_mixin.dart';
-import '../../skeleton/skeleton.dart';
-import '../../providers/account_provider.dart';
-import '../../data/data.dart';
+import '../../app_export.dart';
+
 
 class BuildingBalloon extends StatefulWidget {
   final Building building;
@@ -18,7 +16,7 @@ class BuildingBalloon extends StatefulWidget {
 }
 
 class _BuildingBalloonState extends State<BuildingBalloon>
-    with ServiceFinderWidgetMixin {
+    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
     return Consumer<AccountProvider>(builder: (_, state, child) {

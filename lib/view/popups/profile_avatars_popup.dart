@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/data.dart';
-import '../../services/connection/http_connection.dart';
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
 
 class ProfileAvatarsPopup extends AbstractPopup {
   ProfileAvatarsPopup({super.key}) : super(Routes.popupProfile, args: {});

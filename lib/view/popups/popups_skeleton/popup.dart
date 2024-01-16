@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
-import '../../view.dart';
-import '../../../skeleton/skeleton.dart';
-
 class AbstractPopup extends StatefulWidget {
   //todo: check routes here
   final Routes type;
@@ -19,7 +16,7 @@ class AbstractPopup extends StatefulWidget {
 }
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin {
+    with ILogger, ServiceFinderWidgetMixin , ClassFinderWidgetMixin{
   Alignment alignment = Alignment.center;
   bool barrierDismissible = true, canPop = true;
 

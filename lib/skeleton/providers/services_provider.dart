@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../data/data.dart';
+import '../data/responses.dart';
 import '../services/services.dart';
 
 enum ServiceStatus {
@@ -21,7 +21,6 @@ class ServiceState {
 }
 
 class ServicesProvider extends ChangeNotifier {
-
   ServiceState state = ServiceState(ServiceStatus.none);
 
   final Set<IService> _services = {};

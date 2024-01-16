@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
-import '../../mixins/service_finder_mixin.dart';
-import '../../skeleton/skeleton.dart';
+import '../../app_export.dart';
 
 class DeadlineIndicator extends StatefulWidget {
   final Deadline deadline;
@@ -15,7 +13,7 @@ class DeadlineIndicator extends StatefulWidget {
 }
 
 class _DeadlineIndicatorState extends State<DeadlineIndicator>
-    with ServiceFinderWidgetMixin {
+    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   Timer? _timer;
 
   @override
@@ -53,7 +51,7 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator>
                       alignment: const Alignment(0, 0.3),
                       child: Text(
                           "${((widget.deadline.boost.ratio - 1) * 100).round()}%")),
-                  SkinnedText(remaining.toRemainingTime()),
+                  SkinnedText(remaining.toInt().toRemainingTime()),
                 ],
               ));
   }

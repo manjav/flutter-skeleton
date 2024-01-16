@@ -83,31 +83,13 @@ extension PrefExtension on Pref {
 
 enum TutorSteps {
   welcome,
-  exploreFirst,
-  exploreSecond,
-  mergeWelcome,
-  mergeFirst,
-  mergeSecond,
-  mergeOffer,
-  mergeFine,
-  orderTap,
-  orderFill,
   fine,
 }
 
 extension PTutorStapsExtension on TutorSteps {
   int get value => switch (this) {
         TutorSteps.welcome => 0,
-        TutorSteps.exploreFirst => 1,
-        TutorSteps.exploreSecond => 2,
-        TutorSteps.mergeWelcome => 10,
-        TutorSteps.mergeFirst => 11,
-        TutorSteps.mergeSecond => 12,
-        TutorSteps.mergeOffer => 13,
-        TutorSteps.mergeFine => 14,
-        TutorSteps.orderTap => 20,
-        TutorSteps.orderFill => 21,
-        TutorSteps.fine => 30
+        TutorSteps.fine => 30,
       };
 
   void commit([bool force = false]) {

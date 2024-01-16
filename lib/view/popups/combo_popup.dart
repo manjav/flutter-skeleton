@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../../data/data.dart';
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
 
 class ComboPopup extends AbstractPopup {
   ComboPopup({super.key}) : super(Routes.popupCombo, args: {});
