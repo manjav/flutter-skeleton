@@ -8,11 +8,8 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../data/data.dart';
-import '../../providers/account_provider.dart';
-import '../../services/connection/noob_socket.dart';
-import '../../skeleton/skeleton.dart';
-import '../views.dart';
+import '../../app_export.dart';
+
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Routes.home, args: {});
@@ -121,8 +118,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
           ),
           TabNavigator(
               tabsCount: _selectionInputs.length,
-              // selectedIndex: _selectedTab,
-              // punchIndex: _punchIndex,
               itemBuilder: _tabItemBuilder)
         ]);
       }),
