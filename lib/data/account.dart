@@ -6,16 +6,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../mixins/service_finder_mixin.dart';
-import '../../services/services.dart';
-import '../../skeleton/skeleton.dart';
-import '../../view/overlays/overlays.dart';
-import 'adam.dart';
-import 'building.dart';
-import 'fruit.dart';
-import 'rpc_data.dart';
-import 'store.dart';
-import 'tribe.dart';
+import '../app_export.dart';
 
 class Player extends Opponent {
   late int gender,
@@ -335,11 +326,13 @@ class Account extends Player with ServiceFinderMixin {
     base_hero_id = Convert.toInt(map["base_hero_id"], base_hero_id);
     wheel_of_fortune_opens_in = Convert.toInt(
         map["wheel_of_fortune_opens_in"], wheel_of_fortune_opens_in);
-    latest_constants_version =
-        Convert.toInt(map["latest_constants_version"], latest_constants_version);
+    latest_constants_version = Convert.toInt(
+        map["latest_constants_version"], latest_constants_version);
     deltaTime = Convert.toInt(map["delta_time"], deltaTime);
-    xpBoostCreatedAt = Convert.toInt(map["xpboost_created_at"], xpBoostCreatedAt);
-    pwBoostCreatedAt = Convert.toInt(map["pwboost_created_at"], pwBoostCreatedAt);
+    xpBoostCreatedAt =
+        Convert.toInt(map["xpboost_created_at"], xpBoostCreatedAt);
+    pwBoostCreatedAt =
+        Convert.toInt(map["pwboost_created_at"], pwBoostCreatedAt);
     xpBoostId = Convert.toInt(map["xpboost_id"], xpBoostId);
     pwBoostId = Convert.toInt(map["pwboost_id"], pwBoostId);
   }
@@ -567,10 +560,31 @@ class Account extends Player with ServiceFinderMixin {
         Values.rank => rank,
         _ => 0,
       };
+
+  Map<String, int> getSchedules() {
+    var schedules = <String, int>{};
+    if (dailyReward.containsKey("next_reward_at")) {
+      schedules["daily"] = dailyReward["next_reward_at"] as int;
+    }
+    var cooldown = calculateMaxCooldown();
+    if (cooldown > 0) {
+      schedules["cooldown"] = cooldown;
+    }
+    return schedules;
+  }
 }
 
 class Deadline {
   final int time;
   final ShopItem boost;
   Deadline(this.time, this.boost);
+}
+
+enum Values {
+  none,
+  gold,
+  leagueRank,
+  nectar,
+  potion,
+  rank,
 }

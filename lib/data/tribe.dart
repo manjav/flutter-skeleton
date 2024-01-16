@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 
-import '../../main.dart';
 import '../../app_export.dart';
-import '../../mixins/service_finder_mixin.dart';
+import '../../main.dart';
 
 class Tribe with ServiceFinderMixin {
   late int id,
