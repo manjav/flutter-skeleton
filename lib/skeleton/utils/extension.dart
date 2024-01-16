@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:intl/intl.dart';
+import '../../data/data.dart';
 import '../skeleton.dart';
 
 extension IntExtension on int {
@@ -99,7 +100,7 @@ extension StringExtension on String {
     try {
       return b64.decode(b64.decode(this).xorEncrypt(secret: secret));
     } catch (e) {
-      throw SkeletonException(StatusCode.C901_ENCRYPTION_ERROR, "");
+      throw SkeletonException(StatusCode.C901_ENCRYPTION_ERROR.value, "");
     }
   }
 

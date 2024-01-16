@@ -43,7 +43,7 @@ class HttpConnection extends IService {
     var test = _config["updates"]["test"];
     if (test["version"] < version) {
       if (!test["testers"].contains(loadData.account.id)) {
-        throw SkeletonException(StatusCode.C702_UPDATE_TEST, "");
+        throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
       }
     }
     Pref.restoreKey.setString(loadData.account.restoreKey);
@@ -59,7 +59,7 @@ class HttpConnection extends IService {
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {
-        throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
+        throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
       }
     }
     if (response!.statusCode == 200) {
@@ -67,11 +67,11 @@ class HttpConnection extends IService {
       var updates = _config["updates"];
       if (updates["force"]["version"] > version) {
         throw SkeletonException(
-            StatusCode.C701_UPDATE_FORCE, updates["force"]["message"]);
+            StatusCode.C701_UPDATE_FORCE.value, updates["force"]["message"]);
       } else if (!Pref.skipUpdate.getBool() &&
           updates["notice"]["version"] > version) {
         throw SkeletonException(
-            StatusCode.C700_UPDATE_NOTICE, updates["notice"]["message"]);
+            StatusCode.C700_UPDATE_NOTICE.value, updates["notice"]["message"]);
       }
       Pref.skipUpdate.setBool(false);
       LoadingData.baseURL = "http://${_config['ip']}";
@@ -82,7 +82,7 @@ class HttpConnection extends IService {
       log("Config loaded.");
     } else {
       throw SkeletonException(
-          StatusCode.C100_UNEXPECTED_ERROR, 'Failed to load config file');
+          StatusCode.C100_UNEXPECTED_ERROR.value, 'Failed to load config file');
     }
   }
 
@@ -94,7 +94,7 @@ class HttpConnection extends IService {
       if (context.mounted) {
         Routes.popupMessage.navigate(context, args: {
           "title": "Error",
-          "message": "error_${e.statusCode.value}".l()
+          "message": "error_${e.statusCode}".l()
         });
       }
       rethrow;
@@ -122,12 +122,12 @@ class HttpConnection extends IService {
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {
-        throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE, error);
+        throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
       }
     }
     final status = response!.statusCode;
     if (status != 200) {
-      throw SkeletonException(status.toStatus(),
+      throw SkeletonException(status.toStatus().value,
           response.body.isNotEmpty ? response.body : "error_$status".l());
     }
 
@@ -139,7 +139,7 @@ class HttpConnection extends IService {
     var responseData = jsonDecode(body);
     if (!responseData['status']) {
       var statusCode = (responseData['data']['code'] as int).toStatus();
-      throw SkeletonException(statusCode, response.body);
+      throw SkeletonException(statusCode.value, response.body);
     }
     return responseData['data'];
   }

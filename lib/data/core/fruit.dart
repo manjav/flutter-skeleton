@@ -220,7 +220,7 @@ class AccountCard extends AbstractCard {
         getAccountProvider(context).update(context, data);
       }
     } on SkeletonException catch (e) {
-      if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL) {
+      if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL.value) {
         lastUsedAt = 0;
       }
     }
