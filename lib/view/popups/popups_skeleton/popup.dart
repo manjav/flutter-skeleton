@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../view/view.dart';
-import '../../skeleton.dart';
+import '../../view.dart';
+import '../../../skeleton/skeleton.dart';
 
 class AbstractPopup extends StatefulWidget {
   //todo: check routes here

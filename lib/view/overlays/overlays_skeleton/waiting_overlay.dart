@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton.dart';
+import '../../../skeleton/skeleton.dart';
+import 'overlay.dart';
 
 class WaitingOverlay extends AbstractOverlay {
   final String message;

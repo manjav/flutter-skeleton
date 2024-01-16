@@ -95,6 +95,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   Widget contentFactory() => const SizedBox();
 
-  void toast(String message) =>
-      Overlays.insert(context, OverlayType.toast, args: message);
+  // void toast(String message) =>
+  //     Overlays.insert(context, OverlayType.toast, args: message);
 }
