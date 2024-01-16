@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../view/view.dart';
-import '../../skeleton.dart';
+import '../../mixins/service_finder_mixin.dart';
+import '../view.dart';
+import '../../skeleton/skeleton.dart';
 
 class AbstractScreen extends StatefulWidget {
   //todo: check routes here

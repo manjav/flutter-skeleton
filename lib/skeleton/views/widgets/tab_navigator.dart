@@ -16,8 +16,7 @@ class TabNavigator extends StatefulWidget {
   State<TabNavigator> createState() => _TabNavigatorState();
 }
 
-class _TabNavigatorState extends State<TabNavigator>
-    with ServiceFinderWidgetMixin {
+class _TabNavigatorState extends State<TabNavigator> {
   final double _navbarHeight = 210.d;
 
   @override

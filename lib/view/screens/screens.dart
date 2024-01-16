@@ -5,3 +5,4 @@ export 'screen_home.dart';
 export 'screen_livebattle.dart';
 export 'screen_livebattle_outcome.dart';
 export 'screen_quest.dart';
+export 'screen.dart';

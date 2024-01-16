@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_export.dart';
+import '../mixins/service_finder_mixin.dart';
 
 class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
   late Account account;

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/app_export.dart';
 
-import '../../data/data.dart';
-import '../../services/services.dart';
-import '../skeleton.dart';
-
-class Inbox extends IService {
+class Inbox extends IService with ServiceFinderMixin {
   List<Message> messages = [];
   @override
   initialize({List<Object>? args}) async {
