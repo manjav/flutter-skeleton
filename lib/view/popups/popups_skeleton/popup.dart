@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton.dart';
+import '../../../app_export.dart';
+import '../../view.dart';
+import '../../../skeleton/skeleton.dart';
 
 class AbstractPopup extends StatefulWidget {
+  //todo: check routes here
   final Routes type;
   final Map<String, dynamic> args;
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../skeleton.dart';
+import '../../view.dart';
+import '../../../skeleton/skeleton.dart';
 
 class MessagePopup extends AbstractPopup {
+  //todo: check routes here
   const MessagePopup({super.key, required super.args})
       : super(Routes.popupMessage);
 

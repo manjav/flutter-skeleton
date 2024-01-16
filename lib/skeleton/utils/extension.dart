@@ -99,7 +99,7 @@ extension StringExtension on String {
     try {
       return b64.decode(b64.decode(this).xorEncrypt(secret: secret));
     } catch (e) {
-      throw SkeletonException(StatusCode.C901_ENCRYPTION_ERROR, "");
+      throw SkeletonException(901, "");
     }
   }
 

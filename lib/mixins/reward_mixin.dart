@@ -7,8 +7,9 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../data/data.dart';
-import '../../skeleton/skeleton.dart';
+import '../data/data.dart';
+import '../skeleton/skeleton.dart';
+import '../view/view.dart';
 
 enum RewardAnimationState {
   none,
@@ -164,12 +165,15 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     } on SkeletonException catch (e) {
       if (context.mounted) {
         await Future.delayed(const Duration(milliseconds: 10));
-        if (mounted) {
-          Routes.popupMessage.navigate(context, args: {
-            "title": "Error",
-            "message": "error_${e.statusCode.value}".l()
-          });
-        }
+        // if (mounted) {
+        //   //todo: routes is extract to project we need to fix this
+        //   Routes.popupMessage.navigate(context, args: {
+        //     "title": "Error",
+        //     "message": "error_${e.statusCode}".l()
+        //   });
+        //
+        // }
+        rethrow;
       }
       dismiss();
     }

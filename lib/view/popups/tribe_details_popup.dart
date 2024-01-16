@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
+import '../view.dart';
 
 class TribeDetailsPopup extends AbstractPopup {
   const TribeDetailsPopup({required super.args, super.key})

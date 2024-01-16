@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton.dart';
+import '../../mixins/service_finder_mixin.dart';
+import '../view.dart';
+import '../../skeleton/skeleton.dart';
 
 class AbstractScreen extends StatefulWidget {
+  //todo: check routes here
   final Routes type;
   final Map<String, dynamic> args;
   final String? sfx;
@@ -93,6 +96,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   Widget contentFactory() => const SizedBox();
 
-  void toast(String message) =>
-      Overlays.insert(context, OverlayType.toast, args: message);
+  // void toast(String message) =>
+  //     Overlays.insert(context, OverlayType.toast, args: message);
 }

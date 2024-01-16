@@ -4,6 +4,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import '../../app_export.dart';
+import '../../mixins/service_finder_mixin.dart';
 
 class Fruit {
   late String name;
@@ -220,7 +221,7 @@ class AccountCard extends AbstractCard {
         getAccountProvider(context).update(context, data);
       }
     } on SkeletonException catch (e) {
-      if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL) {
+      if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL.value) {
         lastUsedAt = 0;
       }
     }

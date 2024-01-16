@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
+import '../view.dart';
 
 class HeroPopup extends AbstractPopup {
   final int selectedHero;

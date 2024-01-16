@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
+import '../view.dart';
 
 class RankingPopup extends AbstractPopup {
   RankingPopup({super.key}) : super(Routes.popupRanking, args: {});
