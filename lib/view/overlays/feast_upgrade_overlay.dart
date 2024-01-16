@@ -18,6 +18,13 @@ class _UpgradeFeastOverlayState
   late int _buildingId;
   late Building _building;
   late AnimationController _animationController;
+  get _postFix {
+    return switch (_building.type) {
+      Buildings.tribe => "ˡ",
+      Buildings.mine || Buildings.treasury => "",
+      _ => "%"
+    };
+  }
 
   @override
   void initState() {
@@ -46,7 +53,6 @@ class _UpgradeFeastOverlayState
 
   @override
   void onRiveEvent(RiveEvent event) {
-    print(state);
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
       _updateTexts();
@@ -72,9 +78,8 @@ class _UpgradeFeastOverlayState
     updateRiveText("headerText", "upgrade_l".l());
     // updateRiveText("upToCaptionText", "upgraded_l".l([_building.level]));
     updateRiveText("upToCaptionText", "upgrade_t_$_buildingId".l());
-    var benefit = _building.benefit.convert();
-    updateRiveText(
-        "upToText", "$benefit${_buildingId == Buildings.tribe.id ? "ˡ" : "%"}");
+    var benefit = _building.benefit.compact();
+    updateRiveText("upToText", "$benefit$_postFix");
   }
 
   @override
