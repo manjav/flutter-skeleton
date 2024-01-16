@@ -4,9 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../data/data.dart';
-import '../../../main.dart';
-import '../../skeleton.dart';
+import '../../data/data.dart';
+import '../../main.dart';
+import '../../skeleton/skeleton.dart';
+import '../view.dart';
 
 class LoadingOverlay extends AbstractOverlay {
   const LoadingOverlay({super.key}) : super(type: OverlayType.loading);

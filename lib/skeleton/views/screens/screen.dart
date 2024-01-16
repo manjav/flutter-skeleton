@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class AbstractScreen extends StatefulWidget {
+  //todo: check routes here
   final Routes type;
   final Map<String, dynamic> args;
   final String? sfx;

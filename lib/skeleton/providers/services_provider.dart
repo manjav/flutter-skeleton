@@ -26,7 +26,6 @@ class ServicesProvider extends ChangeNotifier {
 
   final Set<IService> _services = {};
 
-  //todo: we need to check nullable here
   T get<T>() => _services.firstWhere((service) => service is T) as T;
 
   void addService(IService service) {

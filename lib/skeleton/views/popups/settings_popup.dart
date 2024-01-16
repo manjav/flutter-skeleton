@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
+import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class SettingsPopup extends AbstractPopup {
+  //todo: check routes here
   SettingsPopup({super.key}) : super(Routes.popupSettings, args: {});
 
   @override
