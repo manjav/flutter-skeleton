@@ -165,13 +165,15 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     } on SkeletonException catch (e) {
       if (context.mounted) {
         await Future.delayed(const Duration(milliseconds: 10));
-        if (mounted) {
-          //todo: routes is extract to project we need to fix this
-          Routes.popupMessage.navigate(context, args: {
-            "title": "Error",
-            "message": "error_${e.statusCode}".l()
-          });
-        }
+        // if (mounted) {
+        //   //todo: routes is extract to project we need to fix this
+        //   Routes.popupMessage.navigate(context, args: {
+        //     "title": "Error",
+        //     "message": "error_${e.statusCode}".l()
+        //   });
+        //
+        // }
+        rethrow;
       }
       dismiss();
     }
