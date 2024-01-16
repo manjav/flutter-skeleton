@@ -52,22 +52,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         _punchTab(state.data as int);
       }
     });
-
-    //     for (var i = 0; i < widget.tabsCount; i++) {
-    //   _punchInputs.add(null);
-    //   _selectionInputs.add(null);
-    // }
-    // widget.selectedIndex.addListener(() {
-    //   for (var i = 0; i < widget.tabsCount; i++) {
-    //     _selectionInputs[i]!.value = i == widget.selectedIndex.value;
-    //   }
-    // });
-    // widget.punchIndex?.addListener(() {
-    //   if (widget.punchIndex!.value >= 0 &&
-    //       widget.punchIndex!.value < widget.tabsCount) {
-    //     _punchInputs[widget.punchIndex!.value]!.value = true;
-    //   }
-    // });
   }
 
   @override
