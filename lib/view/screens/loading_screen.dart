@@ -12,56 +12,54 @@ class LoadingScreen extends AbstractScreen {
 
 class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   @override
-  void onRender(Duration timeStamp) {
+  void onRender(Duration timeStamp) async {
     Overlays.insert(context, OverlayType.loading);
     var serviceProvider = context.read<ServicesProvider>();
+    var accountProvider = context.read<AccountProvider>();
 
     var firebaseAnalytics = FirebaseAnalytics.instance;
 
-    var ads = Ads();
-    ads.initialize();
-    serviceProvider.addService(ads);
-
-    serviceProvider.addService(Games());
-    serviceProvider.addService(HttpConnection());
-    serviceProvider.addService(DeviceInfo());
-    serviceProvider.addService(Inbox());
-    serviceProvider.addService(Localization());
-    serviceProvider.addService(Notifications());
-    serviceProvider.addService(NoobSocket());
-    serviceProvider.addService(Sounds());
-    serviceProvider.addService(Themes());
-    serviceProvider.addService(Trackers(firebaseAnalytics));
-
-    initialize();
-  }
-
-  initialize() async {
-    var serviceProvider = context.read<ServicesProvider>();
-
     try {
-      serviceProvider.get<DeviceInfo>().initialize();
-      serviceProvider.get<Themes>().initialize();
-      await serviceProvider.get<Localization>().initialize(args: [context]);
-      await serviceProvider.get<Trackers>().initialize();
+      var deviceInfo = DeviceInfo();
+      deviceInfo.initialize();
+      serviceProvider.addService(deviceInfo);
 
-      // Load server data
-      var data = await serviceProvider.get<HttpConnection>().initialize()
-          as LoadingData;
+      var themes = Themes();
+      themes.initialize();
+      serviceProvider.addService(themes);
 
-      serviceProvider.get<Trackers>().sendUserData(data.account);
+      var inbox = Inbox();
+      // await inbox.initialize(args: [context]);
+      serviceProvider.addService(inbox);
+
+      var localization = Localization();
+      await localization.initialize(args: [context]);
+      serviceProvider.addService(localization);
+
+      var trackers = Trackers(firebaseAnalytics);
+      await trackers.initialize();
+      serviceProvider.addService(trackers);
+
+      var httpConnection = HttpConnection();
+      var data = await httpConnection.initialize() as LoadingData;
+      serviceProvider.addService(httpConnection);
+
+      trackers.sendUserData(data.account);
+
       if (context.mounted) {
-        context.read<AccountProvider>().initialize(data.account);
-        context.read<ServicesProvider>().changeState(ServiceStatus.initialize);
+        accountProvider.initialize(data.account);
 
-        // Initialize notifications ...
-        serviceProvider.get<Notifications>().initialize(args: [data.account]);
-      }
+        serviceProvider.changeState(ServiceStatus.initialize);
 
-      // Initialize socket
-      if (context.mounted) {
-        serviceProvider.get<NoobSocket>().initialize(
+        var notifications = Notifications();
+        notifications.initialize(args: [data.account]);
+        serviceProvider.addService(notifications);
+
+        var noobSocket = NoobSocket();
+        noobSocket.initialize(
             args: [data.account, context.read<OpponentsProvider>()]);
+
+        serviceProvider.addService(noobSocket);
       }
     } on SkeletonException catch (e) {
       if (context.mounted) {
@@ -69,13 +67,18 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
       }
     }
 
-    serviceProvider.get<Games>().initialize();
+    var games = Games();
+    games.initialize();
+    serviceProvider.addService(games);
 
-    var ads = serviceProvider.get<Ads>();
+    var ads = Ads();
     ads.initialize();
     ads.onUpdate = _onAdsServicesUpdate;
+    serviceProvider.addService(ads);
 
-    serviceProvider.get<Sounds>().initialize();
+    var sounds = Sounds();
+    sounds.initialize();
+    serviceProvider.addService(sounds);
   }
 
   _onAdsServicesUpdate(Placement? placement) {
