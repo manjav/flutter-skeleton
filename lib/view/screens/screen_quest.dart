@@ -3,9 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../../mixins/service_finder_mixin.dart';
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
 
 class QuestScreen extends AbstractScreen {
   QuestScreen({required super.args, super.key}) : super(Routes.quest);

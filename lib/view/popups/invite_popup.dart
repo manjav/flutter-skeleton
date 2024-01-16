@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
 
-
 class InvitePopup extends AbstractPopup {
   InvitePopup({super.key}) : super(Routes.popupInvite, args: {});
 

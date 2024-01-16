@@ -2,12 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
-import '../../../data/data.dart';
-import '../../../mixins/service_finder_mixin.dart';
-import '../../../skeleton/skeleton.dart';
-import '../../screens/screen_livebattle.dart';
-import '../indicator_level.dart';
-import 'live_warrior.dart';
+import '../../../app_export.dart';
 
 class LiveTribe extends StatefulWidget {
   final int ownerId, battleId, helpCost;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
+
 
 class DailyGiftPopup extends AbstractPopup {
   DailyGiftPopup({super.key}) : super(Routes.popupDailyGift, args: {});
