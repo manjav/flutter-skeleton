@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/data.dart';
-import '../../../view/view.dart';
-import '../../skeleton.dart';
+import '../../view.dart';
+import '../../../skeleton/skeleton.dart';
 
 class InboxPopup extends AbstractPopup {
 

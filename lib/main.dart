@@ -5,11 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'data/core/adam.dart';
-import 'providers/account_provider.dart';
-import 'providers/opponents_provider.dart';
-import 'skeleton/skeleton.dart';
-import 'view/routes.dart';
+import 'app_export.dart';
 
 void main() async {
   MyApp.startTime = DateTime.now();
