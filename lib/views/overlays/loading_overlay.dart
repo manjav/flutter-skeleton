@@ -33,7 +33,8 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   Widget build(BuildContext context) {
     //todo: check status code is moved to project it's better check this in project or refactor
     var isForceUpdate = _serviceState.exception != null &&
-        _serviceState.exception!.statusCode == StatusCode.C701_UPDATE_FORCE.value;
+        _serviceState.exception!.statusCode ==
+            StatusCode.C701_UPDATE_FORCE.value;
     var isUpdateError = _serviceState.exception != null &&
             _serviceState.exception!.statusCode ==
                 StatusCode.C700_UPDATE_NOTICE.value ||
@@ -138,7 +139,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
     if (exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY.value ||
         exception.statusCode == StatusCode.C702_UPDATE_TEST.value) {
       close();
-      Routes.popupRestore.navigate(context, args: {"onlySet": true});
+      // Routes.popupRestore.navigate(context, args: {"onlySet": true});
     } else if (isUpdateError) {
       _update(isForceUpdate);
     } else {
