@@ -4,8 +4,7 @@ import 'package:provider/provider.dart';
 import '../../data/data.dart';
 import '../../providers/account_provider.dart';
 import '../../skeleton/skeleton.dart';
-import '../items/card_item.dart';
-import 'hero_popup.dart';
+import '../view.dart';
 
 class HeroEvolvePopup extends AbstractPopup {
   const HeroEvolvePopup({super.key, required super.args})

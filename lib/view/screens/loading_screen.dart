@@ -18,7 +18,10 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
 
     var firebaseAnalytics = FirebaseAnalytics.instance;
 
-    serviceProvider.addService(Ads());
+    var ads = Ads();
+    ads.initialize();
+    serviceProvider.addService(ads);
+
     serviceProvider.addService(Games());
     serviceProvider.addService(HttpConnection());
     serviceProvider.addService(DeviceInfo());
@@ -57,7 +60,8 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
 
       // Initialize socket
       if (context.mounted) {
-        serviceProvider.get<NoobSocket>().initialize(args: [data.account, context.read<OpponentsProvider>()]);
+        serviceProvider.get<NoobSocket>().initialize(
+            args: [data.account, context.read<OpponentsProvider>()]);
       }
     } on SkeletonException catch (e) {
       if (context.mounted) {
@@ -76,7 +80,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
 
   _onAdsServicesUpdate(Placement? placement) {
     var serviceProvider = context.read<ServicesProvider>();
-    Sounds sounds=serviceProvider.get<Sounds>();
+    Sounds sounds = serviceProvider.get<Sounds>();
 
     if (Pref.music.getBool()) {
       if (placement!.state == AdState.show) {

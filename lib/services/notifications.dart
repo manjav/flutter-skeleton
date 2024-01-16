@@ -9,8 +9,8 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../../data/data.dart';
-import '../skeleton.dart';
+import '../data/data.dart';
+import '../skeleton/skeleton.dart';
 
 class Notifications extends IService {
   static bool granted = false;

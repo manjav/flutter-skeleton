@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../data/core/adam.dart';
 import '../../../providers/providers.dart';
+import '../../../view/view.dart';
 import '../../skeleton.dart';
 
 class Indicator extends StatefulWidget {
