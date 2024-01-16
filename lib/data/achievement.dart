@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../data.dart';
-import '../../skeleton/utils/utils.dart';
+import '../app_export.dart';
 
 enum AchievementType {
   none,

@@ -12,15 +12,6 @@ class StringMap<T> {
   }
 }
 
-enum Values {
-  none,
-  gold,
-  leagueRank,
-  nectar,
-  potion,
-  rank,
-}
-
 class IntVec2d {
   final int i, j;
   IntVec2d(this.i, this.j);

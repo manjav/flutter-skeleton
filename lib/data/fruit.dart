@@ -3,8 +3,8 @@
 //         -=-=-=-    Fruit    -=-=-=-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+
 import '../../app_export.dart';
-import '../../mixins/service_finder_mixin.dart';
 
 class Fruit {
   late String name;
@@ -72,7 +72,8 @@ class FruitCard {
 
     attributes[HeroAttribute.power] = Convert.toInt(data["powerAttribute"]);
     attributes[HeroAttribute.wisdom] = Convert.toInt(data["wisdomAttribute"]);
-    attributes[HeroAttribute.blessing] = Convert.toInt(data["blessingAttribute"]);
+    attributes[HeroAttribute.blessing] =
+        Convert.toInt(data["blessingAttribute"]);
     potionLimit = Convert.toInt(data["potion_limit"]);
   }
 

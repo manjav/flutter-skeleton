@@ -1,4 +1,5 @@
-import '../../app_export.dart';
+
+import 'data.dart';
 
 class LoadingData {
   static String baseURL = "";

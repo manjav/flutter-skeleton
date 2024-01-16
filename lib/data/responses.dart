@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 enum StatusCode {
   C0_SUCCESS,
   C100_UNEXPECTED_ERROR,
