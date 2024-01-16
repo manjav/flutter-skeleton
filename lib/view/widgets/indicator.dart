@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/app_export.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/core/adam.dart';
-import '../../../providers/providers.dart';
-import '../../../view/view.dart';
-import '../../skeleton.dart';
+import '../../data/core/adam.dart';
+import '../../providers/providers.dart';
+import '../view.dart';
+import '../../skeleton/skeleton.dart';
 
 class Indicator extends StatefulWidget {
   final String origin;
@@ -30,7 +31,7 @@ class Indicator extends StatefulWidget {
 }
 
 class _IndicatorState extends State<Indicator>
-    with TickerProviderStateMixin, ILogger {
+    with TickerProviderStateMixin, ILogger , ServiceFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();
@@ -59,7 +60,7 @@ class _IndicatorState extends State<Indicator>
                 case Values.nectar:
                   Navigator.popUntil(context, (route) => route.isFirst);
                   //todo: check this line for service
-                  // services.changeState(ServiceStatus.changeTab, data: 0);
+                  services.changeState(ServiceStatus.changeTab, data: 0);
                   log("Go to shop");
                   break;
                 case Values.potion:
