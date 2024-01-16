@@ -6,7 +6,7 @@ export 'core.dart';
 export 'fruit.dart';
 export 'message.dart';
 export 'responses.dart';
-export 'rpc_data.dart';
 export 'rpc.dart';
+export 'rpc_data.dart';
 export 'store.dart';
 export 'tribe.dart';

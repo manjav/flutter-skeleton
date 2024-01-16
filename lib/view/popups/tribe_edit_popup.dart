@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/data.dart';
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
 
 class TribeEditPopup extends AbstractPopup {
   TribeEditPopup({super.key}) : super(Routes.popupTribeEdit, args: {});
