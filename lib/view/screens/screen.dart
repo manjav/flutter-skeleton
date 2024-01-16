@@ -22,7 +22,7 @@ class AbstractScreen extends StatefulWidget {
 }
 
 class AbstractScreenState<T extends AbstractScreen> extends State<T>
-    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin {
+    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   List<Widget> stepChildren = <Widget>[];
 
   @override

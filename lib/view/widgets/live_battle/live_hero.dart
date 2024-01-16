@@ -18,7 +18,11 @@ class LiveHero extends StatefulWidget {
 }
 
 class _LiveHeroState extends State<LiveHero>
-    with TickerProviderStateMixin, KeyProvider, ServiceFinderWidgetMixin {
+    with
+        KeyProvider,
+        TickerProviderStateMixin,
+        ServiceFinderWidgetMixin,
+        ClassFinderWidgetMixin {
   final List<bool> _enables = [true, true, true, true];
   late AnimationController _animationController;
 

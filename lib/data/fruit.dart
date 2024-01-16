@@ -205,7 +205,7 @@ class AuctionCard extends AbstractCard {
   }
 }
 
-class AccountCard extends AbstractCard {
+class AccountCard extends AbstractCard with ClassFinderMixin {
   bool isDeployed = false;
   AccountCard(super.account, super.map, {int? ownerId}) {
     id = map['id'] ?? -1;
@@ -292,7 +292,7 @@ extension HeroAttributesExtesion on HeroAttribute {
   }
 }
 
-class HeroCard with ServiceFinderMixin {
+class HeroCard with ServiceFinderMixin, ClassFinderMixin {
   static const attributeMultiplier = 2;
   static const benefitModifier = 0.01;
   static const benefit_maxMultipliers = {

@@ -11,7 +11,7 @@ class AbstractPageItem extends StatefulWidget {
 }
 
 class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin {
+    with ILogger, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
     return Center(child: SkinnedText("coming_soon".l(), style: TStyles.large));

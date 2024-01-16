@@ -21,7 +21,10 @@ class LiveTribe extends StatefulWidget {
 }
 
 class _LiveTribeState extends State<LiveTribe>
-    with TickerProviderStateMixin, ServiceFinderWidgetMixin {
+    with
+        TickerProviderStateMixin,
+        ServiceFinderWidgetMixin,
+        ClassFinderWidgetMixin {
   late Timer _timer;
   final double _helpTimeout = 38;
   late AnimationController _animationController;

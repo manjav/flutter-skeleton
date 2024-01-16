@@ -13,7 +13,7 @@ class DeadlineIndicator extends StatefulWidget {
 }
 
 class _DeadlineIndicatorState extends State<DeadlineIndicator>
-    with ServiceFinderWidgetMixin {
+    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   Timer? _timer;
 
   @override
