@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../app_export.dart';
 import '../../view.dart';
 import '../../../skeleton/skeleton.dart';
 

@@ -30,7 +30,7 @@ class Indicator extends StatefulWidget {
 }
 
 class _IndicatorState extends State<Indicator>
-    with TickerProviderStateMixin, ILogger, ServiceFinderWidgetMixin {
+    with TickerProviderStateMixin, ILogger {
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();
@@ -58,7 +58,8 @@ class _IndicatorState extends State<Indicator>
                 case Values.gold:
                 case Values.nectar:
                   Navigator.popUntil(context, (route) => route.isFirst);
-                  services.changeState(ServiceStatus.changeTab, data: 0);
+                  //todo: check this line for service
+                  // services.changeState(ServiceStatus.changeTab, data: 0);
                   log("Go to shop");
                   break;
                 case Values.potion:
