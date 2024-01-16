@@ -4,8 +4,8 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class BuildingWidget extends StatefulWidget {
-  final Building building;
   final Widget? child;
+  final Building building;
   final void Function()? onTap;
   const BuildingWidget(this.building, {super.key, this.child, this.onTap});
 
