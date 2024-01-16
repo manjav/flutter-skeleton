@@ -1,4 +1,5 @@
-import '../../skeleton.dart';
+import '../../skeleton/skeleton.dart';
+import 'trackers_service.dart';
 
 abstract class AbstractTracker {
   TrackerSDK sdk = TrackerSDK.none;

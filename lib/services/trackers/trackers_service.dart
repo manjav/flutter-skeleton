@@ -1,9 +1,9 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import '../../../data/data.dart';
-import '../../../services/services.dart';
-import '../../skeleton.dart';
+import '../../data/data.dart';
+import '../services.dart';
+import '../../skeleton/skeleton.dart';
 
 enum TrackerSDK { none, firebase, gameAnalytics, kochava, metrix, smartlook }
 
