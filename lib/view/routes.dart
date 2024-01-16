@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../skeleton/views/views.dart';
 import 'view.dart';
 
 enum Routes {

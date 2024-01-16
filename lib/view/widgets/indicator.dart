@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/app_export.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/core/adam.dart';
-import '../../providers/providers.dart';
-import '../view.dart';
-import '../../skeleton/skeleton.dart';
 
 class Indicator extends StatefulWidget {
   final String origin;
@@ -31,7 +27,7 @@ class Indicator extends StatefulWidget {
 }
 
 class _IndicatorState extends State<Indicator>
-    with TickerProviderStateMixin, ILogger , ServiceFinderWidgetMixin {
+    with TickerProviderStateMixin, ILogger, ServiceFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/fruit.dart';
-import '../../skeleton/skeleton.dart';
+import '../../app_export.dart';
+
 
 class CardHolder extends StatefulWidget {
   final AccountCard? card;

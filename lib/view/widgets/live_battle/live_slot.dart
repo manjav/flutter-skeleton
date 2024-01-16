@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/core/fruit.dart';
-import '../../../skeleton/skeleton.dart';
-import '../../items/card_item.dart';
-import '../../screens/screen_livebattle.dart';
+import '../../../app_export.dart';
 
 class LiveSlot extends StatelessWidget with KeyProvider {
   final int index;

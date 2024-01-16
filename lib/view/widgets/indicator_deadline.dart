@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../data/core/account.dart';
-import '../../mixins/service_finder_mixin.dart';
-import '../../skeleton/skeleton.dart';
+import '../../app_export.dart';
 
 class DeadlineIndicator extends StatefulWidget {
   final Deadline deadline;
