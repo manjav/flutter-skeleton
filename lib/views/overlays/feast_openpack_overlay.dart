@@ -82,7 +82,6 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
 
   @override
   void onRiveEvent(RiveEvent event) {
-    print(event);
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
       var count = _cards.length > 2 ? 0 : _cards.length;
@@ -175,21 +174,18 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   }
 
   Future<void> _chooseHero(int index) async {
-    // _cards = await accountBloc.openPack(context, _pack,
-    //     selectedCardId: _cards[index].base.id);
-    var result = {
-      "achieveCards": [
-        {
-          "id": 559815886,
-          "last_used_at": 0,
-          "power": 46,
-          "base_card_id": 715,
-          "player_id": 8169489
-        }
-      ]
-    };
-
     process(() async {
+      // var result = {
+      //   "achieveCards": [
+      //     {
+      //       "id": 559815886,
+      //       "last_used_at": 0,
+      //       "power": 46,
+      //       "base_card_id": 715,
+      //       "player_id": 8169489
+      //     }
+      //   ]
+      // };
       var result = await accountProvider.openPack(context, _pack,
           selectedCardId: _cards[index].base.id);
       return result;
