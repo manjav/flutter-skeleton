@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../view.dart';
+import '../../views.dart';
 import '../../../skeleton/skeleton.dart';
 
 class MessagePopup extends AbstractPopup {

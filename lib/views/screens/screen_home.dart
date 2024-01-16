@@ -8,11 +8,8 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../data/data.dart';
-import '../../providers/account_provider.dart';
-import '../../services/connection/noob_socket.dart';
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
+
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Routes.home, args: {});
@@ -52,22 +49,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         _punchTab(state.data as int);
       }
     });
-
-    //     for (var i = 0; i < widget.tabsCount; i++) {
-    //   _punchInputs.add(null);
-    //   _selectionInputs.add(null);
-    // }
-    // widget.selectedIndex.addListener(() {
-    //   for (var i = 0; i < widget.tabsCount; i++) {
-    //     _selectionInputs[i]!.value = i == widget.selectedIndex.value;
-    //   }
-    // });
-    // widget.punchIndex?.addListener(() {
-    //   if (widget.punchIndex!.value >= 0 &&
-    //       widget.punchIndex!.value < widget.tabsCount) {
-    //     _punchInputs[widget.punchIndex!.value]!.value = true;
-    //   }
-    // });
   }
 
   @override
@@ -137,8 +118,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
           ),
           TabNavigator(
               tabsCount: _selectionInputs.length,
-              // selectedIndex: _selectedTab,
-              // punchIndex: _punchIndex,
               itemBuilder: _tabItemBuilder)
         ]);
       }),
