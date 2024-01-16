@@ -12,7 +12,7 @@ import '../../data/data.dart';
 import '../../providers/account_provider.dart';
 import '../../services/connection/noob_socket.dart';
 import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../views.dart';
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Routes.home, args: {});
