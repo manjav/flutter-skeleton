@@ -4,7 +4,8 @@ import 'package:adivery/adivery.dart';
 import 'package:adivery/adivery_ads.dart';
 import 'package:flutter/material.dart';
 
-import '../../app_export.dart';
+import '../../skeleton.dart';
+
 
 class AdAdivery extends AbstractAdSDK {
   static String platform = Platform.isAndroid ? "Android" : "iOS";

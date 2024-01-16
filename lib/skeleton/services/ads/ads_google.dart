@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../app_export.dart';
+import '../../skeleton.dart';
+
 
 class AdGoogle extends AbstractAdSDK {
   final AdRequest _request = const AdRequest(nonPersonalizedAds: false);
