@@ -1,7 +1,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/app_export.dart';
 import 'package:provider/provider.dart';
+
+import '../../app_export.dart';
 
 class LoadingScreen extends AbstractScreen {
   LoadingScreen({super.key}) : super(Routes.home, args: {});
@@ -44,7 +45,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
       var data = await httpConnection.initialize() as LoadingData;
       serviceProvider.addService(httpConnection);
 
-      trackers.sendUserData(data.account);
+      trackers.sendUserData("${data.account.id}", data.account.name);
 
       if (context.mounted) {
         accountProvider.initialize(data.account);
@@ -52,7 +53,8 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
         serviceProvider.changeState(ServiceStatus.initialize);
 
         var notifications = Notifications();
-        notifications.initialize(args: [data.account]);
+        notifications.initialize(
+            args: ["${data.account.id}", data.account.getSchedules()]);
         serviceProvider.addService(notifications);
 
         var noobSocket = NoobSocket();

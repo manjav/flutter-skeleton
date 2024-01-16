@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
 import '../loading_overlay.dart';
-import '../../view.dart';
-import '../../../skeleton/skeleton.dart';
 
 enum OverlayType {
   none,

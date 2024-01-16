@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
 
-import '../../data/core/account.dart';
-import '../../skeleton/skeleton.dart';
-import '../../providers/account_provider.dart';
+import '../../app_export.dart';
 
 class LevelIndicator extends StatefulWidget {
   final int? xp;

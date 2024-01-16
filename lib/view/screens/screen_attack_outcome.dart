@@ -4,7 +4,6 @@ import 'package:rive/rive.dart';
 import '../../data/data.dart';
 import '../../skeleton/skeleton.dart';
 import '../view.dart';
-import '../widgets/indicator_level.dart';
 
 enum FightMode { quest, battle }
 

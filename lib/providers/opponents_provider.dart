@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../app_export.dart';
+import '../data/data.dart';
 
 class OpponentsProvider extends ChangeNotifier {
   List<Opponent> list = [];

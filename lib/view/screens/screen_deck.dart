@@ -5,13 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/data.dart';
-import '../../services/services.dart';
-import '../../skeleton/skeleton.dart';
 import '../../providers/account_provider.dart';
-import '../items/items.dart';
+import '../../skeleton/skeleton.dart';
 import '../view.dart';
-import '../widgets/card_holder.dart';
-import '../widgets/indicator_level.dart';
 
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;
@@ -275,7 +271,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         onClose: (data) async {
       _selectedCards.clear(setNull: true);
       // Reset reminder notifications ....
-      getService<Notifications>().schedule(account);
+      getService<Notifications>().schedule(account.getSchedules());
     });
   }
 }

@@ -3,10 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../data/data.dart';
-import '../../skeleton/skeleton.dart';
 import '../../providers/account_provider.dart';
+import '../../skeleton/skeleton.dart';
 import '../view.dart';
-import '../widgets/indicator_level.dart';
 
 class ProfilePopup extends AbstractPopup {
   final int playerId;

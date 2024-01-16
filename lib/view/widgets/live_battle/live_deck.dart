@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/core/fruit.dart';
-import '../../../skeleton/skeleton.dart';
-import '../../items/card_item.dart';
+import '../../../app_export.dart';
 
 class LiveDeck extends StatelessWidget with KeyProvider {
   final SelectedCards items;

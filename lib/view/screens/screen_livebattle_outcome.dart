@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/adam.dart';
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
 
 class LiveOutScreen extends AbstractScreen {
   LiveOutScreen({required super.args, super.key}) : super(Routes.livebattleOut);

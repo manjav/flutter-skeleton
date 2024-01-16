@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/core/rpc.dart';
-import '../../skeleton/skeleton.dart';
-import '../view.dart';
+import '../../app_export.dart';
 
 class TribeDonatePopup extends AbstractPopup {
   TribeDonatePopup({super.key}) : super(Routes.popupTribeDonate, args: {});
