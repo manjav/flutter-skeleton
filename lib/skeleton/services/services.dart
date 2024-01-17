@@ -8,3 +8,4 @@ export 'service.dart';
 export 'sounds.dart';
 export 'theme.dart';
 export 'trackers/trackers.dart';
+export 'routes/routes.dart';

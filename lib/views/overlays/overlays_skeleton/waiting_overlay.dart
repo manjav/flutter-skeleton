@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../skeleton/skeleton.dart';
-import 'overlay.dart';
+import '../../../app_export.dart';
 
 class WaitingOverlay extends AbstractOverlay {
   final String message;
   const WaitingOverlay(this.message, {super.key})
-      : super(type: OverlayType.toast);
+      : super(route: OverlaysName.OVERLAY_WAITING);
 
   @override
   createState() => _WaitingOverlayState();

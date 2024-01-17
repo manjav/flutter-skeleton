@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Routes.home, args: {});
+  LoadingScreen({super.key}) : super(Routes.LOADING_SCREEN, args: {});
 
   @override
   createState() => _LoadingScreenState();
@@ -14,8 +14,25 @@ class LoadingScreen extends AbstractScreen {
 class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void onRender(Duration timeStamp) async {
-    Overlays.insert(context, OverlayType.loading);
+    Overlays.insert(
+      context,
+      const LoadingOverlay(),
+    );
     var serviceProvider = context.read<ServicesProvider>();
+
+    var route = RouteService();
+    route.pages = [
+      SkeletonPageModel(
+          page: LoadingScreen(), route: Routes.LOADING_SCREEN, isOpaque: true),
+      SkeletonPageModel(
+          page: HomeScreen(), route: Routes.HOME_SCREEN, isOpaque: true),
+      SkeletonPageModel(
+          page: const MessagePopup(args: {}),
+          route: Routes.POPUP_MESSAGE,
+          isOpaque: true),
+    ];
+
+    serviceProvider.addService(route);
 
     var deviceInfo = DeviceInfo();
     deviceInfo.initialize();

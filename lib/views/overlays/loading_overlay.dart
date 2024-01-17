@@ -8,7 +8,7 @@ import '../../main.dart';
 import '../../app_export.dart';
 
 class LoadingOverlay extends AbstractOverlay {
-  const LoadingOverlay({super.key}) : super(type: OverlayType.loading);
+  const LoadingOverlay({super.key}) : super(route: OverlaysName.OVERLAY_LOADING);
 
   @override
   createState() => _LoadingOverlayState();
@@ -157,7 +157,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
       await Future.delayed(
           Duration(milliseconds: _minAnimationTime - elapsedTime));
       if (mounted) {
-        Routes.home.replace(context);
+        services.get<RouteService>().replace(Routes.HOME_SCREEN);
       }
     } else if (services.state.status == ServiceStatus.error) {
       _serviceState = services.state;
