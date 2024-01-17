@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'app_export.dart';
@@ -14,11 +15,15 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   await Firebase.initializeApp();
   await Prefs().initialize();
+
+
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
   static late final DateTime startTime;
+
   const MyApp({super.key});
 
   static final _firebaseAnalytics = FirebaseAnalytics.instance;
@@ -75,40 +80,40 @@ class _MyAppState extends State<MyApp>
     _initialize();
     if (!DeviceInfo.isPreInitialized) return const SizedBox();
     return KeyedSubtree(
-        key: key,
-        child: MultiProvider(
-            providers: [
-              ChangeNotifierProvider(create: (_) => ServicesProvider()),
-            ],
-            child: MaterialApp(
-                navigatorObservers: [
-                  MyApp._observer
-                ],
-                localizationsDelegates: const [
-                  // AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                ],
-                supportedLocales: Localization.locales,
-                theme: Themes.darkData,
-                locale: Localization.locales.firstWhere((l) =>
-                    l.languageCode ==
-                    Pref.language.getString(defaultValue: 'en')),
-                // darkTheme: Themes.darkData,
-                // themeMode: settingsController.themeMode,
+      key: key,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ServicesProvider()),
+        ],
+        child: GetMaterialApp(
+          navigatorObservers: [MyApp._observer],
+          localizationsDelegates: const [
+            // AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+          ],
+          supportedLocales: Localization.locales,
+          theme: Themes.darkData,
+          locale: Localization.locales.firstWhere((l) =>
+              l.languageCode == Pref.language.getString(defaultValue: 'en')),
+          // darkTheme: Themes.darkData,
+          // themeMode: settingsController.themeMode,
 
-                // Define a function to handle named routes in order to support
-                // Flutter web url navigation and deep linking.
-                onGenerateRoute: (RouteSettings routeSettings) {
-                  return MaterialTransparentRoute(
-                      isOpaque: RoutesExtension.getOpaque(routeSettings.name!),
-                      settings: routeSettings,
-                      builder: (BuildContext context) =>
-                          RoutesExtension.getWidget(routeSettings.name!,
-                              args: routeSettings.arguments
-                                  as Map<String, dynamic>?));
-                })));
+          // Define a function to handle named routes in order to support
+          // Flutter web url navigation and deep linking.
+          // onGenerateRoute: (RouteSettings routeSettings) {
+          //   return MaterialTransparentRoute(
+          //       isOpaque: RoutesExtension.getOpaque(routeSettings.name!),
+          //       settings: routeSettings,
+          //       builder: (BuildContext context) => RoutesExtension.getWidget(
+          //           routeSettings.name!,
+          //           args: routeSettings.arguments as Map<String, dynamic>?));
+          // },
+          home: LoadingScreen(),
+        ),
+      ),
+    );
   }
 
   @override
