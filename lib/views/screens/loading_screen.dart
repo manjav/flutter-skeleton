@@ -17,8 +17,6 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     Overlays.insert(context, OverlayType.loading);
     var serviceProvider = context.read<ServicesProvider>();
 
-    var firebaseAnalytics = FirebaseAnalytics.instance;
-
     var deviceInfo = DeviceInfo();
     deviceInfo.initialize();
     serviceProvider.addService(deviceInfo);
@@ -31,7 +29,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     await localization.initialize(args: [context]);
     serviceProvider.addService(localization);
 
-    var trackers = Trackers(firebaseAnalytics);
+    var trackers = Trackers(FirebaseAnalytics.instance);
     await trackers.initialize();
     serviceProvider.addService(trackers);
 
