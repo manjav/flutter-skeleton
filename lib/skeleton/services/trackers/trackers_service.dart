@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../skeleton.dart';
@@ -19,7 +18,7 @@ class Trackers extends IService {
   };
 
   final _sdks = <TrackerSDK, AbstractTracker>{
-    TrackerSDK.firebase: FirebaseTracker(),
+    // TrackerSDK.firebase: FirebaseTracker(),
     // TrackerSDK.gameAnalytics: GameAnalyticsTracker(),
     // TrackerSDK.kochava: KochavaaTracker(),
     // TrackerSDK.metrix: MetrixTracker(),
@@ -28,15 +27,14 @@ class Trackers extends IService {
   int variant = 1;
   final _testName = "_";
   final _buildType = BuildType.installed;
-  final FirebaseAnalytics firebaseAnalytics;
 
-  Trackers(this.firebaseAnalytics);
+  Trackers();
 
   @override
   initialize({List<Object>? args}) async {
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
-      sdk.initialize(args: [firebaseAnalytics], logCallback: log);
+      sdk.initialize(logCallback: log);
       var deviceId = await sdk.getDeviceId();
       if (deviceId != null) DeviceInfo.adId = deviceId;
       var variant = await sdk.getVariantId(_testName);
