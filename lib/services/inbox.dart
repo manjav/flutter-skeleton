@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/app_export.dart';
 
+import '../../app_export.dart';
 
 class Inbox extends IService with ServiceFinderMixin {
   List<Message> messages = [];

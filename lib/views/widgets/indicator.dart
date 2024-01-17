@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/app_export.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_export.dart';
 
 class Indicator extends StatefulWidget {
   final String origin;

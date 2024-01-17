@@ -5,19 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter-skeleton",
+            "name": "fruitcraft",
             "request": "launch",
             "type": "dart",
             "preLaunchTask": "convert"
         },
         {
-            "name": "flutter-skeleton (profile mode)",
+            "name": "fruitcraft (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "flutter-skeleton (release mode)",
+            "name": "fruitcraft (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",
