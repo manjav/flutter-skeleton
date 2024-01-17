@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/views/overlays_name.dart';
 
 import '../../../skeleton/skeleton.dart';
 import 'overlay.dart';
@@ -11,7 +12,7 @@ class ConfirmOverlay extends AbstractOverlay {
   const ConfirmOverlay(
       this.message, this.acceptLabel, this.declineLabel, this.onAccept,
       {this.barrierDismissible = true, super.key})
-      : super(type: OverlayType.confirm);
+      : super(route:OverlaysName.OVERLAY_CONFIRM);
 
   @override
   createState() => _ConfirmOverlayState();

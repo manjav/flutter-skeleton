@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../skeleton/skeleton.dart';
+import '../../overlays_name.dart';
 import 'overlay.dart';
 
 class ToastOverlay extends AbstractOverlay {
   final String message;
   const ToastOverlay(this.message, {super.key})
-      : super(type: OverlayType.toast);
+      : super(route: OverlaysName.OVERLAY_TOAST);
 
   @override
   createState() => _ToastOverlayState();

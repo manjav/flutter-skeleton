@@ -117,5 +117,5 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   }
 
   void toast(String message) =>
-      Overlays.insert(context, OverlayType.toast, args: message);
+      Overlays.insert(context, ToastOverlay(message));
 }
