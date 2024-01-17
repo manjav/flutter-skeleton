@@ -157,7 +157,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
       await Future.delayed(
           Duration(milliseconds: _minAnimationTime - elapsedTime));
       if (mounted) {
-        services.get<RouteService>().to(Routes.HOME_SCREEN);
+        services.get<RouteService>().replace(Routes.HOME_SCREEN);
       }
     } else if (services.state.status == ServiceStatus.error) {
       _serviceState = services.state;

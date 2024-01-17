@@ -35,7 +35,7 @@ class RouteService extends IService {
     if (page == null) throw Exception("route not found");
 
     if (page.type == RouteType.page || page.type == RouteType.popup) {
-      return Get.offAll(
+      return Get.off(
         page.page,
         routeName: page.route,
         opaque: page.isOpaque,
