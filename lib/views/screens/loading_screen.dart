@@ -1,6 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -16,6 +15,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   void onRender(Duration timeStamp) async {
     Overlays.insert(context, OverlayType.loading);
     var serviceProvider = context.read<ServicesProvider>();
+    var accountProvider = context.read<AccountProvider>();
 
     var firebaseAnalytics = FirebaseAnalytics.instance;
 
@@ -31,9 +31,18 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     await localization.initialize(args: [context]);
     serviceProvider.addService(localization);
 
-    var trackers = Trackers(firebaseAnalytics);
-    await trackers.initialize();
-    serviceProvider.addService(trackers);
+      var trackers = Trackers(firebaseAnalytics);
+      await trackers.initialize();
+      serviceProvider.addService(trackers);
+
+      var httpConnection = HttpConnection();
+      var data = await httpConnection.initialize() as LoadingData;
+      serviceProvider.addService(httpConnection);
+
+      trackers.sendUserData("${data.account.id}", data.account.name);
+
+      if (context.mounted) {
+        accountProvider.initialize(data.account);
 
     serviceProvider.changeState(ServiceStatus.initialize);
 
