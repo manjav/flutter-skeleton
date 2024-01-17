@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../main.dart';
 import '../../app_export.dart';
+import '../../main.dart';
 
 class LoadingOverlay extends AbstractOverlay {
-  const LoadingOverlay({super.key}) : super(route: OverlaysName.OVERLAY_LOADING);
+  const LoadingOverlay({super.key})
+      : super(route: OverlaysName.OVERLAY_LOADING);
 
   @override
   createState() => _LoadingOverlayState();
@@ -24,8 +24,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   @override
   void initState() {
     _startTime = DateTime.now().millisecondsSinceEpoch;
-    context.read<ServicesProvider>().addListener(_serviceListener);
-
+    services.addListener(_serviceListener);
     super.initState();
   }
 
@@ -150,7 +149,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   Future<void> _serviceListener() async {
     if (services.state.status == ServiceStatus.complete) {
       _closeInput?.value = true;
-      context.read<ServicesProvider>().removeListener(_serviceListener);
+      services.removeListener(_serviceListener);
     } else if (services.state.status == ServiceStatus.initialize) {
       // wait for minimum animation time
       var elapsedTime = DateTime.now().millisecondsSinceEpoch - _startTime;
