@@ -28,7 +28,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
           page: HomeScreen(), route: Routes.HOME_SCREEN, isOpaque: true),
       SkeletonPageModel(
           page: const MessagePopup(args: {}),
-          route: Routes.MESSAGE_POPUP,
+          route: Routes.POPUP_MESSAGE,
           isOpaque: true),
     ];
 
