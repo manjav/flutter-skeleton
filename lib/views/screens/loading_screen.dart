@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +30,6 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
           route: Routes.POPUP_MESSAGE,
           isOpaque: true),
     ];
-
     serviceProvider.addService(route);
 
     var deviceInfo = DeviceInfo();
@@ -46,31 +44,31 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     await localization.initialize(args: [context]);
     serviceProvider.addService(localization);
 
-    var trackers = Trackers(FirebaseAnalytics.instance);
-    await trackers.initialize();
-    serviceProvider.addService(trackers);
+    // var trackers = Trackers(FirebaseAnalytics.instance);
+    // await trackers.initialize();
+    // serviceProvider.addService(trackers);
 
     serviceProvider.changeState(ServiceStatus.initialize);
 
-    var notifications = Notifications();
-    notifications.initialize(args: ["", <String, int>{}]);
-    serviceProvider.addService(notifications);
+    // var notifications = Notifications();
+    // notifications.initialize(args: ["", <String, int>{}]);
+    // serviceProvider.addService(notifications);
 
     var games = Games();
     games.initialize();
     serviceProvider.addService(games);
 
-    var ads = Ads();
-    ads.initialize();
-    ads.onUpdate = _onAdsServicesUpdate;
-    serviceProvider.addService(ads);
+    // var ads = Ads();
+    // ads.initialize();
+    // ads.onUpdate = _onAdsServicesUpdate;
+    // serviceProvider.addService(ads);
 
     var sounds = Sounds();
     sounds.initialize();
     serviceProvider.addService(sounds);
   }
 
-  _onAdsServicesUpdate(Placement? placement) {
+  /* _onAdsServicesUpdate(Placement? placement) {
     var serviceProvider = context.read<ServicesProvider>();
     Sounds sounds = serviceProvider.get<Sounds>();
 
@@ -82,7 +80,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
         sounds.playMusic();
       }
     }
-  }
+  } */
 
   @override
   Widget build(BuildContext context) => const SizedBox();
