@@ -9,21 +9,15 @@ import 'package:provider/provider.dart';
 import 'app_export.dart';
 
 void main() async {
-  MyApp.startTime = DateTime.now();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   await Firebase.initializeApp();
   await Prefs().initialize();
-
-
-
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  static late final DateTime startTime;
-
   const MyApp({super.key});
 
   static final _firebaseAnalytics = FirebaseAnalytics.instance;

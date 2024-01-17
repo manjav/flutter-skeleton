@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/views/overlays_name.dart';
 
-import '../../../skeleton/skeleton.dart';
-import 'overlay.dart';
+import '../../../app_export.dart';
 
 class ConfirmOverlay extends AbstractOverlay {
   final String message, acceptLabel, declineLabel;

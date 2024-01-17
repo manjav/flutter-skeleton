@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_skeleton/views/overlays_name.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
 import '../../app_export.dart';
-import '../../skeleton/services/routes/route_service.dart';
 
 class LoadingOverlay extends AbstractOverlay {
   const LoadingOverlay({super.key}) : super(route: OverlaysName.OVERLAY_LOADING);
@@ -160,7 +157,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
       await Future.delayed(
           Duration(milliseconds: _minAnimationTime - elapsedTime));
       if (mounted) {
-        services.get<RouteService>().to("/home");
+        services.get<RouteService>().to(Routes.HOME_SCREEN);
       }
     } else if (services.state.status == ServiceStatus.error) {
       _serviceState = services.state;

@@ -1,11 +1,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_skeleton/views/overlays/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
-import '../../skeleton/services/routes/route_service.dart';
-import '../../skeleton/services/routes/skeleton_page_model.dart';
 
 class LoadingScreen extends AbstractScreen {
   LoadingScreen({super.key}) : super(Routes.LOADING_SCREEN, args: {});

@@ -1,6 +1,6 @@
-import 'package:flutter_skeleton/app_export.dart';
 import 'package:get/get.dart';
 
+import '../service.dart';
 import 'skeleton_page_model.dart';
 
 class RouteService extends IService {
