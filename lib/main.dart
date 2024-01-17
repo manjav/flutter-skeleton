@@ -2,22 +2,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
-import 'blocs/account_bloc.dart';
-import 'blocs/opponents_bloc.dart';
-import 'blocs/services_bloc.dart';
-import 'data/core/adam.dart';
-import 'mixins/service_provider.dart';
-import 'services/device_info.dart';
-import 'services/localization.dart';
-import 'services/prefs.dart';
-import 'services/sounds.dart';
-import 'services/theme.dart';
-import 'view/overlays/overlay.dart';
-import 'view/route_provider.dart';
-import 'view/widgets/loader_widget.dart';
+import 'app_export.dart';
 
 void main() async {
   MyApp.startTime = DateTime.now();
@@ -46,7 +34,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp>
-    with WidgetsBindingObserver, ServiceProvider {
+    with WidgetsBindingObserver, ServiceFinderWidgetMixin {
   UniqueKey? key;
 
   @override
@@ -61,12 +49,11 @@ class _MyAppState extends State<MyApp>
         state == AppLifecycleState.inactive) {
       // getService<Sounds>(context).stopAll();
     } else if (state == AppLifecycleState.resumed) {
-      getService<Sounds>(context).playMusic();
+      getService<Sounds>().playMusic();
     }
   }
 
   void restartApp() {
-    Ranks.lists.clear();
     Overlays.clear();
     LoaderWidget.cachedLoaders.clear();
     if (Navigator.canPop(context)) Navigator.pop(context);
@@ -89,12 +76,9 @@ class _MyAppState extends State<MyApp>
     if (!DeviceInfo.isPreInitialized) return const SizedBox();
     return KeyedSubtree(
         key: key,
-        child: MultiBlocProvider(
+        child: MultiProvider(
             providers: [
-              BlocProvider(
-                  create: (context) => ServicesBloc(MyApp._firebaseAnalytics)),
-              BlocProvider(create: (context) => AccountBloc()),
-              BlocProvider(create: (context) => OpponentsBloc())
+              ChangeNotifierProvider(create: (_) => ServicesProvider()),
             ],
             child: MaterialApp(
                 navigatorObservers: [
@@ -118,10 +102,10 @@ class _MyAppState extends State<MyApp>
                 // Flutter web url navigation and deep linking.
                 onGenerateRoute: (RouteSettings routeSettings) {
                   return MaterialTransparentRoute(
-                      isOpaque: RouteProvider.getOpaque(routeSettings.name!),
+                      isOpaque: RoutesExtension.getOpaque(routeSettings.name!),
                       settings: routeSettings,
                       builder: (BuildContext context) =>
-                          RouteProvider.getWidget(routeSettings.name!,
+                          RoutesExtension.getWidget(routeSettings.name!,
                               args: routeSettings.arguments
                                   as Map<String, dynamic>?));
                 })));
