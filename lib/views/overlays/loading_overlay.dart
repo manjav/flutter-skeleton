@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,8 +7,7 @@ import '../../app_export.dart';
 import '../../main.dart';
 
 class LoadingOverlay extends AbstractOverlay {
-  const LoadingOverlay({super.key})
-      : super(route: OverlaysName.loading);
+  const LoadingOverlay({super.key}) : super(route: OverlaysName.loading);
 
   @override
   createState() => _LoadingOverlayState();
@@ -139,8 +137,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
     if (exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY.value ||
         exception.statusCode == StatusCode.C702_UPDATE_TEST.value) {
       close();
-      context
-          .read<ServicesProvider>()
+      services
           .get<RouteService>()
           .to(Routes.popupRestore, args: {"onlySet": true});
     } else if (isUpdateError) {

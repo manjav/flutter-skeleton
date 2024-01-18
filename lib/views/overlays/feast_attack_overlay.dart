@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 // ignore: implementation_imports
@@ -111,9 +110,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     } else if (state == RewardAnimationState.closing) {
       var route =
           widget.args["opponent"] != null ? Routes.battleOut : Routes.questOut;
-      context
-          .read<ServicesProvider>()
-          .get<RouteService>()
+      services.get<RouteService>()
           .to(route, args: _outcomeData);
     }
   }

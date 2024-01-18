@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -97,9 +96,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
 
   _onButtonsPressed(RpcId id) async {
     if (id == RpcId.getProfileInfo) {
-      context
-          .read<ServicesProvider>()
-          .get<RouteService>()
+      services.get<RouteService>()
           .to(Routes.popupProfile, args: {"id": widget.member.id});
       close();
       return;
