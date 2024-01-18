@@ -48,7 +48,7 @@ apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace "com.tcg.fruitcraft.trading.card.game.battle"
+    namespace "com.lingai"
     compileSdkVersion flutterCompileSdkVersion.toInteger()
     ndkVersion "25.2.9519653"
     compileOptions {
@@ -65,7 +65,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.tcg.fruitcraft.trading.card.game.battle"
+        applicationId "com.lingai"
         minSdkVersion flutterMinSdkVersion
         targetSdkVersion flutterTargetSdkVersion
         versionCode flutterVersionCode.toInteger()

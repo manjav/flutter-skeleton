@@ -5,19 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter-skeleton",
+            "name": "lingai",
             "request": "launch",
             "type": "dart",
             "preLaunchTask": "convert"
         },
         {
-            "name": "flutter-skeleton (profile mode)",
+            "name": "lingai (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "flutter-skeleton (release mode)",
+            "name": "lingai (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",
