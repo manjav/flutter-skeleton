@@ -1,0 +1,16 @@
+{
+    "topics": [
+        {
+            "id": "supermarket",
+            "prompt": "the 3 different options could be bread, milk, or eggs"
+        },
+        {
+            "id": "taxi",
+            "prompt": ""
+        },
+        {
+            "id": "restaurant",
+            "prompt": ""
+        }
+    ]
+}

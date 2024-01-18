@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,6 +14,19 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+  List _topics = [];
+  @override
+  void initState() {
+    _loadData();
+    super.initState();
+  }
+
+  Future<void> _loadData() async {
+    var data = await rootBundle.loadString("assets/texts/topics.json");
+    _topics = jsonDecode(data)["topics"];
+    setState(() {});
+  }
+
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
@@ -32,21 +47,44 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                   "message": "quit_message".l(),
                   "isConfirm": () {}
                 });
-            // var result = await Routes.popupMessage.navigate(
-            //   context,
-            //   args: {
-            //     "title": "quit_title".l(),
-            //     "message": "quit_message".l(),
-            //     "isConfirm": () {}
-            //   },
-            // );
             if (result != null) {
               SystemNavigator.pop();
             }
           }
         }
       },
-      child: const SizedBox(),
+      child: Center(
+        child: Widgets.rect(
+          height: 555,
+          alignment: Alignment.center,
+          child: ListView.builder(
+            itemBuilder: _topicItemBuilder,
+            itemCount: _topics.length,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _topicItemBuilder(BuildContext context, int index) {
+    var id = "topic_${_topics[index]["id"]}";
+    return Widgets.button(
+      context,
+      padding: EdgeInsets.zero,
+      margin: const EdgeInsets.all(12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Asset.load<Image>(id),
+            SkinnedText(id.l(), style: TStyles.large),
+          ],
+        ),
+      ),
+      onPressed: () {
+        services.get<RouteService>().to(Routes.chat);
+      },
     );
   }
 }
