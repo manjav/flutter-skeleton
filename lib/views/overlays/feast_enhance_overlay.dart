@@ -6,7 +6,7 @@ import '../../app_export.dart';
 class EnhanceFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
   const EnhanceFeastOverlay({required this.args, super.onClose, super.key})
-      : super(type: OverlayType.feastEnhance);
+      : super(route: OverlaysName.feastEnhance);
 
   @override
   createState() => _EnhanceFeastOverlayState();

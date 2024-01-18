@@ -10,7 +10,7 @@ import '../../app_export.dart';
 class PurchaseFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
   const PurchaseFeastOverlay({required this.args, super.onClose, super.key})
-      : super(type: OverlayType.feastPurchase);
+      : super(route: OverlaysName.feastPurchase);
 
   @override
   createState() => _PurchaseFeastOverlayState();

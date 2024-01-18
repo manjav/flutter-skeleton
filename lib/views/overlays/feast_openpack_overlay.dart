@@ -10,7 +10,7 @@ import '../../app_export.dart';
 class OpenPackFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
   const OpenPackFeastOverlay({required this.args, super.onClose, super.key})
-      : super(type: OverlayType.feastOpenpack);
+      : super(route: OverlaysName.feastOpenPack);
 
   @override
   createState() => _OpenPackScreenState();

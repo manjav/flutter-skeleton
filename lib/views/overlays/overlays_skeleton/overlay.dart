@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
-import '../loading_overlay.dart';
 
 class Overlays {
   static final _entries = <String, OverlayEntry>{};
@@ -14,10 +13,10 @@ class Overlays {
     }
   }
 
-  static remove(AbstractOverlay overlay) {
-    if (_entries.containsKey(overlay.route)) {
-      _entries[overlay.route]?.remove();
-      _entries.remove(overlay.route);
+  static remove(String route) {
+    if (_entries.containsKey(route)) {
+      _entries[route]?.remove();
+      _entries.remove(route);
     }
   }
 
@@ -42,7 +41,7 @@ class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
   }
 
   void close() {
-    Overlays.remove(widget);
+    Overlays.remove(widget.route);
   }
 
   void toast(String message) => Overlays.insert(context, ToastOverlay(message));
