@@ -4,18 +4,18 @@ import '../../app_export.dart';
 
 class AbstractScreen extends StatefulWidget {
   //todo: check routes here
-  final Routes type;
+  final String route;
   final Map<String, dynamic> args;
   final String? sfx;
   final bool closable;
 
   AbstractScreen(
-    this.type, {
+    this.route, {
     required this.args,
     Key? key,
     this.sfx,
     this.closable = true,
-  }) : super(key: key ??= Key(type.name));
+  }) : super(key: key ??= Key(route));
 
   @override
   createState() => AbstractScreenState();
@@ -94,6 +94,5 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   Widget contentFactory() => const SizedBox();
 
-  // void toast(String message) =>
-  //     Overlays.insert(context, OverlayType.toast, args: message);
+  void toast(String message) => Overlays.insert(context, ToastOverlay(message));
 }

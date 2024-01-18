@@ -1,11 +1,9 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
 class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Routes.home, args: {});
+  LoadingScreen({super.key}) : super(Routes.LOADING_SCREEN, args: {});
 
   @override
   createState() => _LoadingScreenState();
@@ -14,76 +12,63 @@ class LoadingScreen extends AbstractScreen {
 class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void onRender(Duration timeStamp) async {
-    Overlays.insert(context, OverlayType.loading);
-    var serviceProvider = context.read<ServicesProvider>();
-    var accountProvider = context.read<AccountProvider>();
-    try {
-      var deviceInfo = DeviceInfo();
-      deviceInfo.initialize();
-      serviceProvider.addService(deviceInfo);
+    Overlays.insert(
+      context,
+      const LoadingOverlay(),
+    );
 
-      var themes = Themes();
-      themes.initialize();
-      serviceProvider.addService(themes);
+    var route = RouteService();
+    route.pages = [
+      SkeletonPageModel(
+          page: LoadingScreen(), route: Routes.LOADING_SCREEN, isOpaque: true),
+      SkeletonPageModel(
+          page: HomeScreen(), route: Routes.HOME_SCREEN, isOpaque: true),
+      SkeletonPageModel(
+          page: const MessagePopup(args: {}),
+          route: Routes.POPUP_MESSAGE,
+          isOpaque: true),
+    ];
+    services.addService(route);
 
-      var inbox = Inbox();
-      // await inbox.initialize(args: [context]);
-      serviceProvider.addService(inbox);
+    var deviceInfo = DeviceInfo();
+    deviceInfo.initialize();
+    services.addService(deviceInfo);
 
-      var localization = Localization();
-      await localization.initialize(args: [context]);
-      serviceProvider.addService(localization);
+    var themes = Themes();
+    themes.initialize();
+    services.addService(themes);
 
-      var trackers = Trackers(FirebaseAnalytics.instance);
-      await trackers.initialize();
-      serviceProvider.addService(trackers);
+    var localization = Localization();
+    await localization.initialize(args: [context]);
+    services.addService(localization);
 
-      var httpConnection = HttpConnection();
-      var data = await httpConnection.initialize() as LoadingData;
-      serviceProvider.addService(httpConnection);
+    var trackers = Trackers();
+    await trackers.initialize();
+    services.addService(trackers);
 
-      trackers.sendUserData("${data.account.id}", data.account.name);
+    await Future.delayed(const Duration(milliseconds: 10));
+    services.changeState(ServiceStatus.initialize);
 
-      if (context.mounted) {
-        accountProvider.initialize(data.account);
-
-        serviceProvider.changeState(ServiceStatus.initialize);
-
-        var notifications = Notifications();
-        notifications.initialize(
-            args: ["${data.account.id}", data.account.getSchedules()]);
-        serviceProvider.addService(notifications);
-
-        var noobSocket = NoobSocket();
-        noobSocket.initialize(
-            args: [data.account, context.read<OpponentsProvider>()]);
-
-        serviceProvider.addService(noobSocket);
-      }
-    } on SkeletonException catch (e) {
-      if (context.mounted) {
-        serviceProvider.changeState(ServiceStatus.error, exception: e);
-      }
-    }
+    var notifications = Notifications();
+    notifications.initialize(args: ["", <String, int>{}]);
+    services.addService(notifications);
 
     var games = Games();
     games.initialize();
-    serviceProvider.addService(games);
+    services.addService(games);
 
     var ads = Ads();
     ads.initialize();
     ads.onUpdate = _onAdsServicesUpdate;
-    serviceProvider.addService(ads);
+    services.addService(ads);
 
     var sounds = Sounds();
     sounds.initialize();
-    serviceProvider.addService(sounds);
+    services.addService(sounds);
   }
 
   _onAdsServicesUpdate(Placement? placement) {
-    var serviceProvider = context.read<ServicesProvider>();
-    Sounds sounds = serviceProvider.get<Sounds>();
-
+    var sounds = services.get<Sounds>();
     if (Pref.music.getBool()) {
       if (placement!.state == AdState.show) {
         sounds.stopAll();
