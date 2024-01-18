@@ -9,7 +9,7 @@ import '../../app_export.dart';
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [];
 
-  LiveBattleScreen({required super.args, super.key})
+  LiveBattleScreen({super.key})
       : super(Routes.liveBattle, closable: false);
 
   @override

@@ -6,7 +6,7 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class QuestScreen extends AbstractScreen {
-  QuestScreen({required super.args, super.key}) : super(Routes.quest);
+  QuestScreen({super.key}) : super(Routes.quest);
 
   @override
   createState() => _QuestScreenState();

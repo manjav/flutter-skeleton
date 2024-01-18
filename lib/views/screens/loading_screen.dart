@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Routes.loading, args: {});
+  LoadingScreen({super.key}) : super(Routes.loading, );
 
   @override
   createState() => _LoadingScreenState();
@@ -27,57 +27,54 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
       SkeletonPageModel(page: DeckScreen(), route: Routes.deck, isOpaque: true),
       SkeletonPageModel(
           page: QuestScreen(
-            args: const {},
           ),
           route: Routes.quest,
           isOpaque: true),
       SkeletonPageModel(
           page: AttackOutScreen(
             Routes.questOut,
-            args: const {},
           ),
           route: Routes.questOut,
           isOpaque: true),
       SkeletonPageModel(
           page: AttackOutScreen(
             Routes.battleOut,
-            args: const {},
           ),
           route: Routes.battleOut,
           isOpaque: true),
       SkeletonPageModel(
-          page: LiveOutScreen(args: const {}),
+          page: LiveOutScreen(),
           route: Routes.liveBattleOut,
           isOpaque: true),
       SkeletonPageModel(
-          page: LiveBattleScreen(args: const {}),
+          page: LiveBattleScreen(),
           route: Routes.liveBattle,
           isOpaque: true),
       SkeletonPageModel(
-        page: const CardDetailsPopup(args: {}),
+        page: CardDetailsPopup(),
         route: Routes.popupCardDetails,
         isOpaque: true,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const CardEnhancePopup(
-          args: {},
+        page: CardEnhancePopup(
+          
         ),
         route: Routes.popupCardEnhance,
         isOpaque: true,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const CardEvolvePopup(
-          args: {},
+        page: CardEvolvePopup(
+          
         ),
         route: Routes.popupCardEvolve,
         isOpaque: true,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const HeroEvolvePopup(
-          args: {},
+        page: HeroEvolvePopup(
+         
         ),
         route: Routes.popupHeroEvolve,
         isOpaque: true,
@@ -90,16 +87,16 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const CardSelectPopup(
-          args: {},
+        page: CardSelectPopup(
+        
         ),
         route: Routes.popupCardSelect,
         isOpaque: true,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const MessagePopup(
-          args: {},
+        page: MessagePopup(
+          
         ),
         route: Routes.popupMessage,
         isOpaque: true,
@@ -124,23 +121,23 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const SupportiveBuildingPopup(
-          args: {},
+        page: SupportiveBuildingPopup(
+          
         ),
         route: Routes.popupSupportiveBuilding,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const MineBuildingPopup(
-          args: {},
+        page: MineBuildingPopup(
+         
         ),
         route: Routes.popupMineBuilding,
         isOpaque: true,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const TreasuryBuildingPopup(args: {}),
+        page: TreasuryBuildingPopup(),
         route: Routes.popupTreasuryBuilding,
         isOpaque: true,
         type: RouteType.popup,
@@ -194,7 +191,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const RestorePopup(args: {}),
+        page: RestorePopup(),
         route: Routes.popupRestore,
         isOpaque: true,
         type: RouteType.popup,
@@ -218,8 +215,8 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const TribeDetailsPopup(
-          args: {},
+        page: TribeDetailsPopup(
+          
         ),
         route: Routes.popupTribeOptions,
         isOpaque: true,
