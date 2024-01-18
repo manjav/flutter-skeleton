@@ -21,15 +21,19 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
 
   onSelectCard(int index, Building building) async {
     if (index >= building.maxCards) {
-      Overlays.insert(context, OverlayType.toast,
-          args: "card_holder_unavailable".l([
-            "building_${building.type.name}_t".l(),
-            building.isAvailableCardHolder(index)
-          ]));
+      Overlays.insert(
+        context,
+        ToastOverlay("card_holder_unavailable".l([
+          "building_${building.type.name}_t".l(),
+          building.isAvailableCardHolder(index)
+        ])),
+      );
       return;
     }
-    var returnValue = await Routes.popupCardSelect
-        .navigate(context, args: {'building': building});
+    var returnValue = await context
+        .read<ServicesProvider>()
+        .get<RouteService>()
+        .to(Routes.popupCardSelect, args: {'building': building});
     if (returnValue == null) return;
     var selectedCards = returnValue as List<AccountCard?>;
     if (const ListEquality().equals(selectedCards, building.cards) ||

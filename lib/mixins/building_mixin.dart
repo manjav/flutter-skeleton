@@ -47,10 +47,15 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
                     ]),
                   )
                 ]),
-            onPressed: () => Overlays.insert(context, OverlayType.feastUpgrade,
-                args: {"id": building.type.id}),
-            onDisablePressed: () => Overlays.insert(context, OverlayType.toast,
-                args: "max_level".l(["building_${building.type.name}_t".l()])),
+            onPressed: () => Overlays.insert(
+              context,
+              UpgradeFeastOverlay(args: {"id": building.type.id}),
+            ),
+            onDisablePressed: () => Overlays.insert(
+              context,
+              ToastOverlay(
+                  "max_level".l(["building_${building.type.name}_t".l()])),
+            ),
           )
         ]);
   }
