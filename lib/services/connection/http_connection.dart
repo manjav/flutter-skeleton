@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -59,7 +60,8 @@ class HttpConnection extends IService {
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {
-        throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
+        throw SkeletonException(
+            StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
       }
     }
     if (response!.statusCode == 200) {
@@ -92,10 +94,10 @@ class HttpConnection extends IService {
       result = await rpc(id, params: params);
     } on SkeletonException catch (e) {
       if (context.mounted) {
-        Routes.popupMessage.navigate(context, args: {
-          "title": "Error",
-          "message": "error_${e.statusCode}".l()
-        });
+        await context.read<ServicesProvider>().get<RouteService>().to(
+          Routes.popupMessage,
+          args: {"title": "Error", "message": "error_${e.statusCode}".l()},
+        );
       }
       rethrow;
     }
@@ -122,7 +124,8 @@ class HttpConnection extends IService {
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {
-        throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
+        throw SkeletonException(
+            StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
       }
     }
     final status = response!.statusCode;
