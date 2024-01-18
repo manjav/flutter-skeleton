@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../service.dart';
@@ -42,5 +43,9 @@ class RouteService extends IService {
         arguments: args,
       );
     }
+  }
+
+  void popUntil(RoutePredicate predicate) async {
+    Get.until(predicate);
   }
 }
