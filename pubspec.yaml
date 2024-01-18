@@ -19,15 +19,15 @@ dependencies:
   audioplayers: ^5.2.0
   crypto: ^3.0.2
   device_info_plus: ^9.1.0
-  # firebase_analytics: ^10.6.3
-  # firebase_core: ^2.21.0
-  # firebase_messaging: ^14.7.3
+  firebase_analytics: ^10.6.3
+  firebase_core: ^2.21.0
+  firebase_messaging: ^14.7.3
   # flutter_local_notifications: ^16.1.0
   # flutter_smartlook: ^4.1.9
   flutter_svg: ^2.0.9
   flutter_timezone: ^1.0.8
   # gameanalytics_sdk: ^1.2.7
-  # games_services: ^4.0.0
+  games_services: ^4.0.0
   # google_mobile_ads: ^3.1.0
   # http: ^1.1.0
   in_app_purchase: ^3.1.8
