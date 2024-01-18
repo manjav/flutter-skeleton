@@ -42,32 +42,32 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     await localization.initialize(args: [context]);
     services.addService(localization);
 
-    // var trackers = Trackers();
-    // await trackers.initialize();
-    // services.addService(trackers);
+    var trackers = Trackers();
+    await trackers.initialize();
+    services.addService(trackers);
 
     await Future.delayed(const Duration(milliseconds: 10));
     services.changeState(ServiceStatus.initialize);
 
-    // var notifications = Notifications();
-    // notifications.initialize(args: ["", <String, int>{}]);
-    // serviceProvider.addService(notifications);
+    var notifications = Notifications();
+    notifications.initialize(args: ["", <String, int>{}]);
+    services.addService(notifications);
 
-    // var games = Games();
-    // games.initialize();
-    // services.addService(games);
+    var games = Games();
+    games.initialize();
+    services.addService(games);
 
-    // var ads = Ads();
-    // ads.initialize();
-    // ads.onUpdate = _onAdsServicesUpdate;
-    // services.addService(ads);
+    var ads = Ads();
+    ads.initialize();
+    ads.onUpdate = _onAdsServicesUpdate;
+    services.addService(ads);
 
     var sounds = Sounds();
     sounds.initialize();
     services.addService(sounds);
   }
 
-  /* _onAdsServicesUpdate(Placement? placement) {
+  _onAdsServicesUpdate(Placement? placement) {
     var sounds = services.get<Sounds>();
     if (Pref.music.getBool()) {
       if (placement!.state == AdState.show) {
@@ -77,7 +77,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
         sounds.playMusic();
       }
     }
-  } */
+  }
 
   @override
   Widget build(BuildContext context) => const SizedBox();
