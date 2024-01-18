@@ -1,24 +1,22 @@
 import 'dart:io';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
-
 import '../../skeleton.dart';
 
 class FirebaseTracker extends AbstractTracker {
-  late FirebaseAnalytics _firebaseAnalytics;
+  // late FirebaseAnalytics _firebaseAnalytics;
 
   @override
   initialize({List? args, Function(dynamic)? logCallback}) {
     super.initialize(args: args, logCallback: logCallback);
-    sdk = TrackerSDK.gameAnalytics;
-    _firebaseAnalytics = args![0] as FirebaseAnalytics;
+   //  sdk = TrackerSDK.firebaseAnalytics;
+    // _firebaseAnalytics = MyApp.firebaseAnalytics;
   }
 
   @override
   setProperties(Map<String, String> properties) {
     for (var property in properties.entries) {
-      _firebaseAnalytics.setUserProperty(
-          name: property.key, value: property.value);
+      //_firebaseAnalytics.setUserProperty(
+      //    name: property.key, value: property.value);
     }
   }
 
@@ -26,11 +24,11 @@ class FirebaseTracker extends AbstractTracker {
   purchase(String currency, double amount, String itemId, String itemType,
       String receipt, String signature) async {
     if (!Platform.isAndroid) {
-      await _firebaseAnalytics.logPurchase(
+      /*await _firebaseAnalytics.logPurchase(
           currency: currency,
           value: amount,
           transactionId: signature,
-          coupon: receipt);
+          coupon: receipt);*/
     }
   }
 
@@ -42,29 +40,29 @@ class FirebaseTracker extends AbstractTracker {
       'adPlacement': placement.id,
       'adSdkName': placement.sdk.name,
     };
-    _firebaseAnalytics.logEvent(name: "ads", parameters: map);
+    //_firebaseAnalytics.logEvent(name: "ads", parameters: map);
   }
 
   @override
   design(String name, {Map<String, dynamic>? parameters}) {
-    _firebaseAnalytics.logEvent(name: name, parameters: parameters);
+    //_firebaseAnalytics.logEvent(name: name, parameters: parameters);
   }
 
   @override
   resource(ResourceFlowType type, String currency, int amount, String itemType,
       String itemId) {
-    _firebaseAnalytics
+    /*_firebaseAnalytics
         .logEvent(name: "resource_change", parameters: <String, dynamic>{
       "flowType": type.index,
       "currency": currency, //"Gems",
       "amount": amount,
       "itemType": itemType, //"IAP",
       "itemId": itemId //"Coins400"
-    });
+    });*/
   }
 
   @override
   setScreen(String screenName) async {
-    await _firebaseAnalytics.setCurrentScreen(screenName: screenName);
+    // await _firebaseAnalytics.setCurrentScreen(screenName: screenName);
   }
 }

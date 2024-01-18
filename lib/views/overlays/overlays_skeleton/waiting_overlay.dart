@@ -5,7 +5,7 @@ import '../../../app_export.dart';
 class WaitingOverlay extends AbstractOverlay {
   final String message;
   const WaitingOverlay(this.message, {super.key})
-      : super(route: OverlaysName.OVERLAY_WAITING);
+      : super(route: OverlaysName.waiting);
 
   @override
   createState() => _WaitingOverlayState();

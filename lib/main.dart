@@ -1,5 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,7 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   await Prefs().initialize();
   runApp(const MyApp());
 }
@@ -20,9 +18,9 @@ void main() async {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static final _firebaseAnalytics = FirebaseAnalytics.instance;
-  static final _observer =
-      FirebaseAnalyticsObserver(analytics: _firebaseAnalytics);
+  // static final firebaseAnalytics = FirebaseAnalytics.instance;
+  // static final _observer =
+  //     FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
 
   @override
   createState() => _MyAppState();
@@ -80,7 +78,7 @@ class _MyAppState extends State<MyApp>
           ChangeNotifierProvider(create: (_) => ServicesProvider()),
         ],
         child: GetMaterialApp(
-          navigatorObservers: [MyApp._observer],
+          // navigatorObservers: [MyApp._observer],
           localizationsDelegates: const [
             // AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

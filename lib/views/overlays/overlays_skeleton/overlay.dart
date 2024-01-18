@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
-import '../loading_overlay.dart';
 
 class Overlays {
   static final _entries = <String, OverlayEntry>{};

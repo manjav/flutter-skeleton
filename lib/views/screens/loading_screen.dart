@@ -1,11 +1,9 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
 class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Routes.LOADING_SCREEN, args: {});
+  LoadingScreen({super.key}) : super(Routes.loading, args: {});
 
   @override
   createState() => _LoadingScreenState();
@@ -18,62 +16,58 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
       context,
       const LoadingOverlay(),
     );
-    var serviceProvider = context.read<ServicesProvider>();
 
     var route = RouteService();
     route.pages = [
       SkeletonPageModel(
-          page: LoadingScreen(), route: Routes.LOADING_SCREEN, isOpaque: true),
-      SkeletonPageModel(
-          page: HomeScreen(), route: Routes.HOME_SCREEN, isOpaque: true),
+          page: LoadingScreen(), route: Routes.loading, isOpaque: true),
+      SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(
           page: const MessagePopup(args: {}),
-          route: Routes.POPUP_MESSAGE,
+          route: Routes.message,
           isOpaque: true),
     ];
-
-    serviceProvider.addService(route);
+    services.addService(route);
 
     var deviceInfo = DeviceInfo();
     deviceInfo.initialize();
-    serviceProvider.addService(deviceInfo);
+    services.addService(deviceInfo);
 
     var themes = Themes();
     themes.initialize();
-    serviceProvider.addService(themes);
+    services.addService(themes);
 
     var localization = Localization();
     await localization.initialize(args: [context]);
-    serviceProvider.addService(localization);
+    services.addService(localization);
 
-    var trackers = Trackers(FirebaseAnalytics.instance);
-    await trackers.initialize();
-    serviceProvider.addService(trackers);
+    // var trackers = Trackers();
+    // await trackers.initialize();
+    // services.addService(trackers);
 
-    serviceProvider.changeState(ServiceStatus.initialize);
+    await Future.delayed(const Duration(milliseconds: 10));
+    services.changeState(ServiceStatus.initialize);
 
-    var notifications = Notifications();
-    notifications.initialize(args: ["", <String, int>{}]);
-    serviceProvider.addService(notifications);
+    // var notifications = Notifications();
+    // notifications.initialize(args: ["", <String, int>{}]);
+    // serviceProvider.addService(notifications);
 
-    var games = Games();
-    games.initialize();
-    serviceProvider.addService(games);
+    // var games = Games();
+    // games.initialize();
+    // services.addService(games);
 
-    var ads = Ads();
-    ads.initialize();
-    ads.onUpdate = _onAdsServicesUpdate;
-    serviceProvider.addService(ads);
+    // var ads = Ads();
+    // ads.initialize();
+    // ads.onUpdate = _onAdsServicesUpdate;
+    // services.addService(ads);
 
     var sounds = Sounds();
     sounds.initialize();
-    serviceProvider.addService(sounds);
+    services.addService(sounds);
   }
 
-  _onAdsServicesUpdate(Placement? placement) {
-    var serviceProvider = context.read<ServicesProvider>();
-    Sounds sounds = serviceProvider.get<Sounds>();
-
+  /* _onAdsServicesUpdate(Placement? placement) {
+    var sounds = services.get<Sounds>();
     if (Pref.music.getBool()) {
       if (placement!.state == AdState.show) {
         sounds.stopAll();
@@ -82,7 +76,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
         sounds.playMusic();
       }
     }
-  }
+  } */
 
   @override
   Widget build(BuildContext context) => const SizedBox();
