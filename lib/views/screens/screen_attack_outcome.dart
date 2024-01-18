@@ -129,8 +129,9 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
     accountProvider.update(context, widget.args);
     var lastRoute =
         widget.route == Routes.questOut ? Routes.quest : Routes.popupOpponents;
-    Navigator.popUntil(
-        context, (route) => route.settings.name == lastRoute);
+    services
+        .get<RouteService>()
+        .popUntil((route) => route.settings.name == lastRoute);
   }
 
   Widget _ribbonTopBuilder() {

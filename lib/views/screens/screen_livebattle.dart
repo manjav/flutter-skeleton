@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -351,10 +350,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     getService<Notifications>()
         .schedule(accountProvider.account.getSchedules());
 
-    context
-        .read<ServicesProvider>()
-        .get<RouteService>()
-        .to(Routes.liveBattleOut, args: {
+    services.get<RouteService>().to(Routes.liveBattleOut, args: {
       "friendsId": _friendsHead.id,
       "oppositesId": _oppositesHead.id,
       "warriors": _warriors.values.toList()

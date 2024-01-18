@@ -38,10 +38,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     services.changeState(ServiceStatus.complete);
     getService<NoobSocket>().onReceive.add(_onNoobReceive);
     if (accountProvider.account.dailyReward.containsKey("day_index")) {
-      context
-          .read<ServicesProvider>()
-          .get<RouteService>()
-          .to(Routes.popupDailyGift);
+      services.get<RouteService>().to(Routes.popupDailyGift);
     }
     getService<Sounds>().playMusic();
     context.read<ServicesProvider>().addListener(() async {
@@ -62,10 +59,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         width: 196.d,
         height: 200.d,
         child: LevelIndicator(
-            onPressed: () => context
-                .read<ServicesProvider>()
-                .get<RouteService>()
-                .to(Routes.popupProfile)),
+            onPressed: () =>
+                services.get<RouteService>().to(Routes.popupProfile)),
       )
     ];
   }
@@ -86,10 +81,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
               height: 110.d,
               padding: EdgeInsets.all(16.d),
               child: Asset.load<Image>("ui_settings"),
-              onPressed: () => context
-                  .read<ServicesProvider>()
-                  .get<RouteService>()
-                  .to(Routes.popupSettings))),
+              onPressed: () =>
+                  services.get<RouteService>().to(Routes.popupSettings))),
       ];
     }
     return super.appBarElementsRight();
@@ -102,8 +95,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
           if (Platform.isAndroid) {
-            var result = await context
-                .read<ServicesProvider>()
+            var result = await services
                 .get<RouteService>()
                 .to(Routes.popupMessage, args: {
               "title": "quit_title".l(),
@@ -327,9 +319,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     if (createAt > 0) {
       args["created_at"] = createAt;
     }
-    context
-        .read<ServicesProvider>()
-        .get<RouteService>()
-        .to(Routes.liveBattle, args: args);
+    services.get<RouteService>().to(Routes.liveBattle, args: args);
   }
 }

@@ -57,7 +57,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
           _positioned(180.d, _fractionBuilder(_friendsHead, _friends)),
           _positioned(100.d, _vsBuilder()),
         ]),
-        onPressed: () => Navigator.popUntil(context, (route) => route.isFirst));
+        onPressed: () => services.get<RouteService>().popUntil((route) => route.isFirst));
   }
 
   Widget _positioned(double top, Widget child) => Positioned(

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -130,10 +129,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
   void _riveEventsListener(RiveEvent event) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
       if (event.name == "click") {
-        await context
-            .read<ServicesProvider>()
-            .get<RouteService>()
-            .to(Routes.deck);
+        await services.get<RouteService>().to(Routes.deck);
         _questsCount = accountProvider.account.questsCount - 1;
         // Update city levels after quest
         for (var i = 0; i < widget.arena.value.length; i++) {
@@ -195,5 +191,6 @@ class City {
   final int index;
   SMINumber? state;
   final Offset position;
+
   City(this.index, this.position);
 }
