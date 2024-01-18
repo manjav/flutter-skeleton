@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../app_export.dart';
 class AbstractPopup extends StatefulWidget {
   //todo: check routes here
-  final Routes type;
+  final String name;
   final Map<String, dynamic> args;
 
   const AbstractPopup(
-    this.type, {
+    this.name, {
     required this.args,
     super.key,
   });
@@ -75,7 +75,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   }
 
   Color get backgroundColor => TColors.black80;
-  String titleBuilder() => widget.type.name.toLowerCase().l();
+  String titleBuilder() => widget.name.toLowerCase().l();
   EdgeInsets get chromeMargin => EdgeInsets.fromLTRB(24.d, 100.d, 24.d, 0);
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 92.d);
 
@@ -121,5 +121,5 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   }
 
   void toast(String message) =>
-      Overlays.insert(context, OverlayType.toast, args: message);
+      Overlays.insert(context, ToastOverlay(message));
 }

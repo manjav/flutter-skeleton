@@ -30,7 +30,7 @@
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data android:name="flutterEmbedding" android:value="2" />
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-5018637481206902~2875726229"/>
-		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+		<!-- <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" /> -->
 		<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\701520098502" />
         <meta-data android:name="metrix_appId" android:value="xmqcrkjfmwteytt" />
     </application>

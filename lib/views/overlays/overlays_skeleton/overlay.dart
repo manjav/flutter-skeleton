@@ -1,85 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
-import '../loading_overlay.dart';
 
-enum OverlayType {
-  none,
-  loading,
-  chatOptions,
-  confirm,
-  member,
-  outcome,
-  toast,
-  waiting,
+class Overlays {
+  static final _entries = <String, OverlayEntry>{};
 
-  feastAttack,
-  feastEvolve,
-  feastLevelup,
-  feastEnhance,
-  feastOpenpack,
-  feastPurchase,
-  feastUpgrade,
-  feastUpgradeCard,
-}
-
-extension Overlays on OverlayType {
-  static AbstractOverlay getWidget(
-    String routeName, {
-    dynamic args,
-    Function(dynamic data)? onClose,
-  }) {
-    //todo: check routes here
-    return switch (routeName) {
-      "/loading" => const LoadingOverlay(),
-      "/chatOptions" =>
-        ChatOptionsOverlay(y: args[0], options: args[1], onSelect: args[2]),
-      "/confirm" => ConfirmOverlay(
-          args["message"],
-          args["acceptLabel"] ?? "accept_l".l(),
-          args["declineLabel"] ?? "decline_l".l(),
-          args["onAccept"],
-          barrierDismissible: args["barrierDismissible"] ?? true),
-      "/member" => MemberOverlay(args[0], args[1], args[2]),
-      "/toast" => ToastOverlay(args as String),
-      "/waiting" => ToastOverlay(args as String),
-      "/feastAttack" => AttackFeastOverlay(args: args ?? {}, onClose: onClose),
-      "/feastLevelup" =>
-        LevelupFeastOverlay(args: args ?? {}, onClose: onClose),
-      "/feastOpenpack" =>
-        OpenPackFeastOverlay(args: args ?? {}, onClose: onClose),
-      "/feastEnhance" =>
-        EnhanceFeastOverlay(args: args ?? {}, onClose: onClose),
-      "/feastEnhancemax" =>
-        PurchaseFeastOverlay(args: args ?? {}, onClose: onClose),
-      "/feastEvolve" => EvolveFeastOverlay(args: args ?? {}, onClose: onClose),
-      "/feastPurchase" =>
-        PurchaseFeastOverlay(args: args ?? {}, onClose: onClose),
-      "/feastUpgrade" =>
-        UpgradeFeastOverlay(args: args ?? {}, onClose: onClose),
-      "/feastUpgradeCard" =>
-        UpgradeCardFeastOverlay(args: args ?? {}, onClose: onClose),
-      _ => const AbstractOverlay(),
-    };
-  }
-
-  String get routeName => "/$name";
-
-  static final _entries = <OverlayType, OverlayEntry>{};
-  static insert(BuildContext context, OverlayType type,
-      {dynamic args, Function(dynamic)? onClose}) {
-    if (!_entries.containsKey(type)) {
-      _entries[type] = OverlayEntry(
-          builder: (c) =>
-              getWidget(type.routeName, args: args, onClose: onClose));
-      Overlay.of(context).insert(_entries[type]!);
+  static insert(BuildContext context, AbstractOverlay overlay) {
+    if (!_entries.containsKey(overlay.route)) {
+      var entry = OverlayEntry(builder: (c) => overlay);
+      _entries[overlay.route] = entry;
+      Overlay.of(context).insert(entry);
     }
   }
 
-  static remove(OverlayType type) {
-    if (_entries.containsKey(type)) {
-      _entries[type]?.remove();
-      _entries.remove(type);
+  static remove(AbstractOverlay overlay) {
+    if (_entries.containsKey(overlay.route)) {
+      _entries[overlay.route]?.remove();
+      _entries.remove(overlay.route);
     }
   }
 
@@ -87,10 +24,10 @@ extension Overlays on OverlayType {
 }
 
 class AbstractOverlay extends StatefulWidget {
-  final OverlayType type;
+  final String route;
   final Function(dynamic data)? onClose;
-  const AbstractOverlay(
-      {this.type = OverlayType.none, this.onClose, super.key});
+
+  const AbstractOverlay({this.route = "", this.onClose, super.key});
 
   @override
   createState() => AbstractOverlayState();
@@ -104,9 +41,8 @@ class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
   }
 
   void close() {
-    Overlays.remove(widget.type);
+    Overlays.remove(widget);
   }
 
-  void toast(String message) =>
-      Overlays.insert(context, OverlayType.toast, args: message);
+  void toast(String message) => Overlays.insert(context, ToastOverlay(message));
 }
