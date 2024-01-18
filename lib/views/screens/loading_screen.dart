@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Routes.LOADING_SCREEN, args: {});
+  LoadingScreen({super.key}) : super(Routes.loading, args: {});
 
   @override
   createState() => _LoadingScreenState();
@@ -20,12 +20,11 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     var route = RouteService();
     route.pages = [
       SkeletonPageModel(
-          page: LoadingScreen(), route: Routes.LOADING_SCREEN, isOpaque: true),
-      SkeletonPageModel(
-          page: HomeScreen(), route: Routes.HOME_SCREEN, isOpaque: true),
+          page: LoadingScreen(), route: Routes.loading, isOpaque: true),
+      SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(
           page: const MessagePopup(args: {}),
-          route: Routes.POPUP_MESSAGE,
+          route: Routes.message,
           isOpaque: true),
     ];
     services.addService(route);

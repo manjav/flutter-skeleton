@@ -12,7 +12,7 @@ import '../../app_export.dart';
 
 
 class HomeScreen extends AbstractScreen {
-  HomeScreen({super.key}) : super(Routes.HOME_SCREEN, args: {});
+  HomeScreen({super.key}) : super(Routes.home, args: {});
 
   @override
   createState() => _HomeScreenState();
@@ -93,7 +93,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
           if (Platform.isAndroid) {
-            var result = await services.get<RouteService>().to(Routes.POPUP_MESSAGE,
+            var result = await services.get<RouteService>().to(Routes.message,
                 args: {
                   "title": "quit_title".l(),
                   "message": "quit_message".l(),

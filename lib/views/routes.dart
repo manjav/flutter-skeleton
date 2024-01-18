@@ -1,6 +1,6 @@
-class Routes{
-  static const LOADING_SCREEN="/";
-  static const HOME_SCREEN="/home";
+class Routes {
+  static const loading = "/";
+  static const home = "/home";
 
-  static const POPUP_MESSAGE="popupMessage";
+  static const message = "popupMessage";
 }
