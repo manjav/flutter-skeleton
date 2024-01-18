@@ -527,7 +527,7 @@ class Account extends Player with ServiceFinderMixin {
         getService<Trackers>(context).design("level_5");
       }
       Timer(const Duration(milliseconds: 100),
-          () => Overlays.insert(context, OverlayType.feastLevelup, args: data));
+          () => Overlays.insert(context, LevelupFeastOverlay(args: data)));
     }
 
     data["achieveCards"] = achieveCards;
