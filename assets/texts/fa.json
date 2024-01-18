@@ -1,4 +1,11 @@
 {
+    "app_title": "LingAI",
+    "ago_moments": "چند لحظه قبل",
+    "ago_minutes": "%s دقیقه قبل",
+    "ago_hours": "%s ساعت قبل",
+    "ago_days": "%s روز قبل",
+    "ago_months": "%s ماه قبل",
+    "ago_years": "%s سال قبل",
     "topic_restaurant": "رفتن به رستوران",
     "topic_supermarket": "خرید از سوپرمارکت",
     "topic_taxi": "گرفتن تاکسی"

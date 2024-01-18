@@ -22,10 +22,9 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
       SkeletonPageModel(
           page: LoadingScreen(), route: Routes.loading, isOpaque: true),
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
+      SkeletonPageModel(page: ChatScreen(), route: Routes.chat, isOpaque: true),
       SkeletonPageModel(
-          page: const MessagePopup(args: {}),
-          route: Routes.message,
-          isOpaque: true),
+          page: const MessagePopup(args: {}), route: Routes.message),
     ];
     services.addService(route);
 

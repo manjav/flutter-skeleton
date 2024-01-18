@@ -1,4 +1,11 @@
 {
+    "app_title": "LingAI",
+    "ago_moments": "Moments ago",
+    "ago_minutes": "%s minutes ago",
+    "ago_hours": "%s hours ago",
+    "ago_days": "%s days ago",
+    "ago_months": "%s months ago",
+    "ago_years": "%s years ago",
     "topic_restaurant": "Ordering a food in a restaurant",
     "topic_supermarket": "At a supermarket",
     "topic_taxi": "Take a taxi"
