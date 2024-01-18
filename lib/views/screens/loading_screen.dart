@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -274,13 +275,34 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     var trackers = Trackers(firebase);
     await trackers.initialize();
     services.addService(trackers);
+    try {
+      var httpConnection = HttpConnection();
+      var data = await httpConnection.initialize() as LoadingData;
+      services.addService(httpConnection);
 
-    await Future.delayed(const Duration(milliseconds: 10));
-    services.changeState(ServiceStatus.initialize);
+      trackers.sendUserData("${data.account.id}", data.account.name);
 
-    var notifications = Notifications();
-    notifications.initialize(args: ["", <String, int>{}]);
-    services.addService(notifications);
+      if (context.mounted) {
+        accountProvider.initialize(data.account);
+
+        services.changeState(ServiceStatus.initialize);
+
+        var notifications = Notifications();
+        notifications.initialize(
+            args: ["${data.account.id}", data.account.getSchedules()]);
+        services.addService(notifications);
+
+        var noobSocket = NoobSocket();
+        noobSocket.initialize(
+            args: [data.account, context.read<OpponentsProvider>()]);
+
+        services.addService(noobSocket);
+      }
+    } on SkeletonException catch (e) {
+      if (context.mounted) {
+        services.changeState(ServiceStatus.error, exception: e);
+      }
+    }
 
     var games = Games();
     games.initialize();
