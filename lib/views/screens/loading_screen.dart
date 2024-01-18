@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
@@ -22,10 +23,237 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
       SkeletonPageModel(
           page: LoadingScreen(), route: Routes.loading, isOpaque: true),
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
+      SkeletonPageModel(page: DeckScreen(), route: Routes.deck, isOpaque: true),
       SkeletonPageModel(
-          page: const MessagePopup(args: {}),
-          route: Routes.message,
+          page: QuestScreen(
+            args: const {},
+          ),
+          route: Routes.quest,
           isOpaque: true),
+      SkeletonPageModel(
+          page: AttackOutScreen(
+            Routes.questOut,
+            args: const {},
+          ),
+          route: Routes.questOut,
+          isOpaque: true),
+      SkeletonPageModel(
+          page: AttackOutScreen(
+            Routes.battleOut,
+            args: const {},
+          ),
+          route: Routes.battleOut,
+          isOpaque: true),
+      SkeletonPageModel(
+          page: LiveOutScreen(args: const {}),
+          route: Routes.liveBattleOut,
+          isOpaque: true),
+      SkeletonPageModel(
+          page: LiveBattleScreen(args: const {}),
+          route: Routes.liveBattle,
+          isOpaque: true),
+      SkeletonPageModel(
+        page: const CardDetailsPopup(args: {}),
+        route: Routes.popupCardDetails,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const CardEnhancePopup(
+          args: {},
+        ),
+        route: Routes.popupCardEnhance,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const CardEvolvePopup(
+          args: {},
+        ),
+        route: Routes.popupCardEvolve,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const HeroEvolvePopup(
+          args: {},
+        ),
+        route: Routes.popupHeroEvolve,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: CollectionPopup(),
+        route: Routes.popupCollection,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const CardSelectPopup(
+          args: {},
+        ),
+        route: Routes.popupCardSelect,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const MessagePopup(
+          args: {},
+        ),
+        route: Routes.popupMessage,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: LeaguePopup(),
+        route: Routes.popupLeague,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: RankingPopup(),
+        route: Routes.popupRanking,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: OpponentsPopup(),
+        route: Routes.popupOpponents,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const SupportiveBuildingPopup(
+          args: {},
+        ),
+        route: Routes.popupSupportiveBuilding,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const MineBuildingPopup(
+          args: {},
+        ),
+        route: Routes.popupMineBuilding,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const TreasuryBuildingPopup(args: {}),
+        route: Routes.popupTreasuryBuilding,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: PotionPopup(),
+        route: Routes.popupPotion,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: ComboPopup(),
+        route: Routes.popupCombo,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: HeroPopup(1),
+        route: Routes.popupHero,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: InboxPopup(),
+        route: Routes.popupInbox,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: ProfilePopup(-1),
+        route: Routes.popupProfile,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: ProfileEditPopup(),
+        route: Routes.popupProfileEdit,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: ProfileAvatarsPopup(),
+        route: Routes.popupProfileAvatars,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: SettingsPopup(),
+        route: Routes.popupSettings,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const RestorePopup(args: {}),
+        route: Routes.popupRestore,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: InvitePopup(),
+        route: Routes.popupInvite,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: RedeemGiftPopup(),
+        route: Routes.popupRedeemGift,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: DailyGiftPopup(),
+        route: Routes.popupDailyGift,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: const TribeDetailsPopup(
+          args: {},
+        ),
+        route: Routes.popupTribeOptions,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: TribeInvitePopup(),
+        route: Routes.popupTribeInvite,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: TribeEditPopup(),
+        route: Routes.popupTribeEdit,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: TribeDonatePopup(),
+        route: Routes.popupTribeDonate,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: SelectCardTypePopup(),
+        route: Routes.popupCardSelectType,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: SelectCardCategoryPopup(),
+        route: Routes.popupCardSelectCategory,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
     ];
     services.addService(route);
 
@@ -41,7 +269,9 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     await localization.initialize(args: [context]);
     services.addService(localization);
 
-    var trackers = Trackers();
+    var firebase = FirebaseAnalytics.instance;
+
+    var trackers = Trackers(firebase);
     await trackers.initialize();
     services.addService(trackers);
 

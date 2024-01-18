@@ -87,8 +87,8 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   List<Widget> appBarElementsRight() {
     return [
-      Indicator(widget.type.name, Values.gold),
-      Indicator(widget.type.name, Values.nectar, width: 300.d)
+      Indicator(widget.route, Values.gold),
+      Indicator(widget.route, Values.nectar, width: 300.d)
     ];
   }
 

@@ -52,7 +52,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
       MapEntry("gold", widget.args['gold_added'] ?? 0),
       MapEntry("xp", widget.args['xp_added'] ?? 0),
     ];
-    if (widget.type == Routes.battleOut) {
+    if (widget.route == Routes.battleOut) {
       _prizes.add(MapEntry("league_bonus", widget.args['league_bonus'] ?? 0));
       _prizes.add(MapEntry("seed", widget.args['seed_added'] ?? 0));
     }
@@ -128,9 +128,9 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
   void _close() {
     accountProvider.update(context, widget.args);
     var lastRoute =
-        widget.type == Routes.questOut ? Routes.quest : Routes.popupOpponents;
+        widget.route == Routes.questOut ? Routes.quest : Routes.popupOpponents;
     Navigator.popUntil(
-        context, (route) => route.settings.name == lastRoute.routeName);
+        context, (route) => route.settings.name == lastRoute);
   }
 
   Widget _ribbonTopBuilder() {

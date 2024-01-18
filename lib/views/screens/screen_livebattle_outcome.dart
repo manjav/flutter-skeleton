@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class LiveOutScreen extends AbstractScreen {
-  LiveOutScreen({required super.args, super.key}) : super(Routes.livebattleOut);
+  LiveOutScreen({required super.args, super.key}) : super(Routes.liveBattleOut);
   @override
   createState() => _LiveOutScreenState();
 }

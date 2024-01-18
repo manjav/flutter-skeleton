@@ -3,13 +3,15 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
 class LiveBattleScreen extends AbstractScreen {
   static List<double> deadlines = [];
+
   LiveBattleScreen({required super.args, super.key})
-      : super(Routes.livebattle, closable: false);
+      : super(Routes.liveBattle, closable: false);
 
   @override
   createState() => _LiveBattleScreenState();
@@ -19,6 +21,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   late Account _account;
   late PageController _pageController;
   final Warriors _warriorsNotifier = Warriors();
+
   Map<int, LiveWarrior> get _warriors => _warriorsNotifier.value;
   final SelectedCards _deckCards = SelectedCards([]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
@@ -32,6 +35,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   @override
   List<Widget> appBarElementsLeft() => [];
+
   @override
   List<Widget> appBarElementsRight() => [];
 
@@ -347,7 +351,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     getService<Notifications>()
         .schedule(accountProvider.account.getSchedules());
 
-    Routes.livebattleOut.navigate(context, args: {
+    context
+        .read<ServicesProvider>()
+        .get<RouteService>()
+        .to(Routes.liveBattleOut, args: {
       "friendsId": _friendsHead.id,
       "oppositesId": _oppositesHead.id,
       "warriors": _warriors.values.toList()
@@ -364,6 +371,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
 class Warriors extends ValueNotifier<Map<int, LiveWarrior>> {
   Warriors() : super({});
+
   void add(int id, LiveWarrior warrior) {
     value[id] = warrior;
     notifyListeners();

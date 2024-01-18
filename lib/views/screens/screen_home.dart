@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
+
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../app_export.dart';
-
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Routes.home, args: {});
@@ -38,7 +38,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     services.changeState(ServiceStatus.complete);
     getService<NoobSocket>().onReceive.add(_onNoobReceive);
     if (accountProvider.account.dailyReward.containsKey("day_index")) {
-      Routes.popupDailyGift.navigate(context);
+      context
+          .read<ServicesProvider>()
+          .get<RouteService>()
+          .to(Routes.popupDailyGift);
     }
     getService<Sounds>().playMusic();
     context.read<ServicesProvider>().addListener(() async {
@@ -59,7 +62,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
         width: 196.d,
         height: 200.d,
         child: LevelIndicator(
-            onPressed: () => Routes.popupProfile.navigate(context)),
+            onPressed: () => context
+                .read<ServicesProvider>()
+                .get<RouteService>()
+                .to(Routes.popupProfile)),
       )
     ];
   }
@@ -70,7 +76,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       return [];
     }
     if (_selectedTabIndex == 4) {
-      return [Indicator(widget.type.name, Values.gold)];
+      return [Indicator(widget.route, Values.gold)];
     }
     if (_selectedTabIndex == 2) {
       return <Widget>[
@@ -80,7 +86,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
               height: 110.d,
               padding: EdgeInsets.all(16.d),
               child: Asset.load<Image>("ui_settings"),
-              onPressed: () => Routes.popupSettings.navigate(context))),
+              onPressed: () => context
+                  .read<ServicesProvider>()
+                  .get<RouteService>()
+                  .to(Routes.popupSettings))),
       ];
     }
     return super.appBarElementsRight();
@@ -93,20 +102,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
           if (Platform.isAndroid) {
-            var result = await services.get<RouteService>().to(Routes.message,
-                args: {
-                  "title": "quit_title".l(),
-                  "message": "quit_message".l(),
-                  "isConfirm": () {}
-                });
-            // var result = await Routes.popupMessage.navigate(
-            //   context,
-            //   args: {
-            //     "title": "quit_title".l(),
-            //     "message": "quit_message".l(),
-            //     "isConfirm": () {}
-            //   },
-            // );
+            var result = await context
+                .read<ServicesProvider>()
+                .get<RouteService>()
+                .to(Routes.popupMessage, args: {
+              "title": "quit_title".l(),
+              "message": "quit_message".l(),
+              "isConfirm": () {}
+            });
             if (result != null) {
               SystemNavigator.pop();
             }
@@ -126,8 +129,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
             onPageChanged: (value) => _selectTap(value, pageChange: false),
           ),
           TabNavigator(
-              tabsCount: _selectionInputs.length,
-              itemBuilder: _tabItemBuilder)
+              tabsCount: _selectionInputs.length, itemBuilder: _tabItemBuilder)
         ]);
       }),
     );
@@ -222,7 +224,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   void _onNoobReceive(NoobMessage message) {
     var account = accountProvider.account;
     if (message.type == Noobs.help &&
-        ModalRoute.of(context)!.settings.name == Routes.home.routeName) {
+        ModalRoute.of(context)!.settings.name == Routes.home) {
       var help = message as NoobHelpMessage;
       if (help.ownerTribeId == account.tribeId && help.ownerId != account.id) {
         _showConfirmOverlay(
@@ -299,13 +301,17 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   void _showConfirmOverlay(String message, Function() onAccept) {
-    Overlays.insert(context, OverlayType.confirm, args: {
-      "barrierDismissible": false,
-      "message": message,
-      "onAccept": onAccept
-    });
+    Overlays.insert(
+        context,
+        ConfirmOverlay(
+          message,
+          "accept_l".l(),
+          "decline_l".l(),
+          onAccept,
+          barrierDismissible: false,
+        ));
     Timer(const Duration(seconds: 10),
-        () => Overlays.remove(OverlayType.confirm));
+        () => Overlays.remove(OverlaysName.confirm));
   }
 
   void _joinBattle(int id, Opponent friendsHead, Opponent oppositesHead,
@@ -321,6 +327,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
     if (createAt > 0) {
       args["created_at"] = createAt;
     }
-    Routes.livebattle.navigate(context, args: args);
+    context
+        .read<ServicesProvider>()
+        .get<RouteService>()
+        .to(Routes.liveBattle, args: args);
   }
 }
