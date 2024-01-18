@@ -8,7 +8,7 @@ class ProfilePopup extends AbstractPopup {
   final int playerId;
 
   ProfilePopup(this.playerId, {super.key})
-      : super(Routes.popupProfile, args: {});
+      : super(Routes.popupProfile);
 
   @override
   createState() => _ProfilePopupState();

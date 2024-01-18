@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class TribeSearchPopup extends AbstractPopup {
-  TribeSearchPopup({super.key}) : super(Routes.popupTribeSearch, args: {});
+  TribeSearchPopup({super.key}) : super(Routes.popupTribeSearch);
 
   @override
   createState() => _TribeSearchPopupState();

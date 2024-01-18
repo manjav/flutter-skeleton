@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class RankingPopup extends AbstractPopup {
-  RankingPopup({super.key}) : super(Routes.popupRanking, args: {});
+  RankingPopup({super.key}) : super(Routes.popupRanking);
 
   @override
   createState() => _RankingPopupState();

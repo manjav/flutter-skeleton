@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class SupportiveBuildingPopup extends AbstractPopup {
-  const SupportiveBuildingPopup({required super.args, super.key})
+  SupportiveBuildingPopup({super.key})
       : super(Routes.popupSupportiveBuilding);
 
   @override

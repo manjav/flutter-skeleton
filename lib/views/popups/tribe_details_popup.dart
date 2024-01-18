@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../app_export.dart';
 
 class TribeDetailsPopup extends AbstractPopup {
-  const TribeDetailsPopup({required super.args, super.key})
+  TribeDetailsPopup({super.key})
       : super(Routes.popupTribeOptions);
 
   @override

@@ -4,7 +4,7 @@ import '../../app_export.dart';
 
 class SelectCardCategoryPopup extends AbstractPopup {
   SelectCardCategoryPopup({super.key})
-      : super(Routes.popupCardSelectCategory, args: {});
+      : super(Routes.popupCardSelectCategory);
 
   @override
   createState() => _SelectTypePopupState();

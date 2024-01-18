@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../app_export.dart';
+
 class AbstractPopup extends StatefulWidget {
   //todo: check routes here
   final String name;
-  final Map<String, dynamic> args;
+  // final Map<String, dynamic> args;
 
-  const AbstractPopup(
+  Map<String, dynamic> get args => Get.arguments;
+
+  AbstractPopup(
     this.name, {
-    required this.args,
+    // this.args = const {},
     super.key,
   });
+
   @override
   createState() => AbstractPopupState();
 }
 
 class AbstractPopupState<T extends AbstractPopup> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin , ClassFinderWidgetMixin{
+    with ILogger, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   Alignment alignment = Alignment.center;
   bool barrierDismissible = true, canPop = true;
 
@@ -120,6 +125,5 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     ]);
   }
 
-  void toast(String message) =>
-      Overlays.insert(context, ToastOverlay(message));
+  void toast(String message) => Overlays.insert(context, ToastOverlay(message));
 }

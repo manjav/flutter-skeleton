@@ -7,7 +7,7 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class OpponentsPopup extends AbstractPopup {
-  OpponentsPopup({super.key}) : super(Routes.popupOpponents, args: {});
+  OpponentsPopup({super.key}) : super(Routes.popupOpponents);
 
   @override
   createState() => _OpponentsPopupState();

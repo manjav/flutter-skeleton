@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class LeaguePopup extends AbstractPopup {
-  LeaguePopup({super.key}) : super(Routes.popupLeague, args: {});
+  LeaguePopup({super.key}) : super(Routes.popupLeague);
 
   @override
   createState() => _LeaguePopupState();

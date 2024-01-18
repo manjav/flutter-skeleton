@@ -6,7 +6,7 @@ import '../../../app_export.dart';
 class InboxPopup extends AbstractPopup {
 
   //todo: check routes here
-  InboxPopup({super.key}) : super(Routes.popupInbox, args: {});
+  InboxPopup({super.key}) : super(Routes.popupInbox);
 
   @override
   createState() => _InboxPopupState();

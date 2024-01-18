@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class CardSelectPopup extends AbstractPopup {
-  const CardSelectPopup({super.key, required super.args})
+  CardSelectPopup({super.key})
       : super(Routes.popupCardSelect);
 
   @override
