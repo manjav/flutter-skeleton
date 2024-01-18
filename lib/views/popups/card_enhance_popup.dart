@@ -135,8 +135,10 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   _sacrifice() async {
     if (!_isSacrificeAvailable) return;
-    Overlays.insert(context, OverlayType.feastEnhance,
-        args: {"card": card, "sacrificedCards": selectedCards});
+    Overlays.insert(
+        context,
+        EnhanceFeastOverlay(
+            args: {"card": card, "sacrificedCards": selectedCards}));
     if (mounted) {
       Navigator.pop(context);
     }
@@ -216,9 +218,13 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   }
 
   _enhanceMax() async {
-    Overlays.insert(context, OverlayType.feastUpgradeCard,
-        args: {"card": account.cards[card.id]}, onClose: (d) {
-      if (mounted) Navigator.pop(context);
-    });
+    Overlays.insert(
+        context,
+        UpgradeFeastOverlay(
+          args: {"card": account.cards[card.id]},
+          onClose: (d) {
+            if (mounted) Navigator.pop(context);
+          },
+        ));
   }
 }

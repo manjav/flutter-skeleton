@@ -177,34 +177,39 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
   }
 
   _evolve() {
-    Overlays.insert(context, OverlayType.feastEvolve,
-        args: {"cards": selectedCards}, onClose: (d) async {
-      cards = getCards(account);
-      if (cards.length < 2) {
-        // Show other mergeable cards
-        selectedCards.clear();
-        cards = getCards(account);
-        if (cards.isNotEmpty) {
-          selectedCards.addCard(cards[0]);
-        }
-        cards = getCards(account);
-        await Future.delayed(const Duration(milliseconds: 50));
-        // Close if mergeable cards not available
-        if (mounted && cards.length < 2) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-          return;
-        }
-      } else {
-        // Add another same-type mergeable card
-        selectedCards.value.clear();
-        selectedCards.addCard(cards[0]);
-      }
-      // if (_hackMode) {
-      //   await accountBloc.evolve(context, selectedCards);
-      //   selectedCards.addCard(cards[1]);
-      //   await Future.delayed(const Duration(milliseconds: 1800));
-      //   if (mounted) _evolve();
-      // }
-    });
+    Overlays.insert(
+        context,
+        EvolveFeastOverlay(
+            args: {"cards": selectedCards},
+            onClose: (d) async {
+              cards = getCards(account);
+              if (cards.length < 2) {
+                // Show other mergeable cards
+                selectedCards.clear();
+                cards = getCards(account);
+                if (cards.isNotEmpty) {
+                  selectedCards.addCard(cards[0]);
+                }
+                cards = getCards(account);
+                await Future.delayed(const Duration(milliseconds: 50));
+                // Close if mergeable cards not available
+                if (mounted && cards.length < 2) {
+                  services
+                      .get<RouteService>()
+                      .popUntil((route) => route.isFirst);
+                  return;
+                }
+              } else {
+                // Add another same-type mergeable card
+                selectedCards.value.clear();
+                selectedCards.addCard(cards[0]);
+              }
+              // if (_hackMode) {
+              //   await accountBloc.evolve(context, selectedCards);
+              //   selectedCards.addCard(cards[1]);
+              //   await Future.delayed(const Duration(milliseconds: 1800));
+              //   if (mounted) _evolve();
+              // }
+            }));
   }
 }

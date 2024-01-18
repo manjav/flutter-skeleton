@@ -15,9 +15,9 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
   @override
   List<Widget> appBarElements() {
     return [
-      Indicator(widget.type.name, Values.gold),
-      Indicator(widget.type.name, Values.nectar, width: 300.d),
-      Indicator(widget.type.name, Values.potion, width: 280.d),
+      Indicator(widget.name, Values.gold),
+      Indicator(widget.name, Values.nectar, width: 300.d),
+      Indicator(widget.name, Values.potion, width: 280.d),
     ];
   }
 
@@ -110,16 +110,22 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
 
   void _fill(Account account, HeroCard hero, int step) {
     if (account.potion < step) {
-      Routes.popupPotion.navigate(context);
+      services.get<RouteService>()
+          .to(Routes.popupPotion);
     } else {
       hero.fillPotion(context, step);
     }
   }
 
   _evolve(Account account, HeroCard hero) async {
-    Overlays.insert(context, OverlayType.feastUpgradeCard,
-        args: {"card": hero.card, "isHero": true});
+    Overlays.insert(
+      context,
+      UpgradeCardFeastOverlay(
+        args: {"card": hero.card, "isHero": true},
+      ),
+    );
     if (mounted) {
+      // Todo: ask from mansour for this line
       // Navigator.popUntil(context, (route) => route.isFirst);
     }
   }

@@ -151,7 +151,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                         SkinnedText(value.tribeName, style: tribeStyle),
                       ])),
                   SizedBox(width: 16.d),
-                  Indicator(widget.type.name, Values.leagueRank,
+                  Indicator(widget.name, Values.leagueRank,
                       width: 240.d,
                       hasPlusIcon: false,
                       data: value.leagueId,
@@ -301,11 +301,13 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         if (mounted) {
           result["friendsHead"] = accountProvider.account;
           result["oppositesHead"] = opponent;
-          Routes.livebattle.navigate(context, args: result);
+          services.get<RouteService>()
+              .to(Routes.liveBattle, args: result);
         }
       } finally {}
       return;
     }
-    Routes.deck.navigate(context, args: {"opponent": opponent});
+    services.get<RouteService>()
+        .to(Routes.deck, args: {"opponent": opponent});
   }
 }

@@ -44,7 +44,7 @@ class _TribeInvitePopupState extends AbstractPopupState<TribeInvitePopup> {
       });
       if (mounted) {
         Navigator.pop(context);
-        Overlays.insert(context, OverlayType.toast, args: "message");
+        Overlays.insert(context, const ToastOverlay("message"));
       }
     } finally {}
   }

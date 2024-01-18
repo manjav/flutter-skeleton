@@ -100,8 +100,8 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   List<Widget> appBarElements() {
     return [
-      Indicator(widget.type.name, Values.gold),
-      Indicator(widget.type.name, Values.nectar, width: 310.d)
+      Indicator(widget.name, Values.gold),
+      Indicator(widget.name, Values.nectar, width: 310.d)
     ];
   }
 
