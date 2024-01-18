@@ -72,8 +72,9 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                         isVisible: _card.fruit.isHero,
                         color: ButtonColor.violet,
                         label: "˩  ${"hero_edit".l()}",
-                        onPressed: () => Routes.popupHero
-                            .navigate(context, args: {"card": _card.fruit.id})),
+                        onPressed: () => services.get<RouteService>().to(
+                            Routes.popupHero,
+                            args: {"card": _card.fruit.id})),
                     _button(
                         isVisible: _card.fruit.isSalable,
                         color: ButtonColor.green,
@@ -95,12 +96,14 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                           )
                         ]),
                         onPressed: () => Overlays.insert(
-                                context, OverlayType.confirm,
-                                args: {
-                                  "message": "card_sell_warn"
-                                      .l([_card.basePrice.compact()]),
-                                  "onAccept": _sell
-                                }),
+                              context,
+                              ConfirmOverlay(
+                                "card_sell_warn".l([_card.basePrice.compact()]),
+                                "accept_l".l(),
+                                "decline_l".l(),
+                                _sell,
+                              ),
+                            ),
                         onDisablePressed: () => toast("not_salable".l()))
                   ]))
             ])));
@@ -132,10 +135,10 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         onDisablePressed: onDisablePressed);
   }
 
-  _onButtonsTap(Routes route) async {
-    await route.navigate(context, args: {"card": _card});
+  _onButtonsTap(String route) async {
+    await services.get<RouteService>().to(route, args: {"card": _card});
     if (mounted && !accountProvider.account.cards.containsKey(_card.id)) {
-      Navigator.popUntil(context, (route) => route.isFirst);
+      services.get<RouteService>().popUntil((route) => route.isFirst);
     }
     setState(() {});
   }

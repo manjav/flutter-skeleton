@@ -6,7 +6,7 @@ import '../../app_export.dart';
 class UpgradeFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
   const UpgradeFeastOverlay({required this.args, super.onClose, super.key})
-      : super(type: OverlayType.feastUpgrade);
+      : super(route: OverlaysName.feastUpgrade);
 
   @override
   createState() => _UpgradeFeastOverlayState();

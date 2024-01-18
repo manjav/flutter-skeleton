@@ -26,8 +26,8 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
   @override
   List<Widget> appBarElements() {
     return [
-      Indicator(widget.type.name, Values.potion, width: 290.d),
-      Indicator(widget.type.name, Values.gold),
+      Indicator(widget.name, Values.potion, width: 290.d),
+      Indicator(widget.name, Values.gold),
     ];
   }
 

@@ -7,8 +7,7 @@ import '../../app_export.dart';
 import '../../main.dart';
 
 class LoadingOverlay extends AbstractOverlay {
-  const LoadingOverlay({super.key})
-      : super(route: OverlaysName.OVERLAY_LOADING);
+  const LoadingOverlay({super.key}) : super(route: OverlaysName.loading);
 
   @override
   createState() => _LoadingOverlayState();
@@ -32,7 +31,8 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   Widget build(BuildContext context) {
     //todo: check status code is moved to project it's better check this in project or refactor
     var isForceUpdate = _serviceState.exception != null &&
-        _serviceState.exception!.statusCode == StatusCode.C701_UPDATE_FORCE.value;
+        _serviceState.exception!.statusCode ==
+            StatusCode.C701_UPDATE_FORCE.value;
     var isUpdateError = _serviceState.exception != null &&
             _serviceState.exception!.statusCode ==
                 StatusCode.C700_UPDATE_NOTICE.value ||
@@ -137,7 +137,9 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
     if (exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY.value ||
         exception.statusCode == StatusCode.C702_UPDATE_TEST.value) {
       close();
-      Routes.popupRestore.navigate(context, args: {"onlySet": true});
+      services
+          .get<RouteService>()
+          .to(Routes.popupRestore, args: {"onlySet": true});
     } else if (isUpdateError) {
       _update(isForceUpdate);
     } else {
@@ -155,7 +157,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
       await Future.delayed(
           Duration(milliseconds: _minAnimationTime - elapsedTime));
       if (mounted) {
-        services.get<RouteService>().replace(Routes.HOME_SCREEN);
+        services.get<RouteService>().replace(Routes.home);
       }
     } else if (services.state.status == ServiceStatus.error) {
       _serviceState = services.state;

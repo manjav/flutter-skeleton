@@ -184,7 +184,8 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
           Text(record.weeklyScore.compact(), style: TStyles.small),
         ]), onPressed: () async {
       if (!record.itsMe) {
-        Routes.popupProfile.navigate(context, args: {"id": record.id});
+        services.get<RouteService>()
+            .to(Routes.popupProfile,args: {"id": record.id});
       }
     });
   }

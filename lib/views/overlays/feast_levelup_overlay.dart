@@ -6,7 +6,7 @@ import '../../app_export.dart';
 class LevelupFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
   const LevelupFeastOverlay({required this.args, super.onClose, super.key})
-      : super(type: OverlayType.feastLevelup);
+      : super();
 
   @override
   createState() => _LevelupScreenState();

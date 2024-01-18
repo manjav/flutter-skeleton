@@ -5,8 +5,9 @@ import '../../app_export.dart';
 class MemberOverlay extends AbstractOverlay {
   final double y;
   final Opponent member, me;
+
   const MemberOverlay(this.member, this.me, this.y, {super.key})
-      : super(type: OverlayType.member);
+      : super(route: OverlaysName.member);
 
   @override
   createState() => _MemberOverlayState();
@@ -95,7 +96,8 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
 
   _onButtonsPressed(RpcId id) async {
     if (id == RpcId.getProfileInfo) {
-      Routes.popupProfile.navigate(context, args: {"id": widget.member.id});
+      services.get<RouteService>()
+          .to(Routes.popupProfile, args: {"id": widget.member.id});
       close();
       return;
     }

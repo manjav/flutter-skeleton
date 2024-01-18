@@ -10,6 +10,7 @@ import '../../app_export.dart';
 
 class ShopPageItem extends AbstractPageItem {
   const ShopPageItem({super.key}) : super("cards");
+
   @override
   createState() => _ShopPageItemState();
 }
@@ -18,6 +19,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   late Account _account;
   final Map<ShopSections, List<ShopItemVM>> _items = {};
   late StreamSubscription<List<PurchaseDetails>> _subscription;
+
   // final bool _hackMode = false;
 
   final Map<String, ProductDetails> _productDetails = {};
@@ -93,12 +95,14 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       if (details.status != PurchaseStatus.pending) {
         if (details.status == PurchaseStatus.error ||
             details.status == PurchaseStatus.canceled) {
-          Overlays.remove(OverlayType.waiting);
-          Overlays.insert(context, OverlayType.waiting,
-              args: details.error!.message.l());
+          Overlays.remove(OverlaysName.waiting);
+          Overlays.insert(
+            context,
+            WaitingOverlay(details.error!.message.l()),
+          );
         } else if (details.status == PurchaseStatus.purchased ||
             details.status == PurchaseStatus.restored) {
-          Overlays.remove(OverlayType.waiting);
+          Overlays.remove(OverlaysName.waiting);
           if (details.productID.startsWith("gold_")) {
             _deliverProduct(ShopSections.gold, details);
           } else {
@@ -131,8 +135,11 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         // accountBloc.account.update({section.name: item.base.value});
         // accountBloc.add(SetAccount(account: accountBloc.account));
 
-        Overlays.insert(context, OverlayType.feastPurchase,
-            args: {"item": item});
+        Overlays.insert(
+            context,
+            PurchaseFeastOverlay(
+              args: {"item": item},
+            ));
         return;
       }
     }
@@ -357,13 +364,14 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     }
 
     if (item.base.section == ShopSections.boost) {
-      Overlays.insert(context, OverlayType.feastPurchase, args: {"item": item});
+      Overlays.insert(context, PurchaseFeastOverlay(args: {"item": item}));
     } else {
       Overlays.insert(
         context,
-        OverlayType.feastOpenpack,
-        args: {"pack": item.base},
-        onClose: (d) => services.changeState(ServiceStatus.punch, data: 1),
+        OpenPackFeastOverlay(
+          args: {"pack": item.base},
+          onClose: (d) => services.changeState(ServiceStatus.punch, data: 1),
+        ),
       );
     }
   }

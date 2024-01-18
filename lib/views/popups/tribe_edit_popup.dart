@@ -118,7 +118,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
                 } else if (cost > _account.gold) {
                   message = "error_183".l();
                 }
-                Overlays.insert(context, OverlayType.toast, args: message);
+                Overlays.insert(context, ToastOverlay(message));
               })
         ]);
   }

@@ -5,6 +5,7 @@ import '../../app_export.dart';
 
 class CardsPageItem extends AbstractPageItem {
   const CardsPageItem({super.key}) : super("cards");
+
   @override
   createState() => _CardsPageItemState();
 }
@@ -39,7 +40,8 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             width: 132.d,
             child: Widgets.skinnedButton(context,
                 icon: "icon_collection",
-                onPressed: () => Routes.popupCollection.navigate(context))),
+                onPressed: () =>
+                    services.get<RouteService>().to(Routes.popupCollection))),
         PositionedDirectional(
             top: paddingTop,
             width: 132.d,
@@ -50,11 +52,13 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
               var levels =
                   state.account.loadingData.rules["availabilityLevels"]!;
               if (state.account.level < levels["combo"]) {
-                Overlays.insert(context, OverlayType.toast,
-                    args:
-                        "unavailable_l".l(["popupcombo".l(), levels["combo"]]));
+                Overlays.insert(
+                    context,
+                    ToastOverlay(
+                      "unavailable_l".l(["popupcombo".l(), levels["combo"]]),
+                    ));
               } else {
-                Routes.popupCombo.navigate(context);
+                services.get<RouteService>().to(Routes.popupCombo);
               }
             }))
       ]);
@@ -65,8 +69,9 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.touchable(
       context,
-      onTap: () =>
-          Routes.popupCardDetails.navigate(context, args: {'card': card}),
+      onTap: () => services
+          .get<RouteService>()
+          .to(Routes.popupCardDetails, args: {'card': card}),
       child: CardItem(card,
           size: itemSize,
           key: getGlobalKey(card.id),

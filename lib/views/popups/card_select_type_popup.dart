@@ -27,7 +27,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
   }
 
   @override
-  List<Widget> appBarElements() => [Indicator(widget.type.name, Values.gold)];
+  List<Widget> appBarElements() => [Indicator(widget.name, Values.gold)];
 
   @override
   Widget innerChromeFactory() {

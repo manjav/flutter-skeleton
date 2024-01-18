@@ -9,7 +9,7 @@ import '../../app_export.dart';
 class EvolveFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
   const EvolveFeastOverlay({required this.args, super.onClose, super.key})
-      : super(type: OverlayType.feastEvolve);
+      : super(route: OverlaysName.feastEvolve);
 
   @override
   createState() => _EvolveFeastOverlayState();

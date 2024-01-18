@@ -5,7 +5,7 @@ import '../../../app_export.dart';
 class ToastOverlay extends AbstractOverlay {
   final String message;
   const ToastOverlay(this.message, {super.key})
-      : super(route: OverlaysName.OVERLAY_TOAST);
+      : super(route: OverlaysName.toast);
 
   @override
   createState() => _ToastOverlayState();

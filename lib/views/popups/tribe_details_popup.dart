@@ -70,7 +70,8 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           color: ButtonColor.teal,
           label: "tribe_invite".l(),
           icon: "tribe_invite",
-          onPressed: () => Routes.popupTribeInvite.navigate(context)),
+          onPressed: () =>
+              services.get<RouteService>().to(Routes.popupTribeInvite)),
       SizedBox(height: 20.d),
       Expanded(
           child: ListView.builder(
@@ -129,11 +130,10 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           _indicator("icon_xp", member.xp.compact(), 60.d,
               EdgeInsets.only(right: 16.d)),
         ]), onTapUp: (details) {
-      Overlays.insert(context, OverlayType.member, args: [
-        member,
-        tribe.members.value.firstWhere((m) => m.itsMe),
-        details.globalPosition.dy - 220.d
-      ]);
+      Overlays.insert(
+          context,
+          MemberOverlay(member, tribe.members.value.firstWhere((m) => m.itsMe),
+              details.globalPosition.dy - 220.d));
     });
   }
 
@@ -175,7 +175,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             label: "tribe_donate".l(),
             padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
             onPressed: () async {
-          await Routes.popupTribeDonate.navigate(context);
+          await services.get<RouteService>().to(Routes.popupTribeDonate);
           setState(() {});
         })
       ]),
@@ -258,13 +258,17 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           ]),
         )
       ]),
-      onPressed: () => Overlays.insert(context, OverlayType.feastUpgrade,
-          args: {"id": id, "tribe": tribe}, onClose: (data) => setState(() {})),
+      onPressed: () => Overlays.insert(
+          context,
+          UpgradeFeastOverlay(
+            args: {"id": id, "tribe": tribe},
+            onClose: (data) => setState(() {}),
+          )),
       onDisablePressed: () {
         var message = cost > tribe.gold
             ? "error_227".l()
             : "max_level".l(["tribe_upgrade_t_$id".l()]);
-        Overlays.insert(context, OverlayType.toast, args: message);
+        Overlays.insert(context, ToastOverlay(message));
       },
     );
   }

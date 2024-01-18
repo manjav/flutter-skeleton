@@ -9,6 +9,7 @@ import '../../app_export.dart';
 
 class MainMapPageItem extends AbstractPageItem {
   const MainMapPageItem({super.key}) : super("battle");
+
   @override
   createState() => _MainMapItemState();
 }
@@ -28,23 +29,30 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           artboard.addController(controller!);
         }),
         PositionedDirectional(
-            bottom: 350.d,
-            start: 32.d,
-            child: Indicator("home", Values.leagueRank,
-                hasPlusIcon: false,
-                onTap: () => Routes.popupLeague.navigate(context))),
+          bottom: 350.d,
+          start: 32.d,
+          child: Indicator("home", Values.leagueRank,
+              hasPlusIcon: false,
+              onTap: () => services.get<RouteService>().to(Routes.popupLeague)),
+        ),
         PositionedDirectional(
             bottom: 220.d,
             start: 32.d,
-            child: Indicator("home", Values.rank,
-                hasPlusIcon: false,
-                onTap: () => Routes.popupRanking.navigate(context))),
+            child: Indicator(
+              "home",
+              Values.rank,
+              hasPlusIcon: false,
+              onTap: () => services.get<RouteService>().to(Routes.popupRanking),
+            )),
         PositionedDirectional(
             bottom: 180.d,
             end: 32.d,
-            child: Widgets.button(context,
-                child: Asset.load<Image>("icon_notifications", width: 60.d),
-                onPressed: () => Routes.popupInbox.navigate(context))),
+            child: Widgets.button(
+              context,
+              child: Asset.load<Image>("icon_notifications", width: 60.d),
+              onPressed: () =>
+                  services.get<RouteService>().to(Routes.popupInbox),
+            )),
         _building(state.account, Buildings.defense),
         _building(state.account, Buildings.offense),
         _building(state.account, Buildings.base),
@@ -87,7 +95,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
-      _ => Routes.none,
+      _ => "",
     };
     // Offense and defense buildings need tribe membership.
     if (type == Routes.popupSupportiveBuilding &&
@@ -108,10 +116,10 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       }
     }
 
-    if (type == Routes.none) {
+    if (type == "") {
       return;
     }
-    type.navigate(context, args: {"building": building});
+    services.get<RouteService>().to(type, args: {"building": building});
   }
 
   void _riveEventsListener(RiveEvent event) {

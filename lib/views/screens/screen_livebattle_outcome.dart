@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class LiveOutScreen extends AbstractScreen {
-  LiveOutScreen({required super.args, super.key}) : super(Routes.livebattleOut);
+  LiveOutScreen({required super.args, super.key}) : super(Routes.liveBattleOut);
   @override
   createState() => _LiveOutScreenState();
 }
@@ -57,7 +57,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
           _positioned(180.d, _fractionBuilder(_friendsHead, _friends)),
           _positioned(100.d, _vsBuilder()),
         ]),
-        onPressed: () => Navigator.popUntil(context, (route) => route.isFirst));
+        onPressed: () => services.get<RouteService>().popUntil((route) => route.isFirst));
   }
 
   Widget _positioned(double top, Widget child) => Positioned(

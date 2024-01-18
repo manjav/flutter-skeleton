@@ -8,7 +8,9 @@ import '../../app_export.dart';
 
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;
+
   DeckScreen({this.opponent, super.key}) : super(Routes.deck, args: {});
+
   @override
   createState() => _DeckScreenState();
 }
@@ -21,9 +23,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   @override
   List<Widget> appBarElementsRight() {
     return <Widget>[
-      Indicator(widget.type.name, Values.gold),
-      Indicator(widget.type.name, Values.nectar, width: 280.d),
-      Indicator(widget.type.name, Values.potion, width: 256.d),
+      Indicator(widget.route, Values.gold),
+      Indicator(widget.route, Values.nectar, width: 280.d),
+      Indicator(widget.route, Values.potion, width: 256.d),
     ];
   }
 
@@ -263,12 +265,16 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   bool isBossQuest(Account account) => ((account.questsCount / 10) % 1 == 0);
 
   _attack(Account account) async {
-    Overlays.insert(context, OverlayType.feastAttack,
+    Overlays.insert(
+      context,
+      AttackFeastOverlay(
         args: {"opponent": widget.opponent, "cards": _selectedCards},
         onClose: (data) async {
-      _selectedCards.clear(setNull: true);
-      // Reset reminder notifications ....
-      getService<Notifications>().schedule(account.getSchedules());
-    });
+          _selectedCards.clear(setNull: true);
+          // Reset reminder notifications ....
+          getService<Notifications>().schedule(account.getSchedules());
+        },
+      ),
+    );
   }
 }

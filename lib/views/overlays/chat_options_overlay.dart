@@ -10,7 +10,7 @@ class ChatOptionsOverlay extends AbstractOverlay {
   final List<ChatOptions> options;
   const ChatOptionsOverlay(
       {required this.options, this.y, this.onSelect, super.key})
-      : super(type: OverlayType.chatOptions);
+      : super(route: OverlaysName.chatOptions);
 
   @override
   createState() => _ChatOptionsOverlayState();

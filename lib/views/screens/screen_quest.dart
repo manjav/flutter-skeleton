@@ -129,7 +129,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
   void _riveEventsListener(RiveEvent event) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
       if (event.name == "click") {
-        await Routes.deck.navigate(context);
+        await services.get<RouteService>().to(Routes.deck);
         _questsCount = accountProvider.account.questsCount - 1;
         // Update city levels after quest
         for (var i = 0; i < widget.arena.value.length; i++) {
@@ -191,5 +191,6 @@ class City {
   final int index;
   SMINumber? state;
   final Offset position;
+
   City(this.index, this.position);
 }

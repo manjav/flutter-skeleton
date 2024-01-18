@@ -10,7 +10,7 @@ class ConfirmOverlay extends AbstractOverlay {
   const ConfirmOverlay(
       this.message, this.acceptLabel, this.declineLabel, this.onAccept,
       {this.barrierDismissible = true, super.key})
-      : super(route:OverlaysName.OVERLAY_CONFIRM);
+      : super(route:OverlaysName.confirm);
 
   @override
   createState() => _ConfirmOverlayState();

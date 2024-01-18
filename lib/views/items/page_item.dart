@@ -18,5 +18,5 @@ class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
   }
 
   void toast(String message) =>
-      Overlays.insert(context, OverlayType.toast, args: message);
+      Overlays.insert(context, ToastOverlay(message));
 }

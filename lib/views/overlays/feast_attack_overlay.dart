@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rive/rive.dart';
+
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
@@ -10,8 +11,9 @@ import '../../app_export.dart';
 
 class AttackFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
+
   const AttackFeastOverlay({required this.args, super.onClose, super.key})
-      : super(type: OverlayType.feastAttack);
+      : super(route: OverlaysName.feastAttack);
 
   @override
   createState() => _AttackFeastOverlayState();
@@ -108,7 +110,8 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     } else if (state == RewardAnimationState.closing) {
       var route =
           widget.args["opponent"] != null ? Routes.battleOut : Routes.questOut;
-      route.navigate(context, args: _outcomeData);
+      services.get<RouteService>()
+          .to(route, args: _outcomeData);
     }
   }
 
@@ -137,7 +140,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     await Future.delayed(const Duration(seconds: 1));
     widget.onClose?.call(result);
     if (state.index < RewardAnimationState.disposed.index) {
-      Overlays.remove(widget.type);
+      Overlays.remove(widget.route);
       state = RewardAnimationState.disposed;
     }
   }
