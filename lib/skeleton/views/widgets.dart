@@ -20,6 +20,7 @@ class Widgets {
     Widget? child,
   }) {
     return GestureDetector(
+      
         onVerticalDragStart: onVerticalDragStart == null
             ? null
             : (details) {
@@ -73,6 +74,7 @@ class Widgets {
             onLongPress?.call();
           }
         },
+        
         child: child);
   }
 
@@ -120,7 +122,10 @@ class Widgets {
   static Widget button(
     BuildContext context, {
     Function()? onPressed,
+    Function(dynamic details)? onTapDown,
     Function(TapUpDetails)? onTapUp,
+    Function()? onTapCancel,
+    Function()? onLongPress,
     int buttonId = 30,
     Color? color,
     Alignment? alignment,
@@ -141,7 +146,10 @@ class Widgets {
     return touchable(context,
         id: buttonId,
         onTap: onPressed,
+        onTapDown: onTapDown,
         onTapUp: onTapUp,
+        onTapCancel: onTapCancel,
+        onLongPress: onLongPress,
         child: rect(
           width: width,
           height: height,
@@ -168,62 +176,6 @@ class Widgets {
             fit: BoxFit.fill,
             image: Asset.load<Image>(path, centerSlice: sliceData).image,
             centerSlice: sliceData?.centerSlice));
-  }
-
-  static skinnedButton(
-    BuildContext context, {
-    String? label,
-    String? icon,
-    ButtonColor color = ButtonColor.yellow,
-    ButtonSize size = ButtonSize.small,
-    Widget? child,
-    int buttonId = 30,
-    double? width,
-    double? height,
-    bool isEnable = true,
-    Alignment? alignment,
-    EdgeInsets? margin,
-    EdgeInsets? padding,
-    Function()? onPressed,
-    Function()? onDisablePressed,
-    BoxConstraints? constraints,
-  }) {
-    if (!isEnable) {
-      color = ButtonColor.gray;
-    }
-    return button(context,
-        onPressed: isEnable ? onPressed : onDisablePressed,
-        width: width,
-        height: height,
-        buttonId: buttonId,
-        alignment: alignment ?? Alignment.center,
-        constraints: constraints,
-        margin: margin,
-        padding: padding ?? EdgeInsets.fromLTRB(28.d, 25.d, 28.d, 40.d),
-        decoration: buttonDecorator(color, size),
-        child: Opacity(
-            opacity: isEnable ? 1 : 0.7,
-            child: label != null || icon != null
-                ? Row(mainAxisSize: MainAxisSize.min, children: [
-                    icon == null
-                        ? const SizedBox()
-                        : Asset.load<Image>(icon, height: 68.d),
-                    SizedBox(width: (label != null && icon != null) ? 16.d : 0),
-                    label == null
-                        ? const SizedBox()
-                        : SkinnedText(label, style: TStyles.large),
-                  ])
-                : child!));
-  }
-
-  static buttonDecorator(ButtonColor color,
-      [ButtonSize size = ButtonSize.small]) {
-    var slicingData = switch (size) {
-      ButtonSize.small =>
-        ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 4, 20)),
-      _ => ImageCenterSliceData(130, 158),
-    };
-    return imageDecorator("button_${size.name}_${color.name}", slicingData);
   }
 
   static divider(
@@ -349,7 +301,3 @@ class Widgets {
         ]));
   }
 }
-
-enum ButtonColor { cream, gray, green, violet, teal, wooden, yellow }
-
-enum ButtonSize { small, medium }

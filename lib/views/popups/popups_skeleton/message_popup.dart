@@ -4,8 +4,7 @@ import '../../../skeleton/skeleton.dart';
 
 class MessagePopup extends AbstractPopup {
   //todo: check routes here
-  const MessagePopup({super.key, required super.args})
-      : super("popupMessage");
+  const MessagePopup({super.key, required super.args}) : super("popupMessage");
 
   @override
   createState() => _MessagePopupState();
@@ -37,7 +36,7 @@ class _MessagePopupState extends AbstractPopupState<MessagePopup> {
   }
 
   _button(ButtonColor color, String label, dynamic result) {
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         width: 360.d,
         label: label,
         color: color,
