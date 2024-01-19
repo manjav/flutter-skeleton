@@ -72,30 +72,32 @@ class _SkinnedButtonState extends State<SkinnedButton> {
       },
       onTapDown: (details) => setState(() => _isPressed = true),
       onTapCancel: () => setState(() => _isPressed = false),
-        width: widget.width,
-        height: widget.height,
-        buttonId: widget.buttonId,
-        alignment: widget.alignment ?? Alignment.center,
-        constraints: widget.constraints,
-        margin: widget.margin,
+      width: widget.width,
+      height: widget.height,
+      buttonId: widget.buttonId,
+      alignment: widget.alignment ?? Alignment.center,
+      constraints: widget.constraints,
+      margin: widget.margin,
       padding: widget.padding ??
           EdgeInsets.fromLTRB(28.d, 25.d, 28.d, _isPressed ? 40.d : 44.d),
       decoration: SkinnedButton.buttonDecorator(color, _isPressed, widget.size),
-        child: Opacity(
-            opacity: widget.isEnable ? 1 : 0.7,
-            child: widget.label != null || widget.icon != null
-                ? Row(mainAxisSize: MainAxisSize.min, children: [
-                    widget.icon == null
-                        ? const SizedBox()
-                        : Asset.load<Image>(widget.icon!, height: 68.d),
-                    SizedBox(
-                        width: (widget.label != null && widget.icon != null)
-                            ? 16.d
-                            : 0),
-                    widget.label == null
-                        ? const SizedBox()
-                        : SkinnedText(widget.label!, style: TStyles.large),
-                  ])
+      child: Opacity(
+          opacity: widget.isEnable ? 1 : 0.7,
+          child: widget.label != null || widget.icon != null
+              ? Row(mainAxisSize: MainAxisSize.min, children: [
+                  widget.icon == null
+                      ? const SizedBox()
+                      : Asset.load<Image>(widget.icon!, height: 68.d),
+                  SizedBox(
+                      width: (widget.label != null && widget.icon != null)
+                          ? 16.d
+                          : 0),
+                  widget.label == null
+                      ? const SizedBox()
+                      : SkinnedText(widget.label!,
+                          style: TStyles.large,
+                          shadowScale: _isPressed ? 1.2 : 1),
+                ])
               : widget.child!),
     );
   }
