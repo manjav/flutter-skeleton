@@ -8,7 +8,7 @@ enum FightMode { quest, battle }
 
 class AttackOutScreen extends AbstractScreen {
   AttackOutScreen(super.mode,
-      {required super.args, super.closable = false, super.key});
+      {super.closable = false, super.key});
   @override
   createState() => _AttackOutScreenState();
 }

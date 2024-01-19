@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class PotionPopup extends AbstractPopup {
-  PotionPopup({super.key}) : super(Routes.popupPotion, args: {});
+  PotionPopup({super.key}) : super(Routes.popupPotion);
 
   @override
   createState() => _PotionPopupState();

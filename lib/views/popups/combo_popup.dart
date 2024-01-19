@@ -4,7 +4,7 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class ComboPopup extends AbstractPopup {
-  ComboPopup({super.key}) : super(Routes.popupCombo, args: {});
+  ComboPopup({super.key}) : super(Routes.popupCombo);
 
   @override
   createState() => _ComboPopupState();

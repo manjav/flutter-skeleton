@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
 class AbstractScreen extends StatefulWidget {
   //todo: check routes here
   final String route;
-  final Map<String, dynamic> args;
   final String? sfx;
   final bool closable;
 
+  Map<String, dynamic> get args => Get.arguments;
+
   AbstractScreen(
     this.route, {
-    required this.args,
     Key? key,
     this.sfx,
     this.closable = true,
@@ -22,7 +23,11 @@ class AbstractScreen extends StatefulWidget {
 }
 
 class AbstractScreenState<T extends AbstractScreen> extends State<T>
-    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
+    with
+        ILogger,
+        TickerProviderStateMixin,
+        ServiceFinderWidgetMixin,
+        ClassFinderWidgetMixin {
   List<Widget> stepChildren = <Widget>[];
 
   @override

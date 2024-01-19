@@ -12,7 +12,7 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 import '../../app_export.dart';
 
 class HomeScreen extends AbstractScreen {
-  HomeScreen({super.key}) : super(Routes.home, args: {});
+  HomeScreen({super.key}) : super(Routes.home,);
 
   @override
   createState() => _HomeScreenState();

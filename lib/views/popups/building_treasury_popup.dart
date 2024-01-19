@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class TreasuryBuildingPopup extends AbstractPopup {
-  const TreasuryBuildingPopup({required super.args, super.key})
+  TreasuryBuildingPopup({super.key})
       : super(Routes.popupTreasuryBuilding);
 
   @override

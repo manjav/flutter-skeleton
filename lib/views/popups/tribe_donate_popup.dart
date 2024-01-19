@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class TribeDonatePopup extends AbstractPopup {
-  TribeDonatePopup({super.key}) : super(Routes.popupTribeDonate, args: {});
+  TribeDonatePopup({super.key}) : super(Routes.popupTribeDonate);
 
   @override
   createState() => _TribeDonatePopupState();

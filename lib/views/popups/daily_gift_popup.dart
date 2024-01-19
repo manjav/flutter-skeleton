@@ -4,7 +4,7 @@ import '../../app_export.dart';
 
 
 class DailyGiftPopup extends AbstractPopup {
-  DailyGiftPopup({super.key}) : super(Routes.popupDailyGift, args: {});
+  DailyGiftPopup({super.key}) : super(Routes.popupDailyGift);
 
   @override
   createState() => _RewardPopupState();

@@ -9,7 +9,7 @@ import '../../app_export.dart';
 class DeckScreen extends AbstractScreen {
   final Opponent? opponent;
 
-  DeckScreen({this.opponent, super.key}) : super(Routes.deck, args: {});
+  DeckScreen({this.opponent, super.key}) : super(Routes.deck);
 
   @override
   createState() => _DeckScreenState();
