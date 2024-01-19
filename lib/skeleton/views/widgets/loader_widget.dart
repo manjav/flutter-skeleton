@@ -7,7 +7,7 @@ import 'package:rive/src/rive_core/assets/file_asset.dart' as rive;
 import '../../skeleton.dart';
 
 class LoaderWidget extends StatefulWidget {
-  static String baseURL = "";
+  static String baseURL = "https://8ball.turnedondigital.com/fc";
   static Map<String, String> hashMap = {};
 
   final String name;
