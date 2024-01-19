@@ -20,7 +20,6 @@ class Widgets {
     Widget? child,
   }) {
     return GestureDetector(
-      
         onVerticalDragStart: onVerticalDragStart == null
             ? null
             : (details) {
@@ -44,22 +43,22 @@ class Widgets {
               },
         onTap: () {
           if (_isActive(id)) {
-            context.read<ServicesProvider>().get<Sounds>().play(sfx ?? "click");
             onTap?.call();
           }
         },
         onTapUp: (details) {
           if (_isActive(id)) {
-            if (sfx == null) {
-              // services.get<Sounds>().play("button-up");
-            }
+            context
+                .read<ServicesProvider>()
+                .get<Sounds>()
+                .play(sfx ?? "mouse_up");
             onTapUp?.call(details);
           }
         },
         onTapDown: (details) {
           if (_isActive(id)) {
             if (sfx == null) {
-              // services.get<Sounds>().play("button-down");
+              context.read<ServicesProvider>().get<Sounds>().play("mouse_down");
             }
             onTapDown?.call(details);
           }
@@ -74,7 +73,6 @@ class Widgets {
             onLongPress?.call();
           }
         },
-        
         child: child);
   }
 
