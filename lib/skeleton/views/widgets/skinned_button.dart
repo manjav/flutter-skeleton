@@ -45,14 +45,17 @@ class SkinnedButton extends StatefulWidget {
   State<SkinnedButton> createState() => _SkinnedButtonState();
 
   static buttonDecorator(ButtonColor color,
-      [ButtonSize size = ButtonSize.small]) {
+      [bool isPressed = false, ButtonSize size = ButtonSize.small]) {
     var slicingData = switch (size) {
       ButtonSize.small =>
         ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 4, 20)),
       _ => ImageCenterSliceData(130, 158),
     };
-    return Widgets.imageDecorator(
-        "button_${size.name}_${color.name}", slicingData);
+    var assetName = "button_${size.name}_${color.name}";
+    if (isPressed) {
+      assetName += "_down";
+    }
+    return Widgets.imageDecorator(assetName, slicingData);
   }
 }
 
