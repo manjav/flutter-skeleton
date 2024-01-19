@@ -60,19 +60,27 @@ class SkinnedButton extends StatefulWidget {
 }
 
 class _SkinnedButtonState extends State<SkinnedButton> {
+  bool _isPressed = false;
   @override
   Widget build(BuildContext context) {
     var color = !widget.isEnable ? ButtonColor.gray : widget.color;
-    return Widgets.button(context,
-        onPressed: widget.isEnable ? widget.onPressed : widget.onDisablePressed,
+    return Widgets.button(
+      context,
+      onTapUp: (details) {
+        setState(() => _isPressed = false);
+        (widget.isEnable ? widget.onPressed : widget.onDisablePressed)?.call();
+      },
+      onTapDown: (details) => setState(() => _isPressed = true),
+      onTapCancel: () => setState(() => _isPressed = false),
         width: widget.width,
         height: widget.height,
         buttonId: widget.buttonId,
         alignment: widget.alignment ?? Alignment.center,
         constraints: widget.constraints,
         margin: widget.margin,
-        padding: widget.padding ?? EdgeInsets.fromLTRB(28.d, 25.d, 28.d, 40.d),
-        decoration: SkinnedButton.buttonDecorator(color, widget.size),
+      padding: widget.padding ??
+          EdgeInsets.fromLTRB(28.d, 25.d, 28.d, _isPressed ? 40.d : 44.d),
+      decoration: SkinnedButton.buttonDecorator(color, _isPressed, widget.size),
         child: Opacity(
             opacity: widget.isEnable ? 1 : 0.7,
             child: widget.label != null || widget.icon != null
@@ -88,6 +96,7 @@ class _SkinnedButtonState extends State<SkinnedButton> {
                         ? const SizedBox()
                         : SkinnedText(widget.label!, style: TStyles.large),
                   ])
-                : widget.child!));
+              : widget.child!),
+    );
   }
 }
