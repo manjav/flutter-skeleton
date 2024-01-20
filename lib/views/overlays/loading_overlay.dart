@@ -92,18 +92,19 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           isUpdateError && !isForceUpdate
-                              ? Widgets.skinnedButton(context,
+                              ? SkinnedButton(
                                   height: 160.d,
                                   padding:
                                       EdgeInsets.fromLTRB(42.d, 0, 42.d, 16.d),
                                   label: "play_l".l(),
-                                  buttonId: -1, onPressed: () {
-                                  Pref.skipUpdate.setBool(true);
-                                  _reload();
-                                })
+                                  buttonId: -1,
+                                  onPressed: () {
+                                    Pref.skipUpdate.setBool(true);
+                                    _reload();
+                                  })
                               : const SizedBox(),
                           SizedBox(width: 12.d),
-                          Widgets.skinnedButton(context,
+                          SkinnedButton(
                               color: isUpdateError
                                   ? ButtonColor.green
                                   : ButtonColor.yellow,
