@@ -27,6 +27,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
+  Widget appBarFactory(double paddingTop) {
+    if (services.state.status.index < ServiceStatus.initialize.index) {
+      return const SizedBox();
+    }
+    return super.appBarFactory(paddingTop);
+  }
+
+  @override
   Widget contentFactory() {
     if (services.state.status.index < ServiceStatus.initialize.index) {
       return const SizedBox();
@@ -39,10 +47,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             var result = await services
                 .get<RouteService>()
                 .to(Routes.popupMessage, args: {
-                  "title": "quit_title".l(),
-                  "message": "quit_message".l(),
-                  "isConfirm": () {}
-                });
+              "title": "quit_title".l(),
+              "message": "quit_message".l(),
+              "isConfirm": () {}
+            });
             if (result != null) {
               SystemNavigator.pop();
             }
