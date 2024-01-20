@@ -3,7 +3,6 @@ import '../../views.dart';
 import '../../../skeleton/skeleton.dart';
 
 class MessagePopup extends AbstractPopup {
-  //todo: check routes here
   MessagePopup({super.key})
       : super("popupMessage");
 
@@ -37,7 +36,7 @@ class _MessagePopupState extends AbstractPopupState<MessagePopup> {
   }
 
   _button(ButtonColor color, String label, dynamic result) {
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         width: 360.d,
         label: label,
         color: color,

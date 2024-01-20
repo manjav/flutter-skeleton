@@ -11,6 +11,7 @@ class SkinnedText extends StatelessWidget {
   final TextAlign? textAlign;
   final TextOverflow? overflow;
   final TextDirection? textDirection;
+  final double shadowScale;
   const SkinnedText(
     this.text, {
     super.key,
@@ -20,6 +21,7 @@ class SkinnedText extends StatelessWidget {
     this.strokeWidth,
     this.alignment = Alignment.center,
     this.textDirection,
+    this.shadowScale = 1.0,
     this.overflow,
   });
 
@@ -38,7 +40,7 @@ class SkinnedText extends StatelessWidget {
                 ..strokeWidth = strokeWidth ?? style.fontSize! * 0.15
                 ..color = strokeColor
                 ..style = PaintingStyle.stroke,
-              shadows: [_shadow(0, style.fontSize! * 0.16)])),
+              shadows: [_shadow(0, style.fontSize! * 0.16 * shadowScale)])),
       Text(text,
           overflow: overflow,
           textAlign: textAlign,

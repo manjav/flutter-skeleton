@@ -20,13 +20,13 @@ class RouteService extends IService {
   Future<dynamic> to(String route, {dynamic args}) async {
     var page = pages.firstWhereOrNull((item) => item.route == route);
     if (page == null) throw Exception("route not found");
-
     if (page.type == RouteType.page || page.type == RouteType.popup) {
       return Get.to(
-        page.page,
-        routeName: page.route,
-        opaque: page.isOpaque,
+        () => page.page,
         arguments: args,
+        opaque: page.isOpaque,
+        routeName: page.route,
+        transition: Transition.fadeIn,
       );
     }
   }
@@ -37,10 +37,10 @@ class RouteService extends IService {
 
     if (page.type == RouteType.page || page.type == RouteType.popup) {
       return Get.off(
-        page.page,
+        () => page.page,
+        arguments: args,
         routeName: page.route,
         opaque: page.isOpaque,
-        arguments: args,
       );
     }
   }

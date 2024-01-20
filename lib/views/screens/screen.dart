@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../app_export.dart';
 
 class AbstractScreen extends StatefulWidget {
-  //todo: check routes here
   final String route;
   final String? sfx;
   final bool closable;
@@ -17,6 +16,8 @@ class AbstractScreen extends StatefulWidget {
     this.sfx,
     this.closable = true,
   }) : super(key: key ??= Key(route));
+
+  Map<String, dynamic> get args => Get.arguments;
 
   @override
   createState() => AbstractScreenState();
@@ -44,10 +45,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   @override
   Widget build(BuildContext context) {
-    var appBarElements = <Widget>[];
-    appBarElements.addAll(appBarElementsLeft());
-    appBarElements.add(const Expanded(child: SizedBox()));
-    appBarElements.addAll(appBarElementsRight());
     var paddingTop = MediaQuery.of(context).viewPadding.top;
     if (paddingTop <= 0) {
       paddingTop = 24.d;
@@ -64,18 +61,26 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
               left: 0,
               child: contentFactory(),
             ),
-            PositionedDirectional(
-              top: paddingTop,
-              start: 24.d,
-              end: 24.d,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: appBarElements),
-            ),
+            appBarFactory(paddingTop),
           ],
         ),
       ),
+    );
+  }
+
+  Widget appBarFactory(double paddingTop) {
+    var appBarElements = <Widget>[];
+    appBarElements.addAll(appBarElementsLeft());
+    appBarElements.add(const Expanded(child: SizedBox()));
+    appBarElements.addAll(appBarElementsRight());
+    return PositionedDirectional(
+      top: paddingTop,
+      start: 24.d,
+      end: 24.d,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: appBarElements),
     );
   }
 
