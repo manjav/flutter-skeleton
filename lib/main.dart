@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp>
   void restartApp() {
     Overlays.clear();
     LoaderWidget.cachedLoaders.clear();
+    Get.reset(clearRouteBindings: true);
     if (Navigator.canPop(context)) Navigator.pop(context);
     _initialize(true);
   }
