@@ -3,5 +3,5 @@ class Routes {
   static const home = "/home";
   static const chat = "/chat";
 
-  static const message = "popupMessage";
+  static const popupMessage = "popupMessage";
 }

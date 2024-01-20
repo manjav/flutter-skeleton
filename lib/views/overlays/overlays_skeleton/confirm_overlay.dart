@@ -54,12 +54,13 @@ class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
 
   Widget _button(String label,
       {ButtonColor color = ButtonColor.green, Function()? onPressed}) {
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         color: color,
         padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 32.d),
-        label: label, onPressed: () {
-      onPressed?.call();
-      close();
-    });
+        label: label,
+        onPressed: () {
+          onPressed?.call();
+          close();
+        });
   }
 }

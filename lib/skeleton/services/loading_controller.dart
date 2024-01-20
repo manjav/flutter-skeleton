@@ -1,30 +1,25 @@
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
-class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Routes.loading, args: {});
-
+class LoadingController extends GetxController with ServiceFinderMixin {
   @override
-  createState() => _LoadingScreenState();
-}
-
-class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
-  @override
-  void onRender(Duration timeStamp) async {
+  Future<void> onReady() async {
+    super.onReady();
+    var services = getServices(Get.context!);
     Overlays.insert(
-      context,
+      Get.overlayContext!,
       const LoadingOverlay(),
     );
 
     var route = RouteService();
     route.pages = [
-      SkeletonPageModel(
-          page: LoadingScreen(), route: Routes.loading, isOpaque: true),
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(page: ChatScreen(), route: Routes.chat, isOpaque: true),
       SkeletonPageModel(
-          page: const MessagePopup(args: {}), route: Routes.message),
+          page: const MessagePopup(),
+          route: Routes.popupMessage,
+          isOpaque: false),
     ];
     services.addService(route);
 
@@ -37,14 +32,14 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
     services.addService(themes);
 
     var localization = Localization();
-    await localization.initialize(args: [context]);
+    await localization.initialize(args: [Get.context!]);
     services.addService(localization);
 
     // var trackers = Trackers();
     // await trackers.initialize();
     // services.addService(trackers);
 
-    await Future.delayed(const Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 100));
     services.changeState(ServiceStatus.initialize);
 
     // var notifications = Notifications();
@@ -62,7 +57,9 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
 
     var sounds = Sounds();
     sounds.initialize();
+    sounds.playMusic();
     services.addService(sounds);
+    services.changeState(ServiceStatus.complete);
   }
 
   /* _onAdsServicesUpdate(Placement? placement) {
@@ -76,7 +73,4 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
       }
     }
   } */
-
-  @override
-  Widget build(BuildContext context) => const SizedBox();
 }
