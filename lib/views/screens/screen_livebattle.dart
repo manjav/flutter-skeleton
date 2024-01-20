@@ -146,7 +146,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             Positioned(
                 width: 120.d,
                 right: 40.d,
-                child: Widgets.skinnedButton(context,
+                child: SkinnedButton(
                     label: "x", onPressed: _close))
           ],
         ));

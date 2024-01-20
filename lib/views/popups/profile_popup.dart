@@ -126,7 +126,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                     end: 20.d,
                     width: 100.d,
                     height: 100.d,
-                    child: Widgets.skinnedButton(context,
+                    child: SkinnedButton(
                         padding: EdgeInsets.fromLTRB(16.d, 10.d, 16.d, 24.d),
                         color: ButtonColor.wooden,
                         child: Asset.load<Image>("tribe_edit"),

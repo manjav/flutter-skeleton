@@ -110,7 +110,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   Widget _enhanceButton(ButtonColor color, String text, List<Widget> children,
       bool isEnable, Function() onTap) {
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         width: 460.d,
         height: 200.d,
         color: color,

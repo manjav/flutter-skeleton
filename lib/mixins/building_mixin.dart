@@ -23,8 +23,7 @@ mixin BuildingPopupMixin<T extends AbstractPopup> on State<T> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Widgets.skinnedButton(
-            context,
+          SkinnedButton(
             height: 160.d,
             isEnable: building.level < building.maxLevel,
             color: ButtonColor.green,

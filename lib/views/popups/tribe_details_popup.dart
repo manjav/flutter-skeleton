@@ -66,7 +66,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             40.d),
       ]),
       SizedBox(height: 20.d),
-      Widgets.skinnedButton(context,
+      SkinnedButton(
           color: ButtonColor.teal,
           label: "tribe_invite".l(),
           icon: "tribe_invite",
@@ -171,7 +171,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         SizedBox(width: 4.d),
         SkinnedText(tribe.gold.compact(), style: TStyles.large),
         const Expanded(child: SizedBox()),
-        Widgets.skinnedButton(context,
+        SkinnedButton(
             label: "tribe_donate".l(),
             padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
             onPressed: () async {
@@ -232,8 +232,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
     }
     var cost = tribe.getOptionCost(id);
     var newBenefit = tribe.getOption(id, tribe.levels[id]! + 1);
-    return Widgets.skinnedButton(
-      context,
+    return SkinnedButton(
       height: 150.d,
       color: ButtonColor.green,
       padding: EdgeInsets.fromLTRB(28.d, 18.d, 22.d, 28.d),

@@ -35,7 +35,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
               hintText: account.name,
               onChange: (t) => setState(() {})),
           SizedBox(height: 12.d),
-          Widgets.skinnedButton(context,
+          SkinnedButton(
               isEnable: _textController.text.length >= 6 &&
                   _textController.text != account.name,
               height: 160.d,

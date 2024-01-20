@@ -70,7 +70,7 @@ class _TreasuryBuildingPopupState
 
   Widget _transactionButton(ButtonColor color, bool isEnable,
       List<Widget> children, Function() onTap) {
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         color: color,
         isEnable: isEnable,
         height: 150.d,

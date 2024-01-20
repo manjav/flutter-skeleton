@@ -30,10 +30,11 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       if (state.account.tribe == null || state.account.tribe!.id <= 0) {
         return Column(children: [
           Expanded(child: TribeSearchPopup()),
-          Widgets.skinnedButton(context, label: "tribe_new".l(), width: 380.d,
+          SkinnedButton(
+              label: "tribe_new".l(),
+              width: 380.d,
               onPressed: () async {
-                await services.get<RouteService>()
-                    .to(Routes.popupTribeEdit);
+                await services.get<RouteService>().to(Routes.popupTribeEdit);
                 setState(() {});
               }),
           SizedBox(height: 200.d),
@@ -66,7 +67,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       Widgets.button(
         context,
         onPressed: () async {
-          await services.get<RouteService>()
+          await services
+              .get<RouteService>()
               .to(Routes.popupTribeOptions, args: {"index": 0});
           setState(() {});
         },
@@ -75,16 +77,16 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             LoaderWidget(AssetType.animation, "tab_3", fit: BoxFit.fitWidth,
                 onRiveInit: (Artboard artboard) {
-                  final controller =
+              final controller =
                   StateMachineController.fromArtboard(artboard, "Tab");
-                  _tribeLevelInput = controller?.findInput<double>("level");
-                  _tribeLevelInput?.value =
-                      account.tribe!.levels[Buildings.tribe.id]!.toDouble();
-                  controller?.findInput<bool>("hideBackground")!.value = true;
-                  controller?.findInput<bool>("active")!.value = true;
+              _tribeLevelInput = controller?.findInput<double>("level");
+              _tribeLevelInput?.value =
+                  account.tribe!.levels[Buildings.tribe.id]!.toDouble();
+              controller?.findInput<bool>("hideBackground")!.value = true;
+              controller?.findInput<bool>("active")!.value = true;
 
-                  artboard.addController(controller!);
-                }, width: 160.d, height: 160.d),
+              artboard.addController(controller!);
+            }, width: 160.d, height: 160.d),
             SizedBox(width: 16.d),
             _informationBuilder(account, account.tribe!),
             const Expanded(child: SizedBox()),
@@ -121,10 +123,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
             SizedBox(width: 16.d),
             hasPermission
                 ? Widgets.rect(
-                padding: EdgeInsets.all(10.d),
-                decoration: Widgets.imageDecorator(
-                    "frame_hatch_button", ImageCenterSliceData(42)),
-                child: Asset.load<Image>("tribe_edit", width: 42.d))
+                    padding: EdgeInsets.all(10.d),
+                    decoration: Widgets.imageDecorator(
+                        "frame_hatch_button", ImageCenterSliceData(42)),
+                    child: Asset.load<Image>("tribe_edit", width: 42.d))
                 : const SizedBox()
           ]),
           Row(children: [
@@ -136,8 +138,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           ]),
         ]),
         onPressed: () async {
-          await services.get<RouteService>()
-              .to(Routes.popupTribeEdit);
+          await services.get<RouteService>().to(Routes.popupTribeEdit);
           setState(() {});
         },
       ),
@@ -147,8 +148,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   Widget _membersButtonBuilder(Tribe tribe) {
     return ValueListenableBuilder<List<Opponent>>(
         valueListenable: tribe.members,
-        builder: (context, value, child) =>
-            Widgets.rect(
+        builder: (context, value, child) => Widgets.rect(
               width: 260.d,
               padding: EdgeInsets.zero,
               child: Column(
@@ -156,8 +156,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                   children: [
                     _indicator(
                         "icon_population",
-                        "${tribe.population}/${tribe.getOption(
-                            Buildings.tribe.id)}"
+                        "${tribe.population}/${tribe.getOption(Buildings.tribe.id)}"
                             .convert(),
                         40.d),
                     SizedBox(height: 8.d),
@@ -206,7 +205,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   }
 
   Widget _upgradable(ButtonColor color, String icon, String label) {
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         padding: EdgeInsets.fromLTRB(24.d, 0, 28.d, 20.d),
         color: color,
         child: Row(
@@ -216,8 +215,10 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               Asset.load<Image>(icon, width: 50.d),
               SizedBox(width: 12.d),
               SkinnedText(label.convert()),
-            ]), onPressed: () async {
-          await services.get<RouteService>()
+            ]),
+        onPressed: () async {
+          await services
+              .get<RouteService>()
               .to(Routes.popupTribeOptions, args: {"index": 1});
           setState(() {});
         });
@@ -250,9 +251,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   Widget _chatList(Account account) {
     var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
-    var now = DateTime
-        .now()
-        .secondsSinceEpoch;
+    var now = DateTime.now().secondsSinceEpoch;
 
     // Initialize inbox
     getService<Inbox>().initialize(args: [context, account]);
@@ -269,18 +268,17 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                   controller: _scrollController,
                   padding: EdgeInsets.all(48.d),
                   itemCount: account.tribe!.chat.length,
-                  itemBuilder: (c, i) =>
-                      _chatItemRenderer(
-                          account,
-                          account.tribe!.chat
-                              .value[account.tribe!.chat.length - i - 1],
-                          titleStyle,
-                          now)));
+                  itemBuilder: (c, i) => _chatItemRenderer(
+                      account,
+                      account.tribe!.chat
+                          .value[account.tribe!.chat.length - i - 1],
+                      titleStyle,
+                      now)));
         });
   }
 
-  _chatItemRenderer(Account account, NoobChatMessage message,
-      TextStyle titleStyle, int now) {
+  _chatItemRenderer(
+      Account account, NoobChatMessage message, TextStyle titleStyle, int now) {
     if (message.messageType.isConfirm) {
       return _confirmItemRenderer(account, message);
     }
@@ -290,19 +288,18 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         width: padding,
         height: padding,
         radius: padding,
-        padding: EdgeInsets.all(6.d),
-        onTapUp: (details) async {
-          await account.tribe!.loadMembers(context, account);
-          if (!mounted) return;
-          Overlays.insert(
-            context,
-            MemberOverlay(
-                account.tribe!.members.value
-                    .firstWhere((m) => m.name == message.sender),
-                account,
-                details.globalPosition.dy - 220.d),
-          );
-        },
+        padding: EdgeInsets.all(6.d), onTapUp: (details) async {
+      await account.tribe!.loadMembers(context, account);
+      if (!mounted) return;
+      Overlays.insert(
+        context,
+        MemberOverlay(
+            account.tribe!.members.value
+                .firstWhere((m) => m.name == message.sender),
+            account,
+            details.globalPosition.dy - 220.d),
+      );
+    },
         decoration: Widgets.imageDecorator(
             "frame_hatch_button", ImageCenterSliceData(42)),
         child: LoaderWidget(AssetType.image, "avatar_${message.avatarId}",
@@ -350,20 +347,20 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         margin: EdgeInsets.only(bottom: 48.d),
         padding: EdgeInsets.fromLTRB(32.d, 26.d, 16.d, 16.d),
         decoration:
-        Widgets.imageDecorator("ui_popup_group", ImageCenterSliceData(144)),
+            Widgets.imageDecorator("ui_popup_group", ImageCenterSliceData(144)),
         child: Column(
             crossAxisAlignment: getService<Localization>().columnAlign,
             children: [
               Text(message.text),
               SizedBox(height: 16.d),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                Widgets.skinnedButton(context,
+                SkinnedButton(
                     padding: padding,
                     label: "reject_l".l(),
                     color: ButtonColor.yellow,
                     onPressed: () => _decide(account.tribe!, message, false)),
                 SizedBox(width: 24.d),
-                Widgets.skinnedButton(context,
+                SkinnedButton(
                     padding: padding,
                     label: "accept_l".l(),
                     color: ButtonColor.green,
@@ -378,14 +375,13 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         child: SkinnedText(message.text));
   }
 
-  void _onChatItemTap(Account account, TapUpDetails details,
-      NoobChatMessage message) {
+  void _onChatItemTap(
+      Account account, TapUpDetails details, NoobChatMessage message) {
     var options = <ChatOptions>[];
-    if (account.tribe!
-        .members.value
-        .firstWhere((m) => m.itsMe)
-        .tribePosition
-        .index >=
+    if (account.tribe!.members.value
+            .firstWhere((m) => m.itsMe)
+            .tribePosition
+            .index >=
         TribePosition.owner.index) {
       options.add(ChatOptions.pin);
     }
@@ -403,8 +399,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                   account.tribe!.pinMessage(context, account, message);
                 } else if (option == ChatOptions.reply) {
                   _inputController.text =
-                  "@${message.sender}: ${message.text.truncate(
-                      16)}...\n${_inputController.text}";
+                      "@${message.sender}: ${message.text.truncate(16)}...\n${_inputController.text}";
                   setState(() {});
                 }
               }));
@@ -429,17 +424,17 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         child: Row(textDirection: TextDirection.ltr, children: [
           Expanded(
               child: Widgets.skinnedInput(
-                radius: 56.d,
-                maxLines: null,
-                controller: _inputController,
-                onChange: (text) {
-                  if (text.contains("\n")) {
-                    _inputController.text = text.substring(0, text.length - 1);
-                    _sendMessage(account);
-                  }
-                },
-                onSubmit: (text) => _sendMessage(account),
-              )),
+            radius: 56.d,
+            maxLines: null,
+            controller: _inputController,
+            onChange: (text) {
+              if (text.contains("\n")) {
+                _inputController.text = text.substring(0, text.length - 1);
+                _sendMessage(account);
+              }
+            },
+            onSubmit: (text) => _sendMessage(account),
+          )),
           SizedBox(width: 12.d),
           Widgets.button(context,
               color: TColors.primary80,

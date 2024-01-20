@@ -8,8 +8,6 @@ class AbstractScreen extends StatefulWidget {
   final String? sfx;
   final bool closable;
 
-  Map<String, dynamic> get args => Get.arguments;
-
   AbstractScreen(
     this.route, {
     Key? key,

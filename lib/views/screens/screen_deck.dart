@@ -73,7 +73,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             height: 214.d,
             width: 420.d,
             bottom: 24.d,
-            child: Widgets.skinnedButton(context,
+            child: SkinnedButton(
                 padding: EdgeInsets.fromLTRB(56.d, 48.d, 56.d, 64.d),
                 alignment: Alignment.center,
                 child: Row(

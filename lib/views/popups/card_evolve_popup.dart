@@ -121,7 +121,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
     return Positioned(
       bottom: 40.d,
       height: 170.d,
-      child: Widgets.skinnedButton(context,
+      child: SkinnedButton(
           isEnable: selectedCards.value.length >= 2,
           padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
           child: Row(textDirection: TextDirection.ltr, children: [

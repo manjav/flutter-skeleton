@@ -16,7 +16,7 @@ class LoadingController extends GetxController with ServiceFinderMixin {
     route.pages = [
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(
-          page: const MessagePopup(),
+          page: MessagePopup(),
           route: Routes.popupMessage,
           isOpaque: false),
     ];

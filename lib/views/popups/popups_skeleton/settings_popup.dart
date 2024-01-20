@@ -87,7 +87,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
   Widget _button(String title,
       {ButtonColor color = ButtonColor.teal, double? width}) {
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         width: width,
         color: color,
         icon: "icon_$title",

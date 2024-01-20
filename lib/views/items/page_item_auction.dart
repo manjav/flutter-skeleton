@@ -164,7 +164,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                         ]),
                     SizedBox(height: 8.d),
                     bidable
-                        ? Widgets.skinnedButton(context,
+                        ? SkinnedButton(
                             padding: EdgeInsets.fromLTRB(0, 12.d, 8.d, 32.d),
                             color: ButtonColor.green,
                             child: Row(
