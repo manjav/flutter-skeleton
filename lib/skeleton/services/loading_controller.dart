@@ -1,18 +1,19 @@
+import 'package:flutter_skeleton/service_locator.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
-class LoadingController extends GetxController with ServiceFinderMixin {
+class LoadingController extends GetxController {
   @override
   Future<void> onReady() async {
     super.onReady();
-    var services = getServices(Get.context!);
+    var services = serviceLocator<ServicesProvider>();
     Overlays.insert(
       Get.overlayContext!,
       const LoadingOverlay(),
     );
 
-    var route = RouteService();
+    var route = serviceLocator<RouteService>();
     route.pages = [
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(
@@ -20,19 +21,12 @@ class LoadingController extends GetxController with ServiceFinderMixin {
           route: Routes.popupMessage,
           isOpaque: false),
     ];
-    services.addService(route);
 
-    var deviceInfo = DeviceInfo();
-    deviceInfo.initialize();
-    services.addService(deviceInfo);
+    serviceLocator<DeviceInfo>().initialize();
 
-    var themes = Themes();
-    themes.initialize();
-    services.addService(themes);
+    serviceLocator<Themes>().initialize();
 
-    var localization = Localization();
-    await localization.initialize(args: [Get.context!]);
-    services.addService(localization);
+    await serviceLocator<Localization>().initialize(args: [Get.context!]);
 
     // var trackers = Trackers();
     // await trackers.initialize();
@@ -54,10 +48,10 @@ class LoadingController extends GetxController with ServiceFinderMixin {
     // ads.onUpdate = _onAdsServicesUpdate;
     // services.addService(ads);
 
-    var sounds = Sounds();
+    var sounds = serviceLocator<Sounds>();
     sounds.initialize();
     sounds.playMusic();
-    services.addService(sounds);
+
     services.changeState(ServiceStatus.complete);
   }
 
