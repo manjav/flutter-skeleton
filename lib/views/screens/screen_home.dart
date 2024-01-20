@@ -18,7 +18,7 @@ class HomeScreen extends AbstractScreen {
   createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends AbstractScreenState<AbstractScreen>
+class _HomeScreenState extends AbstractScreenState<HomeScreen>
     with BackgroundMixin, KeyProvider {
   late PageController _pageController;
   int _selectedTabIndex = 2, punchIndex = -1;
