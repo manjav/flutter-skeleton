@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
 class AbstractScreen extends StatefulWidget {
-  //todo: check routes here
   final String route;
-  final Map<String, dynamic> args;
   final String? sfx;
   final bool closable;
 
   AbstractScreen(
     this.route, {
-    required this.args,
     Key? key,
     this.sfx,
     this.closable = true,
   }) : super(key: key ??= Key(route));
+
+  Map<String, dynamic> get args => Get.arguments;
 
   @override
   createState() => AbstractScreenState();

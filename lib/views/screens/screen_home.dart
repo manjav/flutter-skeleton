@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import '../../app_export.dart';
 
 class HomeScreen extends AbstractScreen {
-  HomeScreen({super.key}) : super(Routes.home, args: {});
+  HomeScreen({super.key}) : super(Routes.home);
 
   @override
   createState() => _HomeScreenState();
