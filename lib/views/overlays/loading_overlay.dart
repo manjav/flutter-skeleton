@@ -16,13 +16,11 @@ class LoadingOverlay extends AbstractOverlay {
 class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   bool _logViewVisibility = false;
   SMIBool? _closeInput;
-  int _startTime = 0;
-  final _minAnimationTime = 3000;
+  final _minAnimationTime = 1500;
   ServiceState _serviceState = ServiceState(ServiceStatus.none);
 
   @override
   void initState() {
-    _startTime = DateTime.now().millisecondsSinceEpoch;
     services.addListener(_serviceListener);
     super.initState();
   }
@@ -39,6 +37,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
         isForceUpdate;
     var logStyle = TStyles.tiny.copyWith(color: TColors.gray);
     return Scaffold(
+      backgroundColor: TColors.transparent,
       body: Stack(alignment: Alignment.center, children: [
         Asset.load<RiveAnimation>('loading', onRiveInit: (Artboard artboard) {
           final controller = StateMachineController.fromArtboard(
@@ -148,16 +147,14 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
 
   Future<void> _serviceListener() async {
     if (services.state.status == ServiceStatus.complete) {
-      _closeInput?.value = true;
       services.removeListener(_serviceListener);
     } else if (services.state.status == ServiceStatus.initialize) {
-      // wait for minimum animation time
-      var elapsedTime = DateTime.now().millisecondsSinceEpoch - _startTime;
+      // Wait for minimum animation time
+      var elapsedTime =
+          DateTime.now().difference(MyApp.startTime).inMilliseconds;
       await Future.delayed(
           Duration(milliseconds: _minAnimationTime - elapsedTime));
-      if (mounted) {
-        services.get<RouteService>().replace(Routes.home);
-      }
+      _closeInput?.value = true;
     } else if (services.state.status == ServiceStatus.error) {
       _serviceState = services.state;
       setState(() {});
