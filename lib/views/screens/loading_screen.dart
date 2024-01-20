@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class LoadingScreen extends AbstractScreen {
-  LoadingScreen({super.key}) : super(Routes.loading, args: {});
+  LoadingScreen({super.key}) : super(Routes.loading);
 
   @override
   createState() => _LoadingScreenState();
@@ -23,9 +23,7 @@ class _LoadingScreenState extends AbstractScreenState<AbstractScreen> {
           page: LoadingScreen(), route: Routes.loading, isOpaque: true),
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(
-          page: const MessagePopup(args: {}),
-          route: Routes.message,
-          isOpaque: true),
+          page: const MessagePopup(), route: Routes.message, isOpaque: true),
     ];
     services.addService(route);
 

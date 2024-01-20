@@ -4,7 +4,8 @@ import '../../../skeleton/skeleton.dart';
 
 class MessagePopup extends AbstractPopup {
   //todo: check routes here
-  const MessagePopup({super.key, required super.args}) : super("popupMessage");
+  const MessagePopup({super.key})
+      : super("popupMessage");
 
   @override
   createState() => _MessagePopupState();
