@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'app_export.dart';
 
 void main() async {
+  MyApp.startTime = DateTime.now();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -16,6 +17,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  static late final DateTime startTime;
   const MyApp({super.key});
 
   // static final firebaseAnalytics = FirebaseAnalytics.instance;
@@ -89,20 +91,7 @@ class _MyAppState extends State<MyApp>
           theme: Themes.darkData,
           locale: Localization.locales.firstWhere((l) =>
               l.languageCode == Pref.language.getString(defaultValue: 'en')),
-          // darkTheme: Themes.darkData,
-          // themeMode: settingsController.themeMode,
-
-          // Define a function to handle named routes in order to support
-          // Flutter web url navigation and deep linking.
-          // onGenerateRoute: (RouteSettings routeSettings) {
-          //   return MaterialTransparentRoute(
-          //       isOpaque: RoutesExtension.getOpaque(routeSettings.name!),
-          //       settings: routeSettings,
-          //       builder: (BuildContext context) => RoutesExtension.getWidget(
-          //           routeSettings.name!,
-          //           args: routeSettings.arguments as Map<String, dynamic>?));
-          // },
-          home: LoadingScreen(),
+          home: HomeScreen(),
         ),
       ),
     );
