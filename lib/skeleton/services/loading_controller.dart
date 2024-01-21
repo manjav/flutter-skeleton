@@ -260,18 +260,17 @@ class LoadingController extends GetxController with ServiceFinderMixin {
       if (context.mounted) {
         accountProvider.initialize(data.account);
 
+        var noobSocket = NoobSocket();
+        noobSocket.initialize(
+            args: [data.account, context.read<OpponentsProvider>()]);
+        services.addService(noobSocket);
+
         services.changeState(ServiceStatus.initialize);
 
         var notifications = Notifications();
         notifications.initialize(
             args: ["${data.account.id}", data.account.getSchedules()]);
         services.addService(notifications);
-
-        var noobSocket = NoobSocket();
-        noobSocket.initialize(
-            args: [data.account, context.read<OpponentsProvider>()]);
-
-        services.addService(noobSocket);
       }
     } on SkeletonException catch (e) {
       if (context.mounted) {
@@ -290,7 +289,9 @@ class LoadingController extends GetxController with ServiceFinderMixin {
 
     var sounds = Sounds();
     sounds.initialize();
+    sounds.playMusic();
     services.addService(sounds);
+    services.changeState(ServiceStatus.complete);
   }
 
   _onAdsServicesUpdate(Placement? placement) {
