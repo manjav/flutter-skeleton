@@ -5,11 +5,11 @@ import '../services/services.dart';
 
 enum ServiceStatus {
   none,
+  error,
   initialize,
   complete,
   changeTab,
   punch,
-  error,
 }
 
 class ServiceState {
