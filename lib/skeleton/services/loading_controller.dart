@@ -1,4 +1,6 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -6,7 +8,12 @@ class LoadingController extends GetxController with ServiceFinderMixin {
   @override
   Future<void> onReady() async {
     super.onReady();
-    var services = getServices(Get.context!);
+
+    var context = Get.context!;
+
+    var services = getServices(context);
+    var accountProvider = context.read<AccountProvider>();
+
     Overlays.insert(
       Get.overlayContext!,
       const LoadingOverlay(),
@@ -14,11 +21,214 @@ class LoadingController extends GetxController with ServiceFinderMixin {
 
     var route = RouteService();
     route.pages = [
-      SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(
-          page: MessagePopup(),
-          route: Routes.popupMessage,
-          isOpaque: false),
+          page: LoadingScreen(), route: Routes.loading, isOpaque: true),
+      SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
+      SkeletonPageModel(page: DeckScreen(), route: Routes.deck, isOpaque: true),
+      SkeletonPageModel(
+          page: QuestScreen(), route: Routes.quest, isOpaque: true),
+      SkeletonPageModel(
+          page: AttackOutScreen(
+            Routes.questOut,
+          ),
+          route: Routes.questOut,
+          isOpaque: true),
+      SkeletonPageModel(
+          page: AttackOutScreen(
+            Routes.battleOut,
+          ),
+          route: Routes.battleOut,
+          isOpaque: true),
+      SkeletonPageModel(
+          page: LiveOutScreen(), route: Routes.liveBattleOut, isOpaque: true),
+      SkeletonPageModel(
+          page: LiveBattleScreen(), route: Routes.liveBattle, isOpaque: true),
+      SkeletonPageModel(
+        page: CardDetailsPopup(),
+        route: Routes.popupCardDetails,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: CardEnhancePopup(),
+        route: Routes.popupCardEnhance,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: CardEvolvePopup(),
+        route: Routes.popupCardEvolve,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: HeroEvolvePopup(),
+        route: Routes.popupHeroEvolve,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: CollectionPopup(),
+        route: Routes.popupCollection,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: CardSelectPopup(),
+        route: Routes.popupCardSelect,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: MessagePopup(),
+        route: Routes.popupMessage,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: LeaguePopup(),
+        route: Routes.popupLeague,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: RankingPopup(),
+        route: Routes.popupRanking,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: OpponentsPopup(),
+        route: Routes.popupOpponents,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: SupportiveBuildingPopup(),
+        route: Routes.popupSupportiveBuilding,
+        isOpaque: false,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: MineBuildingPopup(),
+        route: Routes.popupMineBuilding,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: TreasuryBuildingPopup(),
+        route: Routes.popupTreasuryBuilding,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: PotionPopup(),
+        route: Routes.popupPotion,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: ComboPopup(),
+        route: Routes.popupCombo,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: HeroPopup(1),
+        route: Routes.popupHero,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: InboxPopup(),
+        route: Routes.popupInbox,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: ProfilePopup(-1),
+        route: Routes.popupProfile,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: ProfileEditPopup(),
+        route: Routes.popupProfileEdit,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: ProfileAvatarsPopup(),
+        route: Routes.popupProfileAvatars,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: SettingsPopup(),
+        route: Routes.popupSettings,
+        isOpaque: false,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: RestorePopup(),
+        route: Routes.popupRestore,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: InvitePopup(),
+        route: Routes.popupInvite,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: RedeemGiftPopup(),
+        route: Routes.popupRedeemGift,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: DailyGiftPopup(),
+        route: Routes.popupDailyGift,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: TribeDetailsPopup(),
+        route: Routes.popupTribeOptions,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: TribeInvitePopup(),
+        route: Routes.popupTribeInvite,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: TribeEditPopup(),
+        route: Routes.popupTribeEdit,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: TribeDonatePopup(),
+        route: Routes.popupTribeDonate,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: SelectCardTypePopup(),
+        route: Routes.popupCardSelectType,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
+      SkeletonPageModel(
+        page: SelectCardCategoryPopup(),
+        route: Routes.popupCardSelectCategory,
+        isOpaque: true,
+        type: RouteType.popup,
+      ),
     ];
     services.addService(route);
 
@@ -31,38 +241,60 @@ class LoadingController extends GetxController with ServiceFinderMixin {
     services.addService(themes);
 
     var localization = Localization();
-    await localization.initialize(args: [Get.context!]);
+    await localization.initialize(args: [context]);
     services.addService(localization);
 
-    // var trackers = Trackers();
-    // await trackers.initialize();
-    // services.addService(trackers);
+    var firebase = FirebaseAnalytics.instance;
 
-    await Future.delayed(const Duration(milliseconds: 500));
-    services.changeState(ServiceStatus.initialize);
+    var trackers = Trackers(firebase);
+    await trackers.initialize();
+    services.addService(trackers);
+    
+    try {
+      var httpConnection = HttpConnection();
+      var data = await httpConnection.initialize() as LoadingData;
+      services.addService(httpConnection);
 
-    // var notifications = Notifications();
-    // notifications.initialize(args: ["", <String, int>{}]);
-    // serviceProvider.addService(notifications);
+      trackers.sendUserData("${data.account.id}", data.account.name);
 
-    // var games = Games();
-    // games.initialize();
-    // services.addService(games);
+      if (context.mounted) {
+        accountProvider.initialize(data.account);
 
-    // var ads = Ads();
-    // ads.initialize();
-    // ads.onUpdate = _onAdsServicesUpdate;
-    // services.addService(ads);
+        services.changeState(ServiceStatus.initialize);
+
+        var notifications = Notifications();
+        notifications.initialize(
+            args: ["${data.account.id}", data.account.getSchedules()]);
+        services.addService(notifications);
+
+        var noobSocket = NoobSocket();
+        noobSocket.initialize(
+            args: [data.account, context.read<OpponentsProvider>()]);
+
+        services.addService(noobSocket);
+      }
+    } on SkeletonException catch (e) {
+      if (context.mounted) {
+        services.changeState(ServiceStatus.error, exception: e);
+      }
+    }
+
+    var games = Games();
+    games.initialize();
+    services.addService(games);
+
+    var ads = Ads();
+    ads.initialize();
+    ads.onUpdate = _onAdsServicesUpdate;
+    services.addService(ads);
 
     var sounds = Sounds();
     sounds.initialize();
-    sounds.playMusic();
     services.addService(sounds);
-    services.changeState(ServiceStatus.complete);
   }
 
-  /* _onAdsServicesUpdate(Placement? placement) {
-    var sounds = services.get<Sounds>();
+  _onAdsServicesUpdate(Placement? placement) {
+    var sounds = getService<Sounds>(Get.context!);
     if (Pref.music.getBool()) {
       if (placement!.state == AdState.show) {
         sounds.stopAll();
@@ -71,5 +303,5 @@ class LoadingController extends GetxController with ServiceFinderMixin {
         sounds.playMusic();
       }
     }
-  } */
+  }
 }
