@@ -36,7 +36,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
               itemCount: _donates.length,
               itemBuilder: _gridItemBuilder)),
       SizedBox(height: 40.d),
-      Widgets.skinnedButton(context,
+      SkinnedButton(
           color: ButtonColor.green,
           height: 160.d,
           // width: 400.d,

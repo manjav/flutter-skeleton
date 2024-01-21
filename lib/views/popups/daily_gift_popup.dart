@@ -56,7 +56,7 @@ class _RewardPopupState extends AbstractPopupState<DailyGiftPopup> {
               itemBuilder: _daysItemBuilder,
             )),
         SizedBox(height: 40.d),
-        Widgets.skinnedButton(context,
+        SkinnedButton(
             width: 440.d,
             label: "claim_l".l(),
             color: ButtonColor.green,

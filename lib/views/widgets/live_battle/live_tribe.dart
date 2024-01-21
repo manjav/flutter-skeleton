@@ -96,7 +96,7 @@ class _LiveTribeState extends State<LiveTribe>
         team.isNotEmpty) {
       return const SizedBox();
     }
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         width: 320.d,
         height: 150.d,
         isEnable: _timer.isActive,

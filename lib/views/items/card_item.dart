@@ -154,7 +154,7 @@ class _CardItemState extends State<CardItem> {
                             .toRemainingTime()
                             .convert()),
                         IgnorePointer(
-                            child: Widgets.skinnedButton(context,
+                            child: SkinnedButton(
                                 height: 128.d,
                                 color: ButtonColor.teal,
                                 padding: EdgeInsets.only(bottom: 12.d),

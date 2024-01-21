@@ -129,14 +129,14 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Widgets.skinnedButton(context,
+                        SkinnedButton(
                             color: ButtonColor.cream,
                             label: "cancel_l".l(),
                             width: 340.d,
                             padding: EdgeInsets.only(bottom: 12.d),
                             onPressed: () => Navigator.pop(context)),
                         SizedBox(width: 12.d),
-                        Widgets.skinnedButton(context,
+                        SkinnedButton(
                             label: "save_l".l(),
                             width: 340.d,
                             color: ButtonColor.green,
@@ -263,8 +263,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
       if (host != null) {
         return _lockItem("icon_used", "${host.card.fruit.name}_t".l());
       }
-      return Widgets.skinnedButton(
-        context,
+      return SkinnedButton(
         width: 320.d,
         height: 120.d,
         label: "use_l".l(),
@@ -276,8 +275,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     if (item.unlockLevel > _account.hero_max_rarity) {
       return _lockItem("icon_locked", "level_l".l([item.unlockLevel]));
     }
-    return Widgets.skinnedButton(
-      context,
+    return SkinnedButton(
       height: 120.d,
       icon: "icon_nectar",
       label: "${item.cost}",

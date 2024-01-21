@@ -87,7 +87,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
     if (id == RpcId.none) {
       return const SizedBox();
     }
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         padding: EdgeInsets.only(bottom: 20.d),
         color: color,
         label: "${id.name.toLowerCase()}_l".l(),
@@ -96,7 +96,8 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
 
   _onButtonsPressed(RpcId id) async {
     if (id == RpcId.getProfileInfo) {
-      services.get<RouteService>()
+      services
+          .get<RouteService>()
           .to(Routes.popupProfile, args: {"id": widget.member.id});
       close();
       return;

@@ -65,7 +65,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
               _levelItemBuilder(i, fruit)
           ]),
           SizedBox(height: 48.d),
-          Widgets.skinnedButton(context,
+          SkinnedButton(
               label: "search_l".l(),
               width: 340.d,
               onPressed: () =>

@@ -1,4 +1,4 @@
-export 'loading_screen.dart';
+export 'screen_loading.dart';
 export 'screen.dart';
 export 'screen_attack_outcome.dart';
 export 'screen_deck.dart';

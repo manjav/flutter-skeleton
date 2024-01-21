@@ -4,17 +4,14 @@ import 'package:get/get.dart';
 import '../../../app_export.dart';
 
 class AbstractPopup extends StatefulWidget {
-  //todo: check routes here
   final String name;
-  // final Map<String, dynamic> args;
-
-  Map<String, dynamic> get args => Get.arguments;
 
   AbstractPopup(
     this.name, {
-    // this.args = const {},
     super.key,
   });
+
+  Map<String, dynamic> get args => Get.arguments;
 
   @override
   createState() => AbstractPopupState();

@@ -64,7 +64,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
           mainAxisSize: MainAxisSize.min,
           children: [_checkbox("asc", 0), _checkbox("desc", 1)]),
       SizedBox(height: 48.d),
-      Widgets.skinnedButton(context,
+      SkinnedButton(
           width: 340.d,
           label: "search_l".l(),
           onPressed: () => Navigator.pop(context, {

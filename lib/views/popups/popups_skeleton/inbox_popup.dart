@@ -76,7 +76,7 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
   _getConfirmButtons(Message message) {
     var padding = EdgeInsets.fromLTRB(44.d, 20.d, 44.d, 40.d);
     if (message.type == Messages.text) {
-      return Widgets.skinnedButton(context,
+      return SkinnedButton(
           padding: padding,
           color: ButtonColor.yellow,
           label: "go_l".l(),
@@ -84,14 +84,14 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
     }
     if (!message.type.isConfirm) return SizedBox(height: 22.d);
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-      Widgets.skinnedButton(context,
+      SkinnedButton(
           padding: padding,
           color: ButtonColor.yellow,
           label: "˦",
           onPressed: () =>
               message.decideTribeRequest(context, message.intData[0], false)),
       SizedBox(width: 8.d),
-      Widgets.skinnedButton(context,
+      SkinnedButton(
           padding: padding,
           color: ButtonColor.green,
           label: "˥", onPressed: () async {

@@ -40,7 +40,7 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
             hintText: "settings_gift_hint".l(),
             onChange: (t) => setState(() {})),
         SizedBox(height: 40.d),
-        Widgets.skinnedButton(context,
+        SkinnedButton(
             width: 540.d,
             icon: "icon_gift",
             label: "settings_gift".l(),

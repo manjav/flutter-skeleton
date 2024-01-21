@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
@@ -12,19 +13,24 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 import '../../app_export.dart';
 
 class HomeScreen extends AbstractScreen {
-  HomeScreen({super.key}) : super(Routes.home,);
+  HomeScreen({super.key})
+      : super(
+          Routes.home,
+        );
 
   @override
   createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends AbstractScreenState<AbstractScreen>
+class _HomeScreenState extends AbstractScreenState<HomeScreen>
     with BackgroundMixin, KeyProvider {
   late PageController _pageController;
   int _selectedTabIndex = 2, punchIndex = -1;
   final List<SMITrigger?> _punchInputs = List.generate(5, (index) => null);
   final List<SMIBool?> _selectionInputs = List.generate(5, (index) => null);
   SMINumber? _tribeLevelInput;
+
+  var controller = Get.put(LoadingController());
 
   @override
   void initState() {
@@ -36,13 +42,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
     services.changeState(ServiceStatus.complete);
-    getService<NoobSocket>().onReceive.add(_onNoobReceive);
-    if (accountProvider.account.dailyReward.containsKey("day_index")) {
-      services.get<RouteService>().to(Routes.popupDailyGift);
-    }
-    getService<Sounds>().playMusic();
-    context.read<ServicesProvider>().addListener(() async {
+
+    context.read<ServicesProvider>().addListener(() {
       var state = services.state;
+      if (state.status == ServiceStatus.initialize) {
+        if (accountProvider.account.dailyReward.containsKey("day_index")) {
+          services.get<RouteService>().to(Routes.popupDailyGift);
+        }
+
+        getService<Sounds>().playMusic();
+
+        getService<NoobSocket>().onReceive.add(_onNoobReceive);
+        setState(() {});
+      }
       if (state.status == ServiceStatus.changeTab) {
         _selectTap(state.data as int);
       } else if (state.status == ServiceStatus.punch) {
@@ -89,7 +101,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen>
   }
 
   @override
+  Widget appBarFactory(double paddingTop) {
+    if (services.state.status.index < ServiceStatus.initialize.index) {
+      return const SizedBox();
+    }
+    return super.appBarFactory(paddingTop);
+  }
+
+  @override
   Widget contentFactory() {
+    if (services.state.status.index < ServiceStatus.initialize.index) {
+      return const SizedBox();
+    }
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {

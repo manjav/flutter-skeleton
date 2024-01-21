@@ -73,7 +73,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
     var step = 50;
 
     if (hero.potion >= capacity) {
-      return Widgets.skinnedButton(context,
+      return SkinnedButton(
           width: 500.d,
           color: ButtonColor.green,
           label: titleBuilder(),
@@ -82,13 +82,13 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Widgets.skinnedButton(context,
+        SkinnedButton(
             color: ButtonColor.yellow,
             label: "+$step",
             icon: "icon_potion",
             onPressed: () => _fill(account, hero, step)),
         SizedBox(width: 10.d),
-        Widgets.skinnedButton(context,
+        SkinnedButton(
             color: ButtonColor.teal,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               SkinnedText("fill_out".l(), style: TStyles.large),

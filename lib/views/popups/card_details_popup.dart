@@ -122,7 +122,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
     if (!isVisible) {
       return const SizedBox();
     }
-    return Widgets.skinnedButton(context,
+    return SkinnedButton(
         margin: EdgeInsets.all(8.d),
         icon: icon,
         color: color,

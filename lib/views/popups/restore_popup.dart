@@ -4,8 +4,7 @@ import '../../main.dart';
 import '../../app_export.dart';
 
 class RestorePopup extends AbstractPopup {
-  RestorePopup({super.key})
-      : super(Routes.popupRestore);
+  RestorePopup({super.key}) : super(Routes.popupRestore);
 
   @override
   createState() => _RestorePopupState();
@@ -59,7 +58,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
           hintText: "settings_restore_hint".l(),
           onChange: (t) => setState(() {})),
       SizedBox(height: 30.d),
-      Widgets.skinnedButton(context,
+      SkinnedButton(
           width: 590.d,
           color: ButtonColor.green,
           icon: "icon_restore",
@@ -75,4 +74,12 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
     Pref.restoreKey.setString(_textController.text);
     MyApp.restartApp(context);
   }
+
+  @override
+  List<Widget> appBarElements() => widget.args.containsKey("onlySet")
+      ? []
+      : [
+          Indicator(widget.name, Values.gold),
+          Indicator(widget.name, Values.nectar, width: 310.d)
+        ];
 }

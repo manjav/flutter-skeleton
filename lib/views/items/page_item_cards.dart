@@ -38,7 +38,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             top: paddingTop,
             start: 20.d,
             width: 132.d,
-            child: Widgets.skinnedButton(context,
+            child: SkinnedButton(
                 icon: "icon_collection",
                 onPressed: () =>
                     services.get<RouteService>().to(Routes.popupCollection))),
@@ -46,21 +46,23 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             top: paddingTop,
             width: 132.d,
             start: 150.d,
-            child: Widgets.skinnedButton(context, icon: "icon_combo",
+            child: SkinnedButton(
+                icon: "icon_combo",
                 onPressed: () {
-              // Show unavailable message
-              var levels =
-                  state.account.loadingData.rules["availabilityLevels"]!;
-              if (state.account.level < levels["combo"]) {
-                Overlays.insert(
-                    context,
-                    ToastOverlay(
-                      "unavailable_l".l(["popupcombo".l(), levels["combo"]]),
-                    ));
-              } else {
-                services.get<RouteService>().to(Routes.popupCombo);
-              }
-            }))
+                  // Show unavailable message
+                  var levels =
+                      state.account.loadingData.rules["availabilityLevels"]!;
+                  if (state.account.level < levels["combo"]) {
+                    Overlays.insert(
+                        context,
+                        ToastOverlay(
+                          "unavailable_l"
+                              .l(["popupcombo".l(), levels["combo"]]),
+                        ));
+                  } else {
+                    services.get<RouteService>().to(Routes.popupCombo);
+                  }
+                }))
       ]);
     });
   }

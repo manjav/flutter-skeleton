@@ -86,7 +86,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Widgets.skinnedButton(context,
+          SkinnedButton(
               height: 160.d,
               isEnable: _isSubmitEnable(cost),
               color: ButtonColor.green,

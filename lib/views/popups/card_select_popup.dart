@@ -81,7 +81,7 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
                       width: 420.d,
                       height: 160.d,
                       bottom: 24.d,
-                      child: Widgets.skinnedButton(context,
+                      child: SkinnedButton(
                           label: "card_select".l(),
                           onPressed: () =>
                               Navigator.pop(context, _selectedCards.value)))
