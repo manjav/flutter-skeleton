@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
@@ -29,6 +30,8 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   final List<SMIBool?> _selectionInputs = List.generate(5, (index) => null);
   SMINumber? _tribeLevelInput;
 
+  var controller = Get.put(LoadingController());
+
   @override
   void initState() {
     _pageController = PageController(initialPage: _selectedTabIndex);
@@ -39,17 +42,17 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
     services.changeState(ServiceStatus.complete);
-    getService<NoobSocket>().onReceive.add(_onNoobReceive);
-
-    if (accountProvider.account.dailyReward.containsKey("day_index")) {
-      services.get<RouteService>().to(Routes.popupDailyGift);
-    }
-
-    getService<Sounds>().playMusic();
 
     context.read<ServicesProvider>().addListener(() {
       var state = services.state;
       if (state.status == ServiceStatus.initialize) {
+        if (accountProvider.account.dailyReward.containsKey("day_index")) {
+          services.get<RouteService>().to(Routes.popupDailyGift);
+        }
+
+        getService<Sounds>().playMusic();
+
+        getService<NoobSocket>().onReceive.add(_onNoobReceive);
         setState(() {});
       }
       if (state.status == ServiceStatus.changeTab) {
@@ -95,6 +98,14 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       ];
     }
     return super.appBarElementsRight();
+  }
+
+  @override
+  Widget appBarFactory(double paddingTop) {
+    if (services.state.status.index < ServiceStatus.initialize.index) {
+      return const SizedBox();
+    }
+    return super.appBarFactory(paddingTop);
   }
 
   @override
