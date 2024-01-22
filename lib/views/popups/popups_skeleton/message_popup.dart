@@ -3,7 +3,7 @@ import '../../views.dart';
 import '../../../skeleton/skeleton.dart';
 
 class MessagePopup extends AbstractPopup {
-  MessagePopup({super.key})
+  const MessagePopup({super.key})
       : super("popupMessage");
 
   @override

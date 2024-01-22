@@ -74,6 +74,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             child: SkinnedButton(
                 padding: EdgeInsets.fromLTRB(56.d, 48.d, 56.d, 64.d),
                 alignment: Alignment.center,
+                size: ButtonSize.medium,
+                onPressed: () => _attack(state.account),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -81,9 +83,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                     SizedBox(width: 16.d),
                     SkinnedText("attack_l".l(), style: TStyles.large),
                   ],
-                ),
-                size: ButtonSize.medium,
-                onPressed: () => _attack(state.account)))
+                )))
       ]);
     });
   }

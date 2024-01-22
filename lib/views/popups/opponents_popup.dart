@@ -7,7 +7,7 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class OpponentsPopup extends AbstractPopup {
-  OpponentsPopup({super.key}) : super(Routes.popupOpponents);
+  const OpponentsPopup({super.key}) : super(Routes.popupOpponents);
 
   @override
   createState() => _OpponentsPopupState();
@@ -189,6 +189,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                             width: 320.d,
                             color: ButtonColor.green,
                             padding: EdgeInsets.fromLTRB(16.d, 8.d, 16.d, 22.d),
+                            onPressed: _scout,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -197,8 +198,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                                 SkinnedText(floatingCost.compact(),
                                     style: TStyles.large),
                               ],
-                            ),
-                            onPressed: _scout));
+                            )));
               }),
           SizedBox(width: 32.d),
         ],
@@ -243,15 +243,15 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                   child: SkinnedButton(
                       padding: EdgeInsets.fromLTRB(32.d, 28.d, 42.d, 42.d),
                       alignment: Alignment.center,
+                      size: ButtonSize.medium,
+                      onPressed: _attack,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           const LoaderWidget(AssetType.image, "icon_battle"),
                           SkinnedText("attack_l".l(), style: TStyles.large),
                         ],
-                      ),
-                      size: ButtonSize.medium,
-                      onPressed: _attack)),
+                      ))),
               SizedBox(width: 8.d),
               SkinnedButton(
                   width: 230.d,

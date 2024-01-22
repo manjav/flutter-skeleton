@@ -6,7 +6,7 @@ import '../../../main.dart';
 
 class SettingsPopup extends AbstractPopup {
   //todo: check routes here
-  SettingsPopup({super.key}) : super(Routes.popupSettings);
+  const SettingsPopup({super.key}) : super(Routes.popupSettings);
 
   @override
   createState() => _SettingsPopupState();

@@ -29,7 +29,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
       if (state.account.tribe == null || state.account.tribe!.id <= 0) {
         return Column(children: [
-          Expanded(child: TribeSearchPopup()),
+          const Expanded(child: TribeSearchPopup()),
           SkinnedButton(
               label: "tribe_new".l(),
               width: 380.d,

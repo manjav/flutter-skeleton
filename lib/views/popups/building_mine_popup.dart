@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class MineBuildingPopup extends AbstractPopup {
-  MineBuildingPopup({super.key})
+  const MineBuildingPopup({super.key})
       : super(Routes.popupMineBuilding);
 
   @override

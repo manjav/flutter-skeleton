@@ -102,6 +102,7 @@ class _LiveTribeState extends State<LiveTribe>
         isEnable: _timer.isActive,
         color: ButtonColor.teal,
         padding: EdgeInsets.fromLTRB(20.d, 0.d, 20.d, 8.d),
+        onPressed: _help,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             Asset.load<Image>("icon_horn", height: 76.d),
@@ -125,8 +126,7 @@ class _LiveTribeState extends State<LiveTribe>
                   border: 2,
                   radius: 10.d,
                   padding: 4.d))
-        ]),
-        onPressed: _help);
+        ]));
   }
 
   _help() async {

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class TreasuryBuildingPopup extends AbstractPopup {
-  TreasuryBuildingPopup({super.key})
+  const TreasuryBuildingPopup({super.key})
       : super(Routes.popupTreasuryBuilding);
 
   @override
@@ -75,9 +75,9 @@ class _TreasuryBuildingPopupState
         isEnable: isEnable,
         height: 150.d,
         width: 360.d,
+        onPressed: onTap,
         child: Row(
-            mainAxisAlignment: MainAxisAlignment.center, children: children),
-        onPressed: onTap);
+            mainAxisAlignment: MainAxisAlignment.center, children: children));
   }
 
   _transaction(Account account, RpcId id, int amount) async {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class InvitePopup extends AbstractPopup {
-  InvitePopup({super.key}) : super(Routes.popupInvite);
+  const InvitePopup({super.key}) : super(Routes.popupInvite);
 
   @override
   createState() => _InvitePopupState();

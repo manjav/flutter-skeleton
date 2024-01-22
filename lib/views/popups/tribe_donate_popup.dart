@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class TribeDonatePopup extends AbstractPopup {
-  TribeDonatePopup({super.key}) : super(Routes.popupTribeDonate);
+  const TribeDonatePopup({super.key}) : super(Routes.popupTribeDonate);
 
   @override
   createState() => _TribeDonatePopupState();
@@ -42,6 +42,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
           // width: 400.d,
           isEnable: _donateValue > 0,
           padding: EdgeInsets.fromLTRB(28.d, 18.d, 22.d, 28.d),
+          onPressed: _donate,
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             SkinnedText("tribe_donate".l(), style: TStyles.large),
             SizedBox(width: 20.d),
@@ -55,8 +56,7 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
                     style: TStyles.large.copyWith(height: 1)),
               ]),
             )
-          ]),
-          onPressed: _donate),
+          ])),
     ]);
   }
 

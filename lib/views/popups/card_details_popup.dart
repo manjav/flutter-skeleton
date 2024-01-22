@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class CardDetailsPopup extends AbstractPopup {
-  CardDetailsPopup({super.key})
+  const CardDetailsPopup({super.key})
       : super(Routes.popupCardDetails);
 
   @override
@@ -126,13 +126,13 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         margin: EdgeInsets.all(8.d),
         icon: icon,
         color: color,
-        child: child,
         label: label,
         width: width,
         height: 160.d,
         isEnable: isEnable,
         onPressed: onPressed,
-        onDisablePressed: onDisablePressed);
+        onDisablePressed: onDisablePressed,
+        child: child);
   }
 
   _onButtonsTap(String route) async {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class ProfileAvatarsPopup extends AbstractPopup {
-  ProfileAvatarsPopup({super.key}) : super(Routes.popupProfile);
+  const ProfileAvatarsPopup({super.key}) : super(Routes.popupProfile);
 
   @override
   createState() => _ProfileAvatarsPopupState();

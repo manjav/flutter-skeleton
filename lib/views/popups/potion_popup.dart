@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class PotionPopup extends AbstractPopup {
-  PotionPopup({super.key}) : super(Routes.popupPotion);
+  const PotionPopup({super.key}) : super(Routes.popupPotion);
 
   @override
   createState() => _PotionPopupState();
@@ -64,6 +64,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
         width: 420.d,
         height: 150.d,
         onDisablePressed: () => toast("max_level".l([titleBuilder()])),
+        onPressed: onTap,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Asset.load<Image>("icon_potion", height: 80.d),
           SizedBox(width: 6.d),
@@ -78,8 +79,7 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
               SkinnedText(cost.compact()),
             ]),
           ),
-        ]),
-        onPressed: onTap);
+        ]));
   }
 
   _fill(Account account, double amount) async {

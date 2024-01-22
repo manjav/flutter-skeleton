@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class CollectionPopup extends AbstractPopup {
-  CollectionPopup({super.key}) : super(Routes.popupCollection);
+  const CollectionPopup({super.key}) : super(Routes.popupCollection);
 
   @override
   createState() => _CollectionPopupState();

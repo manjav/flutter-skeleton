@@ -4,7 +4,7 @@ import '../../main.dart';
 import '../../app_export.dart';
 
 class RestorePopup extends AbstractPopup {
-  RestorePopup({super.key}) : super(Routes.popupRestore);
+  const RestorePopup({super.key}) : super(Routes.popupRestore);
 
   @override
   createState() => _RestorePopupState();
