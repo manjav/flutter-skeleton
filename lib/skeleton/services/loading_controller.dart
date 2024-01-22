@@ -21,8 +21,6 @@ class LoadingController extends GetxController with ServiceFinderMixin {
 
     var route = RouteService();
     route.pages = [
-      SkeletonPageModel(
-          page: LoadingScreen(), route: Routes.loading, isOpaque: true),
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(page: DeckScreen(), route: Routes.deck, isOpaque: true),
       SkeletonPageModel(
@@ -46,61 +44,61 @@ class LoadingController extends GetxController with ServiceFinderMixin {
       SkeletonPageModel(
         page: CardDetailsPopup(),
         route: Routes.popupCardDetails,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: CardEnhancePopup(),
         route: Routes.popupCardEnhance,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: CardEvolvePopup(),
         route: Routes.popupCardEvolve,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: HeroEvolvePopup(),
         route: Routes.popupHeroEvolve,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: CollectionPopup(),
         route: Routes.popupCollection,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: CardSelectPopup(),
         route: Routes.popupCardSelect,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: MessagePopup(),
         route: Routes.popupMessage,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: LeaguePopup(),
         route: Routes.popupLeague,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: RankingPopup(),
         route: Routes.popupRanking,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: OpponentsPopup(),
         route: Routes.popupOpponents,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
@@ -112,55 +110,55 @@ class LoadingController extends GetxController with ServiceFinderMixin {
       SkeletonPageModel(
         page: MineBuildingPopup(),
         route: Routes.popupMineBuilding,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: TreasuryBuildingPopup(),
         route: Routes.popupTreasuryBuilding,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: PotionPopup(),
         route: Routes.popupPotion,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: ComboPopup(),
         route: Routes.popupCombo,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: HeroPopup(1),
         route: Routes.popupHero,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: InboxPopup(),
         route: Routes.popupInbox,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: ProfilePopup(-1),
         route: Routes.popupProfile,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: ProfileEditPopup(),
         route: Routes.popupProfileEdit,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: ProfileAvatarsPopup(),
         route: Routes.popupProfileAvatars,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
@@ -172,61 +170,61 @@ class LoadingController extends GetxController with ServiceFinderMixin {
       SkeletonPageModel(
         page: RestorePopup(),
         route: Routes.popupRestore,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: InvitePopup(),
         route: Routes.popupInvite,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: RedeemGiftPopup(),
         route: Routes.popupRedeemGift,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: DailyGiftPopup(),
         route: Routes.popupDailyGift,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: TribeDetailsPopup(),
         route: Routes.popupTribeOptions,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: TribeInvitePopup(),
         route: Routes.popupTribeInvite,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: TribeEditPopup(),
         route: Routes.popupTribeEdit,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: TribeDonatePopup(),
         route: Routes.popupTribeDonate,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: SelectCardTypePopup(),
         route: Routes.popupCardSelectType,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
       SkeletonPageModel(
         page: SelectCardCategoryPopup(),
         route: Routes.popupCardSelectCategory,
-        isOpaque: true,
+        isOpaque: false,
         type: RouteType.popup,
       ),
     ];
@@ -266,6 +264,10 @@ class LoadingController extends GetxController with ServiceFinderMixin {
         services.addService(noobSocket);
 
         services.changeState(ServiceStatus.initialize);
+
+        var inbox = Inbox();
+        inbox.initialize(args: [context,data.account]);
+        services.addService(inbox);
 
         var notifications = Notifications();
         notifications.initialize(
