@@ -18,7 +18,7 @@ class Sounds extends ISounds {
 /*
  * Load, cache and play sounds
  */
-  var _index = 0;
+  // var _index = 0;
   final Map<String, AudioPlayer> _players = {};
   final _sounds = <String, DeviceFileSource>{};
 
@@ -28,13 +28,10 @@ class Sounds extends ISounds {
     if (name.isEmpty) return;
     if (channel == null) {
       if (!Pref.sfx.getBool()) return;
-      player = _findPlayer();
+      player = _findPlayer(name);
     } else {
       if (channel == "music" && !Pref.music.getBool()) return;
-      if (!_players.containsKey(channel)) {
-        _players[channel] = AudioPlayer();
-      }
-      player = _players[channel]!;
+      player = _findPlayer(channel);
     }
 
     if (loop) player.setReleaseMode(ReleaseMode.loop);
@@ -56,14 +53,17 @@ class Sounds extends ISounds {
     player.play(_sounds[name] = DeviceFileSource(file!.path));
   }
 
-  AudioPlayer _findPlayer() {
-    var entries = _players.entries;
-    for (var e in entries) {
-      if (e.key.startsWith('_') && e.value.state != PlayerState.playing) {
-        return e.value;
-      }
-    }
-    return _players["_${_index++}"] = AudioPlayer();
+  ///we have bug here because in mouse down and mouse up we get same audio player
+  ///for example audio player index 1 [time between call these is very tiny and return same audio player]
+  ///there fore we set two source in a small time with these way we didn't get any error
+  AudioPlayer _findPlayer(String name) {
+    // var entries = _players.entries;
+    // for (var e in entries) {
+    //   if (e.key.startsWith('_') && e.value.state != PlayerState.playing) {
+    //     return e.value;
+    //   }
+    // }
+    return _players[name] ?? (_players[name] = AudioPlayer());
   }
 
   @override
