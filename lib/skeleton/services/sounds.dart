@@ -23,7 +23,7 @@ class Sounds extends ISounds {
   final _sounds = <String, DeviceFileSource>{};
 
   @override
-  Future<void> play(String name, {String? channel}) async {
+  Future<void> play(String name, {String? channel, bool loop = false}) async {
     AudioPlayer player;
     if (name.isEmpty) return;
     if (channel == null) {
@@ -36,6 +36,8 @@ class Sounds extends ISounds {
       }
       player = _players[channel]!;
     }
+
+    if (loop) player.setReleaseMode(ReleaseMode.loop);
 
     if (_sounds.containsKey(name)) {
       try {
@@ -79,6 +81,6 @@ class Sounds extends ISounds {
 
   @override
   void playMusic() {
-    play('main_theme', channel: "music");
+    play('main_theme', channel: "music",loop: true);
   }
 }
