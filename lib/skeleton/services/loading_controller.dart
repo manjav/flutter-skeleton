@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:fruitcraft/main.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -242,9 +243,7 @@ class LoadingController extends GetxController with ServiceFinderMixin {
     await localization.initialize(args: [context]);
     services.addService(localization);
 
-    var firebase = FirebaseAnalytics.instance;
-
-    var trackers = Trackers(firebase);
+    var trackers = Trackers();
     await trackers.initialize();
     services.addService(trackers);
     

@@ -28,15 +28,14 @@ class Trackers extends IService {
   int variant = 1;
   final _testName = "_";
   final _buildType = BuildType.installed;
-  final FirebaseAnalytics firebaseAnalytics;
 
-  Trackers(this.firebaseAnalytics);
+  Trackers();
 
   @override
   initialize({List<Object>? args}) async {
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
-      sdk.initialize(args: [firebaseAnalytics], logCallback: log);
+      sdk.initialize(args: [], logCallback: log);
       var deviceId = await sdk.getDeviceId();
       if (deviceId != null) DeviceInfo.adId = deviceId;
       var variant = await sdk.getVariantId(_testName);
