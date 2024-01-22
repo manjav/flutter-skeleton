@@ -3,6 +3,7 @@
 //         -=-=-=-    Fruit    -=-=-=-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
@@ -207,6 +208,8 @@ class AuctionCard extends AbstractCard {
 
 class AccountCard extends AbstractCard with ClassFinderMixin {
   bool isDeployed = false;
+  RxBool loadingCoolOff = false.obs;
+
   AccountCard(super.account, super.map, {int? ownerId}) {
     id = map['id'] ?? -1;
     this.ownerId = ownerId ?? account.id;
@@ -215,6 +218,7 @@ class AccountCard extends AbstractCard with ClassFinderMixin {
 
   Future<void> coolOff(BuildContext context) async {
     try {
+      loadingCoolOff.value = true;
       var data = await getService<HttpConnection>(context)
           .tryRpc(context, RpcId.coolOff, params: {RpcParams.card_id.name: id});
       lastUsedAt = 0;
@@ -225,6 +229,8 @@ class AccountCard extends AbstractCard with ClassFinderMixin {
       if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL.value) {
         lastUsedAt = 0;
       }
+    } finally {
+      loadingCoolOff.value = false;
     }
   }
 

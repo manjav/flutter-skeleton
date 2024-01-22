@@ -136,34 +136,87 @@ class _CardItemState extends State<CardItem> {
           ])));
     }
     if (widget.showCoolOff && _remainingCooldown.value > 0) {
-      items.add(Positioned(
+      items.add(
+        Positioned(
           top: 1 * s,
           left: 6 * s,
           bottom: 8 * s,
           right: 6 * s,
           child: ValueListenableBuilder<int>(
-              valueListenable: _remainingCooldown,
-              builder: (context, value, child) => Widgets.rect(
-                  radius: 23 * s,
-                  color: TColors.white50,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Expanded(child: SizedBox()),
-                        SkinnedText(_remainingCooldown.value
-                            .toRemainingTime()
-                            .convert()),
-                        IgnorePointer(
-                            child: SkinnedButton(
-                                height: 128.d,
-                                color: ButtonColor.teal,
-                                padding: EdgeInsets.only(bottom: 12.d),
-                                label: widget.card
-                                    .cooldownTimeToCost(
-                                        _remainingCooldown.value)
-                                    .compact(),
-                                icon: "icon_gold"))
-                      ])))));
+            valueListenable: _remainingCooldown,
+            builder: (context, value, child) => Widgets.rect(
+              radius: 23 * s,
+              color: TColors.black80,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  LoaderWidget(
+                      AssetType.image,
+                      subFolder: "cards",
+                      "cooldown_glow",
+                      height: 204.d,
+                      width: 205.d),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "ˣ ${_remainingCooldown.value.toRemainingTime().convert()}",
+                        style: TStyles.medium.copyWith(
+                          color: TColors.white,
+                        ),
+                      ),
+                      SizedBox(height: 5.d),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          LoaderWidget(
+                              AssetType.image,
+                              subFolder: "cards",
+                              "cooldown_button",
+                              height: 80.d),
+                          StreamBuilder<Object>(
+                            stream: (widget.card as AccountCard)
+                                .loadingCoolOff
+                                .stream,
+                            builder: (context, snapshot) {
+                              return LoaderWidget(
+                                  AssetType.image,
+                                  subFolder: "cards",
+                                  (snapshot.hasData && snapshot.data == true)
+                                      ? "cooldown_reloaded"
+                                      : "cooldown_reload",
+                                  height: 50.d);
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5.d,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Asset.load<Image>('icon_gold', height: 60.d),
+                          SizedBox(
+                            width: 5.d,
+                          ),
+                          Text(
+                              widget.card
+                                  .cooldownTimeToCost(_remainingCooldown.value)
+                                  .compact(),
+                              style: TStyles.medium.copyWith(
+                                color: TColors.white,
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
     var stack = Stack(alignment: Alignment.center, children: items);
