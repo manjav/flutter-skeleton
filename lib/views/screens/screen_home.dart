@@ -41,17 +41,12 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
-    services.changeState(ServiceStatus.complete);
-
     context.read<ServicesProvider>().addListener(() {
       var state = services.state;
       if (state.status == ServiceStatus.initialize) {
         if (accountProvider.account.dailyReward.containsKey("day_index")) {
           services.get<RouteService>().to(Routes.popupDailyGift);
         }
-
-        getService<Sounds>().playMusic();
-
         getService<NoobSocket>().onReceive.add(_onNoobReceive);
         setState(() {});
       }

@@ -7,9 +7,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class DeckScreen extends AbstractScreen {
-  final Opponent? opponent;
-
-  DeckScreen({this.opponent, super.key}) : super(Routes.deck);
+  DeckScreen({super.key}) : super(Routes.deck);
 
   @override
   createState() => _DeckScreenState();
@@ -117,7 +115,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   }
 
   Widget _header(Account account) {
-    var opponent = widget.opponent ??
+    var opponent = widget.args["opponent"] ??
         Opponent.initialize({
           "name": "enemy_l".l(),
           "def_power": getQuestPower(account)[2],
@@ -195,7 +193,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var opponentPower = "????";
     if (opponent.isRevealed) {
       opponentPower = opponent.defPower.compact();
-    } else if (widget.opponent == null) {
+    } else if (widget.args["opponent"] == null) {
       opponentPower = "~${opponent.defPower.compact()}";
     }
     return Expanded(
@@ -268,7 +266,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     Overlays.insert(
       context,
       AttackFeastOverlay(
-        args: {"opponent": widget.opponent, "cards": _selectedCards},
+        args: {"opponent": widget.args["opponent"], "cards": _selectedCards},
         onClose: (data) async {
           _selectedCards.clear(setNull: true);
           // Reset reminder notifications ....
