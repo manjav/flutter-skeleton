@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../../skeleton.dart';
+import '../../export.dart';
 
 enum ButtonColor { cream, gray, green, violet, teal, wooden, yellow }
 

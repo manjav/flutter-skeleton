@@ -1,6 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 
-import '../skeleton.dart';
+import '../export.dart';
 
 abstract class ISounds extends IService {
   void play(String name, {String? channel});
