@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../skeleton.dart';

@@ -1,5 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:fruitcraft/main.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
