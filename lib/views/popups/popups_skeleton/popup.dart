@@ -11,7 +11,7 @@ class AbstractPopup extends StatefulWidget {
     super.key,
   });
 
-  Map<String, dynamic> get args => Get.arguments;
+  Map<String, dynamic> get args => Get.arguments ?? {};
   String get name => route.replaceAll("/", "");
 
   @override
