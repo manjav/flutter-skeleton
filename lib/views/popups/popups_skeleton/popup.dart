@@ -6,7 +6,7 @@ import '../../../app_export.dart';
 class AbstractPopup extends StatefulWidget {
   final String route;
 
-  AbstractPopup(
+  const AbstractPopup(
     this.route, {
     super.key,
   });
