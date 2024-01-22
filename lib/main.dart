@@ -22,9 +22,9 @@ class MyApp extends StatefulWidget {
   static late final DateTime startTime;
   const MyApp({super.key});
 
-  static final _firebaseAnalytics = FirebaseAnalytics.instance;
+  static final firebaseAnalytics = FirebaseAnalytics.instance;
   static final _observer =
-      FirebaseAnalyticsObserver(analytics: _firebaseAnalytics);
+      FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
 
   @override
   createState() => _MyAppState();
