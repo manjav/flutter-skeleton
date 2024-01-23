@@ -30,6 +30,7 @@ dependencies:
   get_it: ^7.6.7
   # gameanalytics_sdk: ^1.2.7
   # games_services: ^4.0.0
+  get: ^4.6.6
   # google_mobile_ads: ^3.1.0
   # http: ^1.1.0
   in_app_purchase: ^3.1.8
@@ -43,8 +44,7 @@ dependencies:
   rive: ^0.12.3
   shared_preferences: ^2.2.0
   # unity_ads_plugin: ^0.3.10
-  url_launcher: ^6.1.14
-  
+  url_launcher: ^6.1.14'
 
 dev_dependencies:
   flutter_test:
