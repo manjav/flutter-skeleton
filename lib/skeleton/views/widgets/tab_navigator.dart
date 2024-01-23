@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton.dart';
+import '../../export.dart';
 
 class TabNavigator extends StatefulWidget {
   final int tabsCount;

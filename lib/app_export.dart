@@ -1,2 +1,2 @@
-export 'skeleton/skeleton.dart';
-export 'views/views.dart';
+export 'skeleton/export.dart';
+export 'views/export.dart';

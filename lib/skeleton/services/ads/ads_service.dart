@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton.dart';
+import '../../export.dart';
 
 class Ads extends IService {
   final _sdks = <AdSDKName, AbstractAdSDK>{};

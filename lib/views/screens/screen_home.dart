@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_skeleton/service_locator.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';
@@ -39,6 +40,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     });
   }
 
+  // @override
+  // void dispose() {
+  //   services.removeListener(() { });
+  //   super.dispose();
+  // }
+
   @override
   Widget appBarFactory(double paddingTop) {
     if (services.state.status.index < ServiceStatus.initialize.index) {
@@ -57,8 +64,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
           if (Platform.isAndroid) {
-            var result = await services
-                .get<RouteService>()
+            var result = await serviceLocator<RouteService>()
                 .to(Routes.popupMessage, args: {
               "title": "quit_title".l(),
               "message": "quit_message".l(),

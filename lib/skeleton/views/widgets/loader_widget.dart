@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart' as rive;
-import '../../skeleton.dart';
+import '../../export.dart';
 
 class LoaderWidget extends StatefulWidget {
   static String baseURL = "https://8ball.turnedondigital.com/fc";

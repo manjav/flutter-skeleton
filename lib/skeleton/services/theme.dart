@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'services.dart';
+import 'export.dart';
 
 class TColors {
   static const accent = Color(0xFFFF5D54);
@@ -49,7 +49,7 @@ TextStyle _style({Color? color, double? size, FontWeight? weight}) {
     fontSize: size,
     color: color ?? TColors.primary10,
     fontWeight: weight ?? FontWeight.bold,
-    fontFamily: 'LilitaOneSultanAdan',
+    fontFamily: "primary_font",
   );
 }
 

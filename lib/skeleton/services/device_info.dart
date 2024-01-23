@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../skeleton.dart';
+import '../export.dart';
 
 class DeviceInfo extends IService {
   static double ratio = 1;

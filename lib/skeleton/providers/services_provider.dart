@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/responses.dart';
-import '../services/services.dart';
+import '../services/export.dart';
 
 enum ServiceStatus {
   none,
@@ -22,18 +22,6 @@ class ServiceState {
 
 class ServicesProvider extends ChangeNotifier {
   ServiceState state = ServiceState(ServiceStatus.none);
-
-  final Set<IService> _services = {};
-
-  T get<T>() => _services.firstWhere((service) => service is T) as T;
-
-  void addService(IService service) {
-    try {
-      _services.add(service);
-    } catch (x) {
-      throw SkeletonException(400, "cannot add service");
-    }
-  }
 
   void changeState(ServiceStatus state,
       {SkeletonException? exception, dynamic data}) {

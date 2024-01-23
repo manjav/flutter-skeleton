@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton.dart';
+import '../../export.dart';
 
 class SkinnedText extends StatelessWidget {
   final String text;

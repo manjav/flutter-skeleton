@@ -15,7 +15,7 @@ class AbstractScreen extends StatefulWidget {
     this.closable = true,
   }) : super(key: key ??= Key(route));
 
-  Map<String, dynamic> get args => Get.arguments;
+  Map<String, dynamic> get args => Get.arguments ?? {};
 
   @override
   createState() => AbstractScreenState();

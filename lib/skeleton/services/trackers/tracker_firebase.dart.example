@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../../skeleton.dart';
+import '../../export.dart';
 
 class FirebaseTracker extends AbstractTracker {
   // late FirebaseAnalytics _firebaseAnalytics;
