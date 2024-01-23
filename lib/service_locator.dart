@@ -12,4 +12,5 @@ void initServices() {
   serviceLocator.registerLazySingleton<Themes>(() => Themes());
   serviceLocator.registerLazySingleton<Localization>(() => Localization());
   serviceLocator.registerLazySingleton<Sounds>(() => Sounds());
+  serviceLocator.registerLazySingleton<HttpConnection>(() => HttpConnection());
 }

@@ -32,7 +32,8 @@ class LoadingController extends GetxController {
     // await trackers.initialize();
     // services.addService(trackers);
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    await await serviceLocator<HttpConnection>().initialize();
+
     services.changeState(ServiceStatus.initialize);
 
     // var notifications = Notifications();

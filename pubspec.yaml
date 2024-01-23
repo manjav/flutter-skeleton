@@ -32,7 +32,7 @@ dependencies:
   # games_services: ^4.0.0
   get: ^4.6.6
   # google_mobile_ads: ^3.1.0
-  # http: ^1.1.0
+  http: ^1.1.0
   in_app_purchase: ^3.1.8
   intl: ^0.18.0
   # kochava_tracker: ^2.4.0
