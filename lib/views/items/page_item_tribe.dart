@@ -19,8 +19,6 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AccountProvider>(builder: (_, state, child) {
-      _tribeLevelInput?.value =
-          state.account.tribe!.levels[Buildings.tribe.id]!.toDouble();
       // Show unavailable message
       var levels = state.account.loadingData.rules["availabilityLevels"]!;
       if (state.account.level < levels["tribe"]!) {
@@ -40,6 +38,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           SizedBox(height: 200.d),
         ]);
       }
+      _tribeLevelInput?.value =
+          state.account.tribe!.levels[Buildings.tribe.id]!.toDouble();
       state.account.tribe!.loadMembers(context, state.account);
       return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         SizedBox(height: 10.d),
