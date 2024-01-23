@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:intl/intl.dart';
@@ -84,45 +83,6 @@ extension IntExtension on int {
 extension StringExtension on String {
   String toPascalCase() {
     return substring(0, 1).toUpperCase() + substring(1).toLowerCase();
-  }
-
-  String xorEncrypt({String? secret}) {
-    var secretKey = secret ?? _getDefaultSecret();
-    var result = "";
-    for (var i = 0; i < length; i++) {
-      result += String.fromCharCode(
-          codeUnitAt(i) ^ secretKey.codeUnitAt(i % secretKey.length));
-    }
-    return utf8.fuse(base64).encode(result);
-  }
-
-  String xorDecrypt({String? secret}) {
-    var b64 = utf8.fuse(base64);
-    try {
-      return b64.decode(b64.decode(this).xorEncrypt(secret: secret));
-    } catch (e) {
-      throw SkeletonException(901, "");
-    }
-  }
-
-  String _getDefaultSecret() {
-    var secretParts = [
-      "",
-      "288",
-      "1343",
-      "1055",
-      "based",
-      "ali",
-      "antler",
-      "faraz"
-    ];
-    return secretParts[5] +
-        secretParts[2] +
-        secretParts[7] +
-        secretParts[3] +
-        secretParts[6] +
-        secretParts[1] +
-        secretParts[4];
   }
 
   String truncate(int length, {String postfix = "..."}) =>
