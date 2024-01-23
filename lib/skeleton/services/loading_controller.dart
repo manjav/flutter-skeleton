@@ -1,4 +1,3 @@
-import 'package:flutter_skeleton/service_locator.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';

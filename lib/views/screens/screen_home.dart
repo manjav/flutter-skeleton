@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_skeleton/service_locator.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';
