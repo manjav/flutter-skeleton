@@ -65,6 +65,8 @@ class Tribe with ServiceFinderMixin {
   int get onlineMembersCount =>
       members.value.where((member) => member.status > 0).length;
 
+  int get membersCount => members.value.length;
+
   sendMessage(BuildContext context, Account account, String text) async {
     if (text.isEmpty) return;
     var now = DateTime.now();

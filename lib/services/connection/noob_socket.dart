@@ -57,8 +57,11 @@ class NoobSocket extends IService {
       var trimmedMessage = _messageStream.substring(startIndex + 15, endIndex);
       trimmedMessage = b64.decode(trimmedMessage.xorDecrypt(secret: _secret));
 
-      var noobMessage = NoobMessage.getProperMessage(
-          _account, jsonDecode(trimmedMessage), _account.tribe);
+      var noobMessage =
+          NoobMessage.getProperMessage(_account, jsonDecode(trimmedMessage));
+      if (noobMessage.type == Noobs.chat) {
+        _account.tribe?.chat.add(noobMessage as NoobChatMessage);
+      }
       // if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
       _updateStatus(noobMessage);
       dispatchMessage(noobMessage);
@@ -140,7 +143,7 @@ class NoobMessage {
   int id = 0;
   String channel = "";
   static NoobMessage getProperMessage(
-      Account account, Map<String, dynamic> map, Tribe? tribe) {
+      Account account, Map<String, dynamic> map) {
     var message = switch (map["push_message_type"] ?? "") {
       "player_status" || "tribe_player_status" => NoobStatusMessage(map),
       "battle_update" => NoobCardMessage(account, map),
@@ -154,9 +157,6 @@ class NoobMessage {
       "auction_sold" => NoobAuctionMessage(Noobs.auctionSold, map, account),
       _ => NoobMessage(Noobs.none, map),
     };
-    if (message.channel.startsWith("tribe")) {
-      tribe?.chat.add(message as NoobChatMessage);
-    }
     return message;
   }
 

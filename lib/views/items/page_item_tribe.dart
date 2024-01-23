@@ -156,7 +156,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                   children: [
                     _indicator(
                         "icon_population",
-                        "${tribe.population}/${tribe.getOption(Buildings.tribe.id)}"
+                        "${tribe.membersCount}/${tribe.getOption(Buildings.tribe.id)}"
                             .convert(),
                         40.d),
                     SizedBox(height: 8.d),

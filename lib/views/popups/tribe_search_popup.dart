@@ -108,7 +108,8 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
               height: 120.d,
               width: 210.d,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 24.d),
-              decoration: SkinnedButton.buttonDecorator(_actionColorBuilder(tribe)),
+              decoration:
+                  SkinnedButton.buttonDecorator(_actionColorBuilder(tribe)),
               child: SkinnedText(
                   textAlign: TextAlign.center,
                   style: TStyles.medium.copyWith(height: 1),
