@@ -7,9 +7,8 @@ import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../data/data.dart';
-import '../skeleton/skeleton.dart';
-import '../views/views.dart';
+import '../app_export.dart';
+
 
 enum RewardAnimationState {
   none,

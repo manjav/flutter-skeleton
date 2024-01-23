@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:fruitcraft/main.dart';
 
-import '../../skeleton.dart';
+import '../../export.dart';
 
 class FirebaseTracker extends AbstractTracker {
   late FirebaseAnalytics _firebaseAnalytics;

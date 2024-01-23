@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../views.dart';
-import '../../../skeleton/skeleton.dart';
+
+import '../../../app_export.dart';
+
 
 class MessagePopup extends AbstractPopup {
   const MessagePopup({super.key})

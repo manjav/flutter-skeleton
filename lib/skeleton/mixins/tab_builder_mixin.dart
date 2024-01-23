@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../skeleton/skeleton.dart';
+import '../export.dart';
 
 @optionalTypeArgs
 mixin TabBuilderMixin<T extends StatefulWidget> on State<T> {
