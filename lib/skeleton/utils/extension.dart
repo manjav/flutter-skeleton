@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:intl/intl.dart';
-import '../skeleton.dart';
+import '../export.dart';
 
 extension IntExtension on int {
   static final _separator = NumberFormat('###,###,###');
