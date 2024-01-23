@@ -1,5 +1,6 @@
 
-import '../export.dart';
+
+import '../../app_export.dart';
 
 abstract class IService with ILogger {
   bool isInitialized = false;

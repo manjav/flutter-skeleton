@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_skeleton/service_locator.dart';
 
-import '../export.dart';
+import '../../app_export.dart';
 
 class Widgets {
   static GestureDetector touchable(
