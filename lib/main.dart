@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp>
     initServices();
 
     if (mounted) if (Navigator.canPop(context)) Navigator.pop(context);
-    
+
     _initialize(true);
   }
 

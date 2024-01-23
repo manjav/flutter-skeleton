@@ -105,7 +105,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         ),
       ),
       onPressed: () {
-        services.get<RouteService>().to(Routes.chat);
+        serviceLocator<RouteService>().to(Routes.chat, args: _topics[index]);
       },
     );
   }
