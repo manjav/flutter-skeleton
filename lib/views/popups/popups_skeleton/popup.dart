@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_skeleton/service_locator.dart';
 import 'package:get/get.dart';
 
 import '../../../app_export.dart';
@@ -28,7 +29,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   @override
   void initState() {
-    getService<Sounds>().play("popup");
+    serviceLocator<Sounds>().play("popup");
     canPop = widget.args["canPop"] ?? true;
     barrierDismissible = widget.args["barrierDismissible"] ?? true;
     super.initState();
