@@ -13,12 +13,15 @@ class Avatar extends StatefulWidget {
 class _AvatarState extends State<Avatar> {
   @override
   Widget build(BuildContext context) {
-    return Widgets.rect(
-      color: TColors.clay,
-      width: widget.padding,
-      radius: widget.padding,
-      height: widget.padding,
-      padding: EdgeInsets.all(6.d),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(widget.padding),
+      child: Widgets.rect(
+          color: TColors.clay,
+          width: widget.padding,
+          radius: widget.padding,
+          height: widget.padding,
+          // padding: EdgeInsets.all(6.d),
+          child: Asset.load<Image>("avatar")),
     );
   }
 }
