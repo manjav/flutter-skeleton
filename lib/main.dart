@@ -64,8 +64,9 @@ class _MyAppState extends State<MyApp>
 
     await serviceLocator.reset();
     initServices();
+
+    if (mounted) if (Navigator.canPop(context)) Navigator.pop(context);
     
-    if (Navigator.canPop(context)) Navigator.pop(context);
     _initialize(true);
   }
 
