@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  adivery: ^4.6.1
+  # adivery: ^4.6.1
   archive: ^3.4.8
   audioplayers: ^5.2.0
   collection: ^1.17.2
@@ -31,7 +31,7 @@ dependencies:
   gameanalytics_sdk: ^1.2.7
   games_services: ^4.0.0
   get: ^4.6.6
-  google_mobile_ads: ^3.1.0
+  # google_mobile_ads: ^3.1.0
   http: ^1.1.0
   in_app_purchase: ^3.1.8
   intl: ^0.18.0
@@ -45,7 +45,7 @@ dependencies:
   shared_preferences: ^2.2.0
   square_percent_indicater: ^0.1.0
   tcp_socket_connection: ^0.3.1  
-  unity_ads_plugin: ^0.3.10
+  # unity_ads_plugin: ^0.3.10
   url_launcher: ^6.1.14
 
 dev_dependencies:

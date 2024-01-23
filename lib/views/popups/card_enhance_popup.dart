@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class CardEnhancePopup extends AbstractPopup {
-  CardEnhancePopup({super.key})
+  const CardEnhancePopup({super.key})
       : super(Routes.popupCardEnhance);
 
   @override
@@ -116,6 +116,8 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
         color: color,
         isEnable: isEnable,
         padding: EdgeInsets.fromLTRB(30.d, 16.d, 14.d, 29.d),
+        onDisablePressed: () => toast("card_enhance_min".l()),
+        onPressed: onTap,
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           SkinnedText(text,
               style: TStyles.medium.copyWith(fontSize: 46.d, height: 3.d)),
@@ -128,9 +130,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: children))
-        ]),
-        onDisablePressed: () => toast("card_enhance_min".l()),
-        onPressed: onTap);
+        ]));
   }
 
   _sacrifice() async {

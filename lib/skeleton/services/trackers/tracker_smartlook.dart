@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 
-import '../../skeleton.dart';
+import '../../export.dart';
 
 
 class SmartlookTracker extends AbstractTracker {

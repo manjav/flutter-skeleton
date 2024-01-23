@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class HeroEvolvePopup extends AbstractPopup {
-  HeroEvolvePopup({super.key})
+  const HeroEvolvePopup({super.key})
       : super(Routes.popupHeroEvolve);
 
   @override

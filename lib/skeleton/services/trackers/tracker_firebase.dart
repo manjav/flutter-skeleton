@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:fruitcraft/main.dart';
 
-import '../../skeleton.dart';
+import '../../export.dart';
 
 class FirebaseTracker extends AbstractTracker {
   late FirebaseAnalytics _firebaseAnalytics;
@@ -10,8 +11,8 @@ class FirebaseTracker extends AbstractTracker {
   @override
   initialize({List? args, Function(dynamic)? logCallback}) {
     super.initialize(args: args, logCallback: logCallback);
-    sdk = TrackerSDK.gameAnalytics;
-    _firebaseAnalytics = args![0] as FirebaseAnalytics;
+    sdk = TrackerSDK.firebase;
+    _firebaseAnalytics = MyApp.firebaseAnalytics;
   }
 
   @override

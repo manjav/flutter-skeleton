@@ -7,7 +7,7 @@ import '../../app_export.dart';
 class ProfilePopup extends AbstractPopup {
   final int playerId;
 
-  ProfilePopup(this.playerId, {super.key})
+  const ProfilePopup(this.playerId, {super.key})
       : super(Routes.popupProfile);
 
   @override

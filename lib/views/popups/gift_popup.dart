@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class RedeemGiftPopup extends AbstractPopup {
-  RedeemGiftPopup({super.key}) : super(Routes.popupRedeemGift);
+  const RedeemGiftPopup({super.key}) : super(Routes.popupRedeemGift);
 
   @override
   createState() => _RewardPopupState();

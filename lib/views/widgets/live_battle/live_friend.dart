@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../skeleton/skeleton.dart';
+import '../../../app_export.dart';
+
 
 class LiveFriend extends StatefulWidget {
   const LiveFriend({super.key});

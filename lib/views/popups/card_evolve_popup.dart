@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class CardEvolvePopup extends AbstractPopup {
-  CardEvolvePopup({super.key})
+  const CardEvolvePopup({super.key})
       : super(Routes.popupCardEvolve);
 
   @override
@@ -124,6 +124,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
       child: SkinnedButton(
           isEnable: selectedCards.value.length >= 2,
           padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
+          onPressed: _evolve,
           child: Row(textDirection: TextDirection.ltr, children: [
             SkinnedText(titleBuilder(),
                 style: TStyles.large.copyWith(height: 3.d)),
@@ -137,8 +138,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
                 SkinnedText(_getMergeCost().compact(), style: TStyles.large),
               ]),
             )
-          ]),
-          onPressed: _evolve),
+          ])),
     );
   }
 

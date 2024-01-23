@@ -41,7 +41,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
-    context.read<ServicesProvider>().addListener(() {
+    services.addListener(() {
       var state = services.state;
       if (state.status == ServiceStatus.initialize) {
         if (accountProvider.account.dailyReward.containsKey("day_index")) {

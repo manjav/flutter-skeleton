@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../data/data.dart';
-import '../../../skeleton/skeleton.dart';
+import '../../../app_export.dart';
+
 
 class LiveWarriorView extends StatelessWidget {
   final bool isExpanded;

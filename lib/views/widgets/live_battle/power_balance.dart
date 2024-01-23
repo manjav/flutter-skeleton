@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../skeleton/skeleton.dart';
+import '../../../app_export.dart';
+
 
 class PowerBalance extends StatelessWidget {
   final int value, maxValue;
