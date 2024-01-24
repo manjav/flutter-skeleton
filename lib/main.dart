@@ -85,25 +85,19 @@ class _MyAppState extends State<MyApp>
     if (!DeviceInfo.isPreInitialized) return const SizedBox();
     return KeyedSubtree(
       key: key,
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-              create: (_) => serviceLocator<ServicesProvider>()),
+      child: GetMaterialApp(
+        // navigatorObservers: [MyApp._observer],
+        localizationsDelegates: const [
+          // AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
         ],
-        child: GetMaterialApp(
-          // navigatorObservers: [MyApp._observer],
-          localizationsDelegates: const [
-            // AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-          ],
-          supportedLocales: Localization.locales,
-          theme: Themes.darkData,
-          locale: Localization.locales.firstWhere((l) =>
-              l.languageCode == Pref.language.getString(defaultValue: 'en')),
-          home: HomeScreen(),
-        ),
+        supportedLocales: Localization.locales,
+        theme: Themes.darkData,
+        locale: Localization.locales.firstWhere((l) =>
+            l.languageCode == Pref.language.getString(defaultValue: 'en')),
+        home: HomeScreen(),
       ),
     );
   }
