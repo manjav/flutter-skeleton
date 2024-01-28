@@ -4,8 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../app_export.dart';
 
 class InboxPopup extends AbstractPopup {
-
-  //todo: check routes here
   const InboxPopup({super.key}) : super(Routes.popupInbox);
 
   @override
