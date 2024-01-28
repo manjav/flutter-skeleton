@@ -13,7 +13,7 @@ extension NoobCommandExtension on NoobCommand {
 class NoobSocket extends IService {
   List<Function(NoobMessage)> onReceive = [];
   late TcpSocketConnection _socketConnection;
-  late Account _account;
+  late AccountProvider _account;
   late OpponentsProvider _opponents;
   int _lastMessageReceiveTime = 0;
   String _messageStream = "";
@@ -25,7 +25,7 @@ class NoobSocket extends IService {
   @override
   initialize({List<Object>? args}) async {
     super.initialize(args: args);
-    _account = args![0] as Account;
+    _account = args![0] as AccountProvider;
     _opponents = args[1] as OpponentsProvider;
     connect();
   }
@@ -36,8 +36,8 @@ class NoobSocket extends IService {
     // _socketConnection.enableConsolePrint(true);
     await _socketConnection.connect(500, _messageReceived, attempts: 3);
     _lastMessageReceiveTime = DateTime.now().secondsSinceEpoch;
-    subscribe("user${_account.id}");
-    if (_account.tribe != null) subscribe("tribe${_account.tribe?.id}");
+    subscribe("user${_account.account.id}");
+    if (_account.account.tribe != null) subscribe("tribe${_account.account.tribe?.id}");
   }
 
   void _messageReceived(String message) {
@@ -58,11 +58,18 @@ class NoobSocket extends IService {
       trimmedMessage = b64.decode(trimmedMessage.xorDecrypt(secret: _secret));
 
       var noobMessage =
-          NoobMessage.getProperMessage(_account, jsonDecode(trimmedMessage));
+          NoobMessage.getProperMessage(_account.account, jsonDecode(trimmedMessage));
       if (noobMessage.type == Noobs.chat) {
-        _account.tribe?.chat.add(noobMessage as NoobChatMessage);
+        _account.account.tribe?.chat.add(noobMessage as NoobChatMessage);
       }
-      // if (noobMessage.type != Noobs.playerStatus) log(trimmedMessage);
+      if (noobMessage.type == Noobs.tribeJoin) {
+        var tribe = noobMessage as TribeJoinMessage;
+        _account.installTribe(tribe.tribe);
+        connect();
+      }
+      if (noobMessage.type != Noobs.playerStatus) {
+        log(trimmedMessage);
+      }
       _updateStatus(noobMessage);
       dispatchMessage(noobMessage);
       _messageStream = _messageStream.substring(endIndex + 12);
@@ -113,8 +120,8 @@ class NoobSocket extends IService {
     }
 
     // Update tribe members status
-    if (_account.tribe != null) {
-      _loopPlayers(_account.tribe!.members.value, noobMessage);
+    if (_account.account.tribe != null) {
+      _loopPlayers(_account.account.tribe!.members.value, noobMessage);
     }
   }
 
@@ -137,6 +144,7 @@ enum Noobs {
   chat,
   auctionBid,
   auctionSold,
+  tribeJoin,
 }
 
 class NoobMessage {
@@ -155,6 +163,7 @@ class NoobMessage {
       "chat" => NoobChatMessage(map, account),
       "auction_bid" => NoobAuctionMessage(Noobs.auctionBid, map, account),
       "auction_sold" => NoobAuctionMessage(Noobs.auctionSold, map, account),
+      "tribe_join" => TribeJoinMessage(map),
       _ => NoobMessage(Noobs.none, map),
     };
     return message;
@@ -180,6 +189,18 @@ class NoobStatusMessage extends NoobMessage {
     var id = map["player_id"];
     playerId = (id is String) ? int.parse(id) : id;
     status = map["status"];
+  }
+}
+
+class TribeJoinMessage extends NoobMessage {
+  late Tribe tribe;
+  late String deciderName;
+  late int tribePermission;
+
+  TribeJoinMessage(Map<String, dynamic> map) : super(Noobs.tribeJoin, map) {
+    tribe = Tribe(map["tribe"]);
+    deciderName = map["decider_name"];
+    tribePermission = map["tribe_permission"];
   }
 }
 

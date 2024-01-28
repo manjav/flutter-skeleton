@@ -257,7 +257,7 @@ class LoadingController extends GetxController with ServiceFinderMixin {
 
         var noobSocket = NoobSocket();
         noobSocket.initialize(
-            args: [data.account, context.read<OpponentsProvider>()]);
+            args: [accountProvider, context.read<OpponentsProvider>()]);
         services.addService(noobSocket);
 
         services.changeState(ServiceStatus.initialize);
