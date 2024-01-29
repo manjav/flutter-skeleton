@@ -48,12 +48,17 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 
   @override
   Widget contentFactory() {
-    return ListView.builder(
+    return Widgets.rect(
+      color: const Color(0xFF04B2BB),
+      child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
         reverse: true,
         itemExtent: _mapHeight,
         itemCount: _lastArena - _firstArena,
         controller: _scrollController,
-        itemBuilder: (context, index) => _mapItemRenderer(index + _firstArena));
+          itemBuilder: (context, index) =>
+              _mapItemRenderer(index + _firstArena)),
+    );
   }
 
   Widget _mapItemRenderer(int index) =>
