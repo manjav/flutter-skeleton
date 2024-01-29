@@ -52,10 +52,10 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
       color: const Color(0xFF04B2BB),
       child: ListView.builder(
           physics: const BouncingScrollPhysics(),
-        reverse: true,
-        itemExtent: _mapHeight,
-        itemCount: _lastArena - _firstArena,
-        controller: _scrollController,
+          reverse: true,
+          itemExtent: _mapHeight,
+          itemCount: _lastArena - _firstArena,
+          controller: _scrollController,
           itemBuilder: (context, index) =>
               _mapItemRenderer(index + _firstArena)),
     );
@@ -87,6 +87,8 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   int _questsCount = 0;
   bool _waitingMode = true;
+  SMIInput<double>? _boatPosition;
+
   @override
   void initState() {
     super.initState();
@@ -115,6 +117,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
           controller?.addEventListener((event) => _riveEventsListener(event));
           controller?.findInput<bool>("boatActive")?.value =
               widget.index == widget.currentIndex;
+          _boatPosition = controller?.findInput<double>("boatPosition");
           artboard.addController(controller!);
         }, fit: BoxFit.fitWidth),
         ValueListenableBuilder<List<City>>(
@@ -136,9 +139,9 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
 
   void _riveEventsListener(RiveEvent event) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
+      _questsCount = accountProvider.account.questsCount - 1;
       if (event.name == "click") {
         await services.get<RouteService>().to(Routes.deck);
-        _questsCount = accountProvider.account.questsCount - 1;
         // Update city levels after quest
         for (var i = 0; i < widget.arena.value.length; i++) {
           widget.arena.value[i].state?.value =
@@ -150,8 +153,15 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
         var cities = event.properties["buttons"].split(",");
         for (var i = 0; i < cities.length; i++) {
           var offset = cities[i].split(":");
-          positions.add(City(
-              i, Offset(double.parse(offset[0]), double.parse(offset[1]))));
+          var city =
+              City(i, Offset(double.parse(offset[0]), double.parse(offset[1])));
+          positions.add(city);
+          if (widget.index == widget.currentIndex) {
+            var index = (_questsCount / 10).floor() * 10;
+            if (index == widget.index * 130 + i * 10) {
+              _boatPosition?.value = city.position.dy / 100;
+            }
+          }
         }
         widget.arena.value = positions;
       }
