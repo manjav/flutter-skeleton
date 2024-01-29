@@ -27,7 +27,6 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    //todo: check status code is moved to project it's better check this in project or refactor
     var isForceUpdate = _serviceState.exception != null &&
         _serviceState.exception!.statusCode ==
             StatusCode.C701_UPDATE_FORCE.value;
