@@ -61,8 +61,8 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
     );
   }
 
-  Widget _mapItemRenderer(int index) =>
-      ArenaItemRenderer(index, _getArena(index), _questsCount, _waitingMode);
+  Widget _mapItemRenderer(int index) => ArenaItemRenderer(
+      _arenaIndex, index, _getArena(index), _questsCount, _waitingMode);
 
   ValueNotifier<List<City>> _getArena(int index) {
     return _arenas[index >= _arenas.length ? _arenas.length - 1 : index];
@@ -72,10 +72,11 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 class ArenaItemRenderer extends StatefulWidget {
   final int index;
   final int questsCount;
+  final int currentIndex;
   final bool waitingMode;
   final ValueNotifier<List<City>> arena;
-  const ArenaItemRenderer(
-      this.index, this.arena, this.questsCount, this.waitingMode,
+  const ArenaItemRenderer(this.currentIndex, this.index, this.arena,
+      this.questsCount, this.waitingMode,
       {super.key});
 
   @override
@@ -112,6 +113,8 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
             onRiveInit: (Artboard artboard) {
           var controller = StateMachineController.fromArtboard(artboard, "Map");
           controller?.addEventListener((event) => _riveEventsListener(event));
+          controller?.findInput<bool>("boatActive")?.value =
+              widget.index == widget.currentIndex;
           artboard.addController(controller!);
         }, fit: BoxFit.fitWidth),
         ValueListenableBuilder<List<City>>(
