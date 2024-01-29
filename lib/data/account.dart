@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:fruitcraft/mixins/mine_mixin.dart';
 
 import '../app_export.dart';
 
@@ -49,7 +50,7 @@ class Player extends Opponent {
   }
 }
 
-class Account extends Player with ServiceFinderMixin {
+class Account extends Player with ServiceFinderMixin, MineMixin {
   Account() : super.initialize({}, 0);
   static const levelExpo = 2.7;
   static const levelMultiplier = 1.3;
@@ -569,6 +570,14 @@ class Account extends Player with ServiceFinderMixin {
     var cooldown = calculateMaxCooldown();
     if (cooldown > 0) {
       schedules["cooldown"] = cooldown;
+    }
+    var mineCollectable = nextCollectableTime(this);
+    if (mineCollectable > 0) {
+      schedules["mine_collectable"] = mineCollectable;
+    }
+    var mineFull = nextFullTime(this);
+    if (mineFull > 0) {
+      schedules["mine_full"] = mineFull;
     }
     return schedules;
   }
