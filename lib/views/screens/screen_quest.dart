@@ -159,6 +159,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
           if (widget.index == widget.currentIndex) {
             var index = (_questsCount / 10).floor() * 10;
             if (index == widget.index * 130 + i * 10) {
+              await Future.delayed(const Duration(seconds: 1));
               _boatPosition?.value = city.position.dy / 100;
             }
           }
