@@ -13,9 +13,9 @@ class QuestScreen extends AbstractScreen {
 }
 
 class _QuestScreenState extends AbstractScreenState<QuestScreen> {
-  final int _padding = 10;
+  final int _padding = 1;
   int _questsCount = 0;
-  int _firstArena = 0, _lastArena = 0;
+  int _arenaIndex = 0, _firstArena = 0, _lastArena = 0;
   bool _waitingMode = true;
   late ScrollController _scrollController;
   List<ValueNotifier<List<City>>> _arenas = [];
@@ -26,15 +26,15 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   void initState() {
     _questsCount = accountProvider.account.questsCount - 1;
     _mapHeight = DeviceInfo.size.width * 2.105;
-    var arenaIndex = (_questsCount / 130).floor();
+    _arenaIndex = (_questsCount / 130).floor();
     var location = _questsCount % 130;
-    _firstArena = (arenaIndex - _padding).min(0);
-    _lastArena = arenaIndex + _padding;
+    _firstArena = (_arenaIndex - _padding).min(0);
+    _lastArena = _arenaIndex + _padding + 1;
     _arenas = List.generate(4, (index) => ValueNotifier([]));
     _scrollController = ScrollController(
         keepScrollOffset: false,
         initialScrollOffset:
-            (arenaIndex - _firstArena - 0.1 - Random().nextDouble() * 0.6) *
+            (_arenaIndex - _firstArena - 0.1 - Random().nextDouble() * 0.6) *
                     _mapHeight +
                 location * 20.d);
     _loadCityButton();
