@@ -75,12 +75,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           _oppositeCards.add(AccountCard(_account, card));
         }
       } else {
-        var opponentPower = _opponent.defPower;
-        if (!_outcomeData["outcome"] && opponentPower < playerCardsPower) {
-          opponentPower = playerCardsPower +
-              (playerCardsPower * Random().nextDouble() * 0.1).round();
-        }
-        _findCardByPower(opponentPower);
+        _simulateOuestOppositeCards(playerCardsPower);
       }
       _oppositeCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
@@ -89,8 +84,13 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     });
   }
 
-  _findCardByPower(int opponentPower) {
+  void _simulateOuestOppositeCards(int playerCardsPower) {
     var random = Random();
+    var opponentPower = _opponent.defPower;
+    if (!_outcomeData["outcome"] && opponentPower < playerCardsPower) {
+      opponentPower = playerCardsPower +
+          (playerCardsPower * random.nextDouble() * 0.1).round();
+    }
     var cardPower = (opponentPower / 4).floor();
     var cards = _account.loadingData.baseCards.values
         .where(
