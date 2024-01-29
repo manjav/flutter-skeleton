@@ -54,7 +54,7 @@ class Tribe with ServiceFinderMixin {
   }
 
   loadMembers(BuildContext context, Account account) async {
-    if (members.value.isNotEmpty) return;
+    // if (members.value.isNotEmpty) return;
     try {
       var result = await getService<HttpConnection>(context)
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
