@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rive/rive.dart';
-
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
@@ -27,6 +26,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   final Map<String, ImageAsset> _imageAssets = {};
   final List<AccountCard> _playerCards = [], _oppositeCards = [];
   SMIInput<double>? _playerCardsCount, _oppositeCardsCount;
+  bool _isBattle = false;
 
   @override
   void initState() {
@@ -35,10 +35,10 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     _account = accountProvider.account;
     children = [animationBuilder("attack")];
     _opponent = widget.args["opponent"] ?? Opponent.create(1, "دشمن", 0);
+    _isBattle = widget.args["isBattle"];
 
     process(() async {
       SelectedCards? cards = widget.args["cards"];
-      var isBattle = widget.args["opponent"] != null;
       if (cards != null) {
         var params = {
           "cards": cards.getIds(),
@@ -49,12 +49,12 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
         if (cards.value[2] != null) {
           params["hero_id"] = cards.value[2]!.id;
         }
-        if (isBattle) {
+        if (_isBattle) {
           params["opponent_id"] = _opponent.id;
           params["attacks_in_today"] = _opponent.todayAttacksCount;
         }
         _outcomeData =
-            await rpc(isBattle ? RpcId.battle : RpcId.quest, params: params);
+            await rpc(_isBattle ? RpcId.battle : RpcId.quest, params: params);
       } else {
         await Future.delayed(const Duration(milliseconds: 200));
         _outcomeData = jsonDecode(
