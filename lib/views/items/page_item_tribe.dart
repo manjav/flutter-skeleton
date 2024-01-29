@@ -41,15 +41,22 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       _tribeLevelInput?.value =
           state.account.tribe!.levels[Buildings.tribe.id]!.toDouble();
       state.account.tribe!.loadMembers(context, state.account);
-      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        SizedBox(height: 10.d),
-        _headerBuilder(state.account),
-        _pinnedMessage(state.account),
-        _chatList(state.account),
-        SizedBox(height: 6.d),
-        _inputView(state.account),
-        SizedBox(height: 220.d)
-      ]);
+      var paddingTop = MediaQuery.of(context).viewPadding.top;
+      if (paddingTop <= 0) {
+        paddingTop = 24.d;
+      }
+      return Padding(
+        padding: EdgeInsets.only(top: paddingTop),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          SizedBox(height: 10.d),
+          _headerBuilder(state.account),
+          _pinnedMessage(state.account),
+          _chatList(state.account),
+          SizedBox(height: 6.d),
+          _inputView(state.account),
+          SizedBox(height: 220.d)
+        ]),
+      );
     });
   }
 

@@ -28,85 +28,84 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
     var siblings = _account.getReadyCards().where((c) => c.base == _card.base);
     var isUpgradable =
         (siblings.length > 1 || _card.base.isHero) && _card.isUpgradable;
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: backgroundColor,
-            body: Stack(children: [
-              Widgets.touchable(context,
-                  onTap:
-                      barrierDismissible ? () => Navigator.pop(context) : null),
-              Container(
-                  alignment: alignment,
-                  padding: EdgeInsets.all(100.d),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    SizedBox(
-                        width: 500.d,
-                        child: CardItem(_card,
-                            size: 500.d, heroTag: "hero_${_card.id}")),
-                    SizedBox(height: 70.d),
-                    Text("${_name}_description".l(),
-                        style: TStyles.mediumInvert.copyWith(height: 2.7.d)),
-                    SizedBox(height: 100.d),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      _button(
-                        width: 420.d,
-                        label: "˧  ${"enhance_l".l()}",
-                        isEnable: _card.power < _card.base.powerLimit,
-                        onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
-                        onDisablePressed: () => toast("card_max_power".l()),
-                      ),
-                      _button(
-                          width: 420.d,
-                          isEnable: isUpgradable,
-                          label: "˨  ${"evolve_l".l()}",
-                          onPressed: () => _onButtonsTap(_card.base.isHero
-                              ? Routes.popupHeroEvolve
-                              : Routes.popupCardEvolve),
-                          onDisablePressed: () {
-                            toast(_card.isUpgradable
-                                ? "card_no_sibling".l()
-                                : "max_level".l(["${_name}_t".l()]));
-                          }),
+    return Scaffold(
+        backgroundColor: backgroundColor,
+        body: Stack(children: [
+          Widgets.touchable(context,
+              onTap:
+                  barrierDismissible ? () => Navigator.pop(context) : null),
+          Container(
+              alignment: alignment,
+              padding: EdgeInsets.all(100.d),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                SizedBox(
+                    width: 500.d,
+                    child: CardItem(_card,
+                        size: 500.d, heroTag: "hero_${_card.id}")),
+                SizedBox(height: 70.d),
+                Text("${_name}_description".l(),
+                    style: TStyles.mediumInvert.copyWith(height: 2.7.d)),
+                SizedBox(height: 100.d),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  _button(
+                    width: 420.d,
+                    label: "˧  ${"enhance_l".l()}",
+                    isEnable: _card.power < _card.base.powerLimit,
+                    onPressed: () => _onButtonsTap(Routes.popupCardEnhance),
+                    onDisablePressed: () => toast("card_max_power".l()),
+                  ),
+                  _button(
+                      width: 420.d,
+                      isEnable: isUpgradable,
+                      label: "˨  ${"evolve_l".l()}",
+                      onPressed: () => _onButtonsTap(_card.base.isHero
+                          ? Routes.popupHeroEvolve
+                          : Routes.popupCardEvolve),
+                      onDisablePressed: () {
+                        toast(_card.isUpgradable
+                            ? "card_no_sibling".l()
+                            : "max_level".l(["${_name}_t".l()]));
+                      }),
+                ]),
+                _button(
+                    isVisible: _card.fruit.isHero,
+                    color: ButtonColor.violet,
+                    label: "˩  ${"hero_edit".l()}",
+                    onPressed: () => services.get<RouteService>().to(
+                        Routes.popupHero,
+                        args: {"card": _card.fruit.id})),
+                _button(
+                    isVisible: _card.fruit.isSalable,
+                    color: ButtonColor.green,
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      SkinnedText("˫  ${"card_sell".l()}",
+                          style: TStyles.large),
+                      SizedBox(width: 20.d),
+                      Widgets.rect(
+                        padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
+                        decoration: Widgets.imageDecorator(
+                            "frame_hatch_button", ImageCenterSliceData(42)),
+                        child: Row(
+                            textDirection: TextDirection.ltr,
+                            children: [
+                              Asset.load<Image>("icon_gold", height: 76.d),
+                              SkinnedText(_card.basePrice.compact(),
+                                  style: TStyles.large.copyWith(height: 1)),
+                            ]),
+                      )
                     ]),
-                    _button(
-                        isVisible: _card.fruit.isHero,
-                        color: ButtonColor.violet,
-                        label: "˩  ${"hero_edit".l()}",
-                        onPressed: () => services.get<RouteService>().to(
-                            Routes.popupHero,
-                            args: {"card": _card.fruit.id})),
-                    _button(
-                        isVisible: _card.fruit.isSalable,
-                        color: ButtonColor.green,
-                        child: Row(mainAxisSize: MainAxisSize.min, children: [
-                          SkinnedText("˫  ${"card_sell".l()}",
-                              style: TStyles.large),
-                          SizedBox(width: 20.d),
-                          Widgets.rect(
-                            padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
-                            decoration: Widgets.imageDecorator(
-                                "frame_hatch_button", ImageCenterSliceData(42)),
-                            child: Row(
-                                textDirection: TextDirection.ltr,
-                                children: [
-                                  Asset.load<Image>("icon_gold", height: 76.d),
-                                  SkinnedText(_card.basePrice.compact(),
-                                      style: TStyles.large.copyWith(height: 1)),
-                                ]),
-                          )
-                        ]),
-                        onPressed: () => Overlays.insert(
-                              context,
-                              ConfirmOverlay(
-                                "card_sell_warn".l([_card.basePrice.compact()]),
-                                "accept_l".l(),
-                                "decline_l".l(),
-                                _sell,
-                              ),
-                            ),
-                        onDisablePressed: () => toast("not_salable".l()))
-                  ]))
-            ])));
+                    onPressed: () => Overlays.insert(
+                          context,
+                          ConfirmOverlay(
+                            "card_sell_warn".l([_card.basePrice.compact()]),
+                            "accept_l".l(),
+                            "decline_l".l(),
+                            _sell,
+                          ),
+                        ),
+                    onDisablePressed: () => toast("not_salable".l()))
+              ]))
+        ]));
   }
 
   Widget _button(
