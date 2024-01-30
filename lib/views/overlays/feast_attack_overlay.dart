@@ -21,8 +21,8 @@ class AttackFeastOverlay extends AbstractOverlay {
 
 class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     with RewardScreenMixin {
-  late Account _account;
-  late Opponent _opponent;
+  Account? _account;
+  Opponent? _opponent;
   Map<String, dynamic> _outcomeData = {};
   final Map<String, ImageAsset> _imageAssets = {};
   final List<AccountCard> _playerCards = [], _oppositeCards = [];
@@ -51,8 +51,8 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           params["hero_id"] = cards.value[2]!.id;
         }
         if (_isBattle) {
-          params["opponent_id"] = _opponent.id;
-          params["attacks_in_today"] = _opponent.todayAttacksCount;
+          params["opponent_id"] = _opponent!.id;
+          params["attacks_in_today"] = _opponent!.todayAttacksCount;
         }
         _outcomeData =
             await rpc(_isBattle ? RpcId.battle : RpcId.quest, params: params);
@@ -63,7 +63,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       }
       var playerCardsPower = 0;
       for (var card in _outcomeData["attack_cards"]) {
-        _playerCards.add(AccountCard(_account, card));
+        _playerCards.add(AccountCard(_account!, card));
         playerCardsPower += card["power"]! as int;
       }
       _playerCards
@@ -72,7 +72,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
 
       if (_isBattle) {
         for (var card in _outcomeData["opponent_cards"] ?? []) {
-          _oppositeCards.add(AccountCard(_account, card));
+          _oppositeCards.add(AccountCard(_account!, card));
         }
       } else {
         _simulateOuestOppositeCards(playerCardsPower);
@@ -86,13 +86,13 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
 
   void _simulateOuestOppositeCards(int playerCardsPower) {
     var random = Random();
-    var opponentPower = _opponent.defPower;
+    var opponentPower = _opponent!.defPower;
     if (!_outcomeData["outcome"] && opponentPower < playerCardsPower) {
       opponentPower = playerCardsPower +
           (playerCardsPower * random.nextDouble() * 0.1).round();
     }
     var cardPower = (opponentPower / 4).floor();
-    var cards = _account.loadingData.baseCards.values
+    var cards = _account!.loadingData.baseCards.values
         .where(
             (c) => c.power < cardPower && c.powerLimit > cardPower && !c.isHero)
         .toList();
@@ -101,7 +101,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       var cardId = cards[random.nextInt(cards.length)].id;
       if (i == 3) {
         _oppositeCards.add(AccountCard(
-            _account, {"base_card_id": cardId, "power": opponentPower}));
+            _account!, {"base_card_id": cardId, "power": opponentPower}));
       } else {
         var power = cardPower -
             (random.nextDouble() * 0.1 * cardPower +
@@ -109,7 +109,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
                 .round();
         opponentPower -= power;
         _oppositeCards.add(
-            AccountCard(_account, {"base_card_id": cardId, "power": power}));
+            AccountCard(_account!, {"base_card_id": cardId, "power": power}));
       }
     }
   }
@@ -121,7 +121,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     _playerCardsCount = controller.findInput<double>("playerCards");
     _oppositeCardsCount = controller.findInput<double>("opponentCards");
     updateRiveText("playerNameText", "you_l".l());
-    updateRiveText("opponentNameText", _opponent.name);
+    updateRiveText("opponentNameText", _opponent!.name);
     artboard.addController(controller);
     return controller;
   }
@@ -156,11 +156,11 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       FileAsset asset, Uint8List? embeddedBytes) async {
     if (asset is ImageAsset) {
       if (asset.name == "playerAvatar") {
-        asset.image = await loadImage("avatar_${_account.avatarId}",
+        asset.image = await loadImage("avatar_${_account!.avatarId}",
             subFolder: "avatars");
         return true;
       } else if (asset.name == "opponentAvatar") {
-        asset.image = await loadImage("avatar_${_opponent.avatarId}",
+        asset.image = await loadImage("avatar_${_opponent!.avatarId}",
             subFolder: "avatars");
         return true;
       } else if (asset.name.startsWith("card")) {

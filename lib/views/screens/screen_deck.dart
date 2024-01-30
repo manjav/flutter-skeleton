@@ -17,7 +17,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     with KeyProvider {
   final SelectedCards _selectedCards =
       SelectedCards(List.generate(5, (i) => null));
-  late Opponent _opponent;
+  Opponent? _opponent;
 
   @override
   List<Widget> appBarElementsRight() {
@@ -153,9 +153,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                             Asset.load<Image>("deck_battle_icon",
                                 height: 136.d),
                             _opponentInfo(
-                                CrossAxisAlignment.end, account, _opponent),
+                                CrossAxisAlignment.end, account, _opponent!),
                             SizedBox(width: 8.d),
-                            _avatar(TextAlign.right, _opponent),
+                            _avatar(TextAlign.right, _opponent!),
                           ],
                         )),
                     ValueListenableBuilder<List<AccountCard?>>(
