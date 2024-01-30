@@ -13,9 +13,9 @@ class QuestScreen extends AbstractScreen {
 }
 
 class _QuestScreenState extends AbstractScreenState<QuestScreen> {
-  final int _padding = 10;
+  final int _padding = 1;
   int _questsCount = 0;
-  int _firstArena = 0, _lastArena = 0;
+  int _arenaIndex = 0, _firstArena = 0, _lastArena = 0;
   bool _waitingMode = true;
   late ScrollController _scrollController;
   List<ValueNotifier<List<City>>> _arenas = [];
@@ -26,15 +26,15 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   void initState() {
     _questsCount = accountProvider.account.questsCount - 1;
     _mapHeight = DeviceInfo.size.width * 2.105;
-    var arenaIndex = (_questsCount / 130).floor();
+    _arenaIndex = (_questsCount / 130).floor();
     var location = _questsCount % 130;
-    _firstArena = (arenaIndex - _padding).min(0);
-    _lastArena = arenaIndex + _padding;
+    _firstArena = (_arenaIndex - _padding).min(0);
+    _lastArena = _arenaIndex + _padding + 1;
     _arenas = List.generate(4, (index) => ValueNotifier([]));
     _scrollController = ScrollController(
         keepScrollOffset: false,
         initialScrollOffset:
-            (arenaIndex - _firstArena - 0.1 - Random().nextDouble() * 0.6) *
+            (_arenaIndex - _firstArena - 0.1 - Random().nextDouble() * 0.6) *
                     _mapHeight +
                 location * 20.d);
     _loadCityButton();
@@ -48,16 +48,21 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 
   @override
   Widget contentFactory() {
-    return ListView.builder(
-        reverse: true,
-        itemExtent: _mapHeight,
-        itemCount: _lastArena - _firstArena,
-        controller: _scrollController,
-        itemBuilder: (context, index) => _mapItemRenderer(index + _firstArena));
+    return Widgets.rect(
+      color: const Color(0xFF04B2BB),
+      child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          reverse: true,
+          itemExtent: _mapHeight,
+          itemCount: _lastArena - _firstArena,
+          controller: _scrollController,
+          itemBuilder: (context, index) =>
+              _mapItemRenderer(index + _firstArena)),
+    );
   }
 
-  Widget _mapItemRenderer(int index) =>
-      ArenaItemRenderer(index, _getArena(index), _questsCount, _waitingMode);
+  Widget _mapItemRenderer(int index) => ArenaItemRenderer(
+      _arenaIndex, index, _getArena(index), _questsCount, _waitingMode);
 
   ValueNotifier<List<City>> _getArena(int index) {
     return _arenas[index >= _arenas.length ? _arenas.length - 1 : index];
@@ -67,10 +72,11 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
 class ArenaItemRenderer extends StatefulWidget {
   final int index;
   final int questsCount;
+  final int currentIndex;
   final bool waitingMode;
   final ValueNotifier<List<City>> arena;
-  const ArenaItemRenderer(
-      this.index, this.arena, this.questsCount, this.waitingMode,
+  const ArenaItemRenderer(this.currentIndex, this.index, this.arena,
+      this.questsCount, this.waitingMode,
       {super.key});
 
   @override
@@ -81,6 +87,8 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   int _questsCount = 0;
   bool _waitingMode = true;
+  SMIInput<double>? _boatPosition;
+
   @override
   void initState() {
     super.initState();
@@ -107,6 +115,9 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
             onRiveInit: (Artboard artboard) {
           var controller = StateMachineController.fromArtboard(artboard, "Map");
           controller?.addEventListener((event) => _riveEventsListener(event));
+          controller?.findInput<bool>("boatActive")?.value =
+              widget.index == widget.currentIndex;
+          _boatPosition = controller?.findInput<double>("boatPosition");
           artboard.addController(controller!);
         }, fit: BoxFit.fitWidth),
         ValueListenableBuilder<List<City>>(
@@ -128,9 +139,9 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
 
   void _riveEventsListener(RiveEvent event) {
     WidgetsBinding.instance.addPostFrameCallback((d) async {
+      _questsCount = accountProvider.account.questsCount - 1;
       if (event.name == "click") {
         await services.get<RouteService>().to(Routes.deck);
-        _questsCount = accountProvider.account.questsCount - 1;
         // Update city levels after quest
         for (var i = 0; i < widget.arena.value.length; i++) {
           widget.arena.value[i].state?.value =
@@ -142,8 +153,16 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
         var cities = event.properties["buttons"].split(",");
         for (var i = 0; i < cities.length; i++) {
           var offset = cities[i].split(":");
-          positions.add(City(
-              i, Offset(double.parse(offset[0]), double.parse(offset[1]))));
+          var city =
+              City(i, Offset(double.parse(offset[0]), double.parse(offset[1])));
+          positions.add(city);
+          if (widget.index == widget.currentIndex) {
+            var index = (_questsCount / 10).floor() * 10;
+            if (index == widget.index * 130 + i * 10) {
+              await Future.delayed(const Duration(seconds: 1));
+              _boatPosition?.value = city.position.dy / 100;
+            }
+          }
         }
         widget.arena.value = positions;
       }

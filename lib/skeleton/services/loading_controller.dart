@@ -244,7 +244,12 @@ class LoadingController extends GetxController with ServiceFinderMixin {
     var trackers = Trackers();
     await trackers.initialize();
     services.addService(trackers);
-    
+
+    var sounds = Sounds();
+    sounds.initialize();
+    sounds.playMusic();
+    services.addService(sounds);
+
     try {
       var httpConnection = HttpConnection();
       var data = await httpConnection.initialize() as LoadingData;
@@ -271,26 +276,23 @@ class LoadingController extends GetxController with ServiceFinderMixin {
             args: ["${data.account.id}", data.account.getSchedules()]);
         services.addService(notifications);
       }
+
+      var games = Games();
+      games.initialize();
+      services.addService(games);
+
+      var ads = Ads();
+      ads.initialize();
+      ads.onUpdate = _onAdsServicesUpdate;
+      services.addService(ads);
+
+      services.changeState(ServiceStatus.complete);
+      
     } on SkeletonException catch (e) {
       if (context.mounted) {
         services.changeState(ServiceStatus.error, exception: e);
       }
     }
-
-    var games = Games();
-    games.initialize();
-    services.addService(games);
-
-    var ads = Ads();
-    ads.initialize();
-    ads.onUpdate = _onAdsServicesUpdate;
-    services.addService(ads);
-
-    var sounds = Sounds();
-    sounds.initialize();
-    sounds.playMusic();
-    services.addService(sounds);
-    services.changeState(ServiceStatus.complete);
   }
 
   _onAdsServicesUpdate(Placement? placement) {
