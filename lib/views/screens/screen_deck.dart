@@ -17,6 +17,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     with KeyProvider {
   final SelectedCards _selectedCards =
       SelectedCards(List.generate(5, (i) => null));
+  Opponent? _opponent;
 
   @override
   List<Widget> appBarElementsRight() {
@@ -37,6 +38,13 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return Consumer<AccountProvider>(builder: (_, state, child) {
       var cards = state.account.getReadyCards();
+      _opponent = widget.args["opponent"] ??
+          Opponent.initialize({
+            "name": "enemy_l".l(),
+            "def_power": getQuestPower(state.account)[2],
+            "level": state.account.level,
+            "xp": state.account.xp * (0.9 + Random().nextDouble() * 0.2)
+          }, 0);
       for (var card in cards) {
         card.isDeployed = false;
       }
@@ -115,13 +123,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   }
 
   Widget _header(Account account) {
-    var opponent = widget.args["opponent"] ??
-        Opponent.initialize({
-          "name": "enemy_l".l(),
-          "def_power": getQuestPower(account)[2],
-          "level": account.level,
-          "xp": account.xp * (0.9 + Random().nextDouble() * 0.2)
-        }, 0);
     return Widgets.rect(
         padding: EdgeInsets.symmetric(horizontal: 10.d, vertical: 7.d),
         decoration: Widgets.imageDecorator("frame_header_cheese",
@@ -152,9 +153,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                             Asset.load<Image>("deck_battle_icon",
                                 height: 136.d),
                             _opponentInfo(
-                                CrossAxisAlignment.end, account, opponent),
+                                CrossAxisAlignment.end, account, _opponent!),
                             SizedBox(width: 8.d),
-                            _avatar(TextAlign.right, opponent),
+                            _avatar(TextAlign.right, _opponent!),
                           ],
                         )),
                     ValueListenableBuilder<List<AccountCard?>>(
@@ -266,7 +267,11 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     Overlays.insert(
       context,
       AttackFeastOverlay(
-        args: {"opponent": widget.args["opponent"], "cards": _selectedCards},
+        args: {
+          "opponent": _opponent,
+          "cards": _selectedCards,
+          "isBattle": widget.args.containsKey("opponent"),
+        },
         onClose: (data) async {
           _selectedCards.clear(setNull: true);
           // Reset reminder notifications ....
