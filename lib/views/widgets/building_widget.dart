@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -40,6 +41,14 @@ class _BuildingWidgetState extends State<BuildingWidget> {
                 if (input != null) {
                   _levelInput = input as SMINumber;
                   _levelInput!.value = widget.building.level.toDouble();
+                }
+                if (widget.building.type == Buildings.treasury) {
+                  var input = controller.findInput<double>('gold');
+                  var goldInput = input as SMINumber;
+
+                  var account = context.read<AccountProvider>().account;
+                  var x = ((3 * account.bank_account_balance) / widget.building.benefit).round();
+                  goldInput.value = x.toDouble();
                 }
                 artboard.addController(controller);
               },
