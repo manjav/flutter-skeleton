@@ -84,8 +84,11 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         top: center.dy + position[1] * DeviceInfo.ratio - size.height * 0.5,
         width: size.width,
         height: size.height,
-        child: BuildingWidget(building,
-            child: child, onTap: () => _onBuildingTap(account, building)));
+        child: BuildingWidget(
+            key: GlobalKey(),
+            building,
+            onTap: () => _onBuildingTap(account, building),
+            child: child));
   }
 
   _onBuildingTap(Account account, Building building) {
