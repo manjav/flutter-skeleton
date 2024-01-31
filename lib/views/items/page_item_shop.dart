@@ -85,8 +85,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           _productDetails[details.id] = details;
         }
       }
+    } finally {
       setState(() {});
-    } finally {}
+    }
   }
 
   void _listenToPurchaseUpdated(
