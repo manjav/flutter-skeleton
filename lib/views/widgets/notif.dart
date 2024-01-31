@@ -98,7 +98,7 @@ class NotifState extends State<Notif> with SingleTickerProviderStateMixin {
             }
             if (widget.onTap != null) widget.onTap!();
           },
-          child: Container(
+          child: Widgets.rect(
             width: 487.d,
             height: 130.d,
             margin: const EdgeInsets.only(bottom: 10),
