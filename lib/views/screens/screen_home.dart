@@ -234,7 +234,6 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
 
   void _onNoobReceive(NoobMessage message) {
     var account = accountProvider.account;
-    var route = getService<RouteService>();
     var sound = getService<Sounds>();
 
     if (message.type == Noobs.playerStatus) {
@@ -242,7 +241,12 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       return;
     }
 
-    if (message.type == Noobs.help && route.currentRoute == Routes.home) {
+    if (message.type != Noobs.playerStatus && message.type != Noobs.chat) {
+      print("here");
+    }
+
+    if (message.type == Noobs.help &&
+        getService<RouteService>().currentRoute == Routes.home) {
       var help = message as NoobHelpMessage;
       if (help.ownerTribeId == account.tribeId) {
         sound.play("help");
