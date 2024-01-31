@@ -237,7 +237,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     var sound = getService<Sounds>();
 
     if (message.type == Noobs.playerStatus) {
-      // sound.play("attack");
+      //todo: show notif online here
       return;
     }
 
