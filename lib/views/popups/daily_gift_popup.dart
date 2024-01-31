@@ -60,7 +60,10 @@ class _RewardPopupState extends AbstractPopupState<DailyGiftPopup> {
             width: 440.d,
             label: "claim_l".l(),
             color: ButtonColor.green,
-            onPressed: () => Navigator.pop(context)),
+            onPressed: (){
+              Navigator.pop(context);
+              Overlays.insert(context, const DailyRewardFeastOverlay());
+            }),
       ],
     );
   }
