@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fruitcraft/mixins/notif_mixin.dart';
+import 'package:fruitcraft/services/event_notification.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
@@ -23,7 +24,7 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<HomeScreen>
-    with BackgroundMixin, KeyProvider {
+    with BackgroundMixin, KeyProvider, NotifMixin {
   late PageController _pageController;
   int _selectedTabIndex = 2, punchIndex = -1;
   final List<SMITrigger?> _punchInputs = List.generate(5, (index) => null);
@@ -233,29 +234,70 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
 
   void _onNoobReceive(NoobMessage message) {
     var account = accountProvider.account;
+    var sound = getService<Sounds>();
+    var notifService = getService<EventNotification>();
+
+    if (message.type == Noobs.playerStatus) {
+      //todo: show notif online here
+      return;
+    }
+
     if (message.type == Noobs.help &&
-        ModalRoute.of(context)!.settings.name == Routes.home) {
+        getService<RouteService>().currentRoute == Routes.home) {
       var help = message as NoobHelpMessage;
-      if (help.ownerTribeId == account.tribeId && help.ownerId != account.id) {
-        _showConfirmOverlay(
-            "tribe_help".l([help.attackerName, help.defenderName]),
-            () => _onAcceptHelp(help, account));
+      if (help.ownerTribeId == account.tribeId) {
+        sound.play("help");
+        notifService.showNotif(
+            NotifData(
+              message: message,
+              title: help.defenderName,
+              caption: "tribe_help".l([help.defenderName, help.attackerName]),
+              mode: 1,
+              onTap: () {
+                onAcceptHelp(message, account);
+                notifService.hideNotif(message);
+              },
+            ),
+            context);
       }
       return;
     }
+
     if (message.type == Noobs.battleRequest) {
+      sound.play("attack");
       var request = message as NoobRequestBattleMessage;
-      _showConfirmOverlay("battle_request".l([request.attackerName]),
-          () => _onAcceptAttack(request, account));
+      notifService.showNotif(
+          NotifData(
+            message: message,
+            title: request.attackerName,
+            caption: "battle_request".l([request.attackerName]),
+            mode: 0,
+            onTap: () {
+              onAcceptAttack(message, account);
+              notifService.hideNotif(message);
+            },
+          ),
+          context);
       return;
     }
+
     if (message.type == Noobs.auctionBid) {
       var bid = message as NoobAuctionMessage;
       if (bid.card.ownerIsMe && bid.card.loserIsMe) {
         var text = bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deal";
         accountProvider.update(context, {"gold": bid.card.lastBidderGold});
-        _showConfirmOverlay(
-            text.l([bid.card.maxBidderName]), () => _selectTap(4));
+        notifService.showNotif(
+            NotifData(
+              message: message,
+              title: bid.card.maxBidderName,
+              caption: text.l([bid.card.maxBidderName]),
+              mode: 1,
+              onTap: () {
+                _selectTap(4);
+                notifService.hideNotif(message);
+              },
+            ),
+            context);
       }
     } else if (message.type == Noobs.auctionSold) {
       var bid = message as NoobAuctionMessage;
@@ -267,76 +309,9 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     }
   }
 
-  _onAcceptAttack(NoobRequestBattleMessage request, Account account) async {
-    try {
-      var result = await rpc(RpcId.battleDefense,
-          params: {"battle_id": request.id, "choice": 1});
-      _joinBattle(
-          request.id,
-          account,
-          Opponent.create(request.attackerId, request.attackerName, account.id),
-          result["help_cost"],
-          result["created_at"]);
-    } finally {}
-  }
-
-  _onAcceptHelp(NoobHelpMessage help, Account account) async {
-    var attacker =
-        Opponent.create(help.attackerId, help.attackerName, account.id);
-    var defender =
-        Opponent.create(help.defenderId, help.defenderName, account.id);
-    getFriend() => help.isAttacker ? attacker : defender;
-    getOpposite() => help.isAttacker ? defender : attacker;
-    var result = await rpc(RpcId.battleJoin,
-        params: {"battle_id": help.id, "mainEnemy": getOpposite().id});
-    if (!mounted) return;
-    _joinBattle(help.id, getFriend(), getOpposite(), 0, result["created_at"]);
-    _addBattleCard(account, result, help.attackerId, "attacker_cards_set");
-    _addBattleCard(account, result, help.defenderId, "defender_cards_set");
-  }
-
   @override
   void dispose() {
     getService<NoobSocket>().onReceive.remove(_onNoobReceive);
     super.dispose();
-  }
-
-  _addBattleCard(Account account, result, int attackerId, String side) async {
-    await Future.delayed(const Duration(milliseconds: 10));
-    for (var element in result[side]) {
-      element["owner_team_id"] = attackerId;
-      var message = NoobCardMessage(account, element);
-      getService<NoobSocket>().dispatchMessage(message);
-    }
-  }
-
-  void _showConfirmOverlay(String message, Function() onAccept) {
-    Overlays.insert(
-        context,
-        ConfirmOverlay(
-          message,
-          "accept_l".l(),
-          "decline_l".l(),
-          onAccept,
-          barrierDismissible: false,
-        ));
-    Timer(const Duration(seconds: 10),
-        () => Overlays.remove(OverlaysName.confirm));
-  }
-
-  void _joinBattle(int id, Opponent friendsHead, Opponent oppositesHead,
-      [int helpCost = -1, int createAt = 0]) {
-    var args = {
-      "battle_id": id,
-      "friendsHead": friendsHead,
-      "oppositesHead": oppositesHead
-    };
-    if (helpCost > -1) {
-      args["help_cost"] = helpCost;
-    }
-    if (createAt > 0) {
-      args["created_at"] = createAt;
-    }
-    services.get<RouteService>().to(Routes.liveBattle, args: args);
   }
 }

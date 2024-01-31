@@ -1,3 +1,4 @@
+import 'package:fruitcraft/services/event_notification.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -249,6 +250,10 @@ class LoadingController extends GetxController with ServiceFinderMixin {
     sounds.initialize();
     sounds.playMusic();
     services.addService(sounds);
+
+    var eventNotification=EventNotification();
+    eventNotification.initialize();
+    services.addService(eventNotification);
 
     try {
       var httpConnection = HttpConnection();

@@ -4,8 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class HeroEvolvePopup extends AbstractPopup {
-  const HeroEvolvePopup({super.key})
-      : super(Routes.popupHeroEvolve);
+  const HeroEvolvePopup({super.key}) : super(Routes.popupHeroEvolve);
 
   @override
   createState() => _HeroEvolvePopupState();
@@ -110,8 +109,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
 
   void _fill(Account account, HeroCard hero, int step) {
     if (account.potion < step) {
-      services.get<RouteService>()
-          .to(Routes.popupPotion);
+      services.get<RouteService>().to(Routes.popupPotion);
     } else {
       hero.fillPotion(context, step);
     }
@@ -125,8 +123,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
       ),
     );
     if (mounted) {
-      // Todo: ask from mansour for this line
-      // Navigator.popUntil(context, (route) => route.isFirst);
+      services.get<RouteService>().popUntil((route) => route.isFirst);
     }
   }
 }

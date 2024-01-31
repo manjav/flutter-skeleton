@@ -30,8 +30,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   @override
   Widget contentFactory() {
+    var paddingTop = MediaQuery.of(context).viewPadding.top;
+    if (paddingTop <= 0) {
+      paddingTop = 24.d;
+    }
+    paddingTop += 150.d;
     var gap = 10.d;
-    var paddingTop = 172.d;
     var headerSize = 509.d;
     var crossAxisCount = 4;
     var itemSize =

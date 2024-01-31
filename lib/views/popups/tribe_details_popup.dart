@@ -74,10 +74,18 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
               services.get<RouteService>().to(Routes.popupTribeInvite)),
       SizedBox(height: 20.d),
       Expanded(
-          child: ListView.builder(
+          child: FutureBuilder(
+        future: tribe.loadMembers(context, _account),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const SizedBox();
+          }
+          return ListView.builder(
               itemCount: tribe.members.value.length,
               itemBuilder: (c, i) =>
-                  _memberItemBuilder(tribe, tribe.members.value[i], i))),
+                  _memberItemBuilder(tribe, tribe.members.value[i], i));
+        },
+      )),
     ]);
   }
 

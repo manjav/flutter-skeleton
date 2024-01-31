@@ -5,7 +5,6 @@ import '../../../app_export.dart';
 import '../../../main.dart';
 
 class SettingsPopup extends AbstractPopup {
-  //todo: check routes here
   const SettingsPopup({super.key}) : super(Routes.popupSettings);
 
   @override
