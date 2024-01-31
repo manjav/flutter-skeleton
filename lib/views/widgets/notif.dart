@@ -26,9 +26,9 @@ class Notif extends StatefulWidget {
 }
 
 class NotifState extends State<Notif> with SingleTickerProviderStateMixin {
-  RxBool isOpen = false.obs;
+  RxBool isMinimize = true.obs;
   double bottom = 0;
-  double right = 0;
+  double size = 0;
 
   Artboard? _artboard;
   SMITrigger? _closeTrigger;
@@ -40,6 +40,8 @@ class NotifState extends State<Notif> with SingleTickerProviderStateMixin {
     duration: const Duration(milliseconds: 500),
     vsync: this,
   );
+
+  NoobMessage get message => widget.message.message;
 
   @override
   void initState() {
@@ -69,17 +71,26 @@ class NotifState extends State<Notif> with SingleTickerProviderStateMixin {
 
   remove() {
     setState(() {
-      right = -200;
+      size = -200;
+    });
+  }
+
+  hide() {
+    setState(() {
+      isMinimize.value = true;
+      widget.message.isMinimize = true;
+      _minimizeInput!.value = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    isOpen.value = widget.message.isMinimize;
+    isMinimize.value = widget.message.isMinimize;
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 500),
-      right: right,
+      right: Localization.isRTL ? null : size,
+      left: Localization.isRTL ? size : null,
       bottom: bottom,
       child: SizeTransition(
         sizeFactor: Tween<double>(begin: 0.0, end: 1.0).animate(controller),
@@ -90,10 +101,10 @@ class NotifState extends State<Notif> with SingleTickerProviderStateMixin {
             if (_minimizeInput == null) {
               return;
             }
-            if (isOpen.value == false) {
-              isOpen.value = true;
-              widget.message.isMinimize = true;
-              _minimizeInput!.value = true;
+            if (isMinimize.value == true) {
+              isMinimize.value = false;
+              widget.message.isMinimize = false;
+              _minimizeInput!.value = false;
               return;
             }
             if (widget.onTap != null) widget.onTap!();

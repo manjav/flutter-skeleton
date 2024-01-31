@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fruitcraft/mixins/notif_mixin.dart';
+import 'package:fruitcraft/services/event_notification.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
@@ -235,14 +235,11 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   void _onNoobReceive(NoobMessage message) {
     var account = accountProvider.account;
     var sound = getService<Sounds>();
+    var notifService = getService<EventNotification>();
 
     if (message.type == Noobs.playerStatus) {
       //todo: show notif online here
       return;
-    }
-
-    if (message.type != Noobs.playerStatus && message.type != Noobs.chat) {
-      print("here");
     }
 
     if (message.type == Noobs.help &&
@@ -250,12 +247,18 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       var help = message as NoobHelpMessage;
       if (help.ownerTribeId == account.tribeId) {
         sound.play("help");
-        showNotif(
-          help,
-          title: help.defenderName,
-          caption: "tribe_help".l([help.defenderName, help.attackerName]),
-          mode: 0,
-        );
+        notifService.showNotif(
+            NotifData(
+              message: message,
+              title: help.defenderName,
+              caption: "tribe_help".l([help.defenderName, help.attackerName]),
+              mode: 1,
+              onTap: () {
+                onAcceptHelp(message, account);
+                notifService.hideNotif(message);
+              },
+            ),
+            context);
       }
       return;
     }
@@ -263,12 +266,18 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     if (message.type == Noobs.battleRequest) {
       sound.play("attack");
       var request = message as NoobRequestBattleMessage;
-      showNotif(
-        request,
-        title: request.attackerName,
-        caption: "battle_request".l([request.attackerName]),
-        mode: 0,
-      );
+      notifService.showNotif(
+          NotifData(
+            message: message,
+            title: request.attackerName,
+            caption: "battle_request".l([request.attackerName]),
+            mode: 0,
+            onTap: () {
+              onAcceptAttack(message, account);
+              notifService.hideNotif(message);
+            },
+          ),
+          context);
       return;
     }
 
@@ -277,8 +286,18 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       if (bid.card.ownerIsMe && bid.card.loserIsMe) {
         var text = bid.card.ownerIsMe ? "auction_bid_sell" : "auction_bid_deal";
         accountProvider.update(context, {"gold": bid.card.lastBidderGold});
-        showConfirmOverlay(
-            text.l([bid.card.maxBidderName]), () => _selectTap(4));
+        notifService.showNotif(
+            NotifData(
+              message: message,
+              title: bid.card.maxBidderName,
+              caption: text.l([bid.card.maxBidderName]),
+              mode: 1,
+              onTap: () {
+                _selectTap(4);
+                notifService.hideNotif(message);
+              },
+            ),
+            context);
       }
     } else if (message.type == Noobs.auctionSold) {
       var bid = message as NoobAuctionMessage;

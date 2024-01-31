@@ -1,87 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../app_export.dart';
 
 mixin NotifMixin<T extends AbstractScreen> on State<T> {
-  static Map<GlobalKey<NotifState>, OverlayEntry> notifications = {};
-
-  void showNotif(
-    NoobMessage message, {
-    required String title,
-    required String caption,
-    int mode = 0,
-  }) {
-    var key = GlobalKey<NotifState>();
-    var notif = Notif(
-      key: key,
-      message: NotifData(
-        message: message,
-        title: title,
-        caption: caption,
-        mode: mode,
-      ),
-      bottom: 400.d,
-      onClose: () {
-        key.currentState?.remove();
-        notifications.remove(key);
-        _animateNotifications();
-      },
-      //todo: comment for now we need to fix it
-      // onTap: () => onNotifTap(message),
-    );
-    var entry = OverlayEntry(
-      builder: (ctx) => notif,
-    );
-
-    notifications[key] = entry;
-
-    Overlay.of(context).insert(entry);
-    _animateNotifications();
-  }
-
-  void _animateNotifications() {
-    int index = 0;
-    for (var entry in notifications.keys) {
-      var add = ((notifications.length - 1 - index) * 150.d);
-      var bottom = 400.d + add;
-      entry.currentState?.changePosition(bottom);
-      index++;
-    }
-  }
-
-  void onNotifTap(NoobMessage message) {
-    var account = context.read<AccountProvider>().account;
-    if (message is NoobHelpMessage) {
-      showConfirmOverlay(
-          "tribe_help".l([message.attackerName, message.defenderName]),
-          () => _onAcceptHelp(message, account));
-      return;
-    }
-    if (message is NoobRequestBattleMessage) {
-      showConfirmOverlay("battle_request".l([message.attackerName]),
-          () => _onAcceptAttack(message, account));
-      return;
-    }
-  }
-
-  void showConfirmOverlay(String message, Function() onAccept) {
-    Overlays.insert(
-        context,
-        ConfirmOverlay(
-          message,
-          "accept_l".l(),
-          "decline_l".l(),
-          onAccept,
-          barrierDismissible: false,
-        ));
-    Timer(const Duration(seconds: 10),
-        () => Overlays.remove(OverlaysName.confirm));
-  }
-
-  _onAcceptAttack(NoobRequestBattleMessage request, Account account) async {
+  onAcceptAttack(NoobRequestBattleMessage request, Account account) async {
     try {
       var result = await context
           .read<ServicesProvider>()
@@ -98,7 +22,7 @@ mixin NotifMixin<T extends AbstractScreen> on State<T> {
     } finally {}
   }
 
-  _onAcceptHelp(NoobHelpMessage help, Account account) async {
+  onAcceptHelp(NoobHelpMessage help, Account account) async {
     var attacker =
         Opponent.create(help.attackerId, help.attackerName, account.id);
     var defender =

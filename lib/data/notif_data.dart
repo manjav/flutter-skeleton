@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../app_export.dart';
@@ -8,6 +9,7 @@ class NotifData {
   final String title;
   final String caption;
   final int? mode;
+  final VoidCallback? onTap;
   bool isMinimize;
   RxInt remainingTime = 100.obs;
   late Timer _timer;
@@ -17,6 +19,7 @@ class NotifData {
     required this.title,
     required this.caption,
     this.mode,
+    this.onTap,
     this.isMinimize = true,
   }) {
     startTimer();
