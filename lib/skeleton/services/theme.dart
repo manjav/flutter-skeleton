@@ -50,7 +50,6 @@ TextStyle _style({Color? color, double? size, FontWeight? weight}) {
     color: color ?? TColors.primary10,
     fontWeight: weight ?? FontWeight.bold,
     fontFamily: 'LilitaOneSultanAdan',
-    decoration: TextDecoration.none,
   );
 }
 

@@ -70,11 +70,12 @@ class OnlineStatusState extends State<OnlineStatus>
             SizedBox(
               width: 15.d,
             ),
-            SkinnedText(
-              text,
-              strokeWidth: 0,
-              strokeColor: TColors.transparent,
-              shadowScale: 0,
+            Material(
+              color: TColors.transparent,
+              child: Text(
+                text,
+                style: TStyles.medium.copyWith(color: TColors.primary),
+              ),
             )
           ],
         ),
