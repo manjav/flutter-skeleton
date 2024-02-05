@@ -45,39 +45,39 @@ class OnlineStatusState extends State<OnlineStatus>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedPositioned(
-      duration: const Duration(milliseconds: 500),
-      right: Localization.isRTL ? null : size,
-      left: Localization.isRTL ? size : null,
-      top: 280.d,
-      child: Container(
-        width: 472.d,
-        padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 20.d),
-        decoration: BoxDecoration(
-            border: Border.all(
-              color: TColors.black,
-              width: 6.d,
-            ),
-            borderRadius: BorderRadius.horizontal(
-              left: Localization.isRTL ? Radius.zero : Radius.circular(60.d),
-              right: Localization.isRTL ? Radius.circular(60.d) : Radius.zero,
-            ),
-            color: TColors.black80),
-        child: Row(
-          children: [
-            Asset.load<Image>("player_online",
-                height: 31.d, width: 46.d, fit: BoxFit.contain),
-            SizedBox(
-              width: 15.d,
-            ),
-            Material(
-              color: TColors.transparent,
-              child: Text(
+    return Material(
+      color: TColors.transparent,
+      child: AnimatedPositioned(
+        duration: const Duration(milliseconds: 500),
+        right: Localization.isRTL ? null : size,
+        left: Localization.isRTL ? size : null,
+        top: 280.d,
+        child: Container(
+          width: 472.d,
+          padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 20.d),
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: TColors.black,
+                width: 6.d,
+              ),
+              borderRadius: BorderRadius.horizontal(
+                left: Localization.isRTL ? Radius.zero : Radius.circular(60.d),
+                right: Localization.isRTL ? Radius.circular(60.d) : Radius.zero,
+              ),
+              color: TColors.black80),
+          child: Row(
+            children: [
+              Asset.load<Image>("player_online",
+                  height: 31.d, width: 46.d, fit: BoxFit.contain),
+              SizedBox(
+                width: 15.d,
+              ),
+              Text(
                 text,
                 style: TStyles.medium.copyWith(color: TColors.primary),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
