@@ -232,7 +232,8 @@ class LoadingController extends GetxController {
 
     await serviceLocator<Localization>().initialize(args: [Get.context!]);
 
-    var trackers = await serviceLocator<Trackers>().initialize();
+    var trackers = serviceLocator<Trackers>();
+    await trackers.initialize();
 
     var sounds = serviceLocator<Sounds>();
     sounds.initialize();
@@ -263,7 +264,8 @@ class LoadingController extends GetxController {
 
       serviceLocator<Games>().initialize();
 
-      var ads = serviceLocator<Ads>().initialize();
+      var ads = serviceLocator<Ads>();
+      ads.initialize();
       ads.onUpdate = _onAdsServicesUpdate;
 
       services.changeState(ServiceStatus.complete);
