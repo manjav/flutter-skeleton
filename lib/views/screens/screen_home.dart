@@ -232,13 +232,29 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     Timer(const Duration(seconds: 1), () => _punchInputs[index]?.value = false);
   }
 
-  void _onNoobReceive(NoobMessage message) {
+  void _onNoobReceive(NoobMessage message) async {
     var account = accountProvider.account;
     var sound = getService<Sounds>();
     var notifService = getService<EventNotification>();
 
     if (message.type == Noobs.playerStatus) {
-      //todo: show notif online here
+      var status = message as NoobStatusMessage;
+      if (status.playerId == account.id) {
+        return;
+      }
+      if (account.tribe != null && account.tribe!.members.value.isEmpty) {
+        await account.tribe!.loadMembers(context, account);
+      }
+      var player = account.tribe?.members.value
+          .firstWhereOrNull((item) => item.id == status.playerId);
+      if (player == null) {
+        return;
+      }
+      if (status.status != 1) {
+        return;
+      }
+      // ignore: use_build_context_synchronously
+      notifService.addStatus("event_online".l([player.name]), context);
       return;
     }
 
