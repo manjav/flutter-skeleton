@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class HeroPopup extends AbstractPopup {
-  final int selectedHero;
-  const HeroPopup(this.selectedHero, {super.key}) : super(Routes.popupHero);
+  const HeroPopup({super.key}) : super(Routes.popupHero);
+
+  int get selectedHero => args["id"];
 
   @override
   createState() => _HeroPopupState();

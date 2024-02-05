@@ -5,10 +5,9 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class ProfilePopup extends AbstractPopup {
-  final int playerId;
+  const ProfilePopup({super.key}) : super(Routes.popupProfile);
 
-  const ProfilePopup(this.playerId, {super.key})
-      : super(Routes.popupProfile);
+  int get playerId => args["id"] ?? -1;
 
   @override
   createState() => _ProfilePopupState();
