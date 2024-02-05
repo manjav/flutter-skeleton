@@ -37,7 +37,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
     _account = accountProvider.account;
     _isWin = widget.args['outcome'];
     _color = _isWin ? "green" : "red";
-    getService<Sounds>().play(_isWin ? "won" : "lose");
+    serviceLocator<Sounds>().play(_isWin ? "won" : "lose");
     if (widget.args.containsKey("attacker_hero_benefits_info") &&
         widget.args["attacker_hero_benefits_info"].length > 0) {
       var benefits = widget.args["attacker_hero_benefits_info"];
@@ -129,8 +129,7 @@ class _AttackOutScreenState extends AbstractScreenState<AttackOutScreen>
     accountProvider.update(context, widget.args);
     var lastRoute =
         widget.route == Routes.questOut ? Routes.quest : Routes.popupOpponents;
-    services
-        .get<RouteService>()
+    serviceLocator<RouteService>()
         .popUntil((route) => route.settings.name == lastRoute);
   }
 

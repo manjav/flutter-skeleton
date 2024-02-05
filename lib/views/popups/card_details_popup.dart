@@ -71,7 +71,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                     isVisible: _card.fruit.isHero,
                     color: ButtonColor.violet,
                     label: "˩  ${"hero_edit".l()}",
-                    onPressed: () => services.get<RouteService>().to(
+                    onPressed: () => serviceLocator<RouteService>().to(
                         Routes.popupHero,
                         args: {"card": _card.fruit.id})),
                 _button(
@@ -135,9 +135,9 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   }
 
   _onButtonsTap(String route) async {
-    await services.get<RouteService>().to(route, args: {"card": _card});
+    await serviceLocator<RouteService>().to(route, args: {"card": _card});
     if (mounted && !accountProvider.account.cards.containsKey(_card.id)) {
-      services.get<RouteService>().popUntil((route) => route.isFirst);
+      serviceLocator<RouteService>().popUntil((route) => route.isFirst);
     }
     setState(() {});
   }

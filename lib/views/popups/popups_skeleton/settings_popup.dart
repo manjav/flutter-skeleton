@@ -74,7 +74,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
 
     // Handle music toggle switch
     if (setting == Pref.music) {
-      var sounds = getService<Sounds>();
+      var sounds = serviceLocator<Sounds>();
       if (setting.getBool()) {
         sounds.playMusic();
       } else {
@@ -115,7 +115,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
       "invite" => Routes.popupInvite,
       _ => Routes.popupRedeemGift,
     };
-    services.get<RouteService>()
+    serviceLocator<RouteService>()
         .to(route);
   }
 

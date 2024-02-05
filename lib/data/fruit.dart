@@ -99,7 +99,7 @@ class FruitCard {
   }
 }
 
-class AbstractCard with ServiceFinderMixin {
+class AbstractCard {
   static double powerToGoldRatio = 8.0;
   static double minPriceRatio = 0.75;
   static double maxPriceRatio = 1.5;
@@ -219,7 +219,7 @@ class AccountCard extends AbstractCard with ClassFinderMixin {
   Future<void> coolOff(BuildContext context) async {
     try {
       loadingCoolOff.value = true;
-      var data = await getService<HttpConnection>(context)
+      var data = await serviceLocator<HttpConnection>()
           .tryRpc(context, RpcId.coolOff, params: {RpcParams.card_id.name: id});
       lastUsedAt = 0;
       if (context.mounted) {
@@ -298,7 +298,7 @@ extension HeroAttributesExtesion on HeroAttribute {
   }
 }
 
-class HeroCard with ServiceFinderMixin, ClassFinderMixin {
+class HeroCard with ClassFinderMixin {
   static const attributeMultiplier = 2;
   static const benefitModifier = 0.01;
   static const benefit_maxMultipliers = {
@@ -381,7 +381,7 @@ class HeroCard with ServiceFinderMixin, ClassFinderMixin {
       params[RpcParams.potion.name] = value;
     }
     try {
-      var data = await getService<HttpConnection>(context)
+      var data = await serviceLocator<HttpConnection>()
           .tryRpc(context, RpcId.potionize, params: params);
       if (!context.mounted) return;
       data["hero_id"] = card.id;

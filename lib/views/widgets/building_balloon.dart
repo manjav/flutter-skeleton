@@ -45,7 +45,7 @@ class _BuildingBalloonState extends State<BuildingBalloon>
       if (result is List) return;
       if (mounted) {
         accountProvider.update(context, result);
-        getService<Notifications>()
+        serviceLocator<Notifications>()
             .schedule(accountProvider.account.getSchedules());
       }
     } finally {}

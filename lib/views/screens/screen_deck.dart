@@ -279,7 +279,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         onClose: (data) async {
           _selectedCards.clear(setNull: true);
           // Reset reminder notifications ....
-          getService<Notifications>().schedule(account.getSchedules());
+          serviceLocator<Notifications>().schedule(account.getSchedules());
         },
       ),
     );

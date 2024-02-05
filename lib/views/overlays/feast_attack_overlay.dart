@@ -147,7 +147,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     } else if (state == RewardAnimationState.closing) {
       var route =
           widget.args["opponent"] != null ? Routes.battleOut : Routes.questOut;
-      services.get<RouteService>().to(route, args: _outcomeData);
+      serviceLocator<RouteService>().to(route, args: _outcomeData);
     }
   }
 

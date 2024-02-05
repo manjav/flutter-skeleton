@@ -96,8 +96,7 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
 
   _onButtonsPressed(RpcId id) async {
     if (id == RpcId.getProfileInfo) {
-      services
-          .get<RouteService>()
+      serviceLocator<RouteService>()
           .to(Routes.popupProfile, args: {"id": widget.member.id});
       close();
       return;

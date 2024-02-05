@@ -50,7 +50,7 @@ class _ProfileAvatarsPopupState
       padding: EdgeInsets.all(16.d),
       child: LoaderWidget(AssetType.image, "avatar_$id", subFolder: "avatars"),
       onPressed: () async {
-        await getService<HttpConnection>()
+        await serviceLocator<HttpConnection>()
             .tryRpc(context, RpcId.setProfileInfo, params: {"avatar_id": id});
         setState(() => account.avatarId = id);
         accountProvider.update();

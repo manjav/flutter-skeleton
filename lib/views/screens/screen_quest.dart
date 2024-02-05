@@ -141,7 +141,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     WidgetsBinding.instance.addPostFrameCallback((d) async {
       _questsCount = accountProvider.account.questsCount - 1;
       if (event.name == "click") {
-        await services.get<RouteService>().to(Routes.deck);
+        await serviceLocator<RouteService>().to(Routes.deck);
         // Update city levels after quest
         for (var i = 0; i < widget.arena.value.length; i++) {
           widget.arena.value[i].state?.value =

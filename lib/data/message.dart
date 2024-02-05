@@ -61,7 +61,7 @@ extension MessagesExtenstion on Messages {
   }
 }
 
-class Message with ServiceFinderMixin {
+class Message {
   List<int> intData = [];
   Messages type = Messages.none;
   String text = "", metadata = "";
@@ -139,7 +139,7 @@ class Message with ServiceFinderMixin {
         "decision": isAccept ? "approve" : "reject"
       };
       if (requesterId != null) params["new_member_id"] = requesterId;
-      var data = await getService<HttpConnection>(context).tryRpc(context,
+      var data = await serviceLocator<HttpConnection>().tryRpc(context,
           requesterId != null ? RpcId.tribeDecideJoin : RpcId.tribeDecideInvite,
           params: params);
       return data;

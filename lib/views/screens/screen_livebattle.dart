@@ -48,7 +48,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           .toDouble();
     }
 
-    var socket = getService<NoobSocket>();
+    var socket = serviceLocator<NoobSocket>();
     if (!socket.isConnected) {
       socket.connect();
     }
@@ -344,10 +344,10 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
 
     // Reset reminder notifications ....
-    getService<Notifications>()
+    serviceLocator<Notifications>()
         .schedule(accountProvider.account.getSchedules());
 
-    services.get<RouteService>().to(Routes.liveBattleOut, args: {
+    serviceLocator<RouteService>().to(Routes.liveBattleOut, args: {
       "friendsId": _friendsHead.id,
       "oppositesId": _oppositesHead.id,
       "warriors": _warriors.values.toList()
@@ -355,7 +355,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _close() {
-    getService<NoobSocket>().onReceive.remove(_onNoobReceive);
+    serviceLocator<NoobSocket>().onReceive.remove(_onNoobReceive);
     _timer.cancel();
     _pageController.dispose();
     Navigator.pop(context);

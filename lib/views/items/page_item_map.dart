@@ -33,7 +33,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           start: 32.d,
           child: Indicator("home", Values.leagueRank,
               hasPlusIcon: false,
-              onTap: () => services.get<RouteService>().to(Routes.popupLeague)),
+              onTap: () => serviceLocator<RouteService>().to(Routes.popupLeague)),
         ),
         PositionedDirectional(
             bottom: 220.d,
@@ -42,7 +42,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               "home",
               Values.rank,
               hasPlusIcon: false,
-              onTap: () => services.get<RouteService>().to(Routes.popupRanking),
+              onTap: () => serviceLocator<RouteService>().to(Routes.popupRanking),
             )),
         PositionedDirectional(
             bottom: 180.d,
@@ -51,7 +51,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               context,
               child: Asset.load<Image>("icon_notifications", width: 60.d),
               onPressed: () =>
-                  services.get<RouteService>().to(Routes.popupInbox),
+                  serviceLocator<RouteService>().to(Routes.popupInbox),
             )),
         _building(state.account, Buildings.defense),
         _building(state.account, Buildings.offense),
@@ -122,7 +122,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     if (type == "") {
       return;
     }
-    services.get<RouteService>().to(type, args: {"building": building});
+    serviceLocator<RouteService>().to(type, args: {"building": building});
   }
 
   void _riveEventsListener(RiveEvent event) {

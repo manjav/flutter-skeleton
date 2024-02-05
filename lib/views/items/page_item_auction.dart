@@ -82,7 +82,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     };
     var params = {};
     if (tabName == "fruit" || tabName == "price") {
-      var route = services.get<RouteService>();
+      var route = serviceLocator<RouteService>();
       dynamic result = await (tabName == "fruit"
           ? route.to(Routes.popupCardSelectType)
           : route.to(Routes.popupCardSelectCategory));

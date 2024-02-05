@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_export.dart';
 
-class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
+class AccountProvider extends ChangeNotifier {
   late Account account;
 
   void initialize(Account account) => this.account = account;
@@ -31,7 +31,7 @@ class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
       BuildContext context, SelectedCards selectedCards) async {
     if (selectedCards.value.length < 2) return null;
     var params = {RpcParams.sacrifices.name: selectedCards.getIds()};
-    var result = await getService<HttpConnection>(context)
+    var result = await serviceLocator<HttpConnection>()
         .rpc(RpcId.evolveCard, params: params);
     for (var card in selectedCards.value) {
       account.cards.remove(card!.id);
@@ -44,7 +44,7 @@ class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
 
   Future<AccountCard> evolveHero(
       BuildContext context, AccountCard heroCard) async {
-    var result = await getService<HttpConnection>(context).rpc(RpcId.evolveCard,
+    var result = await serviceLocator<HttpConnection>().rpc(RpcId.evolveCard,
         params: {RpcParams.sacrifices.name: "[${heroCard.id}]"});
 
     account.cards.remove(heroCard.id);
@@ -61,7 +61,7 @@ class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
   }
 
   Future<AccountCard> enhanceMax(BuildContext context, AccountCard card) async {
-    var result = await getService<HttpConnection>(context)
+    var result = await serviceLocator<HttpConnection>()
         .rpc(RpcId.enhanceMax, params: {RpcParams.card_id.name: card.id});
     if (context.mounted) {
       update(context, result);
@@ -75,7 +75,7 @@ class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
       RpcParams.card_id.name: card.id,
       RpcParams.sacrifices.name: selectedCards.getIds()
     };
-    var result = await getService<HttpConnection>(context)
+    var result = await serviceLocator<HttpConnection>()
         .rpc(RpcId.enhanceCard, params: params);
     for (var card in selectedCards.value) {
       account.cards.remove(card!.id);
@@ -92,7 +92,7 @@ class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
     if (selectedCardId > -1) {
       params["base_card_id"] = selectedCardId;
     }
-    var result = await getService<HttpConnection>(context)
+    var result = await serviceLocator<HttpConnection>()
         .rpc(RpcId.buyCardPack, params: params);
     if (result.containsKey("base_card_id_set")) {
       var cards = <AccountCard>[];
@@ -116,7 +116,7 @@ class AccountProvider extends ChangeNotifier with ServiceFinderMixin {
     if (tribe != null) {
       params[RpcParams.tribe_id.name] = tribe.id;
     }
-    var result = await getService<HttpConnection>(context).rpc(
+    var result = await serviceLocator<HttpConnection>().rpc(
         tribe != null ? RpcId.tribeUpgrade : RpcId.upgrade,
         params: params);
 

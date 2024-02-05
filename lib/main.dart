@@ -15,6 +15,9 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   await Firebase.initializeApp();
   await Prefs().initialize();
+
+  initServices();
+
   runApp(const MyApp());
 }
 
@@ -50,16 +53,21 @@ class _MyAppState extends State<MyApp>
         state == AppLifecycleState.inactive) {
       // getService<Sounds>(context).stopAll();
     } else if (state == AppLifecycleState.resumed) {
-      getService<Sounds>().playMusic();
+      serviceLocator<Sounds>().playMusic();
     }
   }
 
-  void restartApp() {
-    Ranks.lists.clear();
+  void restartApp() async {
     Overlays.clear();
     LoaderWidget.cachedLoaders.clear();
+
     Get.reset(clearRouteBindings: true);
-    if (Navigator.canPop(context)) Navigator.pop(context);
+
+    await serviceLocator.reset();
+    initServices();
+
+    if (mounted) if (Navigator.canPop(context)) Navigator.pop(context);
+    
     _initialize(true);
   }
 
@@ -81,9 +89,8 @@ class _MyAppState extends State<MyApp>
       key: key,
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => ServicesProvider()),
-          ChangeNotifierProvider(create: (_)=> AccountProvider()),
-          ChangeNotifierProvider(create: (_) => OpponentsProvider())
+          ChangeNotifierProvider(create: (_)=> serviceLocator<AccountProvider>()),
+          ChangeNotifierProvider(create: (_) => serviceLocator<OpponentsProvider>())
         ],
         child: GetMaterialApp(
           navigatorObservers: [MyApp._observer],

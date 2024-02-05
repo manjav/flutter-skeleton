@@ -47,7 +47,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
 
   @override
   Widget contentFactory() {
-    getService<Sounds>().play(_friendsHead.won ? "won" : "lose");
+    serviceLocator<Sounds>().play(_friendsHead.won ? "won" : "lose");
     return Widgets.button(context,
         padding: EdgeInsets.all(32.d),
         child: Stack(alignment: Alignment.center, children: [
@@ -57,7 +57,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
           _positioned(180.d, _fractionBuilder(_friendsHead, _friends)),
           _positioned(100.d, _vsBuilder()),
         ]),
-        onPressed: () => services.get<RouteService>().popUntil((route) => route.isFirst));
+        onPressed: () => serviceLocator<RouteService>().popUntil((route) => route.isFirst));
   }
 
   Widget _positioned(double top, Widget child) => Positioned(

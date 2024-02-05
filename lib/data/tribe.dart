@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../../app_export.dart';
 import '../../main.dart';
 
-class Tribe with ServiceFinderMixin {
+class Tribe {
   late int id,
       gold,
       status,
@@ -55,7 +55,7 @@ class Tribe with ServiceFinderMixin {
 
   loadMembers(BuildContext context, Account account) async {
     try {
-      var result = await getService<HttpConnection>(context)
+      var result = await serviceLocator<HttpConnection>()
           .rpc(RpcId.tribeMembers, params: {"coach_tribe": false});
       members.value = Opponent.createList(result["members"], account.id);
     } finally {}
@@ -82,13 +82,13 @@ class Tribe with ServiceFinderMixin {
               MyApp.startTime.microsecondsSinceEpoch) /
           1000
     };
-    await getService<NoobSocket>(context).publish(jsonEncode(chat));
+    await serviceLocator<NoobSocket>().publish(jsonEncode(chat));
   }
 
   pinMessage(
       BuildContext context, Account account, NoobChatMessage message) async {
     try {
-      await getService<HttpConnection>(context).tryRpc(
+      await serviceLocator<HttpConnection>().tryRpc(
           context, RpcId.tribePinMessage,
           params: {"title": "", "message": message.text});
       if (context.mounted) {
@@ -99,7 +99,7 @@ class Tribe with ServiceFinderMixin {
 
   loadPinnedMessage(BuildContext context, Account account) async {
     try {
-      var data = await getService<HttpConnection>(context)
+      var data = await serviceLocator<HttpConnection>()
           .tryRpc(context, RpcId.tribeGetPinnedMessages);
       if (data["messages"].isEmpty) return null;
       var msg = data["messages"].first;

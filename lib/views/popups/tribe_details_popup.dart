@@ -71,7 +71,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
           label: "tribe_invite".l(),
           icon: "tribe_invite",
           onPressed: () =>
-              services.get<RouteService>().to(Routes.popupTribeInvite)),
+              serviceLocator<RouteService>().to(Routes.popupTribeInvite)),
       SizedBox(height: 20.d),
       Expanded(
           child: FutureBuilder(
@@ -183,7 +183,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             label: "tribe_donate".l(),
             padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
             onPressed: () async {
-          await services.get<RouteService>().to(Routes.popupTribeDonate);
+          await serviceLocator<RouteService>().to(Routes.popupTribeDonate);
           setState(() {});
         })
       ]),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -46,7 +45,7 @@ class _BuildingWidgetState extends State<BuildingWidget> {
                   var input = controller.findInput<double>('gold');
                   var goldInput = input as SMINumber;
 
-                  var account = context.read<AccountProvider>().account;
+                  var account = serviceLocator<AccountProvider>().account;
                   var x = ((3 * account.bank_account_balance) / widget.building.benefit).round();
                   goldInput.value = x.toDouble();
                 }

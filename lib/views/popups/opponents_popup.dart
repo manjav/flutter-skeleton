@@ -46,13 +46,13 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   _findOpponents() async {
     var deltaTime = _account.getTime() - _fetchAt;
-    var opponentBloc = context.read<OpponentsProvider>();
+    var opponentBloc = serviceLocator<OpponentsProvider>();
     if ((deltaTime > 30 && _requestsCount % 5 == 0) || deltaTime > 120) {
       var data = await rpc(RpcId.getOpponents);
 
       opponentBloc.list = Opponent.fromMap(data, 0);
       if (mounted) {
-        context.read<OpponentsProvider>().update();
+        serviceLocator<OpponentsProvider>().update();
       }
       _fetchAt = _account.getTime();
     }
@@ -301,13 +301,13 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         if (mounted) {
           result["friendsHead"] = accountProvider.account;
           result["oppositesHead"] = opponent;
-          services.get<RouteService>()
+          serviceLocator<RouteService>()
               .to(Routes.liveBattle, args: result);
         }
       } finally {}
       return;
     }
-    services.get<RouteService>()
+    serviceLocator<RouteService>()
         .to(Routes.deck, args: {"opponent": opponent});
   }
 }

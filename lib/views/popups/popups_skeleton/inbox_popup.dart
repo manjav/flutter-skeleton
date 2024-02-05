@@ -20,14 +20,14 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
   }
 
   _loadMessages() async {
-    await getService<Inbox>()
+    await serviceLocator<Inbox>()
         .initialize(args: [context, accountProvider.account]);
     setState(() {});
   }
 
   @override
   contentFactory() {
-    _messages = getService<Inbox>().messages;
+    _messages = serviceLocator<Inbox>().messages;
     var titleStyle = TStyles.small.copyWith(color: TColors.primary30);
     var now = DateTime.now().secondsSinceEpoch;
 

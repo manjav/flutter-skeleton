@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -34,9 +33,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   @override
   void initState() {
     if (waitingSFX.isNotEmpty) {
-      context
-          .read<ServicesProvider>()
-          .get<Sounds>()
+      serviceLocator<Sounds>()
           .play(waitingSFX, channel: "reward");
     }
     super.initState();
@@ -119,8 +116,8 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         startInput?.value = true;
       }
     } else if (state == RewardAnimationState.started) {
-      context.read<ServicesProvider>().get<Sounds>().stop("reward");
-      context.read<ServicesProvider>().get<Sounds>().play(startSFX);
+      serviceLocator<Sounds>().stop("reward");
+      serviceLocator<Sounds>().play(startSFX);
       WidgetsBinding.instance
           .addPostFrameCallback((t) => _progressbarNotifier.value = false);
     } else if (state == RewardAnimationState.closed) {

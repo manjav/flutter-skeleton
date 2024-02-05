@@ -50,7 +50,7 @@ class Player extends Opponent {
   }
 }
 
-class Account extends Player with ServiceFinderMixin, MineMixin {
+class Account extends Player with MineMixin {
   Account() : super.initialize({}, 0);
   static const levelExpo = 2.7;
   static const levelMultiplier = 1.3;
@@ -525,7 +525,7 @@ class Account extends Player with ServiceFinderMixin, MineMixin {
     data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
       if (data["level"] == 5) {
-        getService<Trackers>(context).design("level_5");
+        serviceLocator<Trackers>().design("level_5");
       }
       Timer(const Duration(milliseconds: 100),
           () => Overlays.insert(context, LevelupFeastOverlay(args: data)));

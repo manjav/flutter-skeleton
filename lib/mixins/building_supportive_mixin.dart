@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../app_export.dart';
 
@@ -30,9 +29,7 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
       );
       return;
     }
-    var returnValue = await context
-        .read<ServicesProvider>()
-        .get<RouteService>()
+    var returnValue = await serviceLocator<RouteService>()
         .to(Routes.popupCardSelect, args: {'building': building});
     if (returnValue == null) return;
     var selectedCards = returnValue as List<AccountCard?>;
@@ -47,9 +44,7 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
       RpcParams.type.name: building.type.id
     };
     if (context.mounted) {
-      await context
-          .read<ServicesProvider>()
-          .get<HttpConnection>()
+      await serviceLocator<HttpConnection>()
           .tryRpc(context, RpcId.assignCard, params: params);
     }
     for (var i = 0; i < selectedCards.length; i++) {
@@ -57,11 +52,9 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
     }
 
     if (mounted) {
-      var accountProvider = context.read<AccountProvider>();
+      var accountProvider = serviceLocator<AccountProvider>();
       accountProvider.updateBuilding(building);
-      context
-          .read<ServicesProvider>()
-          .get<Notifications>()
+      serviceLocator<Notifications>()
           .schedule(accountProvider.account.getSchedules());
     }
   }

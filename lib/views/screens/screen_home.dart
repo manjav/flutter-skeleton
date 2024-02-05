@@ -46,9 +46,9 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       var state = services.state;
       if (state.status == ServiceStatus.initialize) {
         if (accountProvider.account.dailyReward.containsKey("day_index")) {
-          services.get<RouteService>().to(Routes.popupDailyGift);
+          serviceLocator<RouteService>().to(Routes.popupDailyGift);
         }
-        getService<NoobSocket>().onReceive.add(_onNoobReceive);
+        serviceLocator<NoobSocket>().onReceive.add(_onNoobReceive);
         setState(() {});
       }
       if (state.status == ServiceStatus.changeTab) {
@@ -68,7 +68,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
         height: 200.d,
         child: LevelIndicator(
             onPressed: () =>
-                services.get<RouteService>().to(Routes.popupProfile)),
+                serviceLocator<RouteService>().to(Routes.popupProfile)),
       )
     ];
   }
@@ -90,7 +90,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
               padding: EdgeInsets.all(16.d),
               child: Asset.load<Image>("ui_settings"),
               onPressed: () =>
-                  services.get<RouteService>().to(Routes.popupSettings))),
+                  serviceLocator<RouteService>().to(Routes.popupSettings))),
       ];
     }
     return super.appBarElementsRight();
@@ -234,8 +234,8 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
 
   void _onNoobReceive(NoobMessage message) async {
     var account = accountProvider.account;
-    var sound = getService<Sounds>();
-    var notifService = getService<EventNotification>();
+    var sound = serviceLocator<Sounds>();
+    var notifService = serviceLocator<EventNotification>();
 
     if (message.type == Noobs.playerStatus) {
       var status = message as NoobStatusMessage;
@@ -259,7 +259,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     }
 
     if (message.type == Noobs.help &&
-        getService<RouteService>().currentRoute == Routes.home) {
+        serviceLocator<RouteService>().currentRoute == Routes.home) {
       var help = message as NoobHelpMessage;
       if (help.ownerTribeId == account.tribeId) {
         sound.play("help");
@@ -327,7 +327,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
 
   @override
   void dispose() {
-    getService<NoobSocket>().onReceive.remove(_onNoobReceive);
+    serviceLocator<NoobSocket>().onReceive.remove(_onNoobReceive);
     super.dispose();
   }
 }

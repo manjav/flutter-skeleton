@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 import '../app_export.dart';
 
 mixin NotifMixin<T extends AbstractScreen> on State<T> {
   onAcceptAttack(NoobRequestBattleMessage request, Account account) async {
     try {
-      var result = await context
-          .read<ServicesProvider>()
-          .get<HttpConnection>()
-          .tryRpc(context, RpcId.battleDefense,
-              params: {"battle_id": request.id, "choice": 1});
+      var result = await serviceLocator<HttpConnection>().tryRpc(
+          context, RpcId.battleDefense,
+          params: {"battle_id": request.id, "choice": 1});
 
       _joinBattle(
           request.id,
@@ -30,11 +27,9 @@ mixin NotifMixin<T extends AbstractScreen> on State<T> {
     getFriend() => help.isAttacker ? attacker : defender;
     getOpposite() => help.isAttacker ? defender : attacker;
 
-    var result = await context
-        .read<ServicesProvider>()
-        .get<HttpConnection>()
-        .tryRpc(context, RpcId.battleJoin,
-            params: {"battle_id": help.id, "mainEnemy": getOpposite().id});
+    var result = await serviceLocator<HttpConnection>().tryRpc(
+        context, RpcId.battleJoin,
+        params: {"battle_id": help.id, "mainEnemy": getOpposite().id});
 
     if (!mounted) return;
     _joinBattle(help.id, getFriend(), getOpposite(), 0, result["created_at"]);
@@ -43,7 +38,7 @@ mixin NotifMixin<T extends AbstractScreen> on State<T> {
   }
 
   _addBattleCard(Account account, result, int attackerId, String side) async {
-    var noobSocket = context.read<ServicesProvider>().get<NoobSocket>();
+    var noobSocket = serviceLocator<NoobSocket>();
 
     await Future.delayed(const Duration(milliseconds: 10));
     for (var element in result[side]) {
@@ -66,9 +61,6 @@ mixin NotifMixin<T extends AbstractScreen> on State<T> {
     if (createAt > 0) {
       args["created_at"] = createAt;
     }
-    context
-        .read<ServicesProvider>()
-        .get<RouteService>()
-        .to(Routes.liveBattle, args: args);
+    serviceLocator<RouteService>().to(Routes.liveBattle, args: args);
   }
 }
