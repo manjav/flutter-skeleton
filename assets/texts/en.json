@@ -285,6 +285,9 @@
     "tribe_invite_description": "You can invite players that you think are suitable to your tribe. Once they accept your invitation they will be automatically added to your tribe.",
     "tribe_donate_description": "You can give some of your own gold to the tribe in order to purchase a building sooner.",
     "tribe_poke_success": "You successfully poked your fellow tribe member.",
+    "tribe_promote_success": "Player has been promoted.",
+    "tribe_demoted_success": "Player has been demoted.",
+    "tribe_kiked_success": "Player has been kicked.",
     "chat_pin": "Pin",
     "chat_reply": "Reply",
     "auction_bid": "Last Bid:",
@@ -400,6 +403,9 @@
     "achievement_13_title": "Instagram",
     "achievement_13_message": "You've visited the Fruitcraft Instagram page and shown your support.",
     "achievement_13_0": "Instagram Fan",
+    "event_attack":"Attacked you now!",
+    "event_help":"Requested for help!",
+    "event_bid":"has bid on one of your cards!",
     "daily_gifts": "Daily Gifts",
     "daily_gift_message": "General, We'll never forget the first day that you helped us.",
     "day_l": "Day %s",
@@ -695,5 +701,9 @@
     "notif_weekend_head": "Have a nice weekend",
     "notif_weekend_body": "Forget all the troubles and play the game to relax!✌️",
     "notif_sleep_head": "Can't Sleep?",
-    "notif_sleep_body": "Playing a casual game can make you fall asleep faster.💤"
+    "notif_sleep_body": "Playing a casual game can make you fall asleep faster.💤",
+    "notif_mine_collectable_head": "mine!",
+    "notif_mine_collectable_body": "Your mine is collectable!",
+    "notif_mine_full_head": "mine!",
+    "notif_mine_full_body": "Your Mine is Full!"
 }

@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fruitcraft/mixins/mine_mixin.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
-
 
 class BuildingBalloon extends StatefulWidget {
   final Building building;
@@ -16,7 +16,7 @@ class BuildingBalloon extends StatefulWidget {
 }
 
 class _BuildingBalloonState extends State<BuildingBalloon>
-    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
+    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin,MineMixin {
   @override
   Widget build(BuildContext context) {
     return Consumer<AccountProvider>(builder: (_, state, child) {
@@ -45,17 +45,9 @@ class _BuildingBalloonState extends State<BuildingBalloon>
       if (result is List) return;
       if (mounted) {
         accountProvider.update(context, result);
+        getService<Notifications>()
+            .schedule(accountProvider.account.getSchedules());
       }
     } finally {}
   }
-
-  int collectableGold(Account account) {
-    var goldPerSec = widget.building.getCardsBenefit(account) / 3600;
-    return ((account.getTime() - account.last_gold_collect_at) * goldPerSec)
-        .clamp(0, widget.building.benefit)
-        .floor();
-  }
-
-  bool isCollectable(Account account) =>
-      account.getTime() >= account.gold_collection_allowed_at;
 }

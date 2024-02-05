@@ -57,7 +57,12 @@ mixin SupportiveBuildingPopupMixin<T extends AbstractPopup> on State<T> {
     }
 
     if (mounted) {
-      context.read<AccountProvider>().updateBuilding(building);
+      var accountProvider = context.read<AccountProvider>();
+      accountProvider.updateBuilding(building);
+      context
+          .read<ServicesProvider>()
+          .get<Notifications>()
+          .schedule(accountProvider.account.getSchedules());
     }
   }
 }
