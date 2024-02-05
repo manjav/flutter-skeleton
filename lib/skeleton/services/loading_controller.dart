@@ -1,24 +1,22 @@
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
-class LoadingController extends GetxController with ServiceFinderMixin {
+class LoadingController extends GetxController {
   @override
   Future<void> onReady() async {
     super.onReady();
+    var services = serviceLocator<ServicesProvider>();
+    var accountProvider = serviceLocator<AccountProvider>();
 
     var context = Get.context!;
-
-    var services = getServices(context);
-    var accountProvider = context.read<AccountProvider>();
 
     Overlays.insert(
       Get.overlayContext!,
       const LoadingOverlay(),
     );
 
-    var route = RouteService();
+    var route = serviceLocator<RouteService>();
     route.pages = [
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(page: DeckScreen(), route: Routes.deck, isOpaque: true),
@@ -131,7 +129,7 @@ class LoadingController extends GetxController with ServiceFinderMixin {
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const HeroPopup(1),
+        page: const HeroPopup(),
         route: Routes.popupHero,
         isOpaque: false,
         type: RouteType.popup,
@@ -143,7 +141,7 @@ class LoadingController extends GetxController with ServiceFinderMixin {
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const ProfilePopup(-1),
+        page: const ProfilePopup(),
         route: Routes.popupProfile,
         isOpaque: false,
         type: RouteType.popup,
@@ -227,71 +225,48 @@ class LoadingController extends GetxController with ServiceFinderMixin {
         type: RouteType.popup,
       ),
     ];
-    services.addService(route);
 
-    var deviceInfo = DeviceInfo();
-    deviceInfo.initialize();
-    services.addService(deviceInfo);
+    serviceLocator<DeviceInfo>().initialize();
 
-    var themes = Themes();
-    themes.initialize();
-    services.addService(themes);
+    serviceLocator<Themes>().initialize();
 
-    var localization = Localization();
-    await localization.initialize(args: [context]);
-    services.addService(localization);
+    await serviceLocator<Localization>().initialize(args: [Get.context!]);
 
-    var trackers = Trackers();
-    await trackers.initialize();
-    services.addService(trackers);
+    var trackers = await serviceLocator<Trackers>().initialize();
 
-    var sounds = Sounds();
+    var sounds = serviceLocator<Sounds>();
     sounds.initialize();
     sounds.playMusic();
-    services.addService(sounds);
 
-    var eventNotification=EventNotification();
-    eventNotification.initialize();
-    services.addService(eventNotification);
+    serviceLocator<EventNotification>().initialize();
 
     try {
-      var httpConnection = HttpConnection();
+      var httpConnection = serviceLocator<HttpConnection>();
       var data = await httpConnection.initialize() as LoadingData;
-      services.addService(httpConnection);
 
       trackers.sendUserData("${data.account.id}", data.account.name);
 
       if (context.mounted) {
         accountProvider.initialize(data.account);
 
-        var noobSocket = NoobSocket();
+        var noobSocket = serviceLocator<NoobSocket>();
         noobSocket.initialize(
-            args: [accountProvider, context.read<OpponentsProvider>()]);
-        services.addService(noobSocket);
+            args: [accountProvider, serviceLocator<OpponentsProvider>()]);
 
         services.changeState(ServiceStatus.initialize);
 
-        var inbox = Inbox();
-        inbox.initialize(args: [context,data.account]);
-        services.addService(inbox);
+        serviceLocator<Inbox>().initialize(args: [context, data.account]);
 
-        var notifications = Notifications();
-        notifications.initialize(
+        serviceLocator<Notifications>().initialize(
             args: ["${data.account.id}", data.account.getSchedules()]);
-        services.addService(notifications);
       }
 
-      var games = Games();
-      games.initialize();
-      services.addService(games);
+      serviceLocator<Games>().initialize();
 
-      var ads = Ads();
-      ads.initialize();
+      var ads = serviceLocator<Ads>().initialize();
       ads.onUpdate = _onAdsServicesUpdate;
-      services.addService(ads);
 
       services.changeState(ServiceStatus.complete);
-      
     } on SkeletonException catch (e) {
       if (context.mounted) {
         services.changeState(ServiceStatus.error, exception: e);
@@ -300,7 +275,7 @@ class LoadingController extends GetxController with ServiceFinderMixin {
   }
 
   _onAdsServicesUpdate(Placement? placement) {
-    var sounds = getService<Sounds>(Get.context!);
+    var sounds = serviceLocator<Sounds>();
     if (Pref.music.getBool()) {
       if (placement!.state == AdState.show) {
         sounds.stopAll();
