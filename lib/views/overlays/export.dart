@@ -1,5 +1,6 @@
 export 'chat_options_overlay.dart';
 export 'feast_attack_overlay.dart';
+export 'feast_daily_reward_overlay.dart';
 export 'feast_enhance_overlay.dart';
 export 'feast_evolve_overlay.dart';
 export 'feast_levelup_overlay.dart';

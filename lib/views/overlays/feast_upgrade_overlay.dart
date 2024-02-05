@@ -39,8 +39,11 @@ class _UpgradeFeastOverlayState
       animationBuilder("upgrade"),
       _buildingWidget()
     ];
-    process(() async =>
-        await accountProvider.upgrade(context, _building, tribe: tribe));
+    process(() async {
+      await accountProvider.upgrade(context, _building, tribe: tribe);
+      getService<Notifications>()
+          .schedule(accountProvider.account.getSchedules());
+    });
   }
 
   @override

@@ -107,7 +107,8 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
         RpcParams.tribe_id.name: accountProvider.account.tribe!.id,
         RpcParams.member_id.name: widget.member.id,
       });
-      if (id == RpcId.tribePoke) toast("tribe_poke_success".l());
+      //show toast for promoted, demoted, kick and poke
+      if (id != RpcId.tribeLeave) toast("tribe_${id.name}_success".l());
       if (mounted && id == RpcId.tribeLeave) {
         accountProvider.installTribe(null);
         Navigator.pop(context);

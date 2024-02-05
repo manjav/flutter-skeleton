@@ -1,4 +1,3 @@
-
 import 'export.dart';
 
 class LoadingData {
@@ -40,7 +39,8 @@ class LoadingData {
             'treasury': 5,
             'popupOpponents': 9,
             'tribeChange': 150,
-          }
+          },
+          'mineBallonActiveRatio': 0.1
         };
   }
 }
