@@ -1,4 +1,3 @@
-import 'package:fruitcraft/services/event_notification.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 

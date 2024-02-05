@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -94,7 +93,7 @@ class HttpConnection extends IService {
       result = await rpc(id, params: params);
     } on SkeletonException catch (e) {
       if (context.mounted) {
-        await context.read<ServicesProvider>().get<RouteService>().to(
+        await serviceLocator<RouteService>().to(
           Routes.popupMessage,
           args: {"title": "Error", "message": "error_${e.statusCode}".l()},
         );

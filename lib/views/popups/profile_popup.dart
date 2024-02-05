@@ -100,8 +100,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                 child: LevelIndicator(
                     showLevel: false,
                     avatarId: _player!.avatarId,
-                    onPressed: () => services
-                        .get<RouteService>()
+                    onPressed: () => serviceLocator<RouteService>()
                         .to(Routes.popupProfileAvatars))),
             PositionedDirectional(
                 top: 10.d,
@@ -130,8 +129,7 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                         padding: EdgeInsets.fromLTRB(16.d, 10.d, 16.d, 24.d),
                         color: ButtonColor.wooden,
                         child: Asset.load<Image>("tribe_edit"),
-                        onPressed: () => services
-                            .get<RouteService>()
+                        onPressed: () => serviceLocator<RouteService>()
                             .to(Routes.popupProfileEdit)))
                 : const SizedBox(),
             Positioned(

@@ -194,8 +194,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
                 await Future.delayed(const Duration(milliseconds: 50));
                 // Close if mergeable cards not available
                 if (mounted && cards.length < 2) {
-                  services
-                      .get<RouteService>()
+                  serviceLocator<RouteService>()
                       .popUntil((route) => route.isFirst);
                   return;
                 }

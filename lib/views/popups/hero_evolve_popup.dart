@@ -109,7 +109,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
 
   void _fill(Account account, HeroCard hero, int step) {
     if (account.potion < step) {
-      services.get<RouteService>().to(Routes.popupPotion);
+      serviceLocator<RouteService>().to(Routes.popupPotion);
     } else {
       hero.fillPotion(context, step);
     }
@@ -123,7 +123,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
       ),
     );
     if (mounted) {
-      services.get<RouteService>().popUntil((route) => route.isFirst);
+      serviceLocator<RouteService>().popUntil((route) => route.isFirst);
     }
   }
 }

@@ -41,7 +41,7 @@ class _UpgradeFeastOverlayState
     ];
     process(() async {
       await accountProvider.upgrade(context, _building, tribe: tribe);
-      getService<Notifications>()
+      serviceLocator<Notifications>()
           .schedule(accountProvider.account.getSchedules());
     });
   }

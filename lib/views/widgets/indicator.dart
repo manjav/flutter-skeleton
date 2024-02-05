@@ -54,14 +54,13 @@ class _IndicatorState extends State<Indicator>
               switch (widget.type) {
                 case Values.gold:
                 case Values.nectar:
-                  services
-                      .get<RouteService>()
+                  serviceLocator<RouteService>()
                       .popUntil((route) => route.isFirst);
                   services.changeState(ServiceStatus.changeTab, data: 0);
                   log("Go to shop");
                   break;
                 case Values.potion:
-                  services.get<RouteService>().to(Routes.popupPotion);
+                  serviceLocator<RouteService>().to(Routes.popupPotion);
                   break;
                 default:
                   break;

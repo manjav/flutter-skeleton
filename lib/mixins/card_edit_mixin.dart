@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../app_export.dart';
 
@@ -15,7 +14,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
   @override
   void initState() {
     card = widget.args['card'];
-    account = context.read<AccountProvider>().account;
+    account = serviceLocator<AccountProvider>().account;
     cards = getCards(account);
     super.initState();
   }
@@ -117,7 +116,7 @@ mixin CardEditMixin<T extends AbstractPopup> on State<T> {
     for (var card in selectedCards.value) {
       account.cards.remove(card!.id);
     }
-    context.read<AccountProvider>().update(context, data);
+    serviceLocator<AccountProvider>().update(context, data);
   }
 
   GlobalKey getGlobalKey(int key) =>

@@ -79,7 +79,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
       ]));
       return;
     }
-    var result = await getService<HttpConnection>().tryRpc(
+    var result = await serviceLocator<HttpConnection>().tryRpc(
         context, RpcId.setProfileInfo,
         params: {"name": _textController.text});
     if (result["name_changed"]) {
@@ -101,7 +101,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
       padding: EdgeInsets.all(20.d),
       child: LoaderWidget(AssetType.image, "mood_$id", subFolder: "moods"),
       onPressed: () async {
-        await getService<HttpConnection>()
+        await serviceLocator<HttpConnection>()
             .tryRpc(context, RpcId.setProfileInfo, params: {"mood_id": id});
         setState(() => account.moodId = id);
         accountProvider.update();

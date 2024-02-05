@@ -32,7 +32,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               label: "tribe_new".l(),
               width: 380.d,
               onPressed: () async {
-                await services.get<RouteService>().to(Routes.popupTribeEdit);
+                await serviceLocator<RouteService>().to(Routes.popupTribeEdit);
                 setState(() {});
               }),
           SizedBox(height: 200.d),
@@ -74,8 +74,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       Widgets.button(
         context,
         onPressed: () async {
-          await services
-              .get<RouteService>()
+          await serviceLocator<RouteService>()
               .to(Routes.popupTribeOptions, args: {"index": 0});
           setState(() {});
         },
@@ -145,7 +144,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           ]),
         ]),
         onPressed: () async {
-          await services.get<RouteService>().to(Routes.popupTribeEdit);
+          await serviceLocator<RouteService>().to(Routes.popupTribeEdit);
           setState(() {});
         },
       ),
@@ -224,8 +223,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
               SkinnedText(label.convert()),
             ]),
         onPressed: () async {
-          await services
-              .get<RouteService>()
+          await serviceLocator<RouteService>()
               .to(Routes.popupTribeOptions, args: {"index": 1});
           setState(() {});
         });
@@ -261,7 +259,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
     var now = DateTime.now().secondsSinceEpoch;
 
     // Initialize inbox
-    getService<Inbox>().initialize(args: [context, account]);
+    serviceLocator<Inbox>().initialize(args: [context, account]);
 
     return ValueListenableBuilder<List<NoobChatMessage>>(
         valueListenable: account.tribe!.chat,
@@ -356,7 +354,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         decoration:
             Widgets.imageDecorator("ui_popup_group", ImageCenterSliceData(144)),
         child: Column(
-            crossAxisAlignment: getService<Localization>().columnAlign,
+            crossAxisAlignment: serviceLocator<Localization>().columnAlign,
             children: [
               Text(message.text),
               SizedBox(height: 16.d),

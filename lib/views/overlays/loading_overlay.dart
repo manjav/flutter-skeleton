@@ -136,8 +136,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
     if (exception!.statusCode == StatusCode.C154_INVALID_RESTORE_KEY.value ||
         exception.statusCode == StatusCode.C702_UPDATE_TEST.value) {
       close();
-      services
-          .get<RouteService>()
+      serviceLocator<RouteService>()
           .to(Routes.popupRestore, args: {"onlySet": true});
     } else if (isUpdateError) {
       _update(isForceUpdate);

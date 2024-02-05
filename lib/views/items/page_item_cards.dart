@@ -41,7 +41,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
             child: SkinnedButton(
                 icon: "icon_collection",
                 onPressed: () =>
-                    services.get<RouteService>().to(Routes.popupCollection))),
+                    serviceLocator<RouteService>().to(Routes.popupCollection))),
         PositionedDirectional(
             top: paddingTop,
             width: 132.d,
@@ -60,7 +60,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                               .l(["popupcombo".l(), levels["combo"]]),
                         ));
                   } else {
-                    services.get<RouteService>().to(Routes.popupCombo);
+                    serviceLocator<RouteService>().to(Routes.popupCombo);
                   }
                 }))
       ]);
@@ -71,8 +71,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.touchable(
       context,
-      onTap: () => services
-          .get<RouteService>()
+      onTap: () => serviceLocator<RouteService>()
           .to(Routes.popupCardDetails, args: {'card': card}),
       child: CardItem(card,
           size: itemSize,
