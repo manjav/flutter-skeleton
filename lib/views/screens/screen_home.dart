@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fruitcraft/mixins/notif_mixin.dart';
-import 'package:fruitcraft/services/event_notification.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';

@@ -31,6 +31,7 @@ dependencies:
   gameanalytics_sdk: ^1.2.7
   games_services: ^4.0.0
   get: ^4.6.6
+  get_it:
   # google_mobile_ads: ^3.1.0
   http: ^1.1.0
   in_app_purchase: ^3.1.8
