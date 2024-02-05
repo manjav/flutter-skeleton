@@ -6,3 +6,4 @@ export 'indicator_deadline.dart';
 export 'indicator_level.dart';
 export 'live_battle/export.dart';
 export 'notif.dart';
+export 'online_status.dart';
