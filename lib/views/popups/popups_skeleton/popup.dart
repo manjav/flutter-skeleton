@@ -28,7 +28,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   @override
   void initState() {
-    getService<Sounds>().play("popup");
+    serviceLocator<Sounds>().play("popup");
     canPop = widget.args["canPop"] ?? true;
     barrierDismissible = widget.args["barrierDismissible"] ?? true;
     super.initState();

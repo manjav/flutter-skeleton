@@ -113,8 +113,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
           if (Platform.isAndroid) {
-            var result = await services
-                .get<RouteService>()
+            var result = await serviceLocator<RouteService>()
                 .to(Routes.popupMessage, args: {
               "title": "quit_title".l(),
               "message": "quit_message".l(),
