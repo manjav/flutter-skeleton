@@ -11,6 +11,14 @@ class HeroEvolvePopup extends AbstractPopup {
 }
 
 class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
+  late AccountCard _card;
+
+  @override
+  void initState() {
+    _card = widget.args['card'] as AccountCard;
+    super.initState();
+  }
+
   @override
   List<Widget> appBarElements() {
     return [
@@ -26,7 +34,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
   @override
   Widget contentFactory() {
     return Consumer<AccountProvider>(builder: (_, state, child) {
-      var hero = state.account.heroes[(widget.args['card'] as AccountCard).id]!;
+      var hero = state.account.heroes[_card.id]!;
       var capacity = hero.card.base.potionLimit;
       return SizedBox(
           width: 960.d,
