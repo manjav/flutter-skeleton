@@ -4,7 +4,7 @@ class Routes {
   static const questOut = "/questOut";
   static const battleOut = "/battleOut";
   static const liveBattleOut = "/liveBattleOut";
-  static const home = "/home";
+  static const home = "/";
   static const liveBattle = "/liveBattle";
 
   static const popupNone = "/popupNone";

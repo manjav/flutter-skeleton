@@ -17,7 +17,6 @@ class EventNotification extends IService {
       message: data,
       bottom: 400.d,
       onClose: () {
-        key.currentState?.remove();
         notifications.remove(key);
         _animateNotifications();
       },

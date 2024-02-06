@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
+// ignore: implementation_imports
+import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../app_export.dart';
 
@@ -38,7 +41,8 @@ class CardItem extends StatefulWidget {
         key: key, subFolder: "cards", width: size);
   }
 
-  static getHeroAnimation(AbstractCard card, double size, {Key? key}) {
+  static getHeroAnimation(AbstractCard card, double size,
+      {Key? key, Function(StateMachineController)? onInitController}) {
     var hero = card.account.heroes[card.id];
     var items = <String, HeroItem>{};
     if (hero != null) {
@@ -61,8 +65,23 @@ class CardItem extends StatefulWidget {
             item.value.base.id.toDouble();
       }
       artboard.addController(controller);
-    }, key: key);
+      if (onInitController != null) onInitController(controller);
+    }, riveAssetLoader: _onRiveAssetLoad, key: key);
   }
+}
+
+Future<bool> _onRiveAssetLoad(FileAsset asset, Uint8List? embeddedBytes) async {
+  if (asset is FontAsset) {
+    _loadFont(asset);
+    return true;
+  }
+  return false; // load the default embedded asset
+}
+
+Future<void> _loadFont(FontAsset asset) async {
+  var bytes = await rootBundle.load('assets/fonts/${asset.name}');
+  var font = await FontAsset.parseBytes(bytes.buffer.asUint8List());
+  asset.font = font;
 }
 
 class _CardItemState extends State<CardItem> {

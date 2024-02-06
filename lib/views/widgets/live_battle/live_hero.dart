@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 
 import '../../../app_export.dart';
 
@@ -11,10 +12,10 @@ class LiveHero extends StatefulWidget {
       {super.key});
 
   @override
-  State<LiveHero> createState() => _LiveHeroState();
+  State<LiveHero> createState() => LiveHeroState();
 }
 
-class _LiveHeroState extends State<LiveHero>
+class LiveHeroState extends State<LiveHero>
     with
         KeyProvider,
         TickerProviderStateMixin,
@@ -22,6 +23,7 @@ class _LiveHeroState extends State<LiveHero>
         ClassFinderWidgetMixin {
   final List<bool> _enables = [true, true, true, true];
   late AnimationController _animationController;
+  StateMachineController? stateMachineController;
 
   @override
   void initState() {
@@ -53,7 +55,9 @@ class _LiveHeroState extends State<LiveHero>
               children: [
                 SizedBox(height: 360.d),
                 CardItem.getHeroAnimation(hero, 320.d,
-                    key: getGlobalKey(hero.id)),
+                    key: getGlobalKey(hero.id), onInitController: (controller) {
+                  stateMachineController = controller;
+                }),
                 Positioned(
                   bottom: 0,
                   child: Row(

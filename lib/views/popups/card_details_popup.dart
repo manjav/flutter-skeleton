@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -40,8 +41,11 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 SizedBox(
                     width: 500.d,
-                    child: CardItem(_card,
-                        size: 500.d, heroTag: "hero_${_card.id}")),
+                    child:
+                        Consumer<AccountProvider>(builder: (_, state, child) {
+                      return CardItem(_card,
+                          size: 500.d, heroTag: "hero_${_card.id}");
+                    })),
                 SizedBox(height: 70.d),
                 Text("${_name}_description".l(),
                     style: TStyles.mediumInvert.copyWith(height: 2.7.d)),
