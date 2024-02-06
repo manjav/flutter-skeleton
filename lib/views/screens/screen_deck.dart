@@ -42,6 +42,26 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return Consumer<AccountProvider>(builder: (_, state, child) {
       var cards = state.account.getReadyCards();
+      cards.sort((a, b) {
+        int x = 1, y = 1;
+
+        var aCoolDown = a.getRemainingCooldown();
+        var bCoolDown = b.getRemainingCooldown();
+
+        if (a.base.isHero && aCoolDown == 0) x += 2;
+        if (b.base.isHero && bCoolDown == 0) y += 2;
+
+        if (aCoolDown > 0) x -= 3;
+        if (bCoolDown > 0) y -= 3;
+
+        if (a.power > b.power) {
+          x++;
+        } else {
+          y++;
+        }
+        return y - x;
+      });
+
       _opponent = widget.args["opponent"] ??
           Opponent.initialize({
             "name": "enemy_l".l(),
