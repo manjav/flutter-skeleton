@@ -7,7 +7,7 @@ import '../../app_export.dart';
 class HeroPopup extends AbstractPopup {
   const HeroPopup({super.key}) : super(Routes.popupHero);
 
-  int get selectedHero => args["id"];
+  int get selectedHero => args["card"];
 
   @override
   createState() => _HeroPopupState();
