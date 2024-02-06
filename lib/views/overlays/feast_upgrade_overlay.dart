@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -18,6 +19,7 @@ class _UpgradeFeastOverlayState
   late int _buildingId;
   late Building _building;
   late AnimationController _animationController;
+  RxBool ready = false.obs;
   get _postFix {
     return switch (_building.type) {
       Buildings.tribe => "ˡ",
@@ -43,6 +45,8 @@ class _UpgradeFeastOverlayState
       await accountProvider.upgrade(context, _building, tribe: tribe);
       serviceLocator<Notifications>()
           .schedule(accountProvider.account.getSchedules());
+      ready.value = !ready.value;
+      return true;
     });
   }
 
@@ -74,7 +78,11 @@ class _UpgradeFeastOverlayState
             animation: _animationController,
             builder: (context, child) => Transform.scale(
                 scale: _animationController.value,
-                child: BuildingWidget(_building))));
+                child: StreamBuilder<bool>(
+                    stream: ready.stream,
+                    builder: (context, snapshot) {
+                      return BuildingWidget(_building,key: GlobalKey(),);
+                    }))));
   }
 
   void _updateTexts() {
