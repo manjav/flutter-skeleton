@@ -69,12 +69,6 @@ class NotifState extends State<Notif> with SingleTickerProviderStateMixin {
     });
   }
 
-  remove() {
-    setState(() {
-      size = -200;
-    });
-  }
-
   hide() {
     setState(() {
       isMinimize.value = true;
