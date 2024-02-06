@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
 
@@ -111,6 +112,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     }
   }
 
+  GlobalKey heroKey = GlobalKey();
+
   @override
   Widget contentFactory() {
     var myCards = _warriors[_account.id]!.cards;
@@ -135,7 +138,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             LiveSlot(1, -0.26, 0.07, -0.07, _slotState, myCards),
             LiveSlot(2, 0.26, 0.07, 0.07, _slotState, myCards),
             LiveSlot(3, 0.75, 0.10, 0.20, _slotState, myCards),
-            LiveHero(_battleId, -0.45, oppositesHeadCards),
+            LiveHero(_battleId, -0.45, oppositesHeadCards, key: heroKey),
             LiveHero(_battleId, 0.35, myCards),
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
             LiveTribe(
@@ -309,6 +312,23 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         var card = _warriors[message.ownerId]!.cards.value[index]!;
         if (message.ability == Abilities.power) {
           card.power += entry.value;
+          var state = heroKey.currentState! as LiveHeroState;
+          var controller = state.stateMachineController;
+          if (controller != null) {
+            var powerTrigger =
+                controller.findInput<bool>("benefitPower") as SMITrigger;
+
+            controller.artboard!.component<TextValueRun>("PowerText")?.text =
+                entry.value.toString();
+            controller.artboard!
+                .component<TextValueRun>("PowerText_stroke")
+                ?.text = entry.value.toString();
+            controller.artboard!
+                .component<TextValueRun>("PowerText_shadow")
+                ?.text = entry.value.toString();
+            powerTrigger.value = !powerTrigger.value;
+            powerTrigger.fire();
+          }
         } else {
           card.lastUsedAt = entry.value;
           _account.cards[card.id]?.lastUsedAt = card.lastUsedAt;
