@@ -87,8 +87,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
     return Widgets.rect(
       margin: chromeMargin,
       padding: EdgeInsets.symmetric(horizontal: 24.d),
-      decoration: Widgets.imageDecorator(
-          "popup_chrome", ImageCenterSliceData(410, 460)),
+      decoration: chromeSkinBuilder,
       child:
           Stack(alignment: Alignment.topCenter, fit: StackFit.loose, children: [
         innerChromeFactory(),
@@ -98,6 +97,9 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
       ]),
     );
   }
+
+  BoxDecoration get chromeSkinBuilder =>
+      Widgets.imageDecorator("popup_chrome", ImageCenterSliceData(410, 460));
 
   Widget contentFactory() => Widgets.rect(
       height: 480.d, width: 880.d, color: TColors.green.withAlpha(133));
