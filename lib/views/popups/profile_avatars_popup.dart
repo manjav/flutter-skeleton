@@ -23,21 +23,38 @@ class _ProfileAvatarsPopupState
 
   @override
   Widget contentFactory() {
+    return SizedBox(
+      height: 800.d,
+      child: CustomScrollView(
+        shrinkWrap: true,
+        slivers: [
+          ..._renderSet(0, 21),
+          ..._renderSet(101, 109),
+          ..._renderSet(109, 223),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _renderSet(int start, int end) {
     var account = accountProvider.account;
-    return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // SkinnedText("profile_mood_title".l()),
-          // SizedBox(height: 20.d),
-          SizedBox(
-              height: 700.d,
-              child: GridView.builder(
-                  itemCount: 20,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5),
-                  itemBuilder: (c, i) => _avatarItemBuilder(account, i))),
-        ]);
+    var res = <Widget>[];
+    res.add(SliverList(
+      delegate: SliverChildListDelegate.fixed(
+        [
+          SizedBox(height: start > 0 ? 20.d : 0),
+          SkinnedText("profile_mood_title".l()),
+          SizedBox(height: 20.d),
+        ],
+      ),
+    ));
+    res.add(SliverGrid.builder(
+      itemCount: end - start,
+      gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+      itemBuilder: (c, i) => _avatarItemBuilder(account, start + i),
+    ));
+    return res;
   }
 
   Widget? _avatarItemBuilder(Account account, int index) {
