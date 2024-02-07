@@ -32,28 +32,31 @@ class LoadingController extends GetxController {
     // await trackers.initialize();
     // services.addService(trackers);
 
-    await await serviceLocator<HttpConnection>().initialize();
-
-    services.changeState(ServiceStatus.initialize);
-
-    // var notifications = Notifications();
-    // notifications.initialize(args: ["", <String, int>{}]);
-    // serviceProvider.addService(notifications);
-
-    // var games = Games();
-    // games.initialize();
-    // services.addService(games);
-
-    // var ads = Ads();
-    // ads.initialize();
-    // ads.onUpdate = _onAdsServicesUpdate;
-    // services.addService(ads);
-
     var sounds = serviceLocator<Sounds>();
     sounds.initialize();
-    sounds.playMusic();
 
-    services.changeState(ServiceStatus.complete);
+    try {
+      await await serviceLocator<HttpConnection>().initialize();
+
+      services.changeState(ServiceStatus.initialize);
+
+      // var notifications = Notifications();
+      // notifications.initialize(args: ["", <String, int>{}]);
+      // serviceProvider.addService(notifications);
+
+      // var games = Games();
+      // games.initialize();
+      // services.addService(games);
+
+      // var ads = Ads();
+      // ads.initialize();
+      // ads.onUpdate = _onAdsServicesUpdate;
+      // services.addService(ads);
+
+      services.changeState(ServiceStatus.complete);
+    } on SkeletonException catch (e) {
+      services.changeState(ServiceStatus.error, exception: e);
+    }
   }
 
   /* _onAdsServicesUpdate(Placement? placement) {
