@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lingai/views/avatar.dart';
 
 import '../../app_export.dart';
 

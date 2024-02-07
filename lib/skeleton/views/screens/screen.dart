@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../app_export.dart';
+import '../../../app_export.dart';
 
 class AbstractScreen extends StatefulWidget {
   final String route;

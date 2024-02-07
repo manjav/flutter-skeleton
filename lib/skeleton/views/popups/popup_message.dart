@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+
 import '../../export.dart';
-import '../../../skeleton/export.dart';
 
 class MessagePopup extends AbstractPopup {
   //todo: check routes here
