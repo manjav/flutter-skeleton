@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fruitcraft/mixins/notif_mixin.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
-import '../../app_export.dart';
+import '../../../app_export.dart';
+
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key})
