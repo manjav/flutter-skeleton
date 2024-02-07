@@ -51,6 +51,8 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
       var data = await rpc(RpcId.getOpponents);
 
       opponentBloc.list = Opponent.fromMap(data, 0);
+      opponentBloc.list
+          .insert(0, Opponent.create(8169489, "تست خونگی")..status = 1);
       if (mounted) {
         serviceLocator<OpponentsProvider>().update();
       }
@@ -288,26 +290,30 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   void _attack() async {
-    if (_selectedOpponent.value.status == 2) {
-      toast("error_139".l());
-      return;
-    }
+    // if (_selectedOpponent.value.status == 2) {
+    //   toast("error_139".l());
+    //   return;
+    // }
     var opponent = _selectedOpponent.value;
-    opponent.increaseAttacksCount();
-    if (_selectedOpponent.value.status == 1) {
-      try {
-        var result = await rpc(RpcId.battleLive,
-            params: {RpcParams.opponent_id.name: opponent.id});
-        if (mounted) {
-          result["friendsHead"] = accountProvider.account;
-          result["oppositesHead"] = opponent;
-          serviceLocator<RouteService>()
-              .to(Routes.liveBattle, args: result);
-        }
-      } finally {}
-      return;
-    }
-    serviceLocator<RouteService>()
-        .to(Routes.deck, args: {"opponent": opponent});
+    var result = <String, dynamic>{};
+    result["friendsHead"] = accountProvider.account;
+    result["oppositesHead"] = opponent;
+    serviceLocator<RouteService>().to(Routes.liveBattle, args: result);
+
+    // opponent.increaseAttacksCount();
+    // if (_selectedOpponent.value.status == 1) {
+    //   try {
+    //     var result = await rpc(RpcId.battleLive,
+    //         params: {RpcParams.opponent_id.name: opponent.id});
+    //     if (mounted) {
+    //       result["friendsHead"] = accountProvider.account;
+    //       result["oppositesHead"] = opponent;
+    //       serviceLocator<RouteService>().to(Routes.liveBattle, args: result);
+    //     }
+    //   } finally {}
+    //   return;
+    // }
+    // serviceLocator<RouteService>()
+    //     .to(Routes.deck, args: {"opponent": opponent});
   }
 }
