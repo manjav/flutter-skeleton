@@ -16,7 +16,7 @@ class SkinnedText extends StatelessWidget {
     this.text, {
     super.key,
     this.style,
-    this.strokeColor = TColors.primary10,
+    this.strokeColor = TColors.primary,
     this.textAlign,
     this.strokeWidth,
     this.alignment = Alignment.center,
@@ -27,7 +27,7 @@ class SkinnedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var style = this.style ?? TStyles.medium;
+    var style = this.style ?? TStyles.mediumInvert;
     return Stack(alignment: alignment, children: [
       // Positioned.fill(child: Widgets.rect(color: TColors.green.withAlpha(31))),
       Text(text,
@@ -45,11 +45,7 @@ class SkinnedText extends StatelessWidget {
           overflow: overflow,
           textAlign: textAlign,
           textDirection: textDirection,
-          style: style.copyWith(
-            color: style.color == TColors.primary10
-                ? TColors.primary
-                : style.color,
-          )),
+          style: style),
     ]);
   }
 

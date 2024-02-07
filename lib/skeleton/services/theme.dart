@@ -10,13 +10,17 @@ class TColors {
   static const cream = Color(0xFFF6E5D0);
   static const clay = Color(0xFFD29774);
   static const cyan = Color(0xFF3FC1B9);
-  static const primary = Color(0xFFFFF8EE);
-  static const primary90 = Color(0xFFF8E5D3);
-  static const primary80 = Color(0xFFF3D0BA);
-  static const primary70 = Color(0xFFE5B99F);
-  static const primary30 = Color(0xFF88624B);
-  static const primary20 = Color(0xFF77513A);
-  static const primary10 = Color(0xFF66432E);
+  static const primary = Color(0xFF19212A);
+  static const primary90 = Color(0xFF223140);
+  static const primary80 = Color(0xFF2E4154);
+  static const primary70 = Color(0xFF3C5167);
+  static const primary60 = Color(0xFF4E637C);
+  static const primary50 = Color(0xFF617791);
+  static const primary40 = Color(0xFF7A8FA9);
+  static const primary30 = Color(0xFF92A6C0);
+  static const primary20 = Color(0xFFADBFD6);
+  static const primary10 = Color(0xFFCDD9EA);
+  static const primary0 = Color(0xFFEEF5FF);
   static const gray = Color(0xFFA4A4A4);
   static const green = Color(0xFF82EE24);
   static const orange = Color(0xFFFF8B21);
@@ -47,7 +51,7 @@ extension Autosize on TextStyle {
 TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   return TextStyle(
     fontSize: size,
-    color: color ?? TColors.primary10,
+    color: color ?? TColors.primary70,
     fontWeight: weight ?? FontWeight.bold,
     fontFamily: "primary_font",
   );
@@ -64,13 +68,13 @@ class Themes extends IService {
     TStyles.large = _style(size: 52.d, weight: FontWeight.w800);
     TStyles.big = _style(size: 72.d, weight: FontWeight.w900);
     TStyles.tinyInvert =
-        _style(size: 22.d, weight: FontWeight.w100, color: TColors.primary90);
-    TStyles.smallInvert = _style(
-        size: 30.4.d, weight: FontWeight.normal, color: TColors.primary90);
+        _style(size: 22.d, weight: FontWeight.w100, color: TColors.primary0);
+    TStyles.smallInvert =
+        _style(size: 30.4.d, weight: FontWeight.w300, color: TColors.primary0);
     TStyles.mediumInvert =
-        _style(size: 40.d, weight: FontWeight.normal, color: TColors.primary90);
+        _style(size: 40.d, weight: FontWeight.w600, color: TColors.primary0);
     TStyles.largeInvert =
-        _style(size: 52.d, weight: FontWeight.normal, color: TColors.primary90);
+        _style(size: 52.d, weight: FontWeight.w800, color: TColors.primary0);
   }
 
   static ThemeData? get darkData {
@@ -91,11 +95,11 @@ class Themes extends IService {
     );
 
     return ThemeData(
-      colorScheme: const ColorScheme.dark(
-          background: TColors.black,
-          primary: TColors.primary30,
+      colorScheme: const ColorScheme.light(
+          background: TColors.primary0,
+          primary: TColors.primary0,
           outline: TColors.primary70),
-      brightness: Brightness.dark,
+      brightness: Brightness.light,
       textTheme: textTheme,
       useMaterial3: true,
     );
