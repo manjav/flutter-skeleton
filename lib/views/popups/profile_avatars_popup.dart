@@ -24,7 +24,7 @@ class _ProfileAvatarsPopupState
   @override
   Widget contentFactory() {
     return SizedBox(
-      height: 800.d,
+      height: 1360.d,
       child: CustomScrollView(
         shrinkWrap: true,
         slivers: [
