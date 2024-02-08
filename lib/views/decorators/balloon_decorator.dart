@@ -1,40 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../app_export.dart';
-
-class Balloon extends StatefulWidget {
-  final Alignment? alignment;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-  final double? width;
-  final double? height;
-  final Matrix4? transform;
-  final Alignment? transformAlignment;
-  final Decoration? foregroundDecoration;
-  final BalloonDecorationData? decorationData;
-  final Widget? child;
-
-  final double? tipSize;
-  final BalloonTipPosition? tipPosition;
-
-  const Balloon({
-    super.key,
-    this.tipSize,
-    this.tipPosition,
-    this.alignment,
-    this.padding,
-    this.margin,
-    this.width,
-    this.height,
-    this.transform,
-    this.transformAlignment,
-    this.decorationData,
-    this.foregroundDecoration,
-    required this.child,
-  });
-  @override
-  createState() => _BalloonState();
-}
+import '../../../app_export.dart';
 
 enum BalloonTipPosition {
   topLeft,
@@ -51,82 +17,61 @@ enum BalloonTipPosition {
   rightBottom
 }
 
-class _BalloonState extends State<Balloon> {
-  @override
-  Widget build(BuildContext context) {
-    var padding = widget.padding ?? EdgeInsets.fromLTRB(10.d, 6.d, 10.d, 6.d);
-    return Widgets.rect(
-        child: Widgets.rect(
-            alignment: widget.alignment ?? Alignment.center,
-            padding: padding,
-            decoration: BalloonDecoration(
-                widget.decorationData,
-                widget.tipSize ?? 10,
-                widget.tipPosition ?? BalloonTipPosition.bottom),
-            foregroundDecoration: widget.foregroundDecoration,
-            margin: widget.margin,
-            transform: widget.transform,
-            transformAlignment: widget.transformAlignment,
-            width: widget.width,
-            height: widget.height ?? 56.d,
-            child: widget.child));
-  }
-}
-
 // ignore: must_be_immutable
 class BalloonDecoration extends Decoration {
-  final double tipSize;
-  final BalloonTipPosition tipPosition;
-  final BalloonDecorationData? data;
+  final Color? mainColor;
+  final Color? strokeColor;
+  final double? strokeWidth;
+  final double? tipSize;
+  final double? cornerRadius;
+  final BalloonTipPosition? tipPosition;
 
-  late BalloonDecorationData dataFallback;
-  BalloonDecoration(
-    this.data,
+  const BalloonDecoration({
+    this.mainColor,
+    this.strokeColor,
     this.tipSize,
+    this.strokeWidth,
+    this.cornerRadius,
     this.tipPosition,
-  ) : super() {
-    if (data == null) {
-      dataFallback = BalloonDecorationData(
-        mainColor: TColors.primary10, //0
-        borderColor: TColors.primary10,
-        cornerRadius: 32.d,
-        border: 4.d,
-      );
-    } else {
-      dataFallback = BalloonDecorationData(
-        mainColor: data!.mainColor,
-        borderColor: data!.borderColor,
-        cornerRadius: data!.cornerRadius ?? 32,
-        border: data!.border ?? 12,
-      );
-    }
-  }
+  }) : super();
 
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
-    return _ButtonPainter(dataFallback, tipSize, tipPosition);
+    return _ButtonPainter(
+      mainColor ?? TColors.primary0,
+      strokeColor ?? TColors.primary20,
+      tipSize ?? 10.d,
+      strokeWidth ?? 2.d,
+      cornerRadius ?? 10.d,
+      tipPosition ?? BalloonTipPosition.bottom,
+    );
   }
 }
 
 class _ButtonPainter extends BoxPainter {
+  final Color mainColor;
+  final Color strokeColor;
+  final double strokeWidth;
   final double tipSize;
+  final double cornerRadius;
   final BalloonTipPosition tipPosition;
   final _mainPaint = Paint()
     ..style = PaintingStyle.fill
     ..color;
-  final _borderPaint = Paint()
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 2;
+  final _strokePaint = Paint()..style = PaintingStyle.stroke;
 
-  final BalloonDecorationData data;
   _ButtonPainter(
-    this.data,
+    this.mainColor,
+    this.strokeColor,
     this.tipSize,
+    this.strokeWidth,
+    this.cornerRadius,
     this.tipPosition,
   ) : super() {
-    _mainPaint.color = data.mainColor!;
-    _borderPaint.color = data.borderColor!;
-    _borderPaint.strokeJoin = StrokeJoin.round;
+    _mainPaint.color = mainColor;
+    _strokePaint.color = strokeColor;
+    _strokePaint.strokeWidth = strokeWidth;
+    _strokePaint.strokeJoin = StrokeJoin.round;
   }
 
   @override
@@ -135,7 +80,7 @@ class _ButtonPainter extends BoxPainter {
       return;
     }
     // var b = 4.0.d;
-    var cr = data.cornerRadius!;
+    var cr = cornerRadius;
     var r = RRect.fromLTRBXY(
         offset.dx,
         offset.dy,
@@ -144,7 +89,7 @@ class _ButtonPainter extends BoxPainter {
         cr,
         cr);
 
-    var l = _borderPaint.strokeWidth * 0.5;
+    var l = _strokePaint.strokeWidth * 0.5;
     var tip = switch (tipPosition) {
       BalloonTipPosition.rightTop => Offset(r.right + l, r.top + cr + tipSize),
       BalloonTipPosition.right => Offset(r.right - l, r.center.dy + tipSize),
@@ -172,7 +117,7 @@ class _ButtonPainter extends BoxPainter {
       BalloonTipPosition.leftBottom =>
         Path()
           ..moveTo(tip.dx, tip.dy)
-          ..lineTo(tip.dx - tipSize, tip.dy - tipSize * 0.89)
+          ..lineTo(tip.dx - tipSize, tip.dy - tipSize * 0.9)
           ..quadraticBezierTo(tip.dx - tipSize * 1.2, tip.dy - tipSize,
               tip.dx - tipSize, tip.dy - tipSize * 1.3)
           ..lineTo(tip.dx, tip.dy - tipSize * 1.4),
@@ -185,22 +130,8 @@ class _ButtonPainter extends BoxPainter {
     };
 
     canvas.drawRRect(r, _mainPaint);
-    canvas.drawRRect(r, _borderPaint);
+    canvas.drawRRect(r, _strokePaint);
     canvas.drawPath(path, _mainPaint);
-    canvas.drawPath(path, _borderPaint);
+    canvas.drawPath(path, _strokePaint);
   }
-}
-
-class BalloonDecorationData {
-  final Color? mainColor;
-  final Color? borderColor;
-  final double? cornerRadius;
-  final double? border;
-
-  BalloonDecorationData({
-    this.mainColor,
-    this.borderColor,
-    this.cornerRadius,
-    this.border,
-  });
 }
