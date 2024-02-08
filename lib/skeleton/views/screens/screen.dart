@@ -81,8 +81,8 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   List<Widget> appBarElementsLeft() {
     return [
       Widgets.button(context,
-          height: 117.d,
-          padding: EdgeInsets.all(22.d),
+          height: 40.d,
+          padding: EdgeInsets.all(8.d),
           child: Asset.load<Image>(
               "ui_arrow_${Localization.isRTL ? "forward" : "back"}"),
           onPressed: () => Navigator.pop(context))

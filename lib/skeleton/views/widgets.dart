@@ -47,8 +47,7 @@ class Widgets {
         },
         onTapUp: (details) {
           if (_isActive(id)) {
-            serviceLocator<Sounds>()
-                .play(sfx ?? "mouse_up");
+            serviceLocator<Sounds>().play(sfx ?? "mouse_up");
             onTapUp?.call(details);
           }
         },
@@ -245,7 +244,7 @@ class Widgets {
     var style = TStyles.medium.copyWith(height: 1.5);
     return rect(
         radius: radius,
-        color: TColors.primary,
+        color: TColors.primary10,
         width: width ?? 720.d,
         child: TextField(
             style: style,

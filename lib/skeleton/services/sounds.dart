@@ -81,6 +81,6 @@ class Sounds extends ISounds {
 
   @override
   void playMusic() {
-    play('main_theme', channel: "music",loop: true);
+    play('main_theme', channel: "music", loop: true);
   }
 }

@@ -100,7 +100,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           alignment: Alignment.center,
           children: [
             Asset.load<Image>(id),
-            SkinnedText(id.l(), style: TStyles.large),
+            SkinnedText(id.l()),
           ],
         ),
       ),
