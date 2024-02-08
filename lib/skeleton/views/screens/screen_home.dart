@@ -108,6 +108,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         var route = switch (index) {
           0 => Routes.chat,
           1 => Routes.popupMentor,
+          _ => Routes.stt,
         };
         serviceLocator<RouteService>().to(route, args: _topics[index]);
       },
