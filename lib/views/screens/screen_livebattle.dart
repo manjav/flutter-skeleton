@@ -169,13 +169,13 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   Future<void> _onDeckSelect(int index, AccountCard selectedCard) async {
-    if (_battleId == 0) {
-      _deployCard(index, selectedCard);
-      return;
-    }
+    // if (_battleId == 0) {
+    //   _deployCard(index, selectedCard);
+    //   return;
+    // }
     if (!_isDeckActive) return;
     try {
-      _isDeckActive = false;
+      // _isDeckActive = false;
       var round = _slotState.value.i + 1;
       if (selectedCard.base.isHero) {
         round = 5;
@@ -187,8 +187,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         RpcParams.card.name: selectedCard.id,
         RpcParams.round.name: round,
       };
-      var result = await rpc(RpcId.battleSetCard, params: params);
-      selectedCard.lastUsedAt = result["last_used_at"];
+      // var result = await rpc(RpcId.battleSetCard, params: params);
+      // selectedCard.lastUsedAt = result["last_used_at"];
       _deployCard(index, selectedCard);
     } finally {}
     _isDeckActive = true;
@@ -198,7 +198,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     _account.cards[selectedCard.id]?.lastUsedAt = selectedCard.lastUsedAt;
 
     var slot = _slotState.value;
-    if (slot.i == 5) return;
+    if (slot.i == 5 && !selectedCard.base.isHero) return;
     var mySlots = _warriors[_friendsHead.id]!.cards;
     selectedCard.isDeployed = true;
     if (selectedCard.base.isHero) {
