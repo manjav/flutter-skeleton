@@ -154,28 +154,30 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   void _onDeckFocus(int index, AccountCard focusedCard) {
     var slot = _slotState.value;
-    if (slot.i == 5) return;
     var mySlots = _warriors[_account.id]!.cards;
     if (focusedCard.base.isHero) {
-      mySlots.setAtCard(slot.i, null);
-      mySlots.setAtCard(4, focusedCard);
-    } else {
-      mySlots.setAtCard(slot.i, focusedCard);
-      if (mySlots.value[4] != null && !mySlots.value[4]!.isDeployed) {
-        mySlots.setAtCard(4, null);
+      if (slot.i < 5) {
+        mySlots.setAtCard(slot.i, null);
       }
+      mySlots.setAtCard(4, focusedCard);
+      return;
+    }
+    if (slot.i == 5) return;
+    mySlots.setAtCard(slot.i, focusedCard);
+    if (mySlots.value[4] != null && !mySlots.value[4]!.isDeployed) {
+      mySlots.setAtCard(4, null);
     }
     _updatePowerBalance();
   }
 
   Future<void> _onDeckSelect(int index, AccountCard selectedCard) async {
-    // if (_battleId == 0) {
-    //   _deployCard(index, selectedCard);
-    //   return;
-    // }
+    if (_battleId == 0) {
+      _deployCard(index, selectedCard);
+      return;
+    }
     if (!_isDeckActive) return;
     try {
-      // _isDeckActive = false;
+      _isDeckActive = false;
       var round = _slotState.value.i + 1;
       if (selectedCard.base.isHero) {
         round = 5;
@@ -187,8 +189,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         RpcParams.card.name: selectedCard.id,
         RpcParams.round.name: round,
       };
-      // var result = await rpc(RpcId.battleSetCard, params: params);
-      // selectedCard.lastUsedAt = result["last_used_at"];
+      var result = await rpc(RpcId.battleSetCard, params: params);
+      selectedCard.lastUsedAt = result["last_used_at"];
       _deployCard(index, selectedCard);
     } finally {}
     _isDeckActive = true;
