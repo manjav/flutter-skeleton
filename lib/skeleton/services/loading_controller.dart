@@ -20,6 +20,10 @@ class LoadingController extends GetxController {
           page: const MessagePopup(),
           route: Routes.popupMessage,
           isOpaque: false),
+      SkeletonPageModel(
+          page: const MentorPopup(),
+          route: Routes.popupMentor,
+          isOpaque: false),
     ];
 
     serviceLocator<DeviceInfo>().initialize();

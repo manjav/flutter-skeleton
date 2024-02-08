@@ -105,7 +105,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         ),
       ),
       onPressed: () {
-        serviceLocator<RouteService>().to(Routes.chat, args: _topics[index]);
+        var route = switch (index) {
+          0 => Routes.chat,
+          1 => Routes.popupMentor,
+        };
+        serviceLocator<RouteService>().to(route, args: _topics[index]);
       },
     );
   }

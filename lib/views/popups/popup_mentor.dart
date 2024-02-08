@@ -26,32 +26,27 @@ class _TutorialState extends AbstractPopupState<MentorPopup>
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-        ignoring: true,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            _balloon(
-                offset: 2.4,
-                left: 40.d,
-                width: 8.d,
-                height: 8.d,
-                bottom: 150.d),
-            _balloon(
-                offset: 3.2,
-                left: 24.d,
-                width: 16.d,
-                height: 16.d,
-                bottom: 168.d),
-            _balloon(
-                offset: 4.0,
-                left: 32.d,
-                right: 32.d,
-                bottom: 192.d,
-                child: Text("widget.message", style: TStyles.mediumInvert)),
-            Positioned(left: 0, bottom: 0, child: _loadCharacter())
-          ],
-        ));
+    return Material(
+      color: TColors.transparent,
+      child: Widgets.button(context,
+          padding: EdgeInsets.zero,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              _balloon(offset: 2.4, left: 40, width: 8, height: 8, bottom: 140),
+              _balloon(
+                  offset: 3.2, left: 24, width: 32, height: 32, bottom: 160),
+              _balloon(
+                  offset: 4.0,
+                  left: 32,
+                  right: 32,
+                  bottom: 200,
+                  child: const Text("widget.message")),
+              Positioned(left: 0, bottom: 0, child: _loadCharacter())
+            ],
+          ),
+          onPressed: () => Navigator.pop(context)),
+    );
   }
 
   _balloon(
@@ -77,8 +72,12 @@ class _TutorialState extends AbstractPopupState<MentorPopup>
                   scale: opacity,
                   alignment: Alignment.bottomLeft,
                   child: Widgets.rect(
-                      radius: 16.d,
-                      color: TColors.primary10.withOpacity(0.9),
+                      decoration: BoxDecoration(
+                        color: TColors.primary0,
+                        border:
+                            Border.all(color: TColors.primary30, width: 2.d),
+                        borderRadius: BorderRadius.all(Radius.circular(16.d)),
+                      ),
                       padding: EdgeInsets.all(16.d),
                       child: child));
             }));
@@ -86,12 +85,13 @@ class _TutorialState extends AbstractPopupState<MentorPopup>
 
   _loadCharacter() {
     return LoaderWidget(AssetType.animationZipped, "character",
-        width: 200.d, height: 200.d, onRiveInit: (artboard) {
+        width: 200, height: 200, onRiveInit: (artboard) {
       final controller =
           StateMachineController.fromArtboard(artboard, 'Character');
-      artboard.addController(controller!);
+      controller!.findInput<double>("reaction")?.value = 4;
+      artboard.addController(controller);
     });
   }
 }
 
-enum CharacterMood { wonder, happy, angry, search }
+enum CharacterMood { wonder, happy, angry, search, normal }
