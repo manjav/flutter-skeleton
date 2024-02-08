@@ -36,7 +36,7 @@ class DeviceInfo extends IService {
     DeviceInfo.devicePixelRatio = q.devicePixelRatio;
     var width = math.min(size.width, size.height);
     var height = math.max(size.width, size.height);
-    ratio = width / 1080;
+    ratio = width / 390;// Comes from figma design
     aspectRatio = width / height;
 
     // Get app info

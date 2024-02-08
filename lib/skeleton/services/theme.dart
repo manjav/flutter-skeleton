@@ -19,7 +19,7 @@ class TColors {
   static const primary40 = Color(0xFF7A8FA9);
   static const primary30 = Color(0xFF92A6C0);
   static const primary20 = Color(0xFFADBFD6);
-  static const primary10 = Color(0xFFCDD9EA);
+  static const primary10 = Color(0xFFDCE8FA);
   static const primary0 = Color(0xFFEEF5FF);
   static const gray = Color(0xFFA4A4A4);
   static const green = Color(0xFF82EE24);
@@ -62,19 +62,19 @@ class Themes extends IService {
   initialize({List<Object>? args}) {
     super.initialize(args: args);
 
-    TStyles.tiny = _style(size: 22.d, weight: FontWeight.w100);
-    TStyles.small = _style(size: 30.d, weight: FontWeight.w300);
-    TStyles.medium = _style(size: 38.d, weight: FontWeight.w600);
-    TStyles.large = _style(size: 52.d, weight: FontWeight.w800);
-    TStyles.big = _style(size: 72.d, weight: FontWeight.w900);
+    TStyles.tiny = _style(size: 10.d, weight: FontWeight.w100);
+    TStyles.small = _style(size: 14.d, weight: FontWeight.w300);
+    TStyles.medium = _style(size: 16.d, weight: FontWeight.w600);
+    TStyles.large = _style(size: 20.d, weight: FontWeight.w800);
+    TStyles.big = _style(size: 24.d, weight: FontWeight.w900);
     TStyles.tinyInvert =
-        _style(size: 22.d, weight: FontWeight.w100, color: TColors.primary0);
+        _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary0);
     TStyles.smallInvert =
-        _style(size: 30.4.d, weight: FontWeight.w300, color: TColors.primary0);
+        _style(size: 14.d, weight: FontWeight.w300, color: TColors.primary0);
     TStyles.mediumInvert =
-        _style(size: 40.d, weight: FontWeight.w600, color: TColors.primary0);
+        _style(size: 16.d, weight: FontWeight.w600, color: TColors.primary0);
     TStyles.largeInvert =
-        _style(size: 52.d, weight: FontWeight.w800, color: TColors.primary0);
+        _style(size: 20.d, weight: FontWeight.w800, color: TColors.primary0);
   }
 
   static ThemeData? get darkData {
