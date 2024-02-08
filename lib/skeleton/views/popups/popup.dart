@@ -23,9 +23,6 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   Alignment alignment = Alignment.center;
   bool barrierDismissible = true, canPop = true;
 
-  BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecorator("popup_chrome", ImageCenterSliceData(410, 460));
-
   @override
   void initState() {
     serviceLocator<Sounds>().play("popup");
@@ -45,26 +42,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
             Widgets.touchable(context,
                 onTap:
                     barrierDismissible ? () => Navigator.pop(context) : null),
-            Align(
-                alignment: alignment,
-                child: Widgets.rect(
-                  margin: chromeMargin,
-                  padding: EdgeInsets.symmetric(horizontal: 24.d),
-                  decoration: chromeSkinBuilder,
-                  child: Stack(
-                      alignment: Alignment.topCenter,
-                      fit: StackFit.loose,
-                      children: [
-                        innerChromeFactory(),
-                        titleTextFactory(),
-                        Padding(
-                            padding: contentPadding, child: contentFactory()),
-                        Positioned(
-                            top: 60.d,
-                            right: -12.d,
-                            child: closeButtonFactory()),
-                      ]),
-                )),
+            Align(alignment: alignment, child: outerChromeFactory()),
             Positioned(
                 top: paddingTop > 0 ? paddingTop : 24.d,
                 left: 32.d,
@@ -109,6 +87,24 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   }
 
   Widget innerChromeFactory() => const SizedBox();
+
+  Widget outerChromeFactory() {
+    return Widgets.rect(
+      margin: chromeMargin,
+      padding: EdgeInsets.symmetric(horizontal: 24.d),
+      decoration: chromeSkinBuilder,
+      child:
+          Stack(alignment: Alignment.topCenter, fit: StackFit.loose, children: [
+        innerChromeFactory(),
+        titleTextFactory(),
+        Padding(padding: contentPadding, child: contentFactory()),
+        Positioned(top: 60.d, right: -12.d, child: closeButtonFactory()),
+      ]),
+    );
+  }
+
+  BoxDecoration get chromeSkinBuilder =>
+      Widgets.imageDecorator("popup_chrome", ImageCenterSliceData(410, 460));
 
   Widget contentFactory() => Widgets.rect(
       height: 480.d, width: 880.d, color: TColors.green.withAlpha(133));

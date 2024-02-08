@@ -1,10 +1,10 @@
 class Routes {
+  static const home = "/";
   static const deck = "/deck";
   static const quest = "/quest";
   static const questOut = "/questOut";
   static const battleOut = "/battleOut";
   static const liveBattleOut = "/liveBattleOut";
-  static const home = "/";
   static const liveBattle = "/liveBattle";
 
   static const popupNone = "/popupNone";

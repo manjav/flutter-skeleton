@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
 
-
 class MessagePopup extends AbstractPopup {
   const MessagePopup({super.key})
       : super("popupMessage");
