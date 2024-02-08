@@ -111,11 +111,10 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
   }
 
   Widget _chatItemRenderer(Message message, int now) {
-    var padding = 120.d;
-    return Column(children: [
-      _defaultChatItemRenderer(message, padding),
-      _footerChatItemRenderer(message, padding, now),
-      const SizedBox(height: 12),
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      _defaultChatItemRenderer(message),
+      // _footerChatItemRenderer(message, now),
+      SizedBox(height: 16.d),
     ]);
   }
 
@@ -132,11 +131,12 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
           items.add(
             Widgets.button(
               context,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              radius: 32,
-              margin: const EdgeInsets.all(3),
-              color: TColors.orange,
-              child: SkinnedText(choice["destLanguage"]!, style: TStyles.large),
+              radius: 32.d,
+              padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 4.d),
+              margin: EdgeInsets.all(3.d),
+              color: TColors.primary40,
+              child: SkinnedText(choice["destLanguage"]!,
+                  style: TStyles.largeInvert),
               onPressed: () {
                 message.choices.clear();
                 _sendMessage(choice["destLanguage"]);
@@ -144,61 +144,45 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
             ),
           );
         }
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+        return Widgets.rect(
+          color: TColors.primary10,
+          padding: EdgeInsets.all(12.d),
           child: Wrap(verticalDirection: VerticalDirection.up, children: items),
         );
       },
     );
   }
 
-  Widget _defaultChatItemRenderer(Message message, double padding) {
-    var avatar = Avatar(padding);
-    return Row(
-      textDirection: TextDirection.ltr,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        message.itsMe ? SizedBox(width: padding) : avatar,
-        Expanded(
-          child: Widgets.button(
-            context,
-            padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 16.d),
-            decoration: Widgets.imageDecorator(
-                "chat_balloon_${message.itsMe ? "right" : "left"}",
-                ImageCenterSliceData(
-                    80, 78, const Rect.fromLTWH(39, 16, 2, 2))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(message.sender,
-                    style: TStyles.large,
-                    textAlign:
-                        message.itsMe ? TextAlign.right : TextAlign.left),
-                Text(message.text,
-                    textDirection: message.text.getDirection(),
-                    style: TStyles.large)
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 5),
-      ],
+  Widget _defaultChatItemRenderer(Message message) {
+    return Widgets.button(
+      context,
+      margin: EdgeInsets.symmetric(horizontal: 16.d),
+      padding: EdgeInsets.symmetric(horizontal: 16.d, vertical: 18.d),
+      decoration: BalloonDecoration(
+          mainColor: message.itsMe ? TColors.primary0 : TColors.primary10,
+          tipPosition: message.itsMe
+              ? BalloonTipPosition.rightBottom
+              : BalloonTipPosition.leftTop),
+      child: Text(
+        message.text,
+        textDirection: message.text.getDirection(),
+      ),
     );
   }
 
-  Widget _footerChatItemRenderer(Message message, double padding, int now) {
+/*   Widget _footerChatItemRenderer(Message message, int now) {
     return Row(
       mainAxisAlignment:
           message.itsMe ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: [
-        SizedBox(width: padding + 20),
+        SizedBox(width: 24.d),
         Text((now - message.creationDate).toElapsedTime(),
-            style: TStyles.smallInvert),
-        const SizedBox(width: 20),
+            style: TStyles.small.copyWith(color: TColors.primary40)),
+        SizedBox(width: 24.d),
       ],
     );
   }
-
+ */
   Future<void> _scrollDown({int duration = 500, int delay = 0}) async {
     if (_scrollController.positions.isEmpty ||
         _scrollController.position.pixels <= 0) return;
@@ -211,9 +195,9 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
   Widget _inputView() {
     return Widgets.rect(
         radius: 70.d,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
+        color: TColors.primary20,
         padding: const EdgeInsets.all(4),
-        color: TColors.white,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
         child: Row(textDirection: TextDirection.ltr, children: [
           Expanded(
               child: Widgets.skinnedInput(
@@ -231,9 +215,9 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
           SizedBox(width: 12.d),
           Widgets.button(context,
               color: TColors.primary80,
-              height: 128.d,
+              height: 56.d,
               radius: 200.d,
-              padding: EdgeInsets.all(30.d),
+              padding: EdgeInsets.all(16.d),
               child: Asset.load<Image>("icon_send"),
               onPressed: () => _sendMessage())
         ]));
