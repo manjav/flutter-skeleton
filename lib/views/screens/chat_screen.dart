@@ -48,7 +48,7 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
   Widget appBarFactory(double paddingTop) {
     var appBarElements = <Widget>[];
     appBarElements.addAll(appBarElementsLeft());
-    appBarElements.add(const Avatar(50));
+    appBarElements.add(const Avatar("avatar_0", 50));
     appBarElements.add(const SizedBox(width: 10));
     appBarElements.add(
       ValueListenableBuilder(
