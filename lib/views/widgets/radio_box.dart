@@ -1,0 +1,91 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lingai/app_export.dart';
+
+class RadioBox extends StatefulWidget {
+  final String text;
+  final BalloonTipPosition ballonPosition;
+  const RadioBox(this.text, this.ballonPosition, {super.key});
+
+  @override
+  State<RadioBox> createState() => _RadioBoxState();
+}
+
+class _RadioBoxState extends State<RadioBox> {
+  final AudioPlayer _player = AudioPlayer();
+  final ValueNotifier<PlayerState> _playerState =
+      ValueNotifier(PlayerState.stopped);
+
+  @override
+  void initState() {
+    _player.onPlayerStateChanged
+        .listen((PlayerState s) => _playerState.value = s);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var margin = 14.d;
+    return Stack(
+      // alignment: Alignment.center,
+      children: [
+        Widgets.rect(
+            // alignment: Alignment.center,
+            width: 328.d,
+            margin: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
+            padding: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
+            decoration: BalloonDecoration(tipPosition: widget.ballonPosition),
+            child: Text(widget.text,
+                style: TStyles.medium,
+                textDirection: widget.text.getDirection())),
+        Positioned(
+            top: 0,
+            right: 76.d,
+            child: _button(
+              ValueListenableBuilder(
+                  valueListenable: _playerState,
+                  builder: (context, value, child) => Asset.load<SvgPicture>(
+                      value == PlayerState.playing ? "stop" : "play")),
+              margin * 2,
+              _play,
+            )),
+        Positioned(
+            top: 0,
+            right: 30.d,
+            child: _button(Asset.load<SvgPicture>("?"), margin * 2, _translate))
+      ],
+    );
+  }
+
+  Widget _button(Widget child, double size, Function() onPressed) {
+    return Widgets.button(context,
+        color: TColors.transparent,
+        padding: EdgeInsets.all(12.d),
+        child: Widgets.rect(
+          width: size,
+          height: size,
+          padding: EdgeInsets.all(6.d),
+          decoration: BoxDecoration(
+            color: TColors.primary0,
+            border: Border.all(color: TColors.primary30, width: 2.d),
+            borderRadius: BorderRadius.all(Radius.circular(12.d)),
+          ),
+          child: child,
+        ),
+        onPressed: onPressed);
+  }
+
+  _translate() {}
+
+  _play() {
+    if (_playerState.value == PlayerState.playing) {
+      _player.stop();
+      return;
+    }
+    _player.play(
+      UrlSource(
+          "https://s1.matnyaar.ir/gpt/tts.php?voice=onyx&input=${widget.text}"),
+    );
+  }
+}
