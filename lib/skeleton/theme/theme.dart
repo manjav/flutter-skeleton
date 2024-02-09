@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'export.dart';
+import '../services/export.dart';
 
 class TColors {
   static const accent = Color(0xFFFF5D54);
@@ -57,11 +57,8 @@ TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   );
 }
 
-class Themes extends IService {
-  @override
-  initialize({List<Object>? args}) {
-    super.initialize(args: args);
-
+class Themes {
+  static void preInitialize() {
     TStyles.tiny = _style(size: 10.d, weight: FontWeight.w100);
     TStyles.small = _style(size: 14.d, weight: FontWeight.w300);
     TStyles.medium = _style(size: 16.d, weight: FontWeight.w600);
