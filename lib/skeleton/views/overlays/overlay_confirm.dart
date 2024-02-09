@@ -45,7 +45,7 @@ class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
       Expanded(child: Text(widget.message)),
       SizedBox(width: 24.d),
       Column(children: [
-        _button(widget.declineLabel, color: ButtonColor.yellow),
+        _button(widget.declineLabel, color: TColors.orange),
         SizedBox(height: 12.d),
         _button(widget.acceptLabel, onPressed: widget.onAccept),
       ]),
@@ -53,7 +53,7 @@ class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
   }
 
   Widget _button(String label,
-      {ButtonColor color = ButtonColor.green, Function()? onPressed}) {
+      {Color color = TColors.green, Function()? onPressed}) {
     return SkinnedButton(
         color: color,
         padding: EdgeInsets.fromLTRB(36.d, 12.d, 36.d, 32.d),

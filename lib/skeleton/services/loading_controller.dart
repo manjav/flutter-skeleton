@@ -31,7 +31,6 @@ class LoadingController extends GetxController {
 
     serviceLocator<DeviceInfo>().initialize();
 
-
     await serviceLocator<Localization>().initialize(args: [Get.context!]);
 
     // var trackers = Trackers();

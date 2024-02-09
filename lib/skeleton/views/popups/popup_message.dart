@@ -4,8 +4,7 @@ import '../../export.dart';
 
 class MessagePopup extends AbstractPopup {
   //todo: check routes here
-  const MessagePopup({super.key})
-      : super("popupMessage");
+  const MessagePopup({super.key}) : super("popupMessage");
 
   @override
   createState() => _MessagePopupState();
@@ -25,8 +24,8 @@ class _MessagePopupState extends AbstractPopupState<MessagePopup> {
     if (widget.args.containsKey("isConfirm")) {
       items.addAll([
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          _button(ButtonColor.gray, "decline_l".l(), null),
-          _button(ButtonColor.green, "accept_l".l(), true),
+          _button(TColors.gray, "decline_l".l(), null),
+          _button(TColors.green, "accept_l".l(), true),
         ])
       ]);
     }
@@ -36,7 +35,7 @@ class _MessagePopupState extends AbstractPopupState<MessagePopup> {
         children: items);
   }
 
-  _button(ButtonColor color, String label, dynamic result) {
+  _button(Color color, String label, dynamic result) {
     return SkinnedButton(
         width: 360.d,
         label: label,

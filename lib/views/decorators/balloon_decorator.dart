@@ -37,7 +37,7 @@ class BalloonDecoration extends Decoration {
 
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
-    return _ButtonPainter(
+    return _BollonPainter(
       mainColor ?? TColors.primary0,
       strokeColor ?? TColors.primary20,
       tipSize ?? 10.d,
@@ -48,7 +48,7 @@ class BalloonDecoration extends Decoration {
   }
 }
 
-class _ButtonPainter extends BoxPainter {
+class _BollonPainter extends BoxPainter {
   final Color mainColor;
   final Color strokeColor;
   final double strokeWidth;
@@ -60,7 +60,7 @@ class _ButtonPainter extends BoxPainter {
     ..color;
   final _strokePaint = Paint()..style = PaintingStyle.stroke;
 
-  _ButtonPainter(
+  _BollonPainter(
     this.mainColor,
     this.strokeColor,
     this.tipSize,

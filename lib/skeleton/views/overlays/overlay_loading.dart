@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../app_export.dart';
 import '../../../main.dart';
 
-
 class LoadingOverlay extends AbstractOverlay {
   const LoadingOverlay({super.key}) : super(route: OverlaysName.loading);
 
@@ -106,8 +105,8 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                           SizedBox(width: 12.d),
                           SkinnedButton(
                               color: isUpdateError
-                                  ? ButtonColor.green
-                                  : ButtonColor.yellow,
+                                  ? TColors.green
+                                  : TColors.orange,
                               height: 160.d,
                               padding: EdgeInsets.fromLTRB(42.d, 0, 42.d, 16.d),
                               label: isUpdateError

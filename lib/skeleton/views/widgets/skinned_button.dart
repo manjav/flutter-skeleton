@@ -1,36 +1,32 @@
 import 'package:flutter/widgets.dart';
 
-import '../../export.dart';
+import '../../../app_export.dart';
 
-enum ButtonColor { cream, gray, green, violet, teal, wooden, yellow }
-
-enum ButtonSize { small, medium }
-
-class SkinnedButton extends StatefulWidget {
+class SkinnedButton extends StatelessWidget {
+  final int buttonId;
+  final Color? color;
   final String? label;
   final String? icon;
-  final ButtonColor color;
-  final ButtonSize size;
   final Widget? child;
-  final int buttonId;
+  final bool isEnable;
   final double? width;
   final double? height;
-  final bool isEnable;
+  final double? cornerRadius;
   final Alignment? alignment;
   final EdgeInsets? margin;
   final EdgeInsets? padding;
   final Function()? onPressed;
   final Function()? onDisablePressed;
   final BoxConstraints? constraints;
-  const SkinnedButton({
+  SkinnedButton({
+    this.buttonId = 30,
+    this.color,
     this.label,
     this.icon,
-    this.color = ButtonColor.yellow,
-    this.size = ButtonSize.small,
     this.child,
-    this.buttonId = 30,
     this.width,
     this.height,
+    this.cornerRadius,
     this.isEnable = true,
     this.alignment,
     this.margin,
@@ -41,64 +37,52 @@ class SkinnedButton extends StatefulWidget {
     super.key,
   });
 
-  @override
-  State<SkinnedButton> createState() => _SkinnedButtonState();
+  final ValueNotifier<bool> _isPressed = ValueNotifier(false);
 
-  static buttonDecorator(ButtonColor color,
-      [bool isPressed = false, ButtonSize size = ButtonSize.small]) {
-    var slicingData = switch (size) {
-      ButtonSize.small =>
-        ImageCenterSliceData(102, 106, const Rect.fromLTWH(50, 30, 4, 20)),
-      _ => ImageCenterSliceData(130, 158),
-    };
-    var assetName = "button_${size.name}_${color.name}";
-    if (isPressed) {
-      assetName += "_down";
-    }
-    return Widgets.imageDecorator(assetName, slicingData);
-  }
-}
-
-class _SkinnedButtonState extends State<SkinnedButton> {
-  bool _isPressed = false;
   @override
   Widget build(BuildContext context) {
-    var color = !widget.isEnable ? ButtonColor.gray : widget.color;
-    return Widgets.button(
+    return Widgets.touchable(
       context,
+      id: buttonId,
       onTapUp: (details) {
-        setState(() => _isPressed = false);
-        (widget.isEnable ? widget.onPressed : widget.onDisablePressed)?.call();
+        _isPressed.value = false;
+        (isEnable ? onPressed : onDisablePressed)?.call();
       },
-      onTapDown: (details) => setState(() => _isPressed = true),
-      onTapCancel: () => setState(() => _isPressed = false),
-      width: widget.width,
-      height: widget.height,
-      buttonId: widget.buttonId,
-      alignment: widget.alignment ?? Alignment.center,
-      constraints: widget.constraints,
-      margin: widget.margin,
-      padding: widget.padding ??
-          EdgeInsets.fromLTRB(28.d, 25.d, 28.d, _isPressed ? 40.d : 44.d),
-      decoration: SkinnedButton.buttonDecorator(color, _isPressed, widget.size),
-      child: Opacity(
-          opacity: widget.isEnable ? 1 : 0.7,
-          child: widget.label != null || widget.icon != null
-              ? Row(mainAxisSize: MainAxisSize.min, children: [
-                  widget.icon == null
-                      ? const SizedBox()
-                      : Asset.load<Image>(widget.icon!, height: 68.d),
-                  SizedBox(
-                      width: (widget.label != null && widget.icon != null)
-                          ? 16.d
-                          : 0),
-                  widget.label == null
-                      ? const SizedBox()
-                      : SkinnedText(widget.label!,
-                          style: TStyles.large,
-                          shadowScale: _isPressed ? 1.2 : 1),
-                ])
-              : widget.child!),
+      onTapDown: (details) => _isPressed.value = true,
+      onTapCancel: () => _isPressed.value = false,
+      child: ValueListenableBuilder(
+        valueListenable: _isPressed,
+        builder: (context, value, child) {
+          return Widgets.rect(
+            width: width,
+            height: height,
+            alignment: alignment ?? Alignment.center,
+            constraints: constraints,
+            margin: margin,
+            padding: padding ?? EdgeInsets.fromLTRB(28.d, 26.d, 28.d, 30.d),
+            decoration: BattonDecoration(
+                mainColor: color ?? TColors.primary50,
+                strokeColor: TColors.primary,
+                isPressed: _isPressed.value),
+            child: Opacity(
+                opacity: isEnable ? 1 : 0.7,
+                child: label != null || icon != null
+                    ? Row(mainAxisSize: MainAxisSize.min, children: [
+                        icon == null
+                            ? const SizedBox()
+                            : Asset.load<Image>(icon!, height: 68.d),
+                        SizedBox(
+                            width: (label != null && icon != null) ? 16.d : 0),
+                        label == null
+                            ? const SizedBox()
+                            : SkinnedText(label!,
+                                style: TStyles.largeInvert,
+                                shadowScale: _isPressed.value ? 1.4 : 1),
+                      ])
+                    : child!),
+          );
+        },
+      ),
     );
   }
 }
