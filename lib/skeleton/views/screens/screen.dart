@@ -67,13 +67,13 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     appBarElements.addAll(appBarElementsLeft());
     appBarElements.add(const Expanded(child: SizedBox()));
     appBarElements.addAll(appBarElementsRight());
-    return PositionedDirectional(
+    return Positioned(
       top: paddingTop,
-      start: 24.d,
-      end: 24.d,
+      left: 8.d,
+      right: 8.d,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: appBarElements),
     );
   }
@@ -81,8 +81,8 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   List<Widget> appBarElementsLeft() {
     return [
       Widgets.button(context,
-          height: 40.d,
-          padding: EdgeInsets.all(8.d),
+          height: 56.d,
+          padding: EdgeInsets.all(16.d),
           child: Asset.load<Image>(
               "ui_arrow_${Localization.isRTL ? "forward" : "back"}"),
           onPressed: () => Navigator.pop(context))

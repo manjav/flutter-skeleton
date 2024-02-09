@@ -33,11 +33,6 @@ class _STTScreenState extends State<STTScreen> {
   List<LocaleName> _localeNames = [];
   final SpeechToText speech = SpeechToText();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   /// This initializes SpeechToText. That only has to be done
   /// once per application, though calling it again is harmless
   /// it also does nothing. The UX of the sample app ensures that
@@ -82,9 +77,31 @@ class _STTScreenState extends State<STTScreen> {
           const HeaderWidget(),
           Column(
             children: <Widget>[
-              InitSpeechWidget(_hasSpeech, initSpeechState),
-              SpeechControlWidget(_hasSpeech, speech.isListening,
-                  startListening, stopListening, cancelListening),
+              TextButton(
+                onPressed: _hasSpeech ? null : initSpeechState,
+                child: const Text('Initialize'),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  TextButton(
+                    onPressed: !_hasSpeech || speech.isListening
+                        ? null
+                        : startListening,
+                    child: const Text('Start'),
+                  ),
+                  TextButton(
+                    onPressed: speech.isListening ? stopListening : null,
+                    child: const Text('Stop'),
+                  ),
+                  TextButton(
+                    onPressed: speech.isListening ? cancelListening : null,
+                    child: const Text('Cancel'),
+                  )
+                ],
+              ),
+              // SpeechControlWidget(_hasSpeech, speech.isListening,
+              //     startListening, stopListening, cancelListening),
               SessionOptionsWidget(
                 _currentLocaleId,
                 _switchLang,
@@ -328,40 +345,6 @@ class ErrorWidget extends StatelessWidget {
   }
 }
 
-/// Controls to start and stop speech recognition
-class SpeechControlWidget extends StatelessWidget {
-  const SpeechControlWidget(this.hasSpeech, this.isListening,
-      this.startListening, this.stopListening, this.cancelListening,
-      {super.key});
-
-  final bool hasSpeech;
-  final bool isListening;
-  final void Function() startListening;
-  final void Function() stopListening;
-  final void Function() cancelListening;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        TextButton(
-          onPressed: !hasSpeech || isListening ? null : startListening,
-          child: const Text('Start'),
-        ),
-        TextButton(
-          onPressed: isListening ? stopListening : null,
-          child: const Text('Stop'),
-        ),
-        TextButton(
-          onPressed: isListening ? cancelListening : null,
-          child: const Text('Cancel'),
-        )
-      ],
-    );
-  }
-}
-
 class SessionOptionsWidget extends StatelessWidget {
   const SessionOptionsWidget(
       this.currentLocaleId,
@@ -449,25 +432,22 @@ class SessionOptionsWidget extends StatelessWidget {
   }
 }
 
-class InitSpeechWidget extends StatelessWidget {
-  const InitSpeechWidget(this.hasSpeech, this.initSpeechState, {super.key});
+// class InitSpeechWidget extends StatelessWidget {
+//   const InitSpeechWidget(this.hasSpeech, this.initSpeechState, {super.key});
 
-  final bool hasSpeech;
-  final Future<void> Function() initSpeechState;
+//   final bool hasSpeech;
+//   final Future<void> Function() initSpeechState;
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        TextButton(
-          onPressed: hasSpeech ? null : initSpeechState,
-          child: const Text('Initialize'),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceAround,
+//       children: <Widget>[
+
+//       ],
+//     );
+//   }
+// }
 
 /// Display the current status of the listener
 class SpeechStatusWidget extends StatelessWidget {
