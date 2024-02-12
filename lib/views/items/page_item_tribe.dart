@@ -47,7 +47,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
       }
       return Padding(
         padding: EdgeInsets.only(top: paddingTop),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           SizedBox(height: 10.d),
           _headerBuilder(state.account),
           _pinnedMessage(state.account),
@@ -100,7 +101,9 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           ]),
           SizedBox(height: 20.d),
           SizedBox(
-              height: (account.tribe!.description.length / 50).round() * 44.d,
+              height: account.tribe!.description.length >= 50
+                  ? (account.tribe!.description.length / 50).round() * 44.d
+                  : 44.d,
               child: Text(account.tribe!.description,
                   textDirection: account.tribe!.description.getDirection(),
                   style: TStyles.medium.copyWith(height: 1.1))),
