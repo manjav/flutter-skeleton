@@ -301,8 +301,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
         if (mounted) {
           result["friendsHead"] = accountProvider.account;
           result["oppositesHead"] = opponent;
-          serviceLocator<RouteService>()
-              .to(Routes.liveBattle, args: result);
+          serviceLocator<RouteService>().to(Routes.liveBattle, args: result);
         }
       } finally {}
       return;

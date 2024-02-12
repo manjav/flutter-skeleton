@@ -43,15 +43,21 @@ class OnlineStatusState extends State<OnlineStatus>
     });
   }
 
+  BorderRadius get borderRadius => BorderRadius.horizontal(
+        left: Localization.isRTL ? Radius.zero : Radius.circular(60.d),
+        right: Localization.isRTL ? Radius.circular(60.d) : Radius.zero,
+      );
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: TColors.transparent,
-      child: AnimatedPositioned(
-        duration: const Duration(milliseconds: 500),
-        right: Localization.isRTL ? null : size,
-        left: Localization.isRTL ? size : null,
-        top: 280.d,
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 350),
+      right: Localization.isRTL ? null : size,
+      left: Localization.isRTL ? size : null,
+      top: 280.d,
+      child: Material(
+        borderRadius: borderRadius,
+        color: TColors.transparent,
         child: Container(
           width: 472.d,
           padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 20.d),
@@ -60,10 +66,7 @@ class OnlineStatusState extends State<OnlineStatus>
                 color: TColors.black,
                 width: 6.d,
               ),
-              borderRadius: BorderRadius.horizontal(
-                left: Localization.isRTL ? Radius.zero : Radius.circular(60.d),
-                right: Localization.isRTL ? Radius.circular(60.d) : Radius.zero,
-              ),
+              borderRadius: borderRadius,
               color: TColors.black80),
           child: Row(
             children: [
