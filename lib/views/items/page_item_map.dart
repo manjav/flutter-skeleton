@@ -19,6 +19,10 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
 
   @override
   Widget build(BuildContext context) {
+    var paddingTop = MediaQuery.of(context).viewPadding.top;
+    if (paddingTop <= 0) {
+      paddingTop = 24.d;
+    }
     return Consumer<AccountProvider>(builder: (_, state, child) {
       return Stack(alignment: Alignment.topLeft, children: [
         LoaderWidget(AssetType.animation, "map_home", fit: BoxFit.cover,
@@ -29,11 +33,34 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           artboard.addController(controller!);
         }),
         PositionedDirectional(
+          top: paddingTop,
+          start: 32.d,
+          child: Column(
+            children: [
+              SizedBox(
+                width: 196.d,
+                height: 200.d,
+                child: LevelIndicator(
+                    onPressed: () =>
+                        serviceLocator<RouteService>().to(Routes.popupProfile)),
+              ),
+              Widgets.button(context,
+                  width: 110.d,
+                  height: 110.d,
+                  padding: EdgeInsets.all(16.d),
+                  child: Asset.load<Image>("ui_settings"),
+                  onPressed: () =>
+                      serviceLocator<RouteService>().to(Routes.popupSettings))
+            ],
+          ),
+        ),
+        PositionedDirectional(
           bottom: 350.d,
           start: 32.d,
           child: Indicator("home", Values.leagueRank,
               hasPlusIcon: false,
-              onTap: () => serviceLocator<RouteService>().to(Routes.popupLeague)),
+              onTap: () =>
+                  serviceLocator<RouteService>().to(Routes.popupLeague)),
         ),
         PositionedDirectional(
             bottom: 220.d,
@@ -42,7 +69,8 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               "home",
               Values.rank,
               hasPlusIcon: false,
-              onTap: () => serviceLocator<RouteService>().to(Routes.popupRanking),
+              onTap: () =>
+                  serviceLocator<RouteService>().to(Routes.popupRanking),
             )),
         PositionedDirectional(
             bottom: 180.d,
