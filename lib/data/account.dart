@@ -227,10 +227,6 @@ class Account extends Player with MineMixin {
     // latest_app_version = map["latest_app_version"];
     // latest_app_version_for_notice = map["latest_app_version_for_notice"];
 
-    //avatars
-    avatars = map["avatars"];
-    owned_avatars = map["owned_avatars"];
-
     for (var card in map['cards']) {
       cards[card['id']] = AccountCard(this, card);
     }
