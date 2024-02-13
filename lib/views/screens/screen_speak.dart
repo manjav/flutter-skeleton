@@ -20,7 +20,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   final List<Chat> _chats = [];
   Talk? _currentTalk;
   STTBox? _sttBox;
-   
+
   final Narrator _userNarrator = Narrator.nova;
   final Narrator _botNarrator = Narrator.fable;
 
@@ -50,6 +50,13 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   }
 
   Future<void> _nextStep(int index) async {
+    if (index >= _scenario!.thread.length) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (mounted) {
+        Navigator.pop(context);
+      }
+      return;
+    }
     setState(() => _currentTalk = _scenario!.thread[index]);
     for (var chat in _currentTalk!.chats) {
       if (chat.type == ChatType.hint) {
