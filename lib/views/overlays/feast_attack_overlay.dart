@@ -27,6 +27,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   final Map<String, ImageAsset> _imageAssets = {};
   final List<AccountCard> _playerCards = [], _oppositeCards = [];
   SMIInput<double>? _playerCardsCount, _oppositeCardsCount;
+  final Map<int, SMIInput<double>?> _cardPowers = {};
   bool _isBattle = false;
 
   @override
@@ -70,13 +71,30 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
       _playerCardsCount?.value = _playerCards.length.toDouble();
 
-      if (_isBattle) {
-        for (var card in _outcomeData["opponent_cards"] ?? []) {
-          _oppositeCards.add(AccountCard(_account!, card));
-        }
-      } else {
-        _simulateOuestOppositeCards(playerCardsPower);
+      if (!_isBattle) {
+        _outcomeData["opponent_cards"] =
+            _simulateOuestOppositeCards(playerCardsPower);
       }
+      var oppositeCardsPower = 0;
+      for (var card in _outcomeData["opponent_cards"] ?? []) {
+        _oppositeCards.add(AccountCard(_account!, card));
+        oppositeCardsPower += card["power"]! as int;
+      }
+
+      var remainingPower = (playerCardsPower - oppositeCardsPower).abs();
+      var sidePower = _outcomeData["outcome"] ? remainingPower : 0;
+      for (var i = _playerCards.length - 1; i >= 0; i--) {
+        var power = sidePower.max(_playerCards[i].power);
+        sidePower -= power;
+        _cardPowers[i]?.value = power.min(0).toDouble();
+      }
+      sidePower = _outcomeData["outcome"] ? 0 : remainingPower;
+      for (var i = _oppositeCards.length - 1; i >= 0; i--) {
+        var power = sidePower.max(_oppositeCards[i].power);
+        sidePower -= power;
+        _cardPowers[i + 10]?.value = power.min(0).toDouble();
+      }
+
       _oppositeCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
       _oppositeCardsCount?.value = _oppositeCards.length.toDouble();
@@ -84,13 +102,14 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     });
   }
 
-  void _simulateOuestOppositeCards(int playerCardsPower) {
+  List _simulateOuestOppositeCards(int playerCardsPower) {
     var random = Random();
     var opponentPower = _opponent!.defPower;
     if (!_outcomeData["outcome"] && opponentPower < playerCardsPower) {
       opponentPower = playerCardsPower +
           (playerCardsPower * random.nextDouble() * 0.1).round();
     }
+    var result = [];
     var cardPower = (opponentPower / 4).floor();
     var cards = _account!.loadingData.baseCards.values
         .where(
@@ -100,18 +119,17 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     for (var i = 0; i < 4; i++) {
       var cardId = cards[random.nextInt(cards.length)].id;
       if (i == 3) {
-        _oppositeCards.add(AccountCard(
-            _account!, {"base_card_id": cardId, "power": opponentPower}));
+        result.add({"base_card_id": cardId, "power": opponentPower});
       } else {
         var power = cardPower -
             (random.nextDouble() * 0.1 * cardPower +
                     random.nextDouble() * 0.2 * cardPower)
                 .round();
         opponentPower -= power;
-        _oppositeCards.add(
-            AccountCard(_account!, {"base_card_id": cardId, "power": power}));
+        result.add({"base_card_id": cardId, "power": power});
       }
     }
+    return result;
   }
 
   @override
@@ -120,6 +138,10 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     var controller = super.onRiveInit(artboard, stateMachineName);
     _playerCardsCount = controller.findInput<double>("playerCards");
     _oppositeCardsCount = controller.findInput<double>("opponentCards");
+    for (var i = 0; i < 5; i++) {
+      _cardPowers[i] = controller.findInput<double>("cardPower$i");
+      _cardPowers[i + 10] = controller.findInput<double>("cardPower${i + 10}");
+    }
     updateRiveText("playerNameText", "you_l".l());
     updateRiveText("opponentNameText", _opponent!.name);
     artboard.addController(controller);
