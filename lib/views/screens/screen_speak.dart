@@ -16,7 +16,7 @@ class SpeakScreen extends AbstractScreen {
 
 class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   Scenario? _scenario;
-
+  final GlobalKey<AnimatedListState> _chatListKey = GlobalKey<AnimatedListState>();
   final List<Chat> _chats = [];
   Talk? _currentTalk;
   STTBox? _sttBox;
@@ -78,8 +78,8 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
     var items = <Widget>[
       SizedBox(height: 80.d),
       Expanded(
-          child: ListView.builder(
-        itemCount: _chats.length,
+          child: AnimatedList(
+        key: _chatListKey,
         itemBuilder: _chatItemBuilder,
       ))
     ];
@@ -104,32 +104,55 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       }
     }
 
-    return Column(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.d),
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.end,
       children: items,
+      ),
     );
   }
 
-  Widget? _chatItemBuilder(BuildContext context, int index) {
+  Widget _chatItemBuilder(
+      BuildContext context, int index, Animation<double> animation) {
     var chat = _chats[index];
-    return RadioBox(
+    return ScaleTransition(
+      alignment: chat.type == ChatType.user
+          ? Alignment.bottomRight
+          : Alignment.topLeft,
+      scale: CurvedAnimation(
+        parent: animation.drive(Tween<double>(begin: 0, end: 1)),
+        curve: Curves.easeOutBack,
+      ),
+      child: RadioBox(
       chat.value,
       ballonPosition: chat.type == ChatType.user
           ? BalloonTipPosition.rightBottom
           : BalloonTipPosition.leftTop,
       narrator: chat.type == ChatType.user ? _userNarrator : _botNarrator,
+      ),
     );
   }
 
   Future<void> _onSTTResult(STTState state, String text) async {
     if (state == STTState.success) {
-      await Future.delayed(const Duration(milliseconds: 300));
+      const duration = Duration(milliseconds: 300);
+      await Future.delayed(duration);
       _sttBox?.setEnable(false);
-      _chats.addAll(_currentTalk!.chats.where((c) => c.isChat));
+
       var talk = _currentTalk!;
       _currentTalk = null;
       setState(() {});
+
+      // Add items to chat list
+      var items = talk.chats.where((c) => c.isChat);
+      for (var item in items) {
+        _chatListKey.currentState?.insertItem(_chats.length);
+        _chats.add(item);
+        await Future.delayed(duration);
+      }
+
       await serviceLocator<Speaker>()
           .play(talk.first(ChatType.bot).value, narrator: _botNarrator);
 
