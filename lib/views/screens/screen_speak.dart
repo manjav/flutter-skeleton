@@ -69,6 +69,12 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       return const SizedBox();
     }
     var items = <Widget>[
+      SizedBox(height: 80.d),
+      Expanded(
+          child: ListView.builder(
+        itemCount: _chats.length,
+        itemBuilder: _chatItemBuilder,
+      ))
     ];
     if (_currentTalk != null) {
       for (var chat in _currentTalk!.chats) {
@@ -98,11 +104,22 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
     );
   }
 
+  Widget? _chatItemBuilder(BuildContext context, int index) {
+    var chat = _chats[index];
+    return RadioBox(
+      chat.value,
+      ballonPosition: chat.type == ChatType.user
+          ? BalloonTipPosition.rightBottom
+          : BalloonTipPosition.leftTop,
+      narrator: chat.type == ChatType.user ? _userNarrator : _botNarrator,
+    );
+  }
 
   Future<void> _onSTTResult(STTState state, String text) async {
     if (state == STTState.success) {
       await Future.delayed(const Duration(milliseconds: 300));
       _sttBox?.setEnable(false);
+      _chats.addAll(_currentTalk!.chats.where((c) => c.isChat));
       var talk = _currentTalk!;
       _currentTalk = null;
       setState(() {});
