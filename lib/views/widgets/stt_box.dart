@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -11,7 +9,7 @@ class STTBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var stt = serviceLocator<STT>();
-    var size = 128.d;
+    var size = 110.d;
     return ValueListenableBuilder(
       valueListenable: stt.state,
       builder: (context, value, child) {
