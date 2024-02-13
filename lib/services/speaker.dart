@@ -17,6 +17,7 @@ class Speaker extends IService {
       player.stop();
       return;
     }
+    player.setPlaybackRate(narrator == Narrator.onyx ? 1 : 0.8);
     await player.play(
       UrlSource(
           "https://s1.matnyaar.ir/gpt/tts.php?voice=${narrator.name}&input=$text"),
