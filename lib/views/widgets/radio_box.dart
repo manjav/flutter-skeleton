@@ -19,13 +19,14 @@ class RadioBox extends StatefulWidget {
 }
 
 class _RadioBoxState extends State<RadioBox> {
-  final AudioPlayer _player = AudioPlayer();
   final ValueNotifier<PlayerState> _playerState =
       ValueNotifier(PlayerState.stopped);
 
   @override
   void initState() {
-    _player.onPlayerStateChanged
+    serviceLocator<Sounds>()
+        .getPlayer(widget.text)
+        .onPlayerStateChanged
         .listen((PlayerState s) => _playerState.value = s);
     super.initState();
   }
@@ -33,34 +34,42 @@ class _RadioBoxState extends State<RadioBox> {
   @override
   Widget build(BuildContext context) {
     var margin = 14.d;
-    return Stack(
-      // alignment: Alignment.center,
+    var isLeft = widget.ballonPosition == BalloonTipPosition.leftTop;
+    return Row(
+      mainAxisAlignment:
+          isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: [
-        Widgets.rect(
-            // alignment: Alignment.center,
-            width: 328.d,
-            margin: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
-            padding: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
-            decoration: BalloonDecoration(tipPosition: widget.ballonPosition),
-            child: Text(widget.text,
-                style: TStyles.medium,
-                textDirection: widget.text.getDirection())),
-        Positioned(
-            top: 0,
-            right: 76.d,
-            child: _button(
-              ValueListenableBuilder(
-                  valueListenable: _playerState,
-                  builder: (context, value, child) => Asset.load<SvgPicture>(
-                      value == PlayerState.playing ? "stop" : "play")),
-              margin * 2,
+        Stack(
+          children: [
+            Widgets.rect(
+              margin: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
+              padding:
+                  EdgeInsets.fromLTRB(margin * 2, 26.d, margin * 2, margin),
+              decoration: BalloonDecoration(tipPosition: widget.ballonPosition),
+              child: Text(widget.text,
+                  style: TStyles.medium,
+                  textDirection: widget.text.getDirection()),
+            ),
+            Positioned(
+                top: 0,
+                right: 76.d,
+                child: _button(
+                  ValueListenableBuilder(
+                      valueListenable: _playerState,
+                      builder: (context, value, child) =>
+                          Asset.load<SvgPicture>(
+                              value == PlayerState.playing ? "stop" : "play")),
+                  margin * 2,
                   () => serviceLocator<Speaker>()
                       .play(widget.text, narrator: widget.narrator!),
-            )),
-        Positioned(
-            top: 0,
-            right: 30.d,
-            child: _button(Asset.load<SvgPicture>("?"), margin * 2, _translate))
+                )),
+            Positioned(
+                top: 0,
+                right: 30.d,
+                child: _button(
+                    Asset.load<SvgPicture>("?"), margin * 2, _translate))
+          ],
+        ),
       ],
     );
   }
