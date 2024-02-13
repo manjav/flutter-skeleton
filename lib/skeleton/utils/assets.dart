@@ -5,13 +5,13 @@ import 'package:rive/rive.dart';
 
 import '../export.dart';
 
-
 class Asset {
   static T load<T>(
     String path, {
     BoxFit? fit,
     double? width,
     double? height,
+    ColorFilter? svgColorFilter,
     ImageCenterSliceData? centerSlice,
     ImageRepeat imageRepeat = ImageRepeat.noRepeat,
     Function(Artboard)? onRiveInit,
@@ -31,7 +31,10 @@ class Asset {
           centerSlice: centerSlice?.centerSlice,
         ) as T,
       AssetType.vector => SvgPicture.asset(address,
-          width: width, height: height, fit: fit ?? BoxFit.contain) as T,
+          colorFilter: svgColorFilter,
+          width: width,
+          height: height,
+          fit: fit ?? BoxFit.contain) as T,
       _ => null as T
     };
   }
