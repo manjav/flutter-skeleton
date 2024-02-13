@@ -19,57 +19,36 @@ class Widgets {
     Widget? child,
   }) {
     return GestureDetector(
-        onVerticalDragStart: onVerticalDragStart == null
-            ? null
-            : (details) {
-                if (_isActive(id)) {
-                  onVerticalDragStart(details);
-                }
-              },
-        onVerticalDragUpdate: onVerticalDragUpdate == null
-            ? null
-            : (details) {
-                if (_isActive(id)) {
-                  onVerticalDragUpdate(details);
-                }
-              },
-        onVerticalDragEnd: onVerticalDragEnd == null
-            ? null
-            : (details) {
-                if (_isActive(id)) {
-                  onVerticalDragEnd(details);
-                }
-              },
+        onVerticalDragStart:
+            _isActive(id) ? (d) => onVerticalDragStart?.call(d) : null,
+        onVerticalDragUpdate:
+            _isActive(id) ? (d) => onVerticalDragUpdate?.call(d) : null,
+        onVerticalDragEnd:
+            _isActive(id) ? (d) => onVerticalDragEnd?.call(d) : null,
         onTap: () {
-          if (_isActive(id)) {
-            onTap?.call();
-          }
+          if (_isActive(id)) onTap?.call();
         },
-        onTapUp: (details) {
-          if (_isActive(id)) {
-            serviceLocator<Sounds>()
-                .play(sfx ?? "mouse_up");
-            onTapUp?.call(details);
-          }
-        },
-        onTapDown: (details) {
-          if (_isActive(id)) {
-            if (sfx == null) {
-              serviceLocator<Sounds>().play("mouse_down");
-            }
-            onTapDown?.call(details);
-          }
-        },
+        onTapUp: _isActive(id)
+            ? (details) {
+                serviceLocator<Sounds>().play(sfx ?? "mouse_up");
+                onTapUp?.call(details);
+              }
+            : null,
+        onTapDown: _isActive(id)
+            ? (details) {
+                if (sfx == null) {
+                  serviceLocator<Sounds>().play("mouse_down");
+                }
+                onTapDown?.call(details);
+              }
+            : null,
         onTapCancel: () {
           if (_isActive(id)) {
+            serviceLocator<Sounds>().play(sfx ?? "mouse_up");
             onTapCancel?.call();
           }
         },
-        onLongPress: () {
-          if (_isActive(id)) {
-            onLongPress?.call();
-          }
-        },
+        onLongPress: _isActive(id) ? onLongPress?.call() : null,
         child: child);
   }
 

@@ -228,7 +228,6 @@ class LoadingController extends GetxController {
 
     serviceLocator<DeviceInfo>().initialize();
 
-    serviceLocator<Themes>().initialize();
 
     await serviceLocator<Localization>().initialize(args: [Get.context!]);
 

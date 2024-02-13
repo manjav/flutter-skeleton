@@ -77,6 +77,7 @@ class _MyAppState extends State<MyApp>
     }
     var result = await DeviceInfo.preInitialize(context, forced);
     if (result) {
+      Themes.preInitialize();
       setState(() {});
     }
   }
