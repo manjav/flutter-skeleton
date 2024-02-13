@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      // getService<Sounds>(context).stopAll();
+      // serviceLocator<Sounds>().stopAll();
     } else if (state == AppLifecycleState.resumed) {
       serviceLocator<Sounds>().playMusic();
     }

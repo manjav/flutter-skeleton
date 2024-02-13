@@ -43,6 +43,8 @@ class LoadingController extends GetxController {
     var sounds = serviceLocator<Sounds>();
     sounds.initialize();
 
+    serviceLocator<Speaker>().initialize();
+
     try {
       await await serviceLocator<HttpConnection>().initialize();
 

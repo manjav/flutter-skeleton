@@ -5,8 +5,14 @@ import 'package:lingai/app_export.dart';
 
 class RadioBox extends StatefulWidget {
   final String text;
-  final BalloonTipPosition ballonPosition;
-  const RadioBox(this.text, this.ballonPosition, {super.key});
+  final Narrator? narrator;
+  final BalloonTipPosition? ballonPosition;
+  const RadioBox(
+    this.text, {
+    this.ballonPosition = BalloonTipPosition.bottomRight,
+    this.narrator = Narrator.onyx,
+    super.key,
+  });
 
   @override
   State<RadioBox> createState() => _RadioBoxState();
@@ -48,7 +54,8 @@ class _RadioBoxState extends State<RadioBox> {
                   builder: (context, value, child) => Asset.load<SvgPicture>(
                       value == PlayerState.playing ? "stop" : "play")),
               margin * 2,
-              _play,
+                  () => serviceLocator<Speaker>()
+                      .play(widget.text, narrator: widget.narrator!),
             )),
         Positioned(
             top: 0,
@@ -77,15 +84,4 @@ class _RadioBoxState extends State<RadioBox> {
   }
 
   _translate() {}
-
-  _play() {
-    if (_playerState.value == PlayerState.playing) {
-      _player.stop();
-      return;
-    }
-    _player.play(
-      UrlSource(
-          "https://s1.matnyaar.ir/gpt/tts.php?voice=onyx&input=${widget.text}"),
-    );
-  }
 }
