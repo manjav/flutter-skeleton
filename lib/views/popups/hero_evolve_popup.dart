@@ -22,9 +22,9 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
   @override
   List<Widget> appBarElements() {
     return [
+      Indicator(widget.name, Values.potion, width: 280.d),
       Indicator(widget.name, Values.gold),
       Indicator(widget.name, Values.nectar, width: 300.d),
-      Indicator(widget.name, Values.potion, width: 280.d),
     ];
   }
 

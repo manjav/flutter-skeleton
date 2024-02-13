@@ -22,9 +22,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   @override
   List<Widget> appBarElementsRight() {
     return <Widget>[
+      Indicator(widget.route, Values.potion, width: 256.d),
       Indicator(widget.route, Values.gold),
       Indicator(widget.route, Values.nectar, width: 280.d),
-      Indicator(widget.route, Values.potion, width: 256.d),
     ];
   }
 
