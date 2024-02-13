@@ -15,10 +15,11 @@ class SpeakScreen extends AbstractScreen {
 
 class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   Scenario? _scenario;
-  int _currnentDialogIndex = 0;
 
-  List<Chat> _thread = [];
-  List<Chat> _mainDialogs = [];
+  final List<Chat> _chats = [];
+  Talk? _currentTalk;
+
+   
 
   @override
   List<Widget> appBarElementsLeft() {
@@ -41,21 +42,11 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
     var data =
         await rootBundle.loadString("assets/texts/${Get.arguments}.json");
     _scenario = Scenario(jsonDecode(data));
-    _nextStep();
+    _nextStep(0);
   }
 
-  void _nextStep() {
-    var dialog = _scenario!.thread[_currnentDialogIndex];
-    if (dialog.type == ChatType.hint) {
-      // serviceLocator<RouteService>()
-      //     .to(Routes.popupMentor, args: {"message": dialog.text});
-      _mainDialogs = [
-        dialog,
-        _scenario!.thread[_currnentDialogIndex + 1],
-      ];
-    }
-
-    setState(() {});
+  Future<void> _nextStep(int index) async {
+    setState(() => _currentTalk = _scenario!.thread[index]);
   }
 
   @override
@@ -63,16 +54,31 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
     if (_scenario == null) {
       return const SizedBox();
     }
+    var items = <Widget>[
+    ];
+    if (_currentTalk != null) {
+      for (var chat in _currentTalk!.chats) {
+        items.add(switch (chat.type) {
+          ChatType.hint =>
+            Text(chat.value, textDirection: chat.value.getDirection()),
+          ChatType.user => Column(children: [
+              SizedBox(height: 32.d),
+              RadioBox(
+                chat.value,
+                ballonPosition: BalloonTipPosition.rightBottom,
+                narrator: _userNarrator,
+              ),
+              SizedBox(height: 16.d),
+            ]),
+        });
+      }
+    }
 
     return Column(
-      // crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(height: 148.d),
-        Text(_mainDialogs[0].text, textDirection: TextDirection.rtl),
-        SizedBox(height: 12.d),
-        RadioBox(_mainDialogs[1].text, BalloonTipPosition.rightBottom),
-        SkinnedButton(width: 277, label: "test", onPressed: () {})
-      ],
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: items,
     );
   }
+
 }
