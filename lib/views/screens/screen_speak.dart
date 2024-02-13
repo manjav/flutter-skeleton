@@ -16,13 +16,14 @@ class SpeakScreen extends AbstractScreen {
 
 class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   Scenario? _scenario;
-  final GlobalKey<AnimatedListState> _chatListKey = GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _chatListKey =
+      GlobalKey<AnimatedListState>();
   final List<Chat> _chats = [];
   Talk? _currentTalk;
   STTBox? _sttBox;
 
   final Narrator _userNarrator = Narrator.nova;
-  final Narrator _botNarrator = Narrator.fable;
+  final Narrator _botNarrator = Narrator.shimmer;
 
   @override
   List<Widget> appBarElementsLeft() {
