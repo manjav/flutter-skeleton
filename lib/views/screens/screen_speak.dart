@@ -20,7 +20,6 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       GlobalKey<AnimatedListState>();
   final List<Chat> _chats = [];
   Talk? _currentTalk;
-  STTBox? _sttBox;
 
   final Narrator _userNarrator = Narrator.nova;
   final Narrator _botNarrator = Narrator.shimmer;
@@ -46,7 +45,6 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
     var data =
         await rootBundle.loadString("assets/texts/${Get.arguments}.json");
     _scenario = Scenario(jsonDecode(data));
-    _sttBox = STTBox(_scenario!.targetLanguage, onResult: _onSTTResult);
     _nextStep(0);
   }
 
@@ -68,7 +66,8 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
         _sttBox!.setEnable(true, pattern: chat.value);
       }
     }
-    _sttBox!.startListening();
+    serviceLocator<STT>().startListening(
+        locale: _scenario!.targetLanguage, onResult: _onSTTResult);
   }
 
   @override
@@ -140,7 +139,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
     if (state == STTState.success) {
       const duration = Duration(milliseconds: 300);
       await Future.delayed(duration);
-      _sttBox?.setEnable(false);
+      serviceLocator<STT>().setEnable(false);
 
       var talk = _currentTalk!;
       _currentTalk = null;
