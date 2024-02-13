@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      // getService<Sounds>(context).stopAll();
+      serviceLocator<Sounds>().pauseAll();
     } else if (state == AppLifecycleState.resumed) {
       serviceLocator<Sounds>().playMusic();
     }
@@ -67,7 +67,6 @@ class _MyAppState extends State<MyApp>
     initServices();
 
     if (mounted) if (Navigator.canPop(context)) Navigator.pop(context);
-    
     _initialize(true);
   }
 
@@ -89,8 +88,10 @@ class _MyAppState extends State<MyApp>
       key: key,
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_)=> serviceLocator<AccountProvider>()),
-          ChangeNotifierProvider(create: (_) => serviceLocator<OpponentsProvider>())
+          ChangeNotifierProvider(
+              create: (_) => serviceLocator<AccountProvider>()),
+          ChangeNotifierProvider(
+              create: (_) => serviceLocator<OpponentsProvider>())
         ],
         child: GetMaterialApp(
           navigatorObservers: [MyApp._observer],
