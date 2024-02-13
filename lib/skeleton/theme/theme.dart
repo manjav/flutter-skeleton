@@ -3,13 +3,6 @@ import 'package:flutter/material.dart';
 import '../services/export.dart';
 
 class TColors {
-  static const accent = Color(0xFFFF5D54);
-  static const black = Color(0xFF000000);
-  static const black80 = Color(0xAA000000);
-  static const blue = Color(0xFF017AFA);
-  static const cream = Color(0xFFF6E5D0);
-  static const clay = Color(0xFFD29774);
-  static const cyan = Color(0xFF3FC1B9);
   static const primary = Color(0xFF19212A);
   static const primary90 = Color(0xFF223140);
   static const primary80 = Color(0xFF2E4154);
@@ -21,8 +14,15 @@ class TColors {
   static const primary20 = Color(0xFFADBFD6);
   static const primary10 = Color(0xFFDCE8FA);
   static const primary0 = Color(0xFFEEF5FF);
+  static const error = Color(0xFFFF5D54);
+  static const green = Color(0xFF009C51);
+  static const black = Color(0xFF000000);
+  static const black80 = Color(0xAA000000);
+  static const blue = Color(0xFF017AFA);
+  static const cream = Color(0xFFF6E5D0);
+  static const clay = Color(0xFFD29774);
+  static const cyan = Color(0xFF3FC1B9);
   static const gray = Color(0xFFA4A4A4);
-  static const green = Color(0xFF82EE24);
   static const orange = Color(0xFFFF8B21);
   static const teal = Color(0xFF59AFC2);
   static const transparent = Color(0x00000000);

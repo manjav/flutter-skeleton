@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-
 import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
@@ -63,25 +62,23 @@ class _ButtonPainter extends BoxPainter {
     if (configuration.size!.width == 0 || configuration.size!.height == 0) {
       return;
     }
-    var size = configuration.size!;
     var cr = cornerRadius;
+    var size = configuration.size!;
     var r = RRect.fromLTRBXY(offset.dx, offset.dy, offset.dx + size.width,
         offset.dy + size.height, cr, cr);
-    var l = _strokePaint.strokeWidth * 0.5;
+    canvas.drawRRect(r, _strokePaint);
+    canvas.drawRRect(r, _mainPaint);
+
+    var b = 2.0.d;
     var isEnable = true;
-    var b = 4.0.d;
     var pressed = isPressed && isEnable;
-    _hilightPaint.shader = ui.Gradient.linear(Offset(offset.dx, offset.dy),
-        Offset(offset.dx, offset.dy + size.height), [
+    var or =
+        RRect.fromLTRBXY(r.left, r.top + b, r.right, r.bottom - b * 2, cr, cr);
+    _hilightPaint.shader = ui.Gradient.linear(
+        Offset(or.left, or.top), Offset(or.left, or.bottom), [
       pressed ? Color.lerp(mainColor, TColors.white, 0.2)! : mainColor,
       pressed ? mainColor : Color.lerp(mainColor, TColors.white, 0.3)!
     ]);
-
-    var or = RRect.fromLTRBXY(r.left, r.top + b - (pressed ? 0 : b), r.right,
-        r.bottom - l - (pressed ? 0 : b), cr, cr);
-
-    canvas.drawRRect(r, _strokePaint);
-    canvas.drawRRect(r, _mainPaint);
-    canvas.drawRRect(pressed ? r : or, _hilightPaint);
+    canvas.drawRRect(or, _hilightPaint);
   }
 }
