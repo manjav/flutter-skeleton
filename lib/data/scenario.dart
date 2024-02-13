@@ -1,3 +1,5 @@
+import 'package:lingai/app_export.dart';
+
 class Scenario {
   String botName = "", botAvatar = "";
   List<Talk> thread = [];
@@ -22,13 +24,17 @@ class Scenario {
       lastType = t;
       currentTalk.chats
           .add(Chat(type: t, value: map["thread"][index]["value"]));
+      if (t == ChatType.user) {
+        currentTalk.chats.add(
+            Chat(type: ChatType.stt, value: map["thread"][index]["value"]));
+      }
       index++;
     }
     thread.add(currentTalk);
   }
 }
 
-enum ChatType { none, hint, user, bot }
+enum ChatType { none, hint, user, stt, bot }
 
 class ChatTypeExtension {
   static ChatType getEnum(String type) {
@@ -43,7 +49,12 @@ class Chat {
   final ChatType type;
   final String value;
   Chat({required this.type, required this.value});
-  get isChat => type == ChatType.user || type == ChatType.bot;
+  bool get isChat => type == ChatType.user || type == ChatType.bot;
+  Narrator get narrator => switch (type) {
+        ChatType.user => Narrator.nova,
+        ChatType.bot => Narrator.fable,
+        _ => Narrator.onyx,
+      };
 }
 
 class Talk {

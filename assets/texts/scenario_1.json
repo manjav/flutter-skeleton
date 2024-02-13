@@ -6,7 +6,7 @@
     "thread": [
         {
             "type": "hint",
-            "value": "حالا می‌خواهیم سلام کنیم، (لطفا تکرار کن)"
+            "value": "حالا می‌خوایم سلام کنیم، (لطفا تکرار کن)"
         },
         {
             "type": "user",
@@ -14,11 +14,11 @@
         },
         {
             "type": "bot",
-            "value": "Merhaba, Hoş Galdiniz!"
+            "value": "Merhaba, Hoş Geldiniz!"
         },
         {
             "type": "hint",
-            "value": "حالا بگو چی می‌خوای بخری (تکرار)"
+            "value": "حالا بگو چی می‌خوای بخری؟ (تکرار)"
         },
         {
             "type": "user",
