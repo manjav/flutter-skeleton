@@ -9,7 +9,6 @@ void initServices() {
 
   serviceLocator.registerLazySingleton<RouteService>(() => RouteService());
   serviceLocator.registerLazySingleton<DeviceInfo>(() => DeviceInfo());
-  serviceLocator.registerLazySingleton<Themes>(() => Themes());
   serviceLocator.registerLazySingleton<Localization>(() => Localization());
   serviceLocator.registerLazySingleton<Sounds>(() => Sounds());
 }
