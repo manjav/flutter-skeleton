@@ -28,10 +28,10 @@ class Sounds extends ISounds {
     if (name.isEmpty) return;
     if (channel == null) {
       if (!Pref.sfx.getBool()) return;
-      player = _findPlayer(name);
+      player = getPlayer(name);
     } else {
       if (channel == "music" && !Pref.music.getBool()) return;
-      player = _findPlayer(channel);
+      player = getPlayer(channel);
     }
 
     if (loop) player.setReleaseMode(ReleaseMode.loop);
@@ -56,7 +56,7 @@ class Sounds extends ISounds {
   ///we have bug here because in mouse down and mouse up we get same audio player
   ///for example audio player index 1 [time between call these is very tiny and return same audio player]
   ///there fore we set two source in a small time with these way we didn't get any error
-  AudioPlayer _findPlayer(String name) {
+  AudioPlayer getPlayer(String name) {
     // var entries = _players.entries;
     // for (var e in entries) {
     //   if (e.key.startsWith('_') && e.value.state != PlayerState.playing) {
@@ -81,6 +81,6 @@ class Sounds extends ISounds {
 
   @override
   void playMusic() {
-    play('main_theme', channel: "music", loop: true);
+    // play('main_theme', channel: "music", loop: true);
   }
 }
