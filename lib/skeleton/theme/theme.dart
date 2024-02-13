@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../services/export.dart';
+import '../../app_export.dart';
 
 class TColors {
   static const primary = Color(0xFF19212A);
