@@ -1,13 +1,13 @@
 class Scenario {
   String botName = "", botAvatar = "";
-  List<Chat> thread = [];
+  String nativeLanguage = "", targetLanguage = "";
+
   Scenario(Map map) {
     botName = map["botName"];
     botAvatar = map["botAvatar"];
-    thread = List.generate(
-        map["thread"].length,
-        (i) => Chat(
-            Chat.getEnum(map["thread"][i]["type"]), map["thread"][i]["value"]));
+    nativeLanguage = map["nativeLanguage"];
+    targetLanguage = map["targetLanguage"];
+    thread = [];
   }
 }
 
