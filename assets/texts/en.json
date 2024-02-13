@@ -17,6 +17,7 @@
     "battle_l": "Battle",
     "scout_l": "Scout",
     "attack_l": "Attack",
+    "select_cards":"You must select a card at least",
     "level_l": "Level  %s",
     "upgrade_l": "Upgrade",
     "update_l": "Update",

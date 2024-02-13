@@ -288,6 +288,13 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   bool isBossQuest(Account account) => ((account.questsCount / 10) % 1 == 0);
 
   _attack(Account account) async {
+    if (_selectedCards.value.where((element) => element == null).length == 5) {
+      await serviceLocator<RouteService>().to(
+          Routes.popupMessage,
+          args: {"title": "Error", "message": "select_cards".l()},
+        );
+      return;
+    }
     Overlays.insert(
       context,
       AttackFeastOverlay(
