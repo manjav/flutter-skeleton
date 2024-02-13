@@ -20,6 +20,8 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   Talk? _currentTalk;
 
    
+  final Narrator _userNarrator = Narrator.nova;
+  final Narrator _botNarrator = Narrator.fable;
 
   @override
   List<Widget> appBarElementsLeft() {
@@ -47,6 +49,14 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
 
   Future<void> _nextStep(int index) async {
     setState(() => _currentTalk = _scenario!.thread[index]);
+    for (var chat in _currentTalk!.chats) {
+      if (chat.type == ChatType.hint) {
+        await serviceLocator<Speaker>().play(chat.value);
+      } else if (chat.type == ChatType.user) {
+        await serviceLocator<Speaker>()
+            .play(chat.value, narrator: _userNarrator);
+      }
+    }
   }
 
   @override
