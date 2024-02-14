@@ -23,6 +23,12 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
       EdgeInsets.fromLTRB(122.d, 180.d, 122.d, 80.d);
 
   @override
+  void initState() {
+    _textController.text = accountProvider.account.name;
+    super.initState();
+  }
+
+  @override
   Widget contentFactory() {
     var account = accountProvider.account;
     return Column(
@@ -32,7 +38,6 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
           Widgets.skinnedInput(
               maxLines: 1,
               controller: _textController,
-              hintText: account.name,
               onChange: (t) => setState(() {})),
           SizedBox(height: 12.d),
           SkinnedButton(
