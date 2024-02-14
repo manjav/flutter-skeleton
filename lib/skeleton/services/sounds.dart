@@ -7,6 +7,8 @@ abstract class ISounds extends IService {
   void playMusic();
   void stop(String channel);
   void stopAll();
+  void pauseAll();
+  void resumeMusic();
 }
 
 class Sounds extends ISounds {
@@ -81,6 +83,24 @@ class Sounds extends ISounds {
 
   @override
   void playMusic() {
-    play('main_theme', channel: "music",loop: true);
+    play('main_theme', channel: "music", loop: true);
+  }
+
+  @override
+  void pauseAll() {
+    var entries = _players.entries;
+    for (var e in entries) {
+      e.value.pause();
+    }
+  }
+
+  @override
+  void resumeMusic() {
+    var player = _findPlayer("main_theme");
+    if (player.source == null) {
+      playMusic();
+    } else {
+      player.resume();
+    }
   }
 }

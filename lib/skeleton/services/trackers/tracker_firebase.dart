@@ -66,6 +66,6 @@ class FirebaseTracker extends AbstractTracker {
 
   @override
   setScreen(String screenName) async {
-    await _firebaseAnalytics.setCurrentScreen(screenName: screenName);
+    await _firebaseAnalytics.logScreenView(screenName: screenName);
   }
 }
