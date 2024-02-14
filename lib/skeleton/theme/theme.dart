@@ -25,6 +25,7 @@ class TColors {
   static const white = Color(0xFFFFFFFF);
   static const white30 = Color(0x55FFFFFF);
   static const white50 = Color(0x88FFFFFF);
+  static const red = Color(0xFFEE3E3E);
 }
 
 class TStyles {
