@@ -47,6 +47,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               Widgets.button(context,
                   width: 110.d,
                   height: 110.d,
+                  margin: EdgeInsets.only(top: 20.d),
                   padding: EdgeInsets.all(16.d),
                   child: Asset.load<Image>("ui_settings"),
                   onPressed: () =>
