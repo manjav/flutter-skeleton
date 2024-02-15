@@ -44,6 +44,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     var items = <Widget>[];
     items.addAll(children);
     items.add(_progressbarBuilder());
+    items.add(_closeButton());
     return Widgets.button(context,
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
@@ -196,5 +197,16 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
           const RiveEvent(name: "closing", secondsDelay: 0, properties: {}));
       closeInput?.value = true;
     }
+  }
+
+  Widget _closeButton() {
+    return Positioned(
+      right: 100.d,
+      top: 250.d,
+      child: GestureDetector(
+        onTap: () => closeInput?.value = true,
+        child: Asset.load<Image>("close", height: 56.d, width: 56.d),
+      ),
+    );
   }
 }
