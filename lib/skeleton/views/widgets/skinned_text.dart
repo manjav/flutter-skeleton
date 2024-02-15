@@ -19,7 +19,7 @@ class SkinnedText extends StatelessWidget {
     this.strokeColor = TColors.primary10,
     this.textAlign,
     this.strokeWidth,
-    this.alignment = Alignment.center,
+    this.alignment = Alignment.topCenter,
     this.textDirection,
     this.shadowScale = 1.0,
     this.overflow,
@@ -29,18 +29,29 @@ class SkinnedText extends StatelessWidget {
   Widget build(BuildContext context) {
     var style = this.style ?? TStyles.medium;
     return Stack(alignment: alignment, children: [
-      // Positioned.fill(child: Widgets.rect(color: TColors.green.withAlpha(31))),
       Text(text,
           overflow: overflow,
           textAlign: textAlign,
           textDirection: textDirection,
           style: style.copyWith(
-              // backgroundColor: TColors.accent,
+            foreground: Paint()
+              ..strokeWidth = strokeWidth ?? style.fontSize! * 0.15
+              ..color = strokeColor
+              ..style = PaintingStyle.stroke,
+          )),
+      Padding(
+        padding: EdgeInsets.only(top: 3.5.d),
+        child: Text(text,
+            overflow: overflow,
+            textAlign: textAlign,
+            textDirection: textDirection,
+            style: style.copyWith(
               foreground: Paint()
                 ..strokeWidth = strokeWidth ?? style.fontSize! * 0.15
                 ..color = strokeColor
                 ..style = PaintingStyle.stroke,
-              shadows: [_shadow(0, style.fontSize! * 0.16 * shadowScale)])),
+            )),
+      ),
       Text(text,
           overflow: overflow,
           textAlign: textAlign,
@@ -52,7 +63,4 @@ class SkinnedText extends StatelessWidget {
           )),
     ]);
   }
-
-  _shadow(double x, double y) =>
-      Shadow(offset: Offset(x, y), color: strokeColor);
 }
