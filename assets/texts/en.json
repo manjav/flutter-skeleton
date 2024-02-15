@@ -325,6 +325,8 @@
     "profile_name_title": "Change Name:",
     "profile_name_warn": "You can change your name at level %s by spending %s nectar.",
     "profile_mood_title": "Change Mood:",
+    "profile_name_error": "This name is already taken.",
+    "profile_name_suggest": "You can also choose from these names:",
     "profile_set_1":"Regular",
     "profile_set_2":"Royale",
     "profile_set_3":"Premium",

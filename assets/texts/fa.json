@@ -325,6 +325,8 @@
     "profile_name_title": "تغییر نام",
     "profile_name_warn": "شما می تونید اسمتون رو بعد از سطح %s با دادن %s نکتار عوض کنید.",
     "profile_mood_title": "تغییر مود:",
+    "profile_name_error": "این نام کاربری موجود است",
+    "profile_name_suggest": "میتوانید یکی از نام های زیر را انتخاب کنید:",
     "profile_set_1": "عمومی",
     "profile_set_2": "رویال",
     "profile_set_3": "ویژه",
