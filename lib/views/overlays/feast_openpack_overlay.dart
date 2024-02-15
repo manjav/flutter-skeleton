@@ -39,7 +39,9 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
 
     _opacityAnimationController.forward();
     super.initState();
+  }
 
+  Future<void> getData() async {
     process(() async {
       _cards = await accountProvider.openPack(context, _pack);
       var maxCards = _cards.first.base.isHero ? 4 : 2;
@@ -77,6 +79,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     _heroInput = controller.findInput<bool>("isHero");
     updateRiveText("packNameText", "shop_card_${_pack.id}".l());
     updateRiveText("packDescriptionText", "shop_card_${_pack.id}_desc".l());
+    getData();
     return controller;
   }
 

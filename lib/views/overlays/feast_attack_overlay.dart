@@ -38,7 +38,9 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     children = [animationBuilder("attack")];
     _opponent = widget.args["opponent"] ?? Opponent.create(1, "دشمن", 0);
     _isBattle = widget.args["isBattle"];
+  }
 
+  Future<void> getData() async {
     process(() async {
       SelectedCards? cards = widget.args["cards"];
       if (cards != null) {
@@ -145,6 +147,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     updateRiveText("playerNameText", "you_l".l());
     updateRiveText("opponentNameText", _opponent!.name);
     artboard.addController(controller);
+    getData();
     return controller;
   }
 
