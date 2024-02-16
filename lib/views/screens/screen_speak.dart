@@ -70,11 +70,14 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       _inputSize.value = _defaultInputSize;
 
       if (chat.type == ChatType.stt) {
+        if (kDebugMode) {
         await Future.delayed(const Duration(seconds: 2));
         _onSTTResult(STTState.success, chat.value);
-        // serviceLocator<STT>().setEnable(true, pattern: chat.value);
-        // serviceLocator<STT>().startListening(
-        //     locale: _scenario!.targetLanguage, onResult: _onSTTResult);
+        } else {
+          serviceLocator<STT>().setEnable(true, pattern: chat.value);
+          serviceLocator<STT>().startListening(
+              locale: _scenario!.targetLanguage, onResult: _onSTTResult);
+        }
       } else {
         await serviceLocator<Speaker>()
             .play(chat.value, narrator: chat.narrator);
