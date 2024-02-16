@@ -10,11 +10,13 @@
         },
         {
             "type": "user",
-            "value": "Merhaba"
+            "value": "Merhaba",
+            "nativeLanguage": "سلام"
         },
         {
             "type": "bot",
-            "value": "Merhaba, Hoş Geldiniz!"
+            "value": "Merhaba, Hoş Geldiniz!",
+            "nativeLanguage": "سلام، خوش اومدید!"
         },
         {
             "type": "hint",
@@ -22,11 +24,13 @@
         },
         {
             "type": "user",
-            "value": "Yoğurt istiyorum"
+            "value": "Yoğurt istiyorum",
+            "nativeLanguage": "من ماست می‌خوام"
         },
         {
             "type": "bot",
-            "value": "Buyurun."
+            "value": "Buyurun.",
+            "nativeLanguage": "بفرمایید."
         }
     ]
 }

@@ -16,17 +16,22 @@ class Scenario {
     var lastType = ChatType.none;
     Talk currentTalk = Talk(talkIndex);
     while (index < map["thread"].length) {
-      var t = ChatTypeExtension.getEnum(map["thread"][index]["type"]);
+      var chat = map["thread"][index];
+      var t = ChatTypeExtension.getEnum(chat["type"]);
       if (t == ChatType.hint && lastType != ChatType.none) {
         thread.add(currentTalk);
         currentTalk = Talk(++talkIndex);
       }
       lastType = t;
-      currentTalk.chats
-          .add(Chat(type: t, value: map["thread"][index]["value"]));
+      currentTalk.chats.add(Chat(
+          type: t,
+          value: chat["value"],
+          nativeLanguage: chat["nativeLanguage"] ?? ""));
       if (t == ChatType.user) {
-        currentTalk.chats.add(
-            Chat(type: ChatType.stt, value: map["thread"][index]["value"]));
+        currentTalk.chats.add(Chat(
+            type: ChatType.stt,
+            value: chat["value"],
+            nativeLanguage: chat["nativeLanguage"] ?? ""));
       }
       index++;
     }
@@ -48,7 +53,12 @@ class ChatTypeExtension {
 class Chat {
   final ChatType type;
   final String value;
-  Chat({required this.type, required this.value});
+  final String nativeLanguage;
+  Chat({
+    required this.type,
+    required this.value,
+    required this.nativeLanguage,
+  });
   bool get isChat => type == ChatType.user || type == ChatType.bot;
   Narrator get narrator => switch (type) {
         ChatType.user => Narrator.nova,

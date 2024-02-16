@@ -5,10 +5,13 @@ import 'package:lingai/app_export.dart';
 
 class RadioBox extends StatefulWidget {
   final String text;
+  final String? translation;
   final Narrator? narrator;
   final BalloonTipPosition? ballonPosition;
+
   const RadioBox(
     this.text, {
+    this.translation,
     this.ballonPosition = BalloonTipPosition.bottomRight,
     this.narrator = Narrator.onyx,
     super.key,
@@ -45,14 +48,25 @@ class _RadioBoxState extends State<RadioBox> {
               margin: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
               padding:
                   EdgeInsets.fromLTRB(margin * 2, 26.d, margin * 2, margin),
-              decoration: BalloonDecoration(tipPosition: widget.ballonPosition),
-              child: Text(widget.text,
+                decoration:
+                    BalloonDecoration(tipPosition: widget.ballonPosition),
+                child: Column(
+                  children: [
+                    Text(widget.text,
                   style: TStyles.medium,
                   textDirection: widget.text.getDirection()),
-            ),
+                    SizedBox(height: widget.translation == null ? 0 : 4.d),
+                    widget.translation == null
+                        ? const SizedBox()
+                        : Text(widget.translation!,
+                            style: TStyles.small
+                                .copyWith(color: TColors.primary40),
+                            textDirection: widget.translation!.getDirection()),
+                  ],
+                )),
             Positioned(
                 top: 0,
-                right: 76.d,
+                right: widget.translation != null ? null : 30.d,
                 child: _button(
                   ValueListenableBuilder(
                       valueListenable: _playerState,
@@ -63,9 +77,11 @@ class _RadioBoxState extends State<RadioBox> {
                   () => serviceLocator<Speaker>()
                       .play(widget.text, narrator: widget.narrator!),
                 )),
-            Positioned(
+            widget.translation != null
+                ? const SizedBox()
+                : Positioned(
                 top: 0,
-                right: 30.d,
+                    right: 76.d,
                 child: _button(
                     Asset.load<SvgPicture>("?"), margin * 2, _translate))
           ],
