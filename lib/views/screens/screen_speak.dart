@@ -155,26 +155,29 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
         child: _itemContentBuilder(chat));
   }
 
-  Widget _itemContentBuilder(Chat chat) {
+  Widget _itemContentBuilder(Chat chat, [bool inChat = true]) {
+    var tip = BalloonTipPosition.none;
+    if (inChat) {
+      tip = chat.type == ChatType.user
+          ? BalloonTipPosition.rightBottom
+          : BalloonTipPosition.leftTop;
+    }
     if (chat.isChat) {
       return RadioBox(
         chat.value,
-        ballonPosition: chat.type == ChatType.user
-            ? BalloonTipPosition.rightBottom
-            : BalloonTipPosition.leftTop,
+        ballonPosition: tip,
         narrator: chat.narrator,
+        translation: chat.nativeLanguage,
       );
     }
     if (chat.type == ChatType.stt) {
       return const STTBox();
     }
     return Widgets.rect(
-        height: 60.d,
         alignment: Alignment.center,
         child: Text(
           chat.value,
           textDirection: chat.value.getDirection(),
-          style: TStyles.large,
         ));
   }
 

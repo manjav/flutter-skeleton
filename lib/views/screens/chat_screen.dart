@@ -37,10 +37,6 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
       "promptAddition": topic["prompt"],
       "destLanguage": "turkish"
     });
-
-    // var text =
-    //     '{ "conversationId": "0000-dddd-dddd", "response": {"name": "Ali Baghali","text": "Merhaba" },"possibleChoices": [ { "destLanguage": "", "persian": "" }, { "destLanguage": "", "persian": "" }, { "destLanguage": "", "persian": "" }]}';
-    // var result = jsonDecode(text);
     _parseResponse(result);
   }
 
