@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../../app_export.dart';
 
 enum BalloonTipPosition {
+  none,
   topLeft,
   top,
   topRight,
@@ -14,7 +15,7 @@ enum BalloonTipPosition {
   leftBottom,
   rightTop,
   right,
-  rightBottom
+  rightBottom,
 }
 
 // ignore: must_be_immutable
@@ -131,7 +132,9 @@ class _BollonPainter extends BoxPainter {
 
     canvas.drawRRect(r, _mainPaint);
     canvas.drawRRect(r, _strokePaint);
-    canvas.drawPath(path, _mainPaint);
-    canvas.drawPath(path, _strokePaint);
+    if (tipPosition != BalloonTipPosition.none) {
+      canvas.drawPath(path, _mainPaint);
+      canvas.drawPath(path, _strokePaint);
+    }
   }
 }
