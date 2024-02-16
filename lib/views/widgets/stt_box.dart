@@ -9,7 +9,7 @@ class STTBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var stt = serviceLocator<STT>();
-    var size = 110.d;
+    var size = 100.d;
     return ValueListenableBuilder(
       valueListenable: stt.state,
       builder: (context, value, child) {

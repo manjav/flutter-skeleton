@@ -86,7 +86,6 @@ class STT extends IService {
     if (state.value.index < STTState.enable.index) {
       return;
     }
-    print(this.locale);
     recognizedWords.value = "";
     state.value = STTState.enable;
     final options = SpeechListenOptions(
