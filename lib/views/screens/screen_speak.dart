@@ -166,9 +166,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
               ?.removeItem(index, (c, a) => _chatItemBuilder(item, a));
         }
         if (item.isChat) {
-          _chatListKey.currentState?.insertItem(_chatItems.length);
-          _chatItems.add(item);
-          await Future.delayed(duration);
+          await _insertChat(item, duration);
           // Bot answering
           if (item.type == ChatType.bot) {
             await serviceLocator<Speaker>()
@@ -176,9 +174,22 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
           }
         }
       }
+
+      await Future.delayed(duration);
       _nextStep(_currentTalk!.index + 1);
     } else {
       serviceLocator<Sounds>().play("wrong");
     }
+  }
+
+  Future<void> _insertChat(Chat item, Duration duration) async {
+    _chatListKey.currentState?.insertItem(_chatItems.length);
+    _chatItems.add(item);
+    await Future.delayed(const Duration(milliseconds: 1));
+    await _chatScrollController.animateTo(
+        _chatScrollController.position.maxScrollExtent,
+        duration: duration,
+        curve: Curves.easeOutQuart);
+    await Future.delayed(duration);
   }
 }
