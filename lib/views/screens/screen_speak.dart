@@ -19,9 +19,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   Scenario? _scenario;
   final GlobalKey<AnimatedListState> _chatListKey =
       GlobalKey<AnimatedListState>();
-  final GlobalKey<AnimatedListState> _mainListKey =
-      GlobalKey<AnimatedListState>();
-  final List<Chat> _chatItems = [], _mainItems = [];
+  final List<Chat> _chatItems = [];
   Talk? _currentTalk;
 
   @override
@@ -65,8 +63,6 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       if (chat.type == ChatType.bot) {
         continue;
       }
-      _mainListKey.currentState?.insertItem(0);
-      _mainItems.insert(0, chat);
       if (chat.type == ChatType.stt) {
         await Future.delayed(const Duration(seconds: 2));
         _onSTTResult(STTState.success, chat.value);
@@ -87,25 +83,38 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
     }
 
     var padding = 16.d;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.end,
+    return Stack(
       children: [
         Expanded(
           child: AnimatedList(
-              padding: EdgeInsets.fromLTRB(padding, padding * 4, padding, 0),
               key: _chatListKey,
+              controller: _chatScrollController,
+              padding: EdgeInsets.fromLTRB(padding, padding * 4, padding, 0),
               itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
         ),
-        SizedBox(height: 10.d),
-        Widgets.rect(
+        Positioned(
+              right: 0,
+              left: 0,
+              top: DeviceInfo.size.height - 320,
+              child: Widgets.rect(
+                  decoration: BoxDecoration(
           color: TColors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(24.d),
+                      topRight: Radius.circular(24.d),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, -2.d), // changes position of shadow
+                      ),
+                    ],
+                  ),
           padding: EdgeInsets.all(padding),
-          height: 340.d,
-          child: AnimatedList(
-              reverse: true,
-              key: _mainListKey,
-              itemBuilder: (c, i, a) => _chatItemBuilder(_mainItems[i], a)),
+                  child: Column(children: items)),
+          },
         )
       ],
     );
@@ -159,12 +168,6 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
 
       // Move items to chat list
       for (var item in _currentTalk!.chats) {
-        var index = _mainItems.indexOf(item);
-        if (index > -1) {
-          _mainItems.removeAt(index);
-          _mainListKey.currentState
-              ?.removeItem(index, (c, a) => _chatItemBuilder(item, a));
-        }
         if (item.isChat) {
           await _insertChat(item, duration);
           // Bot answering
