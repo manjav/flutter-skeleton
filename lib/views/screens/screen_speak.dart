@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,9 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       GlobalKey<AnimatedListState>();
   final List<Chat> _chatItems = [];
   Talk? _currentTalk;
+  final ScrollController _chatScrollController = ScrollController();
+  final ValueNotifier<double> _inputSize = ValueNotifier(0);
+  final double _defaultInputSize = 324.d;
 
   @override
   List<Widget> appBarElementsLeft() {
@@ -63,6 +67,8 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       if (chat.type == ChatType.bot) {
         continue;
       }
+      _inputSize.value = _defaultInputSize;
+
       if (chat.type == ChatType.stt) {
         await Future.delayed(const Duration(seconds: 2));
         _onSTTResult(STTState.success, chat.value);
@@ -92,10 +98,21 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
               padding: EdgeInsets.fromLTRB(padding, padding * 4, padding, 0),
               itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
         ),
-        Positioned(
+        ValueListenableBuilder(
+          valueListenable: _inputSize,
+          builder: (context, value, child) {
+            var items = <Widget>[];
+            for (var chat in _currentTalk!.chats) {
+              if (chat.type != ChatType.bot) {
+                items.add(_itemContentBuilder(chat, false));
+              }
+            }
+            return AnimatedPositioned(
               right: 0,
               left: 0,
-              top: DeviceInfo.size.height - 320,
+              top: DeviceInfo.size.height - value,
+              curve: value == 0 ? Curves.easeIn : Curves.easeOutBack,
+              duration: const Duration(milliseconds: 300),
               child: Widgets.rect(
                   decoration: BoxDecoration(
           color: TColors.white,
@@ -114,6 +131,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
                   ),
           padding: EdgeInsets.all(padding),
                   child: Column(children: items)),
+            );
           },
         )
       ],
@@ -160,10 +178,10 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   Future<void> _onSTTResult(STTState state, String text) async {
     if (state == STTState.success) {
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
-      const duration = Duration(milliseconds: 300);
-
+      const duration = Duration(milliseconds: 1000);
       // Waiting for celebration
       await Future.delayed(duration);
+      _inputSize.value = 0;
       serviceLocator<STT>().setEnable(false);
 
       // Move items to chat list
