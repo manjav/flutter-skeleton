@@ -37,24 +37,29 @@ class _RadioBoxState extends State<RadioBox> {
   @override
   Widget build(BuildContext context) {
     var margin = 14.d;
-    var isLeft = widget.ballonPosition == BalloonTipPosition.leftTop;
+    var alignment = MainAxisAlignment.center;
+    if (widget.ballonPosition != BalloonTipPosition.none) {
+      alignment = widget.ballonPosition == BalloonTipPosition.leftTop
+          ? MainAxisAlignment.start
+          : MainAxisAlignment.end;
+    }
     return Row(
-      mainAxisAlignment:
-          isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
+      mainAxisAlignment: alignment,
       children: [
         Stack(
+          alignment: Alignment.center,
           children: [
             Widgets.rect(
-              margin: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
-              padding:
-                  EdgeInsets.fromLTRB(margin * 2, 26.d, margin * 2, margin),
+                margin: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
+                padding:
+                    EdgeInsets.fromLTRB(margin * 2, 26.d, margin * 2, margin),
                 decoration:
                     BalloonDecoration(tipPosition: widget.ballonPosition),
                 child: Column(
                   children: [
                     Text(widget.text,
-                  style: TStyles.medium,
-                  textDirection: widget.text.getDirection()),
+                        style: TStyles.medium,
+                        textDirection: widget.text.getDirection()),
                     SizedBox(height: widget.translation == null ? 0 : 4.d),
                     widget.translation == null
                         ? const SizedBox()
@@ -80,10 +85,10 @@ class _RadioBoxState extends State<RadioBox> {
             widget.translation != null
                 ? const SizedBox()
                 : Positioned(
-                top: 0,
+                    top: 0,
                     right: 76.d,
-                child: _button(
-                    Asset.load<SvgPicture>("?"), margin * 2, _translate))
+                    child: _button(
+                        Asset.load<SvgPicture>("?"), margin * 2, _translate))
           ],
         ),
       ],
