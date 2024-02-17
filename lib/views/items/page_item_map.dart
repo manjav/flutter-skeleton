@@ -82,6 +82,17 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               onPressed: () =>
                   serviceLocator<RouteService>().to(Routes.popupInbox),
             )),
+        PositionedDirectional(
+          bottom: 200.d,
+          end: 150.d,
+          height: 150.d,
+          child: _box(0, "06:12:06".l()),
+        ),
+        PositionedDirectional(
+            bottom: 200.d,
+            end: 320.d,
+            height: 150.d,
+            child: _box(1, "chance_box".l())),
         _building(state.account, Buildings.defense),
         _building(state.account, Buildings.offense),
         _building(state.account, Buildings.base),
@@ -155,6 +166,49 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return;
     }
     serviceLocator<RouteService>().to(type, args: {"building": building});
+  }
+
+  Widget _box(double type, String title) {
+    return Widgets.touchable(
+      context,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Widgets.rect(
+              color: TColors.primary20,
+              padding: EdgeInsets.symmetric(horizontal: 12.d),
+              borderRadius: BorderRadius.circular(30.d),
+              child: Text(
+                title,
+                style: TStyles.small.copyWith(color: TColors.white),
+              )),
+          Positioned(
+            bottom: 22.d,
+            child: LoaderWidget(AssetType.animation, "icon_gift",
+                height: 116.d,
+                width: 105.d,
+                fit: BoxFit.cover, onRiveInit: (Artboard artboard) {
+              var controller = StateMachineController.fromArtboard(
+                  artboard, "State Machine 1");
+              var icon = controller?.findInput<double>("icon") as SMINumber;
+              icon.value = type;
+              artboard.addController(controller!);
+            }),
+          ),
+        ],
+      ),
+      onTap: () => _onBoxTap(type),
+    );
+  }
+
+  _onBoxTap(double type) {
+    if (type == 0) {
+      Overlays.insert(
+          context,
+          BundleFeastOverlay(
+            onClose: (data) {},
+          ));
+    }
   }
 
   void _riveEventsListener(RiveEvent event) {
