@@ -45,11 +45,13 @@ class EventNotification extends IService {
   void hideNotif(NoobMessage data) {
     var notif = notifications.keys
         .firstWhereOrNull((element) => element.currentState?.message == data);
+    notifications[notif]?.remove();
     notif?.currentState?.hide();
   }
 
   void hideAllNotif() {
     for (var entry in notifications.keys) {
+      notifications[entry]?.remove();
       entry.currentState?.hide();
     }
   }
