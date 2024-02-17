@@ -47,9 +47,9 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       Expanded(
           child: GridView.builder(
               itemCount: _cards.length,
-              padding: EdgeInsets.only(bottom: 200.d),
+              padding: EdgeInsets.only(bottom: 200.d, right: 15.d, left: 15.d),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 1.52),
+                  crossAxisCount: 2, childAspectRatio: 1.2),
               itemBuilder: (c, i) =>
                   _cardItemBuilder(_cards[i], secondsOffset)))
     ]);
@@ -106,7 +106,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   Widget _cardItemBuilder(AuctionCard card, int secondsOffset) {
     var account = accountProvider.account;
-    var cardSize = 230.d;
+    var cardSize = 240.d;
     var radius = Radius.circular(36.d);
     var bidable = card.activityStatus > 0 &&
         (card.ownerId != account.id) &&
@@ -114,25 +114,34 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     var time = card.activityStatus > 0
         ? (card.createdAt + secondsOffset).toRemainingTime()
         : "closed_l".l();
-    var bidderName = "auction_bid".l();
-    if (!bidable) {
-      bidderName +=
-          "\n${card.maxBidderId == account.id ? "you_l".l() : card.maxBidderName}\n";
-    }
+    var imMaxBidder = card.maxBidderId == account.id;
     return Widgets.button(context,
         radius: radius.x,
         padding: EdgeInsets.zero,
         margin: EdgeInsets.all(8.d),
-        color: TColors.primary90,
+        color: imMaxBidder ? TColors.green40 : TColors.cream15,
         child: Row(children: [
-          Widgets.rect(
-              width: cardSize + 16.d,
-              padding: EdgeInsets.all(8.d),
-              child: CardItem(card,
-                  size: cardSize,
-                  showCooldown: false,
-                  key: getGlobalKey(_selectedTab * 10000 + card.id),
-                  heroTag: "hero_${_selectedTab}_${card.id}")),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                  mainAxisSize: MainAxisSize.min,
+                  textDirection: TextDirection.ltr,
+                  children: [
+                    Asset.load<Image>("icon_gold", width: 60.d),
+                    SizedBox(width: 8.d),
+                    SkinnedText(card.maxBid.compact(), style: TStyles.large)
+                  ]),
+              Widgets.rect(
+                  width: cardSize + 16.d,
+                  padding: EdgeInsets.all(8.d),
+                  child: CardItem(card,
+                      size: cardSize,
+                      showCooldown: false,
+                      key: getGlobalKey(_selectedTab * 10000 + card.id),
+                      heroTag: "hero_${_selectedTab}_${card.id}")),
+            ],
+          ),
           Expanded(
               child: Stack(
             alignment: Alignment.bottomCenter,
@@ -145,43 +154,117 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                   child: Widgets.rect(
                       borderRadius: BorderRadius.only(
                           topRight: radius, bottomLeft: radius),
-                      color: TColors.primary70,
+                      color: TColors.black25,
                       child: SkinnedText("ˣ$time"))),
               Positioned(
-                  left: 0,
-                  right: 8.d,
-                  bottom: 8.d,
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    Text(bidderName, style: TStyles.medium.copyWith(height: 1)),
-                    Row(
-                        mainAxisSize: MainAxisSize.min,
-                        textDirection: TextDirection.ltr,
-                        children: [
-                          Asset.load<Image>("icon_gold", width: 60.d),
-                          SizedBox(width: 8.d),
-                          SkinnedText(card.maxBid.compact(),
-                              style: TStyles.large)
-                        ]),
-                    SizedBox(height: 8.d),
-                    bidable
-                        ? SkinnedButton(
-                            padding: EdgeInsets.fromLTRB(0, 12.d, 8.d, 32.d),
-                            color: ButtonColor.green,
-                            child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                textDirection: TextDirection.ltr,
-                                children: [
-                                  Asset.load<Image>("icon_gold", width: 60.d),
-                                  SizedBox(width: 4.d),
-                                  SkinnedText("+${card.bidStep.compact()}",
-                                      style: TStyles.large)
-                                ]),
-                            onPressed: () => _bid(card))
-                        : const SizedBox(),
-                  ])),
+                left: 0,
+                right: 8.d,
+                bottom: 12.d,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.d),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SkinnedText("auction_owner".l(),
+                          style: TStyles.small, textAlign: TextAlign.start),
+                      SizedBox(
+                        height: 4.d,
+                      ),
+                      Widgets.rect(
+                        height: 50.d,
+                        width: cardSize,
+                        padding: EdgeInsets.symmetric(horizontal: 15.d),
+                        borderRadius: BorderRadius.all(radius),
+                        color: TColors.black25,
+                        child: Row(
+                          children: [
+                            SkinnedText(
+                              card.maxBidderName,
+                              style: TStyles.tiny,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 7.d,
+                      ),
+                      SkinnedText("auction_bid".l(),
+                          style: TStyles.small, textAlign: TextAlign.start),
+                      SizedBox(
+                        height: 4.d,
+                      ),
+                      Widgets.rect(
+                        height: 50.d,
+                        width: cardSize,
+                        padding: EdgeInsets.symmetric(horizontal: 15.d),
+                        borderRadius: BorderRadius.all(radius),
+                        color: TColors.black25,
+                        child: Row(
+                          children: [
+                            SkinnedText(card.maxBidderName, style: TStyles.tiny)
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 17.d),
+                      bidable
+                          ? _getBidButton(card, account, imMaxBidder)
+                          : const SizedBox(),
+                    ],
+                  ),
+                ),
+              ),
             ],
           )),
         ]));
+  }
+
+  _getBidButton(AuctionCard card, Account account, bool imMaxBidder) {
+    if (imMaxBidder) {
+      return SkinnedButton(
+        padding: EdgeInsets.fromLTRB(21.d, 15.d, 12.d, 32.d),
+        color: ButtonColor.teal,
+        width: 240.d,
+        child: Row(
+            mainAxisSize: MainAxisSize.max,
+            textDirection: TextDirection.ltr,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Asset.load<Image>("checkbox_on", width: 53.d),
+              SizedBox(width: 12.d),
+              SkinnedText(
+                "auction_bid_leader".l(),
+                style: TStyles.small,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ]),
+      );
+    }
+    return SkinnedButton(
+        padding: EdgeInsets.fromLTRB(21.d, 15.d, 12.d, 32.d),
+        color: ButtonColor.teal,
+        child: Row(
+            mainAxisSize: MainAxisSize.max,
+            textDirection: TextDirection.ltr,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SkinnedText(
+                "Bid".l(),
+                style: TStyles.medium,
+              ),
+              SizedBox(width: 12.d),
+              Expanded(
+                child: Widgets.rect(
+                  padding: EdgeInsets.zero,
+                  borderRadius: BorderRadius.all(Radius.circular(21.d)),
+                  color: TColors.black25,
+                  child: SkinnedText("+${card.bidStep.compact()}",
+                      style: TStyles.medium),
+                ),
+              ),
+            ]),
+        onPressed: () => _bid(card));
   }
 
   _bid(AuctionCard card) async {
