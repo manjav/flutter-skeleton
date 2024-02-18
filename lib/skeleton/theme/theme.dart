@@ -62,7 +62,7 @@ class Themes {
     TStyles.tiny = _style(size: 22.d, weight: FontWeight.w100);
     TStyles.small = _style(size: 30.d, weight: FontWeight.w300);
     TStyles.medium = _style(size: 38.d, weight: FontWeight.w600);
-  TStyles.large = _style(size: 52.d, weight: FontWeight.w800);
+    TStyles.large = _style(size: 52.d, weight: FontWeight.w800);
     TStyles.big = _style(size: 72.d, weight: FontWeight.w900);
     TStyles.tinyInvert =
         _style(size: 22.d, weight: FontWeight.w100, color: TColors.primary90);
