@@ -79,6 +79,25 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     for (var card in _deckCards.value) {
       card!.isDeployed = false;
     }
+    _deckCards.value.sort((a, b) {
+      int x = 1, y = 1;
+
+      var aCoolDown = a!.getRemainingCooldown();
+      var bCoolDown = b!.getRemainingCooldown();
+
+      if (a.base.isHero && aCoolDown == 0) x += 2;
+      if (b.base.isHero && bCoolDown == 0) y += 2;
+
+      if (aCoolDown > 0) x -= 3;
+      if (bCoolDown > 0) y -= 3;
+
+      if (a.power > b.power) {
+        x++;
+      } else {
+        y++;
+      }
+      return y - x;
+    });
     _maxPower = _account.calculateMaxPower();
     _pageController = PageController(viewportFraction: 0.25);
     super.initState();
@@ -86,7 +105,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     WidgetsBinding.instance.addPostFrameCallback((d) {
       _timer = Timer.periodic(const Duration(milliseconds: 334),
           (t) => _setSlotTime((_seconds += 0.334).round()));
-      _pageController.jumpToPage(4);
+      _pageController.jumpToPage(1);
     });
     if (_battleId == 0) {
       _warriorsNotifier.add(

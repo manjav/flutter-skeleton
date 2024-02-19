@@ -98,6 +98,8 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                 start: 24.d,
                 child: LevelIndicator(
                     showLevel: false,
+                    level: _player!.level,
+                    xp: _player!.xp,
                     avatarId: _player!.avatarId,
                     onPressed: () => serviceLocator<RouteService>()
                         .to(Routes.popupProfileAvatars))),

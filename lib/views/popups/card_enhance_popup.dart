@@ -81,7 +81,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
                                             _getMaxEnhanceCost().compact()),
                                       ]),
                                     ],
-                                    true,
+                                    account.nectar >= _getMaxEnhanceCost(),
                                     _enhanceMax)
                                 : const SizedBox(),
                             _enhanceButton(

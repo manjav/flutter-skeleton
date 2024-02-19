@@ -11,6 +11,7 @@ class Indicator extends StatefulWidget {
   final Function? onTap;
   final bool hasPlusIcon;
   final dynamic data;
+  final bool? disableHero;
 
   const Indicator(
     this.origin,
@@ -21,6 +22,7 @@ class Indicator extends StatefulWidget {
     this.onTap,
     this.data,
     this.hasPlusIcon = true,
+    this.disableHero = false,
   });
   @override
   createState() => _IndicatorState();
@@ -35,43 +37,45 @@ class _IndicatorState extends State<Indicator>
     return SizedBox(
         width: widget.width ?? (widget.hasPlusIcon ? 320.d : 250.d),
         height: height,
-        child: Hero(
-          tag: widget.type.name,
-          child: Widgets.touchable(context,
-              child: Material(
-                color: TColors.transparent,
-                child: widget.value == null
-                    ? Consumer<AccountProvider>(
-                        builder: (_, state, child) => _getElements(
-                            height,
-                            state.account.getValue(widget.type),
-                            state.account.leagueId))
-                    : _getElements(height, widget.value!, widget.data as int),
-              ), onTap: () {
-            if (widget.onTap != null) {
-              widget.onTap?.call();
-            } else {
-              switch (widget.type) {
-                case Values.gold:
-                case Values.nectar:
-                  serviceLocator<RouteService>()
-                      .popUntil((route) => route.isFirst);
-                  services.changeState(ServiceStatus.changeTab, data: 0);
-                  log("Go to shop");
-                  break;
-                case Values.potion:
-                  serviceLocator<RouteService>().to(Routes.popupPotion);
-                  break;
-                default:
-                  break;
-              }
-            }
-            // widget.services.get<Analytics>().funnel("shopclicks");
-            // widget.services
-            //     .get<Analytics>()
-            //     .design('guiClick:shop:${widget.source}');
-          }),
-        ));
+        child: widget.disableHero == true
+            ? _child(height)
+            : Hero(tag: widget.type.name, child: _child(height)));
+  }
+
+  _child(double height) {
+    return Widgets.touchable(context,
+        child: Material(
+          color: TColors.transparent,
+          child: widget.value == null
+              ? Consumer<AccountProvider>(
+                  builder: (_, state, child) => _getElements(
+                      height,
+                      state.account.getValue(widget.type),
+                      state.account.leagueId))
+              : _getElements(height, widget.value!, widget.data as int),
+        ), onTap: () {
+      if (widget.onTap != null) {
+        widget.onTap?.call();
+      } else {
+        switch (widget.type) {
+          case Values.gold:
+          case Values.nectar:
+            serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+            services.changeState(ServiceStatus.changeTab, data: 0);
+            log("Go to shop");
+            break;
+          case Values.potion:
+            serviceLocator<RouteService>().to(Routes.popupPotion);
+            break;
+          default:
+            break;
+        }
+      }
+      // widget.services.get<Analytics>().funnel("shopclicks");
+      // widget.services
+      //     .get<Analytics>()
+      //     .design('guiClick:shop:${widget.source}');
+    });
   }
 
   _getElements(double height, int value, int league) {

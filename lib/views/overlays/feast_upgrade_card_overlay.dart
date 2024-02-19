@@ -28,7 +28,7 @@ class _UpgradeCardFeastOverlayState
     _isHero = widget.args["isHero"] ?? false;
     _oldCard =
         widget.args["card"] ?? accountProvider.account.cards.values.first;
-    _oldPower = _oldPower;
+    _oldPower = _oldCard.power;
     process(() async {
       if (_isHero) {
         return _newCard = await accountProvider.evolveHero(context, _oldCard);

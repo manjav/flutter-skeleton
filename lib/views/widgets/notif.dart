@@ -105,7 +105,7 @@ class NotifState extends State<Notif> with SingleTickerProviderStateMixin {
           },
           child: Widgets.rect(
             width: 487.d,
-            height: 130.d,
+            height: 150.d,
             margin: const EdgeInsets.only(bottom: 10),
             child: LoaderWidget(
               AssetType.animation,

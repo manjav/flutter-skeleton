@@ -22,9 +22,9 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
   @override
   List<Widget> appBarElements() {
     return [
+      Indicator(widget.name, Values.potion, width: 280.d),
       Indicator(widget.name, Values.gold),
       Indicator(widget.name, Values.nectar, width: 300.d),
-      Indicator(widget.name, Values.potion, width: 280.d),
     ];
   }
 
@@ -84,6 +84,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
           width: 500.d,
           color: ButtonColor.green,
           label: titleBuilder(),
+          isEnable: hero.card.getNextLevelPower() > 0,
           onPressed: () => _evolve(account, hero));
     }
     return Row(
@@ -97,6 +98,7 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
         SizedBox(width: 10.d),
         SkinnedButton(
             color: ButtonColor.teal,
+            isEnable: account.nectar >= price,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               SkinnedText("fill_out".l(), style: TStyles.large),
               SizedBox(width: 16.d),

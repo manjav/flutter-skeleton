@@ -9,7 +9,7 @@ import '../../app_export.dart';
 
 class DailyRewardFeastOverlay extends AbstractOverlay {
   const DailyRewardFeastOverlay({super.onClose, super.key})
-      : super(route: OverlaysName.feastPurchase);
+      : super(route: OverlaysName.feastDailyReward);
 
   @override
   createState() => _DailyRewardFeastOverlayState();

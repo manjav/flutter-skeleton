@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -121,24 +122,27 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
     return Positioned(
       bottom: 40.d,
       height: 170.d,
-      child: SkinnedButton(
-          isEnable: selectedCards.value.length >= 2,
-          padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
-          onPressed: _evolve,
-          child: Row(textDirection: TextDirection.ltr, children: [
-            SkinnedText(titleBuilder(),
-                style: TStyles.large.copyWith(height: 3.d)),
-            SizedBox(width: 24.d),
-            Widgets.rect(
-              padding: EdgeInsets.only(right: 12.d),
-              decoration: Widgets.imageDecorator(
-                  "frame_hatch_button", ImageCenterSliceData(42)),
-              child: Row(textDirection: TextDirection.ltr, children: [
-                Asset.load<Image>("icon_gold", height: 76.d),
-                SkinnedText(_getMergeCost().compact(), style: TStyles.large),
-              ]),
-            )
-          ])),
+      child: Consumer<AccountProvider>(builder: (_, state, child) {
+        return SkinnedButton(
+            isEnable: selectedCards.value.length >= 2 &&
+                state.account.gold >= _getMergeCost(),
+            padding: EdgeInsets.fromLTRB(36.d, 16.d, 20.d, 29.d),
+            onPressed: _evolve,
+            child: Row(textDirection: TextDirection.ltr, children: [
+              SkinnedText(titleBuilder(),
+                  style: TStyles.large.copyWith(height: 3.d)),
+              SizedBox(width: 24.d),
+              Widgets.rect(
+                padding: EdgeInsets.only(right: 12.d),
+                decoration: Widgets.imageDecorator(
+                    "frame_hatch_button", ImageCenterSliceData(42)),
+                child: Row(textDirection: TextDirection.ltr, children: [
+                  Asset.load<Image>("icon_gold", height: 76.d),
+                  SkinnedText(_getMergeCost().compact(), style: TStyles.large),
+                ]),
+              )
+            ]));
+      }),
     );
   }
 

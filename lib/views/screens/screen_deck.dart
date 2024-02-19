@@ -22,9 +22,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   @override
   List<Widget> appBarElementsRight() {
     return <Widget>[
+      Indicator(widget.route, Values.potion, width: 256.d),
       Indicator(widget.route, Values.gold),
       Indicator(widget.route, Values.nectar, width: 280.d),
-      Indicator(widget.route, Values.potion, width: 256.d),
     ];
   }
 
@@ -40,38 +40,39 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var crossAxisCount = 4;
     var itemSize =
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
-    return Consumer<AccountProvider>(builder: (_, state, child) {
-      var cards = state.account.getReadyCards();
-      cards.sort((a, b) {
-        int x = 1, y = 1;
+    var account = accountProvider.account;
+    var cards = account.getReadyCards();
+    cards.sort((a, b) {
+      int x = 1, y = 1;
 
-        var aCoolDown = a.getRemainingCooldown();
-        var bCoolDown = b.getRemainingCooldown();
+      var aCoolDown = a.getRemainingCooldown();
+      var bCoolDown = b.getRemainingCooldown();
 
-        if (a.base.isHero && aCoolDown == 0) x += 2;
-        if (b.base.isHero && bCoolDown == 0) y += 2;
+      if (a.base.isHero && aCoolDown == 0) x += 2;
+      if (b.base.isHero && bCoolDown == 0) y += 2;
 
-        if (aCoolDown > 0) x -= 3;
-        if (bCoolDown > 0) y -= 3;
+      if (aCoolDown > 0) x -= 3;
+      if (bCoolDown > 0) y -= 3;
 
-        if (a.power > b.power) {
-          x++;
-        } else {
-          y++;
-        }
-        return y - x;
-      });
-
-      _opponent = widget.args["opponent"] ??
-          Opponent.initialize({
-            "name": "enemy_l".l(),
-            "def_power": getQuestPower(state.account)[2],
-            "level": state.account.level,
-            "xp": state.account.xp * (0.9 + Random().nextDouble() * 0.2)
-          }, 0);
-      for (var card in cards) {
-        card.isDeployed = false;
+      if (a.power > b.power) {
+        x++;
+      } else {
+        y++;
       }
+      return y - x;
+    });
+
+    _opponent = widget.args["opponent"] ??
+        Opponent.initialize({
+          "name": "enemy_l".l(),
+          "def_power": getQuestPower(account)[2],
+          "level": account.level,
+          "xp": account.xp * (0.9 + Random().nextDouble() * 0.2)
+        }, 0);
+    for (var card in cards) {
+      card.isDeployed = false;
+    }
+    return Consumer<AccountProvider>(builder: (_, state, child) {
       return Stack(alignment: Alignment.bottomCenter, children: [
         Positioned(
           top: paddingTop + headerSize,
@@ -288,6 +289,13 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   bool isBossQuest(Account account) => ((account.questsCount / 10) % 1 == 0);
 
   _attack(Account account) async {
+    if (_selectedCards.value.where((element) => element == null).length == 5) {
+      await serviceLocator<RouteService>().to(
+        Routes.popupMessage,
+        args: {"title": "Error", "message": "select_cards".l()},
+      );
+      return;
+    }
     Overlays.insert(
       context,
       AttackFeastOverlay(

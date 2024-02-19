@@ -110,6 +110,8 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                 .floorToDouble();
             controller.findInput<double>('building')?.value =
                 random.nextInt(4).floorToDouble();
+            controller.findInput<double>('theme')?.value =
+                Random().nextInt(4).toDouble();
           },
         ));
   }
@@ -151,11 +153,15 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                         SkinnedText(value.tribeName, style: tribeStyle),
                       ])),
                   SizedBox(width: 16.d),
-                  Indicator(widget.name, Values.leagueRank,
-                      width: 240.d,
-                      hasPlusIcon: false,
-                      data: value.leagueId,
-                      value: _selectedOpponent.value.leagueRank)
+                  Indicator(
+                    widget.name,
+                    Values.leagueRank,
+                    width: 240.d,
+                    hasPlusIcon: false,
+                    data: value.leagueId,
+                    value: _selectedOpponent.value.leagueRank,
+                    disableHero: true,
+                  )
                 ],
               ));
         });

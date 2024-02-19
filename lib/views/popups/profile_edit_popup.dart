@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
@@ -23,17 +24,89 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
       EdgeInsets.fromLTRB(122.d, 180.d, 122.d, 80.d);
 
   @override
+  void initState() {
+    _textController.text = accountProvider.account.name;
+    super.initState();
+  }
+
+  RxBool showError = false.obs;
+  RxList suggests = <String>[].obs;
+  RxString selectedName = "".obs;
+
+  @override
   Widget contentFactory() {
     var account = accountProvider.account;
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Widgets.skinnedInput(
-              maxLines: 1,
-              controller: _textController,
-              hintText: account.name,
-              onChange: (t) => setState(() {})),
+          StreamBuilder<bool>(
+              stream: showError.stream,
+              builder: (context, snapshot) {
+                return Widgets.skinnedInput(
+                    maxLines: 1,
+                    controller: _textController,
+                    borderColor: showError.value == true ? TColors.red : null,
+                    onChange: (t) => setState(() {}));
+              }),
+          StreamBuilder(
+              stream: showError.stream,
+              builder: (ctx, snapshot) {
+                if (!snapshot.hasData || !snapshot.data!) {
+                  return const SizedBox();
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 15.d),
+                    Text("profile_name_error".l(),
+                        style: TStyles.medium
+                            .copyWith(height: 3.d, color: TColors.red)),
+                    SizedBox(height: 15.d),
+                    Text("profile_name_suggest".l(),
+                        style: TStyles.medium
+                            .copyWith(height: 3.d, color: TColors.primary20)),
+                    StreamBuilder(
+                        stream: selectedName.stream,
+                        builder: (ctx, snapshot) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15.d),
+                              ...suggests.take(3).map((name) => Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Widgets.button(
+                                        context,
+                                        padding: EdgeInsets.zero,
+                                        margin: EdgeInsets.only(bottom: 15.d),
+                                        onPressed: () {
+                                          selectedName.value = name;
+                                          _textController.text = name;
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Asset.load<Image>(
+                                                "checkbox_${selectedName.value == name ? "on" : "off"}",
+                                                width: 64.d),
+                                            SizedBox(width: 12.d),
+                                            Text(
+                                              name,
+                                              style: TStyles.medium.copyWith(
+                                                  color: TColors.primary20),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                              SizedBox(height: 15.d),
+                            ],
+                          );
+                        }),
+                  ],
+                );
+              }),
           SizedBox(height: 12.d),
           SkinnedButton(
               isEnable: _textController.text.length >= 6 &&
@@ -72,6 +145,7 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
   }
 
   _renameAccount(Account account) async {
+    showError.value = false;
     if (account.level < 100) {
       toast("profile_name_warn".l([
         account.loadingData.rules["changeNameMinLevel"],
@@ -87,7 +161,13 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
         account.name = _textController.text;
         accountProvider.update(context, result);
       }
+      return;
     }
+    suggests.clear();
+    for (var name in result["available_names"]) {
+      suggests.add(name);
+    }
+    showError.value = true;
     // setState(() => account.name = id);
   }
 

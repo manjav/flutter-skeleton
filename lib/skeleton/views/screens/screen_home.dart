@@ -61,16 +61,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
 
   @override
   List<Widget> appBarElementsLeft() {
-    if (_selectedTabIndex != 2) return [];
-    return [
-      SizedBox(
-        width: 196.d,
-        height: 200.d,
-        child: LevelIndicator(
-            onPressed: () =>
-                serviceLocator<RouteService>().to(Routes.popupProfile)),
-      )
-    ];
+    return [];
   }
 
   @override
@@ -84,13 +75,6 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     if (_selectedTabIndex == 2) {
       return <Widget>[
         ...super.appBarElementsRight()
-          ..add(Widgets.button(context,
-              width: 110.d,
-              height: 110.d,
-              padding: EdgeInsets.all(16.d),
-              child: Asset.load<Image>("ui_settings"),
-              onPressed: () =>
-                  serviceLocator<RouteService>().to(Routes.popupSettings))),
       ];
     }
     return super.appBarElementsRight();
@@ -279,7 +263,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     }
 
     if (message.type == Noobs.battleRequest) {
-      sound.play("attack");
+      sound.play("help");
       var request = message as NoobRequestBattleMessage;
       notifService.showNotif(
           NotifData(

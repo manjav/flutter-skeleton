@@ -5,9 +5,11 @@ import '../../app_export.dart';
 class TColors {
   static const accent = Color(0xFFFF5D54);
   static const black = Color(0xFF000000);
-  static const black80 = Color(0xAA000000);
+  static const black80 = Color(0xCC000000);
+  static const black25 = Color(0x40000000);
   static const blue = Color(0xFF017AFA);
   static const cream = Color(0xFFF6E5D0);
+  static const cream15 = Color(0x26F9E4D9);
   static const clay = Color(0xFFD29774);
   static const cyan = Color(0xFF3FC1B9);
   static const primary = Color(0xFFFFF8EE);
@@ -16,15 +18,17 @@ class TColors {
   static const primary70 = Color(0xFFE5B99F);
   static const primary30 = Color(0xFF88624B);
   static const primary20 = Color(0xFF77513A);
-  static const primary10 = Color(0xFF66432E);
+  static const primary10 = Color(0xFF572018);
   static const gray = Color(0xFFA4A4A4);
   static const green = Color(0xFF82EE24);
+  static const green40 = Color(0x660DAB4F);
   static const orange = Color(0xFFFF8B21);
   static const teal = Color(0xFF59AFC2);
   static const transparent = Color(0x00000000);
   static const white = Color(0xFFFFFFFF);
   static const white30 = Color(0x55FFFFFF);
   static const white50 = Color(0x88FFFFFF);
+  static const red = Color(0xFFEE3E3E);
 }
 
 class TStyles {

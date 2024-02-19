@@ -59,7 +59,7 @@ abstract class Rank {
     } else {
       rank = Convert.toInt(map["rank"]);
     }
-    score = Convert.toInt(map["score"]);
+    score = Convert.toInt(map["xp"] ?? map["score"]);
     itsMe = ownerId == id;
   }
 }
