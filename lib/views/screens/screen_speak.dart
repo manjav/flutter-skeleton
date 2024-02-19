@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:lingai/views/widgets/stt_box.dart';
+import 'package:lingai/views/widgets/listener_box.dart';
 
 import '../../app_export.dart';
 
@@ -56,7 +56,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       await Future.delayed(duration);
       await Future.delayed(duration);
       if (mounted) {
-        Navigator.pop(context);
+        // Navigator.pop(context);
       }
       return;
     }
@@ -71,8 +71,8 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
 
       if (chat.type == ChatType.stt) {
         if (kDebugMode) {
-        await Future.delayed(const Duration(seconds: 2));
-        _onSTTResult(STTState.success, chat.value);
+          await Future.delayed(const Duration(seconds: 2));
+          _onSTTResult(STTState.success, chat.value);
         } else {
           serviceLocator<STT>().setEnable(true, pattern: chat.value);
           serviceLocator<STT>().startListening(
@@ -118,7 +118,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
               duration: const Duration(milliseconds: 300),
               child: Widgets.rect(
                   decoration: BoxDecoration(
-          color: TColors.white,
+                    color: TColors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24.d),
                       topRight: Radius.circular(24.d),
@@ -132,7 +132,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
                       ),
                     ],
                   ),
-          padding: EdgeInsets.all(padding),
+                  padding: EdgeInsets.all(padding),
                   child: Column(children: items)),
             );
           },
@@ -171,7 +171,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       );
     }
     if (chat.type == ChatType.stt) {
-      return const STTBox();
+      return const ListenerBox();
     }
     return Widgets.rect(
         alignment: Alignment.center,

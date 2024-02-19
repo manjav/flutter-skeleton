@@ -3,8 +3,8 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../app_export.dart';
 
-class STTBox extends StatelessWidget {
-  const STTBox({super.key});
+class ListenerBox extends StatelessWidget {
+  const ListenerBox({super.key});
 
   @override
   Widget build(BuildContext context) {
