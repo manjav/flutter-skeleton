@@ -91,49 +91,12 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
     var padding = 16.d;
     return Stack(
       children: [
-        Expanded(
-          child: AnimatedList(
-              key: _chatListKey,
-              controller: _chatScrollController,
-              padding: EdgeInsets.fromLTRB(padding, padding * 4, padding, 0),
-              itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
-        ),
-        ValueListenableBuilder(
-          valueListenable: _inputSize,
-          builder: (context, value, child) {
-            return AnimatedPositioned(
-              right: 0,
-              left: 0,
-              top: DeviceInfo.size.height - value,
-              curve: value == 0 ? Curves.easeIn : Curves.easeOutBack,
-              duration: const Duration(milliseconds: 300),
-              child: Widgets.rect(
-                  decoration: BoxDecoration(
-                    color: TColors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(24.d),
-                      topRight: Radius.circular(24.d),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, -2.d), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  padding: EdgeInsets.all(padding),
-                  child: Column(children: [
-                    Text(_currentTalk!.chats.first.value,
-                        textDirection:
-                            _currentTalk!.chats.first.value.getDirection()),
-                    SizedBox(height: 24.d),
-                    ListenerBox(_currentTalk!.chats[1])
-                  ])),
-            );
-          },
-        )
+        AnimatedList(
+            key: _chatListKey,
+            controller: _chatScrollController,
+            padding: EdgeInsets.fromLTRB(padding, padding * 4, padding, 0),
+            itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
+        _footerBuilder(padding)
       ],
     );
   }
@@ -152,13 +115,10 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
         child: _itemContentBuilder(chat));
   }
 
-  Widget _itemContentBuilder(Chat chat, [bool inChat = true]) {
-    var tip = BalloonTipPosition.none;
-    if (inChat) {
-      tip = chat.type == ChatType.user
-          ? BalloonTipPosition.rightBottom
-          : BalloonTipPosition.leftTop;
-    }
+  Widget _itemContentBuilder(Chat chat) {
+    var tip = chat.type == ChatType.user
+        ? BalloonTipPosition.rightBottom
+        : BalloonTipPosition.leftTop;
     if (chat.isChat) {
       return RadioBox(
         chat.value,
@@ -214,5 +174,44 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
         duration: duration,
         curve: Curves.easeOutQuart);
     await Future.delayed(duration);
+  }
+
+  Widget _footerBuilder(double padding) {
+    return ValueListenableBuilder(
+      valueListenable: _inputSize,
+      builder: (context, value, child) {
+        return AnimatedPositioned(
+          right: 0,
+          left: 0,
+          top: DeviceInfo.size.height - value,
+          curve: value == 0 ? Curves.easeIn : Curves.easeOutBack,
+          duration: const Duration(milliseconds: 300),
+          child: Widgets.rect(
+              decoration: BoxDecoration(
+                color: TColors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24.d),
+                  topRight: Radius.circular(24.d),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, -2.d), // changes position of shadow
+                  ),
+                ],
+              ),
+              padding: EdgeInsets.all(padding),
+              child: Column(children: [
+                Text(_currentTalk!.chats.first.value,
+                    textDirection:
+                        _currentTalk!.chats.first.value.getDirection()),
+                SizedBox(height: 24.d),
+                ListenerBox(_currentTalk!.chats[1])
+              ])),
+        );
+      },
+    );
   }
 }
