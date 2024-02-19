@@ -23,7 +23,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   Talk? _currentTalk;
   final ScrollController _chatScrollController = ScrollController();
   final ValueNotifier<double> _inputSize = ValueNotifier(0);
-  final double _defaultInputSize = 324.d;
+  final double _defaultInputSize = 180.d;
 
   @override
   List<Widget> appBarElementsLeft() {
@@ -101,12 +101,6 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
         ValueListenableBuilder(
           valueListenable: _inputSize,
           builder: (context, value, child) {
-            var items = <Widget>[];
-            for (var chat in _currentTalk!.chats) {
-              if (chat.type != ChatType.bot) {
-                items.add(_itemContentBuilder(chat, false));
-              }
-            }
             return AnimatedPositioned(
               right: 0,
               left: 0,
@@ -130,7 +124,13 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
                     ],
                   ),
                   padding: EdgeInsets.all(padding),
-                  child: Column(children: items)),
+                  child: Column(children: [
+                    Text(_currentTalk!.chats.first.value,
+                        textDirection:
+                            _currentTalk!.chats.first.value.getDirection()),
+                    SizedBox(height: 24.d),
+                    ListenerBox(_currentTalk!.chats[1])
+                  ])),
             );
           },
         )
@@ -167,9 +167,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
         translation: chat.nativeLanguage,
       );
     }
-    if (chat.type == ChatType.stt) {
-      return ListenerBox(chat.narrator);
-    }
+
     return Widgets.rect(
         alignment: Alignment.center,
         child: Text(
@@ -180,22 +178,20 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
 
   Future<void> _onSTTResult(STTState state, String text) async {
     if (state == STTState.success) {
-      serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
       const duration = Duration(milliseconds: 1000);
+      serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
       // Waiting for celebration
       await Future.delayed(duration);
-      _inputSize.value = 0;
       serviceLocator<STT>().setEnable(false);
-
+      _inputSize.value = 0;
       // Move items to chat list
       for (var item in _currentTalk!.chats) {
         if (item.isChat) {
-          await _insertChat(item, duration);
           // Bot answering
           if (item.type == ChatType.bot) {
-            await serviceLocator<Speaker>()
-                .play(item.value, narrator: item.narrator);
+            serviceLocator<Speaker>().play(item.value, narrator: item.narrator);
           }
+          await _insertChat(item, duration);
         }
       }
 
