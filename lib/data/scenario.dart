@@ -61,7 +61,7 @@ class Chat {
   });
   bool get isChat => type == ChatType.user || type == ChatType.bot;
   Narrator get narrator => switch (type) {
-        ChatType.user => Narrator.nova,
+        ChatType.user || ChatType.stt => Narrator.nova,
         ChatType.bot => Narrator.fable,
         _ => Narrator.onyx,
       };

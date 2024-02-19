@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:lingai/views/widgets/listener_box.dart';
 
 import '../../app_export.dart';
 
@@ -171,7 +170,7 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       );
     }
     if (chat.type == ChatType.stt) {
-      return const ListenerBox();
+      return ListenerBox(chat.narrator);
     }
     return Widgets.rect(
         alignment: Alignment.center,

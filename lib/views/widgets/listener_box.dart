@@ -4,7 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../app_export.dart';
 
 class ListenerBox extends StatelessWidget {
-  const ListenerBox({super.key});
+  final Narrator narrator;
+  const ListenerBox(this.narrator, {super.key});
 
   @override
   Widget build(BuildContext context) {
