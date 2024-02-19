@@ -44,7 +44,6 @@ class STT extends IService {
   void _resultListener(SpeechRecognitionResult result) {
     this.result = result;
     _proccessResult();
-    recognizedWords.value = result.recognizedWords;
     onResult?.call(state.value, result.recognizedWords);
     _logEvent(
         'Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
@@ -102,7 +101,7 @@ class STT extends IService {
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
-      pauseFor: const Duration(seconds: 3),
+      pauseFor: const Duration(seconds: 5),
       listenFor: const Duration(seconds: 30),
       onSoundLevelChange: _soundLevelListener,
       onResult: _resultListener,
@@ -124,14 +123,18 @@ class STT extends IService {
   }
 
   void _proccessResult() {
-    if (!result.finalResult) {
-      return;
-    }
     if (pattern == null) {
-      state.value = STTState.success;
+      state.value = result.finalResult ? STTState.success : STTState.fail;
     } else {
-      var isCorrect = result.recognizedWords == pattern;
-      state.value = isCorrect ? STTState.success : STTState.fail;
+      // var words = result.alternates.where((a) =>
+      //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
+      // words.first.recognizedWords;
+      recognizedWords.value = result.recognizedWords;
+      if (result.finalResult) {
+        state.value = result.recognizedWords == pattern
+            ? STTState.success
+            : STTState.fail;
+      }
     }
   }
 
