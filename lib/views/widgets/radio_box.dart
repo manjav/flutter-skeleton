@@ -22,18 +22,6 @@ class RadioBox extends StatefulWidget {
 }
 
 class _RadioBoxState extends State<RadioBox> {
-  final ValueNotifier<PlayerState> _playerState =
-      ValueNotifier(PlayerState.stopped);
-
-  @override
-  void initState() {
-    serviceLocator<Sounds>()
-        .getPlayer(widget.text)
-        .onPlayerStateChanged
-        .listen((PlayerState s) => _playerState.value = s);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     var margin = 14.d;
@@ -73,11 +61,14 @@ class _RadioBoxState extends State<RadioBox> {
                 top: 0,
                 right: widget.translation != null ? null : 30.d,
                 child: _button(
-                  ValueListenableBuilder(
-                      valueListenable: _playerState,
-                      builder: (context, value, child) =>
-                          Asset.load<SvgPicture>(
-                              value == PlayerState.playing ? "stop" : "play")),
+                  StreamBuilder(
+                      stream: serviceLocator<Sounds>()
+                          .getPlayer(widget.text)
+                          .onPlayerStateChanged,
+                      builder: (context, snapshot) => Asset.load<SvgPicture>(
+                          snapshot.data == PlayerState.playing
+                              ? "stop"
+                              : "play")),
                   margin * 2,
                   () => serviceLocator<Speaker>()
                       .play(widget.text, narrator: widget.narrator!),
