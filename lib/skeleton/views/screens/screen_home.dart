@@ -263,7 +263,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     }
 
     if (message.type == Noobs.battleRequest) {
-      sound.play("attack");
+      sound.play("help");
       var request = message as NoobRequestBattleMessage;
       notifService.showNotif(
           NotifData(
