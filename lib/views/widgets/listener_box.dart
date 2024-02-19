@@ -14,91 +14,93 @@ class ListenerBox extends StatelessWidget {
         .copyWith(color: TColors.green, fontWeight: FontWeight.w900);
     var stt = serviceLocator<STT>();
     var size = 100.d;
-        return Row(
-          children: [
-            Widgets.button(
-              context,
-              radius: size,
-              width: size * 0.5,
-              height: size * 0.5,
-              color: TColors.primary10,
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(16.d),
-              child: StreamBuilder(
-                stream: serviceLocator<Sounds>()
-                    .getPlayer(pattern.value)
-                    .onPlayerStateChanged,
-                builder: (context, snapshot) => Asset.load<SvgPicture>(
-                    snapshot.data == PlayerState.playing ? "stop" : "play",
-                    width: size * 0.3),
-              ),
-              onPressed: () => serviceLocator<Speaker>()
-                  .play(pattern.value, narrator: pattern.narrator),
-            ),
-            Expanded(
-              child: ValueListenableBuilder(
-                  valueListenable: stt.recognizedWords,
-                  builder: (context, value, child) {
-                    return Column(
-                      children: [
-                        RichText(
-                            text: TextSpan(
-                          style: TStyles.medium,
-                          children: _getWords(value, correctStyle),
-                        )),
-                        SizedBox(height: 4.d),
-                        Text(pattern.nativeLanguage,
-                            style: TStyles.small
-                                .copyWith(color: TColors.primary40),
-                            textDirection:
-                                pattern.nativeLanguage.getDirection()),
-                        SizedBox(height: 6.d),
-                        stt.state.value == STTState.fail
-                            ? Text(value,
-                                style: TStyles.small
-                                    .copyWith(color: TColors.error),
-                                textDirection: value.getDirection())
-                            : const SizedBox(),
-                      ],
-                    );
-                  }),
-            ),
-            Widgets.button(
-              context,
-              width: size,
-              height: size,
-              radius: size,
-              padding: EdgeInsets.zero,
-              alignment: Alignment.center,
-              color: TColors.primary10,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  ValueListenableBuilder(
-                    valueListenable: stt.audioLevel,
-                    builder: (context, value, child) => AnimatedContainer(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(size)),
-                        color: TColors.primary20,
-                      ),
-                      width: size * stt.audioLevel.value,
-                      height: size * stt.audioLevel.value,
-                      duration: const Duration(milliseconds: STT.levelInterval),
-                    ),
+    return Row(
+      children: [
+        Widgets.button(
+          context,
+          radius: size,
+          width: size * 0.5,
+          height: size * 0.5,
+          color: TColors.primary10,
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(16.d),
+          child: StreamBuilder(
+            stream: serviceLocator<Sounds>()
+                .getPlayer(pattern.value)
+                .onPlayerStateChanged,
+            builder: (context, snapshot) => Asset.load<SvgPicture>(
+                snapshot.data == PlayerState.playing ? "stop" : "play",
+                width: size * 0.3),
+          ),
+          onPressed: () => serviceLocator<Speaker>()
+              .play(pattern.value, narrator: pattern.narrator),
+        ),
+        Expanded(
+          child: ValueListenableBuilder(
+              valueListenable: stt.recognizedWords,
+              builder: (context, value, child) {
+                return Column(
+                  children: [
+                    RichText(
+                        text: TextSpan(
+                      style: TStyles.medium,
+                      children: _getWords(value, correctStyle),
+                    )),
+                    SizedBox(height: 4.d),
+                    Text(pattern.nativeLanguage,
+                        style: TStyles.small.copyWith(color: TColors.primary40),
+                        textDirection: pattern.nativeLanguage.getDirection()),
+                    SizedBox(height: 6.d),
+                    stt.state.value == STTState.fail
+                        ? Text(value,
+                            style: TStyles.small.copyWith(color: TColors.error),
+                            textDirection: value.getDirection())
+                        : const SizedBox(),
+                  ],
+                );
+              }),
+        ),
+        Widgets.button(
+          context,
+          width: size,
+          height: size,
+          radius: size,
+          padding: EdgeInsets.zero,
+          alignment: Alignment.center,
+          color: TColors.primary10,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              ValueListenableBuilder(
+                valueListenable: stt.audioLevel,
+                builder: (context, value, child) => AnimatedContainer(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(size)),
+                    color: TColors.primary20,
                   ),
-                  Asset.load<SvgPicture>(
-                    "mic",
-                    width: size * 0.3,
-                    svgColorFilter:
-                        ColorFilter.mode(_getIconColor(), BlendMode.srcIn),
-                  ),
-                ],
+                  width: size * stt.audioLevel.value,
+                  height: size * stt.audioLevel.value,
+                  duration: const Duration(milliseconds: STT.levelInterval),
+                ),
               ),
-              onPressed: stt.startListening,
-            ),
-          ],
-        );
+              _getIcon(size)
+            ],
+          ),
+          onPressed: stt.startListening,
+        ),
+      ],
+    );
   }
+
+  Widget _getIcon(double size) {
+    var stt = serviceLocator<STT>();
+    return ValueListenableBuilder(
+        valueListenable: stt.state,
+        builder: (context, value, child) {
+          return Opacity(
+              opacity: stt.isEnable ? 1 : 0.7,
+              child: Asset.load<SvgPicture>("mic_$value", width: size * 0.3));
+        });
   }
 
   List<TextSpan> _getWords(String value, TextStyle correctStyle) {
