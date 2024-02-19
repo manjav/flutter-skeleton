@@ -67,18 +67,17 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
         continue;
       }
       _inputSize.value = _defaultInputSize;
+      await serviceLocator<Speaker>().play(chat.value, narrator: chat.narrator);
 
-      if (chat.type == ChatType.stt) {
+      if (chat.type == ChatType.user) {
         if (kDebugMode) {
           await Future.delayed(const Duration(seconds: 2));
-          // _onSTTResult(STTState.success, chat.value);
-        }
+        //   _onSTTResult(STTState.success, chat.value);
+        } else {
         serviceLocator<STT>().setEnable(true, pattern: chat.value);
         serviceLocator<STT>().startListening(
             locale: _scenario!.targetLanguage, onResult: _onSTTResult);
-      } else {
-        await serviceLocator<Speaker>()
-            .play(chat.value, narrator: chat.narrator);
+        }
       }
     }
   }

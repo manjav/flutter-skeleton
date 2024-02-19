@@ -27,19 +27,13 @@ class Scenario {
           type: t,
           value: chat["value"],
           nativeLanguage: chat["nativeLanguage"] ?? ""));
-      if (t == ChatType.user) {
-        currentTalk.chats.add(Chat(
-            type: ChatType.stt,
-            value: chat["value"],
-            nativeLanguage: chat["nativeLanguage"] ?? ""));
-      }
       index++;
     }
     thread.add(currentTalk);
   }
 }
 
-enum ChatType { none, hint, user, stt, bot }
+enum ChatType { none, hint, user, bot }
 
 class ChatTypeExtension {
   static ChatType getEnum(String type) {
@@ -61,7 +55,7 @@ class Chat {
   });
   bool get isChat => type == ChatType.user || type == ChatType.bot;
   Narrator get narrator => switch (type) {
-        ChatType.user || ChatType.stt => Narrator.nova,
+        ChatType.user => Narrator.nova,
         ChatType.bot => Narrator.fable,
         _ => Narrator.onyx,
       };
