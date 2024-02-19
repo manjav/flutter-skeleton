@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -70,14 +69,15 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
       await serviceLocator<Speaker>().play(chat.value, narrator: chat.narrator);
 
       if (chat.type == ChatType.user) {
-        if (kDebugMode) {
-          await Future.delayed(const Duration(seconds: 2));
+        // if (kDebugMode) {
+        //   await Future.delayed(const Duration(seconds: 2));
         //   _onSTTResult(STTState.success, chat.value);
-        } else {
-        serviceLocator<STT>().setEnable(true, pattern: chat.value);
+        // } else {
         serviceLocator<STT>().startListening(
-            locale: _scenario!.targetLanguage, onResult: _onSTTResult);
-        }
+            locale: _scenario!.targetLanguage,
+            pattern: chat.value,
+            onResult: _onSTTResult);
+        // }
       }
     }
   }
@@ -177,12 +177,13 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
   }
 
   Future<void> _onSTTResult(STTState state, String text) async {
+    const duration = Duration(milliseconds: 1500);
+    serviceLocator<STT>().stopListening();
     if (state == STTState.success) {
-      const duration = Duration(milliseconds: 1000);
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
       // Waiting for celebration
       await Future.delayed(duration);
-      serviceLocator<STT>().setEnable(false);
+      serviceLocator<STT>().state.value = STTState.none;
       _inputSize.value = 0;
       // Move items to chat list
       for (var item in _currentTalk!.chats) {
@@ -197,8 +198,10 @@ class _SpeakScreenState extends AbstractScreenState<SpeakScreen> {
 
       await Future.delayed(duration);
       _nextStep(_currentTalk!.index + 1);
-    } else {
+    } else if (state == STTState.fail) {
       serviceLocator<Sounds>().play("wrong");
+      await Future.delayed(duration);
+      serviceLocator<STT>().startListening();
     }
   }
 

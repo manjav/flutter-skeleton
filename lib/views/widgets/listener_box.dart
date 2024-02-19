@@ -14,9 +14,6 @@ class ListenerBox extends StatelessWidget {
         .copyWith(color: TColors.green, fontWeight: FontWeight.w900);
     var stt = serviceLocator<STT>();
     var size = 100.d;
-    return ValueListenableBuilder(
-      valueListenable: stt.state,
-      builder: (context, value, child) {
         return Row(
           children: [
             Widgets.button(
@@ -101,18 +98,7 @@ class ListenerBox extends StatelessWidget {
             ),
           ],
         );
-      },
-    );
   }
-
-  Color _getIconColor() {
-    return switch (serviceLocator<STT>().state.value) {
-      STTState.fail || STTState.error => TColors.error,
-      STTState.success => TColors.green,
-      STTState.disable => TColors.primary30,
-      STTState.done => TColors.primary40,
-      _ => TColors.primary60,
-    };
   }
 
   List<TextSpan> _getWords(String value, TextStyle correctStyle) {

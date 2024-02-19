@@ -7,12 +7,13 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import '../../app_export.dart';
 
-enum STTState { none, disable, enable, success, fail, error, done }
+enum STTState { none, success, fail, error }
 
 class STT extends IService {
   static const int levelInterval = 100;
   String? locale;
   String? pattern;
+  bool isEnable = false;
   Function(STTState, String)? onResult;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
@@ -33,7 +34,9 @@ class STT extends IService {
         onError: _errorListener,
         onStatus: _statusListener,
       );
-      state.value = success ? STTState.disable : STTState.error;
+      if (!success) {
+        state.value = STTState.error;
+      }
     } catch (e) {
       state.value = STTState.error;
     }
@@ -78,15 +81,15 @@ class STT extends IService {
   // This is called each time the users wants to start a new speech
   void startListening({
     String? locale,
+    String? pattern,
     Function(STTState, String)? onResult,
   }) {
     if (locale != null) this.locale = locale;
+    if (locale != null) this.pattern = pattern;
     if (onResult != null) this.onResult = onResult;
-    if (state.value.index < STTState.enable.index) {
-      return;
-    }
+    isEnable = true;
+    state.value = STTState.none;
     recognizedWords.value = "";
-    state.value = STTState.enable;
     final options = SpeechListenOptions(
         onDevice: false,
         listenMode: ListenMode.confirmation,
@@ -111,15 +114,9 @@ class STT extends IService {
   void stopListening() {
     _logEvent('stop');
     _speech.stop();
+    isEnable = false;
     audioLevel.value = 0.0;
-  }
-
-  void setEnable(bool value, {String? pattern}) {
-    if (pattern != null) {
-      this.pattern = pattern;
-    }
-    recognizedWords.value = "";
-    state.value = value ? STTState.enable : STTState.disable;
+    // recognizedWords.value = "";
   }
 
   void _proccessResult() {
@@ -139,6 +136,6 @@ class STT extends IService {
   }
 
   void _logEvent(String eventDescription) {
-    debugPrint('STT $eventDescription');
+    // debugPrint('STT $eventDescription');
   }
 }
