@@ -201,12 +201,6 @@ class LoadingController extends GetxController {
         type: RouteType.popup,
       ),
       SkeletonPageModel(
-        page: const TribeEditPopup(),
-        route: Routes.popupTribeEdit,
-        isOpaque: false,
-        type: RouteType.popup,
-      ),
-      SkeletonPageModel(
         page: const TribeDonatePopup(),
         route: Routes.popupTribeDonate,
         isOpaque: false,
