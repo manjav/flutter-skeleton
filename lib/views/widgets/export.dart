@@ -7,4 +7,3 @@ export 'indicator_level.dart';
 export 'live_battle/export.dart';
 export 'notif.dart';
 export 'online_status.dart';
-export "tribe_edit.dart";

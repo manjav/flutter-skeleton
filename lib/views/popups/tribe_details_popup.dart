@@ -35,9 +35,9 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         height: 1380.d,
         child: Column(children: [
           tabsBuilder(data: [
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < 2; i++)
               TabData("tribe_option_$i".l(),
-                  ["icon_population", "tribe_upgrade","tribe_edit"][i])
+                  ["icon_population", "tribe_upgrade"][i])
           ]),
           SizedBox(height: 30.d),
           Expanded(child: _getSelectedPage(_account.tribe!))
@@ -47,8 +47,7 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
   Widget _getSelectedPage(Tribe tribe) {
     return switch (selectedTabIndex) {
       0 => _membersBuilder(tribe),
-      1 => _upgradeBuilder(tribe),
-      _ => const TribeEdit()
+      _ => _upgradeBuilder(tribe)
     };
   }
 

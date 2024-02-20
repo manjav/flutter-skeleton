@@ -26,5 +26,6 @@ export 'restore_popup.dart';
 export 'settings_popup.dart';
 export 'tribe_details_popup.dart';
 export 'tribe_donate_popup.dart';
+export 'tribe_edit_popup.dart';
 export 'tribe_invite_popup.dart';
 export 'tribe_search_popup.dart';

@@ -147,7 +147,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           ]),
         ]),
         onPressed: () async {
-          await serviceLocator<RouteService>().to(Routes.popupTribeOptions,args: {"index":2});
+          await serviceLocator<RouteService>().to(Routes.popupTribeEdit);
           setState(() {});
         },
       ),
