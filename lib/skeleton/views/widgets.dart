@@ -13,18 +13,9 @@ class Widgets {
     Function(dynamic details)? onTapDown,
     Function()? onTapCancel,
     Function()? onLongPress,
-    Function(DragStartDetails details)? onVerticalDragStart,
-    Function(DragUpdateDetails details)? onVerticalDragUpdate,
-    Function(DragEndDetails details)? onVerticalDragEnd,
     Widget? child,
   }) {
     return GestureDetector(
-        onVerticalDragStart:
-            _isActive(id) ? (d) => onVerticalDragStart?.call(d) : null,
-        onVerticalDragUpdate:
-            _isActive(id) ? (d) => onVerticalDragUpdate?.call(d) : null,
-        onVerticalDragEnd:
-            _isActive(id) ? (d) => onVerticalDragEnd?.call(d) : null,
         onTap: () {
           if (_isActive(id)) onTap?.call();
         },
