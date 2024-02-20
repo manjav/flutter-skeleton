@@ -11,12 +11,19 @@ class AbstractPageItem extends StatefulWidget {
 }
 
 class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
+    with
+        ILogger,
+        ServiceFinderWidgetMixin,
+        ClassFinderWidgetMixin,
+        AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(child: SkinnedText("coming_soon".l(), style: TStyles.large));
   }
 
-  void toast(String message) =>
-      Overlays.insert(context, ToastOverlay(message));
+  void toast(String message) => Overlays.insert(context, ToastOverlay(message));
+
+  @override
+  bool get wantKeepAlive => true;
 }
