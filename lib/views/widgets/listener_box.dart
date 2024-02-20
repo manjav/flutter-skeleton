@@ -86,7 +86,11 @@ class ListenerBox extends StatelessWidget {
               _getIcon(size)
             ],
           ),
-          onPressed: stt.startListening,
+          onPressed: () {
+            if (stt.state.value == STTState.ready) {
+              stt.startListening();
+            }
+          },
         ),
       ],
     );
@@ -97,9 +101,7 @@ class ListenerBox extends StatelessWidget {
     return ValueListenableBuilder(
         valueListenable: stt.state,
         builder: (context, value, child) {
-          return Opacity(
-              opacity: stt.isEnable ? 1 : 0.7,
-              child: Asset.load<SvgPicture>("mic_$value", width: size * 0.3));
+          return Asset.load<SvgPicture>("mic_${value.name}", width: size * 0.3);
         });
   }
 

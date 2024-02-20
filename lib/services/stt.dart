@@ -7,7 +7,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import '../../app_export.dart';
 
-enum STTState { none, success, fail, error }
+enum STTState { none, ready, success, fail, error }
 
 class STT extends IService {
   static const int levelInterval = 100;
@@ -34,9 +34,7 @@ class STT extends IService {
         onError: _errorListener,
         onStatus: _statusListener,
       );
-      if (!success) {
-        state.value = STTState.error;
-      }
+      state.value = success ? STTState.ready : STTState.error;
     } catch (e) {
       state.value = STTState.error;
     }
@@ -88,7 +86,7 @@ class STT extends IService {
     if (locale != null) this.pattern = pattern;
     if (onResult != null) this.onResult = onResult;
     isEnable = true;
-    state.value = STTState.none;
+    state.value = STTState.ready;
     recognizedWords.value = "";
     final options = SpeechListenOptions(
         onDevice: false,
@@ -116,7 +114,6 @@ class STT extends IService {
     _speech.stop();
     isEnable = false;
     audioLevel.value = 0.0;
-    // recognizedWords.value = "";
   }
 
   void _proccessResult() {

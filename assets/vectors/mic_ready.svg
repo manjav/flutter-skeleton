@@ -1,6 +1,9 @@
 <svg width="52" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clip-path="url(#prefix__prefix__clip0_244_266)">
-        <g mask="url(#prefix__a)" fill="#8099b7">
+        <mask id="prefix__a" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="52" height="70">
+            <path d="M52 0H0v70h52V0z" fill="#fff" />
+        </mask>
+        <g mask="url(#prefix__a)" fill-rule="evenodd" clip-rule="evenodd" fill="#4E637C">
             <path
                 d="M52 34.867a3.177 3.177 0 10-6.355 0c0 8.063-6.512 14.582-14.525 14.582H20.46c-7.78 0-14.105-6.33-14.105-14.16a3.177 3.177 0 00-6.355 0c0 11.32 9.15 20.515 20.46 20.514h2.294v7.379h-2.607a3.177 3.177 0 100 6.354h12.106a3.177 3.177 0 000-6.354h-3.145v-7.379h2.012c11.541 0 20.88-9.382 20.88-20.935z" />
             <path
