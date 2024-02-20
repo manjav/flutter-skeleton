@@ -425,6 +425,9 @@ class Account extends Player with MineMixin {
       tribeId = tribe!.id;
     }
     if (tribeId < 0) {
+      tribe?.chat.value.clear();
+      tribe?.members.value.clear();
+      tribe?.pinnedMessage.value = null;
       tribe = null;
       tribeName = "no_tribe".l();
       return;
