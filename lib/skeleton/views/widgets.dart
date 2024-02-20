@@ -254,7 +254,7 @@ class Widgets {
       OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius)),
           borderSide:
-              BorderSide(color: borderColor ?? TColors.transparent, width: 2));
+              BorderSide(color: borderColor ?? TColors.primary80, width: 2));
 
   static Widget clipboardGetter(BuildContext context, String text,
       {double? width, double? height}) {
