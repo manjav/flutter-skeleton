@@ -1,8 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fruitcraft/mixins/mine_mixin.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
 
@@ -16,23 +15,27 @@ class BuildingBalloon extends StatefulWidget {
 }
 
 class _BuildingBalloonState extends State<BuildingBalloon>
-    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin,MineMixin {
+    with ServiceFinderWidgetMixin, ClassFinderWidgetMixin, MineMixin {
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<AccountProvider>(builder: (_, state, child) {
-      if (!isCollectable(state.account)) {
-        return const SizedBox();
-      }
-      return Widgets.button(context,
-          radius: 40.d,
-          color: TColors.primary,
-          padding: EdgeInsets.all(12.d),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Asset.load<Image>("icon_gold", width: 72.d),
-            Text(collectableGold(state.account).compact())
-          ]),
-          onPressed: () => _onPressed(state.account));
-    });
+    return StreamBuilder(
+        stream: Stream.periodic(const Duration(seconds: 10)),
+        builder: (ctx, snapshot) {
+          var account = accountProvider.account;
+          if (!isCollectable(account)) {
+            return const SizedBox();
+          }
+          return Widgets.button(context,
+              radius: 40.d,
+              color: TColors.primary,
+              padding: EdgeInsets.all(12.d),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Asset.load<Image>("icon_gold", width: 72.d),
+                Text(collectableGold(account).compact())
+              ]),
+              onPressed: () => _onPressed(account));
+        });
   }
 
   Future<void> _onPressed(Account account) async {
@@ -48,6 +51,10 @@ class _BuildingBalloonState extends State<BuildingBalloon>
         serviceLocator<Notifications>()
             .schedule(accountProvider.account.getSchedules());
       }
-    } finally {}
+    } finally {
+      setState(() {
+        
+      });
+    }
   }
 }

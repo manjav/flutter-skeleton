@@ -35,4 +35,9 @@ mixin MineMixin {
 
     return (capacity - collected) ~/ goldPerSec;
   }
+
+  int goldLevel(Account account) {
+    var building = account.buildings[Buildings.mine]!;
+    return ((5 * collectableGold(account)) / building.benefit).round();
+  }
 }
