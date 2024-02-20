@@ -135,7 +135,7 @@ class _EditTribeState extends State<EditTribe> with ClassFinderWidgetMixin {
       var result = await rpc(
           _account.tribe == null ? RpcId.tribeCreate : RpcId.tribeEdit,
           params: params);
-      _account.installTribe(result["tribe"]);
+      accountProvider.installTribe(result["tribe"]);
       if (mounted) {
         Navigator.pop(context, true);
       }
