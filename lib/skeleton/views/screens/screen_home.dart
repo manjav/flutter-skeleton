@@ -205,8 +205,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       setState(() => _selectedTabIndex = index);
     }
     if (pageChange) {
-      _pageController.animateToPage(index,
-          duration: const Duration(milliseconds: 700), curve: Curves.ease);
+      _pageController.jumpToPage(index);
     }
   }
 
