@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
 
-class TribeEditPopup extends AbstractPopup {
-  const TribeEditPopup({super.key}) : super(Routes.popupTribeEdit);
+class TribeEdit extends StatefulWidget {
+  const TribeEdit({super.key});
 
   @override
-  createState() => _TribeEditPopupState();
+  createState() => _TribeEditState();
 }
 
-class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
+class _TribeEditState extends State<TribeEdit> with ClassFinderWidgetMixin {
   int status = 0;
   late Account _account;
   final TextEditingController _nameController = TextEditingController();
@@ -17,7 +17,7 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
 
   @override
   void initState() {
-    _account = accountProvider.account;
+    _account = serviceLocator<AccountProvider>().account;
     if (_account.tribe != null && _account.tribe!.id < 0) _account.tribe = null;
     if (_account.tribe != null) {
       _nameController.text = _account.tribe!.name;
@@ -29,12 +29,11 @@ class _TribeEditPopupState extends AbstractPopupState<TribeEditPopup> {
     super.initState();
   }
 
-  @override
   String titleBuilder() =>
       _account.tribe == null ? "tribe_new".l() : "tribe_edit".l();
 
   @override
-  contentFactory() {
+  Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         SkinnedText("name_l".l()),
