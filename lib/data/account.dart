@@ -429,6 +429,10 @@ class Account extends Player with MineMixin {
       tribe?.pinnedMessage.value = null;
       tribe = null;
       tribeName = "no_tribe".l();
+      buildings[Buildings.tribe]!.level = 0;
+      buildings[Buildings.cards]!.level = 0;
+      buildings[Buildings.defense]!.level = 0;
+      buildings[Buildings.offense]!.level = 0;
       return;
     }
     tribeName = tribe!.name;
