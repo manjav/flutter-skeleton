@@ -7,6 +7,7 @@ class OverlaysName {
   static const member = "overlay_member";
   static const outcome = "overlay_outcome";
   static const feastAttack = "overlay_feast_attack";
+  static const feastAttackOutcome = "overlay_feast_attack_outcome";
   static const feastEvolve = "overlay_feast_evolve";
   static const feastLevelUp = "overlay_feast_level_up";
   static const feastEnhance = "overlay_feast_enhance";

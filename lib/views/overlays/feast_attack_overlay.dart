@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -96,6 +97,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
         sidePower -= power;
         _cardPowers[i + 10]?.value = power.min(0).toDouble();
       }
+      _outcomeData["opponent"] = _opponent;
 
       _oppositeCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
@@ -152,7 +154,12 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   }
 
   @override
-  void onRiveEvent(RiveEvent event) {
+  Widget closeButton() {
+    return const SizedBox();
+  }
+
+  @override
+  void onRiveEvent(RiveEvent event) async {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
       updateCard(i, AccountCard card) {
@@ -169,9 +176,27 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       for (var i = 0; i < _oppositeCards.length; i++) {
         updateCard(10 + i, _oppositeCards[i]);
       }
-    } else if (state == RewardAnimationState.closing) {
+    } else if (state == RewardAnimationState.shown) {
+      await Future.delayed(const Duration(milliseconds: 10));
       var route = _opponent!.id != 0 ? Routes.battleOut : Routes.questOut;
-      serviceLocator<RouteService>().to(route, args: _outcomeData);
+      // ignore: use_build_context_synchronously
+      Overlays.insert(
+        context,
+        AttackOutcomeFeastOverlay(
+          args: _outcomeData,
+          type: route,
+          onClose: (data) async {
+            onRiveEvent(const RiveEvent(
+                name: "closing", secondsDelay: 0, properties: {}));
+            closeInput?.value = true;
+            closeButtonController?.reverse();
+          },
+        ),
+      );
+    } else if (state == RewardAnimationState.closing) {
+      var lastRoute = _opponent!.id == 0 ? Routes.quest : Routes.popupOpponents;
+      serviceLocator<RouteService>()
+          .popUntil((route) => route.settings.name == lastRoute);
     }
   }
 
@@ -193,6 +218,13 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       }
     }
     return super.onRiveAssetLoad(asset, embeddedBytes);
+  }
+
+  @override
+  void onScreenTouched() {
+    if (state == RewardAnimationState.started) {
+      skipInput?.value = true;
+    }
   }
 
   @override
