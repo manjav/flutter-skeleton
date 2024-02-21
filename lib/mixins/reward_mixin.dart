@@ -2,12 +2,12 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../app_export.dart';
-
 
 enum RewardAnimationState {
   none,
@@ -27,14 +27,14 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   SMITrigger? startInput, skipInput, closeInput;
   RewardAnimationState state = RewardAnimationState.none;
   final ValueNotifier<bool> _progressbarNotifier = ValueNotifier(true);
+  AnimationController? closeButtonController;
 
   List<Widget> appBarElementsLeft() => [];
 
   @override
   void initState() {
     if (waitingSFX.isNotEmpty) {
-      serviceLocator<Sounds>()
-          .play(waitingSFX, channel: "reward");
+      serviceLocator<Sounds>().play(waitingSFX, channel: "reward");
     }
     super.initState();
   }
@@ -199,6 +199,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       onRiveEvent(
           const RiveEvent(name: "closing", secondsDelay: 0, properties: {}));
       closeInput?.value = true;
+      closeButtonController?.reverse();
     }
   }
 
@@ -207,9 +208,16 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       right: 100.d,
       top: 250.d,
       child: GestureDetector(
-        onTap: () => closeInput?.value = true,
+        onTap: () {
+          closeInput?.value = true;
+          closeButtonController?.reverse();
+        },
         child: Asset.load<Image>("close", height: 56.d, width: 56.d),
-      ),
+      )
+          .animate(
+            onInit: (controller) => closeButtonController = controller,
+          )
+          .fade(duration: 300.ms, delay: 500.ms),
     );
   }
 }
