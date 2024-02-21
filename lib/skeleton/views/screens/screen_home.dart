@@ -54,7 +54,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
-  Widget contentFactory() {
+  Widget contentFactory(double paddingTop) {
     if (services.state.status.index < ServiceStatus.initialize.index) {
       return const SizedBox();
     }

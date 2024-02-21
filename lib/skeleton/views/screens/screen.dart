@@ -53,7 +53,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
               right: 0,
               bottom: 0,
               left: 0,
-              child: contentFactory(),
+              child: contentFactory(paddingTop),
             ),
             appBarFactory(paddingTop),
           ],
@@ -91,7 +91,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   List<Widget> appBarElementsRight() => [];
 
-  Widget contentFactory() => const SizedBox();
+  Widget contentFactory(double paddingTop) => const SizedBox();
 
   void toast(String message) => Overlays.insert(context, ToastOverlay(message));
 }

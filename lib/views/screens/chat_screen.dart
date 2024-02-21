@@ -78,7 +78,7 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
   }
 
   @override
-  Widget contentFactory() {
+  Widget contentFactory(double paddingTop) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       const SizedBox(height: 70),
       _chatList(),
