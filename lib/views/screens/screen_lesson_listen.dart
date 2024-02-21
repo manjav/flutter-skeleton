@@ -34,6 +34,30 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
   void startQuiz(Chat chat) {
     _quizState.value = 0;
   }
+
+  bool _chechAnswers() {
+    for (var i = 0; i < _answers.length; i++) {
+      if (_answers[i] != _pattern[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<void> _onQuizComplete() async {
+    var isCorrect = _chechAnswers();
+    if (isCorrect) {
+      _quizState.value = -2;
+      onQuizResult(true);
+    } else {
+      onQuizResult(false);
+      _quizState.value = -1;
+      await Future.delayed(const Duration(seconds: 1));
+      _answers = [];
+      _quizState.value = 0;
+    }
+  }
+
   @override
   Widget footerBuilder() {
     var size = 80.d;
@@ -44,31 +68,31 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
         padding: EdgeInsets.all(8.d),
         child: Column(
           children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Widgets.button(
-            context,
-            radius: size,
-            width: size * 0.5,
-            height: size * 0.5,
-            color: TColors.primary10,
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(12.d),
-            child: StreamBuilder(
-              stream: serviceLocator<Sounds>()
-                  .getPlayer(chat.value)
-                  .onPlayerStateChanged,
-              builder: (context, snapshot) => Asset.load<SvgPicture>(
-                  snapshot.data == PlayerState.playing ? "stop" : "play",
-                  width: size * 0.3),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Widgets.button(
+                  context,
+                  radius: size,
+                  width: size * 0.5,
+                  height: size * 0.5,
+                  color: TColors.primary10,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(12.d),
+                  child: StreamBuilder(
+                    stream: serviceLocator<Sounds>()
+                        .getPlayer(chat.value)
+                        .onPlayerStateChanged,
+                    builder: (context, snapshot) => Asset.load<SvgPicture>(
+                        snapshot.data == PlayerState.playing ? "stop" : "play",
+                        width: size * 0.3),
+                  ),
+                  onPressed: () => serviceLocator<Speaker>()
+                      .play(chat.value, narrator: chat.type.narrator),
+                ),
+                DirText(currentTalk!.chats.first.value),
+              ],
             ),
-            onPressed: () => serviceLocator<Speaker>()
-                .play(chat.value, narrator: chat.type.narrator),
-          ),
-          DirText(currentTalk!.chats.first.value),
-        ],
-      ),
             SizedBox(height: 8.d),
             _answerBox(),
             SizedBox(height: 8.d),
@@ -149,7 +173,13 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
       color: used ? TColors.primary20 : TColors.primary10,
       child: Opacity(opacity: used ? 0 : 1, child: Text(choice)),
       onPressed: () {
+        if (_quizState.value < 0 || used || _answers.contains(choice)) return;
+        _answers.add(choice);
+        _quizState.value = _answers.length;
+        if (_answers.length == _pattern.length) {
+          _onQuizComplete();
+        }
       },
     );
   }
-  }
+}
