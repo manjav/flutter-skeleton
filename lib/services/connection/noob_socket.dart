@@ -65,7 +65,6 @@ class NoobSocket extends IService {
       if (noobMessage.type == Noobs.tribeJoin) {
         var tribe = noobMessage as TribeJoinMessage;
         _account.installTribe(tribe.tribe);
-        connect();
       }
       if (noobMessage.type != Noobs.playerStatus) {
         log(trimmedMessage);
