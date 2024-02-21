@@ -84,3 +84,8 @@ extension LocalizationExtension on String {
 extension LocalizationIntExtension on int {
   String convert() => Localization.convert(toString());
 }
+
+class DirText extends Text {
+  DirText(super.text, {super.key, super.style})
+      : super(textDirection: text.getDirection());
+}

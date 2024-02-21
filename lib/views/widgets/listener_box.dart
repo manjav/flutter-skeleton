@@ -47,14 +47,13 @@ class ListenerBox extends StatelessWidget {
                       children: _getWords(value, correctStyle),
                     )),
                     SizedBox(height: 4.d),
-                    Text(pattern.nativeLanguage,
-                        style: TStyles.small.copyWith(color: TColors.primary40),
-                        textDirection: pattern.nativeLanguage.getDirection()),
+                    DirText(pattern.nativeLanguage,
+                        style:
+                            TStyles.small.copyWith(color: TColors.primary40)),
                     SizedBox(height: 6.d),
                     stt.state.value == STTState.fail
-                        ? Text(value,
-                            style: TStyles.small.copyWith(color: TColors.error),
-                            textDirection: value.getDirection())
+                        ? DirText(value,
+                            style: TStyles.small.copyWith(color: TColors.error))
                         : const SizedBox(),
                   ],
                 );

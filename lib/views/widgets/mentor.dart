@@ -39,8 +39,7 @@ class _MentorState extends State<Mentor> with TickerProviderStateMixin {
               left: 32,
               right: 32,
               bottom: 200,
-              child: Text(widget.message,
-                  textDirection: widget.message.getDirection())),
+              child: DirText(widget.message)),
           Positioned(left: 0, bottom: 0, child: _loadCharacter())
         ],
       ),

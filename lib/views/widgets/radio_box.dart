@@ -45,16 +45,13 @@ class _RadioBoxState extends State<RadioBox> {
                     BalloonDecoration(tipPosition: widget.ballonPosition),
                 child: Column(
                   children: [
-                    Text(widget.text,
-                        style: TStyles.medium,
-                        textDirection: widget.text.getDirection()),
+                    DirText(widget.text, style: TStyles.medium),
                     SizedBox(height: widget.translation == null ? 0 : 4.d),
                     widget.translation == null
                         ? const SizedBox()
-                        : Text(widget.translation!,
+                        : DirText(widget.translation!,
                             style: TStyles.small
-                                .copyWith(color: TColors.primary40),
-                            textDirection: widget.translation!.getDirection()),
+                                .copyWith(color: TColors.primary40)),
                   ],
                 )),
             Positioned(
