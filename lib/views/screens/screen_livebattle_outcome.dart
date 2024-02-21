@@ -71,7 +71,7 @@ class _LiveOutScreenState extends AbstractScreenState<LiveOutScreen>
         height: 130.d,
         margin: EdgeInsets.all(44.d),
         decoration: Widgets.imageDecorator("ui_ribbon_$color"),
-        child: SkinnedText("fight_label_$color".l()));
+        child: Center(child: SkinnedText("fight_label_$color".l())));
   }
 
   Widget _vsBuilder() {
