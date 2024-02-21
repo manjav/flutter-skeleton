@@ -77,6 +77,12 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             padding: EdgeInsets.fromLTRB(
                 padding, paddingTop + padding * 6, padding, defaultInputSize),
             itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
+        Positioned(
+            top: paddingTop + padding,
+            left: padding,
+            right: padding,
+            height: 64.d,
+            child: _headerBuilder()),
         ValueListenableBuilder(
             valueListenable: inputSize,
             builder: (context, value, child) {
@@ -112,6 +118,55 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
+  Widget _headerBuilder() {
+    return Row(
+      children: [
+        Avatar(scenario!.botAvatar, 64.d),
+        SizedBox(width: 12.d),
+        Expanded(
+            child: ValueListenableBuilder(
+          valueListenable: _progress,
+          builder: (context, value, child) => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(scenario!.botName),
+              TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+                tween: Tween(
+                  begin: value.dx,
+                  end: value.dy,
+                ),
+                builder: (context, value, _) => LinearProgressIndicator(
+                  minHeight: 6.d,
+                  value: value,
+                  color: TColors.green,
+                  backgroundColor: TColors.primary20,
+                  borderRadius: BorderRadius.all(Radius.circular(6.d)),
+                ),
+              ),
+              Text(
+                "${currentTalk!.index + 1} / ${scenario!.thread.length}",
+                style: TStyles.small.copyWith(color: TColors.primary30),
+              ),
+            ],
+          ),
+        )),
+        SizedBox(width: 12.d),
+        Widgets.button(
+          context,
+          width: 32.d,
+          height: 32.d,
+          radius: 32.d,
+          padding: EdgeInsets.all(8.d),
+          color: TColors.primary20,
+          child: Asset.load<SvgPicture>("close"),
+          onPressed: () => Navigator.pop(context),
+        )
+      ],
+    );
+  }
 
   Widget footerBuilder() => const SizedBox();
 
