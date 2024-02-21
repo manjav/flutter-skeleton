@@ -159,12 +159,15 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       if (state == RewardAnimationState.waiting) {
         startInput?.value = true;
       }
-    } on SkeletonException {
+    } on SkeletonException catch(e) {
       if (context.mounted) {
         await Future.delayed(const Duration(milliseconds: 10));
-        rethrow;
+        dismiss();
+        await serviceLocator<RouteService>().to(
+          Routes.popupMessage,
+          args: {"title": "Error", "message": "error_${e.statusCode}".l()},
+        );
       }
-      dismiss();
     }
   }
 
