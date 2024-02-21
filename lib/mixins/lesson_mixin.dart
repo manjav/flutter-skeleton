@@ -198,12 +198,12 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Future<void> onQuizResult(bool isSuccess) async {
     const duration = Duration(milliseconds: 1500);
-    _progress.value = Offset(
-      currentTalk!.index / scenario!.thread.length,
-      (currentTalk!.index + 1) / scenario!.thread.length,
-    );
 
     if (isSuccess) {
+      _progress.value = Offset(
+        currentTalk!.index / scenario!.thread.length,
+        (currentTalk!.index + 1) / scenario!.thread.length,
+      );
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
       // Waiting for celebration
       await Future.delayed(duration);
