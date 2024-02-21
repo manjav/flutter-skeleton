@@ -71,6 +71,8 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
       ),
             SizedBox(height: 8.d),
             _answerBox(),
+            SizedBox(height: 8.d),
+            _wrapper(_choices.length, _choiceItemBuilder),
           ],
         ),
       ),
@@ -134,6 +136,20 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
       children: [
         for (var i = 0; i < itemCount; i++) itemBuilder(i),
       ],
+    );
+  }
+
+  Widget _choiceItemBuilder(int index) {
+    var choice = _choices[index];
+    var used = _answers.contains(choice);
+    return Widgets.button(
+      context,
+      padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
+      margin: EdgeInsets.all(3.d),
+      color: used ? TColors.primary20 : TColors.primary10,
+      child: Opacity(opacity: used ? 0 : 1, child: Text(choice)),
+      onPressed: () {
+      },
     );
   }
   }
