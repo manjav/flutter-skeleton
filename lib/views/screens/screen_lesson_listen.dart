@@ -13,7 +13,22 @@ class LessonListenScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<LessonListenScreen>
     with LessonMixin {
+  List<String> _choices = [], _answers = [], _pattern = [];
   final ValueNotifier<int> _quizState = ValueNotifier(0);
+
+  @override
+  Future<void> nextStep(int index) async {
+    if (index < scenario!.thread.length) {
+      var chat = scenario!.thread[index].chats
+          .where((c) => c.type == ChatType.user)
+          .first;
+      _pattern = chat.value.split(" ");
+      _choices = List.from(_pattern);
+      _choices.shuffle();
+      _answers = [];
+    }
+    await super.nextStep(index);
+  }
 
   @override
   void startQuiz(Chat chat) {
@@ -54,6 +69,8 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
           DirText(currentTalk!.chats.first.value),
         ],
       ),
+            SizedBox(height: 8.d),
+            _answerBox(),
           ],
         ),
       ),
@@ -63,6 +80,44 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
   Widget _answerBox() {
     return Widgets.rect(
       radius: 20.d,
+      color: TColors.primary10,
+      padding: EdgeInsets.fromLTRB(16.d, 6.d, 6.d, 6.d),
+      constraints: BoxConstraints.expand(height: 64.d),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: _wrapper(_answers.length, (i) => Text("${_answers[i]}  ")),
+            ),
+          ),
+          SizedBox(width: 8.d),
+          _answers.isEmpty
+              ? const SizedBox()
+              : Widgets.button(
+                  context,
+                  width: 80.d,
+                  color: TColors.primary20,
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 14.d,
+                    width: 13.d,
+                    child: Asset.load<SvgPicture>("clear", width: 24.d),
+                  ),
+                  onPressed: () {
+                    if (_quizState.value > -1) {
+                      _answers.removeLast();
+                      _quizState.value = _answers.length;
+                    }
+                  },
+                ),
+        ],
+      ),
+    );
+  }
+
   Widget _wrapper(
     int itemCount,
     Widget Function(int) itemBuilder,
