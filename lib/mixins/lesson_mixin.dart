@@ -12,12 +12,14 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Scenario? scenario;
   final GlobalKey<AnimatedListState> _chatListKey =
       GlobalKey<AnimatedListState>();
+
   final List<Chat> _chatItems = [];
   Talk? currentTalk;
   final ScrollController _chatScrollController = ScrollController();
   final ValueNotifier<double> inputSize = ValueNotifier(0);
   final ValueNotifier<Offset> _progress = ValueNotifier(const Offset(0, 0));
-  final double defaultInputSize = 180.d;
+
+  final GlobalKey _footerKey = GlobalKey();
 
   @override
   void initState() {
@@ -49,7 +51,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       if (chat.type == ChatType.bot) {
         continue;
       }
-      inputSize.value = defaultInputSize;
+
+      inputSize.value = _getFooterHeight();
       await serviceLocator<Speaker>()
           .play(chat.value, narrator: chat.type.narrator);
 
@@ -75,7 +78,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             key: _chatListKey,
             controller: _chatScrollController,
             padding: EdgeInsets.fromLTRB(
-                padding, paddingTop + padding * 6, padding, defaultInputSize),
+                padding, paddingTop + padding * 6, padding, _getFooterHeight()),
             itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
         Positioned(
             top: paddingTop + padding,
@@ -92,8 +95,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                 top: DeviceInfo.size.height - value,
                 curve: value == 0 ? Curves.easeIn : Curves.easeOutBack,
                 duration: const Duration(milliseconds: 300),
-                child: Widgets.rect(
-                  height: defaultInputSize,
+                child: Container(
+                  key: _footerKey,
                   decoration: BoxDecoration(
                     color: TColors.primary0,
                     borderRadius: BorderRadius.only(
@@ -237,4 +240,14 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   void startQuiz(Chat chat) {}
+
+  double _getFooterHeight() {
+    double height = 500.d;
+    final keyContext = _footerKey.currentContext;
+    if (mounted && keyContext != null) {
+      final box = keyContext.findRenderObject() as RenderBox;
+      height = box.size.height;
+    }
+    return height;
+  }
 }
