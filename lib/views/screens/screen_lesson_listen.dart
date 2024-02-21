@@ -60,4 +60,17 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
     );
   }
 
+  Widget _answerBox() {
+    return Widgets.rect(
+      radius: 20.d,
+  Widget _wrapper(
+    int itemCount,
+    Widget Function(int) itemBuilder,
+  ) {
+    return Wrap(
+      children: [
+        for (var i = 0; i < itemCount; i++) itemBuilder(i),
+      ],
+    );
+  }
   }
