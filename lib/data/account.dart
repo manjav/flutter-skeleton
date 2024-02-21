@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:fruitcraft/mixins/mine_mixin.dart';
 
 import '../app_export.dart';
 

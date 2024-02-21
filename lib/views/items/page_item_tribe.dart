@@ -18,6 +18,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Consumer<AccountProvider>(builder: (_, state, child) {
       // Show unavailable message
       var levels = state.account.loadingData.rules["availabilityLevels"]!;

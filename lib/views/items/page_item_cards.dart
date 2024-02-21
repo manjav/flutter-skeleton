@@ -14,6 +14,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
     with KeyProvider {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var gap = 10.d;
     var crossAxisCount = 4;
     var itemSize =

@@ -148,6 +148,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (_items.isEmpty) {
       return SkinnedText("waiting_l".l());
     }
