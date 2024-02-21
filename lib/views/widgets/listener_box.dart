@@ -33,7 +33,7 @@ class ListenerBox extends StatelessWidget {
                 width: size * 0.3),
           ),
           onPressed: () => serviceLocator<Speaker>()
-              .play(pattern.value, narrator: pattern.narrator),
+              .play(pattern.value, narrator: pattern.type.narrator),
         ),
         Expanded(
           child: ValueListenableBuilder(

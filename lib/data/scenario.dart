@@ -35,13 +35,19 @@ class Scenario {
 
 enum ChatType { none, hint, user, bot }
 
-class ChatTypeExtension {
+extension ChatTypeExtension on ChatType {
   static ChatType getEnum(String type) {
     for (var value in ChatType.values) {
       if (value.name == type) return value;
     }
     return ChatType.none;
   }
+
+  Narrator get narrator => switch (this) {
+        ChatType.user => Narrator.nova,
+        ChatType.bot => Narrator.fable,
+        _ => Narrator.onyx,
+      };
 }
 
 class Chat {
@@ -54,11 +60,6 @@ class Chat {
     required this.nativeLanguage,
   });
   bool get isChat => type == ChatType.user || type == ChatType.bot;
-  Narrator get narrator => switch (type) {
-        ChatType.user => Narrator.nova,
-        ChatType.bot => Narrator.fable,
-        _ => Narrator.onyx,
-      };
 }
 
 class Talk {
