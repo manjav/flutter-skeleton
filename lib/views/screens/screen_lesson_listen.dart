@@ -99,12 +99,20 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
               : Widgets.button(
                   context,
                   width: 80.d,
-                  color: TColors.primary20,
+                  color: switch (_quizState.value) {
+                    -2 => TColors.green.withOpacity(0.2),
+                    -1 => TColors.error.withOpacity(0.2),
+                    _ => TColors.primary20,
+                  },
                   child: Container(
                     alignment: Alignment.center,
                     height: 14.d,
                     width: 13.d,
-                    child: Asset.load<SvgPicture>("clear", width: 24.d),
+                    child: switch (_quizState.value) {
+                      -2 => Asset.load<SvgPicture>("mic_success", width: 32.d),
+                      -1 => Asset.load<SvgPicture>("mic_fail", width: 32.d),
+                      _ => Asset.load<SvgPicture>("clear", width: 24.d),
+                    },
                   ),
                   onPressed: () {
                     if (_quizState.value > -1) {
