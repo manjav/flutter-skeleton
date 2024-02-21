@@ -44,7 +44,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     var items = <Widget>[];
     items.addAll(children);
     items.add(_progressbarBuilder());
-    items.add(_closeButton());
+    items.add(closeButton());
     return Widgets.button(context,
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
@@ -159,7 +159,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       if (state == RewardAnimationState.waiting) {
         startInput?.value = true;
       }
-    } on SkeletonException catch(e) {
+    } on SkeletonException catch (e) {
       if (context.mounted) {
         await Future.delayed(const Duration(milliseconds: 10));
         dismiss();
@@ -203,12 +203,14 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     }
   }
 
-  Widget _closeButton() {
+  Widget closeButton() {
     return Positioned(
       right: 100.d,
       top: 250.d,
       child: GestureDetector(
         onTap: () {
+          onRiveEvent(const RiveEvent(
+              name: "closing", secondsDelay: 0, properties: {}));
           closeInput?.value = true;
           closeButtonController?.reverse();
         },
