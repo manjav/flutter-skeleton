@@ -13,16 +13,22 @@ class LessonListenScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<LessonListenScreen>
     with LessonMixin {
+  final ValueNotifier<int> _quizState = ValueNotifier(0);
+
   @override
-  Future<void> startQuiz(Chat chat) async {
-    _choices.value = chat.value.split(" ");
-    await Future.delayed(const Duration(seconds: 2));
-    // onQuizResult(true);
+  void startQuiz(Chat chat) {
+    _quizState.value = 0;
+  }
   @override
   Widget footerBuilder() {
     var size = 80.d;
     var chat = currentTalk!.chats.where((c) => c.type == ChatType.user).first;
-    return Column(children: [
+    return ValueListenableBuilder<int>(
+      valueListenable: _quizState,
+      builder: (context, value, child) => Padding(
+        padding: EdgeInsets.all(8.d),
+        child: Column(
+          children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -48,7 +54,10 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
           DirText(currentTalk!.chats.first.value),
         ],
       ),
-    ]);
+          ],
+        ),
+      ),
+    );
   }
 
   }
