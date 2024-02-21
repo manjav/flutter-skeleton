@@ -131,8 +131,7 @@ class Widgets {
           alignment: alignment,
           transform: transform,
           transformAlignment: transformAlignment,
-          padding:
-              padding ?? EdgeInsets.symmetric(horizontal: 32.d, vertical: 48.d),
+          padding: padding,
           margin: margin,
           decoration: decoration,
           foregroundDecoration: foregroundDecoration,

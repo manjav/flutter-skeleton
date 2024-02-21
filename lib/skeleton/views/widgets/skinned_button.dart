@@ -52,14 +52,14 @@ class SkinnedButton extends StatelessWidget {
       onTapCancel: () => _isPressed.value = false,
       child: ValueListenableBuilder(
         valueListenable: _isPressed,
-        builder: (context, value, child) {
+        builder: (context, value, childs) {
           return Widgets.rect(
             width: width,
             height: height,
             alignment: alignment ?? Alignment.center,
             constraints: constraints,
             margin: margin,
-            padding: padding ?? EdgeInsets.fromLTRB(28.d, 26.d, 28.d, 30.d),
+            padding: padding ?? EdgeInsets.all(8.d),
             decoration: BattonDecoration(
                 mainColor: color ?? TColors.primary50,
                 strokeColor: TColors.primary,
