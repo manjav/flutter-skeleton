@@ -28,7 +28,7 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
       _levelInput?.value =
           account.buildings[widget.building.type]!.level.toDouble();
       if (widget.building.type == Buildings.treasury) {
-        var x = ((3 * account.bank_account_balance) / widget.building.benefit)
+        var x = ((5 * account.bank_account_balance) / widget.building.benefit)
             .round();
         _goldInput?.value = x.toDouble();
         return;
@@ -84,7 +84,7 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
                   var input = controller.findInput<double>('gold');
                   _goldInput = input as SMINumber;
 
-                  var x = ((3 * account.bank_account_balance) /
+                  var x = ((5 * account.bank_account_balance) /
                           widget.building.benefit)
                       .round();
                   _goldInput?.value = x.toDouble();
