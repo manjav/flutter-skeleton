@@ -18,8 +18,7 @@ class LoadingController extends GetxController {
     route.pages = [
       SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
       SkeletonPageModel(
-          page: SpeakScreen(), route: Routes.speak, isOpaque: true),
-      SkeletonPageModel(page: ChatScreen(), route: Routes.chat, isOpaque: true),
+          page: LessonSpeakScreen(), route: Routes.speak, isOpaque: true),
       SkeletonPageModel(
           page: const STTScreen(), route: Routes.stt, isOpaque: true),
       SkeletonPageModel(
