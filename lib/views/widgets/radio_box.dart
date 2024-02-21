@@ -38,9 +38,10 @@ class _RadioBoxState extends State<RadioBox> {
           alignment: Alignment.center,
           children: [
             Widgets.rect(
-                margin: EdgeInsets.fromLTRB(margin, 26.d, margin, margin),
-                padding:
-                    EdgeInsets.fromLTRB(margin * 2, 26.d, margin * 2, margin),
+                margin:
+                    EdgeInsets.fromLTRB(margin, margin * 2 - 2.d, margin, 0),
+                padding: EdgeInsets.fromLTRB(
+                    margin * 2, margin * 2, margin * 2, margin),
                 decoration:
                     BalloonDecoration(tipPosition: widget.ballonPosition),
                 child: Column(

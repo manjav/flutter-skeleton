@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:lingai/views/screens/screen_speak.dart';
-import 'package:lingai/views/screens/screen_stt.dart';
+import 'package:lingai/views/screens/screen_lesson_listen.dart';
+import 'package:lingai/views/screens/screen_lesson_speak.dart';
 
 import '../../app_export.dart';
 
@@ -20,7 +20,7 @@ class LoadingController extends GetxController {
       SkeletonPageModel(
           page: LessonSpeakScreen(), route: Routes.speak, isOpaque: true),
       SkeletonPageModel(
-          page: const STTScreen(), route: Routes.stt, isOpaque: true),
+          page: LessonListenScreen(), route: Routes.listen, isOpaque: true),
       SkeletonPageModel(
           page: const MessagePopup(),
           route: Routes.popupMessage,
