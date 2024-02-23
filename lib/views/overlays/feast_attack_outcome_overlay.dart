@@ -14,7 +14,7 @@ class AttackOutcomeFeastOverlay extends AbstractOverlay {
   final String type;
 
   const AttackOutcomeFeastOverlay(
-      {required this.args,required this.type, super.onClose, super.key})
+      {required this.args, required this.type, super.onClose, super.key})
       : super(route: OverlaysName.feastAttackOutcome);
 
   @override
@@ -41,6 +41,7 @@ class _AttackOutcomeStateFeastOverlay
     _account = accountProvider.account;
     _isWin = widget.args['outcome'];
     waitingSFX = _isWin ? "won" : "lose";
+    startSFX = "";
     _opponent = widget.args['opponent'];
     _color = _isWin ? "green" : "red";
 
@@ -94,8 +95,7 @@ class _AttackOutcomeStateFeastOverlay
             children: [
               // Positioned(top: -430.d, child: _ribbonTopBuilder()),
               Align(
-                  alignment: const Alignment(0, 0.5),
-                  child: _prizeList(700.d)),
+                  alignment: const Alignment(0, 0.5), child: _prizeList(700.d)),
               Positioned(
                   height: 100.d,
                   width: 720.d,
