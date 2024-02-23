@@ -92,6 +92,11 @@ extension StringExtension on String {
     var r = Random().nextInt(length - len + 1);
     return substring(r, len);
   }
+
+  List<String> splitByLength(int length) {
+    if (this.length < length) return [this];
+    return [substring(0, length), ...substring(length).splitByLength(length)];
+  }
 }
 
 extension DateExtension on DateTime {
