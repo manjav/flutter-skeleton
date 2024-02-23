@@ -6,12 +6,11 @@ import '../../app_export.dart';
 
 class ListenerBox extends StatelessWidget {
   final Chat pattern;
-  const ListenerBox(this.pattern, {super.key});
-
+  final _defaultStyle = TStyles.medium.copyWith(color: TColors.transparent);
+  final _correctStyle = TStyles.medium
+      .copyWith(color: TColors.green, fontWeight: FontWeight.w900);
   @override
   Widget build(BuildContext context) {
-    var correctStyle = TStyles.medium
-        .copyWith(color: TColors.green, fontWeight: FontWeight.w900);
     var stt = serviceLocator<STT>();
     var size = 100.d;
     return Row(
@@ -44,9 +43,8 @@ class ListenerBox extends StatelessWidget {
                     RichText(
                         text: TextSpan(
                       style: TStyles.medium,
-                      children: _getWords(value, correctStyle),
-                    )),
-                    SizedBox(height: 4.d),
+                      children: _getWords(value),
+                    )),                    SizedBox(height: 4.d),
                     DirText(pattern.nativeLanguage,
                         style:
                             TStyles.small.copyWith(color: TColors.primary40)),
@@ -104,9 +102,9 @@ class ListenerBox extends StatelessWidget {
         });
   }
 
-  List<TextSpan> _getWords(String value, TextStyle correctStyle) {
+  List<TextSpan> _getWords(String value) {
     if (pattern.value == value) {
-      return [TextSpan(text: pattern.value, style: correctStyle)];
+      return [TextSpan(text: pattern.value, style: _correctStyle)];
     }
     var index = pattern.value.toLowerCase().indexOf(value);
     if (index > -1) {
@@ -117,7 +115,7 @@ class ListenerBox extends StatelessWidget {
       if (value.isNotEmpty) {
         spans.add(TextSpan(
             text: pattern.value.substring(index, index + value.length),
-            style: correctStyle));
+            style: _correctStyle));
       }
       if (index + value.length < pattern.value.length - 1) {
         spans
