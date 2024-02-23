@@ -13,6 +13,7 @@ class LessonListenScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<LessonListenScreen>
     with LessonMixin {
+  bool _charByChar = false;
   List<Choice> _choices = [];
   List<String> _answers = [], _pattern = [];
   final ValueNotifier<int> _quizState = ValueNotifier(0);
@@ -23,7 +24,16 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
       var chat = scenario!.thread[index].chats
           .where((c) => c.type == ChatType.user)
           .first;
+
       _pattern = chat.value.split(" ");
+      _charByChar = _pattern.length < 2;
+      if (_charByChar) {
+        _pattern = switch (chat.value.length) {
+          < 5 => chat.value.split(""),
+          _ => chat.value.splitByLength(2),
+        };
+      }
+
       _choices = List.generate(_pattern.length, (i) => Choice(_pattern[i]));
       _choices.shuffle();
       _answers = [];
@@ -120,7 +130,8 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: _wrapper(_answers.length, (i) => Text("${_answers[i]}  ")),
+              child: _wrapper(_answers.length,
+                  (i) => Text("${_answers[i]}${_charByChar ? "" : "  "}")),
             ),
           ),
           SizedBox(width: 8.d),
