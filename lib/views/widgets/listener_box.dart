@@ -6,6 +6,8 @@ import '../../app_export.dart';
 
 class ListenerBox extends StatelessWidget {
   final Chat pattern;
+  final bool challengeMode;
+  ListenerBox(this.pattern, {this.challengeMode = false, super.key});
   final _defaultStyle = TStyles.medium.copyWith(color: TColors.transparent);
   final _correctStyle = TStyles.medium
       .copyWith(color: TColors.green, fontWeight: FontWeight.w900);
@@ -40,11 +42,8 @@ class ListenerBox extends StatelessWidget {
               builder: (context, value, child) {
                 return Column(
                   children: [
-                    RichText(
-                        text: TextSpan(
-                      style: TStyles.medium,
-                      children: _getWords(value),
-                    )),                    SizedBox(height: 4.d),
+                    _answeringBuilder(value),
+                    SizedBox(height: 4.d),
                     DirText(pattern.nativeLanguage,
                         style:
                             TStyles.small.copyWith(color: TColors.primary40)),
@@ -100,6 +99,37 @@ class ListenerBox extends StatelessWidget {
         builder: (context, value, child) {
           return Asset.load<SvgPicture>("mic_${value.name}", width: size * 0.3);
         });
+  }
+
+  Widget _answeringBuilder(String value) {
+    if (challengeMode) {
+      var items = <Widget>[];
+      var patterns = pattern.value.toLowerCase().split(" ");
+      var values = value.split(" ");
+      for (var i = 0; i < patterns.length; i++) {
+        var style = _defaultStyle;
+        if (i < values.length) {
+          if (values[i].toLowerCase() == patterns[i]) {
+            style = _correctStyle;
+          }
+        }
+        items.add(Widgets.rect(
+          radius: 6.d,
+          color: TColors.primary10,
+          margin: EdgeInsets.symmetric(horizontal: 4.d),
+          padding: EdgeInsets.fromLTRB(6.d, 4.d, 6.d, 1.d),
+          child: Text(patterns[i], style: style),
+        ));
+      }
+      return Wrap(children: items);
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: TStyles.medium,
+        children: _getWords(value),
+      ),
+    );
   }
 
   List<TextSpan> _getWords(String value) {
