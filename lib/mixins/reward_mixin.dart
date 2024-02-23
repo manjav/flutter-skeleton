@@ -117,8 +117,10 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         startInput?.value = true;
       }
     } else if (state == RewardAnimationState.started) {
-      serviceLocator<Sounds>().stop("reward");
-      serviceLocator<Sounds>().play(startSFX);
+      // serviceLocator<Sounds>().stop("reward");
+      if (startSFX.isNotEmpty) {
+        serviceLocator<Sounds>().play(startSFX);
+      }
       WidgetsBinding.instance
           .addPostFrameCallback((t) => _progressbarNotifier.value = false);
     } else if (state == RewardAnimationState.closed) {
