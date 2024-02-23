@@ -128,6 +128,7 @@ class _AttackOutcomeStateFeastOverlay
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
 
+    controller.findInput<double>("color")?.value = _isWin ? 1.0 : 0.0;
     controller.findInput<double>("cardsUsedOpponent")?.value =
         widget.args["opponent_cards"].length.toDouble();
     controller.findInput<double>("cardsUsedPlayer")?.value =
