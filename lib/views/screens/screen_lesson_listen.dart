@@ -13,7 +13,8 @@ class LessonListenScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<LessonListenScreen>
     with LessonMixin {
-  List<String> _choices = [], _answers = [], _pattern = [];
+  List<Choice> _choices = [];
+  List<String> _answers = [], _pattern = [];
   final ValueNotifier<int> _quizState = ValueNotifier(0);
 
   @override
@@ -23,7 +24,7 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
           .where((c) => c.type == ChatType.user)
           .first;
       _pattern = chat.value.split(" ");
-      _choices = List.from(_pattern);
+      _choices = List.generate(_pattern.length, (i) => Choice(_pattern[i]));
       _choices.shuffle();
       _answers = [];
     }
@@ -54,6 +55,9 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
       _quizState.value = -1;
       await Future.delayed(const Duration(seconds: 1));
       _answers = [];
+      for (var c in _choices) {
+        c.used = false;
+      }
       _quizState.value = 0;
     }
   }
@@ -142,7 +146,8 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
                   ),
                   onPressed: () {
                     if (_quizState.value > -1) {
-                      _answers.removeLast();
+                      var last = _answers.removeLast();
+                      _choices.lastWhere((c) => c.text == last).used = false;
                       _quizState.value = _answers.length;
                     }
                   },
@@ -165,21 +170,27 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
 
   Widget _choiceItemBuilder(int index) {
     var choice = _choices[index];
-    var used = _answers.contains(choice);
     return Widgets.button(
       context,
       padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
       margin: EdgeInsets.all(3.d),
-      color: used ? TColors.primary20 : TColors.primary10,
-      child: Opacity(opacity: used ? 0 : 1, child: Text(choice)),
+      color: choice.used ? TColors.primary20 : TColors.primary10,
+      child: Opacity(opacity: choice.used ? 0 : 1, child: Text(choice.text)),
       onPressed: () {
-        if (_quizState.value < 0 || used || _answers.contains(choice)) return;
-        _answers.add(choice);
+        if (_quizState.value < 0 || choice.used) return;
+        _answers.add(choice.text);
         _quizState.value = _answers.length;
+        choice.used = true;
         if (_answers.length == _pattern.length) {
           _onQuizComplete();
         }
       },
     );
   }
+}
+
+class Choice {
+  bool used = false;
+  final String text;
+  Choice(this.text);
 }
