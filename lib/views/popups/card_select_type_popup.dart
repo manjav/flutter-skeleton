@@ -91,7 +91,7 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardTypePopup>
           children: [
             CardItem.getCardImage(fruit.cards[0], 76.d),
             SizedBox(width: 12.d),
-            SkinnedText("${fruit.name}_t".l())
+            SkinnedText("${fruit.name}_title".l())
           ],
         ),
         onPressed: () => setState(() => _selectedCardIndex = index));

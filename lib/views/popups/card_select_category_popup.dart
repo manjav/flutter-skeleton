@@ -92,9 +92,11 @@ class _SelectTypePopupState extends AbstractPopupState<SelectCardCategoryPopup>
                 strokeAlign: -2.d)),
         width: 260.d,
         height: 260.d / CardItem.aspectRatio,
-        child: SkinnedText(
-          "card_category_$category".l(),
-          textAlign: TextAlign.center,
+        child: Center(
+          child: SkinnedText(
+            "card_category_$category".l(),
+            textAlign: TextAlign.center,
+          ),
         ),
         onPressed: () => setState(() => _selectedCategory = category));
   }
