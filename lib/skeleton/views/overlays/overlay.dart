@@ -21,6 +21,8 @@ class Overlays {
   }
 
   static void clear() => _entries.clear();
+
+  static int get count => _entries.length;
 }
 
 class AbstractOverlay extends StatefulWidget {
@@ -34,7 +36,7 @@ class AbstractOverlay extends StatefulWidget {
 }
 
 class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
-    with ILogger, ServiceFinderWidgetMixin , ClassFinderWidgetMixin{
+    with ILogger, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   @override
   Widget build(BuildContext context) {
     return const SizedBox();

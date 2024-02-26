@@ -98,6 +98,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
+          if (Overlays.count > 0) return;
           if (Platform.isAndroid) {
             var result = await serviceLocator<RouteService>()
                 .to(Routes.popupMessage, args: {
