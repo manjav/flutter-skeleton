@@ -16,7 +16,6 @@ class BuildingBalloon extends StatefulWidget {
 
 class _BuildingBalloonState extends State<BuildingBalloon>
     with ServiceFinderWidgetMixin, ClassFinderWidgetMixin, MineMixin {
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -42,6 +41,7 @@ class _BuildingBalloonState extends State<BuildingBalloon>
     if (!isCollectable(account)) {
       return;
     }
+    serviceLocator<Sounds>().play("gold");
     var params = {RpcParams.client.name: Platform.operatingSystem};
     try {
       var result = await rpc(RpcId.collectGold, params: params);
@@ -52,9 +52,7 @@ class _BuildingBalloonState extends State<BuildingBalloon>
             .schedule(accountProvider.account.getSchedules());
       }
     } finally {
-      setState(() {
-        
-      });
+      setState(() {});
     }
   }
 }
