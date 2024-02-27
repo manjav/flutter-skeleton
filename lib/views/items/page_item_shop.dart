@@ -148,6 +148,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (_items.isEmpty) {
       return SkinnedText("waiting_l".l());
     }
@@ -185,8 +186,10 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                 child: section == ShopSections.gold
                     ? Widgets.rect(
                         decoration: Widgets.imageDecorator("icon_star"),
-                        child: SkinnedText(
-                            "x${ShopData.getMultiplier(_account.level).round()}"))
+                        child: Center(
+                          child: SkinnedText(
+                              "x${ShopData.getMultiplier(_account.level).round()}"),
+                        ))
                     : null),
             SizedBox(width: 130.d),
             const Expanded(child: SizedBox()),
@@ -329,7 +332,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           height: 100.d,
           transform: Matrix4.rotationZ(-0.15),
           decoration: Widgets.imageDecorator("badge_ribbon"),
-          child: SkinnedText("+${(ratio * 100).round()}%", style: TStyles.tiny),
+          child: Center(child: SkinnedText("+${(ratio * 100).round()}%", style: TStyles.tiny)),
         ));
   }
 

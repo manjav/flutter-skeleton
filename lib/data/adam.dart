@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
 
 import '../app_export.dart';
-
 
 class Ranks {
   static List<T> createList<T extends Rank>(
@@ -198,7 +198,8 @@ class Opponent extends Record {
       leagueId = 0,
       leagueRank = 0,
       powerRatio = 0,
-      todayAttacksCount = 0;
+      todayAttacksCount = 0,
+      theme = 0;
   bool isRevealed = false, pokeStatus = false;
   TribePosition tribePosition = TribePosition.none;
   Opponent.initialize(Map<String, dynamic>? map, int ownerId)
@@ -212,6 +213,7 @@ class Opponent extends Record {
     leagueRank = Convert.toInt(map["league_rank"]);
     powerRatio = Convert.toInt(map["power_ratio"]);
     pokeStatus = map["poke_status"] ?? false;
+    theme = Random().nextInt(4);
     if (map.containsKey("tribe_position")) {
       TribePosition.values[map["tribe_position"]];
     } else {

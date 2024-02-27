@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:fruitcraft/mixins/mine_mixin.dart';
 
 import '../app_export.dart';
 
@@ -425,8 +424,15 @@ class Account extends Player with MineMixin {
       tribeId = tribe!.id;
     }
     if (tribeId < 0) {
+      tribe?.chat.value.clear();
+      tribe?.members.value.clear();
+      tribe?.pinnedMessage.value = null;
       tribe = null;
       tribeName = "no_tribe".l();
+      buildings[Buildings.tribe]!.level = 0;
+      buildings[Buildings.cards]!.level = 0;
+      buildings[Buildings.defense]!.level = 0;
+      buildings[Buildings.offense]!.level = 0;
       return;
     }
     tribeName = tribe!.name;

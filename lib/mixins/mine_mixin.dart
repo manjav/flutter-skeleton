@@ -17,6 +17,7 @@ mixin MineMixin {
 
   int nextFullTime(Account account) {
     var building = account.buildings[Buildings.mine]!;
+    if (building.level == 0) return -1;
 
     var capacity = account.buildings[Buildings.mine]!.benefit;
     var goldPerSec = building.getCardsBenefit(account) / 3600;
@@ -27,6 +28,7 @@ mixin MineMixin {
 
   int nextCollectableTime(Account account) {
     var building = account.buildings[Buildings.mine]!;
+    if (building.level == 0) return -1;
 
     var collected = collectableGold(account);
     var capacity = account.buildings[Buildings.mine]!.benefit *
@@ -34,5 +36,11 @@ mixin MineMixin {
     var goldPerSec = building.getCardsBenefit(account) / 3600;
 
     return (capacity - collected) ~/ goldPerSec;
+  }
+
+  int goldLevel(Account account) {
+    var building = account.buildings[Buildings.mine]!;
+    if (building.level == 0) return 0;
+    return ((5 * collectableGold(account)) / building.benefit).round();
   }
 }

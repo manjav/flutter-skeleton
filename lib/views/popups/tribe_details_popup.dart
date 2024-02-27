@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../app_export.dart';
 
 class TribeDetailsPopup extends AbstractPopup {
-  const TribeDetailsPopup({super.key})
-      : super(Routes.popupTribeOptions);
+  const TribeDetailsPopup({super.key}) : super(Routes.popupTribeOptions);
 
   @override
   createState() => _TribeDetailsPopupState();
@@ -31,13 +30,14 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
 
   @override
   Widget contentFactory() {
+    var tabCount = _member?.tribePosition.index == 1 ? 2 : 3;
     return SizedBox(
         height: 1380.d,
         child: Column(children: [
           tabsBuilder(data: [
-            for (var i = 0; i < 2; i++)
+            for (var i = 0; i < tabCount; i++)
               TabData("tribe_option_$i".l(),
-                  ["icon_population", "tribe_upgrade"][i])
+                  ["icon_population", "tribe_upgrade", "tribe_edit"][i])
           ]),
           SizedBox(height: 30.d),
           Expanded(child: _getSelectedPage(_account.tribe!))
@@ -47,7 +47,8 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
   Widget _getSelectedPage(Tribe tribe) {
     return switch (selectedTabIndex) {
       0 => _membersBuilder(tribe),
-      _ => _upgradeBuilder(tribe)
+      1 => _upgradeBuilder(tribe),
+      _ => const EditTribe()
     };
   }
 
@@ -183,9 +184,9 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             label: "tribe_donate".l(),
             padding: EdgeInsets.fromLTRB(44.d, 10.d, 44.d, 32.d),
             onPressed: () async {
-          await serviceLocator<RouteService>().to(Routes.popupTribeDonate);
-          setState(() {});
-        })
+              await serviceLocator<RouteService>().to(Routes.popupTribeDonate);
+              setState(() {});
+            })
       ]),
       Widgets.divider(width: 900.d, margin: 8.d),
       Expanded(
@@ -249,9 +250,11 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SkinnedText("tribe_upgrade".l(),
               style: TStyles.small.copyWith(height: 3.d)),
-          SkinnedText(
-              "$newBenefit${id == Buildings.tribe.id ? "ˡ" : "%"}".convert(),
-              style: TStyles.large.copyWith(height: 3.5.d)),
+          Expanded(
+            child: SkinnedText(
+                "$newBenefit${id == Buildings.tribe.id ? "ˡ" : "%"}".convert(),
+                style: TStyles.large.copyWith(height: 3.5.d)),
+          ),
         ]),
         SizedBox(width: 20.d),
         Widgets.rect(

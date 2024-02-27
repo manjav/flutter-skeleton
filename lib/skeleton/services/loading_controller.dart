@@ -23,18 +23,6 @@ class LoadingController extends GetxController {
       SkeletonPageModel(
           page: QuestScreen(), route: Routes.quest, isOpaque: true),
       SkeletonPageModel(
-          page: AttackOutScreen(
-            Routes.questOut,
-          ),
-          route: Routes.questOut,
-          isOpaque: true),
-      SkeletonPageModel(
-          page: AttackOutScreen(
-            Routes.battleOut,
-          ),
-          route: Routes.battleOut,
-          isOpaque: true),
-      SkeletonPageModel(
           page: LiveOutScreen(), route: Routes.liveBattleOut, isOpaque: true),
       SkeletonPageModel(
           page: LiveBattleScreen(), route: Routes.liveBattle, isOpaque: true),

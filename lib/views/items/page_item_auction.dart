@@ -29,6 +29,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var secondsOffset = 24 * 3600 - DateTime.now().secondsSinceEpoch;
     var tabsName = _tabs.keys.toList();
     return Column(children: [

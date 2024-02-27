@@ -2,12 +2,12 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../app_export.dart';
-
 
 enum RewardAnimationState {
   none,
@@ -27,14 +27,14 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   SMITrigger? startInput, skipInput, closeInput;
   RewardAnimationState state = RewardAnimationState.none;
   final ValueNotifier<bool> _progressbarNotifier = ValueNotifier(true);
+  AnimationController? closeButtonController;
 
   List<Widget> appBarElementsLeft() => [];
 
   @override
   void initState() {
     if (waitingSFX.isNotEmpty) {
-      serviceLocator<Sounds>()
-          .play(waitingSFX, channel: "reward");
+      serviceLocator<Sounds>().play(waitingSFX, channel: "reward");
     }
     super.initState();
   }
@@ -44,7 +44,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     var items = <Widget>[];
     items.addAll(children);
     items.add(_progressbarBuilder());
-    items.add(_closeButton());
+    items.add(closeButton());
     return Widgets.button(context,
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
@@ -117,8 +117,10 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         startInput?.value = true;
       }
     } else if (state == RewardAnimationState.started) {
-      serviceLocator<Sounds>().stop("reward");
-      serviceLocator<Sounds>().play(startSFX);
+      // serviceLocator<Sounds>().stop("reward");
+      if (startSFX.isNotEmpty) {
+        serviceLocator<Sounds>().play(startSFX);
+      }
       WidgetsBinding.instance
           .addPostFrameCallback((t) => _progressbarNotifier.value = false);
     } else if (state == RewardAnimationState.closed) {
@@ -159,12 +161,15 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       if (state == RewardAnimationState.waiting) {
         startInput?.value = true;
       }
-    } on SkeletonException {
+    } on SkeletonException catch (e) {
       if (context.mounted) {
         await Future.delayed(const Duration(milliseconds: 10));
-        rethrow;
+        dismiss();
+        await serviceLocator<RouteService>().to(
+          Routes.popupMessage,
+          args: {"title": "Error", "message": "error_${e.statusCode}".l()},
+        );
       }
-      dismiss();
     }
   }
 
@@ -196,17 +201,27 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       onRiveEvent(
           const RiveEvent(name: "closing", secondsDelay: 0, properties: {}));
       closeInput?.value = true;
+      closeButtonController?.reverse();
     }
   }
 
-  Widget _closeButton() {
+  Widget closeButton() {
     return Positioned(
       right: 100.d,
       top: 250.d,
       child: GestureDetector(
-        onTap: () => closeInput?.value = true,
+        onTap: () {
+          onRiveEvent(const RiveEvent(
+              name: "closing", secondsDelay: 0, properties: {}));
+          closeInput?.value = true;
+          closeButtonController?.reverse();
+        },
         child: Asset.load<Image>("close", height: 56.d, width: 56.d),
-      ),
+      )
+          .animate(
+            onInit: (controller) => closeButtonController = controller,
+          )
+          .fade(duration: 300.ms, delay: 500.ms),
     );
   }
 }

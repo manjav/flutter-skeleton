@@ -140,3 +140,12 @@ extension DateExtension on DateTime {
   int get daysSinceEpoch =>
       (millisecondsSinceEpoch / (24 * 3600 * 1000)).round();
 }
+
+extension DoubleExtention on dynamic {
+  double toDouble() {
+    if (this is String) return double.parse(this as String);
+    if (this is int) return (this as int).toDouble();
+    if (this is double) return this as double;
+    return 0.0;
+  }
+}

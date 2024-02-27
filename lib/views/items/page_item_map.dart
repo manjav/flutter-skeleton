@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -19,95 +18,93 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var paddingTop = MediaQuery.of(context).viewPadding.top;
     if (paddingTop <= 0) {
       paddingTop = 24.d;
     }
-    return Consumer<AccountProvider>(builder: (_, state, child) {
-      return Stack(alignment: Alignment.topLeft, children: [
-        LoaderWidget(AssetType.animation, "map_home", fit: BoxFit.cover,
-            onRiveInit: (Artboard artboard) {
-          var controller =
-              StateMachineController.fromArtboard(artboard, "State Machine 1");
-          controller?.addEventListener((event) => _riveEventsListener(event));
-          artboard.addController(controller!);
-        }),
-        PositionedDirectional(
-          top: paddingTop,
-          start: 32.d,
-          child: Column(
-            children: [
-              SizedBox(
-                width: 196.d,
-                height: 200.d,
-                child: LevelIndicator(
-                    onPressed: () =>
-                        serviceLocator<RouteService>().to(Routes.popupProfile)),
-              ),
-              Widgets.button(context,
-                  width: 110.d,
-                  height: 110.d,
-                  margin: EdgeInsets.only(top: 20.d),
-                  padding: EdgeInsets.all(16.d),
-                  child: Asset.load<Image>("ui_settings"),
+    var account = accountProvider.account;
+    return Stack(alignment: Alignment.topLeft, children: [
+      LoaderWidget(AssetType.animation, "map_home", fit: BoxFit.cover,
+          onRiveInit: (Artboard artboard) {
+        var controller =
+            StateMachineController.fromArtboard(artboard, "State Machine 1");
+        controller?.addEventListener((event) => _riveEventsListener(event));
+        artboard.addController(controller!);
+      }),
+      PositionedDirectional(
+        top: paddingTop,
+        start: 32.d,
+        child: Column(
+          children: [
+            SizedBox(
+              width: 196.d,
+              height: 200.d,
+              child: LevelIndicator(
                   onPressed: () =>
-                      serviceLocator<RouteService>().to(Routes.popupSettings))
-            ],
-          ),
+                      serviceLocator<RouteService>().to(Routes.popupProfile)),
+            ),
+            Widgets.button(context,
+                width: 110.d,
+                height: 110.d,
+                margin: EdgeInsets.only(top: 20.d),
+                padding: EdgeInsets.all(16.d),
+                child: Asset.load<Image>("ui_settings"),
+                onPressed: () =>
+                    serviceLocator<RouteService>().to(Routes.popupSettings))
+          ],
         ),
-        PositionedDirectional(
-          bottom: 350.d,
+      ),
+      PositionedDirectional(
+        bottom: 350.d,
+        start: 32.d,
+        child: Indicator("home", Values.leagueRank,
+            hasPlusIcon: false,
+            onTap: () => serviceLocator<RouteService>().to(Routes.popupLeague)),
+      ),
+      PositionedDirectional(
+          bottom: 220.d,
           start: 32.d,
-          child: Indicator("home", Values.leagueRank,
-              hasPlusIcon: false,
-              onTap: () =>
-                  serviceLocator<RouteService>().to(Routes.popupLeague)),
-        ),
-        PositionedDirectional(
-            bottom: 220.d,
-            start: 32.d,
-            child: Indicator(
-              "home",
-              Values.rank,
-              hasPlusIcon: false,
-              onTap: () =>
-                  serviceLocator<RouteService>().to(Routes.popupRanking),
-            )),
-        PositionedDirectional(
-            bottom: 180.d,
-            end: 32.d,
-            child: Widgets.button(
-              context,
-              child: Asset.load<Image>("icon_notifications", width: 60.d),
-              onPressed: () =>
-                  serviceLocator<RouteService>().to(Routes.popupInbox),
-            )),
-        PositionedDirectional(
+          child: Indicator(
+            "home",
+            Values.rank,
+            hasPlusIcon: false,
+            onTap: () => serviceLocator<RouteService>().to(Routes.popupRanking),
+          )),
+      PositionedDirectional(
+          bottom: 180.d,
+          end: 32.d,
+          child: Widgets.button(
+            context,
+            child: Asset.load<Image>("icon_notifications", width: 60.d),
+            onPressed: () =>
+                serviceLocator<RouteService>().to(Routes.popupInbox),
+          )),
+      PositionedDirectional(
+        bottom: 200.d,
+        end: 150.d,
+        height: 150.d,
+        child: _box(0, "06:12:06".l()),
+      ),
+      PositionedDirectional(
           bottom: 200.d,
-          end: 150.d,
+          end: 320.d,
           height: 150.d,
-          child: _box(0, "06:12:06".l()),
-        ),
-        PositionedDirectional(
-            bottom: 200.d,
-            end: 320.d,
-            height: 150.d,
-            child: _box(1, "chance_box".l())),
-        _building(state.account, Buildings.defense),
-        _building(state.account, Buildings.offense),
-        _building(state.account, Buildings.base),
-        _building(state.account, Buildings.treasury),
-        _building(state.account, Buildings.mine),
-        _building(state.account, Buildings.park),
-        _building(state.account, Buildings.quest),
-        if (state.account.deadlines.isNotEmpty)
-          for (var i = 0; i < state.account.deadlines.length; i++)
-            Positioned(
-                right: 32.d,
-                top: 200.d + i * 180.d,
-                child: DeadlineIndicator(state.account.deadlines[i])),
-      ]);
-    });
+          child: _box(1, "chance_box".l())),
+      _building(account, Buildings.defense),
+      _building(account, Buildings.offense),
+      _building(account, Buildings.base),
+      _building(account, Buildings.treasury),
+      _building(account, Buildings.mine),
+      _building(account, Buildings.park),
+      _building(account, Buildings.quest),
+      if (account.deadlines.isNotEmpty)
+        for (var i = 0; i < account.deadlines.length; i++)
+          Positioned(
+              right: 32.d,
+              top: 200.d + i * 180.d,
+              child: DeadlineIndicator(account.deadlines[i])),
+    ]);
   }
 
   Widget _building(Account account, Buildings type) {
@@ -128,7 +125,6 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         width: size.width,
         height: size.height,
         child: BuildingWidget(
-            key: GlobalKey(),
             building,
             onTap: () => _onBuildingTap(account, building),
             child: child));

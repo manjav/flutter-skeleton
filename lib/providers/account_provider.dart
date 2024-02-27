@@ -23,7 +23,13 @@ class AccountProvider extends ChangeNotifier {
   }
 
   void installTribe(dynamic data) {
+    if (data == null) {
+      serviceLocator<NoobSocket>().unsubscribe("tribe${account.tribe?.id}");
+    }
     account.installTribe(data);
+    if (account.tribe != null) {
+      serviceLocator<NoobSocket>().subscribe("tribe${account.tribe?.id}");
+    }
     notifyListeners();
   }
 

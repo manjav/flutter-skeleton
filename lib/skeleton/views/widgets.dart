@@ -13,18 +13,9 @@ class Widgets {
     Function(dynamic details)? onTapDown,
     Function()? onTapCancel,
     Function()? onLongPress,
-    Function(DragStartDetails details)? onVerticalDragStart,
-    Function(DragUpdateDetails details)? onVerticalDragUpdate,
-    Function(DragEndDetails details)? onVerticalDragEnd,
     Widget? child,
   }) {
     return GestureDetector(
-        onVerticalDragStart:
-            _isActive(id) ? (d) => onVerticalDragStart?.call(d) : null,
-        onVerticalDragUpdate:
-            _isActive(id) ? (d) => onVerticalDragUpdate?.call(d) : null,
-        onVerticalDragEnd:
-            _isActive(id) ? (d) => onVerticalDragEnd?.call(d) : null,
         onTap: () {
           if (_isActive(id)) onTap?.call();
         },
@@ -254,7 +245,7 @@ class Widgets {
       OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius)),
           borderSide:
-              BorderSide(color: borderColor ?? TColors.transparent, width: 2));
+              BorderSide(color: borderColor ?? TColors.primary80, width: 2));
 
   static Widget clipboardGetter(BuildContext context, String text,
       {double? width, double? height}) {

@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fruitcraft/mixins/notif_mixin.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
 import '../../../app_export.dart';
-
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key})
@@ -36,6 +34,11 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   @override
   void initState() {
     _pageController = PageController(initialPage: _selectedTabIndex);
+    serviceLocator<AccountProvider>().addListener(() {
+      var account = serviceLocator<AccountProvider>().account;
+      _tribeLevelInput?.value =
+          account.tribe?.levels[Buildings.tribe.id]?.toDouble() ?? 0.0;
+    });
     super.initState();
   }
 
@@ -73,9 +76,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       return [Indicator(widget.route, Values.gold)];
     }
     if (_selectedTabIndex == 2) {
-      return <Widget>[
-        ...super.appBarElementsRight()
-      ];
+      return <Widget>[...super.appBarElementsRight()];
     }
     return super.appBarElementsRight();
   }
@@ -97,6 +98,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (!didPop) {
+          if (Overlays.count > 0) return;
           if (Platform.isAndroid) {
             var result = await serviceLocator<RouteService>()
                 .to(Routes.popupMessage, args: {
@@ -110,22 +112,17 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
           }
         }
       },
-      child: Consumer<AccountProvider>(builder: (_, state, child) {
-        _tribeLevelInput?.value = state.account.tribe != null
-            ? state.account.tribe!.levels[Buildings.tribe.id]!.toDouble()
-            : 0.0;
-        return Stack(alignment: Alignment.bottomCenter, children: [
-          backgroundBuilder(color: 2, animated: false),
-          PageView.builder(
-            controller: _pageController,
-            itemCount: _selectionInputs.length,
-            itemBuilder: _pageItemBuilder,
-            onPageChanged: (value) => _selectTap(value, pageChange: false),
-          ),
-          TabNavigator(
-              tabsCount: _selectionInputs.length, itemBuilder: _tabItemBuilder)
-        ]);
-      }),
+      child: Stack(alignment: Alignment.bottomCenter, children: [
+        backgroundBuilder(color: 2, animated: false),
+        PageView.builder(
+          controller: _pageController,
+          itemCount: _selectionInputs.length,
+          itemBuilder: _pageItemBuilder,
+          onPageChanged: (value) => _selectTap(value, pageChange: false),
+        ),
+        TabNavigator(
+            tabsCount: _selectionInputs.length, itemBuilder: _tabItemBuilder)
+      ]),
     );
   }
 
@@ -205,8 +202,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       setState(() => _selectedTabIndex = index);
     }
     if (pageChange) {
-      _pageController.animateToPage(index,
-          duration: const Duration(milliseconds: 700), curve: Curves.ease);
+      _pageController.jumpToPage(index);
     }
   }
 

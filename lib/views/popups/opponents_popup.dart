@@ -111,7 +111,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             controller.findInput<double>('building')?.value =
                 random.nextInt(4).floorToDouble();
             controller.findInput<double>('theme')?.value =
-                Random().nextInt(4).toDouble();
+                _selectedOpponent.value.theme.toDouble();
           },
         ));
   }
