@@ -1,6 +1,4 @@
 import 'package:get/get.dart';
-import 'package:lingai/views/screens/screen_lesson_listen.dart';
-import 'package:lingai/views/screens/screen_lesson_speak.dart';
 
 import '../../app_export.dart';
 
