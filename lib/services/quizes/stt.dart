@@ -7,17 +7,12 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import '../../app_export.dart';
 
-enum STTState { none, ready, success, fail, error }
-
-class STT extends IService {
+class STT extends Quiz {
   static const int levelInterval = 100;
   String? locale;
   String? pattern;
-  bool isEnable = false;
-  Function(STTState, String)? onResult;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
-  final ValueNotifier<STTState> state = ValueNotifier(STTState.none);
   SpeechRecognitionResult result = SpeechRecognitionResult([], true);
   final ValueNotifier<String> recognizedWords = ValueNotifier("");
 
@@ -34,9 +29,9 @@ class STT extends IService {
         onError: _errorListener,
         onStatus: _statusListener,
       );
-      state.value = success ? STTState.ready : STTState.error;
+      state.value = success ? QuizState.ready : QuizState.error;
     } catch (e) {
-      state.value = STTState.error;
+      state.value = QuizState.error;
     }
     super.initialize(args: args);
   }
@@ -46,8 +41,7 @@ class STT extends IService {
     this.result = result;
     _proccessResult();
     onResult?.call(state.value, result.recognizedWords);
-    _logEvent(
-        'Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
+    log('Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
   }
 
   void _soundLevelListener(double level) {
@@ -62,31 +56,27 @@ class STT extends IService {
   }
 
   void _errorListener(SpeechRecognitionError error) {
-    _logEvent(
-        'Received error status: $error, listening: ${_speech.isListening}');
-    state.value = STTState.error;
+    log('Received error status: $error, listening: ${_speech.isListening}');
+    state.value = QuizState.error;
     audioLevel.value = 0;
   }
 
   void _statusListener(String status) {
-    _logEvent(
-        'Received listener status: $status, listening: ${_speech.isListening}');
+    log('Received listener status: $status, listening: ${_speech.isListening}');
     if (status == "done") {
-      stopListening();
+      stop();
     }
   }
 
-  // This is called each time the users wants to start a new speech
-  void startListening({
+  @override
+  void start({
+    Function(QuizState p1, String p2)? onResult,
     String? locale,
     String? pattern,
-    Function(STTState, String)? onResult,
   }) {
+    super.start(onResult: onResult);
     if (locale != null) this.locale = locale;
     if (locale != null) this.pattern = pattern;
-    if (onResult != null) this.onResult = onResult;
-    isEnable = true;
-    state.value = STTState.ready;
     recognizedWords.value = "";
     final options = SpeechListenOptions(
         onDevice: false,
@@ -109,16 +99,17 @@ class STT extends IService {
     );
   }
 
-  void stopListening() {
-    _logEvent('stop');
+  @override
+  void stop() {
+    super.stop();
+    log('stop');
     _speech.stop();
-    isEnable = false;
     audioLevel.value = 0.0;
   }
 
   void _proccessResult() {
     if (pattern == null) {
-      state.value = result.finalResult ? STTState.success : STTState.fail;
+      state.value = result.finalResult ? QuizState.success : QuizState.fail;
     } else {
       // var words = result.alternates.where((a) =>
       //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
@@ -126,13 +117,9 @@ class STT extends IService {
       recognizedWords.value = result.recognizedWords;
       if (result.finalResult) {
         state.value = result.recognizedWords == pattern
-            ? STTState.success
-            : STTState.fail;
+            ? QuizState.success
+            : QuizState.fail;
       }
     }
-  }
-
-  void _logEvent(String eventDescription) {
-    // debugPrint('STT $eventDescription');
   }
 }

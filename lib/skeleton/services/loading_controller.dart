@@ -43,7 +43,6 @@ class LoadingController extends GetxController {
     sounds.initialize();
 
     serviceLocator<Speaker>().initialize();
-    serviceLocator<STT>().initialize();
 
     try {
       await await serviceLocator<HttpConnection>().initialize();

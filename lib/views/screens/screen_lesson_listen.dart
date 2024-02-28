@@ -12,29 +12,23 @@ class LessonListenScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<LessonListenScreen>
     with LessonMixin {
   @override
-  void initState() {
-    serviceLocator<Dictator>().state.addListener(_dictatorListener);
-    super.initState();
-  }
-
-  @override
   Future<void> nextStep(int index) async {
     if (index < scenario!.thread.length) {
-      serviceLocator<Dictator>().init(scenario!.thread[index]);
+      serviceLocator<Dictator>().initialize(args: [scenario!.thread[index]]);
     }
     await super.nextStep(index);
   }
 
   @override
   void startQuiz(Chat chat) {
-    serviceLocator<Dictator>().enable();
+    serviceLocator<Dictator>().start(onResult: _onQuizResult);
   }
 
-  Future<void> _dictatorListener() async {
+  Future<void> _onQuizResult(QuizState state, String value) async {
     var state = serviceLocator<Dictator>().state.value;
-    if (state == -2) {
+    if (state == QuizState.success) {
       onQuizResult(true);
-    } else if (state == -1) {
+    } else if (state == QuizState.fail) {
       onQuizResult(false);
       await Future.delayed(const Duration(seconds: 1));
       serviceLocator<Dictator>().reset();
@@ -44,11 +38,5 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
   @override
   Widget footerBuilder() {
     return const DictationBox();
-  }
-
-  @override
-  void dispose() {
-    serviceLocator<Dictator>().state.removeListener(_dictatorListener);
-    super.dispose();
   }
 }

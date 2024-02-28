@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
@@ -14,28 +13,29 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
     with LessonMixin {
   @override
   Future<void> startQuiz(Chat chat) async {
-    if (kDebugMode) {
-      await Future.delayed(const Duration(seconds: 2));
-      _onSTTResult(STTState.success, chat.value);
-    } else {
-      serviceLocator<STT>().startListening(
-          locale: scenario!.targetLanguage,
-          pattern: chat.value,
-          onResult: _onSTTResult);
-    }
+    // // if (kDebugMode) {
+    //   await Future.delayed(const Duration(seconds: 2));
+    //   _onSTTResult(STTState.success, chat.value);
+    // } else {
+    serviceLocator<STT>().start(
+      locale: scenario!.targetLanguage,
+      pattern: chat.value,
+      onResult: _onQuizResult,
+    );
+    // }
   }
 
-  Future<void> _onSTTResult(STTState state, String text) async {
+  Future<void> _onQuizResult(QuizState state, String text) async {
     const duration = Duration(milliseconds: 1500);
-    serviceLocator<STT>().stopListening();
-    if (state == STTState.success) {
+    serviceLocator<STT>().stop();
+    if (state == QuizState.success) {
       await Future.delayed(duration);
-      serviceLocator<STT>().state.value = STTState.none;
+      serviceLocator<STT>().state.value = QuizState.none;
       onQuizResult(true);
-    } else if (state == STTState.fail) {
+    } else if (state == QuizState.fail) {
       onQuizResult(false);
       await Future.delayed(duration);
-      serviceLocator<STT>().startListening();
+      serviceLocator<STT>().start();
     }
   }
 

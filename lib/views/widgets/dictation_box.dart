@@ -19,8 +19,8 @@ class _DictationBoxState extends State<DictationBox> {
     final chat = dictator.currentStage!.chats
         .where((c) => c.type == ChatType.user)
         .first;
-    return ValueListenableBuilder<int>(
-      valueListenable: dictator.state,
+    return ValueListenableBuilder<List<String>>(
+      valueListenable: dictator.answers,
       builder: (context, value, child) => Padding(
         padding: EdgeInsets.all(8.d),
         child: Column(
@@ -74,20 +74,21 @@ class _DictationBoxState extends State<DictationBox> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: _wrapper(
-                  dictator.answers.length,
+                  dictator.answers.value.length,
                   (i) => Text(
-                      "${dictator.answers[i]}${dictator.charByChar ? "" : "  "}")),
+                      "${dictator.answers.value[i]}${dictator.charByChar ? "" : "  "}")),
             ),
           ),
           SizedBox(width: 8.d),
-          dictator.answers.isEmpty
+          dictator.answers.value.isEmpty
               ? const SizedBox()
               : Widgets.button(
                   context,
                   width: 80.d,
+                  buttonId: dictator.state.value == QuizState.ready ? 30 : -1,
                   color: switch (dictator.state.value) {
-                    -2 => TColors.green.withOpacity(0.2),
-                    -1 => TColors.error.withOpacity(0.2),
+                    QuizState.success => TColors.green.withOpacity(0.2),
+                    QuizState.fail => TColors.error.withOpacity(0.2),
                     _ => TColors.primary20,
                   },
                   child: Container(
@@ -95,19 +96,14 @@ class _DictationBoxState extends State<DictationBox> {
                     height: 14.d,
                     width: 13.d,
                     child: switch (dictator.state.value) {
-                      -2 => Asset.load<SvgPicture>("mic_success", width: 32.d),
-                      -1 => Asset.load<SvgPicture>("mic_fail", width: 32.d),
+                      QuizState.success =>
+                        Asset.load<SvgPicture>("mic_success", width: 32.d),
+                      QuizState.fail =>
+                        Asset.load<SvgPicture>("mic_fail", width: 32.d),
                       _ => Asset.load<SvgPicture>("clear", width: 24.d),
                     },
                   ),
-                  onPressed: () {
-                    if (dictator.state.value > -1) {
-                      var last = dictator.answers.removeLast();
-                      dictator.choices.lastWhere((c) => c.text == last).used =
-                          false;
-                      dictator.state.value = dictator.answers.length;
-                    }
-                  },
+                  onPressed: dictator.deselectChoice,
                 ),
         ],
       ),
@@ -130,17 +126,13 @@ class _DictationBoxState extends State<DictationBox> {
     var choice = dictator.choices[index];
     return Widgets.button(
       context,
-      padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
       margin: EdgeInsets.all(3.d),
+      padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
       color: choice.used ? TColors.primary20 : TColors.primary10,
+      buttonId:
+          dictator.state.value != QuizState.ready || choice.used ? -1 : 30,
       child: Opacity(opacity: choice.used ? 0 : 1, child: Text(choice.text)),
-      onPressed: () {
-        if (dictator.state.value < 0 || choice.used) return;
-        dictator.answers.add(choice.text);
-        dictator.state.value = dictator.answers.length;
-        choice.used = true;
-        serviceLocator<Dictator>().checkAnswers();
-      },
+      onPressed: () => dictator.selectChoice(choice),
     );
   }
 }

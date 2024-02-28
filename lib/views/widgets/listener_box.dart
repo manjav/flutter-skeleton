@@ -48,7 +48,7 @@ class ListenerBox extends StatelessWidget {
                         style:
                             TStyles.small.copyWith(color: TColors.primary40)),
                     SizedBox(height: 6.d),
-                    stt.state.value == STTState.fail
+                    stt.state.value == QuizState.fail
                         ? DirText(value,
                             style: TStyles.small.copyWith(color: TColors.error))
                         : const SizedBox(),
@@ -83,8 +83,8 @@ class ListenerBox extends StatelessWidget {
             ],
           ),
           onPressed: () {
-            if (stt.state.value == STTState.ready) {
-              stt.startListening();
+            if (stt.state.value == QuizState.ready) {
+              stt.start();
             }
           },
         ),
