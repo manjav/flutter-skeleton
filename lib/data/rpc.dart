@@ -74,6 +74,7 @@ enum RpcId {
   auctionBid,
   auctionDeals,
   auctionSells,
+  auctionSellNow,
 }
 
 extension RpcIdEx on RpcId {
@@ -139,6 +140,7 @@ extension RpcIdEx on RpcId {
       RpcId.auctionBid => "auction/bid",
       RpcId.auctionDeals => "auction/loadmyparticipatedauctions",
       RpcId.auctionSells => "auction/loadmyauctions",
+      RpcId.auctionSellNow => "auction/sellnow",
     };
   }
 

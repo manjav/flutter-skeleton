@@ -109,10 +109,10 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
     var account = accountProvider.account;
     var cardSize = 240.d;
     var radius = Radius.circular(36.d);
-    var bidable = card.activityStatus > 0 &&
-        (card.ownerId != account.id) &&
-        card.maxBidderId != account.id;
-    var time = card.activityStatus > 0
+    bool isClosed = card.activityStatus <= 0;
+    bool isMyCard = card.ownerId == account.id;
+    var bidable = !isClosed;
+    var time = !isClosed
         ? (card.createdAt + secondsOffset).toRemainingTime()
         : "closed_l".l();
     var imMaxBidder = card.maxBidderId == account.id;
@@ -120,7 +120,11 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
         radius: radius.x,
         padding: EdgeInsets.zero,
         margin: EdgeInsets.all(8.d),
-        color: imMaxBidder ? TColors.green40 : TColors.cream15,
+        color: imMaxBidder
+            ? TColors.green40
+            : isClosed
+                ? TColors.red20
+                : TColors.cream15,
         child: Row(children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -156,38 +160,42 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                       borderRadius: BorderRadius.only(
                           topRight: radius, bottomLeft: radius),
                       color: TColors.black25,
-                      child: SkinnedText("ˣ$time"))),
+                      child: Center(child: SkinnedText("ˣ$time")))),
               Positioned(
                 left: 0,
                 right: 8.d,
-                bottom: 12.d,
+                bottom: isClosed ? 25.d : 12.d,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0.d),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SkinnedText("auction_owner".l(),
-                          style: TStyles.small, textAlign: TextAlign.start),
+                      !isMyCard
+                          ? SkinnedText("auction_owner".l(),
+                              style: TStyles.small, textAlign: TextAlign.start)
+                          : const SizedBox(),
                       SizedBox(
-                        height: 4.d,
+                        height: !isMyCard ? 4.d : 0,
                       ),
-                      Widgets.rect(
-                        height: 50.d,
-                        width: cardSize,
-                        padding: EdgeInsets.symmetric(horizontal: 15.d),
-                        borderRadius: BorderRadius.all(radius),
-                        color: TColors.black25,
-                        child: Row(
-                          children: [
-                            SkinnedText(
-                              card.maxBidderName,
-                              style: TStyles.tiny,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
+                      !isMyCard
+                          ? Widgets.rect(
+                              height: 50.d,
+                              width: cardSize,
+                              padding: EdgeInsets.symmetric(horizontal: 15.d),
+                              borderRadius: BorderRadius.all(radius),
+                              color: TColors.black25,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Text(card.ownerName,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TStyles.small.copyWith(
+                                              color: TColors.primary))),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
                       SizedBox(
                         height: 7.d,
                       ),
@@ -204,14 +212,30 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
                         color: TColors.black25,
                         child: Row(
                           children: [
-                            SkinnedText(card.maxBidderName, style: TStyles.tiny)
+                            Expanded(
+                                child: Text(card.maxBidderName,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TStyles.small
+                                        .copyWith(color: TColors.primary)))
                           ],
                         ),
                       ),
                       SizedBox(height: 17.d),
                       bidable
-                          ? _getBidButton(card, account, imMaxBidder)
-                          : const SizedBox(),
+                          ? _getBidButton(card, account, imMaxBidder, isMyCard)
+                          : Row(
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                  "ˣAuction closed",
+                                  overflow: TextOverflow.fade,
+                                  style: TStyles.small.copyWith(
+                                      color: imMaxBidder
+                                          ? TColors.green
+                                          : TColors.red),
+                                )),
+                              ],
+                            ),
                     ],
                   ),
                 ),
@@ -221,11 +245,31 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
         ]));
   }
 
-  _getBidButton(AuctionCard card, Account account, bool imMaxBidder) {
+  _getBidButton(
+      AuctionCard card, Account account, bool imMaxBidder, bool isMyCard) {
+    if (isMyCard) {
+      return SkinnedButton(
+        padding: EdgeInsets.fromLTRB(21.d, 15.d, 12.d, 32.d),
+        color: ButtonColor.green,
+        width: 240.d,
+        child: Row(
+            mainAxisSize: MainAxisSize.max,
+            textDirection: TextDirection.ltr,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SkinnedText(
+                "auction_sell_now".l(),
+                style: TStyles.medium,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ]),
+        onPressed: ()=> _sellNow(card),
+      );
+    }
     if (imMaxBidder) {
       return SkinnedButton(
         padding: EdgeInsets.fromLTRB(21.d, 15.d, 12.d, 32.d),
-        color: ButtonColor.teal,
+        color: ButtonColor.green,
         width: 240.d,
         child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -280,6 +324,21 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
         accountProvider.update(context, data);
       }
       toast("auction_added".l());
+    } finally {}
+  }
+
+   _sellNow(AuctionCard card) async {
+    try {
+      var data = await rpc(RpcId.auctionSellNow, params: {"auction_id": card.id});
+      var auction = AuctionCard(accountProvider.account, data["auction"]);
+      var index = _cards.indexWhere((c) => c.id == auction.id);
+      if (index > -1) {
+        setState(() => _cards[index] = auction);
+      }
+      if (context.mounted) {
+        accountProvider.update(context, data);
+      }
+      toast("auction_sell_success".l());
     } finally {}
   }
 }

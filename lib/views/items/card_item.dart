@@ -129,8 +129,19 @@ class _CardItemState extends State<CardItem> {
           top: 6 * s,
           left: 22 * s,
           height: 52 * s,
-          child: SkinnedText("${baseCard.fruit.name}_title".l(),
-              style: _small!.autoSize(baseCard.name.length, 8, 36 * s))));
+          width: 180 * s,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SkinnedText("${baseCard.fruit.name}_title".l(),
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    alignment: Alignment.centerLeft,
+                    style: _small!.autoSize(baseCard.name.length, 8, 40 * s)),
+              ),
+            ],
+          )));
     }
     if (widget.showCooldown) {
       items.add(Positioned(
@@ -146,7 +157,7 @@ class _CardItemState extends State<CardItem> {
           left: 16 * s,
           child: Row(textDirection: TextDirection.ltr, children: [
             SkinnedText("ˢ${widget.card.power.compact().convert()}",
-                style: _small),
+                style: _medium),
             widget.extraPower > 0
                 ? SkinnedText("+${widget.extraPower.compact().convert()}",
                     textDirection: TextDirection.ltr,
