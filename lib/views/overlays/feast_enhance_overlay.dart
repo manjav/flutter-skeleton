@@ -51,6 +51,7 @@ class _EnhanceFeastOverlayState
       updateRiveText("addedPowerText", "+ ˢ0");
     } else if (state == RewardAnimationState.shown) {
       updateRiveText("cardPowerText", "ˢ${_card.power.compact()}");
+      updateRiveText("addedPowerText", "ˢ${diff.compact()}");
     }
     if (event.name == "powerUp") {
       ++_sacrificeStep;

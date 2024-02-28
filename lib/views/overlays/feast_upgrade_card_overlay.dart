@@ -58,7 +58,8 @@ class _UpgradeCardFeastOverlayState
       updateRiveText("cardPowerText", "ˢ${(_newCard.power).compact()}");
     } else if (state == RewardAnimationState.shown) {
       updateRiveText("addedPowerText", "+ ˢ${diff.compact()}");
-    } else if (event.name == "powerUp") {
+    }
+    if (event.name == "powerUp") {
       ++_evolveStep;
       var addedPower = (diff * (_evolveStep / _evolveStepsCount)).round();
       updateRiveText("addedPowerText", "+ ˢ${addedPower.compact()}");
