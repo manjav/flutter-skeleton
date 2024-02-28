@@ -48,4 +48,8 @@ class RouteService extends IService {
   void popUntil(RoutePredicate predicate) async {
     Get.until(predicate);
   }
+
+  void back({dynamic result}) {
+    Get.back(result: result);
+  }
 }

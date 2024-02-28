@@ -304,12 +304,11 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
           "cards": _selectedCards,
           "isBattle": widget.args.containsKey("opponent"),
         },
-        onClose: (data) async {
-          _selectedCards.clear(setNull: true);
-          // Reset reminder notifications ....
-          serviceLocator<Notifications>().schedule(account.getSchedules());
-        },
       ),
     );
+    await Future.delayed(const Duration(milliseconds: 500));
+    // _selectedCards.clear(setNull: true);
+    serviceLocator<Notifications>().schedule(account.getSchedules());
+    serviceLocator<RouteService>().back();
   }
 }
