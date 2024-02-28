@@ -80,15 +80,26 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             onPressed: () =>
                 serviceLocator<RouteService>().to(Routes.popupInbox),
           )),
-      PositionedDirectional(
-        bottom: 200.d,
-        end: 150.d,
-        height: 150.d,
-        child: _box(0, "06:12:06".l()),
-      ),
+      account.bundles != null
+          ? PositionedDirectional(
+              bottom: 200.d,
+              end: 150.d,
+              height: 150.d,
+              child: StreamBuilder<dynamic>(
+                  stream: Stream.periodic(const Duration(seconds: 1)),
+                  builder: (context, snapshot) {
+                    var endDate = Convert.toInt(account.bundles[0]["end_date"]);
+                    var duration = Duration(
+                        seconds: endDate - DateTime.now().secondsSinceEpoch);
+                    String time =
+                        "${duration.inHours.toString().padLeft(2, "0")}:${(duration.inMinutes % 60).toString().padLeft(2, "0")}:${(duration.inSeconds % 60).toString().padLeft(2, "0")}";
+                    return _box(0, time);
+                  }),
+            )
+          : const SizedBox(),
       PositionedDirectional(
           bottom: 200.d,
-          end: 320.d,
+          end: 330.d,
           height: 150.d,
           child: _box(1, "chance_box".l())),
       _building(account, Buildings.defense),
@@ -124,10 +135,8 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         top: center.dy + position[1] * DeviceInfo.ratio - size.height * 0.5,
         width: size.width,
         height: size.height,
-        child: BuildingWidget(
-            building,
-            onTap: () => _onBuildingTap(account, building),
-            child: child));
+        child: BuildingWidget(building,
+            onTap: () => _onBuildingTap(account, building), child: child));
   }
 
   _onBuildingTap(Account account, Building building) {
@@ -172,11 +181,16 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         children: [
           Widgets.rect(
               color: TColors.primary20,
-              padding: EdgeInsets.symmetric(horizontal: 12.d),
+              width: 165.d,
               borderRadius: BorderRadius.circular(30.d),
-              child: Text(
-                title,
-                style: TStyles.small.copyWith(color: TColors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: TStyles.small.copyWith(color: TColors.white),
+                  ),
+                ],
               )),
           Positioned(
             bottom: 22.d,
