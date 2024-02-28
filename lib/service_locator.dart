@@ -10,8 +10,9 @@ void initServices() {
   serviceLocator.registerLazySingleton<RouteService>(() => RouteService());
   serviceLocator.registerLazySingleton<DeviceInfo>(() => DeviceInfo());
   serviceLocator.registerLazySingleton<Localization>(() => Localization());
-  serviceLocator.registerLazySingleton<Sounds>(() => Sounds());
+  serviceLocator.registerLazySingleton<Dictator>(() => Dictator());
   serviceLocator.registerLazySingleton<Speaker>(() => Speaker());
+  serviceLocator.registerLazySingleton<Sounds>(() => Sounds());
   serviceLocator.registerLazySingleton<STT>(() => STT());
   serviceLocator.registerLazySingleton<HttpConnection>(() => HttpConnection());
 }
