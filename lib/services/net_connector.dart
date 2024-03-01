@@ -13,7 +13,7 @@ class LoadingData {
   static int chatPort = 0;
 }
 
-class HttpConnection extends IService {
+class NetConnector extends IService {
   static const rpcDialogue = "dialogue.php";
 
   LoadingData loadData = LoadingData();

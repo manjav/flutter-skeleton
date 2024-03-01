@@ -43,7 +43,7 @@ class LoadingController extends GetxController {
     serviceLocator<Speaker>().initialize();
 
     try {
-      await await serviceLocator<HttpConnection>().initialize();
+      await await serviceLocator<NetConnector>().initialize();
 
       services.changeState(ServiceStatus.initialize);
 

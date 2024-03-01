@@ -31,8 +31,8 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
   }
 
   Future<void> _loadData() async {
-    var result = await serviceLocator<HttpConnection>()
-        .tryRpc(context, HttpConnection.rpcDialogue, params: {
+    var result = await serviceLocator<NetConnector>()
+        .tryRpc(context, NetConnector.rpcDialogue, params: {
       "scenario": topic["id"],
       "promptAddition": topic["prompt"],
       "destLanguage": "turkish"
@@ -234,8 +234,8 @@ class _ChatScreenState extends AbstractScreenState<ChatScreen> {
     text = text ?? _inputController.text;
     _addMessage(text);
     _isWriting.value = true;
-    var result = await serviceLocator<HttpConnection>().tryRpc(
-        context, HttpConnection.rpcDialogue, params: {
+    var result = await serviceLocator<NetConnector>().tryRpc(
+        context, NetConnector.rpcDialogue, params: {
       "scenario": topic["id"],
       "conversationId": _conversationId,
       "replyWith": text
