@@ -74,7 +74,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
             : Positioned(
                 left: 20.d,
                 right: 20.d,
-                bottom: 200.d,
+                bottom: 80.d,
                 child: Column(
                   children: [
                     Text(
@@ -92,26 +92,21 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                         children: [
                           isUpdateError && !isForceUpdate
                               ? SkinnedButton(
-                                  height: 160.d,
-                                  padding:
-                                      EdgeInsets.fromLTRB(42.d, 0, 42.d, 16.d),
-                                  label: "play_l".l(),
+                                  label: "Go !",
                                   buttonId: -1,
                                   onPressed: () {
                                     Pref.skipUpdate.setBool(true);
                                     _reload();
                                   })
                               : const SizedBox(),
-                          SizedBox(width: 12.d),
+                          SizedBox(
+                              width:
+                                  isUpdateError && !isForceUpdate ? 12.d : 0),
                           SkinnedButton(
                               color: isUpdateError
                                   ? TColors.green
                                   : TColors.orange,
-                              height: 160.d,
-                              padding: EdgeInsets.fromLTRB(42.d, 0, 42.d, 16.d),
-                              label: isUpdateError
-                                  ? "update_l".l()
-                                  : "retry_l".l(),
+                              label: isUpdateError ? "Update" : "Retry",
                               buttonId: -1,
                               onPressed: () => _retry(_serviceState.exception,
                                   isUpdateError, isForceUpdate)),

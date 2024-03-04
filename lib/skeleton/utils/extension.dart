@@ -81,15 +81,21 @@ extension IntExtension on int {
 }
 
 extension StringExtension on String {
-  String toPascalCase() {
-    return substring(0, 1).toUpperCase() + substring(1).toLowerCase();
-  }
+  static const _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  static final Random _rnd = Random();
+  static String getRandomString(int length) =>
+      String.fromCharCodes(Iterable.generate(
+          length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+  String toPascalCase() =>
+      substring(0, 1).toUpperCase() + substring(1).toLowerCase();
 
   String truncate(int length, {String postfix = "..."}) =>
       "${substring(0, this.length.max(length))}$postfix";
 
-  String getRandomChar([int len = 1]) {
-    var r = Random().nextInt(length - len + 1);
+  String suffle([int len = 1]) {
+    var r = _rnd.nextInt(length - len + 1);
     return substring(r, len);
   }
 
