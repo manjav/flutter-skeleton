@@ -51,7 +51,7 @@ extension Autosize on TextStyle {
 TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   return TextStyle(
     fontSize: size,
-    color: color ?? TColors.primary70,
+    color: color ?? TColors.primary10,
     fontWeight: weight ?? FontWeight.bold,
     fontFamily: "primary_font",
   );
@@ -65,13 +65,13 @@ class Themes {
     TStyles.large = _style(size: 20.d, weight: FontWeight.w800);
     TStyles.big = _style(size: 24.d, weight: FontWeight.w900);
     TStyles.tinyInvert =
-        _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary0);
+        _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary80);
     TStyles.smallInvert =
-        _style(size: 14.d, weight: FontWeight.w300, color: TColors.primary0);
+        _style(size: 14.d, weight: FontWeight.w300, color: TColors.primary80);
     TStyles.mediumInvert =
-        _style(size: 16.d, weight: FontWeight.w600, color: TColors.primary0);
+        _style(size: 16.d, weight: FontWeight.w600, color: TColors.primary80);
     TStyles.largeInvert =
-        _style(size: 20.d, weight: FontWeight.w800, color: TColors.primary0);
+        _style(size: 20.d, weight: FontWeight.w800, color: TColors.primary80);
   }
 
   static ThemeData? get darkData {

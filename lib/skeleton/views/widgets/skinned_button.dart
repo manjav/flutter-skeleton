@@ -41,6 +41,7 @@ class SkinnedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var strokeSize = 3.d;
     return Widgets.touchable(
       context,
       id: buttonId,
@@ -58,12 +59,17 @@ class SkinnedButton extends StatelessWidget {
             height: height,
             alignment: alignment ?? Alignment.center,
             constraints: constraints,
-            margin: margin,
-            padding: padding ?? EdgeInsets.all(8.d),
+            margin: margin ?? EdgeInsets.zero,
+            padding: padding ??
+                EdgeInsets.fromLTRB(
+                    16.d,
+                    8.d + (_isPressed.value ? strokeSize : 0),
+                    16.d,
+                    8.d - (_isPressed.value ? strokeSize : 0)),
             decoration: BattonDecoration(
-                mainColor: color ?? TColors.primary50,
-                strokeColor: TColors.primary,
-                isPressed: _isPressed.value),
+                mainColor: color,
+                isPressed: _isPressed.value,
+                strokeSize: strokeSize),
             child: Opacity(
                 opacity: isEnable ? 1 : 0.7,
                 child: label != null || icon != null
@@ -75,9 +81,7 @@ class SkinnedButton extends StatelessWidget {
                             width: (label != null && icon != null) ? 16.d : 0),
                         label == null
                             ? const SizedBox()
-                            : SkinnedText(label!,
-                                style: TStyles.largeInvert,
-                                shadowScale: _isPressed.value ? 1.4 : 1),
+                            : Text(label!, style: TStyles.large),
                       ])
                     : child!),
           );
