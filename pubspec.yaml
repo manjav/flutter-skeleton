@@ -37,6 +37,7 @@ dependencies:
   intl: ^0.18.0
   # kochava_tracker: ^2.4.0
   # metrix_plugin: ^1.5.0
+  nakama: ^1.0.5
   # onesignal_flutter: ^5.0.3 
   package_info_plus: ^5.0.1
   path_provider: ^2.1.0
