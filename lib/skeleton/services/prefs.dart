@@ -11,7 +11,6 @@ class Prefs extends IService {
   initialize({List<Object>? args}) async {
     _instance = await SharedPreferences.getInstance();
     if (Pref.visitCount.getInt() <= 0) {
-      Pref.language.setString("en");
       Pref.music.setBool(true);
       Pref.sfx.setBool(true);
     }
@@ -52,16 +51,13 @@ class Prefs extends IService {
 }
 
 enum Pref {
-  attacks,
-  cookies,
-  language,
-  music,
-  restoreKey,
   sfx,
-  testVersion,
+  music,
   tutorStep,
   visitCount,
   skipUpdate,
+  nativeLanguage,
+  targetLanguage,
 }
 
 extension PrefExtension on Pref {

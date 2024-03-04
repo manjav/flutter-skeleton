@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp>
           supportedLocales: Localization.locales,
           theme: Themes.darkData,
           locale: Localization.locales.firstWhere((l) =>
-              l.languageCode == Pref.language.getString(defaultValue: 'en')),
+              l.languageCode == Pref.nativeLanguage.getString(defaultValue: 'en')),
           getPages: [
             GetPage(name: Routes.home, page: () => HomeScreen()),
             GetPage(name: Routes.speak, page: () => LessonSpeakScreen()),

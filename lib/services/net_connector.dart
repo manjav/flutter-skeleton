@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -13,13 +12,14 @@ class LoadingData {
   static String baseURL = "";
   static String chatIp = "";
   static int chatPort = 0;
+  Map configs = {};
+  Contents? contents;
 }
 
 class NetConnector extends IService {
   static const rpcDialogue = "dialogue.php";
 
-  LoadingData loadData = LoadingData();
-  Map<String, dynamic> _config = {};
+  LoadingData loadingData = LoadingData();
   NakamaGrpcClient? _nakamaClient;
   Session? _session;
   Account? account;
@@ -28,31 +28,13 @@ class NetConnector extends IService {
   initialize({List<Object>? args}) async {
     var version = int.parse(DeviceInfo.buildNumber);
     await _loadConfigs(version);
+
+    if (Pref.targetLanguage.getString().isNotEmpty) {
     _session = await connect();
 
-
-    // var loader = Loader();
-    // await loader.load(
-    //     "data.json.zip", "${LoaderWidget.baseURL}/texts/data.json.zip",
-    //     hash: LoaderWidget.hashMap["data.json"]);
-    // var jsonData = utf8.decode(loader.bytes!);
-    // loadData.init(jsonDecode(jsonData));
-
-    // // Load account data
-    // var params = <String, dynamic>{
-    //   RpcParams.os_type.name: 2,
-    //   RpcParams.udid.name: DeviceInfo.adId,
-    //   RpcParams.model.name: DeviceInfo.model,
-    //   RpcParams.device_name.name: DeviceInfo.model,
-    //   RpcParams.game_version.name: version,
-    //   RpcParams.os_version.name: DeviceInfo.osVersion,
-    //   RpcParams.store_type.name: "google",
-    // };
-    // if (Pref.restoreKey.getString().isNotEmpty) {
-    //   params[RpcParams.restore_key.name] = Pref.restoreKey.getString();
-    // }
-    // var data = await rpc(RpcId.playerLoad, params: params);
-    // loadData.account = Account.initialize(data, loadData);
+      // Load Contents
+      var data = await rpc(rpcContentCategories);
+      loadingData.contents = Contents.initialize(data);
 
     // // Check internal version, public users avoidance
     // var test = _config["updates"]["test"];
@@ -61,9 +43,8 @@ class NetConnector extends IService {
     //     throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
     //   }
     // }
-    // Pref.restoreKey.setString(loadData.account.restoreKey);
+    }
     super.initialize();
-    // return loadData;
   }
 
   _loadConfigs(int version) async {
@@ -79,8 +60,8 @@ class NetConnector extends IService {
       }
     }
     if (response!.statusCode == 200) {
-      _config = json.decode(response.body);
-      var updates = _config["updates"];
+      loadingData.configs = json.decode(response.body);
+      var updates = loadingData.configs["updates"];
       if (updates["force"]["version"] > version) {
         throw SkeletonException(
             StatusCode.C701_UPDATE_FORCE.value, updates["force"]["message"]);
@@ -90,9 +71,9 @@ class NetConnector extends IService {
             StatusCode.C700_UPDATE_NOTICE.value, updates["notice"]["message"]);
       }
       Pref.skipUpdate.setBool(false);
-      LoadingData.baseURL = _config["host"];
-      LoaderWidget.baseURL = _config['assetsServer'];
-      LoaderWidget.hashMap = Map.castFrom(_config['files']);
+      LoadingData.baseURL = loadingData.configs["host"];
+      LoaderWidget.baseURL = loadingData.configs['assetsServer']!;
+      LoaderWidget.hashMap = Map.castFrom(loadingData.configs['files']);
       log("Config loaded.");
     } else {
       throw SkeletonException(
@@ -103,8 +84,8 @@ class NetConnector extends IService {
   // Connect to nakama server
   Future<Session> connect() async {
     _nakamaClient = NakamaGrpcClient(
-        host: '192.168.1.133' /* _config['host'] */,
-        port: _config['port'],
+        host: '192.168.1.133' /* loadingData.configs['host'] */,
+        port: loadingData.configs['port'],
         serverKey: 'defaultkey',
         ssl: false);
 
@@ -143,7 +124,7 @@ class NetConnector extends IService {
   Future<T> tryRpc<T>(BuildContext context, String id, {Map? params}) async {
     dynamic result;
     try {
-      result = await rpc(id, params: params);
+      result = await rpc<T>(id, params: params);
     } on SkeletonException catch (e) {
       if (context.mounted) {
         await serviceLocator<RouteService>().to(Routes.popupMessage,
@@ -184,18 +165,10 @@ class NetConnector extends IService {
     params = params ?? {};
     http.Response? response;
     try {
-      final headers = _getDefaultHeader();
-
-      // var data = {};
       var json = jsonEncode(params);
-      // data = params;
       final url = Uri.parse('${LoadingData.baseURL}/$id');
       log("${url.toString()} $json");
-      // if (id.requestType == HttpRequestType.get) {
-      // response = await http.get(url, headers: headers, params: params);
-      // } else {
-      response = await http.post(url, headers: headers, body: params);
-      // }
+      response = await http.post(url, headers: {}, body: params);
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {
@@ -209,7 +182,6 @@ class NetConnector extends IService {
           response.body.isNotEmpty ? response.body : "error_$status".l());
     }
 
-    _proccessResponseHeaders(response.headers);
     log(response.body);
     var responseData = jsonDecode(response.body);
     if (!responseData['status']) {
@@ -217,27 +189,6 @@ class NetConnector extends IService {
       throw SkeletonException(-1, responseData['data']);
     }
     return responseData['data'];
-  }
-
-  void _proccessResponseHeaders(Map<String, String> header) {
-    if (header.containsKey('set-cookie')) {
-      Pref.cookies.setString(header["set-cookie"]!);
-    }
-  }
-
-  Map<String, String>? _getDefaultHeader({Map<String, String>? headers}) {
-    if (!Platform.isAndroid && !Platform.isWindows /*&& buildType!="debug"*/) {
-      return null;
-    }
-    headers = headers ?? {};
-
-    headers["Content-Type"] = "application/x-www-form-urlencoded";
-    // headers["Host"] = _config["host"];
-    var cookies = Pref.cookies.getString();
-    if (cookies.isNotEmpty) {
-      headers["Cookie"] = cookies;
-    }
-    return headers;
   }
 
   bool _isDisconnected(String error) {
