@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:advertising_id/advertising_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,15 @@ class DeviceInfo extends IService {
     DeviceInfo.devicePixelRatio = q.devicePixelRatio;
     var width = math.min(size.width, size.height);
     var height = math.max(size.width, size.height);
-    ratio = width / 390;// Comes from figma design
+    ratio = width / 390; // Comes from figma design
     aspectRatio = width / height;
+
+    // Get advertise id
+    try {
+      adId = (await AdvertisingId.id(true))!;
+    } on PlatformException {
+      adId = StringExtension.getRandomString(12);
+    }
 
     // Get app info
     var packageInfo = await PackageInfo.fromPlatform();
