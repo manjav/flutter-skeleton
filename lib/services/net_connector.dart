@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:http/http.dart' as http;
+import 'package:nakama/nakama.dart';
 
 import '../../app_export.dart';
 
@@ -149,10 +151,36 @@ class NetConnector extends IService {
       }
       rethrow;
     }
-    return result as T;
+    return result;
   }
 
-  Future<dynamic> rpc(String id, {Map? params}) async {
+  Future<T> rpc<T>(String id, {Map? params}) async {
+    params = params ?? {};
+    try {
+      var data = await _nakamaClient!
+          .rpc(session: _session!, id: id, payload: jsonEncode(params));
+      var res = json.decode(data!);
+      var status = (res["status"] as int);
+      if (status == 0) {
+        return res["data"];
+      } else {
+        throw Exception(res["message"]);
+      }
+    } catch (e) {
+      var error = '$e'.split('codeName: ')[1].split(",")[0];
+      if (error == "UNAUTHENTICATED" ||
+          error == "UNAVAILABLE" ||
+          error == "NOT_FOUND" ||
+          error == "INTERNAL") {
+        error = 'error_${error.toLowerCase()}';
+      } else {
+        error = "RPC: $id Error: $e";
+      }
+      throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
+    }
+  }
+
+  Future<dynamic> httpRPC(String id, {Map? params}) async {
     params = params ?? {};
     http.Response? response;
     try {
