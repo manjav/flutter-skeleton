@@ -18,11 +18,16 @@ class NetConnector extends IService {
 
   LoadingData loadData = LoadingData();
   Map<String, dynamic> _config = {};
+  NakamaGrpcClient? _nakamaClient;
+  Session? _session;
+  Account? account;
 
   @override
   initialize({List<Object>? args}) async {
     var version = int.parse(DeviceInfo.buildNumber);
     await _loadConfigs(version);
+    _session = await connect();
+
 
     // var loader = Loader();
     // await loader.load(
@@ -91,6 +96,46 @@ class NetConnector extends IService {
       throw SkeletonException(
           StatusCode.C999_UNKNOWN_ERROR.value, 'Failed to load config file');
     }
+  }
+
+  // Connect to nakama server
+  Future<Session> connect() async {
+    _nakamaClient = NakamaGrpcClient(
+        host: '192.168.1.133' /* _config['host'] */,
+        port: _config['port'],
+        serverKey: 'defaultkey',
+        ssl: false);
+
+    var timezone = DateTime.now().timeZoneOffset.inSeconds;
+    var location = await FlutterTimezone.getLocalTimezone();
+    var store = "GooglePlay";
+    var data = {
+      "timezone": "$timezone",
+      "location": location,
+      "store": store,
+      "latestVersion": DeviceInfo.buildNumber,
+      "displayName": "Player_${StringExtension.getRandomString(4)}",
+      "device":
+          '{"model":"${DeviceInfo.model}", "osVersion":"${DeviceInfo.osVersion}", "baseVersion":"${DeviceInfo.baseVersion}"}'
+    };
+
+    try {
+      var session = await _nakamaClient!
+          .authenticateDevice(deviceId: DeviceInfo.adId, vars: data);
+      return session;
+    } catch (e) {
+      throw SkeletonException(-1, e.toString());
+    }
+  }
+
+  refreshAccount() async {
+    account = await _nakamaClient!.getAccount(_session!);
+  }
+
+  Future<void> updateAccount({String? displayName, String? avatarUrl}) async {
+    await _nakamaClient!.updateAccount(
+        session: _session!, displayName: displayName, avatarUrl: avatarUrl);
+    await refreshAccount();
   }
 
   Future<T> tryRpc<T>(BuildContext context, String id, {Map? params}) async {
