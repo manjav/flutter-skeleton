@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../main.dart';
 import '../../app_export.dart';
 
 class RestorePopup extends AbstractPopup {

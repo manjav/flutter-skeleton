@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_export.dart';
-import '../../../main.dart';
 
 class SettingsPopup extends AbstractPopup {
   const SettingsPopup({super.key}) : super(Routes.popupSettings);
