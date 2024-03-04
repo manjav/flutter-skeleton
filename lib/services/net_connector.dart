@@ -196,4 +196,6 @@ class NetConnector extends IService {
         error.contains("Connection refused") ||
         error.contains("Failed host lookup");
   }
+  static const rpcContentCategories = "content_categories";
+  static const rpcContentContents = "content_contents";
 }
