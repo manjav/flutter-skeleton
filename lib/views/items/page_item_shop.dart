@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -20,9 +20,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   final Map<ShopSections, List<ShopItemVM>> _items = {};
   late StreamSubscription<List<PurchaseDetails>> _subscription;
 
-  // final bool _hackMode = false;
-
-  final Map<String, ProductDetails> _productDetails = {};
+  final Map<String, SkuDetails> _productDetails = {};
 
   @override
   void initState() {
@@ -32,11 +30,6 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   }
 
   _fetchData() async {
-    // if (_account.loadingData.shopProceedItems != null) {
-    //   _items = _account.loadingData.shopProceedItems!;
-    //   setState(() {});
-    //   return;
-    // }
     Set<String> skus = {};
     try {
       var result = await rpc(RpcId.getShopitems);
@@ -66,23 +59,20 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             }
           }
           _items[section]!.insert(
-              len - 2, ShopItemVM(ShopItem(ShopSections.none, {}), 0, 2, 10));
+              len - 2, ShopItemVM(ShopItem(ShopSections.none, {}), 0, 8, 12));
         }
-        // if (section.inStore) {
-        //   _items[section]!.reverseRange(0, _items[section]!.length);
-        // }
         _account.loadingData.shopProceedItems = _items;
       }
-      final Stream<List<PurchaseDetails>> purchaseUpdated =
-          InAppPurchase.instance.purchaseStream;
-      _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-        _listenToPurchaseUpdated(purchaseDetailsList);
-      }, onDone: () => _subscription.cancel());
-      final bool available = await InAppPurchase.instance.isAvailable();
+      var inAppPurchaseService = serviceLocator<Payment>();
+
+      final bool available = inAppPurchaseService.isAvailable;
       if (available) {
-        var response = await InAppPurchase.instance.queryProductDetails(skus);
-        for (var details in response.productDetails) {
-          _productDetails[details.id] = details;
+        var response = await inAppPurchaseService.queryInventory(
+            skus: skus.toList(), querySkuDetails: true);
+        var inventory = response[inAppPurchaseService.INVENTORY] as Inventory;
+        var products = inventory.mSkuMap.values.toList();
+        for (var product in products) {
+          _productDetails[product.mSku!] = product;
         }
       }
     } finally {
@@ -125,17 +115,20 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             data["purchaseState"] != 0) {
           return;
         }
-        // var params = {
-        //   "type": item.base.id,
-        //   "receipt": data["purchaseToken"],
-        //   "token": details.purchaseID,
-        //   "store": "2"
-        // };
 
-        // var result = await rpc(RpcId.buyGoldPack, params: params);
-        // accountBloc.account.update({section.name: item.base.value});
-        // accountBloc.add(SetAccount(account: accountBloc.account));
+        var params = {
+          "type": item.base.id,
+          "receipt": data["purchaseToken"],
+          "token": details.purchaseID,
+          "store": "2"
+        };
 
+        await rpc(RpcId.buyGoldPack, params: params);
+        var account = serviceLocator<AccountProvider>();
+        // ignore: use_build_context_synchronously
+        account.update(context, {section.name: item.base.value});
+
+        // ignore: use_build_context_synchronously
         Overlays.insert(
             context,
             PurchaseFeastOverlay(
@@ -150,7 +143,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   Widget build(BuildContext context) {
     super.build(context);
     if (_items.isEmpty) {
-      return SkinnedText("waiting_l".l());
+      return Center(child: SkinnedText("waiting_l".l()));
     }
     return SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(0, 160.d, 0, 220.d),
@@ -332,7 +325,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
           height: 100.d,
           transform: Matrix4.rotationZ(-0.15),
           decoration: Widgets.imageDecorator("badge_ribbon"),
-          child: Center(child: SkinnedText("+${(ratio * 100).round()}%", style: TStyles.tiny)),
+          child: Center(
+              child: SkinnedText("+${(ratio * 100).round()}%",
+                  style: TStyles.tiny)),
         ));
   }
 
@@ -347,29 +342,44 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   _onItemPressed(ShopItemVM item) async {
     if (item.inStore) {
-      if (kDebugMode) {
-        _deliverProduct(
-            item.base.section,
-            PurchaseDetails(
-                purchaseID: "",
-                productID: item.base.productID,
-                status: PurchaseStatus.purchased,
-                verificationData: PurchaseVerificationData(
-                    localVerificationData: '{"purchaseState":0}',
-                    serverVerificationData: "{}",
-                    source: ""),
-                transactionDate: ""));
-      } else {
-        InAppPurchase.instance.buyConsumable(
-            purchaseParam: PurchaseParam(
-                productDetails: _productDetails[item.base.productID]!));
+      // if (kDebugMode) {
+      //   _deliverProduct(
+      //       item.base.section,
+      //       PurchaseDetails(
+      //           purchaseID: "",
+      //           productID: item.base.productID,
+      //           status: PurchaseStatus.purchased,
+      //           verificationData: PurchaseVerificationData(
+      //               localVerificationData: '{"purchaseState":0}',
+      //               serverVerificationData: "{}",
+      //               source: ""),
+      //           transactionDate: ""));
+      // } else {
+      // InAppPurchase.instance.buyConsumable(
+      //     purchaseParam: PurchaseParam(
+      //         productDetails: _productDetails[item.base.productID]!));
+      // }
+      var payment = serviceLocator<Payment>();
+
+      var res = await payment.launchPurchaseFlow(sku: item.base.productID);
+
+      IabResult? purchaseResult = res[payment.RESULT];
+      Purchase? purchase = res[payment.PURCHASE];
+
+      if (true == purchaseResult?.isFailure()) {
+        return;
       }
+
+      _purchaseUpdated(purchase!, item);
       return;
+      // }
     }
 
     if (item.base.section == ShopSections.boost) {
+      // ignore: use_build_context_synchronously
       Overlays.insert(context, PurchaseFeastOverlay(args: {"item": item}));
     } else {
+      // ignore: use_build_context_synchronously
       Overlays.insert(
         context,
         OpenPackFeastOverlay(
@@ -378,6 +388,46 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         ),
       );
     }
+  }
+
+  void _purchaseUpdated(Purchase purchaseDetail, ShopItemVM item) async {
+    Overlays.remove(OverlaysName.waiting);
+    if (purchaseDetail.mSku.startsWith("gold_")) {
+      _deliver(ShopSections.gold, purchaseDetail, item);
+    } else {
+      _deliver(ShopSections.nectar, purchaseDetail, item);
+    }
+  }
+
+  _deliver(ShopSections section, Purchase details, ShopItemVM item) async {
+    var account = serviceLocator<AccountProvider>();
+    // -- StoreID_AppStore = "1"
+    // -- StoreID_Sibche = "2"
+    // -- StoreID_GooglePlay = "3"
+    // -- StoreID_Bazar = "4"
+    // -- StoreID_Cando = "5"
+    // -- StoreID_Fourtune = "6"
+    // -- StoreID_Samsung = "7"
+    var params = {
+      "type": item.base.id,
+      "receipt": details.mToken,
+      "signature": details.mSignature,
+      "store": FlavorConfig.instance.variables["storeId"]
+    };
+
+    await rpc(RpcId.buyGoldPack, params: params);
+
+    await serviceLocator<Payment>().consume(purchase: details);
+    // ignore: use_build_context_synchronously
+    account.update(context, {section.name: item.base.value});
+
+    // ignore: use_build_context_synchronously
+    Overlays.insert(
+        context,
+        PurchaseFeastOverlay(
+          args: {"item": item},
+        ));
+    return;
   }
 
   @override
