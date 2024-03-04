@@ -67,7 +67,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         padding: EdgeInsets.only(bottom: 14.d),
         decoration: Widgets.imageDecorator(
             "popup_title", ImageCenterSliceData(562, 130)),
-        child: SkinnedText(titleBuilder(), style: TStyles.large));
+        child: Center(child: SkinnedText(titleBuilder(), style: TStyles.large)));
   }
 
   Widget closeButtonFactory() {

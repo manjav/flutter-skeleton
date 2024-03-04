@@ -13,18 +13,9 @@ class Widgets {
     Function(dynamic details)? onTapDown,
     Function()? onTapCancel,
     Function()? onLongPress,
-    Function(DragStartDetails details)? onVerticalDragStart,
-    Function(DragUpdateDetails details)? onVerticalDragUpdate,
-    Function(DragEndDetails details)? onVerticalDragEnd,
     Widget? child,
   }) {
     return GestureDetector(
-        onVerticalDragStart:
-            _isActive(id) ? (d) => onVerticalDragStart?.call(d) : null,
-        onVerticalDragUpdate:
-            _isActive(id) ? (d) => onVerticalDragUpdate?.call(d) : null,
-        onVerticalDragEnd:
-            _isActive(id) ? (d) => onVerticalDragEnd?.call(d) : null,
         onTap: () {
           if (_isActive(id)) onTap?.call();
         },
@@ -219,6 +210,7 @@ class Widgets {
     TextEditingController? controller,
     Function(String)? onChange,
     Function(String)? onSubmit,
+    Color? borderColor,
   }) {
     var style = TStyles.medium.copyWith(height: 1.5);
     return rect(
@@ -240,10 +232,19 @@ class Widgets {
               hintText: hintText,
               contentPadding: EdgeInsets.all(16.d),
               suffixIcon: suffixIcon,
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(radius))),
+              border: _getBorder(radius, borderColor: borderColor),
+              enabledBorder: _getBorder(radius, borderColor: borderColor),
+              focusedBorder: _getBorder(radius, borderColor: borderColor),
+              errorBorder: _getBorder(radius, borderColor: borderColor),
+              disabledBorder: _getBorder(radius, borderColor: borderColor),
             )));
   }
+
+  static OutlineInputBorder _getBorder(double radius, {Color? borderColor}) =>
+      OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(radius)),
+          borderSide:
+              BorderSide(color: borderColor ?? TColors.transparent, width: 2));
 
   static Widget clipboardGetter(BuildContext context, String text,
       {double? width, double? height}) {
