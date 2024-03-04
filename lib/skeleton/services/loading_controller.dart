@@ -1,3 +1,4 @@
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';
@@ -216,7 +217,6 @@ class LoadingController extends GetxController {
 
     serviceLocator<DeviceInfo>().initialize();
 
-
     await serviceLocator<Localization>().initialize(args: [Get.context!]);
 
     var trackers = serviceLocator<Trackers>();
@@ -240,6 +240,12 @@ class LoadingController extends GetxController {
         var noobSocket = serviceLocator<NoobSocket>();
         noobSocket.initialize(
             args: [accountProvider, serviceLocator<OpponentsProvider>()]);
+
+        serviceLocator<Payment>().init(
+          storePackageName: FlavorConfig.instance.variables["storePackageName"],
+          bindUrl: FlavorConfig.instance.variables["bindUrl"],
+          enableDebugLogging: true,
+        );
 
         services.changeState(ServiceStatus.initialize);
 

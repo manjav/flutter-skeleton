@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 
 import '../../app_export.dart';
-import '../../main.dart';
 
 class Tribe {
   late int id,

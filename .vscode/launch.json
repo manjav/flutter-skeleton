@@ -5,10 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "fruitcraft",
+            "name": "fruitcraft bazaar",
+            "program": "lib/main_bazaar.dart",
             "request": "launch",
             "type": "dart",
-            "preLaunchTask": "convert"
+            "preLaunchTask": "convert",
+            "args": ["--target", "lib/main_bazaar.dart" ]
+        },
+        {
+            "name": "fruitcraft myket",
+            "program": "lib/main_myket.dart",
+            "request": "launch",
+            "type": "dart",
+            "preLaunchTask": "convert",
+            "args": ["--target", "lib/main_myket.dart" ]
+        },
+        {
+            "name": "fruitcraft google",
+            "program": "lib/main_google.dart",
+            "request": "launch",
+            "type": "dart",
+            "preLaunchTask": "convert",
+            "args": ["--target", "lib/main_google.dart" ]
         },
         {
             "name": "fruitcraft (profile mode)",

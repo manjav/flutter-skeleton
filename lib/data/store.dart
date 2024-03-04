@@ -1,4 +1,3 @@
-import 'package:in_app_purchase/in_app_purchase.dart';
 import '../../app_export.dart';
 
 enum ShopSections { none, card, gold, boost, nectar, subscription }
@@ -41,10 +40,10 @@ class ShopData {
   }
 
   static String calculatePrice(int level, int nectarPrice,
-      Map<String, ProductDetails> productDetails, ShopItemVM item) {
+      Map<String, SkuDetails> productDetails, ShopItemVM item) {
     var price = item.base.value;
     if (item.inStore && productDetails.containsKey(item.base.productID)) {
-      return productDetails[item.base.productID]!.price;
+      return productDetails[item.base.productID]!.mPrice!;
     }
     if (item.base.section == ShopSections.boost) {
       // Converts gold multiplier to nectar for boost packs

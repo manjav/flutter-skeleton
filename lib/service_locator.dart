@@ -14,11 +14,13 @@ void initServices() {
   serviceLocator.registerLazySingleton<Localization>(() => Localization());
   serviceLocator.registerLazySingleton<Sounds>(() => Sounds());
   serviceLocator.registerLazySingleton<Trackers>(() => Trackers());
-  serviceLocator.registerLazySingleton<EventNotification>(() => EventNotification());
+  serviceLocator
+      .registerLazySingleton<EventNotification>(() => EventNotification());
   serviceLocator.registerLazySingleton<HttpConnection>(() => HttpConnection());
   serviceLocator.registerLazySingleton<NoobSocket>(() => NoobSocket());
   serviceLocator.registerLazySingleton<Notifications>(() => Notifications());
   serviceLocator.registerLazySingleton<Inbox>(() => Inbox());
   serviceLocator.registerLazySingleton<Games>(() => Games());
   serviceLocator.registerLazySingleton<Ads>(() => Ads());
+  serviceLocator.registerLazySingleton<Payment>(() => Payment());
 }

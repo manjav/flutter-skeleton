@@ -4,7 +4,6 @@ import 'package:rive/rive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app_export.dart';
-import '../../../main.dart';
 
 
 class LoadingOverlay extends AbstractOverlay {
