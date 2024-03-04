@@ -12,23 +12,6 @@ class LoadingController extends GetxController {
       const LoadingOverlay(),
     );
 
-    var route = serviceLocator<RouteService>();
-    route.pages = [
-      SkeletonPageModel(page: HomeScreen(), route: Routes.home, isOpaque: true),
-      SkeletonPageModel(
-          page: LessonSpeakScreen(), route: Routes.speak, isOpaque: true),
-      SkeletonPageModel(
-          page: LessonListenScreen(), route: Routes.listen, isOpaque: true),
-      SkeletonPageModel(
-          page: const MessagePopup(),
-          route: Routes.popupMessage,
-          isOpaque: false),
-      SkeletonPageModel(
-          page: const MentorPopup(),
-          route: Routes.popupMentor,
-          isOpaque: false),
-    ];
-
     serviceLocator<DeviceInfo>().initialize();
 
     await serviceLocator<Localization>().initialize(args: [Get.context!]);

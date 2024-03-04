@@ -100,7 +100,16 @@ class _MyAppState extends State<MyApp>
           theme: Themes.darkData,
           locale: Localization.locales.firstWhere((l) =>
               l.languageCode == Pref.language.getString(defaultValue: 'en')),
-          home: HomeScreen(),
+          getPages: [
+            GetPage(name: Routes.home, page: () => HomeScreen()),
+            GetPage(name: Routes.speak, page: () => LessonSpeakScreen()),
+            GetPage(name: Routes.listen, page: () => LessonListenScreen()),
+            GetPage(
+                name: Routes.popupMentor,
+                page: () => const MentorPopup(),
+                opaque: false),
+          ],
+          initialRoute: Routes.home,
         ),
       ),
     );
