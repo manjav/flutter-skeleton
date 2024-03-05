@@ -11,9 +11,9 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+  List<Content> _categories = [];
   LoadingController controller = Get.put(LoadingController());
   final ValueNotifier<int> _selectedCategory = ValueNotifier(0);
-  Contents? _contents;
 
   @override
   void initState() {
@@ -25,18 +25,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     setState(() {});
   }
 
+// Consumer<AccountProvider>(builder: (_, state, child) {
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
     services.addListener(() async {
       if (services.state.status == ServiceStatus.initialize) {
-        if (Pref.targetLanguage.getString().isEmpty) {
+        var account = serviceLocator<AccountProvider>();
+        if (!account.metadata.containsKey("targetLanguage")) {
           await Future.delayed(const Duration(seconds: 1));
           await serviceLocator<RouteService>().to(Routes.onboarding);
-          controller.connect(services);
         }
-        _contents = serviceLocator<NetConnector>().loadingData.contents;
-        _contents!.categories.add(_contents!.categories.first);
+        _categories = (await account.getContents()).categories;
         setState(() {});
       }
     });

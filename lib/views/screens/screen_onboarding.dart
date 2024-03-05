@@ -11,41 +11,45 @@ class OnboardingScreen extends AbstractScreen {
 }
 
 class _ScreenState extends AbstractScreenState<OnboardingScreen> {
+  String _nativeLanguage = "";
   final PageController _pageController = PageController();
+  @override
+  List<Widget> appBarElementsLeft() => [];
 
   @override
   Widget contentFactory(double paddingTop) {
-    var configs = serviceLocator<NetConnector>().loadingData.configs;
-    List<MapEntry> languages = configs["supportedLanguages"].entries.toList();
+    List<MapEntry> languages =
+        NetConnector.configs["supportedLanguages"].entries.toList();
     return PageView.builder(
       itemCount: 2,
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) =>
-          LanguagePage(languages, (code) => onFlagSelect(index, code)),
+          LanguagePage(index, languages, onItemSelect: _onFlagSelect),
     );
   }
 
-  @override
-  List<Widget> appBarElementsLeft() => [];
-
-  void onFlagSelect(int index, String code) {
+  Future<void> _onFlagSelect(int index, String code) async {
     if (index == 0) {
-      Pref.nativeLanguage.setString(code);
+      _nativeLanguage = code;
       _pageController.animateToPage(1,
           duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
     } else {
-      Pref.targetLanguage.setString(code);
-      Navigator.pop(context);
+      await serviceLocator<AccountProvider>()
+          .update(nativeLanguage: _nativeLanguage, targetLanguage: code);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     }
   }
 }
 
 class LanguagePage extends StatefulWidget {
+  final int index;
   final List<MapEntry> languages;
-
-  final Function(String)? onItemSelect;
-  const LanguagePage(this.languages, this.onItemSelect, {super.key});
+  final Function(int, String)? onItemSelect;
+  const LanguagePage(this.index, this.languages,
+      {this.onItemSelect, super.key});
 
   @override
   State<LanguagePage> createState() => _LanguagePageState();
@@ -71,7 +75,7 @@ class _LanguagePageState extends State<LanguagePage> {
           Padding(
             padding: EdgeInsets.all(8.d),
             child: Text(
-              "What is your native language?",
+              ["My native language is ...", "I want to learn..."][widget.index],
               style: TStyles.large,
               textAlign: TextAlign.center,
             ),
@@ -104,7 +108,8 @@ class _LanguagePageState extends State<LanguagePage> {
             Text(_flags[index].value)
           ],
         ),
-        onPressed: () => widget.onItemSelect?.call(_flags[index].key));
+        onPressed: () =>
+            widget.onItemSelect?.call(widget.index, _flags[index].key));
   }
 
   void _onSearchBoxChange(String text) {

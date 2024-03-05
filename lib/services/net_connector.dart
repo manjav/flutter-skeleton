@@ -95,14 +95,8 @@ class NetConnector extends IService {
     }
   }
 
-  refreshAccount() async {
-    account = await _nakamaClient!.getAccount(_session!);
-  }
-
-  Future<void> updateAccount({String? displayName, String? avatarUrl}) async {
-    await _nakamaClient!.updateAccount(
-        session: _session!, displayName: displayName, avatarUrl: avatarUrl);
-    await refreshAccount();
+  Future<Account> getAccount() async {
+    return await _nakamaClient!.getAccount(_session!);
   }
 
   Future<T> tryRpc<T>(BuildContext context, String id, {Map? params}) async {
@@ -208,8 +202,4 @@ class NetConnector extends IService {
     return Result(Responses.success, "", rules.orders);
   }
    */
-
-  static const rpcContentCategories = "content_categories";
-  static const rpcContentContents = "content_contents";
-  // {"groupId":"essential_introducing_en", "nativeLanguage":"en", "targetLanguage":"tr"}
 }
