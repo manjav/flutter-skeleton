@@ -7,10 +7,7 @@ class LoadingController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
     var services = serviceLocator<ServicesProvider>();
-    Overlays.insert(
-      Get.overlayContext!,
-      const LoadingOverlay(),
-    );
+    Overlays.insert(Get.overlayContext!, const LoadingOverlay());
 
     serviceLocator<DeviceInfo>().initialize();
 
@@ -24,13 +21,9 @@ class LoadingController extends GetxController {
     sounds.initialize();
 
     serviceLocator<Speaker>().initialize();
-    connect(services);
-  }
 
-  Future<void> connect(ServicesProvider services) async {
     try {
-      await serviceLocator<NetConnector>().initialize();
-
+      var data = await serviceLocator<NetConnector>().initialize();
       services.changeState(ServiceStatus.initialize);
 
       // var notifications = Notifications();

@@ -14,8 +14,8 @@ class LoadingOverlay extends AbstractOverlay {
 }
 
 class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
-  bool _logViewVisibility = false;
   SMIBool? _closeInput;
+  bool _logViewVisibility = false;
   final _minAnimationTime = 1500;
   ServiceState _serviceState = ServiceState(ServiceStatus.none);
 
@@ -80,7 +80,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                     Text(
                       "${'error_${_serviceState.exception!.statusCode}'.l([
                             _serviceState.exception!.message
-                          ])}\n${isUpdateError ? "" : "try_again".l()}",
+                          ])}\n${isUpdateError ? "" : "Try Again".l()}",
                       textAlign: TextAlign.center,
                       style: TStyles.mediumInvert,
                       softWrap: true,

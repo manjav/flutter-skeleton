@@ -56,12 +56,10 @@ enum Pref {
   tutorStep,
   visitCount,
   skipUpdate,
-  nativeLanguage,
-  targetLanguage,
 }
 
 extension PrefExtension on Pref {
-  bool contains() => Prefs.contains(name);
+  bool get isExists => Prefs.contains(name);
 
   int setInt(int value) => Prefs.setInt(name, value);
   int getInt({int defaultValue = 0}) =>
