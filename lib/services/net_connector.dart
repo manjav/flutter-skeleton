@@ -93,10 +93,12 @@ class NetConnector extends IService {
     var location = await FlutterTimezone.getLocalTimezone();
     var store = "GooglePlay";
     var data = {
-      "timezone": "$timezone",
-      "location": location,
       "store": store,
+      "location": location,
+      "timezone": "$timezone",
       "latestVersion": DeviceInfo.buildNumber,
+      "nativeLanguage": Pref.nativeLanguage.getString(),
+      "targetLanguage": Pref.targetLanguage.getString(),
       "displayName": "Player_${StringExtension.getRandomString(4)}",
       "device":
           '{"model":"${DeviceInfo.model}", "osVersion":"${DeviceInfo.osVersion}", "baseVersion":"${DeviceInfo.baseVersion}"}'

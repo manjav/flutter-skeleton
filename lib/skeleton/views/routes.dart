@@ -4,6 +4,7 @@ class Routes {
   static const listen = "/listen";
   static const chat = "/chat";
   static const word = "/word";
+  static const onboarding = "/onboarding";
 
   static const popupMessage = "/popupMessage";
   static const popupMentor = "/popupMentor";

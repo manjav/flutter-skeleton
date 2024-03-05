@@ -24,9 +24,12 @@ class LoadingController extends GetxController {
     sounds.initialize();
 
     serviceLocator<Speaker>().initialize();
+    connect(services);
+  }
 
+  Future<void> connect(ServicesProvider services) async {
     try {
-      await await serviceLocator<NetConnector>().initialize();
+      await serviceLocator<NetConnector>().initialize();
 
       services.changeState(ServiceStatus.initialize);
 

@@ -104,6 +104,7 @@ class _MyAppState extends State<MyApp>
             GetPage(name: Routes.home, page: () => HomeScreen()),
             GetPage(name: Routes.speak, page: () => LessonSpeakScreen()),
             GetPage(name: Routes.listen, page: () => LessonListenScreen()),
+            GetPage(name: Routes.onboarding, page: () => OnboardingScreen()),
             GetPage(
                 name: Routes.popupMentor,
                 page: () => const MentorPopup(),

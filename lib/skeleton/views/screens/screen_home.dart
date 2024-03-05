@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../app_export.dart';
@@ -15,6 +11,9 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+  LoadingController controller = Get.put(LoadingController());
+  final ValueNotifier<int> _selectedCategory = ValueNotifier(0);
+  Contents? _contents;
 
   @override
   void initState() {
@@ -26,3 +25,37 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     setState(() {});
   }
 
+  @override
+  void onRender(Duration timeStamp) {
+    super.onRender(timeStamp);
+    services.addListener(() async {
+      if (services.state.status == ServiceStatus.initialize) {
+        if (Pref.targetLanguage.getString().isEmpty) {
+          await Future.delayed(const Duration(seconds: 1));
+          await serviceLocator<RouteService>().to(Routes.onboarding);
+          controller.connect(services);
+        }
+        _contents = serviceLocator<NetConnector>().loadingData.contents;
+        _contents!.categories.add(_contents!.categories.first);
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  List<Widget> appBarElementsLeft() => [];
+
+  @override
+  Widget contentFactory(double paddingTop) {
+    if (services.state.status.index < ServiceStatus.initialize.index) {
+      return const SizedBox();
+    }
+    return PopScope(
+      canPop: false,
+      child: Widgets.rect(
+        height: 555,
+        alignment: Alignment.center,
+      ),
+    );
+  }
+}
