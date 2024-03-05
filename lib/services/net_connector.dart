@@ -18,16 +18,16 @@ class NetConnector extends IService {
     var version = int.parse(DeviceInfo.buildNumber);
     await _loadConfigs(version);
 
-      _session = await connect();
+    _session = await connect();
     var account = await getAccount();
 
-      // // Check internal version, public users avoidance
-      // var test = _config["updates"]["test"];
-      // if (test["version"] < version) {
-      //   if (!test["testers"].contains(loadData.account.id)) {
-      //     throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
-      //   }
-      // }
+    // // Check internal version, public users avoidance
+    // var test = _config["updates"]["test"];
+    // if (test["version"] < version) {
+    //   if (!test["testers"].contains(loadData.account.id)) {
+    //     throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
+    //   }
+    // }
     super.initialize();
     return account;
   }

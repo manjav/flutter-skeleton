@@ -24,6 +24,7 @@ class LoadingController extends GetxController {
 
     try {
       var data = await serviceLocator<NetConnector>().initialize();
+      serviceLocator<AccountProvider>().initialize(data);
       services.changeState(ServiceStatus.initialize);
 
       // var notifications = Notifications();
