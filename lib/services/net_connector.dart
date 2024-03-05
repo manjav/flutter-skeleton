@@ -8,33 +8,18 @@ import 'package:nakama/nakama.dart';
 
 import '../../app_export.dart';
 
-class LoadingData {
-  static String baseURL = "";
-  static String chatIp = "";
-  static int chatPort = 0;
-  Map configs = {};
-  Contents? contents;
-}
-
 class NetConnector extends IService {
-  static const rpcDialogue = "dialogue.php";
-
-  LoadingData loadingData = LoadingData();
   NakamaGrpcClient? _nakamaClient;
+  static Map<String, dynamic> configs = {};
   Session? _session;
-  Account? account;
 
   @override
   initialize({List<Object>? args}) async {
     var version = int.parse(DeviceInfo.buildNumber);
     await _loadConfigs(version);
 
-    if (Pref.targetLanguage.getString().isNotEmpty) {
       _session = await connect();
-
-      // Load Contents
-      var data = await rpc(rpcContentCategories);
-      loadingData.contents = Contents.initialize(data);
+    var account = await getAccount();
 
       // // Check internal version, public users avoidance
       // var test = _config["updates"]["test"];
@@ -43,25 +28,25 @@ class NetConnector extends IService {
       //     throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
       //   }
       // }
-    }
     super.initialize();
+    return account;
   }
 
-  _loadConfigs(int version) async {
+  Future<void> _loadConfigs(int version) async {
     http.Response? response;
     try {
       response = await http.get(
-          Uri.parse('https://8ball.turnedondigital.com/lingai/configs.json'));
+          Uri.parse("https://8ball.turnedondigital.com/lingai/configs.json"));
     } catch (e) {
-      var error = '$e';
+      var error = "$e";
       if (_isDisconnected(error)) {
         throw SkeletonException(
             StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
       }
     }
     if (response!.statusCode == 200) {
-      loadingData.configs = json.decode(utf8.decode(response.bodyBytes));
-      var updates = loadingData.configs["updates"];
+      configs = json.decode(utf8.decode(response.bodyBytes));
+      var updates = configs["updates"];
       if (updates["force"]["version"] > version) {
         throw SkeletonException(
             StatusCode.C701_UPDATE_FORCE.value, updates["force"]["message"]);
@@ -71,22 +56,21 @@ class NetConnector extends IService {
             StatusCode.C700_UPDATE_NOTICE.value, updates["notice"]["message"]);
       }
       Pref.skipUpdate.setBool(false);
-      LoadingData.baseURL = loadingData.configs["host"];
-      LoaderWidget.baseURL = loadingData.configs['assetsServer']!;
-      LoaderWidget.hashMap = Map.castFrom(loadingData.configs['files']);
+      LoaderWidget.baseURL = configs["assetsServer"]!;
+      LoaderWidget.hashMap = Map.castFrom(configs["files"]);
       log("Config loaded.");
     } else {
       throw SkeletonException(
-          StatusCode.C999_UNKNOWN_ERROR.value, 'Failed to load config file');
+          StatusCode.C999_UNKNOWN_ERROR.value, "Failed to load config file");
     }
   }
 
   // Connect to nakama server
   Future<Session> connect() async {
     _nakamaClient = NakamaGrpcClient(
-        host: '192.168.1.133' /* loadingData.configs['host'] */,
-        port: loadingData.configs['port'],
-        serverKey: 'defaultkey',
+        host: "192.168.1.133" /* configs["host"] */,
+        port: configs["port"],
+        serverKey: "defaultkey",
         ssl: false);
 
     var timezone = DateTime.now().timeZoneOffset.inSeconds;
@@ -97,8 +81,6 @@ class NetConnector extends IService {
       "location": location,
       "timezone": "$timezone",
       "latestVersion": DeviceInfo.buildNumber,
-      "nativeLanguage": Pref.nativeLanguage.getString(),
-      "targetLanguage": Pref.targetLanguage.getString(),
       "displayName": "Player_${StringExtension.getRandomString(4)}",
       "device":
           '{"model":"${DeviceInfo.model}", "osVersion":"${DeviceInfo.osVersion}", "baseVersion":"${DeviceInfo.baseVersion}"}'
@@ -150,12 +132,12 @@ class NetConnector extends IService {
         throw Exception(res["message"]);
       }
     } catch (e) {
-      var error = '$e'.split('codeName: ')[1].split(",")[0];
+      var error = "$e".split("codeName: ")[1].split(",")[0];
       if (error == "UNAUTHENTICATED" ||
           error == "UNAVAILABLE" ||
           error == "NOT_FOUND" ||
           error == "INTERNAL") {
-        error = 'error_${error.toLowerCase()}';
+        error = "error_${error.toLowerCase()}";
       } else {
         error = "RPC: $id Error: $e";
       }
@@ -168,11 +150,11 @@ class NetConnector extends IService {
     http.Response? response;
     try {
       var json = jsonEncode(params);
-      final url = Uri.parse('${LoadingData.baseURL}/$id');
+      final url = Uri.parse("${configs["host"]}/$id");
       log("${url.toString()} $json");
       response = await http.post(url, headers: {}, body: params);
     } catch (e) {
-      var error = '$e';
+      var error = "$e";
       if (_isDisconnected(error)) {
         throw SkeletonException(
             StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
@@ -186,11 +168,11 @@ class NetConnector extends IService {
 
     log(response.body);
     var responseData = jsonDecode(response.body);
-    if (!responseData['status']) {
-      // var statusCode = (responseData['data']['code'] as int).toStatus();
-      throw SkeletonException(-1, responseData['data']);
+    if (!responseData["status"]) {
+      // var statusCode = (responseData["data"]["code"] as int).toStatus();
+      throw SkeletonException(-1, responseData["data"]);
     }
-    return responseData['data'];
+    return responseData["data"];
   }
 
   bool _isDisconnected(String error) {
