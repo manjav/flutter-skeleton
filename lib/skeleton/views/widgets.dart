@@ -204,56 +204,62 @@ class Widgets {
     String? hintText,
     Widget? suffixIcon,
     double? width,
+    double? height,
     int? maxLength,
     int? maxLines,
-    double radius = 8,
+    double? radius,
     TextEditingController? controller,
     Function(String)? onChange,
     Function(String)? onSubmit,
+    Color? color,
     Color? borderColor,
   }) {
     var style = TStyles.medium.copyWith(height: 1.5);
+    color = color ?? TColors.primary0;
+    borderColor = borderColor ?? TColors.primary30;
+    radius = radius ?? 24.d;
     return rect(
         radius: radius,
-        color: TColors.primary10,
-        width: width ?? 720.d,
+        color: color,
+        width: width ?? 320.d,
+        height: height ?? 40.d,
         child: TextField(
             style: style,
             maxLines: maxLines,
             autofocus: autofocus,
-            maxLength: maxLength == 1 ? null : maxLength,
             controller: controller,
-            textAlign: TextAlign.center,
             onChanged: onChange,
             onSubmitted: onSubmit,
+            textAlign: TextAlign.center,
+            maxLength: maxLength == 1 ? null : maxLength,
             onTapOutside: (p) => FocusManager.instance.primaryFocus?.unfocus(),
             decoration: InputDecoration(
+              contentPadding: EdgeInsets.zero,
               hintStyle: style,
               hintText: hintText,
-              contentPadding: EdgeInsets.all(16.d),
               suffixIcon: suffixIcon,
-              border: _getBorder(radius, borderColor: borderColor),
-              enabledBorder: _getBorder(radius, borderColor: borderColor),
-              focusedBorder: _getBorder(radius, borderColor: borderColor),
-              errorBorder: _getBorder(radius, borderColor: borderColor),
-              disabledBorder: _getBorder(radius, borderColor: borderColor),
+              border: _getBorder(radius, borderColor, 1.d),
+              enabledBorder: _getBorder(radius, TColors.primary20, 1.d),
+              focusedBorder: _getBorder(radius, borderColor, 1.d),
+              errorBorder: _getBorder(radius, borderColor, 1.d),
+              disabledBorder: _getBorder(radius, borderColor, 1.d),
             )));
   }
 
-  static OutlineInputBorder _getBorder(double radius, {Color? borderColor}) =>
+  static OutlineInputBorder _getBorder(
+          double radius, Color borderColor, double width) =>
       OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius)),
-          borderSide:
-              BorderSide(color: borderColor ?? TColors.transparent, width: 2));
+          borderSide: BorderSide(color: borderColor, width: width));
 
   static Widget clipboardGetter(BuildContext context, String text,
       {double? width, double? height}) {
     return button(context,
         width: width ?? 720.d,
         height: height ?? 120.d,
+        color: TColors.primary80,
         margin: EdgeInsets.all(8.d),
         padding: EdgeInsets.symmetric(horizontal: 30.d),
-        color: TColors.primary80,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           SkinnedText(text),
