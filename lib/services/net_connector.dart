@@ -30,19 +30,19 @@ class NetConnector extends IService {
     await _loadConfigs(version);
 
     if (Pref.targetLanguage.getString().isNotEmpty) {
-    _session = await connect();
+      _session = await connect();
 
       // Load Contents
       var data = await rpc(rpcContentCategories);
       loadingData.contents = Contents.initialize(data);
 
-    // // Check internal version, public users avoidance
-    // var test = _config["updates"]["test"];
-    // if (test["version"] < version) {
-    //   if (!test["testers"].contains(loadData.account.id)) {
-    //     throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
-    //   }
-    // }
+      // // Check internal version, public users avoidance
+      // var test = _config["updates"]["test"];
+      // if (test["version"] < version) {
+      //   if (!test["testers"].contains(loadData.account.id)) {
+      //     throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
+      //   }
+      // }
     }
     super.initialize();
   }
@@ -60,7 +60,7 @@ class NetConnector extends IService {
       }
     }
     if (response!.statusCode == 200) {
-      loadingData.configs = json.decode(response.body);
+      loadingData.configs = json.decode(utf8.decode(response.bodyBytes));
       var updates = loadingData.configs["updates"];
       if (updates["force"]["version"] > version) {
         throw SkeletonException(
@@ -198,6 +198,36 @@ class NetConnector extends IService {
         error.contains("Connection refused") ||
         error.contains("Failed host lookup");
   }
+
+  /* 
+  Future<List<PublicAccount>> getAccounts(List userIds) async {
+    if (userIds.isEmpty) {
+      return [];
+    }
+    var data = await _nakamaClient.rpc(
+        session: _session!,
+        id: RpcId.accountsGet.name,
+        payload: userIds.join(','));
+    var accounts = <PublicAccount>[];
+    var list = data!.split('|');
+    for (var item in list) {
+      accounts.add(PublicAccount.fromMap(json.decode(item)));
+    }
+    return accounts;
+  }
+  Future<Result> getOrders() async {
+    var result = await rpc(RpcId.orderGet);
+    if (!result.response.isSuccess()) return result;
+    rules.orders.clear();
+    for (var orderData in result.data) {
+      var order = Order.fromData(orderData);
+      rules.orders[order.id] = order;
+    }
+    return Result(Responses.success, "", rules.orders);
+  }
+   */
+
   static const rpcContentCategories = "content_categories";
   static const rpcContentContents = "content_contents";
+  // {"groupId":"essential_introducing_en", "nativeLanguage":"en", "targetLanguage":"tr"}
 }
