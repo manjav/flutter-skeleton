@@ -62,6 +62,7 @@ flutter:
   # generate: true
 
   assets:
+    - assets/vectors/flags/
     - assets/animations/
     - assets/vectors/
     - assets/images/
