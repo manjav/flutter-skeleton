@@ -81,7 +81,7 @@ class SkinnedButton extends StatelessWidget {
                             width: (label != null && icon != null) ? 16.d : 0),
                         label == null
                             ? const SizedBox()
-                            : Text(label!, style: TStyles.large),
+                            : Text(label!, style: TStyles.largeInvert),
                       ])
                     : child!),
           );

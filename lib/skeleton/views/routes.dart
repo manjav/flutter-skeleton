@@ -3,7 +3,6 @@ class Routes {
   static const speak = "/speak";
   static const listen = "/listen";
   static const chat = "/chat";
-  static const stt = "/stt";
   static const word = "/word";
 
   static const popupMessage = "/popupMessage";
