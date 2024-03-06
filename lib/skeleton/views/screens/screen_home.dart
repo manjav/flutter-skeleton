@@ -128,7 +128,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Widget _groupsBuilder(ParentContent category, int index) {
     return Widgets.rect(
       radius: 12.d,
-      color: TColors.primary10,
+      color: TColors.white50,
       padding: EdgeInsets.all(8.d),
       child: Column(
         children: [
@@ -140,23 +140,38 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget _contentItemBuilder(ParentContent content) {
-    return Widgets.button(context,
-      height: 64.d,
+    return Widgets.rect(
       radius: 16.d,
-      // color: TColors.cyan,
       padding: EdgeInsets.all(12.d),
-      // margin: const EdgeInsets.all(12),
-      child: Row(children: [
-        Image.network(content.iconUrl, height: 100.d),
-        SizedBox(width: 12.d),
-        SizedBox(
-          width: 250.d,
-          child: Text(content.title, style: TStyles.small),
-        )
-        ]), onPressed: () async {
+      child: Column(
+        children: [
+          _lessonItemBuilder(content, 2),
+          _lessonItemBuilder(content, 1),
+          _lessonItemBuilder(content, 0),
+          Row(children: [
+            Image.network(content.iconUrl, height: 40.d),
+            SizedBox(width: 12.d),
+            SizedBox(
+              width: DeviceInfo.size.width * 0.6,
+              child: Text(content.title, style: TStyles.small),
+            )
+          ])
+        ],
+      ),
+    );
+  }
+
+  _lessonItemBuilder(ParentContent content, int type) {
+    return Widgets.button(context,
+        height: 50.d,
+        width: DeviceInfo.size.width * 0.6,
+        child: Text("lesson_$type".l()), onPressed: () async {
       if (content.children.isEmpty) {
         await serviceLocator<AccountProvider>().loadContent(content);
       }
+      serviceLocator<RouteService>().to(
+          switch (type) { 1 => Routes.listen, _ => Routes.speak },
+          args: {"content": content, "challengeMode": type == 2});
     });
   }
 }
