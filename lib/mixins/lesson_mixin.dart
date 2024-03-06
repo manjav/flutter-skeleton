@@ -69,11 +69,12 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                 padding, paddingTop + padding * 6, padding, _getFooterHeight()),
             itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
         Positioned(
-            top: paddingTop + padding,
-            left: padding,
-            right: padding,
-            height: 64.d,
-            child: _headerBuilder()),
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 76.d,
+            child: _headerBuilder(
+                EdgeInsets.fromLTRB(padding, padding, padding, 0))),
         ValueListenableBuilder(
             valueListenable: inputSize,
             builder: (context, value, child) {
@@ -111,6 +112,21 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Widget _headerBuilder(EdgeInsetsGeometry padding) {
     var person = (content!.children[0] as Talk).personId;
+    return Widgets.rect(
+      padding: padding,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: const [
+              0.7,
+              1
+            ],
+            colors: <Color>[
+              TColors.primary10,
+              TColors.primary10.withOpacity(0)
+            ]),
+      ),
       child: Row(
       children: [
           Avatar(person, 64.d),
@@ -157,6 +173,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
           onPressed: () => Navigator.pop(context),
         )
       ],
+      ),
     );
   }
 
