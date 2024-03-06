@@ -40,7 +40,7 @@ class AccountProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Contents> getContents() async {
+  Future<Contents> loadCategories() async {
     // Load Contents
     var data = await serviceLocator<NetConnector>().rpc("content_categories");
     contents = Contents.initialize(data);
@@ -48,5 +48,21 @@ class AccountProvider extends ChangeNotifier {
     notifyListeners();
     return contents!;
   }
-  // static const rpcContentContents = "content_contents";
+
+  Future<void> loadContent(ParentContent group) async {
+    // Load Contents
+    var list = await serviceLocator<NetConnector>()
+        .rpc("content_contents", params: {"groupId": group.id});
+    var messages = <Talk>[];
+    for (var item in list) {
+      messages.add(
+        Talk.initialize(
+          item,
+          account.user.langTag!,
+          metadata["targetLanguage"],
+        ),
+      );
+    }
+    group.children = messages;
+  }
 }

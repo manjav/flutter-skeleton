@@ -11,7 +11,7 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
-  List<Content> _categories = [];
+  List<ParentContent> _categories = [];
   LoadingController controller = Get.put(LoadingController());
   final ValueNotifier<int> _selectedCategory = ValueNotifier(0);
 
@@ -36,7 +36,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           await Future.delayed(const Duration(seconds: 1));
           await serviceLocator<RouteService>().to(Routes.onboarding);
         }
-        _categories = (await account.getContents()).categories;
+        _categories = (await account.loadCategories()).categories;
         setState(() {});
         // await Future.delayed(const Duration(seconds: 1));
         // serviceLocator<RouteService>().to(Routes.popupMentor, args: {
@@ -120,22 +120,22 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  Widget _groupsBuilder(Content category, int index) {
+  Widget _groupsBuilder(ParentContent category, int index) {
     return Widgets.rect(
       radius: 12.d,
       color: TColors.primary10,
       padding: EdgeInsets.all(8.d),
       child: Column(
         children: [
-          for (var i = 0; i < category.children.length; i++)
-            _contentItemBuilder(category.children[i])
+          for (var i = category.children.length - 1; i >= 0; i--)
+            _contentItemBuilder(category.children[i] as ParentContent)
         ],
       ),
     );
   }
 
-  Widget _contentItemBuilder(Content content) {
-    return Widgets.rect(
+  Widget _contentItemBuilder(ParentContent content) {
+    return Widgets.button(context,
       height: 64.d,
       radius: 16.d,
       // color: TColors.cyan,
@@ -148,7 +148,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           width: 250.d,
           child: Text(content.title, style: TStyles.small),
         )
-      ]),
-    );
+        ]), onPressed: () async {
+      if (content.children.isEmpty) {
+        await serviceLocator<AccountProvider>().loadContent(content);
+      }
+    });
   }
 }
