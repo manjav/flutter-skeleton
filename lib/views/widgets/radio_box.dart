@@ -38,6 +38,8 @@ class _RadioBoxState extends State<RadioBox> {
           alignment: Alignment.center,
           children: [
             Widgets.rect(
+                constraints:
+                    BoxConstraints(maxWidth: DeviceInfo.size.width * 0.84),
                 margin:
                     EdgeInsets.fromLTRB(margin, margin * 2 - 2.d, margin, 0),
                 padding: EdgeInsets.fromLTRB(

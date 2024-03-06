@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
@@ -44,7 +45,8 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
     return Column(children: [
       DirText("speaking_hint".l()),
       SizedBox(height: 24.d),
-      ListenerBox(currentTalk!.chats[1])
+      ListenerBox(content!.children[index] as Talk,
+          challengeMode: Get.arguments["challengeMode"])
     ]);
   }
 }

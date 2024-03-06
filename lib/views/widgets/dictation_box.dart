@@ -21,42 +21,42 @@ class _DictationBoxState extends State<DictationBox> {
       builder: (context, value, child) {
         final talk = dictator.currentStage!;
         return Padding(
-        padding: EdgeInsets.all(8.d),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Widgets.button(
-                  context,
-                  radius: size,
-                  width: size * 0.5,
-                  height: size * 0.5,
-                  color: TColors.primary10,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(12.d),
-                  child: StreamBuilder(
-                    stream: serviceLocator<Sounds>()
+          padding: EdgeInsets.all(8.d),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Widgets.button(
+                    context,
+                    radius: size,
+                    width: size * 0.5,
+                    height: size * 0.5,
+                    color: TColors.primary10,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(12.d),
+                    child: StreamBuilder(
+                      stream: serviceLocator<Sounds>()
                           .getPlayer(talk.targetValue)
-                        .onPlayerStateChanged,
-                    builder: (context, snapshot) => Asset.load<SvgPicture>(
+                          .onPlayerStateChanged,
+                      builder: (context, snapshot) => Asset.load<SvgPicture>(
                           snapshot.data == PlayerState.playing
                               ? "stop"
                               : "play",
-                        width: size * 0.3),
-                  ),
-                  onPressed: () => serviceLocator<Speaker>()
+                          width: size * 0.3),
+                    ),
+                    onPressed: () => serviceLocator<Speaker>()
                         .play(talk.targetValue, narrator: talk.type.narrator),
-                ),
+                  ),
                   DirText("listening_hint".l()),
-              ],
-            ),
-            SizedBox(height: 8.d),
-            _answerBox(dictator),
-            SizedBox(height: 8.d),
-            _wrapper(dictator.choices.length, _choiceItemBuilder),
-          ],
-        ),
+                ],
+              ),
+              SizedBox(height: 8.d),
+              _answerBox(dictator),
+              SizedBox(height: 8.d),
+              _wrapper(dictator.choices.length, _choiceItemBuilder),
+            ],
+          ),
         );
       },
     );
