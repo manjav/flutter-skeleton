@@ -12,15 +12,16 @@ class LessonListenScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<LessonListenScreen>
     with LessonMixin {
   @override
-  Future<void> nextStep(int index) async {
-    if (index < scenario!.thread.length) {
-      serviceLocator<Dictator>().initialize(args: [scenario!.thread[index]]);
+  Future<void> nextStep() async {
+    if (index < content!.children.length) {
+      serviceLocator<Dictator>()
+          .initialize(args: [content!.children[index + 1]]);
     }
-    await super.nextStep(index);
+    await super.nextStep();
   }
 
   @override
-  void startQuiz(Chat chat) {
+  void startQuiz(Talk talk) {
     serviceLocator<Dictator>().start(onResult: _onQuizResult);
   }
 

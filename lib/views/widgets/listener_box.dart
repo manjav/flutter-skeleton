@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../app_export.dart';
 
 class ListenerBox extends StatelessWidget {
-  final Chat pattern;
+  final Talk pattern;
   final bool challengeMode;
   ListenerBox(this.pattern, {this.challengeMode = false, super.key});
   final _defaultStyle = TStyles.medium.copyWith(color: TColors.transparent);
@@ -27,14 +27,14 @@ class ListenerBox extends StatelessWidget {
           padding: EdgeInsets.all(16.d),
           child: StreamBuilder(
             stream: serviceLocator<Sounds>()
-                .getPlayer(pattern.value)
+                .getPlayer(pattern.targetValue)
                 .onPlayerStateChanged,
             builder: (context, snapshot) => Asset.load<SvgPicture>(
                 snapshot.data == PlayerState.playing ? "stop" : "play",
                 width: size * 0.3),
           ),
           onPressed: () => serviceLocator<Speaker>()
-              .play(pattern.value, narrator: pattern.type.narrator),
+              .play(pattern.targetValue, narrator: pattern.type.narrator),
         ),
         Expanded(
           child: ValueListenableBuilder(
@@ -133,27 +133,27 @@ class ListenerBox extends StatelessWidget {
   }
 
   List<TextSpan> _getWords(String value) {
-    if (pattern.value == value) {
-      return [TextSpan(text: pattern.value, style: _correctStyle)];
+    var target = pattern.targetValue;
+    if (pattern.targetValue == value) {
+      return [TextSpan(text: target, style: _correctStyle)];
     }
-    var index = pattern.value.toLowerCase().indexOf(value);
+    var index = target.toLowerCase().indexOf(value);
     if (index > -1) {
       var spans = <TextSpan>[];
       if (index > 0) {
-        spans.add(TextSpan(text: pattern.value.substring(0, index)));
+        spans.add(TextSpan(text: target.substring(0, index)));
       }
       if (value.isNotEmpty) {
         spans.add(TextSpan(
-            text: pattern.value.substring(index, index + value.length),
+            text: target.substring(index, index + value.length),
             style: _correctStyle));
       }
-      if (index + value.length < pattern.value.length - 1) {
-        spans
-            .add(TextSpan(text: pattern.value.substring(index + value.length)));
+      if (index + value.length < target.length - 1) {
+        spans.add(TextSpan(text: target.substring(index + value.length)));
       }
       return spans;
     } else {
-      return [TextSpan(text: pattern.value)];
+      return [TextSpan(text: target)];
     }
   }
 }

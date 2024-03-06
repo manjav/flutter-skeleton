@@ -13,13 +13,13 @@ class Dictator extends Quiz {
   @override
   initialize({List<Object>? args}) async {
     currentStage = args![0] as Talk;
-    var chat = currentStage!.chats.where((c) => c.type == ChatType.user).first;
-    _pattern = chat.value.split(" ");
+    var text = currentStage!.targetValue.simple();
+    _pattern = text.split(" ");
     charByChar = _pattern.length < 2;
     if (charByChar) {
-      _pattern = switch (chat.value.length) {
-        < 5 => chat.value.split(""),
-        _ => chat.value.splitByLength(2),
+      _pattern = switch (text.length) {
+        < 3 => text.split(""),
+        _ => text.splitByLength(3),
       };
     }
 

@@ -51,13 +51,15 @@ class AccountProvider extends ChangeNotifier {
 
   Future<void> loadContent(ParentContent group) async {
     // Load Contents
-    var list = await serviceLocator<NetConnector>()
+    List list = await serviceLocator<NetConnector>()
         .rpc("content_contents", params: {"groupId": group.id});
+    list.sort((a, b) => a["index"] - b["index"]);
     var messages = <Talk>[];
-    for (var item in list) {
+    for (var i = 0; i < list.length; i++) {
       messages.add(
         Talk.initialize(
-          item,
+          i,
+          list[i],
           account.user.langTag!,
           metadata["targetLanguage"],
         ),

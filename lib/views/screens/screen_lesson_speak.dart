@@ -12,14 +12,14 @@ class LessonSpeakScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
     with LessonMixin {
   @override
-  Future<void> startQuiz(Chat chat) async {
-    // // if (kDebugMode) {
+  Future<void> startQuiz(Talk talk) async {
+    // if (kDebugMode) {
     //   await Future.delayed(const Duration(seconds: 2));
-    //   _onSTTResult(STTState.success, chat.value);
+    //   _onQuizResult(QuizState.success, talk.targetValue);
     // } else {
     serviceLocator<STT>().start(
-      locale: scenario!.targetLanguage,
-      pattern: chat.value,
+      locale: serviceLocator<AccountProvider>().metadata["targetLanguage"],
+      pattern: talk.targetValue.simple(),
       onResult: _onQuizResult,
     );
     // }
@@ -42,7 +42,7 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
   @override
   Widget footerBuilder() {
     return Column(children: [
-      DirText(currentTalk!.chats.first.value),
+      DirText("speaking_hint".l()),
       SizedBox(height: 24.d),
       ListenerBox(currentTalk!.chats[1])
     ]);

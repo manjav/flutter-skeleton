@@ -16,12 +16,11 @@ class _DictationBoxState extends State<DictationBox> {
   Widget build(BuildContext context) {
     final dictator = serviceLocator<Dictator>();
     final size = 80.d;
-    final chat = dictator.currentStage!.chats
-        .where((c) => c.type == ChatType.user)
-        .first;
     return ValueListenableBuilder<List<String>>(
       valueListenable: dictator.answers,
-      builder: (context, value, child) => Padding(
+      builder: (context, value, child) {
+        final talk = dictator.currentStage!;
+        return Padding(
         padding: EdgeInsets.all(8.d),
         child: Column(
           children: [
@@ -38,14 +37,14 @@ class _DictationBoxState extends State<DictationBox> {
                   padding: EdgeInsets.all(12.d),
                   child: StreamBuilder(
                     stream: serviceLocator<Sounds>()
-                        .getPlayer(chat.value)
+                          .getPlayer(talk.targetValue)
                         .onPlayerStateChanged,
                     builder: (context, snapshot) => Asset.load<SvgPicture>(
                         snapshot.data == PlayerState.playing ? "stop" : "play",
                         width: size * 0.3),
                   ),
                   onPressed: () => serviceLocator<Speaker>()
-                      .play(chat.value, narrator: chat.type.narrator),
+                        .play(talk.targetValue, narrator: talk.type.narrator),
                 ),
                 DirText(dictator.currentStage!.chats.first.value),
               ],

@@ -1,3 +1,5 @@
+import 'package:lingai/app_export.dart';
+
 class Contents {
   List<ParentContent> categories = [];
   Contents.initialize(Map map) {
@@ -44,6 +46,7 @@ class ParentContent extends Content {
 
 class Talk extends Content {
   final String personId, nativeValue, targetValue;
+  TalkType type = TalkType.none;
   Talk(
     super.id,
     super.index,
@@ -52,13 +55,32 @@ class Talk extends Content {
     this.targetValue,
   );
   static Talk initialize(
-      Map map, String nativeLanguage, String targetLanguage) {
-    return Talk(
+      int index, Map map, String nativeLanguage, String targetLanguage) {
+    var talk = Talk(
       map["id"],
-      map["index"],
+      index,
       map["person_id"],
       map[nativeLanguage],
       map[targetLanguage],
     );
+    talk.type = talk.index % 2 == 0 ? TalkType.bot : TalkType.user;
+    return talk;
   }
+}
+
+enum TalkType { none, hint, user, bot }
+
+extension TalkTypeExtension on TalkType {
+  static TalkType getEnum(String type) {
+    for (var value in TalkType.values) {
+      if (value.name == type) return value;
+    }
+    return TalkType.none;
+  }
+
+  Narrator get narrator => switch (this) {
+        TalkType.user => Narrator.nova,
+        TalkType.bot => Narrator.fable,
+        _ => Narrator.onyx,
+      };
 }
