@@ -100,8 +100,14 @@ extension StringExtension on String {
   }
 
   List<String> splitByLength(int length) {
-    if (this.length < length) return [this];
+    if (this.length <= length) return [this];
     return [substring(0, length), ...substring(length).splitByLength(length)];
+  }
+
+  String simple() {
+    return replaceAll(RegExp(r'[!?.,;:]'), '')
+        .replaceAll(RegExp(r'’'), "'")
+        .toLowerCase();
   }
 }
 
