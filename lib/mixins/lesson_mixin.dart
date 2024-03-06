@@ -1,65 +1,53 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../app_export.dart';
 
 mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  Scenario? scenario;
+  ParentContent? content;
   final GlobalKey<AnimatedListState> _chatListKey =
       GlobalKey<AnimatedListState>();
 
-  final List<Chat> _chatItems = [];
-  Talk? currentTalk;
-  final ScrollController _chatScrollController = ScrollController();
+  int index = 0;
+  final List<Talk> _chatItems = [];
   final ValueNotifier<double> inputSize = ValueNotifier(0);
   final ValueNotifier<Offset> _progress = ValueNotifier(const Offset(0, 0));
+  final ScrollController _chatScrollController = ScrollController();
 
   final GlobalKey _footerKey = GlobalKey();
 
   @override
   void initState() {
-    _loadScenerio();
+    content = Get.arguments["content"];
+    nextStep();
     super.initState();
   }
 
-  Future<void> _loadScenerio() async {
-    var data =
-        await rootBundle.loadString("assets/texts/${Get.arguments}.json");
-    scenario = Scenario(jsonDecode(data));
-    nextStep(0);
-  }
-
-  Future<void> nextStep(int index) async {
-    const duration = Duration(milliseconds: 300);
-    if (index >= scenario!.thread.length) {
-      await Future.delayed(duration);
+  Future<void> nextStep() async {
+    const duration = Duration(milliseconds: 500);
+    if (index >= content!.children.length) {
       await Future.delayed(duration);
       if (mounted) {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }
       return;
     }
-    setState(() => currentTalk = scenario!.thread[index]);
+    var talk = content!.children[index] as Talk;
     await Future.delayed(duration);
+    await _insertChat(talk);
 
-    for (var chat in currentTalk!.chats) {
-      if (chat.type == ChatType.bot) {
-        continue;
-      }
+    await serviceLocator<Speaker>()
+        .play(talk.targetValue, narrator: talk.type.narrator);
 
+    ++index;
+    talk = content!.children[index] as Talk;
       inputSize.value = _getFooterHeight();
-      await serviceLocator<Speaker>()
-          .play(chat.value, narrator: chat.type.narrator);
-
-      if (chat.type == ChatType.user) {
-        startQuiz(chat);
-      }
-    }
+    // await serviceLocator<Speaker>()
+    //     .play(currentTalk!.targetValue, narrator: currentTalk!.type.narrator);
+    startQuiz(talk);
   }
 
   @override
@@ -67,7 +55,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   @override
   Widget contentFactory(double paddingTop) {
-    if (scenario == null) {
+    if (content == null) {
       return const SizedBox();
     }
 
@@ -121,10 +109,11 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
-  Widget _headerBuilder() {
-    return Row(
+  Widget _headerBuilder(EdgeInsetsGeometry padding) {
+    var person = (content!.children[0] as Talk).personId;
+      child: Row(
       children: [
-        Avatar(scenario!.botAvatar, 64.d),
+          Avatar(person, 64.d),
         SizedBox(width: 12.d),
         Expanded(
             child: ValueListenableBuilder(
@@ -133,7 +122,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(scenario!.botName),
+                Text(person),
               TweenAnimationBuilder<double>(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut,
@@ -150,7 +139,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                 ),
               ),
               Text(
-                "${currentTalk!.index + 1} / ${scenario!.thread.length}",
+                  "${index + 1} / ${content!.children.length}",
                 style: TStyles.small.copyWith(color: TColors.primary30),
               ),
             ],
@@ -173,14 +162,14 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Widget footerBuilder() => const SizedBox();
 
-  Widget _chatItemBuilder(Chat chat, Animation<double> animation) {
-    var tip = chat.type == ChatType.user
+  Widget _chatItemBuilder(Talk talk, Animation<double> animation) {
+    var tip = talk.type == TalkType.user
         ? BalloonTipPosition.rightBottom
         : BalloonTipPosition.leftTop;
     return ScaleTransition(
-      alignment: switch (chat.type) {
-        ChatType.user => Alignment.bottomRight,
-        ChatType.bot => Alignment.topLeft,
+      alignment: switch (talk.type) {
+        TalkType.user => Alignment.bottomRight,
+        TalkType.bot => Alignment.topLeft,
         _ => Alignment.center,
       },
       scale: CurvedAnimation(
@@ -188,23 +177,19 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         curve: Curves.easeOutBack,
       ),
       child: RadioBox(
-        chat.value,
+        talk.targetValue,
         ballonPosition: tip,
-        narrator: chat.type.narrator,
-        translation: chat.nativeLanguage,
+        narrator: talk.type.narrator,
+        translation: talk.nativeValue,
       ),
     );
   }
 
   Future<void> onQuizResult(bool isSuccess) async {
-    const duration = Duration(milliseconds: 1500);
-
+    const duration = Duration(milliseconds: 500);
     if (isSuccess) {
-      _progress.value = Offset(
-        currentTalk!.index / scenario!.thread.length,
-        (currentTalk!.index + 1) / scenario!.thread.length,
-      );
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
+
       // Waiting for celebration
       await Future.delayed(duration);
       inputSize.value = 0;
@@ -221,7 +206,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       }
 
       await Future.delayed(duration);
-      nextStep(currentTalk!.index + 1);
+      index++;
+      nextStep();
     } else {
       serviceLocator<Sounds>().play("wrong");
     }
