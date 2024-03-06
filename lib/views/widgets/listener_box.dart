@@ -104,7 +104,7 @@ class ListenerBox extends StatelessWidget {
   Widget _answeringBuilder(String value) {
     if (challengeMode) {
       var items = <Widget>[];
-      var patterns = pattern.value.toLowerCase().split(" ");
+      var patterns = pattern.targetValue.toLowerCase().split(" ");
       var values = value.split(" ");
       for (var i = 0; i < patterns.length; i++) {
         var style = _defaultStyle;

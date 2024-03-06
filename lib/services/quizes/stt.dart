@@ -40,7 +40,9 @@ class STT extends Quiz {
   void _resultListener(SpeechRecognitionResult result) {
     this.result = result;
     _proccessResult();
-    onResult?.call(state.value, result.recognizedWords);
+    if (result.finalResult) {
+      onResult?.call(state.value, result.recognizedWords);
+    }
     log('Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
   }
 
@@ -114,9 +116,10 @@ class STT extends Quiz {
       // var words = result.alternates.where((a) =>
       //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
       // words.first.recognizedWords;
+      // print("${result.confidence} $pattern ${result.recognizedWords.simple()}");
       recognizedWords.value = result.recognizedWords;
       if (result.finalResult) {
-        state.value = result.recognizedWords == pattern
+        state.value = result.recognizedWords.simple() == pattern
             ? QuizState.success
             : QuizState.fail;
       }
