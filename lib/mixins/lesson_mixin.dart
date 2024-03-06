@@ -44,7 +44,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
     ++index;
     talk = content!.children[index] as Talk;
-      inputSize.value = _getFooterHeight();
+    inputSize.value = _getFooterHeight();
     // await serviceLocator<Speaker>()
     //     .play(currentTalk!.targetValue, narrator: currentTalk!.type.narrator);
     startQuiz(talk);
@@ -128,51 +128,51 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             ]),
       ),
       child: Row(
-      children: [
+        children: [
           Avatar(person, 64.d),
-        SizedBox(width: 12.d),
-        Expanded(
-            child: ValueListenableBuilder(
-          valueListenable: _progress,
-          builder: (context, value, child) => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          SizedBox(width: 12.d),
+          Expanded(
+              child: ValueListenableBuilder(
+            valueListenable: _progress,
+            builder: (context, value, child) => Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(person),
-              TweenAnimationBuilder<double>(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-                tween: Tween(
-                  begin: value.dx,
-                  end: value.dy,
+                TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  tween: Tween(
+                    begin: value.dx,
+                    end: value.dy,
+                  ),
+                  builder: (context, value, _) => LinearProgressIndicator(
+                    minHeight: 6.d,
+                    value: value,
+                    color: TColors.green,
+                    backgroundColor: TColors.primary20,
+                    borderRadius: BorderRadius.all(Radius.circular(6.d)),
+                  ),
                 ),
-                builder: (context, value, _) => LinearProgressIndicator(
-                  minHeight: 6.d,
-                  value: value,
-                  color: TColors.green,
-                  backgroundColor: TColors.primary20,
-                  borderRadius: BorderRadius.all(Radius.circular(6.d)),
-                ),
-              ),
-              Text(
+                Text(
                   "${index + 1} / ${content!.children.length}",
-                style: TStyles.small.copyWith(color: TColors.primary30),
-              ),
-            ],
-          ),
-        )),
-        SizedBox(width: 12.d),
-        Widgets.button(
-          context,
-          width: 32.d,
-          height: 32.d,
-          radius: 32.d,
-          padding: EdgeInsets.all(8.d),
-          color: TColors.primary20,
-          child: Asset.load<SvgPicture>("close"),
-          onPressed: () => Navigator.pop(context),
-        )
-      ],
+                  style: TStyles.small.copyWith(color: TColors.primary30),
+                ),
+              ],
+            ),
+          )),
+          SizedBox(width: 12.d),
+          Widgets.button(
+            context,
+            width: 32.d,
+            height: 32.d,
+            radius: 32.d,
+            padding: EdgeInsets.all(8.d),
+            color: TColors.primary20,
+            child: Asset.load<SvgPicture>("close"),
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
       ),
     );
   }
@@ -210,17 +210,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       // Waiting for celebration
       await Future.delayed(duration);
       inputSize.value = 0;
-      // Move items to chat list
-      for (var item in currentTalk!.chats) {
-        if (item.isChat) {
-          // Bot answering
-          if (item.type == ChatType.bot) {
-            serviceLocator<Speaker>()
-                .play(item.value, narrator: item.type.narrator);
-          }
-          await _insertChat(item);
-        }
-      }
+      await _insertChat(content!.children[index] as Talk);
 
       await Future.delayed(duration);
       index++;
@@ -230,7 +220,11 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     }
   }
 
-  Future<void> _insertChat(Chat item) async {
+  Future<void> _insertChat(Talk item) async {
+    _progress.value = Offset(
+      index / content!.children.length,
+      (index + 1) / content!.children.length,
+    );
     const duration = Duration(milliseconds: 500);
     _chatListKey.currentState?.insertItem(_chatItems.length);
     _chatItems.add(item);
@@ -242,7 +236,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     await Future.delayed(duration);
   }
 
-  void startQuiz(Chat chat) {}
+  void startQuiz(Talk chat) {}
 
   double _getFooterHeight() {
     double height = 500.d;
