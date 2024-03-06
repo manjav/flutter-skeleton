@@ -86,6 +86,6 @@ extension LocalizationIntExtension on int {
 }
 
 class DirText extends Text {
-  DirText(super.text, {super.key, super.style})
+  DirText(super.text, {super.key, super.style, super.textAlign})
       : super(textDirection: text.getDirection());
 }

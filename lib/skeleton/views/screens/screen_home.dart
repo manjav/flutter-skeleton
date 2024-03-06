@@ -71,18 +71,23 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   Widget _categoryItemBuilder(BuildContext context, int index) {
     var category = _categories[index];
+    const colors = [
+      TColors.cyan,
+      TColors.orange,
+      TColors.blue,
+      TColors.green,
+      TColors.teal,
+      TColors.primary60,
+      TColors.red,
+      TColors.gray
+    ];
     return ValueListenableBuilder(
       valueListenable: _selectedCategory,
       builder: (context, value, child) {
         var isSelected = value == index;
         return Widgets.button(
           context,
-          color: [
-            TColors.cyan,
-            TColors.orange,
-            TColors.blue,
-            TColors.green,
-          ][index],
+          color: colors[index % colors.length],
           padding: EdgeInsets.all(12.d),
           margin: const EdgeInsets.all(12),
           child: Column(

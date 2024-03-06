@@ -40,13 +40,15 @@ class _DictationBoxState extends State<DictationBox> {
                           .getPlayer(talk.targetValue)
                         .onPlayerStateChanged,
                     builder: (context, snapshot) => Asset.load<SvgPicture>(
-                        snapshot.data == PlayerState.playing ? "stop" : "play",
+                          snapshot.data == PlayerState.playing
+                              ? "stop"
+                              : "play",
                         width: size * 0.3),
                   ),
                   onPressed: () => serviceLocator<Speaker>()
                         .play(talk.targetValue, narrator: talk.type.narrator),
                 ),
-                DirText(dictator.currentStage!.chats.first.value),
+                  DirText("listening_hint".l()),
               ],
             ),
             SizedBox(height: 8.d),
@@ -55,7 +57,8 @@ class _DictationBoxState extends State<DictationBox> {
             _wrapper(dictator.choices.length, _choiceItemBuilder),
           ],
         ),
-      ),
+        );
+      },
     );
   }
 

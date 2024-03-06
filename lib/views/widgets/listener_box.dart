@@ -8,9 +8,9 @@ class ListenerBox extends StatelessWidget {
   final Talk pattern;
   final bool challengeMode;
   ListenerBox(this.pattern, {this.challengeMode = false, super.key});
-  final _defaultStyle = TStyles.medium.copyWith(color: TColors.transparent);
+  final _defaultStyle = TStyles.medium.copyWith(height: 1);
   final _correctStyle = TStyles.medium
-      .copyWith(color: TColors.green, fontWeight: FontWeight.w900);
+      .copyWith(color: TColors.green, fontWeight: FontWeight.w900, height: 1);
   @override
   Widget build(BuildContext context) {
     var stt = serviceLocator<STT>();
@@ -36,6 +36,7 @@ class ListenerBox extends StatelessWidget {
           onPressed: () => serviceLocator<Speaker>()
               .play(pattern.targetValue, narrator: pattern.type.narrator),
         ),
+        SizedBox(width: 10.d),
         Expanded(
           child: ValueListenableBuilder(
               valueListenable: stt.recognizedWords,
@@ -44,13 +45,17 @@ class ListenerBox extends StatelessWidget {
                   children: [
                     _answeringBuilder(value),
                     SizedBox(height: 4.d),
-                    DirText(pattern.nativeLanguage,
+                    DirText(pattern.nativeValue,
                         style:
                             TStyles.small.copyWith(color: TColors.primary40)),
                     SizedBox(height: 6.d),
                     stt.state.value == QuizState.fail
-                        ? DirText(value,
-                            style: TStyles.small.copyWith(color: TColors.error))
+                        ? DirText(
+                            value,
+                            style: TStyles.small
+                                .copyWith(color: TColors.error, height: 1),
+                            textAlign: TextAlign.center,
+                          )
                         : const SizedBox(),
                   ],
                 );
@@ -125,8 +130,9 @@ class ListenerBox extends StatelessWidget {
     }
 
     return RichText(
+      textAlign: TextAlign.center,
       text: TextSpan(
-        style: TStyles.medium,
+        style: _defaultStyle,
         children: _getWords(value),
       ),
     );
