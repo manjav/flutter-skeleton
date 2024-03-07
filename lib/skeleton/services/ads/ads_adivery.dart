@@ -4,8 +4,7 @@ import 'package:adivery/adivery.dart';
 import 'package:adivery/adivery_ads.dart';
 import 'package:flutter/material.dart';
 
-import '../../skeleton.dart';
-
+import '../../export.dart';
 
 class AdAdivery extends AbstractAdSDK {
   static String platform = Platform.isAndroid ? "Android" : "iOS";
@@ -17,21 +16,26 @@ class AdAdivery extends AbstractAdSDK {
     AdiveryPlugin.initialize("ads_${sdk.name}_${platform.toLowerCase()}".l());
     AdiveryPlugin.setLoggingEnabled(testMode);
     AdiveryPlugin.addListener(
-        onError: (placementId, error) =>
-            updateState(findPlacement(placementId), AdState.failedLoad, error),
-        onInterstitialLoaded: (placementId) =>
-            updateState(findPlacement(placementId), AdState.loaded),
-        onRewardedLoaded: (placementId) => {},
-        onRewardedClosed: (placementId, isRewarded) {
-          var placement = findPlacement(placementId);
-          if (isRewarded) {
-            placement.reward = {"reward": true};
-          }
-          updateState(placement, AdState.closed);
-        });
+      onError: (placementId, error) {
+        updateState(findPlacement(placementId), AdState.failedLoad, error);
+      },
+      onInterstitialLoaded: (placementId) {
+        updateState(findPlacement(placementId), AdState.loaded);
+      },
+      onRewardedLoaded: (placementId) {
+        updateState(findPlacement(placementId), AdState.loaded);
+      },
+      onRewardedClosed: (placementId, isRewarded) {
+        var placement = findPlacement(placementId);
+        if (isRewarded) {
+          placement.reward = {"reward": true};
+        }
+        updateState(placement, AdState.closed);
+      },
+    );
 
-    request(AdType.interstitial);
-    request(AdType.native);
+    // request(AdType.interstitial);
+    // request(AdType.native);
     request(AdType.rewarded);
   }
 

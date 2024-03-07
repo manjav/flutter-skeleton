@@ -72,7 +72,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             onTap: () => serviceLocator<RouteService>().to(Routes.popupRanking),
           )),
       PositionedDirectional(
-          bottom: 180.d,
+          bottom: 195.d,
           end: 32.d,
           child: Widgets.button(
             context,
@@ -82,7 +82,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           )),
       account.bundles != null
           ? PositionedDirectional(
-              bottom: 200.d,
+              bottom: 210.d,
               end: 150.d,
               height: 150.d,
               child: StreamBuilder<dynamic>(
@@ -98,10 +98,21 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             )
           : const SizedBox(),
       PositionedDirectional(
+        bottom: 210.d,
+        end: 150.d,
+        height: 150.d,
+        child: _box(0, "06:12:06".l()),
+      ),
+      PositionedDirectional(
           bottom: 200.d,
-          end: 330.d,
+          end: 320.d,
           height: 150.d,
           child: _box(1, "chance_box".l())),
+      PositionedDirectional(
+          bottom: 210.d,
+          end: 510.d,
+          height: 150.d,
+          child: _box(2, "gift_reward".l())),
       _building(account, Buildings.defense),
       _building(account, Buildings.offense),
       _building(account, Buildings.base),
@@ -218,6 +229,10 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           BundleFeastOverlay(
             onClose: (data) {},
           ));
+    }
+    if (type == 2) {
+      var ads=serviceLocator<Ads>();
+      ads.show(AdType.rewarded);
     }
   }
 

@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  # adivery: ^4.6.1
+  adivery: ^4.6.1
   archive: ^3.4.8
   audioplayers: ^5.2.0
   collection: ^1.17.2
