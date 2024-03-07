@@ -194,10 +194,6 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           },
         ),
       );
-    } else if (state == RewardAnimationState.closing) {
-      var lastRoute = _opponent!.id == 0 ? Routes.quest : Routes.popupOpponents;
-      serviceLocator<RouteService>()
-          .popUntil((route) => route.settings.name == lastRoute);
     }
   }
 

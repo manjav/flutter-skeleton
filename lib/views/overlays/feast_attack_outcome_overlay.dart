@@ -194,6 +194,7 @@ class _AttackOutcomeStateFeastOverlay
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.closing) {
+       widget.onClose?.call(result);
       _animationController.animateBack(0,
           duration: const Duration(milliseconds: 500));
     }

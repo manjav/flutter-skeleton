@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
@@ -171,39 +171,94 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
 
   Widget _cityRenderer(int index, City city) {
     var size = index == 12 ? 200.d : 170.d;
+    var state = (_questsCount - widget.index * 130 - index * 10).toDouble();
     return Positioned(
       left: city.position.dx.d - size * 0.5,
       top: city.position.dy.d - size * 0.5,
-      child: LoaderWidget(AssetType.animation, "quest_map_button",
-          width: size, height: size, onRiveInit: (Artboard artboard) {
-        void setText(String name, String value) {
-          artboard.component<TextValueRun>(name)?.text = value;
-          artboard.component<TextValueRun>("${name}_stroke")?.text = value;
-          artboard.component<TextValueRun>("${name}_shadow")?.text = value;
-        }
+      child: state >= 0 && state <= 10
+          ? LoaderWidget(AssetType.animation, "quest_map_button",
+              width: size, height: size, onRiveInit: (Artboard artboard) {
+              void setText(String name, String value) {
+                artboard.component<TextValueRun>(name)?.text = value;
+                artboard.component<TextValueRun>("${name}_stroke")?.text =
+                    value;
+                artboard.component<TextValueRun>("${name}_shadow")?.text =
+                    value;
+              }
 
-        var controller =
-            StateMachineController.fromArtboard(artboard, "State Machine 1");
-        city.state = controller?.findInput<double>("state") as SMINumber;
-        var state = (_questsCount - widget.index * 130 - index * 10).toDouble();
-        city.state?.value = state;
-        setText("levelText", "${index + 1}");
-        controller?.addEventListener((event) => _riveEventsListener(event));
-        if (widget.index < 390) {
-          if (index == 1 ||
-              index == 4 ||
-              index == 7 ||
-              index == 10 ||
-              index == 12) {
-            controller?.findInput<double>("bubble")?.value = state > 10 ? 2 : 1;
-            controller?.findInput<double>("bubbleIndex")?.value =
-                index == 12 ? 0 : 1;
-          }
-        }
-        artboard.addController(controller!);
-      }),
+              var controller = StateMachineController.fromArtboard(
+                  artboard, "State Machine 1");
+              city.state = controller?.findInput<double>("state") as SMINumber;
+              city.state?.value = state;
+              setText("levelText", "${index + 1}");
+              controller
+                  ?.addEventListener((event) => _riveEventsListener(event));
+              if (widget.index < 390) {
+                if (index == 1 ||
+                    index == 4 ||
+                    index == 7 ||
+                    index == 10 ||
+                    index == 12) {
+                  controller?.findInput<double>("bubble")?.value =
+                      state > 10 ? 2 : 1;
+                  controller?.findInput<double>("bubbleIndex")?.value =
+                      index == 12 ? 0 : 1;
+                }
+              }
+              artboard.addController(controller!);
+            })
+          : FutureBuilder(
+              future: getImage(index, state),
+              builder: (ctx, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const SizedBox();
+                }
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.memory(
+                      snapshot.data!,
+                      width: size,
+                      height: size,
+                    ),
+                    state > 10 && index != 12
+                        ? Padding(
+                            padding: EdgeInsets.only(bottom: 10.d),
+                            child: SkinnedText(
+                              "${index + 1}",
+                              style: TStyles.medium.copyWith(
+                                color: TColors.primary,
+                              ),
+                            ),
+                          )
+                        : const SizedBox()
+                  ],
+                );
+              },
+            ),
     );
   }
+}
+
+Future<Uint8List> getImage(int index, double state) async {
+  var image = state < 0 ? "quest_map_button2" : "quest_map_button0";
+  if (index < 390) {
+    if (index == 1 || index == 4 || index == 7) {
+      image = state < 0 ? "quest_map_button3" : "quest_map_button1";
+    }
+    if (index == 10) {
+      image = state < 0 ? "quest_map_button3" : "quest_map_button1";
+    }
+    if (index == 12) {
+      image = "quest_map_button4";
+    }
+  }
+  var loader =
+      await LoaderWidget.load(AssetType.image, image, subFolder: "maps");
+  while (loader.metadata == null) {
+    await Future.delayed(const Duration(milliseconds: 100));
+  }
+  return loader.metadata as Uint8List;
 }
 
 class City {

@@ -213,6 +213,7 @@ class Account extends Player with MineMixin {
     coach_test = map["coach_test"];
     mobile_number_verified = map["mobile_number_verified"];
     wheel_of_fortune = map["wheel_of_fortune"];
+    bundles = map["bundles"];
 
     // Strings
     name = map["name"];
