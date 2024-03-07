@@ -213,6 +213,12 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           },
         ),
       );
+      // ignore: use_build_context_synchronously
+      accountProvider.update(context, _outcomeData);
+    } else if (state == RewardAnimationState.closing) {
+      var lastRoute = _opponent!.id == 0 ? Routes.quest : Routes.popupOpponents;
+      serviceLocator<RouteService>()
+          .popUntil((route) => route.settings.name == lastRoute);
     }
   }
 

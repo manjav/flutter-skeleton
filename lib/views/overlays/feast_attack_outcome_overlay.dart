@@ -202,7 +202,6 @@ class _AttackOutcomeStateFeastOverlay
 
   @override
   void dismiss() {
-    accountProvider.update(context, widget.args);
     _animationController.stop();
     super.dismiss();
   }
