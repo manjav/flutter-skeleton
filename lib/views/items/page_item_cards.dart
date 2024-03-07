@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
@@ -72,8 +73,8 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.touchable(
       context,
-      onTap: () => serviceLocator<RouteService>()
-          .to(Routes.popupCardDetails, args: {'card': card}),
+      onTap: () => serviceLocator<RouteService>().to(Routes.popupCardDetails,
+          args: {'card': card}, transition: Transition.fadeIn),
       child: CardItem(card,
           size: itemSize,
           key: getGlobalKey(card.id),

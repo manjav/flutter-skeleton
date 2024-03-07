@@ -17,7 +17,8 @@ class RouteService extends IService {
 
   String get currentRoute => Get.currentRoute;
 
-  Future<dynamic> to(String route, {dynamic args}) async {
+  Future<dynamic> to(String route,
+      {dynamic args, Transition transition = Transition.noTransition}) async {
     var page = pages.firstWhereOrNull((item) => item.route == route);
     if (page == null) throw Exception("route not found");
     if (page.type == RouteType.page || page.type == RouteType.popup) {
@@ -26,12 +27,13 @@ class RouteService extends IService {
         arguments: args,
         opaque: page.isOpaque,
         routeName: page.route,
-        transition: Transition.fadeIn,
+        transition: transition,
       );
     }
   }
 
-  Future<dynamic> replace(String route, {dynamic args}) async {
+  Future<dynamic> replace(String route,
+      {dynamic args, Transition transition = Transition.noTransition}) async {
     var page = pages.firstWhereOrNull((item) => item.route == route);
     if (page == null) throw Exception("route not found");
 
@@ -41,6 +43,7 @@ class RouteService extends IService {
         arguments: args,
         routeName: page.route,
         opaque: page.isOpaque,
+        transition: transition,
       );
     }
   }
