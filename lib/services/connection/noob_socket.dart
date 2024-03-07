@@ -21,6 +21,8 @@ class NoobSocket extends IService {
   String get _secret => "floatint201412bool23string";
   bool get isConnected =>
       DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 60;
+  bool get isSocketConnected =>
+      _socketConnection.isConnected();
 
   @override
   initialize({List<Object>? args}) async {
