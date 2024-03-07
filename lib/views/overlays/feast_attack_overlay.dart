@@ -74,14 +74,14 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       _playerCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
       if (_outcomeData["attack_bonus_power"] > 0) {
-        AccountCard cr =
+        AccountCard tribHelpCard =
             AccountCard(_account!, {"base_card_id": 103, "power": 400});
-        cr.base.name = "TribeHelp";
-        cr.power = Convert.toInt(_outcomeData["attack_bonus_power"]);
-        cr.base.rarity = 0;
-        cr.fruit.name = "TribeHelp";
-        cr.base.fruit.category = 3;
-        _playerCards.add(cr);
+        tribHelpCard.base.name = "TribeHelp";
+        tribHelpCard.power = Convert.toInt(_outcomeData["attack_bonus_power"]);
+        tribHelpCard.base.rarity = 0;
+        tribHelpCard.fruit.name = "TribeHelp";
+        tribHelpCard.base.fruit.category = 3;
+        _playerCards.add(tribHelpCard);
       }
       _playerCardsCount?.value = _playerCards.length.toDouble();
 
@@ -112,14 +112,14 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       _oppositeCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
       if (_outcomeData["def_bonus_power"] > 0) {
-        AccountCard cr =
+        AccountCard tribHelpCard =
             AccountCard(_account!, {"base_card_id": 103, "power": 400});
-        cr.base.name = "TribeHelp";
-        cr.power = Convert.toInt(_outcomeData["def_bonus_power"]);
-        cr.base.rarity = 0;
-        cr.fruit.name = "TribeHelp";
-        cr.base.fruit.category = 3;
-        _oppositeCards.add(cr);
+        tribHelpCard.base.name = "TribeHelp";
+        tribHelpCard.power = Convert.toInt(_outcomeData["def_bonus_power"]);
+        tribHelpCard.base.rarity = 0;
+        tribHelpCard.fruit.name = "TribeHelp";
+        tribHelpCard.base.fruit.category = 3;
+        _oppositeCards.add(tribHelpCard);
       }
       _oppositeCardsCount?.value = _oppositeCards.length.toDouble();
       return _outcomeData;
