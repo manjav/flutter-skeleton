@@ -1,3 +1,4 @@
+export 'auction_item.dart';
 export 'building_balloon.dart';
 export 'building_widget.dart';
 export 'card_holder.dart';
