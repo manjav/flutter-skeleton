@@ -32,7 +32,13 @@ class _PurchaseFeastOverlayState
 
     process(() async {
       if (!_item.inStore) {
-        await accountProvider.openPack(context, widget.args["item"].base);
+        if (_item.base.section == ShopSections.boost) {
+          var res = await accountProvider.boostPack(
+              context, widget.args["item"].base);
+          return res;
+        } else {
+          await accountProvider.openPack(context, widget.args["item"].base);
+        }
       } else {
         await Future.delayed(const Duration(milliseconds: 500));
       }

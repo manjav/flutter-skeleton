@@ -46,6 +46,7 @@ enum RpcId {
   buyHeroItem,
   buyCardPack,
   buyGoldPack,
+  buyBoostPack,
 
   //Tribe
   upgrade,
@@ -115,6 +116,7 @@ extension RpcIdEx on RpcId {
       RpcId.getShopitems => "store/getshopitems",
       RpcId.buyHeroItem => "store/buyheroitem",
       RpcId.buyCardPack => "store/buycardpack",
+      RpcId.buyBoostPack => "store/buyboostpack",
       RpcId.buyGoldPack => "store/buygoldpack",
       RpcId.tribeSearch => "tribe/find",
       RpcId.tribeCreate => "tribe/create",

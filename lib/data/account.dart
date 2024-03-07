@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../app_export.dart';
@@ -528,6 +529,14 @@ class Account extends Player with MineMixin {
       data["card"] = addCard(data["card"]);
     }
 
+    if (data.containsKey("xpboost_created_at")) {
+      xpBoostCreatedAt = Convert.toInt(data["xpboost_created_at"]);
+    }
+
+    if (data.containsKey("pwboost_created_at")) {
+      pwBoostCreatedAt = Convert.toInt(data["pwboost_created_at"]);
+    }
+
     // Level Up
     data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
@@ -550,7 +559,8 @@ class Account extends Player with MineMixin {
     if (deadline <= getTime()) return;
 
     var boost = loadingData.shopItems[ShopSections.boost]!
-        .firstWhere((item) => item.id == id);
+        .firstWhereOrNull((item) => item.id == id);
+    if (boost == null) return;
     deadlines.add(Deadline(deadline, boost));
 
     if (id == pwBoostId) {
