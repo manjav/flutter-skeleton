@@ -10,7 +10,6 @@ class RouteService extends IService {
   String get currentRoute => Get.currentRoute;
 
   Future<dynamic> to(String route, {dynamic args}) async {
-
     return Get.toNamed(
       route,
       arguments: args,

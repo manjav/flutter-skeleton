@@ -15,15 +15,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   LoadingController controller = Get.put(LoadingController());
   final ValueNotifier<int> _selectedCategory = ValueNotifier(0);
 
-  @override
-  void initState() {
-    _loadData();
-    super.initState();
-  }
-
-  Future<void> _loadData() async {
-    setState(() {});
-  }
+  Map<String, int>? _scores;
 
 // Consumer<AccountProvider>(builder: (_, state, child) {
   @override
@@ -37,6 +29,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           await serviceLocator<RouteService>().to(Routes.onboarding);
         }
         _categories = (await account.loadCategories()).categories;
+        _scores = await account.laodScores();
         setState(() {});
         // await Future.delayed(const Duration(seconds: 1));
         // serviceLocator<RouteService>().to(Routes.popupMentor, args: {
@@ -162,16 +155,30 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   _lessonItemBuilder(GroupContent group, int type) {
+    var id = "${group.id}_$type";
+    var scoreNotifier = ValueNotifier(_scores![id] ?? 0);
     return Widgets.button(context,
         height: 50.d,
         width: DeviceInfo.size.width * 0.6,
-        child: Text("lesson_$type".l()), onPressed: () async {
+        child: Row(
+          children: [
+            Text("lesson_$type".l()),
+            SizedBox(width: 16.d),
+            ValueListenableBuilder(
+                valueListenable: scoreNotifier,
+                builder: (context, value, child) =>
+                    Text(["", "*", "**", "***"][scoreNotifier.value])),
+          ],
+        ), onPressed: () async {
       if (group.children.isEmpty) {
         await serviceLocator<AccountProvider>().loadTalks(group);
       }
-      serviceLocator<RouteService>().to(
+      var s = await serviceLocator<RouteService>().to(
           switch (type) { 1 => Routes.listen, _ => Routes.speak },
           args: {"content": group, "challengeMode": type == 2});
+      if (s == null || s <= scoreNotifier.value) return;
+      await serviceLocator<AccountProvider>().saveScore(id, s);
+      scoreNotifier.value = s;
     });
   }
 }
