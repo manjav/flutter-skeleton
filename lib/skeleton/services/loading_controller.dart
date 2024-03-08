@@ -226,6 +226,10 @@ class LoadingController extends GetxController {
     sounds.initialize();
     sounds.playMusic();
 
+    var ads = serviceLocator<Ads>();
+    ads.initialize();
+    ads.onUpdate = _onAdsServicesUpdate;
+
     serviceLocator<EventNotification>().initialize();
 
     try {
@@ -257,10 +261,6 @@ class LoadingController extends GetxController {
 
       serviceLocator<Games>().initialize();
 
-      var ads = serviceLocator<Ads>();
-      ads.initialize();
-      ads.onUpdate = _onAdsServicesUpdate;
-
       services.changeState(ServiceStatus.complete);
     } on SkeletonException catch (e) {
       if (context.mounted) {
@@ -273,10 +273,10 @@ class LoadingController extends GetxController {
     var sounds = serviceLocator<Sounds>();
     if (Pref.music.getBool()) {
       if (placement!.state == AdState.show) {
-        sounds.stopAll();
+        sounds.pauseAll();
       } else if (placement.state == AdState.closed ||
           placement.state == AdState.failedShow) {
-        sounds.playMusic();
+        sounds.resumeMusic();
       }
     }
   }

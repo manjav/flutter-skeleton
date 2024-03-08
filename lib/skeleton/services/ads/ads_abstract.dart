@@ -56,6 +56,7 @@ abstract class AbstractAdSDK with ILogger {
   final Duration waitingDuration = const Duration(milliseconds: 200);
 
   initialize(AdSDKName sdk, {bool testMode = false}) {
+    this.sdk = sdk;
     this.testMode = testMode;
     placements = {
       AdType.interstitial: Placement(sdk, AdType.interstitial),
@@ -90,7 +91,7 @@ abstract class AbstractAdSDK with ILogger {
 
   Placement? isReady(AdType type, {bool gapConsidering = false}) {
     var myAd = placements[type]!;
-    if (myAd.data != null && myAd.state == AdState.loaded) {
+    if (myAd.state == AdState.loaded) {
       return myAd;
     }
     return null;
@@ -107,7 +108,7 @@ abstract class AbstractAdSDK with ILogger {
   @protected
   Placement findPlacement(String placementId) {
     for (var entry in placements.entries) {
-      if ("adid_${sdk}_${entry.key}".l() == placementId) {
+      if ("adid_${sdk.name}_${entry.key.name}".l() == placementId) {
         return entry.value;
       }
     }
