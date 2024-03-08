@@ -17,6 +17,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
   final TextEditingController _inputController = TextEditingController();
 
   @override
+  initState() {
+    super.initState();
+    checkConnection();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Consumer<AccountProvider>(builder: (_, state, child) {
@@ -60,6 +66,16 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         ]),
       );
     });
+  }
+
+  @override
+  bool get wantKeepAlive => false;
+
+  checkConnection() {
+    var socket = serviceLocator<NoobSocket>();
+    if (!socket.isSocketConnected) {
+      socket.connect();
+    }
   }
 
   Widget _headerBuilder(Account account) {
@@ -148,7 +164,8 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           ]),
         ]),
         onPressed: () async {
-          await serviceLocator<RouteService>().to(Routes.popupTribeOptions,args: {"index":2});
+          await serviceLocator<RouteService>()
+              .to(Routes.popupTribeOptions, args: {"index": 2});
           setState(() {});
         },
       ),
