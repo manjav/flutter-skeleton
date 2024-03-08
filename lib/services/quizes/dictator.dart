@@ -54,6 +54,7 @@ class Dictator extends Quiz {
   }
 
   void selectChoice(Choice choice) {
+    if (choice.used) return;
     answers.add(choice.text);
     choice.used = true;
     serviceLocator<Dictator>().checkAnswers();
