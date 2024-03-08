@@ -4,12 +4,12 @@ class Contents {
   List<ParentContent> categories = [];
   Contents.initialize(Map map) {
     for (var entry in map.entries) {
-      var groups = <ParentContent>[];
+      var groups = <GroupContent>[];
       for (var gentry in entry.value["groups"].entries) {
-        groups.add(ParentContent.initialize(gentry.key, gentry.value));
+        groups.add(GroupContent.create(gentry.key, gentry.value));
       }
       groups.sort((a, b) => a.index - b.index);
-      var category = ParentContent.initialize(entry.key, entry.value);
+      var category = ParentContent.create(entry.key, entry.value);
       category.children = groups;
       categories.add(category);
     }
@@ -19,52 +19,36 @@ class Contents {
 
 class Content {
   final String id;
-  final int index;
-  Content(this.id, this.index);
+  int index = 0;
+  Content.create(this.id, Map map) {
+    index = map["index"];
+  }
 }
 
 class ParentContent extends Content {
   List<Content> children = [];
-  final String title, description, iconUrl;
-  ParentContent(
-    super.id,
-    super.index,
-    this.title,
-    this.description,
-    this.iconUrl,
-  );
-  static ParentContent initialize(String id, Map map) {
-    return ParentContent(
-      id,
-      map["index"],
-      map["title"],
-      map["description"],
-      map["iconUrl"],
-    );
+  String title = "", description = "", iconUrl = "";
+  ParentContent.create(String id, Map map) : super.create(id, map) {
+    title = map["title"];
+    description = map["description"];
+    iconUrl = map["iconUrl"];
   }
 }
 
+class GroupContent extends ParentContent {
+  GroupContent.create(super.id, super.map) : super.create();
+}
+
 class Talk extends Content {
-  final String personId, nativeValue, targetValue;
+  String personId = "", nativeValue = "", targetValue = "";
   TalkType type = TalkType.none;
-  Talk(
-    super.id,
-    super.index,
-    this.personId,
-    this.nativeValue,
-    this.targetValue,
-  );
-  static Talk initialize(
-      int index, Map map, String nativeLanguage, String targetLanguage) {
-    var talk = Talk(
-      map["id"],
-      index,
-      map["person_id"],
-      map[nativeLanguage],
-      map[targetLanguage],
-    );
-    talk.type = talk.index % 2 == 0 ? TalkType.bot : TalkType.user;
-    return talk;
+  Talk.create(int index, Map map, String nativeLanguage, String targetLanguage)
+      : super.create(map["id"], map) {
+    this.index = index;
+    personId = map["person_id"];
+    nativeValue = map[nativeLanguage];
+    targetValue = map[targetLanguage];
+    type = index % 2 == 0 ? TalkType.bot : TalkType.user;
   }
 }
 

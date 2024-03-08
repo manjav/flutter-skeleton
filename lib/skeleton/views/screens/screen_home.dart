@@ -133,27 +133,27 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       child: Column(
         children: [
           for (var i = category.children.length - 1; i >= 0; i--)
-            _contentItemBuilder(category.children[i] as ParentContent)
+            _contentItemBuilder(category.children[i] as GroupContent)
         ],
       ),
     );
   }
 
-  Widget _contentItemBuilder(ParentContent content) {
+  Widget _contentItemBuilder(GroupContent group) {
     return Widgets.rect(
       radius: 16.d,
       padding: EdgeInsets.all(12.d),
       child: Column(
         children: [
-          _lessonItemBuilder(content, 2),
-          _lessonItemBuilder(content, 1),
-          _lessonItemBuilder(content, 0),
+          _lessonItemBuilder(group, 2),
+          _lessonItemBuilder(group, 1),
+          _lessonItemBuilder(group, 0),
           Row(children: [
-            Image.network(content.iconUrl, height: 40.d),
+            Image.network(group.iconUrl, height: 40.d),
             SizedBox(width: 12.d),
             SizedBox(
               width: DeviceInfo.size.width * 0.6,
-              child: Text(content.title, style: TStyles.small),
+              child: Text(group.title, style: TStyles.small),
             )
           ])
         ],
@@ -161,17 +161,17 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  _lessonItemBuilder(ParentContent content, int type) {
+  _lessonItemBuilder(GroupContent group, int type) {
     return Widgets.button(context,
         height: 50.d,
         width: DeviceInfo.size.width * 0.6,
         child: Text("lesson_$type".l()), onPressed: () async {
-      if (content.children.isEmpty) {
-        await serviceLocator<AccountProvider>().loadContent(content);
+      if (group.children.isEmpty) {
+        await serviceLocator<AccountProvider>().loadTalks(group);
       }
       serviceLocator<RouteService>().to(
           switch (type) { 1 => Routes.listen, _ => Routes.speak },
-          args: {"content": content, "challengeMode": type == 2});
+          args: {"content": group, "challengeMode": type == 2});
     });
   }
 }

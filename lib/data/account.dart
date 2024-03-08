@@ -49,15 +49,14 @@ class AccountProvider extends ChangeNotifier {
     return contents!;
   }
 
-  Future<void> loadContent(ParentContent group) async {
-    // Load Contents
+  Future<void> loadTalks(GroupContent group) async {
     List list = await serviceLocator<NetConnector>()
         .rpc("content_contents", params: {"groupId": group.id});
     list.sort((a, b) => a["index"] - b["index"]);
-    var messages = <Talk>[];
+    var talks = <Talk>[];
     for (var i = 0; i < list.length; i++) {
-      messages.add(
-        Talk.initialize(
+      talks.add(
+        Talk.create(
           i,
           list[i],
           account.user.langTag!,
@@ -65,6 +64,6 @@ class AccountProvider extends ChangeNotifier {
         ),
       );
     }
-    group.children = messages;
+    group.children = talks;
   }
 }
