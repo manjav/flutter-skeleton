@@ -69,10 +69,20 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       var playerCardsPower = 0;
       for (var card in _outcomeData["attack_cards"]) {
         _playerCards.add(AccountCard(_account!, card));
-        playerCardsPower += card["power"]! as int;
+        playerCardsPower += Convert.toInt(card["power"]!);
       }
       _playerCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
+      if (_outcomeData["attack_bonus_power"] > 0) {
+        AccountCard tribHelpCard =
+            AccountCard(_account!, {"base_card_id": 103, "power": 400});
+        tribHelpCard.base.name = "TribeHelp";
+        tribHelpCard.power = Convert.toInt(_outcomeData["attack_bonus_power"]);
+        tribHelpCard.base.rarity = 0;
+        tribHelpCard.fruit.name = "TribeHelp";
+        tribHelpCard.base.fruit.category = 3;
+        _playerCards.add(tribHelpCard);
+      }
       _playerCardsCount?.value = _playerCards.length.toDouble();
 
       if (!_isBattle) {
@@ -99,9 +109,18 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
         _cardPowers[i + 10]?.value = power.min(0).toDouble();
       }
       _outcomeData["opponent"] = _opponent;
-
       _oppositeCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
+      if (_outcomeData["def_bonus_power"] > 0) {
+        AccountCard tribHelpCard =
+            AccountCard(_account!, {"base_card_id": 103, "power": 400});
+        tribHelpCard.base.name = "TribeHelp";
+        tribHelpCard.power = Convert.toInt(_outcomeData["def_bonus_power"]);
+        tribHelpCard.base.rarity = 0;
+        tribHelpCard.fruit.name = "TribeHelp";
+        tribHelpCard.base.fruit.category = 3;
+        _oppositeCards.add(tribHelpCard);
+      }
       _oppositeCardsCount?.value = _oppositeCards.length.toDouble();
       return _outcomeData;
     });
@@ -194,6 +213,12 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           },
         ),
       );
+      // ignore: use_build_context_synchronously
+      accountProvider.update(context, _outcomeData);
+    } else if (state == RewardAnimationState.closing) {
+      var lastRoute = _opponent!.id == 0 ? Routes.quest : Routes.popupOpponents;
+      serviceLocator<RouteService>()
+          .popUntil((route) => route.settings.name == lastRoute);
     }
   }
 
