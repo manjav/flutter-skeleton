@@ -12,6 +12,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       GlobalKey<AnimatedListState>();
 
   int index = 0;
+  int _fouls = 0, _streakCorrects = 0, _maxCorrects = 0;
   final List<Talk> _chatItems = [];
   final ValueNotifier<double> inputSize = ValueNotifier(0);
   final ValueNotifier<Offset> _progress = ValueNotifier(const Offset(0, 0));
@@ -27,11 +28,14 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Future<void> nextStep() async {
-    const duration = Duration(milliseconds: 500);
     if (index >= content!.children.length) {
-      await Future.delayed(duration);
+      var len = (content!.children.length / 2).round();
+      var corrects = len - _fouls.max(5);
+      print(
+          "${corrects * 100 / len}% $corrects $_maxCorrects $len   ${3 - _fouls.max(2)}");
+      await _delay(500);
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.pop(context, 3 - _fouls.max(2));
       }
       return;
     }
