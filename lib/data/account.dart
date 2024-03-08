@@ -8,6 +8,7 @@ import '../app_export.dart';
 class AccountProvider extends ChangeNotifier {
   Contents? contents;
   late Account account;
+  Map<String, int> scores = {};
   Map<String, dynamic> metadata = {};
 
   void initialize(dynamic account) {
@@ -65,5 +66,20 @@ class AccountProvider extends ChangeNotifier {
       );
     }
     group.children = talks;
+  }
+
+  Future<Map<String, int>> laodScores() async {
+    var scores = await serviceLocator<NetConnector>().rpc("account_scores_get");
+    this.scores = Map.castFrom<dynamic, dynamic, String, int>(scores);
+    notifyListeners();
+    return this.scores;
+  }
+
+  Future<Map<String, int>> saveScore(String key, int value) async {
+    await serviceLocator<NetConnector>()
+        .rpc("account_score_set", params: {"key": key, "value": value});
+    scores[key] = value;
+    notifyListeners();
+    return scores;
   }
 }

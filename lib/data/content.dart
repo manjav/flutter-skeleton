@@ -40,8 +40,8 @@ class GroupContent extends ParentContent {
 }
 
 class Talk extends Content {
-  String personId = "", nativeValue = "", targetValue = "";
   TalkType type = TalkType.none;
+  String personId = "", nativeValue = "", targetValue = "";
   Talk.create(int index, Map map, String nativeLanguage, String targetLanguage)
       : super.create(map["id"], map) {
     this.index = index;
