@@ -109,12 +109,12 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       _building(account, Buildings.mine),
       _building(account, Buildings.park),
       _building(account, Buildings.quest),
-      if (account.deadlines.isNotEmpty)
-        for (var i = 0; i < account.deadlines.length; i++)
-          Positioned(
-              right: 32.d,
-              top: 200.d + i * 180.d,
-              child: DeadlineIndicator(account.deadlines[i])),
+      // if (account.deadlines.isNotEmpty)
+      //   for (var i = 0; i < account.deadlines.length; i++)
+      //     Positioned(
+      //         right: 32.d,
+      //         top: 200.d + i * 180.d,
+      //         child: DeadlineIndicator(account.deadlines[i])),
     ]);
   }
 

@@ -116,6 +116,20 @@ class AccountProvider extends ChangeNotifier {
     return result["achieveCards"];
   }
 
+  Future<Map<String, dynamic>> boostPack(
+      BuildContext context, ShopItem pack) async {
+    var params = <String, dynamic>{RpcParams.type.name: pack.id};
+    params["with_nectar"] = true;
+
+    var result = await serviceLocator<HttpConnection>()
+        .rpc(RpcId.buyBoostPack, params: params);
+
+    if (context.mounted) {
+      update(context, result);
+    }
+    return result["next_prices"];
+  }
+
   upgrade(BuildContext context, Building building, {Tribe? tribe}) async {
     var id = building.type.id;
     var params = {RpcParams.type.name: id};

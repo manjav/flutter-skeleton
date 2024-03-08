@@ -1,9 +1,9 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../app_export.dart';
@@ -18,9 +18,9 @@ class ShopPageItem extends AbstractPageItem {
 class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   late Account _account;
   final Map<ShopSections, List<ShopItemVM>> _items = {};
-  late StreamSubscription<List<PurchaseDetails>> _subscription;
-
+  // late StreamSubscription<List<PurchaseDetails>> _subscription;
   final Map<String, SkuDetails> _productDetails = {};
+  final RxBool _reloadBoosPacks = false.obs;
 
   @override
   void initState() {
@@ -28,6 +28,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     _fetchData();
     super.initState();
   }
+
+  @override
+  bool get wantKeepAlive => false;
 
   _fetchData() async {
     Set<String> skus = {};
@@ -59,7 +62,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             }
           }
           _items[section]!.insert(
-              len - 2, ShopItemVM(ShopItem(ShopSections.none, {}), 0, 8, 12));
+              len - 2, ShopItemVM(ShopItem(ShopSections.none, {}), 0, 2, 10));
         }
         _account.loadingData.shopProceedItems = _items;
       }
@@ -210,7 +213,11 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
               ShopSections.gold => _itemGoldBuilder(i, items[i]),
               ShopSections.nectar => _itemNectarBuilder(i, items[i]),
               ShopSections.card => _itemCardBuilder(i, items[i]),
-              ShopSections.boost => _itemBoostBuilder(i, items[i]),
+              ShopSections.boost => StreamBuilder<bool>(
+                  stream: _reloadBoosPacks.stream,
+                  builder: (context, snapshot) {
+                    return _itemBoostBuilder(i, items[i]);
+                  }),
               _ => const SizedBox(),
             })
     ]);
@@ -377,7 +384,21 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
     if (item.base.section == ShopSections.boost) {
       // ignore: use_build_context_synchronously
-      Overlays.insert(context, PurchaseFeastOverlay(args: {"item": item}));
+      Overlays.insert(
+          context,
+          PurchaseFeastOverlay(
+            args: {"item": item},
+            onClose: (data) {
+              if (data == null || data is! Map<String, dynamic>) return;
+              for (var row in data.entries) {
+                var x = _account.loadingData.shopItems[item.base.section]!
+                    .firstWhereOrNull(
+                        (element) => element.id == int.parse(row.key));
+                x?.value = row.value;
+              }
+              _reloadBoosPacks.value = !_reloadBoosPacks.value;
+            },
+          ));
     } else {
       // ignore: use_build_context_synchronously
       Overlays.insert(
@@ -432,7 +453,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   @override
   void dispose() {
-    _subscription.cancel();
+    // _subscription.cancel();
     super.dispose();
   }
 }
