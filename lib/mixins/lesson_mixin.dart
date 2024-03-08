@@ -40,7 +40,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       return;
     }
     var talk = content!.children[index] as Talk;
-    await Future.delayed(duration);
+    if (await _delay(500)) return;
     await _insertChat(talk);
 
     await serviceLocator<Speaker>()
@@ -207,19 +207,22 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Future<void> onQuizResult(bool isSuccess) async {
-    const duration = Duration(milliseconds: 500);
     if (isSuccess) {
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
+      _streakCorrects++;
+      _maxCorrects = _streakCorrects.min(_maxCorrects);
 
       // Waiting for celebration
-      await Future.delayed(duration);
+      if (await _delay(500)) return;
       inputSize.value = 0;
       await _insertChat(content!.children[index] as Talk);
 
-      await Future.delayed(duration);
+      if (await _delay(500)) return;
       index++;
       nextStep();
     } else {
+      ++_fouls;
+      _streakCorrects = 0;
       serviceLocator<Sounds>().play("wrong");
     }
   }
@@ -232,12 +235,12 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     const duration = Duration(milliseconds: 500);
     _chatListKey.currentState?.insertItem(_chatItems.length);
     _chatItems.add(item);
-    await Future.delayed(const Duration(milliseconds: 1));
+    if (await _delay(1)) return;
     await _chatScrollController.animateTo(
         _chatScrollController.position.maxScrollExtent,
         duration: duration,
         curve: Curves.easeOutQuart);
-    await Future.delayed(duration);
+    await _delay(duration.inMilliseconds);
   }
 
   void startQuiz(Talk chat) {}
@@ -250,5 +253,10 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       height = box.size.height;
     }
     return height;
+  }
+
+  _delay(int duration) async {
+    await Future.delayed(Duration(milliseconds: duration));
+    return !mounted;
   }
 }
