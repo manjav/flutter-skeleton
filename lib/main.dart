@@ -89,6 +89,8 @@ class _MyAppState extends State<MyApp>
         providers: [
           ChangeNotifierProvider(
               create: (_) => serviceLocator<ServicesProvider>()),
+          ChangeNotifierProvider(
+              create: (_) => serviceLocator<AccountProvider>()),
         ],
         child: GetMaterialApp(
           // navigatorObservers: [MyApp._observer],
@@ -103,11 +105,11 @@ class _MyAppState extends State<MyApp>
           locale:
               Localization.locales.firstWhere((l) => l.languageCode == "en"),
           getPages: [
-            _getPage(Routes.home, () => HomeScreen()),
-            _getPage(Routes.speak, () => LessonSpeakScreen()),
-            _getPage(Routes.listen, () => LessonListenScreen()),
-            _getPage(Routes.onboarding, () => OnboardingScreen()),
-            _getPage(Routes.popupMentor, () => const MentorPopup(), false),
+            _getPage(Routes.home, HomeScreen()),
+            _getPage(Routes.speak, LessonSpeakScreen()),
+            _getPage(Routes.listen, LessonListenScreen()),
+            _getPage(Routes.onboarding, OnboardingScreen()),
+            _getPage(Routes.popupMentor, const MentorPopup(), false),
           ],
           initialRoute: Routes.home,
         ),
@@ -122,5 +124,5 @@ class _MyAppState extends State<MyApp>
   }
 
   GetPage<dynamic> _getPage(String routeName, page, [bool opaque = true]) =>
-      GetPage(name: Routes.home, page: () => HomeScreen(), opaque: opaque);
+      GetPage(name: routeName, page: () => page, opaque: opaque);
 }
