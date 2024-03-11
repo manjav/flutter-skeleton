@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp>
     initServices();
 
     if (mounted) if (Navigator.canPop(context)) Navigator.pop(context);
-    
+
     _initialize(true);
   }
 
@@ -82,7 +82,9 @@ class _MyAppState extends State<MyApp>
   @override
   Widget build(BuildContext context) {
     _initialize();
-    if (!DeviceInfo.isPreInitialized) return const SizedBox();
+    if (!DeviceInfo.isPreInitialized) {
+      return const SizedBox();
+    }
     return KeyedSubtree(
       key: key,
       child: GetMaterialApp(
@@ -97,7 +99,11 @@ class _MyAppState extends State<MyApp>
         theme: Themes.darkData,
         locale: Localization.locales.firstWhere((l) =>
             l.languageCode == Pref.language.getString(defaultValue: 'en')),
-        home: HomeScreen(),
+        getPages: [
+          _getPage(Routes.home, () => HomeScreen()),
+          _getPage(Routes.popupMessage, () => const MessagePopup(), false),
+        ],
+        initialRoute: Routes.home,
       ),
     );
   }
@@ -107,4 +113,7 @@ class _MyAppState extends State<MyApp>
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
+  GetPage<dynamic> _getPage(String routeName, page, [bool opaque = true]) =>
+      GetPage(name: Routes.home, page: () => HomeScreen(), opaque: opaque);
 }
