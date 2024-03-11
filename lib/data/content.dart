@@ -1,8 +1,14 @@
 import 'package:lingai/app_export.dart';
 
-class Contents {
+class Content {
+  final String id;
+  int index = 0;
+  Content.create(this.id, Map map) {
+    index = map["index"];
+  }
+
+  static List<ParentContent> createAll(Map map) {
   List<ParentContent> categories = [];
-  Contents.initialize(Map map) {
     for (var entry in map.entries) {
       var groups = <GroupContent>[];
       for (var gentry in entry.value["groups"].entries) {
@@ -14,14 +20,7 @@ class Contents {
       categories.add(category);
     }
     categories.sort((a, b) => a.index - b.index);
-  }
-}
-
-class Content {
-  final String id;
-  int index = 0;
-  Content.create(this.id, Map map) {
-    index = map["index"];
+    return categories;
   }
 }
 

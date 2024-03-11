@@ -6,9 +6,9 @@ import 'package:nakama/nakama.dart';
 import '../app_export.dart';
 
 class AccountProvider extends ChangeNotifier {
-  Contents? contents;
   late Account account;
   Map<String, int> scores = {};
+  List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
 
   void initialize(dynamic account) {
@@ -41,13 +41,12 @@ class AccountProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Contents> loadCategories() async {
+  Future<List<ParentContent>> loadCategories() async {
     // Load Contents
     var data = await serviceLocator<NetConnector>().rpc("content_categories");
-    contents = Contents.initialize(data);
-
+    contents = Content.createAll(data);
     notifyListeners();
-    return contents!;
+    return contents;
   }
 
   Future<void> loadTalks(GroupContent group) async {
