@@ -67,16 +67,26 @@ class AccountProvider extends ChangeNotifier {
     group.children = talks;
   }
 
-  Future<Map<String, int>> laodScores() async {
-    var scores = await serviceLocator<NetConnector>().rpc("account_scores_get");
+  Future<Map> loadStats(String type) async {
+    var stats = await serviceLocator<NetConnector>()
+        .rpc("account_stats_get", params: {"type": type});
+    return stats;
+  }
+
+  Future<void> saveStat(String type, String key, dynamic value) async {
+    await serviceLocator<NetConnector>().rpc("account_stat_set",
+        params: {"type": type, "key": key, "value": value});
+  }
+
+  Future<Map<String, int>> loadScores() async {
+    var scores = await loadStats("scores_${metadata["targetLanguage"]}");
     this.scores = Map.castFrom<dynamic, dynamic, String, int>(scores);
     notifyListeners();
     return this.scores;
   }
 
   Future<Map<String, int>> saveScore(String key, int value) async {
-    await serviceLocator<NetConnector>()
-        .rpc("account_score_set", params: {"key": key, "value": value});
+    saveStat("scores_${metadata["targetLanguage"]}", key, value);
     scores[key] = value;
     notifyListeners();
     return scores;
