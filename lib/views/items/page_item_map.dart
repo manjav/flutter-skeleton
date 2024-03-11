@@ -104,8 +104,8 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         child: _box(0, "06:12:06".l()),
       ),
       PositionedDirectional(
-          bottom: 200.d,
-          end: 320.d,
+          bottom: 210.d,
+          end: 330.d,
           height: 150.d,
           child: _box(1, "chance_box".l())),
       PositionedDirectional(
