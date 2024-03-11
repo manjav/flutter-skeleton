@@ -8,7 +8,7 @@ class Content {
   }
 
   static List<ParentContent> createAll(Map map) {
-  List<ParentContent> categories = [];
+    List<ParentContent> categories = [];
     for (var entry in map.entries) {
       var groups = <GroupContent>[];
       for (var gentry in entry.value["groups"].entries) {
@@ -36,11 +36,19 @@ class ParentContent extends Content {
 
 class GroupContent extends ParentContent {
   GroupContent.create(super.id, super.map) : super.create();
+  Set<String> get words {
+    Set<String> result = {};
+    for (var talk in children) {
+      result.addAll((talk as Talk).words);
+    }
+    return result;
+  }
 }
 
 class Talk extends Content {
   TalkType type = TalkType.none;
   String personId = "", nativeValue = "", targetValue = "";
+  Set<String> get words => {...targetValue.split(" ")};
   Talk.create(int index, Map map, String nativeLanguage, String targetLanguage)
       : super.create(map["id"], map) {
     this.index = index;
@@ -66,4 +74,44 @@ extension TalkTypeExtension on TalkType {
         TalkType.bot => Narrator.fable,
         _ => Narrator.onyx,
       };
+}
+
+class Word {
+  String value;
+  int count;
+  String nativeValue;
+  DateTime firstReview;
+  DateTime lastReview;
+  DateTime nextReview;
+  Word(this.value, this.count, this.nativeValue, this.firstReview,
+      this.nextReview, this.lastReview);
+
+  static Word fromMap(String value, Map map) {
+    return Word(
+      value,
+      map["count"],
+      map["native"],
+      DateExtension.fromDaysSinceEpoch(map["first"]),
+      DateExtension.fromDaysSinceEpoch(map["last"]),
+      DateExtension.fromDaysSinceEpoch(map["next"]),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "count": count,
+      "native": nativeValue,
+      "first": firstReview.daysSinceEpoch,
+      "last": lastReview.daysSinceEpoch,
+      "next": nextReview.daysSinceEpoch,
+    };
+  }
+
+  static Map<String, Word> allFromMap(Map data) {
+    var map = <String, Word>{};
+    for (var entry in data.entries) {
+      map[entry.key] = Word.fromMap(entry.key, entry.value);
+    }
+    return map;
+  }
 }

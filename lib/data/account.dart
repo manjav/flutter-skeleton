@@ -8,6 +8,7 @@ import '../app_export.dart';
 class AccountProvider extends ChangeNotifier {
   late Account account;
   Map<String, int> scores = {};
+  Map<String, Word> words = {};
   List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
 
@@ -90,5 +91,19 @@ class AccountProvider extends ChangeNotifier {
     scores[key] = value;
     notifyListeners();
     return scores;
+  }
+
+  Future<Map<String, Word>> loadWords() async {
+    var data = await loadStats("words_${metadata["targetLanguage"]}");
+    words = Word.allFromMap(data);
+    notifyListeners();
+    return words;
+  }
+
+  Future<Map<String, Word>> saveWord(Word word) async {
+    saveStat("words_${metadata["targetLanguage"]}", word.value, word);
+    words[word.value] = word;
+    notifyListeners();
+    return words;
   }
 }
