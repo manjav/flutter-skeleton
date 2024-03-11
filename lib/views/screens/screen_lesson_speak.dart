@@ -10,20 +10,16 @@ class LessonSpeakScreen extends AbstractScreen {
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
-    with LessonMixin {
+class _ScreenState extends AbstractScreenState<LessonSpeakScreen> with LessonChatMixin {
   @override
   Future<void> startQuiz(Talk talk) async {
-    // if (kDebugMode) {
     //   await Future.delayed(const Duration(seconds: 2));
-    //   _onQuizResult(QuizState.success, talk.targetValue);
-    // } else {
-    serviceLocator<STT>().start(
-      locale: serviceLocator<AccountProvider>().metadata["targetLanguage"],
-      pattern: talk.targetValue.simple(),
-      onResult: _onQuizResult,
-    );
-    // }
+    _onQuizResult(QuizState.success, talk.targetValue);
+    // serviceLocator<STT>().start(
+    //   locale: serviceLocator<AccountProvider>().metadata["targetLanguage"],
+    //   pattern: talk.targetValue.simple(),
+    //   onResult: _onQuizResult,
+    // );
   }
 
   Future<void> _onQuizResult(QuizState state, String text) async {
@@ -32,9 +28,11 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
     if (state == QuizState.success) {
       await Future.delayed(duration);
       serviceLocator<STT>().state.value = QuizState.none;
-      onQuizResult(true);
+      if (mounted) {
+        onQuizResult(context, true);
+      }
     } else if (state == QuizState.fail) {
-      onQuizResult(false);
+      onQuizResult(context, false);
       await Future.delayed(duration);
       serviceLocator<STT>().start();
     }
