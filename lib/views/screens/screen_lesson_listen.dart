@@ -13,9 +13,9 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
     with LessonMixin {
   @override
   Future<void> nextStep() async {
-    if (index < content!.children.length) {
+    if (index.value < content!.children.length) {
       serviceLocator<Dictator>()
-          .initialize(args: [content!.children[index + 1]]);
+          .initialize(args: [content!.children[index.value + 1]]);
     }
     await super.nextStep();
   }

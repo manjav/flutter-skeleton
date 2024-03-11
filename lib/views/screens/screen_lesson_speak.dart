@@ -42,10 +42,13 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
 
   @override
   Widget footerBuilder() {
+    if (index.value >= content!.children.length) {
+      return const SizedBox();
+    }
     return Column(children: [
       DirText("speaking_hint".l()),
       SizedBox(height: 24.d),
-      ListenerBox(content!.children[index] as Talk,
+      ListenerBox(content!.children[index.value] as Talk,
           challengeMode: Get.arguments["challengeMode"])
     ]);
   }
