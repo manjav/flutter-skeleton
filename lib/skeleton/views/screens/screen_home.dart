@@ -28,8 +28,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           await Future.delayed(const Duration(seconds: 1));
           await serviceLocator<RouteService>().to(Routes.onboarding);
         }
-        _categories = (await account.loadCategories()).categories;
-        _scores = await account.laodScores();
+        _categories = (await account.loadCategories());
+        _scores = await account.loadScores();
         setState(() {});
         // await Future.delayed(const Duration(seconds: 1));
         // serviceLocator<RouteService>().to(Routes.popupMentor, args: {
@@ -138,9 +138,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       padding: EdgeInsets.all(12.d),
       child: Column(
         children: [
-          _lessonItemBuilder(group, 2),
-          _lessonItemBuilder(group, 1),
-          _lessonItemBuilder(group, 0),
+          for (var i = 6; i >= 0; i--) _lessonItemBuilder(group, i),
           Row(children: [
             Image.network(group.iconUrl, height: 40.d),
             SizedBox(width: 12.d),
@@ -154,7 +152,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  _lessonItemBuilder(GroupContent group, int type) {
+  Widget _lessonItemBuilder(GroupContent group, int type) {
     var id = "${group.id}_$type";
     var scoreNotifier = ValueNotifier(_scores![id] ?? 0);
     return Widgets.button(context,
@@ -167,14 +165,22 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             ValueListenableBuilder(
                 valueListenable: scoreNotifier,
                 builder: (context, value, child) =>
-                    Text(["", "*", "**", "***"][scoreNotifier.value])),
+                    Text(["☆☆☆", "★☆☆", "★★☆", "★★★"][scoreNotifier.value])),
           ],
         ), onPressed: () async {
       if (group.children.isEmpty) {
         await serviceLocator<AccountProvider>().loadTalks(group);
       }
+      // print(group.words);
       var s = await serviceLocator<RouteService>().to(
-          switch (type) { 1 => Routes.listen, _ => Routes.speak },
+          switch (type) {
+            1 => Routes.listen,
+            3 => Routes.word,
+            4 => Routes.listen,
+            5 => Routes.listen,
+            6 => Routes.listen,
+            _ => Routes.speak,
+          },
           args: {"content": group, "challengeMode": type == 2});
       if (s == null || s <= scoreNotifier.value) return;
       await serviceLocator<AccountProvider>().saveScore(id, s);
