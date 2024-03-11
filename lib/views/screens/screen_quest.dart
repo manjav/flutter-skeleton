@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -18,7 +19,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   int _arenaIndex = 0, _firstArena = 0, _lastArena = 0;
   bool _waitingMode = true;
   late ScrollController _scrollController;
-  List<ValueNotifier<List<City>>> _arenas = [];
+  List<RxList<City>> _arenas = [];
 
   double _mapHeight = 0;
 
@@ -30,7 +31,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
     var location = _questsCount % 130;
     _firstArena = (_arenaIndex - _padding).min(0);
     _lastArena = _arenaIndex + _padding + 1;
-    _arenas = List.generate(4, (index) => ValueNotifier([]));
+    _arenas = List.generate(4, (index) => <City>[].obs);
     _scrollController = ScrollController(
         keepScrollOffset: false,
         initialScrollOffset:
@@ -64,7 +65,7 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   Widget _mapItemRenderer(int index) => ArenaItemRenderer(
       _arenaIndex, index, _getArena(index), _questsCount, _waitingMode);
 
-  ValueNotifier<List<City>> _getArena(int index) {
+  RxList<City> _getArena(int index) {
     return _arenas[index >= _arenas.length ? _arenas.length - 1 : index];
   }
 }
@@ -74,7 +75,7 @@ class ArenaItemRenderer extends StatefulWidget {
   final int questsCount;
   final int currentIndex;
   final bool waitingMode;
-  final ValueNotifier<List<City>> arena;
+  final RxList<City> arena;
   const ArenaItemRenderer(this.currentIndex, this.index, this.arena,
       this.questsCount, this.waitingMode,
       {super.key});
@@ -88,6 +89,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
   int _questsCount = 0;
   bool _waitingMode = true;
   SMIInput<double>? _boatPosition;
+  SMINumber? _state;
 
   @override
   void initState() {
@@ -103,6 +105,18 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     } else {
       _waitingMode = false;
     }
+
+    accountProvider.addListener(() {
+      if (_state == null) return;
+      if (_questsCount != accountProvider.account.questsCount - 1) {
+        _questsCount = accountProvider.account.questsCount - 1;
+        if (_state!.value >= 9) {
+          widget.arena.refresh();
+        } else {
+          _state?.value++;
+        }
+      }
+    });
   }
 
   @override
@@ -120,13 +134,14 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
           _boatPosition = controller?.findInput<double>("boatPosition");
           artboard.addController(controller!);
         }, fit: BoxFit.fitWidth),
-        ValueListenableBuilder<List<City>>(
-            valueListenable: widget.arena,
-            builder: (context, value, child) {
+        StreamBuilder<List<City>>(
+            stream: widget.arena.stream,
+            builder: (context, snapshot) {
+              if (snapshot.data == null) return const SizedBox();
               return Stack(children: [
-                for (var i = 0; i < value.length; i++)
-                  _cityRenderer(
-                      value.length - i - 1, value[value.length - i - 1])
+                for (var i = 0; i < snapshot.data!.length; i++)
+                  _cityRenderer(snapshot.data!.length - i - 1,
+                      snapshot.data![snapshot.data!.length - i - 1])
               ]);
             }),
         Positioned(
@@ -141,12 +156,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     WidgetsBinding.instance.addPostFrameCallback((d) async {
       _questsCount = accountProvider.account.questsCount - 1;
       if (event.name == "click") {
-        await serviceLocator<RouteService>().to(Routes.deck);
-        // Update city levels after quest
-        for (var i = 0; i < widget.arena.value.length; i++) {
-          widget.arena.value[i].state?.value =
-              (_questsCount - widget.index * 130 - i * 10).toDouble();
-        }
+        serviceLocator<RouteService>().to(Routes.deck);
       } else if (event.name == "loading") {
         // Load city positions
         var positions = <City>[];
@@ -176,37 +186,44 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
       left: city.position.dx.d - size * 0.5,
       top: city.position.dy.d - size * 0.5,
       child: state >= 0 && state <= 10
-          ? LoaderWidget(AssetType.animation, "quest_map_button",
-              width: size, height: size, onRiveInit: (Artboard artboard) {
-              void setText(String name, String value) {
-                artboard.component<TextValueRun>(name)?.text = value;
-                artboard.component<TextValueRun>("${name}_stroke")?.text =
-                    value;
-                artboard.component<TextValueRun>("${name}_shadow")?.text =
-                    value;
-              }
-
-              var controller = StateMachineController.fromArtboard(
-                  artboard, "State Machine 1");
-              city.state = controller?.findInput<double>("state") as SMINumber;
-              city.state?.value = state;
-              setText("levelText", "${index + 1}");
-              controller
-                  ?.addEventListener((event) => _riveEventsListener(event));
-              if (widget.index < 390) {
-                if (index == 1 ||
-                    index == 4 ||
-                    index == 7 ||
-                    index == 10 ||
-                    index == 12) {
-                  controller?.findInput<double>("bubble")?.value =
-                      state > 10 ? 2 : 1;
-                  controller?.findInput<double>("bubbleIndex")?.value =
-                      index == 12 ? 0 : 1;
+          ? LoaderWidget(
+              AssetType.animation,
+              "quest_map_button",
+              width: size,
+              height: size,
+              key: GlobalKey(),
+              onRiveInit: (Artboard artboard) {
+                void setText(String name, String value) {
+                  artboard.component<TextValueRun>(name)?.text = value;
+                  artboard.component<TextValueRun>("${name}_stroke")?.text =
+                      value;
+                  artboard.component<TextValueRun>("${name}_shadow")?.text =
+                      value;
                 }
-              }
-              artboard.addController(controller!);
-            })
+
+                var controller = StateMachineController.fromArtboard(
+                    artboard, "State Machine 1");
+                _state = controller?.findInput<double>("state") as SMINumber;
+                city.state = _state;
+                city.state?.value = state;
+                setText("levelText", "${index + 1}");
+                controller
+                    ?.addEventListener((event) => _riveEventsListener(event));
+                if (widget.index < 390) {
+                  if (index == 1 ||
+                      index == 4 ||
+                      index == 7 ||
+                      index == 10 ||
+                      index == 12) {
+                    controller?.findInput<double>("bubble")?.value =
+                        state > 10 ? 2 : 1;
+                    controller?.findInput<double>("bubbleIndex")?.value =
+                        index == 12 ? 0 : 1;
+                  }
+                }
+                artboard.addController(controller!);
+              },
+            )
           : FutureBuilder(
               future: getImage(index, state),
               builder: (ctx, snapshot) {

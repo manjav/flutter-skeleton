@@ -73,7 +73,8 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       }
       _playerCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
-      if (_outcomeData["attack_bonus_power"] > 0) {
+      if (_outcomeData.containsKey("attack_bonus_power") &&
+          _outcomeData["attack_bonus_power"] > 0) {
         AccountCard tribHelpCard =
             AccountCard(_account!, {"base_card_id": 103, "power": 400});
         tribHelpCard.base.name = "TribeHelp";
@@ -111,7 +112,8 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       _outcomeData["opponent"] = _opponent;
       _oppositeCards
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
-      if (_outcomeData["def_bonus_power"] > 0) {
+      if (_outcomeData.containsKey("def_bonus_power") &&
+          _outcomeData["def_bonus_power"] > 0) {
         AccountCard tribHelpCard =
             AccountCard(_account!, {"base_card_id": 103, "power": 400});
         tribHelpCard.base.name = "TribeHelp";

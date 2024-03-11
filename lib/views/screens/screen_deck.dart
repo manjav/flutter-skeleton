@@ -306,9 +306,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         },
       ),
     );
-    await Future.delayed(const Duration(milliseconds: 500));
     // _selectedCards.clear(setNull: true);
     serviceLocator<Notifications>().schedule(account.getSchedules());
+    await Future.delayed(const Duration(milliseconds: 1500));
     serviceLocator<RouteService>().back();
   }
 }
