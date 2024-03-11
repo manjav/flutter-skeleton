@@ -10,16 +10,17 @@ class LessonSpeakScreen extends AbstractScreen {
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<LessonSpeakScreen> with LessonChatMixin {
+class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
+    with LessonChatMixin {
   @override
-  Future<void> startQuiz(Talk talk) async {
-    //   await Future.delayed(const Duration(seconds: 2));
-    _onQuizResult(QuizState.success, talk.targetValue);
-    // serviceLocator<STT>().start(
-    //   locale: serviceLocator<AccountProvider>().metadata["targetLanguage"],
-    //   pattern: talk.targetValue.simple(),
-    //   onResult: _onQuizResult,
-    // );
+  Future<void> startQuiz(Content child) async {
+    await Future.delayed(const Duration(seconds: 2));
+    _onQuizResult(QuizState.success, child.targetValue);
+    serviceLocator<STT>().start(
+      locale: serviceLocator<AccountProvider>().metadata["targetLanguage"],
+      pattern: child.targetValue.simple(),
+      onResult: _onQuizResult,
+    );
   }
 
   Future<void> _onQuizResult(QuizState state, String text) async {

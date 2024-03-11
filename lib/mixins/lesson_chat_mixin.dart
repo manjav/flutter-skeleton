@@ -5,10 +5,8 @@ import '../app_export.dart';
 
 mixin LessonChatMixin<S extends AbstractScreen>
     on AbstractScreenState<S>, LessonMixin {
-  final GlobalKey<AnimatedListState> _chatListKey =
-      GlobalKey<AnimatedListState>();
-
   final List<Talk> _chatItems = [];
+  final _chatListKey = GlobalKey<AnimatedListState>();
   final ScrollController _chatScrollController = ScrollController();
 
   @override
@@ -82,13 +80,13 @@ mixin LessonChatMixin<S extends AbstractScreen>
   Widget footerBuilder() => const SizedBox();
 
   Widget _chatItemBuilder(Talk talk, Animation<double> animation) {
-    var tip = talk.type == TalkType.user
+    var tip = talk.type == ContentType.user
         ? BalloonTipPosition.rightBottom
         : BalloonTipPosition.leftTop;
     return ScaleTransition(
       alignment: switch (talk.type) {
-        TalkType.user => Alignment.bottomRight,
-        TalkType.bot => Alignment.topLeft,
+        ContentType.user => Alignment.bottomRight,
+        ContentType.bot => Alignment.topLeft,
         _ => Alignment.center,
       },
       scale: CurvedAnimation(
@@ -109,20 +107,15 @@ mixin LessonChatMixin<S extends AbstractScreen>
 
   Future<void> _insertChat() async {
     var talk = content!.children[index.value] as Talk;
-
     const duration = Duration(milliseconds: 500);
+
     _chatListKey.currentState?.insertItem(_chatItems.length);
     _chatItems.add(talk);
-    if (await _delay(1)) return;
+    await Future.delayed(const Duration(milliseconds: 1));
     await _chatScrollController.animateTo(
         _chatScrollController.position.maxScrollExtent,
         duration: duration,
         curve: Curves.easeOutQuart);
-    await _delay(duration.inMilliseconds);
-  }
-
-  _delay(int duration) async {
-    await Future.delayed(Duration(milliseconds: duration));
-    return !mounted;
+    await Future.delayed(duration);
   }
 }

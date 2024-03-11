@@ -21,7 +21,7 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
   }
 
   @override
-  void startQuiz(Talk talk) {
+  void startQuiz(Content child) {
     serviceLocator<Dictator>().start(onResult: _onQuizResult);
   }
 
@@ -39,7 +39,7 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
   @override
   updateContent() async {
     var talk = content!.children[index.value] as Talk;
-    if (talk.type == TalkType.user) {
+    if (talk.type == ContentType.user) {
       serviceLocator<Speaker>()
           .play(talk.targetValue, narrator: talk.type.narrator);
     }

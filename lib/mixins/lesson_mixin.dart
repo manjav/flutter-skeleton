@@ -14,7 +14,7 @@ mixin LessonMixin {
 
   Widget headerBuilder(BuildContext context, ValueNotifier<int> index,
       EdgeInsetsGeometry padding, ParentContent group) {
-    var person = (group.children[0] as Talk).personId;
+    // var person = (group.children[0] as Talk).personId;
     return Widgets.rect(
       padding: padding,
       decoration: BoxDecoration(
@@ -32,7 +32,7 @@ mixin LessonMixin {
       ),
       child: Row(
         children: [
-          Avatar(person, 64.d),
+          Avatar("person", 64.d),
           SizedBox(width: 12.d),
           Expanded(
             child: ValueListenableBuilder(
@@ -41,7 +41,7 @@ mixin LessonMixin {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(person),
+                  Text(group.title),
                   TweenAnimationBuilder<double>(
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut,
@@ -93,22 +93,22 @@ mixin LessonMixin {
       }
       return;
     }
-    var talk = content!.children[index.value] as Talk;
+    var child = content!.children[index.value];
     await Future.delayed(const Duration(milliseconds: 500));
     if (!context.mounted) return;
 
     await updateContent();
     index.value += 1;
     await serviceLocator<Speaker>()
-        .play(talk.targetValue, narrator: talk.type.narrator);
+        .play(child.targetValue, narrator: child.type.narrator);
     if (!context.mounted) return;
 
-    talk = content!.children[index.value] as Talk;
+    child = content!.children[index.value];
     headerSize.value = getFooterHeight(context);
-    startQuiz(talk);
+    startQuiz(child);
   }
 
-  void startQuiz(Talk chat) {}
+  void startQuiz(Content child) {}
 
   double getFooterHeight(BuildContext context) {
     double height = 500.d;

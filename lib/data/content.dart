@@ -1,8 +1,10 @@
 import 'package:lingai/app_export.dart';
 
 class Content {
-  final String id;
   int index = 0;
+  final String id;
+  ContentType type = ContentType.none;
+  String nativeValue = "", targetValue = "";
   Content.create(this.id, Map map) {
     index = map["index"];
   }
@@ -16,6 +18,7 @@ class Content {
       }
       groups.sort((a, b) => a.index - b.index);
       var category = ParentContent.create(entry.key, entry.value);
+      category.type = ContentType.category;
       category.children = groups;
       categories.add(category);
     }
@@ -35,19 +38,15 @@ class ParentContent extends Content {
 }
 
 class GroupContent extends ParentContent {
-  GroupContent.create(super.id, super.map) : super.create();
-  Set<String> get words {
-    Set<String> result = {};
-    for (var talk in children) {
-      result.addAll((talk as Talk).words);
-    }
+  GroupContent.create(super.id, super.map) : super.create() {
+    type = ContentType.group;
+  }
     return result;
   }
 }
 
 class Talk extends Content {
-  TalkType type = TalkType.none;
-  String personId = "", nativeValue = "", targetValue = "";
+  String personId = "";
   Set<String> get words => {...targetValue.split(" ")};
   Talk.create(int index, Map map, String nativeLanguage, String targetLanguage)
       : super.create(map["id"], map) {
@@ -55,23 +54,23 @@ class Talk extends Content {
     personId = map["person_id"];
     nativeValue = map[nativeLanguage];
     targetValue = map[targetLanguage];
-    type = index % 2 == 0 ? TalkType.bot : TalkType.user;
+    type = index % 2 == 0 ? ContentType.bot : ContentType.user;
   }
 }
 
-enum TalkType { none, hint, user, bot }
+enum ContentType { none, category, group, hint, user, bot }
 
-extension TalkTypeExtension on TalkType {
-  static TalkType getEnum(String type) {
-    for (var value in TalkType.values) {
+extension ContentTypeExtension on ContentType {
+  static ContentType getEnum(String type) {
+    for (var value in ContentType.values) {
       if (value.name == type) return value;
     }
-    return TalkType.none;
+    return ContentType.none;
   }
 
   Narrator get narrator => switch (this) {
-        TalkType.user => Narrator.nova,
-        TalkType.bot => Narrator.fable,
+        ContentType.user => Narrator.nova,
+        ContentType.bot => Narrator.fable,
         _ => Narrator.onyx,
       };
 }
