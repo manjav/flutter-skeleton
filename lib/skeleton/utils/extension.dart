@@ -112,6 +112,15 @@ extension StringExtension on String {
 }
 
 extension DateExtension on DateTime {
+  static DateTime fromSecondsSinceEpoch(int secondsSinceEpoch,
+          {bool isUtc = false}) =>
+      DateTime.fromMillisecondsSinceEpoch(secondsSinceEpoch * 1000,
+          isUtc: isUtc);
+  static DateTime fromDaysSinceEpoch(int daysSinceEpoch,
+          {bool isUtc = false}) =>
+      DateTime.fromMillisecondsSinceEpoch(daysSinceEpoch * 24 * 3600 * 1000,
+          isUtc: isUtc);
+
   int get secondsSinceEpoch => (millisecondsSinceEpoch / 1000).round();
 
   int get daysSinceEpoch =>
