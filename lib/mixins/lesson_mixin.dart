@@ -1,21 +1,20 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../app_export.dart';
 
-mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
+mixin LessonMixin<S extends AbstractScreen>
+    on AbstractScreenState<S>, HeaderMixin {
   ParentContent? content;
   final GlobalKey<AnimatedListState> _chatListKey =
       GlobalKey<AnimatedListState>();
 
-  int index = 0;
   int _fouls = 0, _streakCorrects = 0, _maxCorrects = 0;
   final List<Talk> _chatItems = [];
+  final ValueNotifier<int> index = ValueNotifier(0);
   final ValueNotifier<double> inputSize = ValueNotifier(0);
-  final ValueNotifier<Offset> _progress = ValueNotifier(const Offset(0, 0));
   final ScrollController _chatScrollController = ScrollController();
 
   final GlobalKey _footerKey = GlobalKey();
@@ -28,26 +27,26 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Future<void> nextStep() async {
-    if (index >= content!.children.length) {
+    if (index.value >= content!.children.length) {
       var len = (content!.children.length / 2).round();
       var corrects = len - _fouls.max(5);
       print(
           "${corrects * 100 / len}% $corrects $_maxCorrects $len   ${3 - _fouls.max(2)}");
       await _delay(500);
       if (mounted) {
-        Navigator.pop(context, 3 - _fouls.max(2));
+        // Navigator.pop(context, 3 - _fouls.max(2));
       }
       return;
     }
-    var talk = content!.children[index] as Talk;
+    var talk = content!.children[index.value] as Talk;
     if (await _delay(500)) return;
+    index.value += 1;
     await _insertChat(talk);
 
     await serviceLocator<Speaker>()
         .play(talk.targetValue, narrator: talk.type.narrator);
 
-    ++index;
-    talk = content!.children[index] as Talk;
+    talk = content!.children[index.value] as Talk;
     inputSize.value = _getFooterHeight();
     // await serviceLocator<Speaker>()
     //     .play(currentTalk!.targetValue, narrator: currentTalk!.type.narrator);
@@ -73,12 +72,13 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                 padding, paddingTop + padding * 6, padding, _getFooterHeight()),
             itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
         Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 76.d,
-            child: _headerBuilder(
-                EdgeInsets.fromLTRB(padding, padding, padding, 0))),
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 76.d,
+          child: headerBuilder(context, index,
+              EdgeInsets.fromLTRB(padding, padding, padding, 0), content!),
+        ),
         ValueListenableBuilder(
             valueListenable: inputSize,
             builder: (context, value, child) {
@@ -111,73 +111,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
               );
             })
       ],
-    );
-  }
-
-  Widget _headerBuilder(EdgeInsetsGeometry padding) {
-    var person = (content!.children[0] as Talk).personId;
-    return Widgets.rect(
-      padding: padding,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [
-              0.7,
-              1
-            ],
-            colors: <Color>[
-              TColors.primary10,
-              TColors.primary10.withOpacity(0)
-            ]),
-      ),
-      child: Row(
-        children: [
-          Avatar(person, 64.d),
-          SizedBox(width: 12.d),
-          Expanded(
-              child: ValueListenableBuilder(
-            valueListenable: _progress,
-            builder: (context, value, child) => Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(person),
-                TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                  tween: Tween(
-                    begin: value.dx,
-                    end: value.dy,
-                  ),
-                  builder: (context, value, _) => LinearProgressIndicator(
-                    minHeight: 6.d,
-                    value: value,
-                    color: TColors.green,
-                    backgroundColor: TColors.primary20,
-                    borderRadius: BorderRadius.all(Radius.circular(6.d)),
-                  ),
-                ),
-                Text(
-                  "${index + 1} / ${content!.children.length}",
-                  style: TStyles.small.copyWith(color: TColors.primary30),
-                ),
-              ],
-            ),
-          )),
-          SizedBox(width: 12.d),
-          Widgets.button(
-            context,
-            width: 32.d,
-            height: 32.d,
-            radius: 32.d,
-            padding: EdgeInsets.all(8.d),
-            color: TColors.primary20,
-            child: Asset.load<SvgPicture>("close"),
-            onPressed: () => Navigator.pop(context),
-          )
-        ],
-      ),
     );
   }
 
@@ -215,10 +148,10 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       // Waiting for celebration
       if (await _delay(500)) return;
       inputSize.value = 0;
-      await _insertChat(content!.children[index] as Talk);
+      index.value += 1;
+      await _insertChat(content!.children[index.value - 1] as Talk);
 
       if (await _delay(500)) return;
-      index++;
       nextStep();
     } else {
       ++_fouls;
@@ -228,10 +161,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Future<void> _insertChat(Talk item) async {
-    _progress.value = Offset(
-      index / content!.children.length,
-      (index + 1) / content!.children.length,
-    );
     const duration = Duration(milliseconds: 500);
     _chatListKey.currentState?.insertItem(_chatItems.length);
     _chatItems.add(item);
