@@ -97,11 +97,11 @@ mixin LessonMixin {
     await Future.delayed(const Duration(milliseconds: 500));
 
     if (child.type == ContentType.bot) {
-    if (!context.mounted) return;
-    await updateContent();
-    index.value += 1;
-    await serviceLocator<Speaker>()
-        .play(child.targetValue, narrator: child.type.narrator);
+      if (!context.mounted) return;
+      await updateContent();
+      index.value += 1;
+      await serviceLocator<Speaker>()
+          .play(child.targetValue, narrator: child.type.narrator);
     child = steps[index.value];
     }
     
