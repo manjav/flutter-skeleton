@@ -11,7 +11,7 @@ mixin LessonChatMixin<S extends AbstractScreen>
 
   @override
   void initState() {
-    content = Get.arguments["content"];
+    steps = Get.arguments["content"].children;
     nextStep(context);
     super.initState();
   }
@@ -21,7 +21,7 @@ mixin LessonChatMixin<S extends AbstractScreen>
 
   @override
   Widget contentFactory(double paddingTop) {
-    if (content == null) {
+    if (steps.isEmpty) {
       return const SizedBox();
     }
 
@@ -38,9 +38,13 @@ mixin LessonChatMixin<S extends AbstractScreen>
           top: 0,
           left: 0,
           right: 0,
-          height: 76.d,
-          child: headerBuilder(context, index,
-              EdgeInsets.fromLTRB(padding, padding, padding, 0), content!),
+          height: headerHeight,
+          child: headerBuilder(
+              context,
+              index,
+              EdgeInsets.fromLTRB(padding, padding, padding, 0),
+              Get.arguments["content"].title,
+              steps),
         ),
         ValueListenableBuilder(
             valueListenable: headerSize,
@@ -106,7 +110,7 @@ mixin LessonChatMixin<S extends AbstractScreen>
   updateContent() async => await _insertChat();
 
   Future<void> _insertChat() async {
-    var talk = content!.children[index.value] as Talk;
+    var talk = steps[index.value] as Talk;
     const duration = Duration(milliseconds: 500);
 
     _chatListKey.currentState?.insertItem(_chatItems.length);

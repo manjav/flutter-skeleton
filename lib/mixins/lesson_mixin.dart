@@ -6,15 +6,14 @@ import 'package:flutter_svg/svg.dart';
 import '../app_export.dart';
 
 mixin LessonMixin {
-  ParentContent? content;
+  List<Content> steps = [];
   final GlobalKey footerKey = GlobalKey();
   int _fouls = 0, _streakCorrects = 0, _maxCorrects = 0;
   final ValueNotifier<int> index = ValueNotifier(0);
   final ValueNotifier<double> headerSize = ValueNotifier(0);
 
   Widget headerBuilder(BuildContext context, ValueNotifier<int> index,
-      EdgeInsetsGeometry padding, ParentContent group) {
-    // var person = (group.children[0] as Talk).personId;
+      EdgeInsetsGeometry padding, String title, List<Content> group) {
     return Widgets.rect(
       padding: padding,
       decoration: BoxDecoration(
@@ -41,13 +40,13 @@ mixin LessonMixin {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(group.title),
+                  Text(title),
                   TweenAnimationBuilder<double>(
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut,
                     tween: Tween(
-                      begin: (value - 1) / group.children.length,
-                      end: value / group.children.length,
+                      begin: (value - 1) / steps.length,
+                      end: value / steps.length,
                     ),
                     builder: (context, value, _) => LinearProgressIndicator(
                       minHeight: 6.d,
@@ -58,7 +57,7 @@ mixin LessonMixin {
                     ),
                   ),
                   Text(
-                    "${index.value} / ${group.children.length}",
+                    "${index.value} / ${steps.length}",
                     style: TStyles.small.copyWith(color: TColors.primary30),
                   ),
                 ],
@@ -82,18 +81,18 @@ mixin LessonMixin {
   }
 
   Future<void> nextStep(BuildContext context) async {
-    if (index.value >= content!.children.length) {
-      var len = (content!.children.length / 2).round();
+    if (index.value >= steps.length) {
+      var len = (steps.length / 2).round();
       var corrects = len - _fouls.max(5);
       print(
           "${corrects * 100 / len}% $corrects $_maxCorrects $len   ${3 - _fouls.max(2)}");
       await Future.delayed(const Duration(milliseconds: 500));
       if (context.mounted) {
-        // Navigator.pop(context, 3 - _fouls.max(2));
+        Navigator.pop(context, 3 - _fouls.max(2));
       }
       return;
     }
-    var child = content!.children[index.value];
+    var child = steps[index.value];
     await Future.delayed(const Duration(milliseconds: 500));
     if (!context.mounted) return;
 
@@ -101,9 +100,9 @@ mixin LessonMixin {
     index.value += 1;
     await serviceLocator<Speaker>()
         .play(child.targetValue, narrator: child.type.narrator);
+    
+    child = steps[index.value];
     if (!context.mounted) return;
-
-    child = content!.children[index.value];
     headerSize.value = getFooterHeight(context);
     startQuiz(child);
   }

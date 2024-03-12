@@ -13,9 +13,9 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
     with LessonChatMixin {
   @override
   Future<void> nextStep(BuildContext context) async {
-    if (index.value < content!.children.length) {
+    if (index.value < steps.length) {
       serviceLocator<Dictator>()
-          .initialize(args: [content!.children[index.value + 1]]);
+          .initialize(args: [steps[index.value + 1]]);
     }
     await super.nextStep(context);
   }
@@ -38,7 +38,7 @@ class _ScreenState extends AbstractScreenState<LessonListenScreen>
 
   @override
   updateContent() async {
-    var talk = content!.children[index.value] as Talk;
+    var talk = steps[index.value] as Talk;
     if (talk.type == ContentType.user) {
       serviceLocator<Speaker>()
           .play(talk.targetValue, narrator: talk.type.narrator);

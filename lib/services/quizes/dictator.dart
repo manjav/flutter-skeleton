@@ -8,11 +8,11 @@ class Dictator extends Quiz {
   List<String> _pattern = [];
   Answers answers = Answers([]);
 
-  Talk? currentStage;
+  Content? currentStage;
 
   @override
   initialize({List<Object>? args}) async {
-    currentStage = args![0] as Talk;
+    currentStage = args![0] as Content;
     var text = currentStage!.targetValue.simple();
     _pattern = text.split(" ");
     charByChar = _pattern.length < 2;

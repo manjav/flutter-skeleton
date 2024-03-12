@@ -14,8 +14,8 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
     with LessonChatMixin {
   @override
   Future<void> startQuiz(Content child) async {
-    await Future.delayed(const Duration(seconds: 2));
-    _onQuizResult(QuizState.success, child.targetValue);
+    // await Future.delayed(const Duration(seconds: 2));
+    // _onQuizResult(QuizState.success, child.targetValue);
     serviceLocator<STT>().start(
       locale: serviceLocator<AccountProvider>().metadata["targetLanguage"],
       pattern: child.targetValue.simple(),
@@ -41,13 +41,13 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
 
   @override
   Widget footerBuilder() {
-    if (index.value >= content!.children.length) {
+    if (index.value >= steps.length) {
       return const SizedBox();
     }
     return Column(children: [
       DirText("speaking_hint".l()),
       SizedBox(height: 24.d),
-      ListenerBox(content!.children[index.value] as Talk,
+      ListenerBox(steps[index.value] as Talk,
           challengeMode: Get.arguments["challengeMode"])
     ]);
   }
