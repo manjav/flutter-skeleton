@@ -44,6 +44,13 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(12.d, 210.d, 12.d, 64.d);
 
+  @override
+  List<Widget> appBarElements() => [
+        Indicator(widget.route, Values.potion, width: 256.d),
+        Indicator(widget.name, Values.gold),
+        Indicator(widget.name, Values.nectar, width: 310.d),
+      ];
+
   _findOpponents() async {
     var deltaTime = _account.getTime() - _fetchAt;
     var opponentBloc = serviceLocator<OpponentsProvider>();
