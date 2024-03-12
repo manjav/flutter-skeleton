@@ -15,7 +15,6 @@ class _DictationBoxState extends State<DictationBox> {
   @override
   Widget build(BuildContext context) {
     final dictator = serviceLocator<Dictator>();
-    final size = 80.d;
     return ValueListenableBuilder<List<String>>(
       valueListenable: dictator.answers,
       builder: (context, value, child) {
@@ -29,6 +28,7 @@ class _DictationBoxState extends State<DictationBox> {
                 textDirection: Localization.dir,
                 children: [
                   DirText("listening_hint".l()),
+                  SpeakerBox(content, 40.d),
                 ],
               ),
               SizedBox(height: 8.d),
@@ -115,6 +115,35 @@ class _DictationBoxState extends State<DictationBox> {
           dictator.state.value != QuizState.ready || choice.used ? -1 : 30,
       child: Opacity(opacity: choice.used ? 0 : 1, child: Text(choice.text)),
       onPressed: () => dictator.selectChoice(choice),
+    );
+  }
+}
+
+class SpeakerBox extends StatelessWidget {
+  final double size;
+  final Content content;
+  const SpeakerBox(this.content, this.size, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Widgets.button(
+      context,
+      radius: size,
+      width: size,
+      height: size,
+      color: TColors.primary20,
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(12.d),
+      child: StreamBuilder(
+        stream: serviceLocator<Sounds>()
+            .getPlayer(content.targetValue)
+            .onPlayerStateChanged,
+        builder: (context, snapshot) => Asset.load<SvgPicture>(
+            snapshot.data == PlayerState.playing ? "stop" : "play",
+            width: size * 0.4),
+      ),
+      onPressed: () => serviceLocator<Speaker>()
+          .play(content.targetValue, narrator: content.type.narrator),
     );
   }
 }
