@@ -140,6 +140,18 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
 
   Widget footerBuilder() {
     if (index.value >= steps.length) return const SizedBox();
+    if (index.value < 3) {
+      return ChoosingBox(
+        mode: [
+          ChoiceMode.text,
+          ChoiceMode.voice,
+          ChoiceMode.image
+        ][index.value],
+        choices: List.generate(4, (i) => steps[i].id),
+        answer: steps[index.value].id,
+        onSelect: (text, isCorrect) => onQuizResult(context, isCorrect),
+      );
+    }
     return const DictationBox();
   }
 }
