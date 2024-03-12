@@ -44,8 +44,8 @@ class GroupContent extends ParentContent {
 
   List<Word> get words {
     var result = <Word>[];
-    var all = ["Merhaba", "teşekkürler", "Hoşçakal"];
-    var natives = ["سلام", "ممنون", "خداحافظ"];
+    var all = ["Merhaba", "teşekkürler", "Hoşçakal", "Adiniz ne?"];
+    var natives = ["سلام", "ممنون", "خداحافظ", "اسم شما چیه؟"];
     // Set<String> all = {};
     // for (var talk in children) {
     //   all.addAll((talk as Talk).words);

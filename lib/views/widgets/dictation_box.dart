@@ -19,35 +19,15 @@ class _DictationBoxState extends State<DictationBox> {
     return ValueListenableBuilder<List<String>>(
       valueListenable: dictator.answers,
       builder: (context, value, child) {
-        final talk = dictator.currentStage!;
+        final content = dictator.currentStage!;
         return Padding(
           padding: EdgeInsets.all(8.d),
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                textDirection: Localization.dir,
                 children: [
-                  Widgets.button(
-                    context,
-                    radius: size,
-                    width: size * 0.5,
-                    height: size * 0.5,
-                    color: TColors.primary10,
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(12.d),
-                    child: StreamBuilder(
-                      stream: serviceLocator<Sounds>()
-                          .getPlayer(talk.targetValue)
-                          .onPlayerStateChanged,
-                      builder: (context, snapshot) => Asset.load<SvgPicture>(
-                          snapshot.data == PlayerState.playing
-                              ? "stop"
-                              : "play",
-                          width: size * 0.3),
-                    ),
-                    onPressed: () => serviceLocator<Speaker>()
-                        .play(talk.targetValue, narrator: talk.type.narrator),
-                  ),
                   DirText("listening_hint".l()),
                 ],
               ),

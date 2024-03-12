@@ -7,6 +7,7 @@ import '../app_export.dart';
 
 mixin LessonMixin {
   List<Content> steps = [];
+  double headerHeight = 76.d;
   final GlobalKey footerKey = GlobalKey();
   int _fouls = 0, _streakCorrects = 0, _maxCorrects = 0;
   final ValueNotifier<int> index = ValueNotifier(0);
