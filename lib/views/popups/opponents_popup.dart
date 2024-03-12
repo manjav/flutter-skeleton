@@ -88,7 +88,8 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             child: Stack(
               children: [
                 PageView.builder(
-                    itemBuilder: _pageItemBuilder,
+                    itemBuilder: (ctx, index) =>
+                        _pageItemBuilder(opponents[index]),
                     itemCount: opponents.length,
                     onPageChanged: (value) =>
                         _selectMap(opponents, value + 0.0, pageChange: false),
@@ -98,7 +99,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
             )));
   }
 
-  Widget? _pageItemBuilder(BuildContext context, int index) {
+  Widget? _pageItemBuilder(Opponent opponent) {
     var random = Random();
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.d),
@@ -109,16 +110,16 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
           onRiveInit: (artboard) {
             final controller =
                 StateMachineController.fromArtboard(artboard, 'Map')!;
-            artboard.addController(controller);
-            controller.findInput<double>('weather')?.value = 0;
-            controller.findInput<double>('money')?.value = _selectedOpponent
-                .value
-                .getGoldLevel(_account.level)
-                .floorToDouble();
+
+            controller.findInput<double>('money')?.value =
+                opponent.getGoldLevel(_account.level).floorToDouble();
+
             controller.findInput<double>('building')?.value =
                 random.nextInt(4).floorToDouble();
             controller.findInput<double>('theme')?.value =
-                _selectedOpponent.value.theme.toDouble();
+                opponent.theme.toDouble();
+
+            artboard.addController(controller);
           },
         ));
   }
