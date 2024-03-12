@@ -94,14 +94,16 @@ mixin LessonMixin {
     }
     var child = steps[index.value];
     await Future.delayed(const Duration(milliseconds: 500));
-    if (!context.mounted) return;
 
+    if (child.type == ContentType.bot) {
+    if (!context.mounted) return;
     await updateContent();
     index.value += 1;
     await serviceLocator<Speaker>()
         .play(child.targetValue, narrator: child.type.narrator);
-    
     child = steps[index.value];
+    }
+    
     if (!context.mounted) return;
     headerSize.value = getFooterHeight(context);
     startQuiz(child);
