@@ -35,6 +35,22 @@ class Fruit {
     });
     return map;
   }
+
+  Fruit copyWith({
+    String? name,
+    int? id,
+    int? maxLevel,
+    int? minLevel,
+    int? category,
+  }) {
+    return Fruit.initialize({
+      "name": name ?? this.name,
+      "id": id ?? this.id,
+      "maxLevel": maxLevel ?? this.maxLevel,
+      "minLevel": minLevel ?? this.minLevel,
+      "category": category ?? this.category,
+    });
+  }
 }
 
 //         -=-=-=-    Card    -=-=-=-
@@ -97,6 +113,41 @@ class FruitCard {
     }
     return map;
   }
+
+  FruitCard copyWith({
+    String? name,
+    bool? isHero,
+    int? id,
+    double? virtualRarity,
+    int? power,
+    int? rarity,
+    int? heroType,
+    int? cooldown,
+    int? powerLimit,
+    int? veteranLevel,
+    int? powerAttribute,
+    int? wisdomAttribute,
+    int? blessingAttribute,
+    int? potionLimit,
+    Fruit? fruit,
+  }) {
+    return FruitCard.initialize(
+      {
+        "name": name ?? this.name,
+        "isHero": isHero ?? this.isHero,
+        "id": id ?? this.id,
+        "virtualRarity": virtualRarity ?? this.virtualRarity,
+        "power": power ?? this.power,
+        "rarity": rarity ?? this.rarity,
+        "heroType": heroType ?? this.heroType,
+        "cooldown": cooldown ?? this.cooldown,
+        "powerLimit": powerLimit ?? this.powerLimit,
+        "veteranLevel": veteranLevel ?? this.veteranLevel,
+        "potionLimit": potionLimit ?? this.potionLimit,
+      },
+      this.fruit.copyWith(),
+    );
+  }
 }
 
 class AbstractCard {
@@ -112,7 +163,9 @@ class AbstractCard {
 
   AbstractCard(this.account, this.map) {
     power = map['power'] != null ? map['power'].round() : 0;
-    base = account.loadingData.baseCards[map['base_card_id']]!;
+    base = map.containsKey("copy")
+        ? account.loadingData.baseCards[map['base_card_id']]!.copyWith()
+        : account.loadingData.baseCards[map['base_card_id']]!;
   }
   int get basePrice => (power * powerToGoldRatio * minPriceRatio).round();
   int get bidStep => (power * powerToGoldRatio * bidStepRatio).round();
