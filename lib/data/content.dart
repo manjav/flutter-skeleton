@@ -41,6 +41,19 @@ class GroupContent extends ParentContent {
   GroupContent.create(super.id, super.map) : super.create() {
     type = ContentType.group;
   }
+
+  List<Word> get words {
+    var result = <Word>[];
+    var all = ["Merhaba", "teşekkürler", "Hoşçakal"];
+    var natives = ["سلام", "ممنون", "خداحافظ"];
+    // Set<String> all = {};
+    // for (var talk in children) {
+    //   all.addAll((talk as Talk).words);
+    // }
+    for (var i = 0; i < all.length; i++) {
+      result.add(Word.create(all[i], {"native": natives[i], "index": i}));
+    }
+
     return result;
   }
 }
@@ -75,34 +88,30 @@ extension ContentTypeExtension on ContentType {
       };
 }
 
-class Word {
-  String value;
-  int count;
-  String nativeValue;
-  DateTime firstReview;
-  DateTime lastReview;
-  DateTime nextReview;
-  Word(this.value, this.count, this.nativeValue, this.firstReview,
-      this.nextReview, this.lastReview);
-
-  static Word fromMap(String value, Map map) {
-    return Word(
-      value,
-      map["count"],
-      map["native"],
-      DateExtension.fromDaysSinceEpoch(map["first"]),
-      DateExtension.fromDaysSinceEpoch(map["last"]),
-      DateExtension.fromDaysSinceEpoch(map["next"]),
-    );
+class Word extends Content {
+  int count = 0;
+  DateTime? firstReview;
+  DateTime? lastReview;
+  DateTime? nextReview;
+  Word.create(String id, Map map) : super.create(id, map) {
+    targetValue = id;
+    count = map["count"] ?? 0;
+    nativeValue = map["native"] ?? "";
+    if (!map.containsKey("first")) return;
+    firstReview = DateExtension.fromDaysSinceEpoch(map["first"]);
+    lastReview = DateExtension.fromDaysSinceEpoch(map["last"]);
+    nextReview = DateExtension.fromDaysSinceEpoch(map["next"]);
   }
+
+  static Word fromMap(String id, Map map) => Word.create(id, map);
 
   Map<String, dynamic> toMap() {
     return {
       "count": count,
       "native": nativeValue,
-      "first": firstReview.daysSinceEpoch,
-      "last": lastReview.daysSinceEpoch,
-      "next": nextReview.daysSinceEpoch,
+      "first": firstReview!.daysSinceEpoch,
+      "last": lastReview!.daysSinceEpoch,
+      "next": nextReview!.daysSinceEpoch,
     };
   }
 

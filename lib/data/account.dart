@@ -101,8 +101,8 @@ class AccountProvider extends ChangeNotifier {
   }
 
   Future<Map<String, Word>> saveWord(Word word) async {
-    saveStat("words_${metadata["targetLanguage"]}", word.value, word);
-    words[word.value] = word;
+    saveStat("words_${metadata["targetLanguage"]}", word.id, word);
+    words[word.id] = word;
     notifyListeners();
     return words;
   }
