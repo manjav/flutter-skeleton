@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../app_export.dart';
-import '../../../main.dart';
 
 class HomeScreen extends AbstractScreen {
   HomeScreen({super.key}) : super(Routes.home);
