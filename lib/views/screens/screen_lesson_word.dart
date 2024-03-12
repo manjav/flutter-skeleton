@@ -12,6 +12,8 @@ class LessonWordScreen extends AbstractScreen {
 }
 
 class _ScreenState extends AbstractScreenState<LessonWordScreen> {
+  final PageController _pageController = PageController();
+
   @override
   void initState() {
     var content = Get.arguments["content"];
@@ -32,6 +34,18 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
     var padding = 12.d;
     return Stack(
       children: [
+        Positioned(
+          left: padding,
+          right: padding,
+          top: paddingTop + padding + headerHeight,
+          bottom: 400.d,
+          child: PageView.builder(
+            itemCount: steps.length,
+            itemBuilder: _contentBuilder,
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+          ),
+        ),
         Positioned(
           top: 0,
           left: 0,
@@ -79,6 +93,15 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
       ],
     );
   }
+
+  @override
+  updateContent() async {
+    if (index.value < steps.length - 1) {
+      _pageController.animateToPage(index.value + 1,
+          duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+    }
+  }
+
   @override
   Future<void> nextStep(BuildContext context) async {
     await super.nextStep(context);
@@ -88,7 +111,7 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
   }
 
   @override
-  void startQuiz(Talk talk) {
+  void startQuiz(Content child) {
     serviceLocator<Dictator>().start(onResult: _onQuizResult);
   }
 
@@ -101,6 +124,18 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
       await Future.delayed(const Duration(seconds: 1));
       serviceLocator<Dictator>().reset();
     }
+  }
+
+  Widget _contentBuilder(BuildContext context, int index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text("word_hint".l()),
+        index == 2
+            ? SpeakerBox(steps[index], 100.d)
+            : Asset.load<Image>("ui_frame_wood_big"),
+      ],
+    );
   }
 
   Widget footerBuilder() {

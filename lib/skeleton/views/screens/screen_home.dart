@@ -138,7 +138,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       padding: EdgeInsets.all(12.d),
       child: Column(
         children: [
-          for (var i = 6; i >= 0; i--) _lessonItemBuilder(group, i),
+          for (var i = 3; i >= 0; i--) _lessonItemBuilder(group, i),
           Row(children: [
             Image.network(group.iconUrl, height: 40.d),
             SizedBox(width: 12.d),
@@ -175,11 +175,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       var s = await serviceLocator<RouteService>().to(
           switch (type) {
             1 => Routes.listen,
-            3 => Routes.word,
-            4 => Routes.listen,
-            5 => Routes.listen,
-            6 => Routes.listen,
-            _ => Routes.speak,
+            0 || 2 => Routes.speak,
+            _ => Routes.word,
           },
           args: {"content": group, "challengeMode": type == 2});
       if (s == null || s <= scoreNotifier.value) return;
