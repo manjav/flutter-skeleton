@@ -85,7 +85,7 @@ mixin LessonMixin {
     if (index.value >= steps.length) {
       var len = (steps.length / 2).round();
       var corrects = len - _fouls.max(5);
-      print(
+      debugPrint(
           "${corrects * 100 / len}% $corrects $_maxCorrects $len   ${3 - _fouls.max(2)}");
       await Future.delayed(const Duration(milliseconds: 500));
       if (context.mounted) {
@@ -102,9 +102,9 @@ mixin LessonMixin {
       index.value += 1;
       await serviceLocator<Speaker>()
           .play(child.targetValue, narrator: child.type.narrator);
-    child = steps[index.value];
+      child = steps[index.value];
     }
-    
+
     if (!context.mounted) return;
     headerSize.value = getFooterHeight(context);
     startQuiz(child);
