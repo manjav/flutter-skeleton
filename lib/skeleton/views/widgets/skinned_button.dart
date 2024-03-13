@@ -12,6 +12,10 @@ class SkinnedButton extends StatelessWidget {
   final double? width;
   final double? height;
   final double? cornerRadius;
+  final double? paddingTop;
+  final double? paddingRight;
+  final double? paddingBottom;
+  final double? paddingLeft;
   final Alignment? alignment;
   final EdgeInsets? margin;
   final EdgeInsets? padding;
@@ -26,6 +30,10 @@ class SkinnedButton extends StatelessWidget {
     this.child,
     this.width,
     this.height,
+    this.paddingTop,
+    this.paddingRight,
+    this.paddingBottom,
+    this.paddingLeft,
     this.cornerRadius,
     this.isEnable = true,
     this.alignment,
@@ -42,6 +50,7 @@ class SkinnedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var strokeSize = 3.d;
+
     return Widgets.touchable(
       context,
       id: buttonId,
@@ -62,10 +71,11 @@ class SkinnedButton extends StatelessWidget {
             margin: margin ?? EdgeInsets.zero,
             padding: padding ??
                 EdgeInsets.fromLTRB(
-                    16.d,
-                    8.d + (_isPressed.value ? strokeSize : 0),
-                    16.d,
-                    8.d - (_isPressed.value ? strokeSize : 0)),
+                    paddingLeft ?? 16.d,
+                    (paddingTop ?? 8.d) + (_isPressed.value ? strokeSize : 0),
+                    (paddingRight ?? 16.d),
+                    (paddingBottom ?? 8.d) -
+                        (_isPressed.value ? strokeSize : 0)),
             decoration: BattonDecoration(
                 mainColor: color,
                 isEnable: isEnable,

@@ -68,7 +68,10 @@ class _WidgetState extends State<MatchBox> {
           color: pair.isEnable
               ? (value == buttonId ? TColors.blue : TColors.white)
               : TColors.teal,
-          padding: EdgeInsets.zero,
+          paddingTop: 3.d,
+          paddingLeft: 3.d,
+          paddingBottom: 3.d,
+          paddingRight: 3.d,
           margin: EdgeInsets.all(4.d),
           child: switch (mode) {
             ButtonMode.text => Text(item, style: TStyles.large),

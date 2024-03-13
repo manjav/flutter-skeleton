@@ -53,21 +53,24 @@ class _ChoosingBoxState extends State<ChoosingBox> {
                 }
               : TColors.white,
           margin: EdgeInsets.all(4.d),
-          padding: EdgeInsets.zero,
-          onPressed: () => _onChoosing(index),
+          paddingTop: 3.d,
+          paddingLeft: 3.d,
+          paddingBottom: 3.d,
+          paddingRight: 3.d,
           child: switch (widget.mode) {
             ButtonMode.text =>
-              Text(widget.choices[index], style: TStyles.large),
+              Text(widget.choices[index].targetValue, style: TStyles.large),
             ButtonMode.image => _image(widget.choices[index]),
-            _ => _player(widget.choices[index]),
+            _ => _player(widget.choices[index].targetValue),
           },
+          onPressed: () => _onChoosing(index),
         );
       },
     );
   }
 
   Future<void> _onChoosing(int index) async {
-    var isCorrect = widget.choices[index] == widget.answer;
+    var isCorrect = widget.choices[index].id == widget.answer;
     widget.onSelect?.call(widget.choices[index], isCorrect);
     _feedbacks.value = IntVec2(index, isCorrect ? 1 : -1);
     await Future.delayed(const Duration(milliseconds: 200));
