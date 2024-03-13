@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
 
-class LessonListenScreen extends AbstractScreen {
-  LessonListenScreen({super.key}) : super(Routes.listen);
+class LessonDictationScreen extends AbstractScreen {
+  LessonDictationScreen({super.key}) : super(Routes.dictation);
 
   @override
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<LessonListenScreen>
+class _ScreenState extends AbstractScreenState<LessonDictationScreen>
     with LessonChatMixin {
   @override
   Future<void> nextStep(BuildContext context) async {
     if (index.value < steps.length) {
-      serviceLocator<Dictator>()
-          .initialize(args: [steps[index.value + 1]]);
+      serviceLocator<Dictator>().initialize(args: [steps[index.value + 1]]);
     }
     await super.nextStep(context);
   }

@@ -174,7 +174,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       // print(group.words);
       var s = await serviceLocator<RouteService>().to(
           switch (type) {
-            1 => Routes.listen,
+            1 => Routes.dictation,
             0 || 2 => Routes.speak,
             3 => Routes.match,
             _ => Routes.word,
