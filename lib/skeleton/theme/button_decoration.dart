@@ -9,6 +9,7 @@ class BattonDecoration extends Decoration {
   final double? strokeSize;
   final double? cornerRadius;
   final bool? isPressed;
+  final bool? isEnable;
 
   const BattonDecoration({
     this.mainColor,
@@ -17,6 +18,7 @@ class BattonDecoration extends Decoration {
     this.strokeSize,
     this.cornerRadius,
     this.isPressed,
+    this.isEnable,
   }) : super();
 
   @override
@@ -27,6 +29,7 @@ class BattonDecoration extends Decoration {
       strokeSize ?? 3.d,
       cornerRadius ?? 10.d,
       isPressed ?? false,
+      isEnable ?? true,
     );
   }
 }
@@ -37,6 +40,7 @@ class _ButtonPainter extends BoxPainter {
   final double strokeSize;
   final double cornerRadius;
   final bool isPressed;
+  final bool isEnable;
   final _mainPaint = Paint()
     ..style = PaintingStyle.fill
     ..color;
@@ -49,6 +53,7 @@ class _ButtonPainter extends BoxPainter {
     this.strokeSize,
     this.cornerRadius,
     this.isPressed,
+    this.isEnable,
   ) : super() {
     _mainPaint.color = mainColor;
     _hasOutline = mainColor == TColors.white;
@@ -60,10 +65,9 @@ class _ButtonPainter extends BoxPainter {
     if (configuration.size!.width == 0 || configuration.size!.height == 0) {
       return;
     }
-    var isEnable = true;
     var cr = cornerRadius;
     var size = configuration.size!;
-    var pressed = isPressed && isEnable;
+    var pressed = isPressed || !isEnable;
     var b = pressed ? strokeSize : 0;
     var o = _hasOutline ? outlineSize : 0;
 
@@ -75,7 +79,11 @@ class _ButtonPainter extends BoxPainter {
         offset.dx + o,
         offset.dy + b + o,
         offset.dx + size.width - o,
-        offset.dy + size.height - o - (pressed ? 0 : strokeSize),
+        offset.dy +
+            size.height -
+            o -
+            (pressed ? 0 : strokeSize) -
+            (_hasOutline ? 0 : outlineSize),
         cr * (_hasOutline ? 0.8 : 1.0),
         cr * (_hasOutline ? 0.8 : 1.0));
     canvas.drawRRect(fr, _mainPaint);

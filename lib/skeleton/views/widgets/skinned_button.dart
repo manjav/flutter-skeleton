@@ -68,10 +68,11 @@ class SkinnedButton extends StatelessWidget {
                     8.d - (_isPressed.value ? strokeSize : 0)),
             decoration: BattonDecoration(
                 mainColor: color,
+                isEnable: isEnable,
                 isPressed: _isPressed.value,
                 strokeSize: strokeSize),
             child: Opacity(
-                opacity: isEnable ? 1 : 0.7,
+                opacity: isEnable ? 1 : 0.6,
                 child: label != null || icon != null
                     ? Row(mainAxisSize: MainAxisSize.min, children: [
                         icon == null
