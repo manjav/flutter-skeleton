@@ -21,6 +21,13 @@ class IntVec2 {
   String toString() => "$i, $j";
 }
 
+class IntVec3 extends IntVec2 {
+  final int k;
+  IntVec3(super.i, super.j, this.k);
+  @override
+  String toString() => "$i, $j, $k";
+}
+
 class ListValueNotifier<T> extends ValueNotifier<List<T>> {
   ListValueNotifier(super.value);
 
@@ -36,6 +43,11 @@ class ListValueNotifier<T> extends ValueNotifier<List<T>> {
 
   void removeLast() {
     value.removeLast();
+    notifyListeners();
+  }
+
+  void update(int index, T item) {
+    value[index] = item;
     notifyListeners();
   }
 }
