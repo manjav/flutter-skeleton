@@ -138,7 +138,12 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
                 narrator: steps[index].type.narrator,
                 width: 100.d,
               )
-            : Asset.load<Image>("ui_frame_wood_big"),
+            : ImageBox(
+                name: steps[index].id,
+                width: 240.d,
+                height: 240.d,
+                borderRadius: 20.d,
+              ),
       ],
     );
   }

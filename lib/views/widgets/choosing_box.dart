@@ -61,7 +61,7 @@ class _ChoosingBoxState extends State<ChoosingBox> {
           child: switch (widget.mode) {
             ButtonMode.text =>
               Text(widget.choices[index].targetValue, style: TStyles.large),
-            ButtonMode.image => _image(widget.choices[index]),
+            ButtonMode.image => ImageBox(name: widget.choices[index].id),
             _ => _player(widget.choices[index].targetValue),
           },
           onPressed: () => _onChoosing(index),
@@ -77,8 +77,6 @@ class _ChoosingBoxState extends State<ChoosingBox> {
     await Future.delayed(const Duration(milliseconds: 200));
     _feedbacks.value = IntVec2(index, 0);
   }
-
-  Widget _image(String item) => Asset.load<Image>("ui_frame_wood_big");
 
   Widget _player(String choice) {
     return Row(

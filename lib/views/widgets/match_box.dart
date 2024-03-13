@@ -34,7 +34,7 @@ class _WidgetState extends State<MatchBox> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _listBuilder(widget.choices, widget.mode, true),
-        _listBuilder(widget.choices, ButtonMode.voice, false),
+        _listBuilder(widget.choices, ButtonMode.image, false),
       ],
     );
   }
@@ -75,7 +75,7 @@ class _WidgetState extends State<MatchBox> {
           margin: EdgeInsets.all(4.d),
           child: switch (mode) {
             ButtonMode.text => Text(item, style: TStyles.large),
-            ButtonMode.image => _image(item),
+            ButtonMode.image => ImageBox(name: widget.choices[index].id),
             _ => _player(item),
           },
           onPressed: () => _onChoosing(index, pair, isTarget),

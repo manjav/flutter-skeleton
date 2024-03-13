@@ -156,3 +156,26 @@ class SpeakerBox extends StatelessWidget {
     );
   }
 }
+
+class ImageBox extends StatelessWidget {
+  final String name;
+  final double? width, height, borderRadius;
+  const ImageBox({
+    required this.name,
+    this.width,
+    this.height,
+    this.borderRadius = 8,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius!),
+      child: Image.network(
+        "https://s1.matnyaar.ir/gpt/dalle.php?input=$name",
+        width: width,
+        height: height,
+      ),
+    );
+  }
+}
