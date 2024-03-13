@@ -151,7 +151,7 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
           ButtonMode.voice,
           ButtonMode.image
         ][index.value],
-        choices: List.generate(4, (i) => steps[i].id),
+        choices: List.from(steps),
         answer: steps[index.value].id,
         onSelect: (text, isCorrect) => onQuizResult(context, isCorrect),
       );

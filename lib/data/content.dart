@@ -1,4 +1,5 @@
 import 'package:lingai/app_export.dart';
+import 'package:lingai/skeleton/export.dart';
 
 class Content {
   int index = 0;
@@ -44,14 +45,16 @@ class GroupContent extends ParentContent {
 
   List<Word> get words {
     var result = <Word>[];
-    var all = ["Merhaba", "teşekkürler", "Hoşçakal", "Adiniz ne?"];
-    var natives = ["سلام", "ممنون", "خداحافظ", "اسم شما چیه؟"];
+    var ids = ["Egg", "Yogurt", "Bread", "Lemon"];
+    var targets = ["Yumurta", "Yogurt", "Ekmek", "Limon"];
+    var natives = ["تخم مرغ", "ماست", "نان", "لیمو"];
     // Set<String> all = {};
     // for (var talk in children) {
     //   all.addAll((talk as Talk).words);
     // }
-    for (var i = 0; i < all.length; i++) {
-      result.add(Word.create(all[i], {"native": natives[i], "index": i}));
+    for (var i = 0; i < ids.length; i++) {
+      result.add(Word.create(
+          ids[i], {"native": natives[i], "target": targets[i], "index": i}));
     }
 
     return result;
@@ -90,13 +93,14 @@ extension ContentTypeExtension on ContentType {
 
 class Word extends Content {
   int count = 0;
+  String id = "";
   DateTime? firstReview;
   DateTime? lastReview;
   DateTime? nextReview;
-  Word.create(String id, Map map) : super.create(id, map) {
-    targetValue = id;
+  Word.create(this.id, Map map) : super.create(id, map) {
     count = map["count"] ?? 0;
     nativeValue = map["native"] ?? "";
+    targetValue = map["target"] ?? "";
     if (!map.containsKey("first")) return;
     firstReview = DateExtension.fromDaysSinceEpoch(map["first"]);
     lastReview = DateExtension.fromDaysSinceEpoch(map["last"]);
@@ -109,6 +113,7 @@ class Word extends Content {
     return {
       "count": count,
       "native": nativeValue,
+      "target": targetValue,
       "first": firstReview!.daysSinceEpoch,
       "last": lastReview!.daysSinceEpoch,
       "next": nextReview!.daysSinceEpoch,

@@ -6,8 +6,8 @@ enum ButtonMode { text, image, voice }
 class ChoosingBox extends StatefulWidget {
   final String answer;
   final ButtonMode mode;
-  final List<String> choices;
-  final Function(String, bool)? onSelect;
+  final List<Word> choices;
+  final Function(Word, bool)? onSelect;
 
   const ChoosingBox({
     required this.mode,
