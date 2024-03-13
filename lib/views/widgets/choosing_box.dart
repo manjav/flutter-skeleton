@@ -1,6 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lingai/app_export.dart';
 
 enum ButtonMode { text, image, voice }
@@ -60,7 +58,7 @@ class _ChoosingBoxState extends State<ChoosingBox> {
           child: switch (widget.mode) {
             ButtonMode.text =>
               Text(widget.choices[index], style: TStyles.large),
-            ButtonMode.image => Asset.load<Image>("ui_frame_wood_big"),
+            ButtonMode.image => _image(widget.choices[index]),
             _ => _player(widget.choices[index]),
           },
         );
@@ -76,25 +74,13 @@ class _ChoosingBoxState extends State<ChoosingBox> {
     _feedbacks.value = IntVec2(index, 0);
   }
 
+  Widget _image(String item) => Asset.load<Image>("ui_frame_wood_big");
+
   Widget _player(String choice) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Widgets.button(
-          context,
-          width: 48.d,
-          height: 48.d,
-          padding: EdgeInsets.all(12.d),
-          child: StreamBuilder(
-              stream: serviceLocator<Sounds>()
-                  .getPlayer(choice)
-                  .onPlayerStateChanged,
-              builder: (context, snapshot) => Asset.load<SvgPicture>(
-                    snapshot.data == PlayerState.playing ? "stop" : "play",
-                  )),
-          onPressed: () =>
-              serviceLocator<Speaker>().play(choice, narrator: Narrator.onyx),
-        ),
+        SpeakerBox(value: choice, narrator: Narrator.onyx),
         Widgets.rect(color: TColors.primary20, height: 24.d, width: 4.d),
         const Text("Select"),
       ],

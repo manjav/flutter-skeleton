@@ -132,7 +132,11 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
       children: [
         Text("word_hint".l()),
         index == 2
-            ? SpeakerBox(steps[index], 100.d)
+            ? SpeakerBox(
+                value: steps[index].targetValue,
+                narrator: steps[index].type.narrator,
+                width: 100.d,
+              )
             : Asset.load<Image>("ui_frame_wood_big"),
       ],
     );
@@ -143,9 +147,9 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
     if (index.value < 3) {
       return ChoosingBox(
         mode: [
-          ChoiceMode.text,
-          ChoiceMode.voice,
-          ChoiceMode.image
+          ButtonMode.text,
+          ButtonMode.voice,
+          ButtonMode.image
         ][index.value],
         choices: List.generate(4, (i) => steps[i].id),
         answer: steps[index.value].id,

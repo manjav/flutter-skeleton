@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -18,24 +17,10 @@ class ListenerBox extends StatelessWidget {
     var size = 100.d;
     return Row(
       children: [
-        Widgets.button(
-          context,
-          radius: size,
-          width: size * 0.5,
-          height: size * 0.5,
-          color: TColors.primary10,
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(16.d),
-          child: StreamBuilder(
-            stream: serviceLocator<Sounds>()
-                .getPlayer(pattern.targetValue)
-                .onPlayerStateChanged,
-            builder: (context, snapshot) => Asset.load<SvgPicture>(
-                snapshot.data == PlayerState.playing ? "stop" : "play",
-                width: size * 0.3),
-          ),
-          onPressed: () => serviceLocator<Speaker>()
-              .play(pattern.targetValue, narrator: pattern.type.narrator),
+        SpeakerBox(
+          narrator: pattern.type.narrator,
+          value: pattern.targetValue,
+          width: 50.d,
         ),
         SizedBox(width: 10.d),
         Expanded(
