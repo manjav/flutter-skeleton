@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lingai/app_export.dart';
 
-enum ChoiceMode { text, image, voice }
+enum ButtonMode { text, image, voice }
 
 class ChoosingBox extends StatefulWidget {
   final String answer;
-  final ChoiceMode mode;
+  final ButtonMode mode;
   final List<String> choices;
   final Function(String, bool)? onSelect;
 
@@ -30,11 +30,11 @@ class _ChoosingBoxState extends State<ChoosingBox> {
     _feedbacks.value = IntVec2(0, 0);
     return Widgets.rect(
       width: 280.d,
-      height: widget.mode == ChoiceMode.image ? 400 : 200.d,
+      height: widget.mode == ButtonMode.image ? 400 : 200.d,
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: (widget.mode == ChoiceMode.image ? 1.0 : 2.2)),
+            childAspectRatio: (widget.mode == ButtonMode.image ? 1.0 : 2.2)),
         itemCount: widget.choices.length,
         itemBuilder: _choiceItemBuilder,
       ),
@@ -58,9 +58,9 @@ class _ChoosingBoxState extends State<ChoosingBox> {
           padding: EdgeInsets.zero,
           onPressed: () => _onChoosing(index),
           child: switch (widget.mode) {
-            ChoiceMode.text =>
+            ButtonMode.text =>
               Text(widget.choices[index], style: TStyles.large),
-            ChoiceMode.image => Asset.load<Image>("ui_frame_wood_big"),
+            ButtonMode.image => Asset.load<Image>("ui_frame_wood_big"),
             _ => _player(widget.choices[index]),
           },
         );
