@@ -8,7 +8,8 @@ class ListenerBox extends StatelessWidget {
   final Talk pattern;
   final bool challengeMode;
   ListenerBox(this.pattern, {this.challengeMode = false, super.key});
-  final _defaultStyle = TStyles.medium.copyWith(height: 1);
+  final _defaultStyle =
+      TStyles.medium.copyWith(height: 1, color: TColors.transparent);
   final _correctStyle = TStyles.medium
       .copyWith(color: TColors.green, fontWeight: FontWeight.w900, height: 1);
   @override
@@ -121,7 +122,7 @@ class ListenerBox extends StatelessWidget {
         items.add(Widgets.rect(
           radius: 6.d,
           color: TColors.primary10,
-          margin: EdgeInsets.symmetric(horizontal: 4.d),
+          margin: EdgeInsets.all(4.d),
           padding: EdgeInsets.fromLTRB(6.d, 4.d, 6.d, 1.d),
           child: Text(patterns[i], style: style),
         ));
