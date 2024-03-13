@@ -65,7 +65,9 @@ class _WidgetState extends State<MatchBox> {
           isEnable: pair.isEnable,
           height: 100.d,
           width: mode == ButtonMode.image ? 100.d : 170.d,
-          color: value == buttonId ? TColors.cyan : TColors.white,
+          color: pair.isEnable
+              ? (value == buttonId ? TColors.blue : TColors.white)
+              : TColors.teal,
           padding: EdgeInsets.zero,
           margin: EdgeInsets.all(4.d),
           child: switch (mode) {
@@ -105,7 +107,7 @@ class _WidgetState extends State<MatchBox> {
       children: [
         SpeakerBox(value: choice, narrator: Narrator.onyx),
         Widgets.rect(color: TColors.primary20, height: 24.d, width: 4.d),
-        const Text("Select"),
+        Text("select_l".l()),
       ],
     );
   }
