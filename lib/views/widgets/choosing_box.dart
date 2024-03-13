@@ -25,6 +25,7 @@ class _ChoosingBoxState extends State<ChoosingBox> {
   final ValueNotifier<IntVec2> _feedbacks = ValueNotifier(IntVec2(0, 0));
   @override
   Widget build(BuildContext context) {
+    widget.choices.shuffle();
     _feedbacks.value = IntVec2(0, 0);
     return Widgets.rect(
       width: 280.d,

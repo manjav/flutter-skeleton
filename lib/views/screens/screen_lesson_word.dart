@@ -18,6 +18,7 @@ class _ScreenState extends AbstractScreenState<LessonWordScreen> {
   void initState() {
     var content = Get.arguments["content"];
     steps = (content as GroupContent).words;
+    steps.shuffle();
     nextStep(context);
     super.initState();
   }
