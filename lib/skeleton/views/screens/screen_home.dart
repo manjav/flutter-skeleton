@@ -138,7 +138,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       padding: EdgeInsets.all(12.d),
       child: Column(
         children: [
-          for (var i = 3; i >= 0; i--) _lessonItemBuilder(group, i),
+          for (var i = 4; i >= 0; i--) _lessonItemBuilder(group, i),
           Row(children: [
             Image.network(group.iconUrl, height: 40.d),
             SizedBox(width: 12.d),
@@ -176,6 +176,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           switch (type) {
             1 => Routes.listen,
             0 || 2 => Routes.speak,
+            3 => Routes.match,
             _ => Routes.word,
           },
           args: {"content": group, "challengeMode": type == 2});
