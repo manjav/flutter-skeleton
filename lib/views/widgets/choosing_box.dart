@@ -82,7 +82,7 @@ class _ChoosingBoxState extends State<ChoosingBox> {
       children: [
         SpeakerBox(value: choice, narrator: Narrator.onyx),
         Widgets.rect(color: TColors.primary20, height: 24.d, width: 4.d),
-        const Text("Select"),
+        Text("select_l".l()),
       ],
     );
   }
