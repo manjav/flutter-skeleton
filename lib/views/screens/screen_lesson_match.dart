@@ -38,6 +38,7 @@ class _ScreenState extends AbstractScreenState<LessonMatchScreen> {
               steps.length,
               (i) => MatchVM(
                     i,
+                    steps[i].id,
                     steps[i].targetValue,
                     steps[i].nativeValue,
                   )),

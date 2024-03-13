@@ -21,8 +21,8 @@ class MatchBox extends StatefulWidget {
 class MatchVM {
   final int index;
   bool isEnable = true;
-  final String key, value;
-  MatchVM(this.index, this.key, this.value);
+  final String id, targetValue, nativeValue;
+  MatchVM(this.index, this.id, this.targetValue, this.nativeValue);
 }
 
 class _WidgetState extends State<MatchBox> {
@@ -54,10 +54,10 @@ class _WidgetState extends State<MatchBox> {
     int index,
     MatchVM pair,
     ButtonMode mode,
-    bool isKey,
+    bool isTarget,
   ) {
-    var buttonId = (index + 1) * (isKey ? 1 : -1);
-    var item = isKey ? pair.key : pair.value;
+    var buttonId = (index + 1) * (isTarget ? 1 : -1);
+    var item = isTarget ? pair.targetValue : pair.nativeValue;
     return ValueListenableBuilder(
       valueListenable: _selectedIndex,
       builder: (context, value, child) {
@@ -78,17 +78,17 @@ class _WidgetState extends State<MatchBox> {
             ButtonMode.image => _image(item),
             _ => _player(item),
           },
-          onPressed: () => _onChoosing(index, pair, isKey),
+          onPressed: () => _onChoosing(index, pair, isTarget),
         );
       },
     );
   }
 
-  Future<void> _onChoosing(int index, MatchVM pair, bool isKey) async {
-    var buttonId = (index + 1) * (isKey ? 1 : -1);
+  Future<void> _onChoosing(int index, MatchVM pair, bool isTarget) async {
+    var buttonId = (index + 1) * (isTarget ? 1 : -1);
     if (_lastAnswer.isNotEmpty) {
       var isCorrect =
-          _lastAnswer == pair.value && _selectedIndex.value != buttonId;
+          _lastAnswer == pair.nativeValue && _selectedIndex.value != buttonId;
       if (isCorrect) {
         pair.isEnable = false;
       }
@@ -97,12 +97,10 @@ class _WidgetState extends State<MatchBox> {
       _selectedIndex.value = 0;
     } else {
       _selectedIndex.value = _selectedIndex.value == buttonId ? 0 : buttonId;
-      _lastAnswer = pair.value;
+      _lastAnswer = pair.nativeValue;
     }
     await Future.delayed(const Duration(milliseconds: 200));
   }
-
-  Widget _image(String item) => Asset.load<Image>("ui_frame_wood_big");
 
   Widget _player(String choice) {
     return Row(
