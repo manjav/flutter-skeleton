@@ -315,6 +315,7 @@
     "auction_bid_sell": "%s has bid on one of your cards!",
     "auction_bid_deal": "%s has bid on your bid!",
     "auction_sell_success": "Auction sells success",
+    "auction_closed": "Auction closed",
     "popupcardselecttype": "Select Card",
     "popupcardselectcategory": "Select Category",
     "popupinbox": "Inbox",

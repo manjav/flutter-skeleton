@@ -47,11 +47,9 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
             ])),
         SizedBox(height: 32.d),
         Expanded(
-          child: GridView.builder(
+          child: ListView.builder(
             itemCount: _cards.length,
             padding: EdgeInsets.only(bottom: 200.d, right: 15.d, left: 15.d),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, childAspectRatio: 1.2),
             itemBuilder: (c, i) => AuctionItem(
               card: _cards[i],
               selectedTab: _selectedTab,
