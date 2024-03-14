@@ -43,6 +43,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return Consumer<AccountProvider>(builder: (_, state, child) {
       var cards = state.account.getReadyCards();
+      var levels = state.account.loadingData.rules["availabilityLevels"]!;
       var paddingTop = MediaQuery.of(context).viewPadding.top;
       if (paddingTop <= 0) {
         paddingTop = 24.d;
@@ -133,7 +134,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                       alignment: Alignment.center,
                       children: [
                         Asset.load<Image>("icon_combo", height: 68.d),
-                        RotationTransition(
+                        state.account.level < levels["combo"] ? RotationTransition(
                           turns: const AlwaysStoppedAnimation(-15 / 360),
                           child: Widgets.rect(
                               color: TColors.primary20,
@@ -146,13 +147,13 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                                     width: 7.d,
                                   ),
                                   Text(
-                                    "Level 15",
+                                    "Level ${levels["combo"]}",
                                     style: TStyles.small
                                         .copyWith(color: TColors.white),
                                   ),
                                 ],
                               )),
-                        )
+                        ): const SizedBox()
                       ],
                     ),
                     SkinnedText(
@@ -164,8 +165,6 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                   ],
                 ), onTap: () {
               // Show unavailable message
-              var levels =
-                  state.account.loadingData.rules["availabilityLevels"]!;
               if (state.account.level < levels["combo"]) {
                 Overlays.insert(
                     context,
