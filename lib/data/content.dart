@@ -1,5 +1,4 @@
 import 'package:lingai/app_export.dart';
-import 'package:lingai/skeleton/export.dart';
 
 class Content {
   int index = 0;
@@ -93,11 +92,10 @@ extension ContentTypeExtension on ContentType {
 
 class Word extends Content {
   int count = 0;
-  String id = "";
   DateTime? firstReview;
   DateTime? lastReview;
   DateTime? nextReview;
-  Word.create(this.id, Map map) : super.create(id, map) {
+  Word.create(String id, Map map) : super.create(id, map) {
     count = map["count"] ?? 0;
     nativeValue = map["native"] ?? "";
     targetValue = map["target"] ?? "";

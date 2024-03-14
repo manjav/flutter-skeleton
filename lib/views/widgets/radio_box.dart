@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lingai/app_export.dart';
 
-class RadioBox extends StatefulWidget {
+class RadioBox extends StatelessWidget {
   final String text;
   final String? translation;
   final Narrator? narrator;
@@ -18,16 +18,11 @@ class RadioBox extends StatefulWidget {
   });
 
   @override
-  State<RadioBox> createState() => _RadioBoxState();
-}
-
-class _RadioBoxState extends State<RadioBox> {
-  @override
   Widget build(BuildContext context) {
     var margin = 14.d;
     var alignment = MainAxisAlignment.center;
-    if (widget.ballonPosition != BalloonTipPosition.none) {
-      alignment = widget.ballonPosition == BalloonTipPosition.leftTop
+    if (ballonPosition != BalloonTipPosition.none) {
+      alignment = ballonPosition == BalloonTipPosition.leftTop
           ? MainAxisAlignment.start
           : MainAxisAlignment.end;
     }
@@ -44,15 +39,14 @@ class _RadioBoxState extends State<RadioBox> {
                     EdgeInsets.fromLTRB(margin, margin * 2 - 2.d, margin, 0),
                 padding: EdgeInsets.fromLTRB(
                     margin * 2, margin * 2, margin * 2, margin),
-                decoration:
-                    BalloonDecoration(tipPosition: widget.ballonPosition),
+                decoration: BalloonDecoration(tipPosition: ballonPosition),
                 child: Column(
                   children: [
-                    DirText(widget.text, style: TStyles.medium),
-                    SizedBox(height: widget.translation == null ? 0 : 4.d),
-                    widget.translation == null
+                    DirText(text, style: TStyles.medium),
+                    SizedBox(height: translation == null ? 0 : 4.d),
+                    translation == null
                         ? const SizedBox()
-                        : DirText(widget.translation!,
+                        : DirText(translation!,
                             style: TStyles.small
                                 .copyWith(color: TColors.primary40)),
                   ],
@@ -71,15 +65,16 @@ class _RadioBoxState extends State<RadioBox> {
                 : Positioned(
                     top: 0,
                     right: 76.d,
-                    child: _button(
-                        Asset.load<SvgPicture>("?"), margin * 2, _translate))
+                    child: _button(context, Asset.load<SvgPicture>("?"),
+                        margin * 2, _translate))
           ],
         ),
       ],
     );
   }
 
-  Widget _button(Widget child, double size, Function() onPressed) {
+  Widget _button(
+      BuildContext context, Widget child, double size, Function() onPressed) {
     return Widgets.button(context,
         color: TColors.transparent,
         padding: EdgeInsets.all(12.d),
