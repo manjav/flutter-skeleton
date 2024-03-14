@@ -4,8 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class CardDetailsPopup extends AbstractPopup {
-  const CardDetailsPopup({super.key})
-      : super(Routes.popupCardDetails);
+  const CardDetailsPopup({super.key}) : super(Routes.popupCardDetails);
 
   @override
   createState() => _CardPopupState();
@@ -33,8 +32,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         backgroundColor: backgroundColor,
         body: Stack(children: [
           Widgets.touchable(context,
-              onTap:
-                  barrierDismissible ? () => Navigator.pop(context) : null),
+              onTap: barrierDismissible ? () => Navigator.pop(context) : null),
           Container(
               alignment: alignment,
               padding: EdgeInsets.all(100.d),
@@ -60,24 +58,25 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                   ),
                   _button(
                       width: 420.d,
-                      isEnable: isUpgradable,
+                      isEnable: _account.tribe != null && isUpgradable,
                       label: "˨  ${"evolve_l".l()}",
                       onPressed: () => _onButtonsTap(_card.base.isHero
                           ? Routes.popupHeroEvolve
                           : Routes.popupCardEvolve),
                       onDisablePressed: () {
-                        toast(_card.isUpgradable
-                            ? "card_no_sibling".l()
-                            : "max_level".l(["${_name}_t".l()]));
+                        _account.tribe == null
+                            ? toast("player_no_tribe".l())
+                            : toast(_card.isUpgradable
+                                ? "card_no_sibling".l()
+                                : "max_level".l(["${_name}_t".l()]));
                       }),
                 ]),
                 _button(
                     isVisible: _card.fruit.isHero,
                     color: ButtonColor.violet,
                     label: "˩  ${"hero_edit".l()}",
-                    onPressed: () => serviceLocator<RouteService>().to(
-                        Routes.popupHero,
-                        args: {"card": _card.fruit.id})),
+                    onPressed: () => serviceLocator<RouteService>()
+                        .to(Routes.popupHero, args: {"card": _card.fruit.id})),
                 _button(
                     isVisible: _card.fruit.isSalable,
                     color: ButtonColor.green,
@@ -89,13 +88,11 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                         padding: EdgeInsets.fromLTRB(0, 2.d, 10.d, 2.d),
                         decoration: Widgets.imageDecorator(
                             "frame_hatch_button", ImageCenterSliceData(42)),
-                        child: Row(
-                            textDirection: TextDirection.ltr,
-                            children: [
-                              Asset.load<Image>("icon_gold", height: 76.d),
-                              SkinnedText(_card.basePrice.compact(),
-                                  style: TStyles.large.copyWith(height: 1)),
-                            ]),
+                        child: Row(textDirection: TextDirection.ltr, children: [
+                          Asset.load<Image>("icon_gold", height: 76.d),
+                          SkinnedText(_card.basePrice.compact(),
+                              style: TStyles.large.copyWith(height: 1)),
+                        ]),
                       )
                     ]),
                     onPressed: () => Overlays.insert(
