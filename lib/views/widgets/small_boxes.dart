@@ -144,7 +144,7 @@ class ImageBox extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius!),
       child: Image.network(
-        "https://s1.matnyaar.ir/gpt/dalle.php?input=$name",
+        "https://s1.matnyaar.ir/gpt/dalle.php?input=$name&resize=${(width ?? 100.d).round()}",
         width: width,
         height: height,
       ),
