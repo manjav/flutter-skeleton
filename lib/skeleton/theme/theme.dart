@@ -16,8 +16,9 @@ class TColors {
   static const primary90 = Color(0xFFF8E5D3);
   static const primary80 = Color(0xFFF3D0BA);
   static const primary70 = Color(0xFFE5B99F);
+  static const primary50 = Color(0xFFEF9D6A);
   static const primary30 = Color(0xFF88624B);
-  static const primary20 = Color(0xFF77513A);
+  static const primary20 = Color(0xFF572018);
   static const primary10 = Color(0xFF572018);
   static const gray = Color(0xFFA4A4A4);
   static const green = Color(0xFF82EE24);
