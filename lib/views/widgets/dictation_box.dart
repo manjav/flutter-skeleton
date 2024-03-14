@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -119,63 +118,6 @@ class _DictationBoxState extends State<DictationBox> {
           dictator.state.value != QuizState.ready || choice.used ? -1 : 30,
       child: Opacity(opacity: choice.used ? 0 : 1, child: Text(choice.text)),
       onPressed: () => dictator.selectChoice(choice),
-    );
-  }
-}
-
-class SpeakerBox extends StatelessWidget {
-  final String value;
-  final double? width;
-  final Narrator narrator;
-  const SpeakerBox({
-    required this.narrator,
-    required this.value,
-    this.width,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var size = width ?? 40.d;
-    return Widgets.button(
-      context,
-      radius: size,
-      width: size,
-      height: size,
-      color: TColors.primary20,
-      alignment: Alignment.center,
-      padding: EdgeInsets.zero,
-      child: StreamBuilder(
-        stream: serviceLocator<Sounds>().getPlayer(value).onPlayerStateChanged,
-        builder: (context, snapshot) => Asset.load<SvgPicture>(
-            snapshot.data == PlayerState.playing ? "stop" : "play",
-            width: size * 0.35),
-      ),
-      onPressed: () =>
-          serviceLocator<Speaker>().play(value, narrator: narrator),
-    );
-  }
-}
-
-class ImageBox extends StatelessWidget {
-  final String name;
-  final double? width, height, borderRadius;
-  const ImageBox({
-    required this.name,
-    this.width,
-    this.height,
-    this.borderRadius = 8,
-    super.key,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius!),
-      child: Image.network(
-        "https://s1.matnyaar.ir/gpt/dalle.php?input=$name",
-        width: width,
-        height: height,
-      ),
     );
   }
 }

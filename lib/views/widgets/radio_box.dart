@@ -58,22 +58,15 @@ class _RadioBoxState extends State<RadioBox> {
                   ],
                 )),
             Positioned(
-                top: 0,
-                right: widget.translation != null ? null : 30.d,
-                child: _button(
-                  StreamBuilder(
-                      stream: serviceLocator<Sounds>()
-                          .getPlayer(widget.text)
-                          .onPlayerStateChanged,
-                      builder: (context, snapshot) => Asset.load<SvgPicture>(
-                          snapshot.data == PlayerState.playing
-                              ? "stop"
-                              : "play")),
-                  margin * 2,
-                  () => serviceLocator<Speaker>()
-                      .play(widget.text, narrator: widget.narrator!),
-                )),
-            widget.translation != null
+              top: margin - 2.d,
+              right: translation != null ? null : 30.d,
+              child: SpeakerBox(
+                narrator: narrator!,
+                value: text,
+                width: margin * 2,
+              ),
+            ),
+            translation != null
                 ? const SizedBox()
                 : Positioned(
                     top: 0,
@@ -105,4 +98,61 @@ class _RadioBoxState extends State<RadioBox> {
   }
 
   _translate() {}
+}
+
+class SpeakerBox extends StatelessWidget {
+  final String value;
+  final double? width;
+  final Narrator narrator;
+  const SpeakerBox({
+    required this.narrator,
+    required this.value,
+    this.width,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var size = width ?? 40.d;
+    return Widgets.button(
+      context,
+      width: size,
+      height: size,
+      radius: size,
+      color: TColors.primary20,
+      alignment: Alignment.center,
+      padding: EdgeInsets.zero,
+      child: StreamBuilder(
+        stream: serviceLocator<Sounds>().getPlayer(value).onPlayerStateChanged,
+        builder: (context, snapshot) => Asset.load<SvgPicture>(
+            snapshot.data == PlayerState.playing ? "stop" : "play",
+            width: size * 0.35),
+      ),
+      onPressed: () =>
+          serviceLocator<Speaker>().play(value, narrator: narrator),
+    );
+  }
+}
+
+class ImageBox extends StatelessWidget {
+  final String name;
+  final double? width, height, borderRadius;
+  const ImageBox({
+    required this.name,
+    this.width,
+    this.height,
+    this.borderRadius = 8,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius!),
+      child: Image.network(
+        "https://s1.matnyaar.ir/gpt/dalle.php?input=$name",
+        width: width,
+        height: height,
+      ),
+    );
+  }
 }
