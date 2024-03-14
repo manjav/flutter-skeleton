@@ -255,11 +255,12 @@ class Opponent extends Record {
   }
 
   int getGoldLevel(int accountLevel) {
+    if (todayAttacksCount < 1) todayAttacksCount = 1;
     var goldRate = gold / todayAttacksCount;
-    if (goldRate < 100 * accountLevel) return 1;
-    if (goldRate < 500 * accountLevel) return 2;
-    if (goldRate < 1000 * accountLevel) return 3;
-    return 4;
+    if (goldRate < 100 * accountLevel) return 0;
+    if (goldRate < 500 * accountLevel) return 1;
+    if (goldRate < 1000 * accountLevel) return 2;
+    return 3;
   }
 }
 
