@@ -7,14 +7,16 @@ class ListenerBox extends StatelessWidget {
   final Talk pattern;
   final bool challengeMode;
   ListenerBox(this.pattern, {this.challengeMode = false, super.key});
-  final _defaultStyle =
-      TStyles.medium.copyWith(height: 1, color: TColors.transparent);
   final _correctStyle = TStyles.medium
       .copyWith(color: TColors.green, fontWeight: FontWeight.w900, height: 1);
+
   @override
   Widget build(BuildContext context) {
-    var stt = serviceLocator<STT>();
     var size = 100.d;
+    var stt = serviceLocator<STT>();
+    var defaultStyle = TStyles.medium.copyWith(
+        height: 1,
+        color: challengeMode ? TColors.transparent : TColors.primary80);
     return Row(
       children: [
         SpeakerBox(
@@ -29,7 +31,7 @@ class ListenerBox extends StatelessWidget {
               builder: (context, value, child) {
                 return Column(
                   children: [
-                    _answeringBuilder(value),
+                    _answeringBuilder(defaultStyle, value),
                     SizedBox(height: 4.d),
                     DirText(pattern.nativeValue,
                         style:
@@ -92,13 +94,13 @@ class ListenerBox extends StatelessWidget {
         });
   }
 
-  Widget _answeringBuilder(String value) {
+  Widget _answeringBuilder(TextStyle defaultStyle, String value) {
     if (challengeMode) {
       var items = <Widget>[];
       var patterns = pattern.targetValue.toLowerCase().split(" ");
       var values = value.split(" ");
       for (var i = 0; i < patterns.length; i++) {
-        var style = _defaultStyle;
+        var style = defaultStyle;
         if (i < values.length) {
           if (values[i].toLowerCase() == patterns[i]) {
             style = _correctStyle;
@@ -118,7 +120,7 @@ class ListenerBox extends StatelessWidget {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-        style: _defaultStyle,
+        style: defaultStyle,
         children: _getWords(value),
       ),
     );
