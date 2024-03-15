@@ -35,7 +35,7 @@ mixin LessonChatMixin<S extends AbstractScreen>
                 padding, getFooterHeight(context)),
             itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
         Positioned(
-          top: 0,
+          top: paddingTop,
           left: 0,
           right: 0,
           height: headerHeight,
