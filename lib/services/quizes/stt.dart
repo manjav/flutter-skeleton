@@ -76,6 +76,7 @@ class STT extends Quiz {
     String? locale,
     String? pattern,
   }) {
+    serviceLocator<Sounds>().stopAll();
     super.start(onResult: onResult);
     if (locale != null) this.locale = locale;
     if (locale != null) this.pattern = pattern;

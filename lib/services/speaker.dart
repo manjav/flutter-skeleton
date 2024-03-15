@@ -10,6 +10,8 @@ class Speaker extends IService {
     bool force = false,
     Narrator narrator = Narrator.onyx,
   }) async {
+    serviceLocator<STT>().stop();
+    serviceLocator<Sounds>().stopAll();
     var player = serviceLocator<Sounds>().getPlayer(text);
     if (force) {
       player.stop();
@@ -17,7 +19,7 @@ class Speaker extends IService {
       player.stop();
       return;
     }
-    player.setPlaybackRate(narrator == Narrator.onyx ? 1 : 0.6);
+    player.setPlaybackRate(narrator == Narrator.onyx ? 1 : 0.7);
     await player.play(
       UrlSource(
           "https://s1.matnyaar.ir/gpt/tts.php?voice=${narrator.name}&input=$text"),
