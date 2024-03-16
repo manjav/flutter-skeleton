@@ -26,11 +26,6 @@ extension IntExtension on int {
     return "$hs : $ms : $ss";
   }
 
-  String toRemainingTimeFormatted() {
-    Duration duration = Duration(seconds: this);
-    return "${duration.inHours.toString().padLeft(2, "0")}:${duration.inMinutes.remainder(60).toString().padLeft(2, "0")}:${duration.inSeconds.remainder(60).toString().padLeft(2, "0")}";
-  }
-
   String toRemainingTime({bool complete = false}) {
     if (this < 60) return "${this}s";
 
