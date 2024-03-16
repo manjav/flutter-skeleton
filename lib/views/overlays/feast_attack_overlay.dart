@@ -201,8 +201,8 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     } else if (state == RewardAnimationState.shown) {
       await Future.delayed(const Duration(milliseconds: 10));
       var route = _opponent!.id != 0 ? Routes.battleOut : Routes.questOut;
-      // ignore: use_build_context_synchronously
       Overlays.insert(
+        // ignore: use_build_context_synchronously
         context,
         AttackOutcomeFeastOverlay(
           args: _outcomeData,

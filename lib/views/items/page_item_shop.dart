@@ -131,12 +131,13 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         // ignore: use_build_context_synchronously
         account.update(context, {section.name: item.base.value});
 
-        // ignore: use_build_context_synchronously
         Overlays.insert(
-            context,
-            PurchaseFeastOverlay(
-              args: {"item": item},
-            ));
+          // ignore: use_build_context_synchronously
+          context,
+          PurchaseFeastOverlay(
+            args: {"item": item},
+          ),
+        );
         return;
       }
     }
@@ -442,12 +443,13 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     // ignore: use_build_context_synchronously
     account.update(context, {section.name: item.base.value});
 
-    // ignore: use_build_context_synchronously
     Overlays.insert(
-        context,
-        PurchaseFeastOverlay(
-          args: {"item": item},
-        ));
+      // ignore: use_build_context_synchronously
+      context,
+      PurchaseFeastOverlay(
+        args: {"item": item},
+      ),
+    );
     return;
   }
 
