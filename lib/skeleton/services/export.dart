@@ -5,7 +5,6 @@ export 'loading_controller.dart';
 export 'localization.dart';
 // export 'notifications.dart';
 export 'prefs.dart';
-export 'routes/export.dart';
 export 'service.dart';
 export 'sounds.dart';
 export 'trackers/export.dart';
