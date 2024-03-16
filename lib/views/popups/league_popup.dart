@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
@@ -14,6 +15,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
   late Account _account;
   LeagueData? _leagueData;
   LeagueHistory? _leagueHistory;
+  RxInt _round = 1.obs;
 
   @override
   void initState() {
@@ -185,7 +187,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
         ]), onPressed: () async {
       if (!record.itsMe) {
         serviceLocator<RouteService>()
-            .to(Routes.popupProfile,args: {"id": record.id});
+            .to(Routes.popupProfile, args: {"id": record.id});
       }
     });
   }
@@ -229,17 +231,77 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(104.d),
             bottomRight: Radius.circular(104.d)),
-        child: ListView.builder(
-            padding: EdgeInsets.only(bottom: 32.d),
-            itemBuilder: _historyItemBuilder,
-            itemCount: LeagueData.stages.length));
+        child: Column(
+          children: [
+            Widgets.rect(
+              color: TColors.primary90,
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Widgets.button(
+                  context,
+                  padding: EdgeInsets.all(22.d),
+                  width: 120.d,
+                  height: 120.d,
+                  onPressed: () {
+                    if (_round <= 1) return;
+                    _round--;
+                    _loadLeagueHistory();
+                  },
+                  child: StreamBuilder<int>(
+                      stream: _round.stream,
+                      builder: (context, snapshot) {
+                        return Opacity(
+                          opacity: _round.value == 1 ? 0.7 : 1,
+                          child: Asset.load<Image>("arrow_left"),
+                        );
+                      }),
+                ),
+                SizedBox(
+                  width: 300.d,
+                  child: StreamBuilder<int>(
+                    stream: _round.stream,
+                    builder: (context, snapshot) {
+                      return SkinnedText("league_week_ago".l([_round.value]));
+                    },
+                  ),
+                ),
+                Widgets.button(
+                  context,
+                  padding: EdgeInsets.all(22.d),
+                  width: 120.d,
+                  height: 120.d,
+                  onPressed: () {
+                    if (_round >= 20) return;
+                    _round.value++;
+                    _loadLeagueHistory();
+                  },
+                  child: StreamBuilder<int>(
+                      stream: _round.stream,
+                      builder: (context, snapshot) {
+                        return Opacity(
+                          opacity: _round.value < 21 ? 1 : 0.7,
+                          child: Asset.load<Image>("arrow_right"),
+                        );
+                      }),
+                ),
+              ]),
+            ),
+            Expanded(
+              child: ListView.builder(
+                  padding: EdgeInsets.only(bottom: 32.d),
+                  itemBuilder: _historyItemBuilder,
+                  itemCount: LeagueData.stages.length),
+            ),
+          ],
+        ));
   }
 
-  _loadLeagueHistory([int round = 1]) async {
+  _loadLeagueHistory() async {
     try {
       var data = await rpc(RpcId.leagueHistory,
-          params: {RpcParams.rounds.name: "[$round]"});
-      _leagueHistory = LeagueHistory.initialize(data, round, _account.id);
+          params: {RpcParams.rounds.name: "[${_round.value}]"});
+      _leagueHistory =
+          LeagueHistory.initialize(data, _round.value, _account.id);
       setState(() {});
     } finally {}
   }

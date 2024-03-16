@@ -103,6 +103,7 @@
     "league_4": "Gold",
     "league_5": "Silver",
     "league_6": "Bronze",
+    "league_week_ago": "%s Week ago",
     "popupranking": "Ranking",
     "rank_tab_0": "Top Players",
     "rank_tab_1": "Expert Tribes",
