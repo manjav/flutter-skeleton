@@ -34,6 +34,10 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator>
   @override
   Widget build(BuildContext context) {
     var remaining = widget.deadline.time - accountProvider.account.getTime();
+    Duration duration = Duration(seconds: remaining);
+    var hour = duration.inHours.toString().padLeft(2, "0");
+    var min = duration.inMinutes.remainder(60).toString().padLeft(2, "0");
+    var second = duration.inSeconds.remainder(60).toString().padLeft(2, "0");
     return SizedBox(
         width: remaining < 1 ? 0 : 500.d,
         height: 150.d,
@@ -45,7 +49,7 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator>
                   Positioned(
                     left: -20.d,
                     child: Widgets.rect(
-                      width: 350.d,
+                      width: 360.d,
                       height: 80.d,
                       decoration: BoxDecoration(
                         gradient: widget.deadline.boost.id < 22
@@ -62,8 +66,11 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator>
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SkinnedText(
-                              remaining.toInt().toRemainingTimeFormatted()),
+                          SizedBox(width: 50.d, child: SkinnedText(hour)),
+                          const SkinnedText(":"),
+                          SizedBox(width: 50.d, child: SkinnedText(min)),
+                          const SkinnedText(":"),
+                          SizedBox(width: 50.d, child: SkinnedText(second)),
                         ],
                       ),
                     ),
