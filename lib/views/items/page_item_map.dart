@@ -35,7 +35,8 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       PositionedDirectional(
         top: paddingTop,
         start: 32.d,
-        child: Column(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               width: 196.d,
@@ -47,7 +48,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             Widgets.button(context,
                 width: 110.d,
                 height: 110.d,
-                margin: EdgeInsets.only(top: 20.d),
+                margin: EdgeInsets.only(top: 10.d, left: 10.d),
                 padding: EdgeInsets.all(16.d),
                 child: Asset.load<Image>("ui_settings"),
                 onPressed: () =>
@@ -120,12 +121,12 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       _building(account, Buildings.mine),
       _building(account, Buildings.park),
       _building(account, Buildings.quest),
-      // if (account.deadlines.isNotEmpty)
-      //   for (var i = 0; i < account.deadlines.length; i++)
-      //     Positioned(
-      //         right: 32.d,
-      //         top: 200.d + i * 180.d,
-      //         child: DeadlineIndicator(account.deadlines[i])),
+      if (account.deadlines.isNotEmpty)
+        for (var i = 0; i < account.deadlines.length; i++)
+          Positioned(
+              left: -10.d,
+              top: 350.d + i * 140.d,
+              child: DeadlineIndicator(account.deadlines[i])),
     ]);
   }
 
