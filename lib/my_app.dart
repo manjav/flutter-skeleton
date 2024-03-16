@@ -92,7 +92,45 @@ class _MyAppState extends State<MyApp>
           theme: Themes.darkData,
           locale: Localization.locales.firstWhere((l) =>
               l.languageCode == Pref.language.getString(defaultValue: 'en')),
-          home: HomeScreen(),
+          initialRoute: Routes.home,
+          getPages: [
+            _getPage(Routes.home, () => HomeScreen()),
+            _getPage(Routes.deck, () => DeckScreen()),
+            _getPage(Routes.quest, () => QuestScreen()),
+            _getPage(Routes.liveBattleOut, () => LiveOutScreen()),
+            _getPage(Routes.liveBattle, () => LiveBattleScreen()),
+            _getPage(Routes.popupCardDetails, () => const CardDetailsPopup(),false,Transition.fadeIn),
+            _getPage(Routes.popupCardEnhance, () => const CardEnhancePopup()),
+            _getPage(Routes.popupCardEvolve, () => const CardEvolvePopup()),
+            _getPage(Routes.popupHeroEvolve, () => const HeroEvolvePopup()),
+            _getPage(Routes.popupCollection, () => const CollectionPopup()),
+            _getPage(Routes.popupCardSelect, () => const CardSelectPopup()),
+            _getPage(Routes.popupMessage, () => const MessagePopup()),
+            _getPage(Routes.popupLeague, () => const LeaguePopup()),
+            _getPage(Routes.popupRanking, () => const RankingPopup()),
+            _getPage(Routes.popupOpponents, () => const OpponentsPopup()),
+            _getPage(Routes.popupSupportiveBuilding, () => const SupportiveBuildingPopup()),
+            _getPage(Routes.popupMineBuilding, () => const MineBuildingPopup()),
+            _getPage(Routes.popupTreasuryBuilding, () => const TreasuryBuildingPopup()),
+            _getPage(Routes.popupPotion, () => const PotionPopup()),
+            _getPage(Routes.popupCombo, () => const ComboPopup()),
+            _getPage(Routes.popupHero, () => const HeroPopup()),
+            _getPage(Routes.popupInbox, () => const InboxPopup()),
+            _getPage(Routes.popupProfile, () => const ProfilePopup()),
+            _getPage(Routes.popupProfileEdit, () => const ProfileEditPopup()),
+            _getPage(Routes.popupProfileAvatars, () => const ProfileAvatarsPopup()),
+            _getPage(Routes.popupSettings, () => const SettingsPopup()),
+            _getPage(Routes.popupRestore, () => const RestorePopup()),
+            _getPage(Routes.popupInvite, () => const InvitePopup()),
+            _getPage(Routes.popupRedeemGift, () => const RedeemGiftPopup()),
+            _getPage(Routes.popupDailyGift, () => const DailyGiftPopup()),
+            _getPage(Routes.popupTribeOptions, () => const TribeDetailsPopup()),
+            _getPage(Routes.popupTribeInvite, () => const TribeInvitePopup()),
+            _getPage(Routes.popupTribeEdit, () => const TribeEditPopup()),
+            _getPage(Routes.popupTribeDonate, () => const TribeDonatePopup()),
+            _getPage(Routes.popupCardSelectType, () => const SelectCardTypePopup()),
+            _getPage(Routes.popupCardSelectCategory, () => const SelectCardCategoryPopup()),
+          ],
         ),
       ),
     );
@@ -103,4 +141,17 @@ class _MyAppState extends State<MyApp>
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
+  GetPage<dynamic> _getPage(
+    String routeName,
+    page, [
+    bool opaque = false,
+    Transition transition = Transition.noTransition,
+  ]) =>
+      GetPage(
+        name: Routes.home,
+        page: () => HomeScreen(),
+        opaque: opaque,
+        transition: transition,
+      );
 }
