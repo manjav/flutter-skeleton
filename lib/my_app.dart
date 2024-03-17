@@ -107,8 +107,8 @@ class _MyAppState extends State<MyApp>
     Transition transition = Transition.noTransition,
   ]) =>
       GetPage(
-        name: Routes.home,
-        page: () => HomeScreen(),
+        name: routeName,
+        page: page,
         opaque: opaque,
         transition: transition,
       );
