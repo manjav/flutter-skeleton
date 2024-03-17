@@ -17,4 +17,5 @@ class OverlaysName {
   static const feastUpgradeCard = "overlay_feast_upgrade_card";
   static const feastDailyReward = "overlay_feast_daily_reward";
   static const feastBundle = "overlay_feast_bundle";
+  static const feastGiftReward = "overlay_feast_gift_reward";
 }
