@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../export.dart';
 
@@ -6,12 +7,16 @@ class Ads extends IService {
   final _sdks = <AdSDKName, AbstractAdSDK>{};
   final _selectedSDK = AdSDKName.adivery;
   Function(Placement?)? onUpdate;
+  Rx<Placement?> changeState = Rx(null);
 
   @override
   initialize({List<Object>? args}) async {
     _sdks[_selectedSDK] = AdAdivery();
     _sdks[_selectedSDK]!.initialize(_selectedSDK);
-    _sdks[_selectedSDK]!.onUpdate = (p) => onUpdate?.call(p);
+    _sdks[_selectedSDK]!.onUpdate = (p) {
+      changeState.subject.add(p);
+      onUpdate?.call(p);
+    };
     super.initialize();
   }
 
