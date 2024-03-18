@@ -184,7 +184,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
     return Widgets.touchable(
       context,
       onTap: () => serviceLocator<RouteService>().to(Routes.popupCardDetails,
-          args: {'card': card}, transition: Transition.fadeIn),
+          args: {'card': card}),
       child: CardItem(card,
           size: itemSize,
           key: getGlobalKey(card.id),
