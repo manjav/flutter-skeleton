@@ -315,6 +315,7 @@
     "auction_bid_sell": "%s در یکی از کارت‌های شما پیشنهاد داده است!",
     "auction_bid_deal": "%s پیشنهاد شما را پیشنهاد داده است!",
     "auction_sell_success": "کارت فروخته شد",
+    "auction_closed": "بسته شده",
     "popupcardselecttype": "انتخاب کارت",
     "popupcardselectcategory": "انتخاب نوع کارت",
     "popupinbox": "صندوق پستی",

@@ -22,8 +22,9 @@ class _AuctionItemState extends State<AuctionItem> {
 
   @override
   initState() {
-    int secondsOffset = 24 * 3600 - DateTime.now().secondsSinceEpoch;
-    remainingSeconds = widget.card.createdAt + secondsOffset;
+    // int secondsOffset = 24 * 3600 - DateTime.now().secondsSinceEpoch;
+    remainingSeconds =
+        (widget.card.createdAt + 24 * 3600) - DateTime.now().secondsSinceEpoch;
     Future.delayed(Duration(seconds: remainingSeconds), () {
       if (mounted) {
         setState(() {});
@@ -36,7 +37,7 @@ class _AuctionItemState extends State<AuctionItem> {
   Widget build(BuildContext context) {
     var account = serviceLocator<AccountProvider>().account;
     var cardSize = 240.d;
-    var radius = Radius.circular(36.d);
+    var radius = Radius.circular(20.d);
     var bidable = widget.card.activityStatus > 0 &&
         (widget.card.ownerId != account.id) &&
         widget.card.maxBidderId != account.id;
@@ -49,123 +50,118 @@ class _AuctionItemState extends State<AuctionItem> {
                 : 24 * 3600;
     var imMaxBidder = widget.card.maxBidderId == account.id;
     return Widgets.button(context,
+        height: 321.d,
         radius: radius.x,
         padding: EdgeInsets.zero,
         margin: EdgeInsets.all(8.d),
         color: imMaxBidder ? TColors.green40 : TColors.cream15,
         child: Row(children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                  mainAxisSize: MainAxisSize.min,
-                  textDirection: TextDirection.ltr,
-                  children: [
-                    Asset.load<Image>("icon_gold", width: 60.d),
-                    SizedBox(width: 8.d),
-                    SkinnedText(widget.card.maxBid.compact(),
-                        style: TStyles.large)
-                  ]),
-              Widgets.rect(
-                  width: cardSize + 16.d,
-                  padding: EdgeInsets.all(8.d),
-                  child: CardItem(widget.card,
-                      size: cardSize,
-                      showCooldown: false,
-                      // key: getGlobalKey(selectedTab * 10000 + card.id),
-                      heroTag: "hero_${widget.selectedTab}_${widget.card.id}")),
-            ],
-          ),
+          Widgets.rect(
+              width: cardSize + 16.d,
+              padding: EdgeInsets.all(8.d),
+              child: CardItem(widget.card,
+                  size: cardSize,
+                  showCooldown: false,
+                  // key: getGlobalKey(selectedTab * 10000 + card.id),
+                  heroTag: "hero_${widget.selectedTab}_${widget.card.id}")),
           Expanded(
-              child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Positioned(
-                top: 0,
-                right: 0,
-                width: 200.d,
-                height: 70.d,
-                child: Widgets.rect(
-                  borderRadius:
-                      BorderRadius.only(topRight: radius, bottomLeft: radius),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SkinnedText("auction_owner".l(),
+                    style: TStyles.small, textAlign: TextAlign.start),
+                SizedBox(
+                  height: 4.d,
+                ),
+                Widgets.rect(
+                  padding: EdgeInsets.symmetric(horizontal: 20.d,vertical: 5.d),
+                  borderRadius: BorderRadius.all(radius),
                   color: TColors.black25,
-                  child: StreamBuilder(
-                    stream: Stream.periodic(
-                      Duration(seconds: refreshRate),
-                      (computationCount) => computationCount,
-                    ),
-                    builder: (context, snapshot) {
-                      var time = widget.card.activityStatus > 0
-                          ? (remainingSeconds - (snapshot.data ?? 0))
-                              .toRemainingTime()
-                          : "closed_l".l();
-                      return SkinnedText("ˣ$time");
-                    },
+                  child: SkinnedText(
+                    widget.card.maxBidderName,
+                    style: TStyles.medium,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              ),
-              Positioned(
-                left: 0,
-                right: 8.d,
-                bottom: 12.d,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.d),
+                SizedBox(
+                  height: 17.d,
+                ),
+                SkinnedText("auction_bid".l(),
+                    style: TStyles.small, textAlign: TextAlign.start),
+                SizedBox(
+                  height: 4.d,
+                ),
+                Widgets.rect(
+                  padding: EdgeInsets.symmetric(horizontal: 20.d,vertical: 5.d),
+                  borderRadius: BorderRadius.all(radius),
+                  color: TColors.black25,
+                  child: SkinnedText(widget.card.maxBidderName,
+                      style: TStyles.medium.copyWith(color: imMaxBidder ? TColors.green : TColors.primary50)),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 10.d,),
+          SizedBox(
+            width: 320.d,
+            child: Expanded(
+                child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  width: 269.d,
+                  height: 75.d,
+                  child: Widgets.rect(
+                    borderRadius:
+                        BorderRadius.only(topRight: radius, bottomLeft: radius),
+                    color: TColors.black25,
+                    child: StreamBuilder(
+                      stream: Stream.periodic(
+                        Duration(seconds: refreshRate),
+                        (computationCount) => computationCount,
+                      ),
+                      builder: (context, snapshot) {
+                        var time = widget.card.activityStatus > 0
+                            ? (remainingSeconds - (snapshot.data ?? 0))
+                                .toRemainingTime()
+                            : "closed_l".l();
+                        return Center(child: SkinnedText("ˣ$time"));
+                      },
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 8.d,
+                  bottom: 12.d,
+                  height: 250.d,
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SkinnedText("auction_owner".l(),
-                          style: TStyles.small, textAlign: TextAlign.start),
-                      SizedBox(
-                        height: 4.d,
-                      ),
-                      Widgets.rect(
-                        height: 50.d,
-                        width: cardSize,
-                        padding: EdgeInsets.symmetric(horizontal: 15.d),
-                        borderRadius: BorderRadius.all(radius),
-                        color: TColors.black25,
-                        child: Row(
-                          children: [
-                            SkinnedText(
-                              widget.card.maxBidderName,
-                              style: TStyles.tiny,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 7.d,
-                      ),
-                      SkinnedText("auction_bid".l(),
-                          style: TStyles.small, textAlign: TextAlign.start),
-                      SizedBox(
-                        height: 4.d,
-                      ),
-                      Widgets.rect(
-                        height: 50.d,
-                        width: cardSize,
-                        padding: EdgeInsets.symmetric(horizontal: 15.d),
-                        borderRadius: BorderRadius.all(radius),
-                        color: TColors.black25,
-                        child: Row(
-                          children: [
-                            SkinnedText(widget.card.maxBidderName,
-                                style: TStyles.tiny)
-                          ],
-                        ),
-                      ),
                       SizedBox(height: 17.d),
+                      Row(
+                          mainAxisSize: MainAxisSize.min,
+                          textDirection: TextDirection.ltr,
+                          children: [
+                            Asset.load<Image>("icon_gold", width: 60.d),
+                            SizedBox(width: 8.d),
+                            SkinnedText(widget.card.maxBid.compact(),
+                                style: TStyles.large)
+                          ]),
+                      SizedBox(height: 10.d),
                       bidable
                           ? _getBidButton(widget.card, account, imMaxBidder)
-                          : const SizedBox(),
+                          : Text("ˣauction_closed".l(),style: TStyles.medium.copyWith(color: imMaxBidder ? TColors.green : TColors.red),),
                     ],
                   ),
                 ),
-              ),
-            ],
-          )),
+              ],
+            )),
+          ),
         ]));
   }
 
@@ -174,7 +170,8 @@ class _AuctionItemState extends State<AuctionItem> {
       return SkinnedButton(
         padding: EdgeInsets.fromLTRB(21.d, 15.d, 12.d, 32.d),
         color: ButtonColor.teal,
-        width: 240.d,
+        width: 260.d,
+        height: 130.d,
         child: Row(
             mainAxisSize: MainAxisSize.max,
             textDirection: TextDirection.ltr,
@@ -182,10 +179,11 @@ class _AuctionItemState extends State<AuctionItem> {
             children: [
               Asset.load<Image>("checkbox_on", width: 53.d),
               SizedBox(width: 12.d),
-              SkinnedText(
-                "auction_bid_leader".l(),
-                style: TStyles.small,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: SkinnedText(
+                  "auction_bid_leader".l(),
+                  style: TStyles.medium.copyWith(height: 1),
+                ),
               ),
             ]),
       );
@@ -193,6 +191,8 @@ class _AuctionItemState extends State<AuctionItem> {
     return SkinnedButton(
       padding: EdgeInsets.fromLTRB(21.d, 15.d, 12.d, 32.d),
       color: ButtonColor.teal,
+      width: 260.d,
+      height: 130.d,
       onPressed: widget.onBid,
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -203,15 +203,13 @@ class _AuctionItemState extends State<AuctionItem> {
             "Bid".l(),
             style: TStyles.medium,
           ),
-          SizedBox(width: 12.d),
-          Expanded(
-            child: Widgets.rect(
-              padding: EdgeInsets.zero,
-              borderRadius: BorderRadius.all(Radius.circular(21.d)),
-              color: TColors.black25,
-              child: SkinnedText("+${card.bidStep.compact()}",
-                  style: TStyles.medium),
-            ),
+          SizedBox(width: 15.d),
+          Widgets.rect(
+            padding: EdgeInsets.all(7.d),
+            borderRadius: BorderRadius.all(Radius.circular(21.d)),
+            color: TColors.black25,
+            child: SkinnedText("+${card.bidStep.compact()}",
+                style: TStyles.medium),
           ),
         ],
       ),
