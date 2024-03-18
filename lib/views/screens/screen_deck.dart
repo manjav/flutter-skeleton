@@ -185,7 +185,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
               ),
             ),
             Positioned(
-              top: 350.d,
+              top: 370.d,
               left: 37.d,
               right: 37.d,
               child: ValueListenableBuilder<List<AccountCard?>>(
@@ -270,7 +270,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             //   ),
             // ),
             Positioned(
-              height: 180.d,
+              height: 200.d,
               bottom: 24.d,
               width: Get.width * 0.95,
               child: Row(
@@ -290,7 +290,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                     ),
                   ),
                   SizedBox(
-                    width: 40.d,
+                    width: 20.d,
                   ),
                   Expanded(
                     child: SkinnedButton(
