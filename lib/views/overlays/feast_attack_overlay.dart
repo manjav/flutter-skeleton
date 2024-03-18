@@ -75,8 +75,8 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
       if (_outcomeData.containsKey("attack_bonus_power") &&
           _outcomeData["attack_bonus_power"] > 0) {
-        AccountCard tribHelpCard =
-            AccountCard(_account!, {"base_card_id": 103, "power": 400});
+        AccountCard tribHelpCard = AccountCard(
+            _account!, {"base_card_id": 103, "power": 400, "copy": true});
         tribHelpCard.base.name = "TribeHelp";
         tribHelpCard.power = Convert.toInt(_outcomeData["attack_bonus_power"]);
         tribHelpCard.base.rarity = 0;
@@ -114,8 +114,8 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
           .sort((r, l) => (l.base.isHero ? -1 : 1) - (r.base.isHero ? -1 : 1));
       if (_outcomeData.containsKey("def_bonus_power") &&
           _outcomeData["def_bonus_power"] > 0) {
-        AccountCard tribHelpCard =
-            AccountCard(_account!, {"base_card_id": 103, "power": 400});
+        AccountCard tribHelpCard = AccountCard(
+            _account!, {"base_card_id": 103, "power": 400, "copy": true});
         tribHelpCard.base.name = "TribeHelp";
         tribHelpCard.power = Convert.toInt(_outcomeData["def_bonus_power"]);
         tribHelpCard.base.rarity = 0;
