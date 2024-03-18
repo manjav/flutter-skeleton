@@ -31,6 +31,16 @@ class TColors {
   static const white50 = Color(0x88FFFFFF);
   static const red = Color(0xFFEE3E3E);
   static const red20 = Color(0x33EE3E3E);
+  static const linearBlue = LinearGradient(
+    colors: [Color(0xff23C9EE), Color(0xff3293C7)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+  static const linearGold = LinearGradient(
+    colors: [Color(0xffFFFF2F), Color(0xffF9C31C)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 }
 
 class TStyles {
