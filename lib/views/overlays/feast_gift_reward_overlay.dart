@@ -41,8 +41,9 @@ class _GiftRewardFeastOverlayState
       var res = await rpc(RpcId.claimAdvertismentReward, params: params);
       addedGold = res["added_gold"];
       hasOffer = res["has_special_offer"];
-      // ignore: use_build_context_synchronously
-      accountProvider.update(context, res);
+      if (mounted) {
+        accountProvider.update(context, res);
+      }
       return true;
     });
   }
