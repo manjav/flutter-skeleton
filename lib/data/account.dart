@@ -413,8 +413,8 @@ class Account extends Player with MineMixin {
       myCards.add(getCard(card));
     }
     myCards.sort((AccountCard a, AccountCard b) =>
-        b.power * (b.base.isHero ? 9999999999 : 1) -
-        a.power * (a.base.isHero ? 9999999999 : 1));
+        b.power * (b.base.isHero ? 99999999 : 1) -
+        a.power * (a.base.isHero ? 99999999 : 1));
     return myCards;
   }
 

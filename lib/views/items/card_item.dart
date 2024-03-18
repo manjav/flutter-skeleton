@@ -9,7 +9,7 @@ import 'package:rive/src/rive_core/assets/file_asset.dart';
 import '../../app_export.dart';
 
 class CardItem extends StatefulWidget {
-  static const aspectRatio = 0.74;
+  static const aspectRatio = 0.72;
   final double size;
   final bool showCoolOff;
   final bool showCooldown;
@@ -157,7 +157,7 @@ class _CardItemState extends State<CardItem> {
           left: 16 * s,
           child: Row(textDirection: TextDirection.ltr, children: [
             SkinnedText("ˢ${widget.card.power.compact().convert()}",
-                style: _medium),
+                style: _small),
             widget.extraPower > 0
                 ? SkinnedText("+${widget.extraPower.compact().convert()}",
                     textDirection: TextDirection.ltr,
