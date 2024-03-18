@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
 
-
 class CardHolder extends StatefulWidget {
   final AccountCard? card;
   final bool heroMode;
@@ -26,26 +25,32 @@ class CardHolder extends StatefulWidget {
 class _CardHolderState extends State<CardHolder> with KeyProvider {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      widget.card == null || !widget.showPower
-          ? const SizedBox()
-          : Widgets.rect(
-              padding: EdgeInsets.all(12.d),
-              decoration: Widgets.imageDecorator(
-                  "deck_balloon",
-                  ImageCenterSliceData(
-                      50, 57, const Rect.fromLTWH(11, 11, 2, 2))),
-              child: Text(widget.card!.power.compact(),
-                  style: TStyles.mediumInvert)),
-      Widgets.button(context,
-          onPressed: () => widget.onTap?.call(),
-          width: widget.heroMode ? 202.d : 184.d,
-          height: widget.heroMode ? 202.d : 184.d,
-          padding: EdgeInsets.all(12.d),
-          decoration: Widgets.imageDecorator(
-              "deck_placeholder", ImageCenterSliceData(117, 117)),
-          child: widget.card == null ? _emptyCard() : _filledCard())
-    ]);
+    return SizedBox(
+      height: 330.d,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Widgets.button(
+            context,
+            onPressed: () => widget.onTap?.call(),
+            width: widget.heroMode ? 218.d : 183.d,
+            height: widget.heroMode ? 296.d : 249.d,
+            margin: EdgeInsets.only(bottom: 25.d),
+            padding: EdgeInsets.all(12.d),
+            decoration: Widgets.imageDecorator(
+                "deck_placeholder", ImageCenterSliceData(117, 117)),
+            child: widget.card == null ? _emptyCard() : _filledCard(),
+          ),
+          widget.card == null || !widget.showPower
+              ? const SizedBox()
+              : Positioned(
+                bottom: 0.d,
+                child: SkinnedText(widget.card!.power.compact(),
+                    style: TStyles.mediumInvert),
+              ),
+        ],
+      ),
+    );
   }
 
   Widget _emptyCard() {
@@ -67,4 +72,3 @@ class _CardHolderState extends State<CardHolder> with KeyProvider {
         subFolder: "cards", key: getGlobalKey(card.id));
   }
 }
-
