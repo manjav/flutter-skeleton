@@ -74,7 +74,6 @@ class EventNotification extends IService {
       onClose: () {
         entry?.remove();
         onlines.removeAt(0);
-        // ignore: use_build_context_synchronously
         _showStatus(context);
       },
     );

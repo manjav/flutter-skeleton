@@ -128,15 +128,16 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
         await rpc(RpcId.buyGoldPack, params: params);
         var account = serviceLocator<AccountProvider>();
-        // ignore: use_build_context_synchronously
-        account.update(context, {section.name: item.base.value});
+        if (mounted) {
+          account.update(context, {section.name: item.base.value});
 
-        // ignore: use_build_context_synchronously
-        Overlays.insert(
+          Overlays.insert(
             context,
             PurchaseFeastOverlay(
               args: {"item": item},
-            ));
+            ),
+          );
+        }
         return;
       }
     }
@@ -383,7 +384,6 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     }
 
     if (item.base.section == ShopSections.boost) {
-      // ignore: use_build_context_synchronously
       Overlays.insert(
           context,
           PurchaseFeastOverlay(
@@ -400,7 +400,6 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             },
           ));
     } else {
-      // ignore: use_build_context_synchronously
       Overlays.insert(
         context,
         OpenPackFeastOverlay(
@@ -439,15 +438,16 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     await rpc(RpcId.buyGoldPack, params: params);
 
     await serviceLocator<Payment>().consume(purchase: details);
-    // ignore: use_build_context_synchronously
-    account.update(context, {section.name: item.base.value});
 
-    // ignore: use_build_context_synchronously
-    Overlays.insert(
+    if (mounted) {
+      account.update(context, {section.name: item.base.value});
+      Overlays.insert(
         context,
         PurchaseFeastOverlay(
           args: {"item": item},
-        ));
+        ),
+      );
+    }
     return;
   }
 

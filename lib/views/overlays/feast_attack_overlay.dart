@@ -207,22 +207,22 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     } else if (state == RewardAnimationState.shown) {
       await Future.delayed(const Duration(milliseconds: 10));
       var route = _opponent!.id != 0 ? Routes.battleOut : Routes.questOut;
-      // ignore: use_build_context_synchronously
-      Overlays.insert(
-        context,
-        AttackOutcomeFeastOverlay(
-          args: _outcomeData,
-          type: route,
-          onClose: (data) async {
-            onRiveEvent(const RiveEvent(
-                name: "closing", secondsDelay: 0, properties: {}));
-            closeInput?.value = true;
-            closeButtonController?.reverse();
-          },
-        ),
-      );
-      // ignore: use_build_context_synchronously
-      accountProvider.update(context, _outcomeData);
+      if (mounted) {
+        Overlays.insert(
+          context,
+          AttackOutcomeFeastOverlay(
+            args: _outcomeData,
+            type: route,
+            onClose: (data) async {
+              onRiveEvent(const RiveEvent(
+                  name: "closing", secondsDelay: 0, properties: {}));
+              closeInput?.value = true;
+              closeButtonController?.reverse();
+            },
+          ),
+        );
+        accountProvider.update(context, _outcomeData);
+      }
     } else if (state == RewardAnimationState.closing) {
       var lastRoute = _opponent!.id == 0 ? Routes.quest : Routes.popupOpponents;
       serviceLocator<RouteService>()
