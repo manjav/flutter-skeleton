@@ -5,6 +5,7 @@ export 'feast_bundle_overlay.dart';
 export 'feast_daily_reward_overlay.dart';
 export 'feast_enhance_overlay.dart';
 export 'feast_evolve_overlay.dart';
+export 'feast_gift_reward_overlay.dart';
 export 'feast_levelup_overlay.dart';
 export 'feast_openpack_overlay.dart';
 export 'feast_purchase_overlay.dart';

@@ -71,6 +71,7 @@ class AdAdivery extends AbstractAdSDK {
   Future<Placement?> show(AdType type, {String? origin}) async {
     var placement = isReady(type);
     if (placement == null) {
+      request(type);
       return null;
     }
     AdiveryPlugin.show(placement.id);

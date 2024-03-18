@@ -223,7 +223,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     );
   }
 
-  _onBoxTap(double type) {
+  _onBoxTap(double type) async {
     if (type == 0) {
       Overlays.insert(
           context,
@@ -232,7 +232,16 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           ));
     }
     if (type == 2) {
-      var ads=serviceLocator<Ads>();
+      var ads = serviceLocator<Ads>();
+      ads.changeState.listen((placment) {
+        if (placment == null) return;
+        if (placment.state != AdState.closed) return;
+        if (placment.reward["reward"] != true) return;
+        Overlays.insert(
+          context,
+          const GiftRewardFeastOverlay(),
+        );
+      });
       ads.show(AdType.rewarded);
     }
   }
