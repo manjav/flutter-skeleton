@@ -316,8 +316,8 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
                   color: ButtonColor.green,
                   padding: EdgeInsets.only(bottom: 10.d),
                   icon: item.inStore ? null : "icon_${item.base.currency}",
-                  label: ShopData.calculatePrice(_account.level,
-                      _account.nectarPrice, _productDetails, item),
+                  label:
+                      ShopData.calculatePrice(_account, _productDetails, item),
                   height: 120.d))
         ]),
         onPressed: () => _onItemPressed(item));

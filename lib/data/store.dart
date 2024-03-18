@@ -39,7 +39,7 @@ class ShopData {
     };
   }
 
-  static String calculatePrice(int level, int nectarPrice,
+  static String calculatePrice(Account account,
       Map<String, SkuDetails> productDetails, ShopItemVM item) {
     var price = item.base.value;
     if (item.inStore && productDetails.containsKey(item.base.productID)) {
@@ -47,7 +47,8 @@ class ShopData {
     }
     if (item.base.section == ShopSections.boost) {
       // Converts gold multiplier to nectar for boost packs
-      var boostNectarMultiplier = getMultiplier(level) / nectarPrice;
+      var boostNectarMultiplier =
+          getMultiplier(account.level) / account.nectarPrice;
       return switch (price) {
         10 => (30000 * boostNectarMultiplier).round(),
         20 => (90000 * boostNectarMultiplier).round(),
@@ -56,6 +57,9 @@ class ShopData {
         _ => price,
       }
           .compact();
+    }
+    if (item.base.id == 32) {
+      return (150 + (account.heroes.length - 1) * 50).compact();
     }
     return price.compact();
   }
