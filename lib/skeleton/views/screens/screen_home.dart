@@ -232,8 +232,9 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       if (status.status != 1) {
         return;
       }
-      // ignore: use_build_context_synchronously
-      notifService.addStatus("event_online".l([player.name]), context);
+      if (mounted) {
+        notifService.addStatus("event_online".l([player.name]), context);
+      }
       return;
     }
 

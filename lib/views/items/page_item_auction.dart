@@ -121,8 +121,7 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
       if (index > -1) {
         setState(() => _cards[index] = auction);
       }
-      if (context.mounted) {
-        // ignore: use_build_context_synchronously
+      if (mounted) {
         accountProvider.update(context, data);
       }
       toast("auction_added".l());
