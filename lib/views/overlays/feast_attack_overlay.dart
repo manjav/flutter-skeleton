@@ -183,6 +183,12 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   @override
   void onRiveEvent(RiveEvent event) async {
     super.onRiveEvent(event);
+    if (event.name == "cards_setup") {
+      serviceLocator<Sounds>().play("cards_setup", channel: "setup");
+    }
+    if (event.name == "hit") {
+      serviceLocator<Sounds>().play("hit", channel: "hit");
+    }
     if (state == RewardAnimationState.started) {
       updateCard(i, AccountCard card) {
         updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
