@@ -4,9 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import '../../app_export.dart';
 
 class ListenerBox extends StatelessWidget {
-  final Talk pattern;
+  final Talk talk;
   final bool challengeMode;
-  ListenerBox(this.pattern, {this.challengeMode = false, super.key});
+  ListenerBox(this.talk, {this.challengeMode = false, super.key});
   final _correctStyle = TStyles.medium
       .copyWith(color: TColors.green, fontWeight: FontWeight.w900, height: 1);
 
@@ -20,8 +20,8 @@ class ListenerBox extends StatelessWidget {
     return Row(
       children: [
         SpeakerBox(
-          narrator: pattern.type.narrator,
-          value: pattern.targetValue,
+          narrator: talk.type.narrator,
+          value: talk.targetValue,
           width: 50.d,
         ),
         SizedBox(width: 10.d),
@@ -33,7 +33,7 @@ class ListenerBox extends StatelessWidget {
                   children: [
                     _answeringBuilder(defaultStyle, value),
                     SizedBox(height: 4.d),
-                    DirText(pattern.nativeValue,
+                    DirText(talk.nativeValue,
                         style:
                             TStyles.small.copyWith(color: TColors.primary40)),
                     SizedBox(height: 6.d),
@@ -97,22 +97,24 @@ class ListenerBox extends StatelessWidget {
   Widget _answeringBuilder(TextStyle defaultStyle, String value) {
     if (challengeMode) {
       var items = <Widget>[];
-      var patterns = pattern.targetValue.toLowerCase().split(" ");
+      var patterns = talk.targetValue.toLowerCase().split(" ");
       var values = value.split(" ");
       for (var i = 0; i < patterns.length; i++) {
         var style = defaultStyle;
         if (i < values.length) {
-          if (values[i].toLowerCase() == patterns[i]) {
+          if (values[i].simple() == patterns[i].simple()) {
             style = _correctStyle;
           }
         }
-        items.add(Widgets.rect(
-          radius: 6.d,
-          color: TColors.primary10,
-          margin: EdgeInsets.all(4.d),
-          padding: EdgeInsets.fromLTRB(6.d, 4.d, 6.d, 1.d),
-          child: Text(patterns[i], style: style),
-        ));
+        items.add(
+          Widgets.rect(
+            radius: 6.d,
+            color: TColors.primary10,
+            margin: EdgeInsets.all(4.d),
+            padding: EdgeInsets.fromLTRB(6.d, 4.d, 6.d, 1.d),
+            child: Text(patterns[i], style: style),
+          ),
+        );
       }
       return Wrap(children: items);
     }
@@ -127,8 +129,8 @@ class ListenerBox extends StatelessWidget {
   }
 
   List<TextSpan> _getWords(String value) {
-    var target = pattern.targetValue;
-    if (pattern.targetValue == value) {
+    var target = talk.targetValue;
+    if (talk.targetValue == value) {
       return [TextSpan(text: target, style: _correctStyle)];
     }
     var index = target.toLowerCase().indexOf(value);
