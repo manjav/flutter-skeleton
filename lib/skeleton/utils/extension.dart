@@ -104,10 +104,14 @@ extension StringExtension on String {
     return [substring(0, length), ...substring(length).splitByLength(length)];
   }
 
-  String simple() {
-    return replaceAll(RegExp(r'[!?.,;:]'), '')
+  String simple([bool withSpace = false]) {
+    var text = replaceAll(RegExp(r'[!?.,;:]'), '')
         .replaceAll(RegExp(r'’'), "'")
         .toLowerCase();
+    if (withSpace) {
+      text = text.replaceAll(RegExp(' '), '');
+    }
+    return text;
   }
 }
 

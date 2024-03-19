@@ -79,7 +79,7 @@ class STT extends Quiz {
     serviceLocator<Sounds>().stopAll();
     super.start(onResult: onResult);
     if (locale != null) this.locale = locale;
-    if (locale != null) this.pattern = pattern;
+    if (locale != null) this.pattern = pattern!.simple(true);
     recognizedWords.value = "";
     final options = SpeechListenOptions(
         onDevice: false,
@@ -121,7 +121,7 @@ class STT extends Quiz {
       // print("${result.confidence} $pattern ${result.recognizedWords.simple()}");
       recognizedWords.value = result.recognizedWords;
       if (result.finalResult) {
-        state.value = result.recognizedWords.simple() == pattern
+        state.value = result.recognizedWords.simple(true) == pattern
             ? QuizState.success
             : QuizState.fail;
       }
