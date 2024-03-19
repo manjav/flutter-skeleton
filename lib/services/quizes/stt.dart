@@ -104,6 +104,7 @@ class STT extends Quiz {
 
   @override
   void stop() {
+    if (!isEnable) return;
     super.stop();
     log('stop');
     _speech.stop();
