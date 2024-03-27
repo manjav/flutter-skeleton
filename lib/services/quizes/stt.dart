@@ -77,11 +77,13 @@ class STT extends Quiz {
     Function(QuizState p1, String p2)? onResult,
     String? locale,
     String? pattern,
+    int minMatchLevel = 90,
   }) {
     // serviceLocator<Sounds>().stopAll();
     super.start(onResult: onResult);
     if (locale != null) this.locale = locale;
     if (pattern != null) this.pattern = pattern.simple();
+    this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
     final options = SpeechListenOptions(
         onDevice: false,

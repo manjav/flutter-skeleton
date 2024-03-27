@@ -16,9 +16,15 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
   Future<void> startQuiz(Content child) async {
     // await Future.delayed(const Duration(seconds: 2));
     // _onQuizResult(QuizState.success, child.targetValue);
+
+    var account = serviceLocator<AccountProvider>();
+    var easyMode =
+        child.targetValue.contains(account.account.user.displayName!);
+
     serviceLocator<STT>().start(
-      locale: serviceLocator<AccountProvider>().metadata["targetLanguage"],
-      pattern: child.targetValue.simple(),
+      locale: account.metadata["targetLanguage"],
+      pattern: child.targetValue,
+      minMatchLevel: easyMode ? 60 : 90,
       onResult: _onQuizResult,
     );
   }
