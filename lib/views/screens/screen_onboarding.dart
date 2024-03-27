@@ -11,7 +11,7 @@ class OnboardingScreen extends AbstractScreen {
 }
 
 class _ScreenState extends AbstractScreenState<OnboardingScreen> {
-  String _nativeLanguage = "";
+  String _nativeLanguage = "", _targetLanguage = "";
   final PageController _pageController = PageController();
   @override
   List<Widget> appBarElementsLeft() => [];
@@ -25,13 +25,13 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) =>
-          LanguagePage(index, languages, onItemSelect: _onFlagSelect),
+          LanguagePage(index, languages, onChange: _onFlagSelect),
     );
   }
 
-  Future<void> _onFlagSelect(int index, String code) async {
+  Future<void> _onFlagSelect(int index, String value) async {
     if (index == 0) {
-      _nativeLanguage = code;
+      _nativeLanguage = value;
       _pageController.animateToPage(1,
           duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
     } else {
@@ -47,9 +47,9 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
 class LanguagePage extends StatefulWidget {
   final int index;
   final List<MapEntry> languages;
-  final Function(int, String)? onItemSelect;
+  final Function(int, String)? onChange;
   const LanguagePage(this.index, this.languages,
-      {this.onItemSelect, super.key});
+      {this.onChange, super.key});
 
   @override
   State<LanguagePage> createState() => _LanguagePageState();
@@ -99,7 +99,8 @@ class _LanguagePageState extends State<LanguagePage> {
   }
 
   Widget _languageItemBuilder(int index) {
-    return Widgets.button(context,
+    return Widgets.button(
+      context,
         height: 64.d,
         child: Row(
           children: [
@@ -108,8 +109,8 @@ class _LanguagePageState extends State<LanguagePage> {
             Text(_flags[index].value)
           ],
         ),
-        onPressed: () =>
-            widget.onItemSelect?.call(widget.index, _flags[index].key));
+      onPressed: () => _submit(_flags[index].key),
+    );
   }
 
   void _onSearchBoxChange(String text) {
@@ -118,4 +119,6 @@ class _LanguagePageState extends State<LanguagePage> {
         .toList();
     setState(() {});
   }
+
+  void _submit(String value) => widget.onChange?.call(widget.index, value);
 }
