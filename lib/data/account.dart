@@ -57,12 +57,8 @@ class AccountProvider extends ChangeNotifier {
     var talks = <Talk>[];
     for (var i = 0; i < list.length; i++) {
       talks.add(
-        Talk.create(
-          i,
-          list[i],
-          account.user.langTag!,
-          metadata["targetLanguage"],
-        ),
+        Talk.create(i, list[i], account.user.langTag!,
+            metadata["targetLanguage"], account.user.displayName!),
       );
     }
     group.children = talks;

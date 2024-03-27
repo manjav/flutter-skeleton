@@ -63,12 +63,13 @@ class GroupContent extends ParentContent {
 class Talk extends Content {
   String personId = "";
   Set<String> get words => {...targetValue.split(" ")};
-  Talk.create(int index, Map map, String nativeLanguage, String targetLanguage)
+  Talk.create(int index, Map map, String nativeLanguage, String targetLanguage,
+      String name)
       : super.create(map["id"], map) {
     this.index = index;
     personId = map["person_id"];
-    nativeValue = map[nativeLanguage];
-    targetValue = map[targetLanguage];
+    nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
+    targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
     type = index % 2 == 0 ? ContentType.bot : ContentType.user;
   }
 }
