@@ -122,6 +122,7 @@ class ListenerBox extends StatelessWidget {
     }
 
     return RichText(
+      textDirection: talk.targetValue.getDirection(),
       textAlign: TextAlign.center,
       text: TextSpan(
         style: defaultStyle,
