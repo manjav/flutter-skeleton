@@ -78,6 +78,7 @@ class SkinnedButton extends StatelessWidget {
                         (_isPressed.value ? strokeSize : 0)),
             decoration: BattonDecoration(
                 mainColor: color,
+                cornerRadius: cornerRadius,
                 isEnable: isEnable,
                 isPressed: _isPressed.value,
                 strokeSize: strokeSize),
