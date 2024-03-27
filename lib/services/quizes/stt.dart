@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -11,6 +12,7 @@ class STT extends Quiz {
   static const int levelInterval = 100;
   String? locale;
   String? pattern;
+  int minMatchLevel = 90;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
   SpeechRecognitionResult result = SpeechRecognitionResult([], true);
@@ -121,9 +123,9 @@ class STT extends Quiz {
       // print("${result.confidence} $pattern ${result.recognizedWords.simple()}");
       recognizedWords.value = result.recognizedWords;
       if (result.finalResult) {
-        state.value = result.recognizedWords.simple(true) == pattern
-            ? QuizState.success
-            : QuizState.fail;
+        var insert = result.recognizedWords.simple();
+        var rate = ratio(pattern!, insert);
+        state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
       }
     }
   }

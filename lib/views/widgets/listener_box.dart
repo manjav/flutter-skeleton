@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 
 import '../../app_export.dart';
 
@@ -31,7 +32,7 @@ class ListenerBox extends StatelessWidget {
               builder: (context, value, child) {
                 return Column(
                   children: [
-                    _answeringBuilder(defaultStyle, value),
+                    _answeringBuilder(defaultStyle, value, stt.minMatchLevel),
                     SizedBox(height: 4.d),
                     DirText(talk.nativeValue,
                         style:
@@ -94,7 +95,7 @@ class ListenerBox extends StatelessWidget {
         });
   }
 
-  Widget _answeringBuilder(TextStyle defaultStyle, String value) {
+  Widget _answeringBuilder(TextStyle defaultStyle, String value, int minMatchLevel) {
     if (challengeMode) {
       var items = <Widget>[];
       var patterns = talk.targetValue.toLowerCase().split(" ");
@@ -102,7 +103,8 @@ class ListenerBox extends StatelessWidget {
       for (var i = 0; i < patterns.length; i++) {
         var style = defaultStyle;
         if (i < values.length) {
-          if (values[i].simple() == patterns[i].simple()) {
+          var rate = ratio(values[i].simple(), patterns[i].simple());
+          if (rate > minMatchLevel) {
             style = _correctStyle;
           }
         }
