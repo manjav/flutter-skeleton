@@ -84,7 +84,10 @@ class _LanguagePageState extends State<LanguagePage> {
           Widgets.skinnedInput(
             hintText: "Search",
             suffixIcon: const Icon(Icons.search),
-            controller: _textInputController,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(
+                  Localization.getLimits(OnboardingScreen.targetLanguage)),
+            ],
             onChange: _onSearchBoxChange,
           ),
           Expanded(

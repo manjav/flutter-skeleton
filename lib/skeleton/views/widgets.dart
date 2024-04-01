@@ -213,6 +213,7 @@ class Widgets {
     Function(String)? onSubmit,
     Color? color,
     Color? borderColor,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     var style = TStyles.medium.copyWith(height: 1.5);
     color = color ?? TColors.primary0;
@@ -230,12 +231,13 @@ class Widgets {
             controller: controller,
             onChanged: onChange,
             onSubmitted: onSubmit,
+            inputFormatters: inputFormatters,
             textAlign: TextAlign.center,
             maxLength: maxLength == 1 ? null : maxLength,
             onTapOutside: (p) => FocusManager.instance.primaryFocus?.unfocus(),
             decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
-              hintStyle: style,
+              hintStyle: style.copyWith(color: TColors.primary40),
               hintText: hintText,
               suffixIcon: suffixIcon,
               border: _getBorder(radius, borderColor, 1.d),
