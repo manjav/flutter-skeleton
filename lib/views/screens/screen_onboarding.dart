@@ -33,7 +33,8 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   Future<void> _onFlagSelect(int index, String value) async {
     if (index == 0) {
       OnboardingScreen.nativeLanguage = value;
-      _nativeLanguage = value;
+      await serviceLocator<Localization>()
+          .initialize(args: [OnboardingScreen.nativeLanguage]);
       _pageController.animateToPage(1,
           duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
     } else if (index == 1) {
@@ -83,16 +84,24 @@ class _LanguagePageState extends State<LanguagePage> {
         children: [
           Padding(
             padding: EdgeInsets.all(8.d),
-            child: Text(
-              ["My native language is ...", "I want to learn..."][widget.index],
-              style: TStyles.large,
+            child: DirText(
+              [
+                "My native language is ...",
+                "target_language_message".l(),
+                "select_name_message".l()
+              ][widget.index],
               textAlign: TextAlign.center,
             ),
           ),
           SizedBox(height: 32.d),
           Widgets.skinnedInput(
-            hintText: "Search",
-            suffixIcon: const Icon(Icons.search),
+            controller: _textInputController,
+            hintText: [
+              "Search",
+              "search_l".l(),
+              "select_name_prompt".l()
+            ][widget.index],
+            suffixIcon: Icon(widget.index > 1 ? Icons.person : Icons.search),
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(
                   Localization.getLimits(OnboardingScreen.targetLanguage)),
