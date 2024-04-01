@@ -38,11 +38,11 @@ class _ScreenState extends AbstractScreenState<LessonDictationScreen>
   @override
   updateContent() async {
     var talk = steps[index.value] as Talk;
+    await super.updateContent();
     if (talk.type == ContentType.user) {
-      serviceLocator<Speaker>()
+      await serviceLocator<Speaker>()
           .play(talk.targetValue, narrator: talk.type.narrator);
     }
-    await super.updateContent();
   }
 
   @override
