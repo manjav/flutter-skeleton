@@ -11,6 +11,7 @@ class Localization extends IService {
   static Map<String, dynamic>? _sentences;
   static String languageCode = "en";
   static TextDirection dir = TextDirection.ltr;
+  static bool isRTLMode(String code) => code == "fa" || code == "ar";
   static bool isRTL = false;
 
   Localization();
@@ -22,7 +23,7 @@ class Localization extends IService {
   initialize({List<Object>? args}) async {
     var locale = Localizations.localeOf(args![0] as BuildContext);
     languageCode = locale.languageCode;
-    isRTL = languageCode == "fa" || languageCode == "ar";
+    isRTL = isRTLMode(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
     await _getData("keys.json");
