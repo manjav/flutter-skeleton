@@ -34,6 +34,9 @@ class _DictationBoxState extends State<DictationBox> {
                   ),
                 ],
               ),
+              SizedBox(height: 12.d),
+              DirText(content.nativeValue,
+                  style: TStyles.small.copyWith(color: TColors.primary40)),
               SizedBox(height: 8.d),
               _answerBox(dictator),
               SizedBox(height: 8.d),
@@ -50,7 +53,9 @@ class _DictationBoxState extends State<DictationBox> {
       radius: 20.d,
       color: TColors.primary10,
       padding: EdgeInsets.fromLTRB(16.d, 6.d, 6.d, 6.d),
-      constraints: BoxConstraints.expand(height: 64.d),
+      constraints: BoxConstraints.expand(
+          height: (1.3.d * dictator.currentStage!.targetValue.length)
+              .clamp(64.d, 200.d)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
