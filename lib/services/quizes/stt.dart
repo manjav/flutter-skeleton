@@ -12,6 +12,7 @@ class STT extends Quiz {
   static const int levelInterval = 100;
   String? locale;
   String? pattern;
+  String logs = "none";
   int minMatchLevel = 90;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
@@ -122,11 +123,11 @@ class STT extends Quiz {
       // var words = result.alternates.where((a) =>
       //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
       // words.first.recognizedWords;
-      // print("${result.confidence} $pattern ${result.recognizedWords.simple()}");
       recognizedWords.value = result.recognizedWords;
       if (result.finalResult) {
         var insert = result.recognizedWords.simple();
         var rate = ratio(pattern!, insert);
+        logs = "${pattern!} == $insert  ratio:$rate";
         state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
       }
     }
