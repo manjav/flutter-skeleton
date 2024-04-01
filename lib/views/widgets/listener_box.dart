@@ -7,6 +7,8 @@ import '../../app_export.dart';
 class ListenerBox extends StatelessWidget {
   final Talk talk;
   final bool challengeMode;
+  final ValueNotifier<bool> _debugMode = ValueNotifier(false);
+
   ListenerBox(this.talk, {this.challengeMode = false, super.key});
   final _correctStyle = TStyles.medium
       .copyWith(color: TColors.green, fontWeight: FontWeight.w900, height: 1);
@@ -46,42 +48,48 @@ class ListenerBox extends StatelessWidget {
                             textAlign: TextAlign.center,
                           )
                         : const SizedBox(),
+                    ValueListenableBuilder(
+                        valueListenable: _debugMode,
+                        builder: (context, value, child) => value
+                            ? Text(stt.logs,
+                                style:
+                                    TStyles.tiny.copyWith(color: TColors.error))
+                            : const SizedBox())
                   ],
                 );
               }),
         ),
-        Widgets.button(
-          context,
-          width: size,
-          height: size,
-          radius: size,
-          padding: EdgeInsets.zero,
-          alignment: Alignment.center,
-          color: TColors.primary10,
-          child: Stack(
+        Widgets.button(context,
+            width: size,
+            height: size,
+            radius: size,
+            padding: EdgeInsets.zero,
             alignment: Alignment.center,
-            children: [
-              ValueListenableBuilder(
-                valueListenable: stt.audioLevel,
-                builder: (context, value, child) => AnimatedContainer(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(size)),
-                    color: TColors.primary20,
+            color: TColors.primary10,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                ValueListenableBuilder(
+                  valueListenable: stt.audioLevel,
+                  builder: (context, value, child) => AnimatedContainer(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(size)),
+                      color: TColors.primary20,
+                    ),
+                    width: size * stt.audioLevel.value,
+                    height: size * stt.audioLevel.value,
+                    duration: const Duration(milliseconds: STT.levelInterval),
                   ),
-                  width: size * stt.audioLevel.value,
-                  height: size * stt.audioLevel.value,
-                  duration: const Duration(milliseconds: STT.levelInterval),
                 ),
-              ),
-              _getIcon(size)
-            ],
-          ),
-          onPressed: () {
-            if (stt.state.value == QuizState.ready) {
-              stt.start();
-            }
-          },
-        ),
+                _getIcon(size)
+              ],
+            ),
+            onPressed: () {
+              if (stt.state.value == QuizState.ready) {
+                stt.start();
+              }
+            },
+            onLongPress: () => _debugMode.value = !_debugMode.value),
       ],
     );
   }
@@ -95,7 +103,8 @@ class ListenerBox extends StatelessWidget {
         });
   }
 
-  Widget _answeringBuilder(TextStyle defaultStyle, String value, int minMatchLevel) {
+  Widget _answeringBuilder(
+      TextStyle defaultStyle, String value, int minMatchLevel) {
     if (challengeMode) {
       var items = <Widget>[];
       var patterns = talk.targetValue.toLowerCase().split(" ");
