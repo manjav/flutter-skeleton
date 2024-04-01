@@ -14,7 +14,13 @@ class Dictator extends Quiz {
   initialize({List<Object>? args}) async {
     currentStage = args![0] as Content;
     var text = currentStage!.targetValue.simple();
-    _pattern = text.split(" ");
+    var pattern = text.split(" ");
+    _pattern = [];
+    if (pattern.length > 10) {
+      _pattern = _joinArray(pattern, pattern.length > 16 ? 3 : 2);
+    } else {
+      _pattern = pattern;
+    }
     charByChar = _pattern.length < 2;
     if (charByChar) {
       _pattern = switch (text.length) {
@@ -27,6 +33,15 @@ class Dictator extends Quiz {
     choices.shuffle();
     answers.value = [];
     state.value = QuizState.ready;
+  }
+
+  List<String> _joinArray(List<String> array, int step) {
+    var result = <String>[];
+    for (var i = 0; i < array.length; i += step) {
+      var sub = array.sublist(i, i > array.length - step ? null : i + step);
+      result.add(sub.join(" "));
+    }
+    return result;
   }
 
   void reset() {
