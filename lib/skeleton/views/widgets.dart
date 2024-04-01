@@ -39,7 +39,7 @@ class Widgets {
             onTapCancel?.call();
           }
         },
-        onLongPress: _isActive(id) ? onLongPress?.call() : null,
+        onLongPress: _isActive(id) ? () => onLongPress?.call() : null,
         child: child);
   }
 
