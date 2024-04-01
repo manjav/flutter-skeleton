@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../export.dart';
+import '../../app_export.dart';
 
 class Localization extends IService {
   static var locales = const [Locale("en"), Locale("fa")];
@@ -21,22 +21,28 @@ class Localization extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    var locale = Localizations.localeOf(args![0] as BuildContext);
-    languageCode = locale.languageCode;
-    isRTL = isRTLMode(languageCode);
-    dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
-    await _getData("keys.json");
-    await _getData("$languageCode.json");
+
+    var keys = await rootBundle.loadString("assets/texts/keys.json");
+    await _getData(json.decode(keys));
+
+    if (args != null) {
+      languageCode = args[0] as String;
+      isRTL = isRTLMode(languageCode);
+      dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
+      var localizations = await serviceLocator<NetConnector>().rpc(
+          "content_localizations",
+          params: {"nativeLanguage": languageCode});
+
+      await _getData(localizations);
+    }
     super.initialize();
   }
 
-  static _getData(String file) async {
-    var data = await rootBundle.loadString("assets/texts/$file");
-    var result = json.decode(data);
-    result.forEach((String key, dynamic value) {
-      _sentences![key] = value.toString();
-    });
+  static _getData(Map result) async {
+    for (var e in result.entries) {
+      _sentences![e.key] = e.value.toString();
+    }
   }
 
   static String convert(String input) {

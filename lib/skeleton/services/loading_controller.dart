@@ -11,7 +11,7 @@ class LoadingController extends GetxController {
 
     serviceLocator<DeviceInfo>().initialize();
 
-    await serviceLocator<Localization>().initialize(args: [Get.context!]);
+    await serviceLocator<Localization>().initialize();
 
     // var trackers = Trackers();
     // await trackers.initialize();
@@ -25,7 +25,16 @@ class LoadingController extends GetxController {
 
     try {
       var data = await serviceLocator<NetConnector>().initialize();
-      serviceLocator<AccountProvider>().initialize(data);
+
+      var account = serviceLocator<AccountProvider>();
+      account.initialize(data);
+
+      // Load localization
+      if (account.account.user.langTag != null) {
+        await serviceLocator<Localization>()
+            .initialize(args: [account.account.user.langTag!]);
+      }
+
       services.changeState(ServiceStatus.initialize);
 
       // var notifications = Notifications();
