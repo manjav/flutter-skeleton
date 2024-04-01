@@ -53,6 +53,11 @@ class Localization extends IService {
         .replaceAll('8', '٨')
         .replaceAll('9', '٩');
   }
+
+  static Pattern getLimits(String code) {
+    if (isRTLMode(code)) return RegExp(r'^[\u0621-\u064A0-9 ]+$');
+    return RegExp(r'^((?![\u0621-\u064A0-9 ]+).)*$');
+  }
 }
 
 extension LocalizationExtension on String {
