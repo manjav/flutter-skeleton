@@ -119,7 +119,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       _building(account, Buildings.base),
       _building(account, Buildings.treasury),
       _building(account, Buildings.mine),
-      _building(account, Buildings.park),
+      _building(account, Buildings.lab),
       _building(account, Buildings.quest),
       if (account.deadlines.isNotEmpty)
         for (var i = 0; i < account.deadlines.length; i++)
@@ -134,7 +134,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     if (!_buildingPositions.containsKey(type.name)) return const SizedBox();
 
     var building = account.buildings[type]!;
-    if (building.type == Buildings.park) {
+    if (building.type == Buildings.lab) {
       building.level = account.potion ~/ 10;
     }
     var position = _buildingPositions[type.name]!;
@@ -158,6 +158,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       Buildings.mine => Routes.popupMineBuilding,
       Buildings.treasury => Routes.popupTreasuryBuilding,
       Buildings.defense || Buildings.offense => Routes.popupSupportiveBuilding,
+      Buildings.lab => Routes.popupPotion,
       _ => "",
     };
     // Offense and defense buildings need tribe membership.

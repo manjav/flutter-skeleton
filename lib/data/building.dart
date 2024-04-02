@@ -16,6 +16,7 @@ enum Buildings {
   auction,
   park,
   quest,
+  lab,
   // message,
   // shop,
 }
