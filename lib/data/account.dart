@@ -240,7 +240,7 @@ class Account extends Player with MineMixin {
         buildings[type] = Building(this, type, level, cards ?? []);
 
     buildings = {};
-    addBuilding(Buildings.park);
+    addBuilding(Buildings.lab);
     addBuilding(Buildings.base);
     addBuilding(Buildings.cards);
     addBuilding(Buildings.tribe);
