@@ -6,6 +6,7 @@ class Routes {
   static const battleOut = "/battleOut";
   static const liveBattleOut = "/liveBattleOut";
   static const liveBattle = "/liveBattle";
+  static const intro = "/intro";
 
   static const popupNone = "/popupNone";
   static const popupMessage = "/popupMessage";
