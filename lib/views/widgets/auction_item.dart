@@ -57,13 +57,17 @@ class _AuctionItemState extends State<AuctionItem> {
         color: imMaxBidder ? TColors.green40 : TColors.cream15,
         child: Row(children: [
           Widgets.rect(
-              width: cardSize + 16.d,
-              padding: EdgeInsets.all(8.d),
-              child: CardItem(widget.card,
-                  size: cardSize,
-                  showCooldown: false,
-                  // key: getGlobalKey(selectedTab * 10000 + card.id),
-                  heroTag: "hero_${widget.selectedTab}_${widget.card.id}")),
+            width: cardSize + 16.d,
+            padding: EdgeInsets.all(8.d),
+            child: CardItem(
+              widget.card,
+              size: cardSize,
+              showCooldown: false,
+              // key: getGlobalKey(selectedTab * 10000 + card.id),
+              heroTag: "hero_${widget.selectedTab}_${widget.card.id}",
+              key: GlobalKey(),
+            ),
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +79,8 @@ class _AuctionItemState extends State<AuctionItem> {
                   height: 4.d,
                 ),
                 Widgets.rect(
-                  padding: EdgeInsets.symmetric(horizontal: 20.d,vertical: 5.d),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.d, vertical: 5.d),
                   borderRadius: BorderRadius.all(radius),
                   color: TColors.black25,
                   child: SkinnedText(
@@ -93,20 +98,24 @@ class _AuctionItemState extends State<AuctionItem> {
                   height: 4.d,
                 ),
                 Widgets.rect(
-                  padding: EdgeInsets.symmetric(horizontal: 20.d,vertical: 5.d),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.d, vertical: 5.d),
                   borderRadius: BorderRadius.all(radius),
                   color: TColors.black25,
                   child: SkinnedText(widget.card.maxBidderName,
-                      style: TStyles.medium.copyWith(color: imMaxBidder ? TColors.green : TColors.primary50)),
+                      style: TStyles.medium.copyWith(
+                          color:
+                              imMaxBidder ? TColors.green : TColors.primary50)),
                 ),
               ],
             ),
           ),
-          SizedBox(width: 10.d,),
+          SizedBox(
+            width: 10.d,
+          ),
           SizedBox(
             width: 320.d,
-            child: Expanded(
-                child: Stack(
+            child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
                 Positioned(
@@ -155,12 +164,18 @@ class _AuctionItemState extends State<AuctionItem> {
                       SizedBox(height: 10.d),
                       bidable
                           ? _getBidButton(widget.card, account, imMaxBidder)
-                          : Text("ˣauction_closed".l(),style: TStyles.medium.copyWith(color: imMaxBidder ? TColors.green : TColors.red),),
+                          : Text(
+                              "ˣauction_closed".l(),
+                              style: TStyles.medium.copyWith(
+                                  color: imMaxBidder
+                                      ? TColors.green
+                                      : TColors.red),
+                            ),
                     ],
                   ),
                 ),
               ],
-            )),
+            ),
           ),
         ]));
   }
