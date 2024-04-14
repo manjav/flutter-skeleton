@@ -63,7 +63,6 @@ class _AuctionItemState extends State<AuctionItem> {
               widget.card,
               size: cardSize,
               showCooldown: false,
-              // key: getGlobalKey(selectedTab * 10000 + card.id),
               heroTag: "hero_${widget.selectedTab}_${widget.card.id}",
               key: GlobalKey(),
             ),
@@ -165,7 +164,7 @@ class _AuctionItemState extends State<AuctionItem> {
                       bidable
                           ? _getBidButton(widget.card, account, imMaxBidder)
                           : Text(
-                              "ˣauction_closed".l(),
+                              "*${"auction_closed".l()}",
                               style: TStyles.medium.copyWith(
                                   color: imMaxBidder
                                       ? TColors.green
