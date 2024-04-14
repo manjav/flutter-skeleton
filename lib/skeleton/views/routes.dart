@@ -41,4 +41,5 @@ class Routes {
   static const popupCardSelectType = "/popupCardSelectType";
   static const popupCardSelectCategory = "/popupCardSelectCategory";
   static const popupChooseName = "/popupChooseName";
+  static const popupHelp = "/popupHelp";
 }

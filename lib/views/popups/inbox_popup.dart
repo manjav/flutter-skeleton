@@ -57,7 +57,7 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
                   children: [
                 SizedBox(height: 24.d),
                 Text(message.getText(),
-                    textDirection: message.text.getDirection()),
+                    textDirection: message.getText().getDirection()),
                 SizedBox(height: 16.d),
                 _getConfirmButtons(message),
               ])),
