@@ -57,12 +57,16 @@ class _AuctionItemState extends State<AuctionItem> {
         color: imMaxBidder ? TColors.green40 : TColors.cream15,
         child: Row(children: [
           Widgets.rect(
-              width: cardSize + 16.d,
-              padding: EdgeInsets.all(8.d),
-              child: CardItem(widget.card,
-                  size: cardSize,
-                  showCooldown: false,
-                  heroTag: "hero_${widget.selectedTab}_${widget.card.id}")),
+            width: cardSize + 16.d,
+            padding: EdgeInsets.all(8.d),
+            child: CardItem(
+              widget.card,
+              size: cardSize,
+              showCooldown: false,
+              heroTag: "hero_${widget.selectedTab}_${widget.card.id}",
+              key: GlobalKey(),
+            ),
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
