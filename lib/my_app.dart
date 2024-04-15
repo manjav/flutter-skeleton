@@ -131,6 +131,7 @@ class _MyAppState extends State<MyApp>
             _getPage(Routes.popupTribeDonate, () => const TribeDonatePopup()),
             _getPage(Routes.popupCardSelectType, () => const SelectCardTypePopup()),
             _getPage(Routes.popupCardSelectCategory, () => const SelectCardCategoryPopup()),
+            _getPage(Routes.popupChooseName, () => const ChooseNamePopup()),
             _getPage(Routes.popupHelp, () => const HelpPopup()),
           ],
         ),

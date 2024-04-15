@@ -8,6 +8,7 @@ export 'card_evolve_popup.dart';
 export 'card_select_category_popup.dart';
 export 'card_select_popup.dart';
 export 'card_select_type_popup.dart';
+export 'choose_name_popup.dart';
 export 'combo_popup.dart';
 export 'daily_gift_popup.dart';
 export 'gift_popup.dart';
