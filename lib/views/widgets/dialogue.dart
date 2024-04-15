@@ -47,8 +47,7 @@ class Dialogue extends StatelessWidget {
             width: width ?? 600.d,
             height: height ?? 236.d,
             padding: EdgeInsets.all(45.d),
-            child: Text(
-              "jsgahdjasdgjh",
+            child: Text(text,
               style: TStyles.medium.copyWith(color: TColors.primary20),
             ),
           ),

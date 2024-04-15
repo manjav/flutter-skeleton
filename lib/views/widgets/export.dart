@@ -10,3 +10,5 @@ export 'live_battle/export.dart';
 export 'notif.dart';
 export 'online_status.dart';
 export 'tribe_edit.dart';
+export 'tutorial_charecter.dart';
+export 'tutorial_hand.dart';

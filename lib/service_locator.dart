@@ -23,4 +23,5 @@ void initServices() {
   serviceLocator.registerLazySingleton<Games>(() => Games());
   serviceLocator.registerLazySingleton<Ads>(() => Ads());
   serviceLocator.registerLazySingleton<Payment>(() => Payment());
+  serviceLocator.registerLazySingleton<TutorialManager>(() => TutorialManager());
 }
