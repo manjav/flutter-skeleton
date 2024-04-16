@@ -10,3 +10,4 @@ export 'rpc.dart';
 export 'rpc_data.dart';
 export 'store.dart';
 export 'tribe.dart';
+export 'tutorial.dart';

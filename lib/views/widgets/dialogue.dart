@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 import '../../app_export.dart';
 
@@ -8,11 +9,13 @@ enum DialogueSide { left, top, right, bottom }
 
 class Dialogue extends StatelessWidget {
   final String text;
+  final TextDirection? textDirection;
   final double? width;
   final double? height;
   final DialogueSide? side;
   const Dialogue({
     required this.text,
+    this.textDirection = TextDirection.LTR,
     this.width,
     this.height,
     this.side = DialogueSide.top,
@@ -44,8 +47,7 @@ class Dialogue extends StatelessWidget {
             width: width ?? 600.d,
             height: height ?? 236.d,
             padding: EdgeInsets.all(45.d),
-            child: Text(
-              text,
+            child: Text(text,
               style: TStyles.medium.copyWith(color: TColors.primary20),
             ),
           ),
