@@ -151,7 +151,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             onTap: () => _onBuildingTap(account, building), child: child));
   }
 
-  _onBuildingTap(Account account, Building building) {
+  _onBuildingTap(Account account, Building building) async {
     var type = switch (building.type) {
       Buildings.quest => Routes.quest,
       Buildings.base => Routes.popupOpponents,
@@ -168,22 +168,15 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return;
     }
     // Get availability level from account
-    var levels = account.loadingData.rules["availabilityLevels"]!;
-    if (levels.containsKey(building.type.name)) {
-      var availableAt = levels[building.type.name]!;
-      if (availableAt == -1) {
-        toast("coming_soon".l());
-        return;
-      } else if (account.level < availableAt) {
-        toast("unavailable_l".l(["${building.type.name}_l".l(), availableAt]));
+    if (!building.getIsAvailable(account)) {
         return;
       }
-    }
 
     if (type == "") {
       return;
     }
-    serviceLocator<RouteService>().to(type, args: {"building": building});
+    await serviceLocator<RouteService>().to(type, args: {"building": building});
+    checkTutorial();
   }
 
   Widget _box(double type, String title) {
