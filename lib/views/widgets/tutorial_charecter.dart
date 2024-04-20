@@ -45,12 +45,12 @@ class _TutorialCharecterState extends State<TutorialCharecter> {
             AnimatedPositioned(
               duration: 300.ms,
               bottom: widget.bottom ?? 800.d,
-              left: widget.dialogueSide == DialogueSide.left
+              left: widget.dialogueSide == DialogueSide.right
                   ? value
                       ? 50.d
                       : -500.d
                   : null,
-              right: widget.dialogueSide == DialogueSide.right
+              right: widget.dialogueSide == DialogueSide.left
                   ? value
                       ? 50.d
                       : -500.d
@@ -69,18 +69,18 @@ class _TutorialCharecterState extends State<TutorialCharecter> {
                 return AnimatedPositioned(
                   duration: 400.ms,
                   bottom: (widget.bottom ?? 800.d) + 50.d,
-                  left: widget.dialogueSide == DialogueSide.left
+                  left: widget.dialogueSide == DialogueSide.right
                       ? value
                           ? 330.d
                           : -800.d
                       : null,
-                  right: widget.dialogueSide == DialogueSide.right
+                  right: widget.dialogueSide == DialogueSide.left
                       ? value
                           ? 370.d
                           : -800.d
                       : null,
                   width: 600.d,
-                  height: 236.d,
+                  height: 280.d,
                   child: Dialogue(
                     text: widget.text.l(),
                     side: widget.dialogueSide,
