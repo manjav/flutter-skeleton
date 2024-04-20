@@ -171,12 +171,13 @@ class AbstractCard {
   int get bidStep => (power * powerToGoldRatio * bidStepRatio).round();
   int get maxPrice => (power * powerToGoldRatio * maxPriceRatio).round();
 
-  int getRemainingCooldown() {
+  int getRemainingCooldown({bool isTutorial = false}) {
     var benefit = account.tribe != null
         ? account.buildings[Buildings.cards]!.getBenefit()
         : 1.0;
     var delta = account.getTime() - lastUsedAt;
     var cooldownTime = base.cooldown * benefit;
+    if (isTutorial) return cooldownTime.toInt().min(0);
     return (cooldownTime - delta).ceil().min(0);
   }
 
