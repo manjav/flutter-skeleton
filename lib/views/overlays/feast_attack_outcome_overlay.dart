@@ -13,9 +13,12 @@ class AttackOutcomeFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
   final String type;
 
-  const AttackOutcomeFeastOverlay(
-      {required this.args, required this.type, super.onClose, super.key})
-      : super(route: OverlaysName.feastAttackOutcome);
+  const AttackOutcomeFeastOverlay({
+    required this.args,
+    required this.type,
+    super.onClose,
+    super.key,
+  }) : super(route: OverlaysName.feastAttackOutcome);
 
   @override
   createState() => _AttackOutcomeStateFeastOverlay();
@@ -191,10 +194,18 @@ class _AttackOutcomeStateFeastOverlay
   }
 
   @override
+  void onTutorialFinish(data) {
+    closeInput?.value = true;
+    super.onTutorialFinish(data);
+  }
+
+  @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
-    if (state == RewardAnimationState.closing) {
-       widget.onClose?.call(result);
+    if (state == RewardAnimationState.shown && isTutorial) {
+      checkTutorial();
+    } else if (state == RewardAnimationState.closing) {
+      widget.onClose?.call(result);
       _animationController.animateBack(0,
           duration: const Duration(milliseconds: 500));
     }
