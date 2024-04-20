@@ -7,7 +7,7 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class MainMapPageItem extends AbstractPageItem {
-  const MainMapPageItem({super.key}) : super("battle");
+  const MainMapPageItem({super.key}) : super(Routes.pageItemMap);
 
   @override
   createState() => _MainMapItemState();

@@ -9,7 +9,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../../app_export.dart';
 
 class ShopPageItem extends AbstractPageItem {
-  const ShopPageItem({super.key}) : super("cards");
+  const ShopPageItem({super.key}) : super(Routes.pageItemShop);
 
   @override
   createState() => _ShopPageItemState();

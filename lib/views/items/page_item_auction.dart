@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_export.dart';
 
 class AuctionPageItem extends AbstractPageItem {
-  const AuctionPageItem({super.key}) : super("cards");
+  const AuctionPageItem({super.key}) : super(Routes.pageItemAuction);
   @override
   createState() => _AuctionPageItemState();
 }

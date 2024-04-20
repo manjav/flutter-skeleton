@@ -6,7 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../app_export.dart';
 
 class CardsPageItem extends AbstractPageItem {
-  const CardsPageItem({super.key}) : super("cards");
+  const CardsPageItem({super.key}) : super(Routes.pageItemCards);
 
   @override
   createState() => _CardsPageItemState();

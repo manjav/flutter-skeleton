@@ -5,7 +5,7 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class TribePageItem extends AbstractPageItem {
-  const TribePageItem({super.key}) : super("tribe");
+  const TribePageItem({super.key}) : super(Routes.pageItemTribe);
 
   @override
   createState() => _TribePageItemState();
