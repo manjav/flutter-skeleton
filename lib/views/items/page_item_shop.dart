@@ -1,6 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -21,12 +22,23 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
   // late StreamSubscription<List<PurchaseDetails>> _subscription;
   final Map<String, SkuDetails> _productDetails = {};
   final RxBool _reloadBoosPacks = false.obs;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _account = accountProvider.account;
     _fetchData();
     super.initState();
+  }
+
+  @override
+  void onTutorialFinish(data) {
+    if (data["index"] == 14) {
+      var item = _items[ShopSections.card]
+          ?.firstWhereOrNull((element) => element.base.id == 2);
+      if (item != null) _onItemPressed(item);
+    }
+    super.onTutorialFinish(data);
   }
 
   @override
@@ -80,6 +92,14 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
       }
     } finally {
       setState(() {});
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          Scrollable.ensureVisible(
+            GlobalObjectKey(ShopSections.card.index).currentContext!,
+            alignment: 0.1,
+          );
+        }
+      });
     }
   }
 
@@ -151,6 +171,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     }
     return SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(0, 160.d, 0, 220.d),
+        controller: _scrollController,
         child: Column(
           children: [
             _header(ShopSections.gold),
@@ -167,6 +188,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   Widget _header(ShopSections section) {
     return Container(
+        key: GlobalObjectKey(section.index),
         clipBehavior: Clip.none,
         decoration: Widgets.imageDecorator("shop_header_${section.name}",
             ImageCenterSliceData(415, 188, const Rect.fromLTWH(42, 58, 2, 2))),
@@ -205,23 +227,26 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
 
   Widget _grid(ShopSections section) {
     var items = _items[section]!;
-    return StaggeredGrid.count(crossAxisCount: 24, children: [
-      for (var i = 0; i < items.length; i++)
-        StaggeredGridTile.count(
-            crossAxisCellCount: items[i].mainCells,
-            mainAxisCellCount: items[i].crossCells,
-            child: switch (items[i].base.section) {
-              ShopSections.gold => _itemGoldBuilder(i, items[i]),
-              ShopSections.nectar => _itemNectarBuilder(i, items[i]),
-              ShopSections.card => _itemCardBuilder(i, items[i]),
-              ShopSections.boost => StreamBuilder<bool>(
-                  stream: _reloadBoosPacks.stream,
-                  builder: (context, snapshot) {
-                    return _itemBoostBuilder(i, items[i]);
-                  }),
-              _ => const SizedBox(),
-            })
-    ]);
+    return StaggeredGrid.count(
+      crossAxisCount: 24,
+      children: [
+        for (var i = 0; i < items.length; i++)
+          StaggeredGridTile.count(
+              crossAxisCellCount: items[i].mainCells,
+              mainAxisCellCount: items[i].crossCells,
+              child: switch (items[i].base.section) {
+                ShopSections.gold => _itemGoldBuilder(i, items[i]),
+                ShopSections.nectar => _itemNectarBuilder(i, items[i]),
+                ShopSections.card => _itemCardBuilder(i, items[i]),
+                ShopSections.boost => StreamBuilder<bool>(
+                    stream: _reloadBoosPacks.stream,
+                    builder: (context, snapshot) {
+                      return _itemBoostBuilder(i, items[i]);
+                    }),
+                _ => const SizedBox(),
+              })
+      ],
+    );
   }
 
   Widget _itemGoldBuilder(int index, ShopItemVM item) {
@@ -404,7 +429,13 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
         context,
         OpenPackFeastOverlay(
           args: {"pack": item.base},
-          onClose: (d) => services.changeState(ServiceStatus.punch, data: 1),
+          onClose: (d) async {
+            services.changeState(ServiceStatus.punch, data: 1);
+            if (isTutorial) {
+              await Future.delayed(300.ms);
+              services.changeState(ServiceStatus.changeTab, data: 2);
+            }
+          },
         ),
       );
     }
