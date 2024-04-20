@@ -1,5 +1,5 @@
 class Routes {
-  static const home = "/";
+  static const home = "/home";
   static const deck = "/deck";
   static const quest = "/quest";
   static const questOut = "/questOut";
