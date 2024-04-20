@@ -17,6 +17,35 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   Map<String, dynamic> _buildingPositions = {};
 
   @override
+  initState() {
+    services.addListener(() {
+      var state = services.state;
+      if (state.status == ServiceStatus.changeTab && state.data == 2) {
+        checkTutorial();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  onTutorialFinish(data) {
+    if (data["index"] == 11) {
+      services.changeState(ServiceStatus.changeTab, data: 0);
+    } else if (data["index"] == 15 || data["index"] == 45) {
+      checkTutorial();
+    } else if (data["index"] == 17) {
+      var account = accountProvider.account;
+      _onBuildingTap(account, account.buildings[Buildings.quest]!);
+    } else if (data["index"] == 18 || data["id"] == 7300) {
+      services.changeState(ServiceStatus.changeTab, data: 1);
+    } else if (data["id"] == 700) {
+      services.changeState(ServiceStatus.changeTab, data: 4);
+    } else if (data["id"] == 800) {
+      serviceLocator<RouteService>().to(Routes.popupLeague);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     var paddingTop = MediaQuery.of(context).viewPadding.top;
@@ -151,7 +180,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             onTap: () => _onBuildingTap(account, building), child: child));
   }
 
-  _onBuildingTap(Account account, Building building) {
+  _onBuildingTap(Account account, Building building) async {
     var type = switch (building.type) {
       Buildings.quest => Routes.quest,
       Buildings.base => Routes.popupOpponents,
@@ -168,22 +197,15 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return;
     }
     // Get availability level from account
-    var levels = account.loadingData.rules["availabilityLevels"]!;
-    if (levels.containsKey(building.type.name)) {
-      var availableAt = levels[building.type.name]!;
-      if (availableAt == -1) {
-        toast("coming_soon".l());
-        return;
-      } else if (account.level < availableAt) {
-        toast("unavailable_l".l(["${building.type.name}_l".l(), availableAt]));
-        return;
-      }
+    if (!building.getIsAvailable(account)) {
+      return;
     }
 
     if (type == "") {
       return;
     }
-    serviceLocator<RouteService>().to(type, args: {"building": building});
+    await serviceLocator<RouteService>().to(type, args: {"building": building});
+    checkTutorial();
   }
 
   Widget _box(double type, String title) {
