@@ -15,6 +15,8 @@ class TutorialOverlay extends AbstractOverlay {
   final String? newRoute;
   final String text;
   final DialogueSide dialogueSide;
+  final int handQuarterTurns;
+  final bool showFocus;
 
   const TutorialOverlay({
     required this.center,
@@ -27,6 +29,8 @@ class TutorialOverlay extends AbstractOverlay {
     this.newRoute,
     this.text = "",
     this.dialogueSide = DialogueSide.left,
+    this.handQuarterTurns = 0,
+    this.showFocus = false,
     super.key,
   }) : super(route: newRoute ?? OverlaysName.tutorial);
 
@@ -59,11 +63,11 @@ class _TutorialOverlayState extends AbstractOverlayState<TutorialOverlay> {
       child: Container(
         height: Get.height,
         width: Get.width,
-        color: Colors.transparent,
+        color: widget.showBackground ? TColors.black25 : TColors.transparent,
         child: Stack(
           fit: StackFit.expand,
           children: [
-            widget.showBackground
+            widget.showFocus
                 ? Container(
                     width: Get.width,
                     height: Get.height,
@@ -92,6 +96,7 @@ class _TutorialOverlayState extends AbstractOverlayState<TutorialOverlay> {
             widget.showHand
                 ? TutorialHand(
                     target: offset,
+                    quarterTurns: widget.handQuarterTurns,
                   )
                 : const SizedBox(),
           ],
