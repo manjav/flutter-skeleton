@@ -1,12 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-
 import '../../app_export.dart';
 
 class CardEnhancePopup extends AbstractPopup {
-  const CardEnhancePopup({super.key})
-      : super(Routes.popupCardEnhance);
+  const CardEnhancePopup({super.key}) : super(Routes.popupCardEnhance);
 
   @override
   createState() => _CardEnhancePopupState();
@@ -21,6 +19,20 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   @override
   String titleBuilder() => "enhance_l".l();
+
+  @override
+  void onTutorialStep(data) {
+    if (data["id"] == 400) {
+      selectedCards.addCard(cards[0]);
+    }
+    super.onTutorialStep(data);
+  }
+
+  @override
+  void onTutorialFinish(data) {
+    _sacrifice();
+    super.onTutorialFinish(data);
+  }
 
   @override
   selectedForeground() {
