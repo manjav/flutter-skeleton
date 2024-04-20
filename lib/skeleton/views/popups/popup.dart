@@ -23,13 +23,30 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   Alignment alignment = Alignment.center;
   bool barrierDismissible = true, canPop = true;
 
+  bool get isTutorial =>
+      serviceLocator.get<TutorialManager>().isTutorial(widget.route);
+
   @override
   void initState() {
     serviceLocator<Sounds>().play("popup");
     canPop = widget.args["canPop"] ?? true;
     barrierDismissible = widget.args["barrierDismissible"] ?? true;
+    serviceLocator<TutorialManager>().onFinish.listen((data) {
+      onTutorialFinish(data);
+    });
+    serviceLocator<TutorialManager>().onStepChange.listen((data) {
+      onTutorialStep(data);
+    });
+    checkTutorial();
     super.initState();
   }
+
+  checkTutorial() {
+    serviceLocator<TutorialManager>().checkToturial(context, widget.route);
+  }
+
+  void onTutorialFinish(dynamic data) {}
+  void onTutorialStep(dynamic data) {}
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +84,8 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
         padding: EdgeInsets.only(bottom: 14.d),
         decoration: Widgets.imageDecorator(
             "popup_title", ImageCenterSliceData(562, 130)),
-        child: Center(child: SkinnedText(titleBuilder(), style: TStyles.large)));
+        child:
+            Center(child: SkinnedText(titleBuilder(), style: TStyles.large)));
   }
 
   Widget closeButtonFactory() {
