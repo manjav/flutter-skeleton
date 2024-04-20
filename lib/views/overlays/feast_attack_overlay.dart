@@ -138,8 +138,10 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     var result = [];
     var cardPower = (opponentPower / 4).floor();
     var cards = _account!.loadingData.baseCards.values
-        .where(
-            (c) => c.power < cardPower && c.powerLimit > cardPower && !c.isHero)
+        .where((c) =>
+            c.power / (isTutorial ? 4 : 1) <= cardPower &&
+            c.powerLimit > cardPower &&
+            !c.isHero)
         .toList();
 
     for (var i = 0; i < 4; i++) {
@@ -164,6 +166,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     var controller = super.onRiveInit(artboard, stateMachineName);
     _playerCardsCount = controller.findInput<double>("playerCards");
     _oppositeCardsCount = controller.findInput<double>("opponentCards");
+    controller.findInput<bool>("isTutorial")?.value = isTutorial;
     for (var i = 0; i < 5; i++) {
       _cardPowers[i] = controller.findInput<double>("cardPower$i");
       _cardPowers[i + 10] = controller.findInput<double>("cardPower${i + 10}");
@@ -214,6 +217,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
             args: _outcomeData,
             type: route,
             onClose: (data) async {
+              widget.onClose?.call(result);
               onRiveEvent(const RiveEvent(
                   name: "closing", secondsDelay: 0, properties: {}));
               closeInput?.value = true;
@@ -224,9 +228,14 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
         accountProvider.update(context, _outcomeData);
       }
     } else if (state == RewardAnimationState.closing) {
-      var lastRoute = _opponent!.id == 0 ? Routes.quest : Routes.popupOpponents;
-      serviceLocator<RouteService>()
-          .popUntil((route) => route.settings.name == lastRoute);
+      var lastRoute = isTutorial
+          ? Routes.deck
+          : _opponent!.id == 0
+              ? Routes.quest
+              : Routes.popupOpponents;
+      serviceLocator<RouteService>().popUntil((route) =>
+          route.settings.name == lastRoute ||
+          route.settings.name == Routes.home);
     }
   }
 
