@@ -12,6 +12,7 @@ export 'choose_name_popup.dart';
 export 'combo_popup.dart';
 export 'daily_gift_popup.dart';
 export 'gift_popup.dart';
+export 'help_popup.dart';
 export 'hero_evolve_popup.dart';
 export 'hero_popup.dart';
 export 'inbox_popup.dart';
