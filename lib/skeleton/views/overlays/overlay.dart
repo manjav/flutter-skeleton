@@ -38,9 +38,30 @@ class AbstractOverlay extends StatefulWidget {
 class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
     with ILogger, ServiceFinderWidgetMixin, ClassFinderWidgetMixin {
   @override
+  void initState() {
+    serviceLocator<TutorialManager>().onFinish.listen((data) {
+      onTutorialFinish(data);
+    });
+    serviceLocator<TutorialManager>().onStepChange.listen((data) {
+      onTutorialStep(data);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return const SizedBox();
   }
+
+  bool get isTutorial =>
+      serviceLocator.get<TutorialManager>().isTutorial(widget.route);
+
+  checkTutorial() {
+    serviceLocator<TutorialManager>().checkToturial(context, widget.route);
+  }
+
+  void onTutorialFinish(dynamic data) {}
+  void onTutorialStep(dynamic data) {}
 
   void close() {
     Overlays.remove(widget.route);

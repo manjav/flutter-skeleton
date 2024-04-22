@@ -5,8 +5,10 @@ import '../../app_export.dart';
 
 class TutorialHand extends StatefulWidget {
   final Offset target;
+  final int quarterTurns;
   const TutorialHand({
     required this.target,
+    this.quarterTurns = 0,
     super.key,
   });
 
@@ -16,22 +18,20 @@ class TutorialHand extends StatefulWidget {
 
 class _TutorialHandState extends State<TutorialHand> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
       duration: 300.ms,
       left: widget.target.dx,
       top: widget.target.dy,
-      child: LoaderWidget(
-        AssetType.image,
-        "pointer_hand",
-        subFolder: "tutorial",
-        height: 230.d,
-        width: 195.d,
+      child: RotatedBox(
+        quarterTurns: widget.quarterTurns,
+        child: LoaderWidget(
+          AssetType.image,
+          "pointer_hand",
+          subFolder: "tutorial",
+          height: 230.d,
+          width: 195.d,
+        ),
       ),
     );
   }

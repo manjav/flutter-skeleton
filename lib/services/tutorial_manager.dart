@@ -1,35 +1,58 @@
+import 'dart:developer';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitcraft/app_export.dart';
+import 'package:get/get.dart';
 
 class TutorialManager {
-  dynamic currentSequnce;
+  dynamic _currentSequnce;
 
-  bool inTutorial(String route) {
+  var onStepChange = Rx<dynamic>(null);
+  var onFinish = Rx<dynamic>(null);
+
+  bool isTutorial(String route) {
+    if (!Tutorial.tutorials.containsKey(route)) return false;
+
+    var account = serviceLocator<AccountProvider>().account;
+    int currentIndex = account.tutorial_index;
+
+    var data = (Tutorial.tutorials[route]! as List)
+        .lastWhereOrNull((element) => element["lastIndex"] >= currentIndex
+            //&& account.level == element["level"]
+            );
+    if (data == null) return false;
     return true;
   }
 
-  checkToturial(BuildContext context, String route,
-      {VoidCallback? onFinish, Function(dynamic)? onTap}) async {
+  checkToturial(BuildContext context, String route) async {
     if (!Tutorial.tutorials.containsKey(route)) return;
 
-    //todo: check tutorial by index and level
-    //for now we just get the sequnces and show them
+    var account = serviceLocator<AccountProvider>().account;
+    int currentIndex = account.tutorial_index;
 
-    var data = Tutorial.tutorials[route]![0];
-    currentSequnce = data["sequnces"] as List;
+    var data = (Tutorial.tutorials[route]! as List)
+        .firstWhereOrNull((element) => element["startIndex"] == currentIndex
+            //&& account.level == element["level"]
+            );
+    if (data == null) return;
+    // if (_currentSequnce != null) return;
+    _currentSequnce = data["sequnces"] as List;
     await Future.delayed(Duration(milliseconds: data["delay"] as int));
+
     if (context.mounted) {
-      showOverlay(context, 0, onFinish: onFinish, onTap: onTap);
+      showOverlay(context, 0);
     }
   }
 
-  showOverlay(BuildContext context, int index,
-      {VoidCallback? onFinish, Function(dynamic)? onTap}) async {
-    if (index + 1 == currentSequnce.length) {
-      if (onFinish != null) onFinish();
+  showOverlay(BuildContext context, int index) async {
+    if (index == _currentSequnce.length) {
+      onFinish.value = _currentSequnce[--index];
+      // if (onFinish != null) onFinish(_currentSequnce[--index]);
+      // _currentSequnce = null;
       return;
     }
-    var item = currentSequnce[index];
+    var item = _currentSequnce[index];
     await Future.delayed(Duration(milliseconds: item["delay"] as int));
     if (context.mounted) {
       Overlays.insert(
@@ -42,14 +65,31 @@ class TutorialManager {
           showCharacter: item["character"],
           showHand: item["hand"],
           handPosition: item["handPosition"],
+          handQuarterTurns: item["handQuarterTurns"] ?? 0,
+          showFocus: item["showFocus"] ?? false,
           text: (item["text"] as String).l(),
           onTap: () {
             Overlays.remove(OverlaysName.tutorial);
-            if (onTap != null) onTap(item);
-            showOverlay(context, ++index, onFinish: onFinish, onTap: onTap);
+            updateTutorialIndex(context, item["index"], item["id"]);
+            onStepChange.value = item;
+            showOverlay(context, ++index);
           },
         ),
       );
+    }
+  }
+
+  updateTutorialIndex(BuildContext context, int index, int id) async {
+    try {
+      // await serviceLocator<HttpConnection>().tryRpc(
+      //     context, RpcId.tutorialState,
+      //     params: {"index": 11, "id": id});
+      if (context.mounted) {
+        serviceLocator<AccountProvider>()
+            .update(context, {"tutorial_index": index, "tutorial_id": id});
+      }
+    } catch (e) {
+      log('$e');
     }
   }
 }

@@ -28,6 +28,8 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
         ServiceFinderWidgetMixin,
         ClassFinderWidgetMixin {
   List<Widget> stepChildren = <Widget>[];
+  bool get isTutorial =>
+      serviceLocator.get<TutorialManager>().isTutorial(widget.route);
 
   @override
   void initState() {
@@ -36,7 +38,21 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     // Analytics.setScreen(widget.mode.name);
     WidgetsBinding.instance.addPostFrameCallback(onRender);
     super.initState();
+    serviceLocator<TutorialManager>().onFinish.listen((data) {
+      onTutorialFinish(data);
+    });
+    serviceLocator<TutorialManager>().onStepChange.listen((data) {
+      onTutorialStep(data);
+    });
+    checkTutorial();
   }
+
+  checkTutorial() {
+    serviceLocator<TutorialManager>().checkToturial(context, widget.route);
+  }
+
+  void onTutorialFinish(dynamic data) {}
+  void onTutorialStep(dynamic data) {}
 
   @protected
   void onRender(Duration timeStamp) {}
