@@ -23,23 +23,27 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
   @override
   void initState() {
     super.initState();
-    var account = serviceLocator<AccountProvider>().account;
     serviceLocator<AccountProvider>().addListener(() {
+      var account = serviceLocator<AccountProvider>().account;
+      if (!widget.building.getIsAvailable(account)) return;
       _levelInput?.value =
           account.buildings[widget.building.type]!.level.toDouble();
       if (widget.building.type == Buildings.treasury) {
-        var x = ((5 * account.bank_account_balance) / widget.building.benefit)
-            .round();
+        var x = ((5 * account.bank_account_balance) / widget.building.benefit);
+        x = x.isInfinite ? 0 : x;
         _goldInput?.value = x.toDouble();
         return;
       }
       if (widget.building.type == Buildings.mine) {
         var x = ((5 * collectableGold(account)) / widget.building.benefit)
             .toDouble();
+        x = x.isInfinite ? 0 : x;
         _goldInput?.value = x;
         return;
       }
     });
+
+    var account = serviceLocator<AccountProvider>().account;
     if (widget.building.type == Buildings.mine) {
       _timer = Timer.periodic(const Duration(seconds: 10), (_) {
         var x = goldLevel(account).toDouble();
