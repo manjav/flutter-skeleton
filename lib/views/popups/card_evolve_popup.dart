@@ -4,8 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app_export.dart';
 
 class CardEvolvePopup extends AbstractPopup {
-  const CardEvolvePopup({super.key})
-      : super(Routes.popupCardEvolve);
+  const CardEvolvePopup({super.key}) : super(Routes.popupCardEvolve);
 
   @override
   createState() => _CardEvolvePopupState();
@@ -18,6 +17,22 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
   void initState() {
     selectedCards.addCard(widget.args['card']);
     super.initState();
+  }
+
+  @override
+  void onTutorialStep(data) {
+    if (data["id"] == 3000) {
+      onSelectCard(0, cards[0]);
+    } else if (data["id"] == 4000) {
+      onSelectCard(1, cards[1]);
+    }
+    super.onTutorialStep(data);
+  }
+
+  @override
+  void onTutorialFinish(data) {
+    _evolve();
+    super.onTutorialFinish(data);
   }
 
   @override

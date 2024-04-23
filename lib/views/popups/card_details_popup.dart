@@ -24,6 +24,16 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   }
 
   @override
+  onTutorialFinish(data) {
+    if (data["index"] == 18) {
+      _onButtonsTap(Routes.popupCardEnhance);
+    }
+    else if (data["index"] == 46) {
+      _onButtonsTap(Routes.popupCardEvolve);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     var siblings = _account.getReadyCards().where((c) => c.base == _card.base);
     var isUpgradable =

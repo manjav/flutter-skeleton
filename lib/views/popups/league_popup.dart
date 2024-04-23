@@ -25,6 +25,14 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
   }
 
   @override
+  void onTutorialStep(data) {
+    if(data["id"]== 801){
+      selectedTabIndex = 1;
+    }
+    super.onTutorialStep(data);
+  }
+
+  @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(0, 176.d, 0, 32.d);
 
   @override
