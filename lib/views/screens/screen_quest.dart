@@ -24,6 +24,14 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   double _mapHeight = 0;
 
   @override
+  onTutorialFinish(data){
+    if(data["index"]==18){
+      //todo: go to first battel
+    }
+    super.onTutorialFinish(data);
+  }
+
+  @override
   void initState() {
     _questsCount = accountProvider.account.questsCount - 1;
     _mapHeight = DeviceInfo.size.width * 2.105;

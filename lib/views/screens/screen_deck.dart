@@ -36,6 +36,14 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   }
 
   @override
+  void onTutorialFinish(data) {
+    if (data["index"] == 7) {
+      _attack(accountProvider.account);
+    }
+    super.onTutorialFinish(data);
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _sortController.dispose();
@@ -43,6 +51,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   @override
   List<Widget> appBarElementsRight() {
+    if (isTutorial) return [];
     return <Widget>[
       Indicator(widget.route, Values.potion, width: 256.d),
       Indicator(widget.route, Values.gold),
@@ -118,10 +127,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
               bottom: 0,
               left: 0,
               right: 0,
-              child: Widgets.rect(
-                color: TColors.black25,
-                height: 500
-              ),
+              child: Widgets.rect(color: TColors.black25, height: 500),
             ),
             Positioned(
               top: paddingTop + headerSize + 30,
@@ -271,49 +277,55 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             // ),
             Positioned(
               height: 200.d,
-              bottom: 24.d,
+              bottom: 50.d,
               width: Get.width * 0.95,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SkinnedButton(
-                    alignment: Alignment.center,
-                    color: ButtonColor.violet,
-                    size: ButtonSize.medium,
-                    width: 221.d,
-                    onPressed: () => Get.back(),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Asset.load<Image>("ui_arrow_back", height: 74.d),
-                      ],
-                    ),
-                  ),
+                  isTutorial
+                      ? const SizedBox()
+                      : SkinnedButton(
+                          alignment: Alignment.center,
+                          color: ButtonColor.violet,
+                          size: ButtonSize.medium,
+                          width: 221.d,
+                          onPressed: () => Get.back(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Asset.load<Image>("ui_arrow_back", height: 74.d),
+                            ],
+                          ),
+                        ),
                   SizedBox(
-                    width: 20.d,
+                    width: isTutorial ? 0 : 20.d,
                   ),
                   Expanded(
-                    child: SkinnedButton(
-                      alignment: Alignment.center,
-                      size: ButtonSize.medium,
-                      onPressed: () => _attack(state.account),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          LoaderWidget(
-                            AssetType.image,
-                            "icon_battle",
-                            height: 101.d,
-                          ),
-                          SizedBox(width: 16.d),
-                          SkinnedText("attack_l".l(), style: TStyles.large),
-                        ],
+                    child: ValueListenableBuilder(
+                      valueListenable: _selectedCards,
+                      builder: (context, value, child) => SkinnedButton(
+                        alignment: Alignment.center,
+                        size: ButtonSize.medium,
+                        onPressed: () => _attack(state.account),
+                        isEnable: value.length >= 2,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            LoaderWidget(
+                              AssetType.image,
+                              "icon_battle",
+                              height: 101.d,
+                            ),
+                            SizedBox(width: 16.d),
+                            SkinnedText("attack_l".l(), style: TStyles.large),
+                          ],
+                        ),
                       ),
                     ),
                   )
                 ],
               ),
-            )
+            ),
           ],
         );
       },
@@ -340,9 +352,30 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             _selectedCards.setCard(card, exception: 2);
           }
         }
+        //todo: add check if we are in tutorial
+        if (_selectedCards.value.where((element) => element != null).length ==
+                2 &&
+            isTutorial) {
+          if (accountProvider.account.tutorial_index <= 6) {
+            accountProvider.update(context, {
+              "tutorial_index": 6,
+            });
+          }
+          checkTutorial();
+          //todo: we need to fix it by listen to finish (need to check)
+          // checkTutorial(context, Routes.deck,
+          //     onFinish: (data) {
+          //   _attack(account);
+          // });
+        }
       },
-      child: CardItem(card,
-          showCoolOff: true, size: itemSize, key: getGlobalKey(card.id)),
+      child: CardItem(
+        card,
+        showCoolOff: true,
+        size: itemSize,
+        key: getGlobalKey(card.id),
+        isTutorial: isTutorial,
+      ),
     );
   }
 
@@ -408,14 +441,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       ),
     );
   }
-
-  Widget _avatar(TextAlign align, Opponent opponent) => LevelIndicator(
-        size: 160.d,
-        align: align,
-        xp: opponent.xp,
-        level: opponent.level,
-        avatarId: opponent.avatarId,
-      );
 
   Widget _opponentInfo(
       CrossAxisAlignment align, Account account, Opponent opponent) {
@@ -539,10 +564,17 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
           "opponent": _opponent,
           "cards": _selectedCards,
           "isBattle": widget.args.containsKey("opponent"),
+          "isTutorial": isTutorial
+        },
+        onClose: (data) {
+          _selectedCards.clear(setNull: true);
+          serviceLocator<TutorialManager>()
+              .checkToturial(context, widget.route);
         },
       ),
     );
     // _selectedCards.clear(setNull: true);
+    if (isTutorial) return;
     serviceLocator<Notifications>().schedule(account.getSchedules());
     await Future.delayed(const Duration(milliseconds: 1500));
     serviceLocator<RouteService>().back();

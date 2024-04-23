@@ -7,7 +7,7 @@ import 'package:rive/rive.dart';
 import '../../app_export.dart';
 
 class MainMapPageItem extends AbstractPageItem {
-  const MainMapPageItem({super.key}) : super("battle");
+  const MainMapPageItem({super.key}) : super(Routes.pageItemMap);
 
   @override
   createState() => _MainMapItemState();
@@ -15,6 +15,35 @@ class MainMapPageItem extends AbstractPageItem {
 
 class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   Map<String, dynamic> _buildingPositions = {};
+
+  @override
+  initState() {
+    services.addListener(() {
+      var state = services.state;
+      if (state.status == ServiceStatus.changeTab && state.data == 2) {
+        checkTutorial();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  onTutorialFinish(data) {
+    if (data["index"] == 11) {
+      services.changeState(ServiceStatus.changeTab, data: 0);
+    } else if (data["index"] == 15 || data["index"] == 45) {
+      checkTutorial();
+    } else if (data["index"] == 17) {
+      var account = accountProvider.account;
+      _onBuildingTap(account, account.buildings[Buildings.quest]!);
+    } else if (data["index"] == 18 || data["id"] == 7300) {
+      services.changeState(ServiceStatus.changeTab, data: 1);
+    } else if (data["id"] == 700) {
+      services.changeState(ServiceStatus.changeTab, data: 4);
+    } else if (data["id"] == 800) {
+      serviceLocator<RouteService>().to(Routes.popupLeague);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,9 +198,8 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     }
     // Get availability level from account
     if (!building.getIsAvailable(account)) {
-        return;
-      }
-
+      return;
+    }
     if (type == "") {
       return;
     }

@@ -7,6 +7,11 @@ class Routes {
   static const liveBattleOut = "/liveBattleOut";
   static const liveBattle = "/liveBattle";
   static const intro = "/intro";
+  static const pageItemMap = "/pageItemMap";
+  static const pageItemShop = "/pageItemShop";
+  static const pageItemCards = "/pageItemCards";
+  static const pageItemTribe = "/pageItemTribe";
+  static const pageItemAuction = "/pageItemAuction";
 
   static const popupNone = "/popupNone";
   static const popupMessage = "/popupMessage";
