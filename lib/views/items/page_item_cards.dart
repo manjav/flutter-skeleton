@@ -28,6 +28,16 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
   }
 
   @override
+  void onTutorialFinish(data) {
+    if (data["index"] == 18 || data["index"] == 46) {
+      var cards = accountProvider.account.getReadyCards();
+      serviceLocator<RouteService>()
+          .to(Routes.popupCardDetails, args: {'card': cards[0]});
+    }
+    super.onTutorialFinish(data);
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _sortController.dispose();
@@ -134,26 +144,29 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                       alignment: Alignment.center,
                       children: [
                         Asset.load<Image>("icon_combo", height: 68.d),
-                        state.account.level < levels["combo"] ? RotationTransition(
-                          turns: const AlwaysStoppedAnimation(-15 / 360),
-                          child: Widgets.rect(
-                              color: TColors.primary20,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Asset.load<Image>("icon_exclude",
-                                      height: 28.d, width: 21.d),
-                                  SizedBox(
-                                    width: 7.d,
-                                  ),
-                                  Text(
-                                    "Level ${levels["combo"]}",
-                                    style: TStyles.small
-                                        .copyWith(color: TColors.white),
-                                  ),
-                                ],
-                              )),
-                        ): const SizedBox()
+                        state.account.level < levels["combo"]
+                            ? RotationTransition(
+                                turns: const AlwaysStoppedAnimation(-15 / 360),
+                                child: Widgets.rect(
+                                    color: TColors.primary20,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Asset.load<Image>("icon_exclude",
+                                            height: 28.d, width: 21.d),
+                                        SizedBox(
+                                          width: 7.d,
+                                        ),
+                                        Text(
+                                          "Level ${levels["combo"]}",
+                                          style: TStyles.small
+                                              .copyWith(color: TColors.white),
+                                        ),
+                                      ],
+                                    )),
+                              )
+                            : const SizedBox()
                       ],
                     ),
                     SkinnedText(
@@ -183,8 +196,8 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
       BuildContext context, int index, AccountCard card, double itemSize) {
     return Widgets.touchable(
       context,
-      onTap: () => serviceLocator<RouteService>().to(Routes.popupCardDetails,
-          args: {'card': card}),
+      onTap: () => serviceLocator<RouteService>()
+          .to(Routes.popupCardDetails, args: {'card': card}),
       child: CardItem(card,
           size: itemSize,
           key: getGlobalKey(card.id),
