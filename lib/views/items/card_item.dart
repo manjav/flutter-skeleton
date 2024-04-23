@@ -18,6 +18,7 @@ class CardItem extends StatefulWidget {
   final int extraPower;
   final String? heroTag;
   final AbstractCard card;
+  final bool isTutorial;
   const CardItem(this.card,
       {this.size = 400,
       this.showCoolOff = false,
@@ -26,6 +27,7 @@ class CardItem extends StatefulWidget {
       this.showTitle = true,
       this.extraPower = 0,
       this.heroTag,
+      this.isTutorial = false,
       super.key});
 
   @override
@@ -91,13 +93,14 @@ class _CardItemState extends State<CardItem> {
   Timer? _cooldownTimer;
   final GlobalKey _imageKey = GlobalKey();
   final ValueNotifier<int> _remainingCooldown = ValueNotifier(0);
+
   @override
-  Widget build(BuildContext context) {
-    var baseCard = widget.card.base;
-    var level = baseCard.rarity;
-    var cooldown = baseCard.cooldown;
+  void initState() {
+    super.initState();
     _remainingCooldown.value = widget.card.getRemainingCooldown();
-    if (widget.showCoolOff && _remainingCooldown.value > 0) {
+    if (!widget.isTutorial &&
+        widget.showCoolOff &&
+        _remainingCooldown.value > 0) {
       _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _remainingCooldown.value = widget.card.getRemainingCooldown();
         if (_remainingCooldown.value <= 0) {
@@ -105,6 +108,14 @@ class _CardItemState extends State<CardItem> {
         }
       });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var baseCard = widget.card.base;
+    var level = baseCard.rarity;
+    var cooldown = baseCard.cooldown;
+
     var s = widget.size / 256;
     if (_tiny == null) {
       _medium = TStyles.medium.copyWith(fontSize: 41 * s);
@@ -190,7 +201,7 @@ class _CardItemState extends State<CardItem> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "ˣ ${_remainingCooldown.value.toRemainingTime().convert()}",
+                        "ˣ ${widget.isTutorial ? baseCard.cooldown : _remainingCooldown.value.toRemainingTime().convert()}",
                         style: TStyles.medium.copyWith(
                           color: TColors.white,
                         ),
@@ -232,7 +243,9 @@ class _CardItemState extends State<CardItem> {
                           ),
                           Text(
                               widget.card
-                                  .cooldownTimeToCost(_remainingCooldown.value)
+                                  .cooldownTimeToCost(widget.isTutorial
+                                      ? baseCard.cooldown
+                                      : _remainingCooldown.value)
                                   .compact(),
                               style: TStyles.medium.copyWith(
                                 color: TColors.white,

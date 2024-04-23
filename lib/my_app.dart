@@ -1,7 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fruitcraft/views/popups/help_popup.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -100,7 +99,7 @@ class _MyAppState extends State<MyApp>
             _getPage(Routes.quest, () => QuestScreen()),
             _getPage(Routes.liveBattleOut, () => LiveOutScreen()),
             _getPage(Routes.liveBattle, () => LiveBattleScreen()),
-            _getPage(Routes.intro, () => const IntroScreen()),
+            _getPage(Routes.intro, () => IntroScreen()),
             _getPage(Routes.popupCardDetails, () => const CardDetailsPopup(),false,Transition.fadeIn),
             _getPage(Routes.popupCardEnhance, () => const CardEnhancePopup()),
             _getPage(Routes.popupCardEvolve, () => const CardEvolvePopup()),
