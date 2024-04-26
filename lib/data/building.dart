@@ -309,6 +309,19 @@ class Building {
 
   int get benefit => get_benefit(type, level);
 
+  bool getIsAvailable(Account account) {
+    var levels = account.loadingData.rules["availabilityLevels"]!;
+    if (levels.containsKey(type.name)) {
+      var availableAt = levels[type.name]!;
+      if (availableAt == -1) {
+        return false;
+      } else if (account.level < availableAt) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   int isAvailableCardHolder(int index) {
     if (type == Buildings.offense || type == Buildings.defense) {
       return switch (index) { < 1 => 1, < 2 => 3, < 3 => 6, _ => 10 };

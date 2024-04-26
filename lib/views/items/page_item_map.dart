@@ -200,7 +200,6 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     if (!building.getIsAvailable(account)) {
       return;
     }
-
     if (type == "") {
       return;
     }
