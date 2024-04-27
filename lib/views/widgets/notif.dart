@@ -12,12 +12,14 @@ class Notif extends StatefulWidget {
   final VoidCallback? onClose;
   final VoidCallback? onTap;
   final double bottom;
+  final bool isTutorial;
 
   const Notif({
     required this.message,
     required this.bottom,
     this.onTap,
     this.onClose,
+    this.isTutorial = false,
     super.key,
   });
 
@@ -74,6 +76,14 @@ class NotifState extends State<Notif> with SingleTickerProviderStateMixin {
       isMinimize.value = true;
       widget.message.isMinimize = true;
       _minimizeInput!.value = true;
+    });
+  }
+
+  show() {
+    setState(() {
+      isMinimize.value = false;
+      widget.message.isMinimize = false;
+      _minimizeInput!.value = false;
     });
   }
 
