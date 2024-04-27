@@ -58,6 +58,10 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
       var data = await rpc(RpcId.getOpponents);
 
       opponentBloc.list = Opponent.fromMap(data, 0);
+      if (isTutorial) {
+        opponentBloc.list
+            .insert(0, Opponent.create(-1, "تست خونگی")..status = 1);
+      }
       if (mounted) {
         serviceLocator<OpponentsProvider>().update();
       }
@@ -302,6 +306,11 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   void _attack() async {
+    if (isTutorial) {
+      var result = <String, dynamic>{};
+      serviceLocator<RouteService>().to(Routes.liveBattle, args: result);
+      return;
+    }
     if (_selectedOpponent.value.status == 2) {
       toast("error_139".l());
       return;
