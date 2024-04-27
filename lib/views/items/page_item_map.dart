@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -20,7 +21,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   initState() {
     services.addListener(() {
       var state = services.state;
-      if (state.status == ServiceStatus.changeTab && state.data == 2) {
+      if (state.status == ServiceStatus.changeTab && state.data["index"] == 2) {
         checkTutorial();
       }
     });
@@ -30,18 +31,34 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   @override
   onTutorialFinish(data) {
     if (data["index"] == 11) {
-      services.changeState(ServiceStatus.changeTab, data: 0);
+      services.changeState(ServiceStatus.changeTab, data: {"index": 0});
     } else if (data["index"] == 15 || data["index"] == 45) {
       checkTutorial();
     } else if (data["index"] == 17) {
       var account = accountProvider.account;
       _onBuildingTap(account, account.buildings[Buildings.quest]!);
     } else if (data["index"] == 18 || data["id"] == 7300) {
-      services.changeState(ServiceStatus.changeTab, data: 1);
+      services.changeState(ServiceStatus.changeTab, data: {"index": 1});
     } else if (data["id"] == 700) {
-      services.changeState(ServiceStatus.changeTab, data: 4);
+      services.changeState(ServiceStatus.changeTab, data: {"index": 4});
     } else if (data["id"] == 800) {
       serviceLocator<RouteService>().to(Routes.popupLeague);
+    } else if (data["id"] == 1002) {
+      services.changeState(ServiceStatus.changeTab, data: {"index": 0});
+    } else if (data["id"] == 1201) {
+      services.changeState(ServiceStatus.changeTab, data: {"index": 0});
+    } else if (data["id"] == 402) {
+      services.changeState(ServiceStatus.changeTab, data: {"index": 1});
+    } else if (data["id"] == 302) {
+      var account = accountProvider.account;
+      _onBuildingTap(account, account.buildings[Buildings.base]!);
+    } else if (data["id"] == 1501) {
+      Get.toNamed(Routes.popupCombo);
+    } else if (data["id"] == 901) {
+      var account = accountProvider.account;
+      _onBuildingTap(account, account.buildings[Buildings.base]!);
+    } else if (data["id"] == 923) {
+      checkTutorial();
     }
   }
 
