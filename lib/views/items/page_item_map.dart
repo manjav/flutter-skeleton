@@ -28,6 +28,40 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   }
 
   @override
+  void onTutorialStart(data) {
+    if (data["id"] == 961) {
+      serviceLocator<EventNotification>().showNotif(
+          NotifData(
+              message: NoobMessage(Noobs.none, {"id": 1}),
+              title: "Khoonkhar",
+              caption: "Attacked you now!"),
+          context,
+          isTutorial: true);
+    }
+    super.onTutorialStart(data);
+  }
+
+  @override
+  void onTutorialStep(data) {
+    if (data["id"] == 961) {
+      serviceLocator<EventNotification>().openAllNotif();
+    } else if (data["id"] == 962) {
+      serviceLocator<EventNotification>().hideAllNotif();
+      serviceLocator<EventNotification>().showNotif(
+          NotifData(
+              message: NoobMessage(Noobs.none, {"id": 1}),
+              title: "Khoonkhar",
+              mode: 1,
+              caption: "Attacked you now!"),
+          context,
+          isTutorial: true);
+    } else if (data["id"] == 963) {
+      serviceLocator<EventNotification>().hideAllNotif();
+    }
+    super.onTutorialStep(data);
+  }
+
+  @override
   onTutorialFinish(data) {
     if (data["index"] == 11) {
       services.changeState(ServiceStatus.changeTab, data: 0);
