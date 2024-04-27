@@ -66,6 +66,17 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   }
 
   @override
+  void onTutorialStep(data) {
+    if (data["id"] == 405) {
+      _itemHolderPress(0, null);
+    } else if (data["id"] == 407 || data["id"] == 406) {
+      //todo: check minions index for starter account
+      _setItem(_minions[0], 0, null, null);
+    }
+    super.onTutorialStep(data);
+  }
+
+  @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 132.d, 48.d, 72.d);
 
   @override
@@ -156,31 +167,37 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   Widget _itemHolder(int index, HeroItem? item) {
     var padding = 20.d;
     return Positioned(
-        left: index == 0 || index == 2 ? padding : null,
-        top: index == 0 || index == 1 ? padding - 2 : null,
-        right: index == 1 || index == 3 ? padding : null,
-        bottom: index == 2 || index == 3 ? padding + 3 : null,
-        child: Widgets.button(context,
-            width: 144.d,
-            height: 144.d,
-            padding: EdgeInsets.all(12.d),
-            decoration: Widgets.imageDecorator(
-                "rect_${item == null ? "add" : "remove"}"),
-            child: item == null
-                ? const SizedBox()
-                : Asset.load<Image>("heroitem_${item.base.image}"),
-            onPressed: () {
-          if (item != null) {
-            _heroes[_selectedIndex.value].items.remove(item);
-            setState(() {});
-            return;
-          }
-          showModalBottomSheet<void>(
-              context: context,
-              backgroundColor: TColors.transparent,
-              barrierColor: TColors.transparent,
-              builder: (BuildContext context) => _itemListBottomSheet(index));
-        }));
+      left: index == 0 || index == 2 ? padding : null,
+      top: index == 0 || index == 1 ? padding - 2 : null,
+      right: index == 1 || index == 3 ? padding : null,
+      bottom: index == 2 || index == 3 ? padding + 3 : null,
+      child: Widgets.button(
+        context,
+        width: 144.d,
+        height: 144.d,
+        padding: EdgeInsets.all(12.d),
+        decoration:
+            Widgets.imageDecorator("rect_${item == null ? "add" : "remove"}"),
+        child: item == null
+            ? const SizedBox()
+            : Asset.load<Image>("heroitem_${item.base.image}"),
+        onPressed: () => _itemHolderPress(index, item),
+      ),
+    );
+  }
+
+  _itemHolderPress(int index, HeroItem? item) {
+    if (item != null) {
+      _heroes[_selectedIndex.value].items.remove(item);
+      setState(() {});
+      return;
+    }
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: TColors.transparent,
+      barrierColor: TColors.transparent,
+      builder: (BuildContext context) => _itemListBottomSheet(index),
+    );
   }
 
   _itemListBottomSheet(int index) {
@@ -343,9 +360,6 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
           await _tryRPC(RpcId.buyHeroItem, {RpcParams.id.name: item.id});
       int id = result["heroitem_id"];
       _account.heroItems[id] = HeroItem(id, item, 0);
-      if (mounted) {
-        Navigator.pop(context);
-      }
     } finally {}
   }
 
