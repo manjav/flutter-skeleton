@@ -24,6 +24,9 @@ class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
     serviceLocator<TutorialManager>().onStepChange.listen((data) {
       onTutorialStep(data);
     });
+    serviceLocator<TutorialManager>().onStart.listen((data) {
+      onTutorialStart(data);
+    });
     checkTutorial();
     super.initState();
   }
@@ -43,6 +46,7 @@ class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
 
   void onTutorialFinish(dynamic data) {}
   void onTutorialStep(dynamic data) {}
+  void onTutorialStart(dynamic data) {}
 
   void toast(String message) => Overlays.insert(context, ToastOverlay(message));
 
