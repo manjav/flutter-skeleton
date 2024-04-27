@@ -61,13 +61,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
 
   void _updateChildren() {
     children = [
-      AnimatedBuilder(
-          animation: _opacityBackgroundAnimationController,
-          builder: (context, child) => Opacity(
-              opacity: _opacityBackgroundAnimationController.value,
-              child: backgroundBuilder())),
+      backgroundBuilder(),
       animationBuilder("openpack"),
-      _cardsList(),
     ];
   }
 
@@ -87,19 +82,28 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
-      var count = _cards.length > 2 ? 0 : _cards.length;
-      for (var i = 0; i < count; i++) {
+      for (var i = 0; i < _cards.length; i++) {
         var card = _cards[i];
         updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
         updateRiveText("cardLevelText$i", card.base.rarity.convert());
         updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
         loadCardIcon(_cardIconAssets[i]!, card.base.getName());
         loadCardFrame(_cardFrameAssets[i]!, card.base);
+        if (card.base.isHero) {
+          updateRiveText(
+              "cardCaptionText$i", "${card.base.getName()}_title".l());
+          updateRiveText("benefitCooldownText$i",
+              card.base.attributes[HeroAttribute.wisdom].toString().convert());
+          updateRiveText(
+              "benefitGoldText$i",
+              card.base.attributes[HeroAttribute.blessing]
+                  .toString()
+                  .convert());
+          updateRiveText("benefitPowerText$i",
+              card.base.attributes[HeroAttribute.power].toString().convert());
+        }
       }
-    } else if (state == RewardAnimationState.closing) {
-      _opacityAnimationController.animateBack(0,
-          duration: const Duration(milliseconds: 500));
-      _opacityBackgroundAnimationController.reverse();
+      updateRiveText("commentText", "select a hero".l());
     }
     if (event.name == "choose") {
       _chooseHero(event.properties["card"].toInt());
@@ -127,46 +131,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       loadFont(asset);
       return true;
     }
-    return false; // load the default embedded asset
-  }
-
-  Widget _cardsList() {
-    var len = _cards.length;
-    if (len < 3) return const SizedBox();
-    var gap = 8.d;
-    var crossAxisCount = 2;
-    var itemSize = 240.d;
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-          alignment: Alignment.center,
-          width: DeviceInfo.size.width * 0.94,
-          height: itemSize / CardItem.aspectRatio * crossAxisCount +
-              gap * (crossAxisCount - 1),
-          child: GridView.builder(
-            itemCount: len,
-            scrollDirection: Axis.horizontal,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 1 / CardItem.aspectRatio,
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: gap,
-                mainAxisSpacing: gap),
-            itemBuilder: (c, i) => _cardItemBuilder(len, i, itemSize),
-          )),
-    );
-  }
-
-  Widget _cardItemBuilder(int len, int index, double size) {
-    return AnimatedBuilder(
-        animation: _opacityAnimationController,
-        builder: (context, child) {
-          return Opacity(
-              opacity:
-                  (_opacityAnimationController.value - 2 + (len - index) * 0.01)
-                      .clamp(0, 1),
-              child: SizedBox(
-                  width: size, child: CardItem(_cards[index], size: size)));
-        });
+    return false;
   }
 
   @override
@@ -178,17 +143,6 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
 
   Future<void> _chooseHero(int index) async {
     process(() async {
-      // var result = {
-      //   "achieveCards": [
-      //     {
-      //       "id": 559815886,
-      //       "last_used_at": 0,
-      //       "power": 46,
-      //       "base_card_id": 715,
-      //       "player_id": 8169489
-      //     }
-      //   ]
-      // };
       var result = await accountProvider.openPack(context, _pack,
           selectedCardId: _cards[index].base.id);
       return result;
