@@ -27,9 +27,11 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   onTutorialFinish(data) {
     if (data["index"] == 18) {
       _onButtonsTap(Routes.popupCardEnhance);
-    }
-    else if (data["index"] == 46) {
+    } else if (data["index"] == 46) {
       _onButtonsTap(Routes.popupCardEvolve);
+    } else if (data["id"] == 404) {
+      serviceLocator<RouteService>()
+          .to(Routes.popupHero, args: {"card": _card.fruit.id});
     }
   }
 
