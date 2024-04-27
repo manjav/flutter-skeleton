@@ -42,6 +42,34 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   @override
+  void onTutorialStep(data) {
+    if (data["id"] == 921) {
+      _selectedOpponent.value.status = 2;
+      _selectedOpponent.notifyListeners();
+    } else if (data["id"] == 922) {
+      _selectedOpponent.value.status = 0;
+      _selectedOpponent.notifyListeners();
+    }
+    super.onTutorialStep(data);
+  }
+
+  @override
+  void onTutorialFinish(data) {
+    if (data["id"] == 303) {
+      Overlays.insert(context, const MapHelpOverlay());
+    } else if (data["id"] == 304) {
+      checkTutorial();
+    } else if (data["id"] == 902) {
+      _attack();
+    } else if (data["id"] == 918) {
+      checkTutorial();
+    } else if (data["id"] == 923) {
+      serviceLocator<RouteService>().back();
+    }
+    super.onTutorialFinish(data);
+  }
+
+  @override
   EdgeInsets get contentPadding => EdgeInsets.fromLTRB(12.d, 210.d, 12.d, 64.d);
 
   @override
