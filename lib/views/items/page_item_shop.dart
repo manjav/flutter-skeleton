@@ -10,13 +10,15 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../../app_export.dart';
 
 class ShopPageItem extends AbstractPageItem {
-  const ShopPageItem({super.key}) : super(Routes.pageItemShop);
+  final ShopSections? shopSections;
+  const ShopPageItem({this.shopSections, super.key})
+      : super(Routes.pageItemShop);
 
   @override
   createState() => _ShopPageItemState();
 }
 
-class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
+class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
   late Account _account;
   final Map<ShopSections, List<ShopItemVM>> _items = {};
   // late StreamSubscription<List<PurchaseDetails>> _subscription;
@@ -93,9 +95,9 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
     } finally {
       setState(() {});
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scrollController.hasClients) {
+        if (_scrollController.hasClients && widget.shopSections != null) {
           Scrollable.ensureVisible(
-            GlobalObjectKey(ShopSections.card.index).currentContext!,
+            GlobalObjectKey(widget.shopSections!.index).currentContext!,
             alignment: 0.1,
           );
         }
@@ -433,7 +435,7 @@ class _ShopPageItemState extends AbstractPageItemState<AbstractPageItem> {
             services.changeState(ServiceStatus.punch, data: 1);
             if (isTutorial) {
               await Future.delayed(300.ms);
-              services.changeState(ServiceStatus.changeTab, data: 2);
+              services.changeState(ServiceStatus.changeTab, data: {"index": 2});
             }
           },
         ),
