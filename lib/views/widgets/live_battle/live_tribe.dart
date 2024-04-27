@@ -1,15 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../app_export.dart';
 
 class LiveTribe extends StatefulWidget {
   final int ownerId, battleId, helpCost;
   final Warriors warriors;
+  final bool isTutorial;
 
   const LiveTribe(this.ownerId, this.battleId, this.helpCost, this.warriors,
-      {super.key});
+      {this.isTutorial = false, super.key});
 
   @override
   State<LiveTribe> createState() => _LiveTribeState();
@@ -20,7 +22,7 @@ class _LiveTribeState extends State<LiveTribe>
         TickerProviderStateMixin,
         ServiceFinderWidgetMixin,
         ClassFinderWidgetMixin {
-  late Timer _timer;
+  Timer? _timer;
   final double _helpTimeout = 38;
   late AnimationController _animationController;
   bool _requestSent = false;
@@ -29,17 +31,22 @@ class _LiveTribeState extends State<LiveTribe>
   void initState() {
     _animationController = AnimationController(
         vsync: this, upperBound: _helpTimeout, value: _helpTimeout);
-    const duration = Duration(seconds: 1);
-    _timer = Timer.periodic(duration, (t) {
-      if (t.tick > _helpTimeout) {
-        t.cancel();
-        if (mounted) {
-          setState(() {});
+    if (widget.isTutorial == false) {
+      const duration = Duration(seconds: 1);
+      _timer = Timer.periodic(duration, (t) {
+        if (t.tick > _helpTimeout) {
+          t.cancel();
+          if (mounted) {
+            setState(() {});
+          }
         }
-      }
-      _animationController.animateTo(_helpTimeout - t.tick.toDouble(),
-          curve: Curves.easeInOutSine, duration: duration);
-    });
+        _animationController.animateTo(_helpTimeout - t.tick.toDouble(),
+            curve: Curves.easeInOutSine, duration: duration);
+      });
+    } else {
+      _animationController.animateTo(30,
+          curve: Curves.easeInOutSine, duration: 100.ms);
+    }
     super.initState();
   }
 
@@ -99,7 +106,7 @@ class _LiveTribeState extends State<LiveTribe>
     return SkinnedButton(
         width: 320.d,
         height: 150.d,
-        isEnable: _timer.isActive,
+        isEnable: widget.isTutorial || (_timer != null && _timer!.isActive),
         color: ButtonColor.teal,
         padding: EdgeInsets.fromLTRB(20.d, 0.d, 20.d, 8.d),
         onPressed: _help,
@@ -129,13 +136,27 @@ class _LiveTribeState extends State<LiveTribe>
         ]));
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _animationController.dispose();
+    super.dispose();
+  }
+
   _help() async {
-    if (!_timer.isActive) return;
+    if (widget.isTutorial) {
+      setState(() {
+        _requestSent = true;
+      });
+      return;
+    }
+    if (_timer == null) return;
+    if (!_timer!.isActive) return;
     _requestSent = true;
     try {
       await rpc(RpcId.battleHelp,
           params: {RpcParams.battle_id.name: widget.battleId});
-      _timer.cancel();
+      _timer?.cancel();
     } catch (e) {
       _requestSent = false;
     }
