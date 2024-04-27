@@ -25,6 +25,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   final List<SMITrigger?> _punchInputs = List.generate(5, (index) => null);
   final List<SMIBool?> _selectionInputs = List.generate(5, (index) => null);
   SMINumber? _tribeLevelInput;
+  ShopSections? _shopSections;
 
   var controller = Get.put(LoadingController());
 
