@@ -4,6 +4,7 @@ export 'adam.dart';
 export 'building.dart';
 export 'fruit.dart';
 export 'message.dart';
+export 'missions.dart';
 export 'notif_data.dart';
 export 'payment/export.dart';
 export 'rpc.dart';
