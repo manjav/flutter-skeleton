@@ -118,6 +118,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
           controller: _pageController,
           itemCount: _selectionInputs.length,
           itemBuilder: _pageItemBuilder,
+          physics: const NeverScrollableScrollPhysics(),
           onPageChanged: (value) => _selectTap(value, pageChange: false),
         ),
         TabNavigator(
