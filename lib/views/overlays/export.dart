@@ -12,4 +12,5 @@ export 'feast_purchase_overlay.dart';
 export 'feast_upgrade_card_overlay.dart';
 export 'feast_upgrade_overlay.dart';
 export 'member_details_overlay.dart';
+export 'mission_overlay.dart';
 export 'tutorial_overlay.dart';
