@@ -10,12 +10,13 @@ class EventNotification extends IService {
   Map<GlobalKey<NotifState>, OverlayEntry> notifications = {};
   List<String> onlines = [];
 
-  void showNotif(NotifData data, BuildContext context) {
+  void showNotif(NotifData data, BuildContext context,
+      {bool isTutorial = false}) {
     var key = GlobalKey<NotifState>();
     var notif = Notif(
       key: key,
       message: data,
-      bottom: 400.d,
+      bottom: isTutorial ? 800.d : 400.d,
       onClose: () {
         notifications[key]?.remove();
         notifications.remove(key);
@@ -46,14 +47,22 @@ class EventNotification extends IService {
   void hideNotif(NoobMessage data) {
     var notif = notifications.keys
         .firstWhereOrNull((element) => element.currentState?.message == data);
-    notifications[notif]?.remove();
     notif?.currentState?.hide();
+    notifications[notif]?.remove();
+    notifications.remove(notif);
   }
 
   void hideAllNotif() {
     for (var entry in notifications.keys) {
-      notifications[entry]?.remove();
       entry.currentState?.hide();
+      notifications[entry]?.remove();
+    }
+    notifications.clear();
+  }
+
+  void openAllNotif() {
+    for (var entry in notifications.keys) {
+      entry.currentState?.show();
     }
   }
 
