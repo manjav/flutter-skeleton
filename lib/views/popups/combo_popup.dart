@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -29,6 +30,15 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
       Indicator(widget.name, Values.potion, width: 290.d),
       Indicator(widget.name, Values.gold),
     ];
+  }
+
+  @override
+  void onTutorialFinish(data) {
+    if (data["id"] == 1502) {
+      Get.back();
+      Get.toNamed(Routes.popupPotion);
+    }
+    super.onTutorialFinish(data);
   }
 
   @override
