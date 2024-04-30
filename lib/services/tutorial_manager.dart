@@ -10,6 +10,15 @@ class TutorialManager {
 
   var onStepChange = Rx<dynamic>(null);
   var onFinish = Rx<dynamic>(null);
+  var onStart = Rx<dynamic>(null);
+  final ValueNotifier<bool> _ignorePointer = ValueNotifier<bool>(false);
+  dynamic _currentItem;
+  int _index = 0;
+  late BuildContext _context;
+
+  void toggleIgnorePointer(bool ignore) {
+    _ignorePointer.value = ignore;
+  }
 
   bool isTutorial(String route) {
     if (!Tutorial.tutorials.containsKey(route)) return false;
@@ -30,6 +39,7 @@ class TutorialManager {
 
     var account = serviceLocator<AccountProvider>().account;
     int currentIndex = account.tutorial_index;
+    _context = context;
 
     var data = (Tutorial.tutorials[route]! as List)
         .firstWhereOrNull((element) => element["startIndex"] == currentIndex
@@ -41,42 +51,49 @@ class TutorialManager {
     await Future.delayed(Duration(milliseconds: data["delay"] as int));
 
     if (context.mounted) {
-      showOverlay(context, 0);
+      _index = 0;
+      onStart(_currentSequnce[0]);
+      showOverlay();
     }
   }
 
-  showOverlay(BuildContext context, int index) async {
-    if (index == _currentSequnce.length) {
-      onFinish.value = _currentSequnce[--index];
-      // if (onFinish != null) onFinish(_currentSequnce[--index]);
-      // _currentSequnce = null;
+  showOverlay() async {
+    if (_index == _currentSequnce.length) {
+      onFinish.value = _currentSequnce[--_index];
       return;
     }
-    var item = _currentSequnce[index];
-    await Future.delayed(Duration(milliseconds: item["delay"] as int));
-    if (context.mounted) {
+    _currentItem = _currentSequnce[_index];
+    await Future.delayed(Duration(milliseconds: _currentItem["delay"] as int));
+    if (_context.mounted) {
       Overlays.insert(
-        context,
+        _context,
         TutorialOverlay(
-          center: item["center"],
-          characterName: item["characterName"],
-          dialogueSide: item["side"],
-          showBackground: item["background"],
-          showCharacter: item["character"],
-          showHand: item["hand"],
-          handPosition: item["handPosition"],
-          handQuarterTurns: item["handQuarterTurns"] ?? 0,
-          showFocus: item["showFocus"] ?? false,
-          text: (item["text"] as String).l(),
-          onTap: () {
-            Overlays.remove(OverlaysName.tutorial);
-            updateTutorialIndex(context, item["index"], item["id"]);
-            onStepChange.value = item;
-            showOverlay(context, ++index);
-          },
+          center: _currentItem["center"],
+          characterName: _currentItem["characterName"],
+          dialogueSide: _currentItem["side"],
+          showBackground: _currentItem["background"],
+          showCharacter: _currentItem["character"],
+          showHand: _currentItem["hand"],
+          handPosition: _currentItem["handPosition"],
+          handQuarterTurns: _currentItem["handQuarterTurns"] ?? 0,
+          showFocus: _currentItem["showFocus"] ?? false,
+          text: (_currentItem["text"] as String).l(),
+          characterSize: _currentItem["characterSize"],
+          bottom: _currentItem["bottom"],
+          ignorePointer: _ignorePointer,
+          radius: _currentItem["radius"],
+          onTap: onTapOverlay,
         ),
       );
     }
+  }
+
+  onTapOverlay() {
+    Overlays.remove(OverlaysName.tutorial);
+    updateTutorialIndex(_context, _currentItem["index"], _currentItem["id"]);
+    onStepChange.value = _currentItem;
+    ++_index;
+    showOverlay();
   }
 
   updateTutorialIndex(BuildContext context, int index, int id) async {

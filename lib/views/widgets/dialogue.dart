@@ -21,8 +21,8 @@ class Dialogue extends StatelessWidget {
   Widget build(BuildContext context) {
     double left = side == DialogueSide.right ? 20.d : 0;
     double right = side == DialogueSide.left ? 20.d : 0;
-    double top = side == DialogueSide.top ? 20.d : 0;
-    double bottom = side == DialogueSide.bottom ? 20.d : 0;
+    double top = side == DialogueSide.bottom ? 20.d : 0;
+    double bottom = side == DialogueSide.top ? 20.d : 0;
     return Stack(
       children: [
         Positioned(
@@ -79,11 +79,11 @@ extension DialogueExtension on DialogueSide? {
       case DialogueSide.right:
         return const Alignment(-1, -0.35);
       case DialogueSide.top:
-        return const Alignment(0, -1);
+        return const Alignment(0, 1);
       case DialogueSide.left:
         return const Alignment(1, -0.35);
       case DialogueSide.bottom:
-        return const Alignment(0, 1);
+        return const Alignment(0, -1);
       default:
         return Alignment.centerLeft;
     }
@@ -94,11 +94,11 @@ extension DialogueExtension on DialogueSide? {
       case DialogueSide.right:
         return 0;
       case DialogueSide.top:
-        return 1;
+        return 3;
       case DialogueSide.left:
         return 2;
       case DialogueSide.bottom:
-        return 3;
+        return 1;
       default:
         return 0;
     }
