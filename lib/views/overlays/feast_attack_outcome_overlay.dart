@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -195,8 +197,28 @@ class _AttackOutcomeStateFeastOverlay
 
   @override
   void onTutorialFinish(data) {
-    closeInput?.value = true;
-    super.onTutorialFinish(data);
+    if (data["id"] == 401) {
+      var card = accountProvider
+          .account.loadingData.shopItems[ShopSections.card]!
+          .firstWhereOrNull((element) => element.id == 32);
+      if (card == null) return;
+      closeInput?.value = true;
+      super.onTutorialFinish(data);
+      Overlays.insert(
+        context,
+        OpenPackFeastOverlay(
+          args: {"pack": card},
+          onClose: (d) async {
+            services.changeState(ServiceStatus.punch, data: 1);
+            if (isTutorial) {
+              await Future.delayed(300.ms);
+              services.changeState(ServiceStatus.changeTab, data: {"index": 2});
+            }
+          },
+        ),
+      );
+      return;
+    }
   }
 
   @override
