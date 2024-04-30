@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   final SelectedCards _deckCards = SelectedCards([]);
   final ValueNotifier<int> _powerBalance = ValueNotifier(0);
   final ValueNotifier<IntVec2d> _slotState = ValueNotifier(IntVec2d(0, 0));
-  late Timer _timer;
+  Timer? _timer;
   double _seconds = 0;
   int _maxPower = 0;
   bool _isDeckActive = true;
@@ -49,11 +48,13 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
           .toDouble();
     }
 
-    var socket = serviceLocator<NoobSocket>();
-    if (!socket.isConnected) {
-      socket.connect();
+    if (!isTutorial) {
+      var socket = serviceLocator<NoobSocket>();
+      if (!socket.isConnected) {
+        socket.connect();
+      }
+      socket.onReceive.add(_onNoobReceive);
     }
-    socket.onReceive.add(_onNoobReceive);
 
     LiveBattleScreen.deadlines = [28, 10, 10, 10, 0, 1];
     _friendsHead = (widget.args["friendsHead"] as Opponent?) ?? _account;
@@ -103,32 +104,83 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     super.initState();
     _setSlotTime(0);
     WidgetsBinding.instance.addPostFrameCallback((d) {
-      _timer = Timer.periodic(const Duration(milliseconds: 334),
-          (t) => _setSlotTime((_seconds += 0.334).round()));
-      _pageController.jumpToPage(1);
+      if (!isTutorial) {
+        _timer = Timer.periodic(const Duration(milliseconds: 334),
+            (t) => _setSlotTime((_seconds += 0.334).round()));
+        _pageController.jumpToPage(0);
+      }
     });
     if (_battleId == 0) {
       _warriorsNotifier.add(
           1,
           LiveWarrior(
               WarriorSide.opposites, _oppositesHead.id, _oppositesHead));
-      var cards = _account.getReadyCards(removeHeroes: true);
-      Timer.periodic(const Duration(seconds: 4), (timer) {
-        var index = timer.tick - 1;
-        if (index < 4) {
-          _warriors[0]!.cards.setAtCard(index, cards[index]);
-          _updatePowerBalance();
-        }
-        if (index == 5) {
-          var noobMessage = NoobMessage.getProperMessage(
-              _account,
-              jsonDecode(
-                  '{"id":0,"players_info":{"${_friendsHead.id}":{"power":3741051,"cooldown":2697,"hero_power_benefit":0,"hero_wisdom_benefit":"5267","hero_blessing_multiplier":0.26666666666667,"won_battle_num":13,"lost_battle_num":34,"id":${_friendsHead.id},"name":"yasamanjoon","added_xp":244,"added_gold":3358,"league_bonus":766.8385059161094,"gold":9739107481,"xp":32531,"league_rank":61,"level":43,"rank":161056,"levelup_gold_added":0,"gift_card":null,"owner_team_id":254512,"q":4258,"hero_benefits_info":{"gold_benefit":707,"cooldown_benefit":5267}},"0":{"power":62416,"cooldown":1995,"hero_power_benefit":0,"hero_wisdom_benefit":0,"hero_blessing_multiplier":0,"won_battle_num":259,"lost_battle_num":99,"is_ignored":true,"id":0,"name":"a.h.alavii","added_xp":0,"added_gold":0,"gold":6752,"xp":242935,"level":90,"league_rank":13010,"rank":64400,"owner_team_id":0,"hero_benefits_info":[]},"1":{"power":62416,"cooldown":1995,"hero_power_benefit":0,"hero_wisdom_benefit":0,"hero_blessing_multiplier":0,"won_battle_num":259,"lost_battle_num":99,"is_ignored":true,"id":1,"name":"a.h.alavii","added_xp":0,"added_gold":0,"gold":6752,"xp":242935,"level":90,"league_rank":13010,"rank":64400,"owner_team_id":0,"hero_benefits_info":[]}},"result":{"winner_added_score":20,"loser_added_score":-20,"winner_tribe_rank":10240,"loser_tribe_rank":1635,"winner_tribe_name":"سالوادور🫀","loser_tribe_name":"بزرگان مشهد","winner_id":254512,"loser_id":0},"push_message_type":"battle_finished"}'));
-          _onNoobReceive(noobMessage);
-          timer.cancel();
-        }
-      });
+      // var cards = _account.getReadyCards(removeHeroes: true);
+      // Timer.periodic(const Duration(seconds: 4), (timer) {
+      // var index = timer.tick - 1;
+      // if (index < 4) {
+      //   _warriors[1]!.cards.setAtCard(index, cards[index]);
+      //   _updatePowerBalance();
+      // }
+      // if (index == 5 && !isTutorial) {
+      //   var noobMessage = NoobMessage.getProperMessage(
+      //       _account,
+      //       jsonDecode(
+      //           '{"id":0,"players_info":{"${_friendsHead.id}":{"power":3741051,"cooldown":2697,"hero_power_benefit":0,"hero_wisdom_benefit":"5267","hero_blessing_multiplier":0.26666666666667,"won_battle_num":13,"lost_battle_num":34,"id":${_friendsHead.id},"name":"yasamanjoon","added_xp":244,"added_gold":3358,"league_bonus":766.8385059161094,"gold":9739107481,"xp":32531,"league_rank":61,"level":43,"rank":161056,"levelup_gold_added":0,"gift_card":null,"owner_team_id":254512,"q":4258,"hero_benefits_info":{"gold_benefit":707,"cooldown_benefit":5267}},"0":{"power":62416,"cooldown":1995,"hero_power_benefit":0,"hero_wisdom_benefit":0,"hero_blessing_multiplier":0,"won_battle_num":259,"lost_battle_num":99,"is_ignored":true,"id":0,"name":"a.h.alavii","added_xp":0,"added_gold":0,"gold":6752,"xp":242935,"level":90,"league_rank":13010,"rank":64400,"owner_team_id":0,"hero_benefits_info":[]},"1":{"power":62416,"cooldown":1995,"hero_power_benefit":0,"hero_wisdom_benefit":0,"hero_blessing_multiplier":0,"won_battle_num":259,"lost_battle_num":99,"is_ignored":true,"id":1,"name":"a.h.alavii","added_xp":0,"added_gold":0,"gold":6752,"xp":242935,"level":90,"league_rank":13010,"rank":64400,"owner_team_id":0,"hero_benefits_info":[]}},"result":{"winner_added_score":20,"loser_added_score":-20,"winner_tribe_rank":10240,"loser_tribe_rank":1635,"winner_tribe_name":"سالوادور🫀","loser_tribe_name":"بزرگان مشهد","winner_id":254512,"loser_id":0},"push_message_type":"battle_finished"}'));
+      //   _onNoobReceive(noobMessage);
+      //   timer.cancel();
+      // }
+      // });
     }
+  }
+
+  @override
+  void onTutorialStart(data) {
+    if (data["id"] == 903) {
+      _pageController.jumpToPage(5);
+    }
+    super.onTutorialStart(data);
+  }
+
+  @override
+  void onTutorialStep(data) async {
+    if (data["id"] == 904) {
+      //deploy card
+      _warriors[_account.id]!
+          .cards
+          .setAtCard(0, _deckCards.value[5], toggleMode: false);
+      // _warriors[1]!.cards.setAtCard(index, cards[index]);
+      var slot = _slotState.value;
+      _gotoNextSlot(0, slot);
+      _updatePowerBalance();
+    } else if (data["id"] == 906) {
+      //second card and show time
+    } else if (data["id"] == 908) {
+      //timeout second card
+      _warriors[_account.id]!
+          .cards
+          .setAtCard(_slotState.value.i, null, toggleMode: false);
+      _gotoNextSlot(1, _slotState.value);
+    } else if (data["id"] == 912) {
+      //add tribemate
+      _addWarrior(_account.id, 2, "یار کمکی");
+    } else if (data["id"] == 913) {
+      //add tribemate
+      _warriors[2]!.cards.setAtCard(1, _deckCards.value[5], toggleMode: false);
+    } else if (data["id"] == 915) {
+      //go to hero page
+      _pageController.jumpToPage(0);
+    } else if (data["id"] == 917) {
+      //deploy hero card
+      _warriors[_account.id]!
+          .cards
+          .setAtCard(4, _deckCards.value[0], toggleMode: false);
+      _updatePowerBalance();
+    } else if (data["id"] == 918) {
+      //close and go to opponent for status guid
+      _close();
+    }
+    super.onTutorialStep(data);
   }
 
   GlobalKey heroKey = GlobalKey();
@@ -162,7 +214,8 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
             LiveTribe(
                 _oppositesHead.id, _battleId, _helpCost, _warriorsNotifier),
-            LiveTribe(_friendsHead.id, _battleId, _helpCost, _warriorsNotifier),
+            LiveTribe(_friendsHead.id, _battleId, _helpCost, _warriorsNotifier,
+                isTutorial: true),
             Positioned(
                 width: 120.d,
                 right: 40.d,
@@ -255,7 +308,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
         return;
       }
     }
-    _timer.cancel();
+    _timer?.cancel();
   }
 
   void _gotoNextSlot(int index, IntVec2d slot) {
@@ -397,7 +450,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
 
   void _close() {
     serviceLocator<NoobSocket>().onReceive.remove(_onNoobReceive);
-    _timer.cancel();
+    _timer?.cancel();
     _pageController.dispose();
     Navigator.pop(context);
   }
