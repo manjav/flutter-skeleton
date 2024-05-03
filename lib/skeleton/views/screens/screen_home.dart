@@ -25,6 +25,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   final List<SMITrigger?> _punchInputs = List.generate(5, (index) => null);
   final List<SMIBool?> _selectionInputs = List.generate(5, (index) => null);
   SMINumber? _tribeLevelInput;
+  ShopSections? _shopSections;
 
   var controller = Get.put(LoadingController());
 
@@ -52,7 +53,8 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
         setState(() {});
       }
       if (state.status == ServiceStatus.changeTab) {
-        _selectTap(state.data as int);
+        _shopSections = state.data["section"] as ShopSections?;
+        _selectTap(state.data["index"] as int);
       } else if (state.status == ServiceStatus.punch) {
         _punchTab(state.data as int);
       }
@@ -185,7 +187,10 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   Widget? _pageItemBuilder(BuildContext context, int index) {
     var key = getGlobalKey(index);
     return switch (index) {
-      0 => ShopPageItem(key: key),
+      0 => ShopPageItem(
+          key: key,
+          shopSections: _shopSections,
+        ),
       1 => CardsPageItem(key: key),
       2 => MainMapPageItem(key: key),
       3 => TribePageItem(key: key),
