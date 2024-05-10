@@ -23,6 +23,8 @@ class STT extends Quiz {
   final double _maxSoundLevel = 10;
   DateTime _lastLevelChanged = DateTime.now();
 
+  List<String> exceptions = [];
+
   @override
   initialize({List<Object>? args}) async {
     if (isInitialized) return;
@@ -79,11 +81,13 @@ class STT extends Quiz {
     String? locale,
     String? pattern,
     int minMatchLevel = 90,
+    List<String>? exceptions,
   }) {
     // serviceLocator<Sounds>().stopAll();
     super.start(onResult: onResult);
     if (locale != null) this.locale = locale;
     if (pattern != null) this.pattern = pattern.simple();
+    if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
     final options = SpeechListenOptions(
@@ -126,8 +130,15 @@ class STT extends Quiz {
       recognizedWords.value = result.recognizedWords;
       if (result.finalResult) {
         var insert = result.recognizedWords.simple();
+        var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
+            orElse: () => "");
         var rate = ratio(pattern!, insert);
-        logs = "${pattern!} == $insert  ratio:$rate";
+        if (exception.isNotEmpty) {
+          minMatchLevel =
+              100 - (100 * exception.length / pattern!.length).round();
+        }
+        logs = "$insert ratio: $rate/$minMatchLevel";
+        // log(log);
         state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
       }
     }
