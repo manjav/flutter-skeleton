@@ -80,7 +80,7 @@ extension IntExtension on int {
   int max(int max) => this > max ? max : this;
 }
 
-extension StringExtension on String {
+extension StringExtensions on String {
   static const _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   static final Random _rnd = Random();

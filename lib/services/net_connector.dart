@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:nakama/nakama.dart';
 
@@ -81,7 +82,7 @@ class NetConnector extends IService {
       "location": location,
       "timezone": "$timezone",
       "latestVersion": DeviceInfo.buildNumber,
-      "displayName": "Player_${StringExtension.getRandomString(4)}",
+      "displayName": "Player_${StringExtensions.getRandomString(4)}",
       "device":
           '{"model":"${DeviceInfo.model}", "osVersion":"${DeviceInfo.osVersion}", "baseVersion":"${DeviceInfo.baseVersion}"}'
     };
@@ -105,8 +106,10 @@ class NetConnector extends IService {
       result = await rpc<T>(id, params: params);
     } on SkeletonException catch (e) {
       if (context.mounted) {
-        await serviceLocator<RouteService>().to(Routes.popupMessage,
-            args: {"title": "Error", "message": "error_${e.statusCode}".l()});
+        await Get.toNamed(Routes.popupMessage, arguments: {
+          "title": "Error",
+          "message": "error_${e.statusCode}".l()
+        });
       }
       rethrow;
     }

@@ -44,7 +44,7 @@ class DeviceInfo extends IService {
     try {
       adId = (await AdvertisingId.id(true))!;
     } on PlatformException {
-      adId = StringExtension.getRandomString(12);
+      adId = StringExtensions.getRandomString(12);
     }
 
     // Get app info

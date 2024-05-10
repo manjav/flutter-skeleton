@@ -26,13 +26,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         var account = serviceLocator<AccountProvider>();
         if (!account.metadata.containsKey("targetLanguage")) {
           await Future.delayed(const Duration(seconds: 1));
-          await serviceLocator<RouteService>().to(Routes.onboarding);
+          await Get.toNamed(Routes.onboarding);
         }
         _categories = (await account.loadCategories());
         _scores = await account.loadScores();
         setState(() {});
         // await Future.delayed(const Duration(seconds: 1));
-        // serviceLocator<RouteService>().to(Routes.popupMentor, args: {
+        // Get.toNamed(Routes.popupMentor, args: {
         //   "message":
         //       "سلام من قلیدونم. به ده ما خوش اومدی!\nما تو دهاتمون به ترکی صحبت می‌کنیم اما نگران نباش. من به تو کمک می‌کنم تا بتونی زبون ما رو یاد بگیری. خوب بریم اول بقالی محل کمی خرید کنیم."
         // });
@@ -147,35 +147,38 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Widget _lessonItemBuilder(GroupContent group, int type) {
     var id = "${group.id}_$type";
     var scoreNotifier = ValueNotifier(_scores![id] ?? 0);
-    return Widgets.button(context,
-        height: 50.d,
-        width: DeviceInfo.size.width * 0.6,
-        child: Row(
-          textDirection: TextDirection.rtl,
-          children: [
-            DirText("lesson_$type".l(), style: TStyles.small),
-            SizedBox(width: 16.d),
-            ValueListenableBuilder(
-                valueListenable: scoreNotifier,
-                builder: (context, value, child) =>
-                    Text(["☆☆☆", "★☆☆", "★★☆", "★★★"][scoreNotifier.value])),
-          ],
-        ), onPressed: () async {
-      if (group.children.isEmpty) {
-        await serviceLocator<AccountProvider>().loadTalks(group);
-      }
-      // print(group.words);
-      var s = await serviceLocator<RouteService>().to(
-          switch (type) {
-            1 => Routes.dictation,
-            0 || 2 => Routes.speak,
-            3 => Routes.match,
-            _ => Routes.word,
-          },
-          args: {"content": group, "challengeMode": type == 2});
-      if (s == null || s <= scoreNotifier.value) return;
-      await serviceLocator<AccountProvider>().saveScore(id, s);
-      scoreNotifier.value = s;
-    },);
+    return Widgets.button(
+      context,
+      height: 50.d,
+      width: DeviceInfo.size.width * 0.6,
+      child: Row(
+        textDirection: TextDirection.rtl,
+        children: [
+          DirText("lesson_$type".l(), style: TStyles.small),
+          SizedBox(width: 16.d),
+          ValueListenableBuilder(
+              valueListenable: scoreNotifier,
+              builder: (context, value, child) =>
+                  Text(["☆☆☆", "★☆☆", "★★☆", "★★★"][scoreNotifier.value])),
+        ],
+      ),
+      onPressed: () async {
+        if (group.children.isEmpty) {
+          await serviceLocator<AccountProvider>().loadTalks(group);
+        }
+        // print(group.words);
+        var s = await Get.toNamed(
+            switch (type) {
+              1 => Routes.dictation,
+              0 || 2 => Routes.speak,
+              3 => Routes.match,
+              _ => Routes.word,
+            },
+            arguments: {"content": group, "challengeMode": type == 2});
+        if (s == null || s <= scoreNotifier.value) return;
+        await serviceLocator<AccountProvider>().saveScore(id, s);
+        scoreNotifier.value = s;
+      },
+    );
   }
 }
