@@ -32,8 +32,8 @@ class ParentContent extends Content {
   String title = "", description = "", iconUrl = "";
   ParentContent.create(String id, Map map) : super.create(id, map) {
     title = map["title"];
-    description = map["description"];
-    iconUrl = map["iconUrl"];
+    description = map["description"]??"";
+    iconUrl = map["iconUrl"]??"";
   }
 }
 
