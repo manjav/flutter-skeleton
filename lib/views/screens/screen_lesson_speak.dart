@@ -18,13 +18,10 @@ class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
     // _onQuizResult(QuizState.success, child.targetValue);
 
     var account = serviceLocator<AccountProvider>();
-    var easyMode =
-        child.targetValue.contains(account.account.user.displayName!);
-
     serviceLocator<STT>().start(
       locale: account.metadata["targetLanguage"],
       pattern: child.targetValue,
-      minMatchLevel: easyMode ? 60 : 90,
+      exceptions: [account.account.user.displayName!.simple()],
       onResult: _onQuizResult,
     );
   }

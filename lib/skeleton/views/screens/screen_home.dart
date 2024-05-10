@@ -80,34 +80,22 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         var isSelected = value == index;
         return Widgets.button(
           context,
-          color: colors[index % colors.length],
           padding: EdgeInsets.all(12.d),
           margin: const EdgeInsets.all(12),
+          color: colors[index % colors.length],
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               isSelected ? _groupsBuilder(category, index) : const SizedBox(),
-              SizedBox(height: isSelected ? 10.d : 0),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                      width: 240.d,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(category.title, style: TStyles.largeInvert),
-                          isSelected
-                              ? const SizedBox()
-                              : Text(category.description,
-                                  style:
-                                      TStyles.smallInvert.copyWith(height: 1)),
-                        ],
-                      )),
-                  Image.network(category.iconUrl,
-                      height: isSelected ? 50.d : 100.d),
-                ],
-              ),
+              DirText(category.title, style: TStyles.largeInvert),
+              DirText(category.description, style: TStyles.tiny),
+              isSelected
+                  ? const SizedBox()
+                  : DirText(category.description,
+                      style: TStyles.smallInvert.copyWith(height: 1)),
+
+              // Image.network(category.iconUrl,
+              //     height: isSelected ? 50.d : 100.d),
             ],
           ),
           onPressed: () {
@@ -137,16 +125,20 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       radius: 16.d,
       padding: EdgeInsets.all(12.d),
       child: Column(
+        textDirection: TextDirection.rtl,
         children: [
+          Row(
+            textDirection: TextDirection.rtl,
+            children: [
+              // Image.network(group.iconUrl, height: 40.d),
+              // SizedBox(width: 12.d),
+              SizedBox(
+                width: DeviceInfo.size.width * 0.6,
+                child: DirText(group.title),
+              )
+            ],
+          ),
           for (var i = 4; i >= 0; i--) _lessonItemBuilder(group, i),
-          Row(children: [
-            Image.network(group.iconUrl, height: 40.d),
-            SizedBox(width: 12.d),
-            SizedBox(
-              width: DeviceInfo.size.width * 0.6,
-              child: Text(group.title, style: TStyles.small),
-            )
-          ])
         ],
       ),
     );
@@ -159,8 +151,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         height: 50.d,
         width: DeviceInfo.size.width * 0.6,
         child: Row(
+          textDirection: TextDirection.rtl,
           children: [
-            Text("lesson_$type".l()),
+            DirText("lesson_$type".l(), style: TStyles.small),
             SizedBox(width: 16.d),
             ValueListenableBuilder(
                 valueListenable: scoreNotifier,
@@ -183,6 +176,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       if (s == null || s <= scoreNotifier.value) return;
       await serviceLocator<AccountProvider>().saveScore(id, s);
       scoreNotifier.value = s;
-    });
+    },);
   }
 }
