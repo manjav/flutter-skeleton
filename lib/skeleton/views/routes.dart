@@ -1,5 +1,6 @@
 class Routes {
   static const home = "/";
+  static const intro = "/intro";
   static const speak = "/speak";
   static const dictation = "/listen";
   static const chat = "/chat";

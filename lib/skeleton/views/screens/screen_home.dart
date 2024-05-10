@@ -138,7 +138,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               )
             ],
           ),
-          for (var i = 4; i >= 0; i--) _lessonItemBuilder(group, i),
+          for (var i = 0; i >= 0; i--) _lessonItemBuilder(group, i),
         ],
       ),
     );
@@ -166,14 +166,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         if (group.children.isEmpty) {
           await serviceLocator<AccountProvider>().loadTalks(group);
         }
+
+        var routName =
+            group.children.where((t) => (t as Talk).personId == "name").isEmpty
+                ? Routes.speak
+                : Routes.intro;
+
         // print(group.words);
-        var s = await Get.toNamed(
-            switch (type) {
-              1 => Routes.dictation,
-              0 || 2 => Routes.speak,
-              3 => Routes.match,
-              _ => Routes.word,
-            },
+        var s = await Get.toNamed(routName,
             arguments: {"content": group, "challengeMode": type == 2});
         if (s == null || s <= scoreNotifier.value) return;
         await serviceLocator<AccountProvider>().saveScore(id, s);

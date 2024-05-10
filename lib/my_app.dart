@@ -96,6 +96,7 @@ class _MyAppState extends State<MyApp>
           getPages: [
             _getPage(Routes.home, HomeScreen()),
             _getPage(Routes.word, LessonWordScreen()),
+            _getPage(Routes.intro, LessonIntroScreen()),
             _getPage(Routes.match, LessonMatchScreen()),
             _getPage(Routes.speak, LessonSpeakScreen()),
             _getPage(Routes.dictation, LessonDictationScreen()),
