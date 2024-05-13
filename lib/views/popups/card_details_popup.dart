@@ -25,11 +25,11 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
 
   @override
   onTutorialFinish(data) {
-    if (data["index"] == 18) {
+    if (data["id"] == 324) {
       _onButtonsTap(Routes.popupCardEnhance);
-    } else if (data["index"] == 46) {
+    } else if (data["id"] == 654) {
       _onButtonsTap(Routes.popupCardEvolve);
-    } else if (data["id"] == 404) {
+    } else if (data["id"] == 405) {
       serviceLocator<RouteService>()
           .to(Routes.popupHero, args: {"card": _card.fruit.id});
     }
@@ -51,14 +51,18 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 SizedBox(
                     width: 500.d,
+                    height: 700.d,
                     child:
                         Consumer<AccountProvider>(builder: (_, state, child) {
                       return CardItem(_card,
                           size: 500.d, heroTag: "hero_${_card.id}");
                     })),
                 SizedBox(height: 70.d),
-                Text("${_name}_description".l(),
-                    style: TStyles.mediumInvert.copyWith(height: 2.7.d)),
+                Text(
+                  "${_name}_description".l(),
+                  style: TStyles.mediumInvert.copyWith(height: 2.7.d),
+                  textDirection: Localization.textDirection,
+                ),
                 SizedBox(height: 100.d),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   _button(
