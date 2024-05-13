@@ -88,11 +88,33 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       _onBuildingTap(account, account.buildings[Buildings.base]!);
     } else if (data["id"] == 1501) {
       Get.toNamed(Routes.popupCombo);
-    } else if (data["id"] == 901) {
-      var account = accountProvider.account;
-      _onBuildingTap(account, account.buildings[Buildings.base]!);
-    } else if (data["id"] == 923) {
-      checkTutorial();
+    } else if (data["id"] == 402) {
+      var card = accountProvider
+          .account.loadingData.shopItems[ShopSections.card]!
+          .firstWhereOrNull((element) => element.id == 32);
+      if (card == null) return;
+      Overlays.insert(
+        context,
+        OpenPackFeastOverlay(
+          args: {"pack": card},
+          onClose: (d) async {
+            services.changeState(ServiceStatus.punch, data: 1);
+            bool haveHero = accountProvider.account
+                    .getReadyCards()
+                    .firstWhereOrNull((element) => element.base.isHero) !=
+                null;
+            //if buy hero success save as a breakPoint
+            if (haveHero) {
+              accountProvider.updateTutorial(
+                  context,
+                  accountProvider.account.index,
+                  accountProvider.account.tutorial_id);
+            }
+            await Future.delayed(100.ms);
+            checkTutorial();
+          },
+        ),
+      );
     }
   }
 
@@ -255,7 +277,9 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return;
     }
     await serviceLocator<RouteService>().to(type, args: {"building": building});
-    checkTutorial();
+    if (account.level == 3 || account.level == 9) {
+      checkTutorial();
+    }
   }
 
   Widget _box(double type, String title) {
