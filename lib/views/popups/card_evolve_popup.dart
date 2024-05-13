@@ -21,9 +21,9 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
 
   @override
   void onTutorialStep(data) {
-    if (data["id"] == 3000) {
+    if (data["id"] == 655) {
       onSelectCard(0, cards[0]);
-    } else if (data["id"] == 4000) {
+    } else if (data["id"] == 656) {
       onSelectCard(1, cards[1]);
     }
     super.onTutorialStep(data);
@@ -201,6 +201,12 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
         EvolveFeastOverlay(
             args: {"cards": selectedCards},
             onClose: (d) async {
+          if (isTutorial) {
+            serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+            Overlays.closeAll();
+            services.changeState(ServiceStatus.changeTab, data: {"index": 2});
+            return;
+          }
               cards = getCards(account);
               if (cards.length < 2) {
                 // Show other mergeable cards
@@ -213,8 +219,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
                 await Future.delayed(const Duration(milliseconds: 50));
                 // Close if mergeable cards not available
                 if (mounted && cards.length < 2) {
-                  serviceLocator<RouteService>()
-                      .popUntil((route) => route.isFirst);
+              serviceLocator<RouteService>().popUntil((route) => route.isFirst);
                   return;
                 }
               } else {
@@ -228,6 +233,8 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
               //   await Future.delayed(const Duration(milliseconds: 1800));
               //   if (mounted) _evolve();
               // }
-            }));
+        },
+      ),
+    );
   }
 }
