@@ -4,8 +4,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get/get.dart';
 
 import '../app_export.dart';
 
@@ -545,11 +546,28 @@ class Account extends Player with MineMixin {
     // Level Up
     data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
-      if (data["level"] == 5) {
-        serviceLocator<Trackers>().design("level_5");
-      }
-      Timer(const Duration(milliseconds: 100),
-          () => Overlays.insert(context, LevelupFeastOverlay(args: data)));
+      // if (data["level"] == 5) {
+      //   serviceLocator<Trackers>().design("level_5");
+      // }
+      Timer(
+        const Duration(milliseconds: 300),
+        () {
+          Overlays.insert(
+            context,
+            LevelupFeastOverlay(
+              args: data,
+              onClose: (_) {
+                serviceLocator<ServicesProvider>()
+                    .changeState(ServiceStatus.changeTab, data: {"index": 2});
+              },
+            ),
+          );
+          Future.delayed(200.ms, () {
+            serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+            Overlays.closeAll(except: OverlaysName.feastLevelUp);
+          });
+        },
+      );
     }
 
     data["achieveCards"] = achieveCards;
