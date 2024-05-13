@@ -20,7 +20,9 @@ class _IntroScreenState extends AbstractScreenState<IntroScreen> {
 
   @override
   void onTutorialFinish(data) {
-    Get.toNamed(Routes.deck);
+    if (data["id"] == 10) {
+      Get.offNamed(Routes.deck);
+    }
     super.onTutorialFinish(data);
   }
 
