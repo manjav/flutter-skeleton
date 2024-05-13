@@ -82,17 +82,13 @@ class _MyAppState extends State<MyApp>
         ],
         child: GetMaterialApp(
           navigatorObservers: [MyApp._observer],
-          localizationsDelegates: const [
-            // AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-          ],
+          localizationsDelegates: GlobalMaterialLocalizations.delegates,
           supportedLocales: Localization.locales,
           theme: Themes.darkData,
           locale: Localization.locales.firstWhere((l) =>
               l.languageCode == Pref.language.getString(defaultValue: 'en')),
           initialRoute: Routes.home,
+          textDirection: Localization.dir,
           getPages: [
             _getPage(Routes.home, () => HomeScreen()),
             _getPage(Routes.deck, () => DeckScreen()),
