@@ -103,7 +103,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Sort by power",
+                    "sort_by_power".l(),
                     style: TStyles.small.copyWith(color: TColors.primary50),
                   ),
                   SizedBox(
