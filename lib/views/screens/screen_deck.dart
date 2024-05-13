@@ -362,7 +362,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                   Expanded(
                     child: ValueListenableBuilder(
                       valueListenable: _selectedCards,
-                      builder: (context, value, child) => SkinnedButton(
+                        builder: (context, value, child) {
+                          return SkinnedButton(
                         alignment: Alignment.center,
                         size: ButtonSize.medium,
                         onPressed: () => _attack(state.account),
@@ -381,10 +382,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                               height: 101.d,
                             ),
                             SizedBox(width: 16.d),
-                            SkinnedText("attack_l".l(), style: TStyles.large),
+                                SkinnedText("attack_l".l(),
+                                    style: TStyles.large),
                           ],
                         ),
-                      ),
+                          );
+                        },
                     ),
                   )
                 ],
