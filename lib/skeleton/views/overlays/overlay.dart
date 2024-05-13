@@ -20,6 +20,16 @@ class Overlays {
     }
   }
 
+  static closeAll({String except = ""}) {
+    _entries.forEach((key, value) {
+      if (key != except) {
+        _entries[key]?.remove();
+        _entries[key]?.dispose();
+      }
+    });
+    _entries.removeWhere((key, value) => key != except);
+  }
+
   static void clear() => _entries.clear();
 
   static int get count => _entries.length;
