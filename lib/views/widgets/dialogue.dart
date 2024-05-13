@@ -44,12 +44,13 @@ class Dialogue extends StatelessWidget {
             padding: EdgeInsets.all(45.d),
             child: Material(
               type: MaterialType.transparency,
-              child: Text(
+              child: SkinnedText(
                 text,
+                hideStroke: true,
                 style: TStyles.large
                     .autoSize(
                       text.length,
-                      100,
+                      150,
                       38.d,
                     )
                     .copyWith(color: TColors.primary20),
