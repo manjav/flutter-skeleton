@@ -507,13 +507,18 @@ class Account extends Player with MineMixin {
     var achieveCards = <AccountCard>[];
     addCard(dynamic newCard) {
       if (newCard == null) return null;
-      var card = cards[newCard["id"]];
+      var card = cards[newCard is AccountCard ? newCard.id : newCard["id"]];
       if (card == null) {
-        cards[newCard["id"]] = card = AccountCard(this, newCard);
+        cards[newCard["id"]] = card =
+            newCard is AccountCard ? newCard : AccountCard(this, newCard);
       } else {
-        card.power = newCard["power"];
-        card.lastUsedAt = newCard["last_used_at"];
-        card.base = loadingData.baseCards[newCard['base_card_id']]!;
+        card.power = newCard is AccountCard ? newCard.power : newCard["power"];
+        card.lastUsedAt = newCard is AccountCard
+            ? newCard.lastUsedAt
+            : newCard["last_used_at"];
+        card.base = loadingData.baseCards[newCard is AccountCard
+            ? newCard.base.id
+            : newCard['base_card_id']]!;
       }
       achieveCards.add(card);
       return card;
