@@ -31,7 +31,7 @@ class HeroPopup extends AbstractPopup {
       HeroCard hero, MapEntry<HeroAttribute, int> attribute) {
     return Row(children: [
       Asset.load<Image>("benefit_${attribute.key.benefit}", width: 56.d),
-      SkinnedText(" ${hero.card.base.attributes[attribute.key]}"),
+      SkinnedText(" ${hero.card.base.attributes[attribute.key]} "),
       SkinnedText(" + ${attribute.value}",
           style: TStyles.medium.copyWith(color: TColors.green)),
     ]);
