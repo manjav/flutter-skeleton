@@ -108,7 +108,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     for (var card in cards) {
       card.isDeployed = false;
     }
-    return Consumer<AccountProvider>(
+    return PopScope(
+      canPop: !isTutorial,
+      child: Consumer<AccountProvider>(
       builder: (_, state, child) {
         return Stack(
           alignment: Alignment.bottomCenter,
@@ -329,11 +331,15 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
           ],
         );
       },
+      ),
     );
   }
 
   Widget? _cardItemBuilder(BuildContext context, int index, Account account,
       AccountCard card, double itemSize) {
+    bool coolDownTutorial =
+        [14, 15, 19].contains(accountProvider.account.tutorial_id) &&
+            card.lastCoolOff == 0;
     return Widgets.button(
       context,
       foregroundDecoration: _selectedCards.value.contains(card)
@@ -342,9 +348,14 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
               border: Border.all(color: TColors.white, width: 8.d))
           : null,
       padding: EdgeInsets.zero,
-      onPressed: () {
-        if (card.getRemainingCooldown() > 0) {
-          card.coolOff(context);
+      onPressed: () async {
+        if (card.getRemainingCooldown(isTutorial: coolDownTutorial) > 0) {
+          await card.coolOff(context, isTutorial: coolDownTutorial);
+          var cards =
+              account.getReadyCards().where((card) => card.lastCoolOff == 0);
+          if (cards.isEmpty && context.mounted && isTutorial) {
+            accountProvider.updateTutorial(context, 11, 20);
+          }
         } else {
           if (card.base.isHero) {
             _selectedCards.setAtCard(2, card);
@@ -352,21 +363,15 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             _selectedCards.setCard(card, exception: 2);
           }
         }
-        //todo: add check if we are in tutorial
         if (_selectedCards.value.where((element) => element != null).length ==
                 2 &&
             isTutorial) {
-          if (accountProvider.account.tutorial_index <= 6) {
+          if (accountProvider.account.tutorial_id <= 12 && context.mounted) {
             accountProvider.update(context, {
-              "tutorial_index": 6,
+              "tutorial_id": 12,
             });
           }
           checkTutorial();
-          //todo: we need to fix it by listen to finish (need to check)
-          // checkTutorial(context, Routes.deck,
-          //     onFinish: (data) {
-          //   _attack(account);
-          // });
         }
       },
       child: CardItem(
@@ -374,7 +379,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         showCoolOff: true,
         size: itemSize,
         key: getGlobalKey(card.id),
-        isTutorial: isTutorial,
+        isTutorial: coolDownTutorial,
       ),
     );
   }
@@ -564,7 +569,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
           "opponent": _opponent,
           "cards": _selectedCards,
           "isBattle": widget.args.containsKey("opponent"),
-          "isTutorial": isTutorial
         },
         onClose: (data) {
           _selectedCards.clear(setNull: true);
@@ -575,7 +579,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       ),
     );
     // _selectedCards.clear(setNull: true);
-    if (isTutorial) return;
+    if (isTutorial && account.tutorial_id < 20) return;
     serviceLocator<Notifications>().schedule(account.getSchedules());
     await Future.delayed(const Duration(milliseconds: 1500));
     serviceLocator<RouteService>().back();
