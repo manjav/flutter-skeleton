@@ -297,7 +297,9 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
   Widget _getLeagueIcon(int league) {
     var indices = LeagueData.getIndices(league);
     return Stack(children: [
-      Asset.load<Image>("icon_league_${indices.$1}", width: 120.d),
+      league > 0
+          ? Asset.load<Image>("icon_league_${indices.$1}", width: 120.d)
+          : const SizedBox(),
       Positioned(
           top: 8.d,
           width: 34.d,
