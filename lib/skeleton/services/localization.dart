@@ -78,9 +78,9 @@ extension LocalizationExtension on String {
       ? TextDirection.rtl
       : TextDirection.ltr;
 
-  String convert() => Localization.convert(this);
+  String convert() => this;
 }
 
 extension LocalizationIntExtension on int {
-  String convert() => Localization.convert(toString());
+  String convert() => toString();
 }
