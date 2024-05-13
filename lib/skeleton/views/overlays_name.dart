@@ -20,4 +20,5 @@ class OverlaysName {
   static const feastGiftReward = "overlay_feast_gift_reward";
   static const tutorial = "overlay_tutorial";
   static const mission = "overlay_mission";
+  static const helpMap = "overlay_help_map";
 }
