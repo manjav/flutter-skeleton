@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fruitcraft/skeleton/views/widgets/skinned_text.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
@@ -34,8 +35,8 @@ class _MineBuildingPopupState extends AbstractPopupState<MineBuildingPopup>
           ])
         ]),
         SizedBox(height: 16.d),
-        Text(descriptionBuilder(),
-            style: TStyles.medium.copyWith(height: 2.7.d)),
+        SkinnedText(descriptionBuilder(),
+            style: TStyles.medium.copyWith(height: 2.7.d),hideStroke: true,),
         SizedBox(height: 48.d),
         upgradeButton(state.account, building),
         Widgets.divider(margin: 36.d, width: 700.d),
