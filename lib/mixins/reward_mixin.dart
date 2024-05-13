@@ -167,7 +167,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         dismiss();
         await serviceLocator<RouteService>().to(
           Routes.popupMessage,
-          args: {"title": "Error", "message": "error_${e.statusCode}".l()},
+          args: {"title": "error".l(), "message": "error_${e.statusCode}".l()},
         );
       }
     }

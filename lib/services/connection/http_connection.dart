@@ -87,15 +87,16 @@ class HttpConnection extends IService {
     }
   }
 
-  Future<T> tryRpc<T>(BuildContext context, RpcId id, {Map? params}) async {
+  Future<T> tryRpc<T>(BuildContext context, RpcId id,
+      {Map? params, showError = true}) async {
     dynamic result;
     try {
       result = await rpc(id, params: params);
     } on SkeletonException catch (e) {
-      if (context.mounted) {
+      if (context.mounted && showError) {
         await serviceLocator<RouteService>().to(
           Routes.popupMessage,
-          args: {"title": "Error", "message": "error_${e.statusCode}".l()},
+          args: {"title": "error".l(), "message": "error_${e.statusCode}".l()},
         );
       }
       rethrow;
