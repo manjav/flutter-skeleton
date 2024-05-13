@@ -17,6 +17,7 @@ class Overlays {
   static remove(String route) {
     if (_entries.containsKey(route)) {
       _entries[route]?.remove();
+      _entries[route]?.dispose();
       _entries.remove(route);
     }
   }
