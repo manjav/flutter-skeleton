@@ -37,7 +37,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   @override
   void onTutorialFinish(data) {
-    if (data["index"] == 7) {
+    if (data["id"] == 13) {
       _attack(accountProvider.account);
     }
     super.onTutorialFinish(data);
@@ -53,7 +53,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   List<Widget> appBarElementsRight() {
     if (isTutorial) return [];
     return <Widget>[
-      Indicator(widget.route, Values.potion, width: 256.d),
       Indicator(widget.route, Values.gold),
       Indicator(widget.route, Values.nectar, width: 280.d),
     ];
@@ -61,7 +60,64 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   @override
   List<Widget> appBarElementsLeft() {
-    return <Widget>[];
+    if (isTutorial) return [];
+    return <Widget>[
+      Consumer<AccountProvider>(
+        builder: (_, state, child) {
+          var levels = state.account.loadingData.rules["availabilityLevels"]!;
+          return Widgets.touchable(context,
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Asset.load<Image>("icon_combo", height: 68.d),
+                      state.account.level < levels["combo"]
+                          ? RotationTransition(
+                              turns: const AlwaysStoppedAnimation(-15 / 360),
+                              child: Widgets.rect(
+                                  color: TColors.primary20,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Asset.load<Image>("icon_exclude",
+                                          height: 28.d, width: 21.d),
+                                      SizedBox(
+                                        width: 7.d,
+                                      ),
+                                      Text(
+                                        "Level ${levels["combo"]}",
+                                        style: TStyles.small
+                                            .copyWith(color: TColors.white),
+                                      ),
+                                    ],
+                                  )),
+                            )
+                          : const SizedBox()
+                    ],
+                  ),
+                  SkinnedText(
+                    "shop_card_combo".l(),
+                    style: TStyles.small.copyWith(
+                      color: TColors.primary20,
+                    ),
+                  ),
+                ],
+              ), onTap: () {
+            // Show unavailable message
+            if (state.account.level < levels["combo"]) {
+              Overlays.insert(
+                  context,
+                  ToastOverlay(
+                    "unavailable_l".l(["popupcombo".l(), levels["combo"]]),
+                  ));
+            } else {
+              serviceLocator<RouteService>().to(Routes.popupCombo);
+            }
+          });
+        },
+      )
+    ];
   }
 
   @override
@@ -122,6 +178,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                 AssetType.image,
                 "background0",
                 subFolder: "backgrounds",
+                  fit: BoxFit.fill,
               ),
             ),
             Positioned(
@@ -309,7 +366,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                         alignment: Alignment.center,
                         size: ButtonSize.medium,
                         onPressed: () => _attack(state.account),
-                        isEnable: value.length >= 2,
+                            isEnable: isTutorial
+                                ? (value
+                                        .where((element) => element == null)
+                                        .length ==
+                                    3)
+                                : true,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
