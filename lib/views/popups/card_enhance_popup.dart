@@ -30,7 +30,10 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   @override
   void onTutorialFinish(data) {
-    _sacrifice();
+    if (data["id"] == 327) {
+      _sacrifice();
+      serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+    }
     super.onTutorialFinish(data);
   }
 
@@ -148,9 +151,17 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   _sacrifice() async {
     if (!_isSacrificeAvailable) return;
     Overlays.insert(
-        context,
-        EnhanceFeastOverlay(
-            args: {"card": card, "sacrificedCards": selectedCards}));
+      Get.overlayContext!,
+      EnhanceFeastOverlay(
+        args: {"card": card, "sacrificedCards": selectedCards},
+        onClose: (data) {
+          if (isTutorial) {
+            Overlays.closeAll();
+            services.changeState(ServiceStatus.changeTab, data: {"index": 2});
+          }
+        },
+      ),
+    );
     if (mounted) {
       Navigator.pop(context);
     }
