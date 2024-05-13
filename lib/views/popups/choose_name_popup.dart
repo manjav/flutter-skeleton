@@ -56,9 +56,13 @@ class _ChooseNamePopupState extends AbstractPopupState<ChooseNamePopup> {
           context, RpcId.setProfileInfo,
           params: {"name": _textController.text});
       accountProvider.account.name = _textController.text;
+      accountProvider.account.is_name_temp = false;
       accountProvider.update();
-    } catch(e){
-       log(e.toString());
+
+      serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+      services.changeState(ServiceStatus.changeTab, data: {"index": 2});
+    } catch (e) {
+      log(e.toString());
     }
   }
 }
