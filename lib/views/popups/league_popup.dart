@@ -26,7 +26,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
 
   @override
   void onTutorialStep(data) {
-    if(data["id"]== 801){
+    if(data["id"]== 804){
       selectedTabIndex = 1;
     }
     super.onTutorialStep(data);
