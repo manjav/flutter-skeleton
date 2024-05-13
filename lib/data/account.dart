@@ -571,6 +571,7 @@ class Account extends Player with MineMixin {
     }
 
     data["achieveCards"] = achieveCards;
+    deadlines.clear();
     _addDeadline(data, xpBoostCreatedAt, xpBoostId);
     _addDeadline(data, pwBoostCreatedAt, pwBoostId);
     return data;
