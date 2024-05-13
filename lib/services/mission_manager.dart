@@ -3,6 +3,8 @@ import 'package:fruitcraft/app_export.dart';
 import 'package:get/get.dart';
 
 class MissionManager extends IService {
+  Missions? currentMissions;
+
   @override
   initialize({List<Object>? args}) {
     serviceLocator<AccountProvider>().addListener(() {
@@ -13,13 +15,24 @@ class MissionManager extends IService {
 
   checkMission() async {
     var account = serviceLocator<AccountProvider>().account;
-    int tutorialIndex = account.tutorial_index;
+    int tutorialId = account.tutorial_id;
 
-    var mission = MissionData.missions
-        .firstWhereOrNull((element) => element.startIndex == tutorialIndex);
+    // var isFinishMission = MissionData.missions.firstWhereOrNull(
+    //         (element) => element.finishId == account.tutorial_id) !=
+    //     null;
+    // if (isFinishMission) await Future.delayed(300.ms);
+
+    var mission = MissionData.missions.firstWhereOrNull((element) =>
+        tutorialId >= element.startId &&
+        tutorialId < element.finishId &&
+        account.level == element.level);
 
     if (mission == null) return;
+    // if (currentMissions != mission) {
+    //   Overlays.remove(OverlaysName.mission);
+    // }
     await Future.delayed(1300.ms);
+    currentMissions = mission;
     Overlays.insert(
         Get.overlayContext!, MissionOverlay(missions: mission.missions));
   }
