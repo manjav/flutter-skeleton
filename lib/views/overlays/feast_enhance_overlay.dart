@@ -40,6 +40,7 @@ class _EnhanceFeastOverlayState
     updateRiveText("cardNameText", "${_card.base.fruit.name}_title".l());
     updateRiveText("cardLevelText", _card.base.rarity.convert());
     updateRiveText("cardPowerText", "ˢ${_oldPower.compact()}");
+    updateRiveText("addedPowerCaptionText", "added_power_caption_text".l());
     return controller;
   }
 
