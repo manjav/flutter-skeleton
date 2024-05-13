@@ -181,6 +181,11 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     }
   }
 
+  @override
+  dispose() {
+    super.dispose();
+  }
+
   Widget _progressbarBuilder() => ValueListenableBuilder(
       valueListenable: _progressbarNotifier,
       builder: (context, value, child) {
