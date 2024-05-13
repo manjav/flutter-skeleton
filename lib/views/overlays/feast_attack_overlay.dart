@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -131,6 +132,10 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   List _simulateOuestOppositeCards(int playerCardsPower) {
     var random = Random();
     var opponentPower = _opponent!.defPower;
+    if (opponentPower > playerCardsPower && _outcomeData["outcome"]) {
+      opponentPower = playerCardsPower -
+          random.nextInt(max(1, opponentPower - playerCardsPower));
+    }
     if (!_outcomeData["outcome"] && opponentPower < playerCardsPower) {
       opponentPower = playerCardsPower +
           (playerCardsPower * random.nextDouble() * 0.1).round();
@@ -138,10 +143,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     var result = [];
     var cardPower = (opponentPower / 4).floor();
     var cards = _account!.loadingData.baseCards.values
-        .where((c) =>
-            c.power / (isTutorial ? 4 : 1) <= cardPower &&
-            c.powerLimit > cardPower &&
-            !c.isHero)
+        .where((c) => !c.isHero && !c.fruit.isMonster)
         .toList();
 
     for (var i = 0; i < 4; i++) {
@@ -222,10 +224,10 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
                   name: "closing", secondsDelay: 0, properties: {}));
               closeInput?.value = true;
               closeButtonController?.reverse();
+              accountProvider.update(Get.context!, _outcomeData);
             },
           ),
         );
-        accountProvider.update(context, _outcomeData);
       }
     } else if (state == RewardAnimationState.closing) {
       var lastRoute = isTutorial
