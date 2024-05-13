@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../export.dart';
@@ -32,6 +33,11 @@ class Localization extends IService {
     await _getData("$languageCode.json");
     super.initialize();
   }
+
+  changeLocal(Locale locale) async {
+    languageCode = locale.languageCode;
+    textDirection =
+        languageCode == "fa" ? TextDirection.rtl : TextDirection.ltr;
     _sentences = {};
     await _getData("keys.json");
     await _getData("$languageCode.json");
@@ -46,8 +52,8 @@ class Localization extends IService {
     });
   }
 
-  static String convert(String input) {
-    if (!Localization.isRTL) return input;
+  static String convert(String input, {bool force = false}) {
+    if (!Localization.isRTL && !force) return input;
     return input
         .replaceAll('0', '٠')
         .replaceAll('1', '١')
@@ -91,4 +97,13 @@ extension LocalizationExtension on String {
 
 extension LocalizationIntExtension on int {
   String convert() => toString();
+
+  String getFormattedPrice() {
+    final storeId = FlavorConfig.instance.variables["storeId"];
+    final formatter = intl.NumberFormat('###,###,###');
+    if (["1", "3", "6", "7"].contains(storeId)) {
+      return formatter.format('\$$this');
+    }
+    return '${formatter.format(this * 10)} ريال';
+  }
 }
