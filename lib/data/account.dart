@@ -295,7 +295,7 @@ class Account extends Player with MineMixin {
   void _updateInteger(Map<String, dynamic> map) {
     q = Convert.toInt(map["q"], q);
     xp = Convert.toInt(map["xp"], xp);
-    gold = Convert.toInt(map["gold"], xp);
+    gold = Convert.toInt(map["gold"], gold);
     nectar = Convert.toInt(map["nectar"], nectar);
     potion = Convert.toInt(map["potion_number"], potion);
     activity_status = Convert.toInt(map["activity_status"], activity_status);
