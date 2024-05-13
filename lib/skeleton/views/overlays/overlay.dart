@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../app_export.dart';
 
@@ -9,7 +10,7 @@ class Overlays {
     if (!_entries.containsKey(overlay.route)) {
       var entry = OverlayEntry(builder: (c) => overlay);
       _entries[overlay.route] = entry;
-      Overlay.of(context).insert(entry);
+      Overlay.of(Get.overlayContext!).insert(entry);
     }
   }
 
