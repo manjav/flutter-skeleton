@@ -568,8 +568,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         },
         onClose: (data) {
           _selectedCards.clear(setNull: true);
-          serviceLocator<TutorialManager>()
-              .checkToturial(context, widget.route);
+          if (isTutorial && account.tutorial_id < 20) {
+            serviceLocator<TutorialManager>().checkToturial(widget.route);
+          }
         },
       ),
     );
