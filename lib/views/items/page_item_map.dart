@@ -205,23 +205,23 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             onPressed: () =>
                 serviceLocator<RouteService>().to(Routes.popupInbox),
           )),
-      account.bundles != null
-          ? PositionedDirectional(
-              bottom: 210.d,
-              end: 150.d,
-              height: 150.d,
-              child: StreamBuilder<dynamic>(
-                  stream: Stream.periodic(const Duration(seconds: 1)),
-                  builder: (context, snapshot) {
-                    var endDate = Convert.toInt(account.bundles[0]["end_date"]);
-                    var duration = Duration(
-                        seconds: endDate - DateTime.now().secondsSinceEpoch);
-                    String time =
-                        "${duration.inHours.toString().padLeft(2, "0")}:${(duration.inMinutes % 60).toString().padLeft(2, "0")}:${(duration.inSeconds % 60).toString().padLeft(2, "0")}";
-                    return _box(0, time);
-                  }),
-            )
-          : const SizedBox(),
+      // account.bundles != null
+      //     ? PositionedDirectional(
+      //         bottom: 210.d,
+      //         end: 150.d,
+      //         height: 150.d,
+      //         child: StreamBuilder<dynamic>(
+      //             stream: Stream.periodic(const Duration(seconds: 1)),
+      //             builder: (context, snapshot) {
+      //               var endDate = Convert.toInt(account.bundles[0]["end_date"]);
+      //               var duration = Duration(
+      //                   seconds: endDate - DateTime.now().secondsSinceEpoch);
+      //               String time =
+      //                   "${duration.inHours.toString().padLeft(2, "0")}:${(duration.inMinutes % 60).toString().padLeft(2, "0")}:${(duration.inSeconds % 60).toString().padLeft(2, "0")}";
+      //               return _box(0, time);
+      //             }),
+      //       )
+      //     : const SizedBox(),
 
       /// Disable for now
       // PositionedDirectional(
