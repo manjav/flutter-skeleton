@@ -50,6 +50,7 @@ class TutorialOverlay extends AbstractOverlay {
 
 class _TutorialOverlayState extends AbstractOverlayState<TutorialOverlay> {
   ValueNotifier<bool> show = ValueNotifier<bool>(false);
+  bool isEnded = false;
 
   @override
   void initState() {
@@ -70,6 +71,7 @@ class _TutorialOverlayState extends AbstractOverlayState<TutorialOverlay> {
         ignoring: value,
         child: GestureDetector(
           onTap: () async {
+            if (!isEnded) return;
             show.value = false;
             await Future.delayed(700.ms);
             if (widget.onTap != null) widget.onTap!();
@@ -111,6 +113,7 @@ class _TutorialOverlayState extends AbstractOverlayState<TutorialOverlay> {
                         characterName: widget.characterName,
                         characterSize: widget.characterSize,
                         dialogueHeight: widget.dialogueHeight,
+                        onEnd: () => isEnded = true,
                       )
                     : const SizedBox(),
                 widget.showHand
