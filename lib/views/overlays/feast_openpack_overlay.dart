@@ -52,7 +52,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       if (count == 0) {
         setState(() => _updateChildren());
       }
-      _countInput?.value = _cards.length.toDouble();
+      _countInput?.value = count.toDouble();
       return _cards;
     });
   }
