@@ -169,9 +169,14 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
           clipBehavior: Clip.none,
           children: [
             PositionedDirectional(
-                top: -34.d,
-                start: 14.d,
-                child: Text(label, style: TStyles.tiny)),
+              top: -34.d,
+              start: 14.d,
+              child: SkinnedText(
+                label,
+                style: TStyles.tiny,
+                hideStroke: true,
+              ),
+            ),
             Row(mainAxisSize: MainAxisSize.min, children: [
               SizedBox(width: icon == null ? 16.d : 8.d),
               icon != null
@@ -241,7 +246,9 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
             child: LoaderWidget(AssetType.image, "medal_$name",
                 subFolder: "medals", width: size, height: size)),
         SizedBox(height: 30.d),
-        count != null ? Text("x$count") : SizedBox(height: 48.d)
+        count != null
+            ? SkinnedText("x$count", hideStroke: true)
+            : SizedBox(height: 48.d)
       ],
     );
   }
@@ -304,10 +311,11 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
           top: 8.d,
           width: 34.d,
           right: 3.d,
-          child: Text(
+          child: SkinnedText(
             "l_${indices.$2}".l(),
             style: TStyles.tiny,
             textAlign: TextAlign.center,
+            hideStroke: true,
           ))
     ]);
   }
@@ -347,9 +355,13 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                         child: SkinnedText(
                             "${"achievement_${line.type.id}_title".l()} $title")),
                     Positioned(
-                        bottom: 25.d,
-                        child: Text("achievement_${line.type.id}_message"
-                            .l([line.format(line.steps[value].max)]))),
+                      bottom: 25.d,
+                      child: SkinnedText(
+                        "achievement_${line.type.id}_message"
+                            .l([line.format(line.steps[value].max)]),
+                        hideStroke: true,
+                      ),
+                    ),
                     Positioned(
                         top: 40.d,
                         width: line.steps.length == 1 ? 230.d : null,

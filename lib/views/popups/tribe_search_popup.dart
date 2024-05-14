@@ -100,9 +100,13 @@ class _TribeSearchPopupState extends AbstractPopupState<TribeSearchPopup> {
         SizedBox(height: 12.d),
         Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Expanded(
-              child: Text("${tribe.description}\n",
-                  textDirection: tribe.description.getDirection(),
-                  style: TStyles.medium.copyWith(height: 1))),
+            child: SkinnedText(
+              "${tribe.description}\n",
+              textDirection: tribe.description.getDirection(),
+              style: TStyles.medium.copyWith(height: 1),
+              hideStroke: true,
+            ),
+          ),
           SizedBox(width: 12.d),
           Widgets.rect(
               height: 120.d,

@@ -22,8 +22,11 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
         children: [
           Asset.load<Image>("icon_potion", height: 210.d),
           SizedBox(height: 32.d),
-          Text("potion_description".l(),
-              style: TStyles.medium.copyWith(height: 2.7.d)),
+          SkinnedText(
+            "potion_description".l(),
+            style: TStyles.medium.copyWith(height: 2.7.d),
+            hideStroke: true,
+          ),
           Widgets.divider(margin: 36.d, width: 700.d),
           Widgets.slider(
             0,

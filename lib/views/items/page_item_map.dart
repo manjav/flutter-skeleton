@@ -317,9 +317,10 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  SkinnedText(
                     title,
                     style: TStyles.small.copyWith(color: TColors.white),
+                    hideStroke: true,
                   ),
                 ],
               )),

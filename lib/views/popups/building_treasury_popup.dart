@@ -24,8 +24,11 @@ class _TreasuryBuildingPopupState
           getBuildingIcon(),
           SkinnedText("level_l".l([building.level])),
           SizedBox(height: 16.d),
-          Text(descriptionBuilder(),
-              style: TStyles.medium.copyWith(height: 2.7.d)),
+          SkinnedText(
+            descriptionBuilder(),
+            style: TStyles.medium.copyWith(height: 2.7.d),
+            hideStroke: true,
+          ),
           SizedBox(height: 48.d),
           upgradeButton(state.account, building),
           Widgets.divider(margin: 36.d, width: 700.d),

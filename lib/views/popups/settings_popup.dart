@@ -57,7 +57,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
         child: Row(children: [
           Asset.load<Image>("icon_${setting.name}", height: 70.d),
           SizedBox(width: 20.d),
-          Text("settings_${setting.name}".l()),
+          SkinnedText("settings_${setting.name}".l(),hideStroke: true,),
           const Expanded(child: SizedBox()),
           IgnorePointer(child: action),
         ]),
@@ -135,7 +135,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Asset.load<Image>("icon_language", height: 70.d),
                 SizedBox(width: 20.d),
-                Text("settings_language".l()),
+                SkinnedText("settings_language".l(),hideStroke: true,),
               ]),
               SizedBox(height: 20.d),
               Expanded(

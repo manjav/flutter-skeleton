@@ -18,7 +18,7 @@ class _MessagePopupState extends AbstractPopupState<MessagePopup> {
   contentFactory() {
     var items = <Widget>[
       SizedBox(height: 64.d),
-      Text(widget.args["message"], style: TStyles.medium),
+      SkinnedText(widget.args["message"], style: TStyles.medium,hideStroke: true),
       SizedBox(height: 86.d),
     ];
     if (widget.args.containsKey("isConfirm")) {

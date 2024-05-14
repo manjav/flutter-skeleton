@@ -345,11 +345,13 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
           Expanded(child: child),
           description.isEmpty
               ? const SizedBox()
-              : Text(
+              : SkinnedText(
                   "${description}_desc"
                       .l([ShopData.boostDeadline.toRemainingTime()]),
                   style: TStyles.small.copyWith(height: 0.9),
-                  textAlign: TextAlign.center),
+                  textAlign: TextAlign.center,
+                  hideStroke: true,
+                ),
           SizedBox(height: description.isEmpty ? 0 : 20.d),
           IgnorePointer(
               child: SkinnedButton(

@@ -25,8 +25,11 @@ class _TribeDonatePopupState extends AbstractPopupState<TribeDonatePopup> {
   contentFactory() {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       SizedBox(height: 60.d),
-      Text("tribe_donate_description".l(),
-          style: TStyles.medium.copyWith(height: 1)),
+      SkinnedText(
+        "tribe_donate_description".l(),
+        style: TStyles.medium.copyWith(height: 1),
+        hideStroke: true,
+      ),
       SizedBox(height: 50.d),
       SizedBox(
           height: 320.d,

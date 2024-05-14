@@ -52,8 +52,11 @@ class _HeroEvolvePopupState extends AbstractPopupState<HeroEvolvePopup> {
               SizedBox(height: 32.d),
               HeroPopup.attributesBuilder(hero, hero.getNextLevelAttributes()),
               SizedBox(height: 32.d),
-              Text("hero_upgrade_description".l(),
-                  style: TStyles.medium.copyWith(height: 1.2)),
+              SkinnedText(
+                "hero_upgrade_description".l(),
+                style: TStyles.medium.copyWith(height: 1.2),
+                hideStroke: true,
+              ),
               Widgets.divider(margin: 36.d, width: 700.d),
               Widgets.slider(
                 0,
