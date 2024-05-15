@@ -61,12 +61,21 @@ class _ChooseNamePopupState extends AbstractPopupState<ChooseNamePopup> {
                   style:
                       TStyles.medium.copyWith(height: 3.d, color: TColors.red)),
               SizedBox(height: 15.d),
-              Text("profile_name_suggest".l(),
-                  style: TStyles.medium
-                      .copyWith(height: 3.d, color: TColors.primary20)),
+              StreamBuilder(
+                  stream: showError.stream,
+                  builder: (ctx, snapshot) {
+                    if (suggests.isEmpty) return const SizedBox();
+                    return SkinnedText(
+                "profile_name_suggest".l(),
+                style: TStyles.medium
+                    .copyWith(height: 3.d, color: TColors.primary20),
+                hideStroke: true,
+                    );
+                  }),
               StreamBuilder(
                   stream: selectedName.stream,
                   builder: (ctx, snapshot) {
+                    if (suggests.isEmpty) return const SizedBox();
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
