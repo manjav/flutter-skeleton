@@ -101,7 +101,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
-      var count = _cards.length > 2 ? 0 : _cards.length;
+      var count = _cards.length > 4 ? 0 : _cards.length;
       for (var i = 0; i < count; i++) {
         var card = _cards[i];
         updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
