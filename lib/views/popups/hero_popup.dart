@@ -283,7 +283,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   _itemActionBuilder(BaseHeroItem item, bool isAvailable, HeroCard? host) {
     if (isAvailable) {
       if (host != null) {
-        return _lockItem("icon_used", "${host.card.fruit.name}_t".l());
+        return _lockItem("icon_used", "${host.card.fruit.name}_title".l());
       }
       return SkinnedButton(
         width: 320.d,
@@ -330,7 +330,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     }
 
     if (host != null) {
-      toast("heroitem_used".l(["${host.card.fruit.name}_t".l()]));
+      toast("heroitem_used".l(["${host.card.fruit.name}_title".l()]));
       return;
     }
 
