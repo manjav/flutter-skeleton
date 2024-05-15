@@ -45,6 +45,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   late List<GlobalKey> _keys;
   final List<BaseHeroItem> _minions = [];
   final List<BaseHeroItem> _weapons = [];
+  final ValueNotifier<bool> onBuy = ValueNotifier(false);
 
   @override
   void initState() {
@@ -208,26 +209,35 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     var isWeapons = index > 1;
     var items = isWeapons ? _weapons : _minions;
     return Widgets.rect(
-        decoration: BoxDecoration(
-          color: TColors.primary90,
-          border: Border.all(color: TColors.clay, width: 8.d),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(80.d)),
-        ),
-        child: Column(
-          children: [
-            SizedBox(height: 20.d),
-            SkinnedText(isWeapons ? "weapons_l".l() : "minions_l".l(),
-                style: TStyles.large),
-            Expanded(
-                child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(100.d)),
-                    child: ListView.builder(
-                        padding: EdgeInsets.all(12.d),
-                        itemExtent: 240.d,
-                        itemBuilder: (c, i) => _itemBuilder(items[i], index),
-                        itemCount: items.length))),
-          ],
-        ));
+      decoration: BoxDecoration(
+        color: TColors.primary90,
+        border: Border.all(color: TColors.clay, width: 8.d),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(80.d)),
+      ),
+      child: Column(
+        children: [
+          SizedBox(height: 20.d),
+          SkinnedText(isWeapons ? "weapons_l".l() : "minions_l".l(),
+              style: TStyles.large),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(100.d)),
+              child: ValueListenableBuilder(
+                valueListenable: onBuy,
+                builder: (context, value, child) {
+                  return ListView.builder(
+                    padding: EdgeInsets.all(12.d),
+                    itemExtent: 240.d,
+                    itemBuilder: (c, i) => _itemBuilder(items[i], index),
+                    itemCount: items.length,
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget? _itemBuilder(BaseHeroItem item, int position) {
@@ -364,9 +374,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
           await _tryRPC(RpcId.buyHeroItem, {RpcParams.id.name: item.id});
       int id = result["heroitem_id"];
       _account.heroItems[id] = HeroItem(id, item, 0);
-    } finally {
-      setState(() {});
-    }
+      onBuy.value = true;
+    } finally {}
   }
 
   _tryRPC(RpcId id, Map<String, dynamic> params) async {
