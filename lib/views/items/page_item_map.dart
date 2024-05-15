@@ -122,9 +122,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           onClose: (d) async {
             services.changeState(ServiceStatus.punch, data: 1);
             bool haveHero = accountProvider.account
-                    .getReadyCards()
-                    .firstWhereOrNull((element) => element.base.isHero) !=
-                null;
+                    .heroes.isNotEmpty;
             //if buy hero success save as a breakPoint
             if (haveHero) {
               accountProvider.updateTutorial(
