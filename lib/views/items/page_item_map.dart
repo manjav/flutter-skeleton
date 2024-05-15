@@ -285,16 +285,19 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       Buildings.lab => Routes.popupPotion,
       _ => "",
     };
+
+    // Get availability level from account
+    if (!building.getIsAvailable(account)) {
+      return;
+    }
+    
     // Offense and defense buildings need tribe membership.
     if (type == Routes.popupSupportiveBuilding &&
         (account.tribe == null || account.tribe!.id <= 0)) {
       toast("error_149".l());
       return;
     }
-    // Get availability level from account
-    if (!building.getIsAvailable(account)) {
-      return;
-    }
+    
     if (type == "") {
       return;
     }
