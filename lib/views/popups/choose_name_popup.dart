@@ -66,10 +66,10 @@ class _ChooseNamePopupState extends AbstractPopupState<ChooseNamePopup> {
                   builder: (ctx, snapshot) {
                     if (suggests.isEmpty) return const SizedBox();
                     return SkinnedText(
-                "profile_name_suggest".l(),
-                style: TStyles.medium
-                    .copyWith(height: 3.d, color: TColors.primary20),
-                hideStroke: true,
+                      "profile_name_suggest".l(),
+                      style: TStyles.medium
+                          .copyWith(height: 3.d, color: TColors.primary20),
+                      hideStroke: true,
                     );
                   }),
               StreamBuilder(
