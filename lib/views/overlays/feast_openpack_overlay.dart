@@ -25,6 +25,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   late AnimationController _opacityAnimationController;
   late AnimationController _opacityBackgroundAnimationController;
   final Map<int, ImageAsset> _cardIconAssets = {}, _cardFrameAssets = {};
+  bool _heroSelected = false;
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       var maxCards = _cards.first.base.isHero ? 4 : 2;
       if (_cards.first.base.isHero) {
         _heroInput?.value = true;
+        setState(() {});
       }
       var count = _cards.length > maxCards ? 0 : _cards.length;
       if (count == 0) {
@@ -77,6 +79,22 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     updateRiveText("packDescriptionText", "shop_card_${_pack.id}_desc".l());
     getData();
     return controller;
+  }
+
+  @override
+  void onScreenTouched() {
+    if (state == RewardAnimationState.shown &&
+        !_heroSelected &&
+        _cards[0].base.isHero) {
+      return;
+    }
+    super.onScreenTouched();
+  }
+
+  @override
+  Widget closeButton() {
+    if (_cards.isNotEmpty && _cards[0].base.isHero) return const SizedBox();
+    return super.closeButton();
   }
 
   @override
@@ -121,8 +139,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       } else {
         updateRiveText("commentText", "tap_close".l());
       }
-    }
-    else if (state == RewardAnimationState.closing) {
+    } else if (state == RewardAnimationState.closing) {
       _opacityAnimationController.animateBack(0,
           duration: const Duration(milliseconds: 500));
       _opacityBackgroundAnimationController.reverse();
@@ -206,6 +223,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     process(() async {
       var result = await accountProvider.openPack(context, _pack,
           selectedCardId: _cards[index].base.id);
+      _heroSelected = true;
       return result;
     });
   }
