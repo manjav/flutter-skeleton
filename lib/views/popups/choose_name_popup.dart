@@ -140,6 +140,8 @@ class _ChooseNamePopupState extends AbstractPopupState<ChooseNamePopup> {
           accountProvider.account.is_name_temp = false;
           accountProvider.update(context, result);
 
+          accountProvider.updateTutorial(context, 302, 302);
+
           serviceLocator<RouteService>().popUntil((route) => route.isFirst);
           services.changeState(ServiceStatus.changeTab, data: {"index": 2});
         }

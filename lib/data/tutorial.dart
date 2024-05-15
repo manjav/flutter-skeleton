@@ -1468,7 +1468,6 @@ class Tutorial {
                 "sarhang_says_that's_a_great_name_and_asks_where_they_came_from",
             "side": DialogueSide.left,
             "delay": 100,
-            "breakPoint": true,
           },
         ],
       },
