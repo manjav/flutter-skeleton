@@ -71,7 +71,7 @@ class _TutorialOverlayState extends AbstractOverlayState<TutorialOverlay> {
         ignoring: value,
         child: GestureDetector(
           onTap: () async {
-            if (!isEnded) return;
+            if (widget.showCharacter && !isEnded) return;
             show.value = false;
             await Future.delayed(700.ms);
             if (widget.onTap != null) widget.onTap!();
