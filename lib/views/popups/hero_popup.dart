@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
@@ -243,43 +244,54 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   Widget? _itemBuilder(BaseHeroItem item, int position) {
     var host = item.getHost(_heroes);
     var heroItem = item.getUsage(_account.heroItems.values.toList());
+    bool haveItem = _account.heroItems.values
+            .firstWhereOrNull((element) => element.base.id == item.id) !=
+        null;
     var isActive = host == null || heroItem != null;
     return Widgets.button(context,
         radius: 44.d,
         color: TColors.primary80,
         margin: EdgeInsets.all(12.d),
         padding: EdgeInsets.all(12.d),
-        child: Row(children: [
-          Opacity(
-              opacity: isActive ? 1 : 0.5,
-              child: Asset.load<Image>("heroitem_${item.image}",
-                  width: 180.d, height: 180.d)),
-          SizedBox(width: 24.d),
-          Expanded(
-              child: Opacity(
-            opacity: isActive ? 1 : 0.6,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SkinnedText("heroitem_${item.id}".l()),
-                  Expanded(
-                      child: Text("heroitem_${item.id}_description".l(),
-                          style: TStyles.small.copyWith(height: 1))),
-                  Row(children: [
-                    _itemAttributeBuilder(item, HeroAttribute.blessing),
-                    _itemAttributeBuilder(item, HeroAttribute.power),
-                    _itemAttributeBuilder(item, HeroAttribute.wisdom),
-                  ])
-                ]),
-          )),
-          SizedBox(width: 12.d),
-          Widgets.rect(
+        child: Row(
+          children: [
+            Opacity(
+                opacity: isActive ? 1 : 0.5,
+                child: Asset.load<Image>("heroitem_${item.image}",
+                    width: 180.d, height: 180.d)),
+            SizedBox(width: 24.d),
+            Expanded(
+                child: Opacity(
+              opacity: isActive ? 1 : 0.6,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SkinnedText("heroitem_${item.id}".l()),
+                    Expanded(
+                      child: SkinnedText(
+                        "heroitem_${item.id}_description".l(),
+                        style: TStyles.small.copyWith(height: 1),
+                        hideStroke: true,
+                      ),
+                    ),
+                    Row(children: [
+                      _itemAttributeBuilder(item, HeroAttribute.blessing),
+                      _itemAttributeBuilder(item, HeroAttribute.power),
+                      _itemAttributeBuilder(item, HeroAttribute.wisdom),
+                    ])
+                  ]),
+            )),
+            SizedBox(width: 12.d),
+            Widgets.rect(
               alignment: Alignment.center,
               width: 200.d,
               child: IgnorePointer(
-                  child: _itemActionBuilder(item, heroItem != null, host))),
-        ]),
+                child: _itemActionBuilder(item, haveItem, host),
+              ),
+            ),
+          ],
+        ),
         onPressed: () => _setItem(item, position, heroItem, host));
   }
 
