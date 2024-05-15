@@ -133,7 +133,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     return SizedBox(
       width: DeviceInfo.size.width,
       child: Stack(alignment: Alignment.center, children: [
-        LoaderWidget(AssetType.animation, "quest_map_0",
+        LoaderWidget(AssetType.animation, "quest_map_${widget.index % 2}",
             onRiveInit: (Artboard artboard) {
           var controller = StateMachineController.fromArtboard(artboard, "Map");
           controller?.addEventListener((event) => _riveEventsListener(event));
