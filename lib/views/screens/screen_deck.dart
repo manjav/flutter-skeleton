@@ -519,8 +519,8 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var opponentPower = "????";
     if (opponent.isRevealed) {
       opponentPower = opponent.defPower.compact();
-    } else if (widget.args["opponent"] == null) {
-      opponentPower = "~${opponent.defPower.compact()}";
+    } else {
+      opponentPower = powerRatingText(opponent.powerRatio);
     }
     return Expanded(
       child: Stack(
@@ -572,6 +572,21 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     //         SizedBox(height: 16.d)
     //       ]),
     // );
+  }
+
+  String powerRatingText(int powerRatio) {
+    switch (powerRatio) {
+      case 1:
+        return "weak".l();
+      case 2:
+        return "average".l();
+      case 3:
+        return "strong".l();
+      case 4:
+        return "very_strong".l();
+      default:
+        return "";
+    }
   }
 
 /* This function returns the power of the next quest.
