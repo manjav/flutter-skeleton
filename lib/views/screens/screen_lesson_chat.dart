@@ -3,14 +3,14 @@ import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
-class LessonSpeakScreen extends AbstractScreen {
-  LessonSpeakScreen({super.key}) : super(Routes.speak);
+class LessonChatScreen extends AbstractScreen {
+  LessonChatScreen({super.key}) : super(Routes.chat);
 
   @override
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<LessonSpeakScreen>
+class _ScreenState extends AbstractScreenState<LessonChatScreen>
     with LessonChatMixin {
   @override
   Future<void> startQuiz(Content child) async {

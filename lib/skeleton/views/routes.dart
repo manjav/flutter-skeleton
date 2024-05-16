@@ -1,9 +1,8 @@
 class Routes {
   static const home = "/";
-  static const intro = "/intro";
-  static const speak = "/speak";
-  static const dictation = "/listen";
   static const chat = "/chat";
+  static const intro = "/intro";
+  static const dictation = "/dictation";
   static const word = "/word";
   static const match = "/match";
   static const onboarding = "/onboarding";
