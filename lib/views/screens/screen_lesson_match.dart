@@ -42,7 +42,7 @@ class _ScreenState extends AbstractScreenState<LessonMatchScreen> {
                     steps[i].targetValue,
                     steps[i].nativeValue,
                   )),
-          onSelect: (text, isCorrect) => onQuizResult(context, isCorrect),
+          onSelect: (text, isCorrect) => onStepResult(context, isCorrect),
         ),
         Positioned(
           top: 0,
@@ -93,24 +93,24 @@ class _ScreenState extends AbstractScreenState<LessonMatchScreen> {
   }
 
   @override
-  Future<void> nextStep(BuildContext context) async {
-    await super.nextStep(context);
+  Future<void> changeStep(BuildContext context, int step) async {
+    await super.changeStep(context, step);
     if (index.value < steps.length) {
       serviceLocator<Dictator>().initialize(args: [steps[index.value]]);
     }
   }
 
   @override
-  void startQuiz(Content child) {
+  void runStep(Content child) {
     serviceLocator<Dictator>().start(onResult: _onQuizResult);
   }
 
   Future<void> _onQuizResult(QuizState state, String value) async {
     var state = serviceLocator<Dictator>().state.value;
     if (state == QuizState.success) {
-      onQuizResult(context, true);
+      onStepResult(context, true);
     } else if (state == QuizState.fail) {
-      onQuizResult(context, false);
+      onStepResult(context, false);
       await Future.delayed(const Duration(seconds: 1));
       serviceLocator<Dictator>().reset();
     }

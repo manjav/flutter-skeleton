@@ -12,7 +12,7 @@ mixin LessonChatMixin<S extends AbstractScreen>
   @override
   void initState() {
     steps = Get.arguments["content"].children;
-    nextStep(context);
+    changeStep(context, 1);
     super.initState();
   }
 

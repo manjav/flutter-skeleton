@@ -81,7 +81,7 @@ mixin LessonMixin {
     );
   }
 
-  Future<void> nextStep(BuildContext context) async {
+  Future<void> changeStep(BuildContext context, int step) async {
     if (index.value >= steps.length) {
       var len = (steps.length / 2).round();
       var corrects = len - _fouls.max(5);
@@ -99,7 +99,7 @@ mixin LessonMixin {
     if (child.type == ContentType.bot) {
       if (!context.mounted) return;
       await updateContent();
-      index.value += 1;
+      index.value += step;
       await serviceLocator<Speaker>()
           .play(child.targetValue, narrator: child.type.narrator);
       child = steps[index.value];
@@ -107,10 +107,10 @@ mixin LessonMixin {
 
     if (!context.mounted) return;
     headerSize.value = getFooterHeight(context);
-    startQuiz(child);
+    runStep(child);
   }
 
-  void startQuiz(Content child) {}
+  void runStep(Content child) {}
 
   double getFooterHeight(BuildContext context) {
     double height = 500.d;
@@ -124,7 +124,7 @@ mixin LessonMixin {
 
   updateContent() {}
 
-  Future<void> onQuizResult(BuildContext context, bool isSuccess) async {
+  Future<void> onStepResult(BuildContext context, bool isSuccess) async {
     if (isSuccess) {
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
       _streakCorrects++;
@@ -140,7 +140,7 @@ mixin LessonMixin {
 
       await Future.delayed(const Duration(milliseconds: 500));
       if (!context.mounted) return;
-      nextStep(context);
+      changeStep(context, 1);
     } else {
       ++_fouls;
       _streakCorrects = 0;

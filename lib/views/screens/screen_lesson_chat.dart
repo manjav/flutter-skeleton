@@ -13,7 +13,7 @@ class LessonChatScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<LessonChatScreen>
     with LessonChatMixin {
   @override
-  Future<void> startQuiz(Content child) async {
+  Future<void> runStep(Content child) async {
     // await Future.delayed(const Duration(seconds: 2));
     // _onQuizResult(QuizState.success, child.targetValue);
 
@@ -33,10 +33,10 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
       await Future.delayed(duration);
       serviceLocator<STT>().state.value = QuizState.none;
       if (mounted) {
-        onQuizResult(context, true);
+        onStepResult(context, true);
       }
     } else if (state == QuizState.fail) {
-      onQuizResult(context, false);
+      onStepResult(context, false);
       await Future.delayed(duration);
       serviceLocator<STT>().start();
     }

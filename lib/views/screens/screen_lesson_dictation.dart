@@ -12,24 +12,24 @@ class LessonDictationScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<LessonDictationScreen>
     with LessonChatMixin {
   @override
-  Future<void> nextStep(BuildContext context) async {
+  Future<void> changeStep(BuildContext context, [int step = 1]) async {
     if (index.value < steps.length) {
       serviceLocator<Dictator>().initialize(args: [steps[index.value + 1]]);
     }
-    await super.nextStep(context);
+    await super.changeStep(context, step);
   }
 
   @override
-  void startQuiz(Content child) {
-    serviceLocator<Dictator>().start(onResult: _onQuizResult);
+  void runStep(Content child) {
+    serviceLocator<Dictator>().start(onResult: _onDictationResult);
   }
 
-  Future<void> _onQuizResult(QuizState state, String value) async {
+  Future<void> _onDictationResult(QuizState state, String value) async {
     var state = serviceLocator<Dictator>().state.value;
     if (state == QuizState.success) {
-      onQuizResult(context, true);
+      onStepResult(context, true);
     } else if (state == QuizState.fail) {
-      onQuizResult(context, false);
+      onStepResult(context, false);
       await Future.delayed(const Duration(seconds: 1));
       serviceLocator<Dictator>().reset();
     }
