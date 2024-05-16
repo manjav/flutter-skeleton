@@ -147,7 +147,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                 opponent.getGoldLevel(_account.level).floorToDouble();
 
             controller.findInput<double>('building')?.value =
-                random.nextInt(4).floorToDouble();
+                opponent.powerRatio.toDouble();
             controller.findInput<double>('theme')?.value =
                 opponent.theme.toDouble();
 
