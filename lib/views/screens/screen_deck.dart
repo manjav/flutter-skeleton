@@ -585,7 +585,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
       case 4:
         return "very_strong".l();
       default:
-        return "";
+        return "average".l();
     }
   }
 
