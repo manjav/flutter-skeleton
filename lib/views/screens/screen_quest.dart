@@ -164,6 +164,17 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     WidgetsBinding.instance.addPostFrameCallback((d) async {
       _questsCount = accountProvider.account.questsCount - 1;
       if (event.name == "click") {
+        //check is boss fight
+        if (isBossFight()) {
+          Overlays.insert(
+            context,
+            MatchingFeastOverlay(
+              args: const {},
+              onClose: (data) => serviceLocator<RouteService>().to(Routes.deck),
+            ),
+          );
+          return;
+        }
         serviceLocator<RouteService>().to(Routes.deck);
       } else if (event.name == "loading") {
         // Load city positions
@@ -185,6 +196,10 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
         widget.arena.value = positions;
       }
     });
+  }
+
+  bool isBossFight() {
+    return accountProvider.account.questsCount % 10 == 0;
   }
 
   Widget _cityRenderer(int index, City city) {
