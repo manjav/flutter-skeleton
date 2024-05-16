@@ -20,6 +20,8 @@ class _PurchaseFeastOverlayState
     extends AbstractOverlayState<PurchaseFeastOverlay>
     with RewardScreenMixin, BackgroundMixin {
   late ShopItemVM _item;
+  List<int> _avatars = [];
+  bool _avatarSelected = false;
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _PurchaseFeastOverlayState
     _item = widget.args["item"] ??
         accountProvider
             .account.loadingData.shopProceedItems![ShopSections.gold]![1];
+    _avatars = widget.args["avatars"] ?? [];
 
     process(() async {
       if (!_item.inStore) {
@@ -42,8 +45,18 @@ class _PurchaseFeastOverlayState
       } else {
         await Future.delayed(const Duration(milliseconds: 500));
       }
-      return true; //await rpc(RpcId.buyGoldPack, params: params);
+      return true;
     });
+  }
+
+    @override
+  void onScreenTouched() {
+    if (state == RewardAnimationState.shown &&
+        !_avatarSelected &&
+        _item.base.reward.isNotEmpty) {
+      return;
+    }
+    super.onScreenTouched();
   }
 
   @override
@@ -61,8 +74,9 @@ class _PurchaseFeastOverlayState
   Future<bool> onRiveAssetLoad(
       FileAsset asset, Uint8List? embeddedBytes) async {
     if (asset is ImageAsset) {
-      if (asset.name == "reward") {
-        _loadRewardIcon(asset, "avatar_109");
+      if (asset.name.startsWith("reward")) {
+        var index = int.parse(asset.name.replaceAll("reward", ""));
+        _loadRewardIcon(asset, "avatar_${_avatars[index]}");
         return true;
       } else if (asset.name == "item") {
         _loadItemIcon(asset);
@@ -70,6 +84,26 @@ class _PurchaseFeastOverlayState
       }
     }
     return super.onRiveAssetLoad(asset, embeddedBytes);
+  }
+
+  @override
+  onRiveEvent(RiveEvent event) {
+    if (event.name.startsWith("choose")) {
+      selectAvatar(event.properties["choose"].toInt());
+    }
+    super.onRiveEvent(event);
+  }
+
+  selectAvatar(int index) async {
+    process(() async {
+      await serviceLocator<HttpConnection>().tryRpc(
+          context, RpcId.setProfileInfo,
+          params: {"avatar_id": _avatars[index]});
+      accountProvider.account.avatarId = _avatars[index];
+      accountProvider.update();
+      _avatarSelected = true;
+      return true;
+    });
   }
 
   Future<void> _loadRewardIcon(ImageAsset asset, String name) async =>

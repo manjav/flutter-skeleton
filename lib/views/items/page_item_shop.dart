@@ -487,7 +487,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       "store": FlavorConfig.instance.variables["storeId"]
     };
 
-    await rpc(RpcId.buyGoldPack, params: params);
+    var res = await rpc(RpcId.buyGoldPack, params: params);
 
     await serviceLocator<Payment>().consume(purchase: details);
 
@@ -496,7 +496,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       Overlays.insert(
         context,
         PurchaseFeastOverlay(
-          args: {"item": item},
+          args: {"item": item, "avatars": res["avatars"]},
         ),
       );
     }
