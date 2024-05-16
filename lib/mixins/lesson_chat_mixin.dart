@@ -5,8 +5,8 @@ import '../app_export.dart';
 
 mixin LessonChatMixin<S extends AbstractScreen>
     on AbstractScreenState<S>, LessonMixin {
-  final List<Talk> _chatItems = [];
-  final _chatListKey = GlobalKey<AnimatedListState>();
+  final List<Talk> _animatedItems = [];
+  final _animatedListKey = GlobalKey<AnimatedListState>();
   final ScrollController _chatScrollController = ScrollController();
 
   @override
@@ -29,11 +29,11 @@ mixin LessonChatMixin<S extends AbstractScreen>
     return Stack(
       children: [
         AnimatedList(
-            key: _chatListKey,
+            key: _animatedListKey,
             controller: _chatScrollController,
             padding: EdgeInsets.fromLTRB(padding, paddingTop + padding * 6,
                 padding, getFooterHeight(context)),
-            itemBuilder: (c, i, a) => _chatItemBuilder(_chatItems[i], a)),
+            itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a)),
         Positioned(
           top: paddingTop,
           left: 0,
@@ -83,7 +83,7 @@ mixin LessonChatMixin<S extends AbstractScreen>
 
   Widget footerBuilder() => const SizedBox();
 
-  Widget _chatItemBuilder(Talk talk, Animation<double> animation) {
+  Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
     var tip = talk.type == ContentType.user
         ? BalloonTipPosition.rightBottom
         : BalloonTipPosition.leftTop;
@@ -107,14 +107,14 @@ mixin LessonChatMixin<S extends AbstractScreen>
   }
 
   @override
-  updateContent() async => await _insertChat();
+  updateContent() async => await _insertItem();
 
-  Future<void> _insertChat() async {
+  Future<void> _insertItem() async {
     var talk = steps[index.value] as Talk;
     const duration = Duration(milliseconds: 500);
 
-    _chatListKey.currentState?.insertItem(_chatItems.length);
-    _chatItems.add(talk);
+    _animatedListKey.currentState?.insertItem(_animatedItems.length);
+    _animatedItems.add(talk);
     await Future.delayed(const Duration(milliseconds: 1));
     await _chatScrollController.animateTo(
         _chatScrollController.position.maxScrollExtent,
