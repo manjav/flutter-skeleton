@@ -10,6 +10,9 @@ class Content {
     index = map["index"];
   }
 
+  bool get isChat => type == ContentType.bot || type == ContentType.user;
+  bool get isQuiz => type == ContentType.user;
+
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];
     for (var entry in map.entries) {
@@ -64,6 +67,8 @@ class GroupContent extends ParentContent {
 
 class Talk extends Content {
   String personId = "";
+  bool get isName => personId == "name";
+
   Set<String> get words => {...targetValue.split(" ")};
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
@@ -72,11 +77,15 @@ class Talk extends Content {
     personId = map["person_id"];
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
-    type = index % 2 == 0 ? ContentType.bot : ContentType.user;
+    if (personId.startsWith(parent.id)) {
+      type = personId.endsWith("2") ? ContentType.bot : ContentType.user;
+    } else {
+      type = personId == "image" ? ContentType.image : ContentType.hint;
+    }
   }
 }
 
-enum ContentType { none, category, group, hint, user, bot }
+enum ContentType { none, category, group, hint, user, bot, image }
 
 extension ContentTypeExtension on ContentType {
   static ContentType getEnum(String type) {
