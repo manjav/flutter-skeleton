@@ -1,116 +1,140 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:lingai/services/lesson_controller.dart';
 
 import '../app_export.dart';
 
 mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  List<Content> steps = [];
-  double headerHeight = 76.d;
   final GlobalKey footerKey = GlobalKey();
-  int _fouls = 0, _streakCorrects = 0, _maxCorrects = 0;
-  final ValueNotifier<int> index = ValueNotifier(0);
-  final ValueNotifier<double> headerSize = ValueNotifier(0);
+  final LessonController controller = LessonController();
+  double padding = 12.d;
 
-  Widget headerBuilder(BuildContext context, ValueNotifier<int> index,
-      EdgeInsetsGeometry padding, String title, List<Content> group) {
-    return Widgets.rect(
-      padding: padding,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [
-              0.7,
-              1
-            ],
-            colors: <Color>[
-              TColors.primary10,
-              TColors.primary10.withOpacity(0)
-            ]),
-      ),
-      child: Row(
-        children: [
-          Avatar("person", 64.d),
-          SizedBox(width: 12.d),
-          Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: index,
-              builder: (context, value, child) => Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title),
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                    tween: Tween(
-                      begin: (value - 1) / steps.length,
-                      end: value / steps.length,
+  @override
+  List<Widget> appBarElementsLeft() => [];
+
+  @override
+  Widget contentFactory(double paddingTop) {
+    if (controller.steps.isEmpty) {
+      return const SizedBox();
+    }
+
+    return Stack(
+      children: [
+        childBuilder(paddingTop),
+        headerBuilder(paddingTop, Get.arguments["content"].title),
+        footerChromeBuilder(),
+      ],
+    );
+  }
+
+  Widget headerBuilder(double paddingTop, String title) {
+    return Positioned(
+      top: paddingTop,
+      left: 0,
+      right: 0,
+      child: Widgets.rect(
+        padding: EdgeInsets.fromLTRB(padding, paddingTop, paddingTop, 0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [
+                0.7,
+                1
+              ],
+              colors: <Color>[
+                TColors.primary10,
+                TColors.primary10.withOpacity(0)
+              ]),
+        ),
+        child: Row(
+          children: [
+            Avatar("person", 64.d),
+            SizedBox(width: 12.d),
+            Expanded(
+              child: ValueListenableBuilder(
+                valueListenable: controller.stepIndex,
+                builder: (context, value, child) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title),
+                    TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      tween: Tween(
+                        begin: value / controller.steps.length,
+                        end: (value + 1) / controller.steps.length,
+                      ),
+                      builder: (context, value, _) => LinearProgressIndicator(
+                        minHeight: 6.d,
+                        value: value,
+                        color: TColors.green,
+                        backgroundColor: TColors.primary20,
+                        borderRadius: BorderRadius.all(Radius.circular(6.d)),
+                      ),
                     ),
-                    builder: (context, value, _) => LinearProgressIndicator(
-                      minHeight: 6.d,
-                      value: value,
-                      color: TColors.green,
-                      backgroundColor: TColors.primary20,
-                      borderRadius: BorderRadius.all(Radius.circular(6.d)),
+                    Text(
+                      "${value + 1} / ${controller.steps.length}",
+                      style: TStyles.small.copyWith(color: TColors.primary30),
                     ),
-                  ),
-                  Text(
-                    "${index.value} / ${steps.length}",
-                    style: TStyles.small.copyWith(color: TColors.primary30),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 12.d),
-          Widgets.button(
-            context,
-            width: 32.d,
-            height: 32.d,
-            radius: 32.d,
-            padding: EdgeInsets.all(8.d),
-            color: TColors.primary20,
-            child: Asset.load<SvgPicture>("close"),
-            onPressed: () => Navigator.pop(context),
-          )
-        ],
+            SizedBox(width: 12.d),
+            Widgets.button(
+              context,
+              width: 32.d,
+              height: 32.d,
+              radius: 32.d,
+              color: TColors.primary20,
+              padding: EdgeInsets.all(8.d),
+              child: Asset.load<SvgPicture>("close"),
+              onPressed: () => Navigator.pop(context),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Future<void> changeStep(BuildContext context, int step) async {
-    if (index.value >= steps.length) {
-      var len = (steps.length / 2).round();
-      var corrects = len - _fouls.max(5);
-      debugPrint(
-          "${corrects * 100 / len}% $corrects $_maxCorrects $len   ${3 - _fouls.max(2)}");
-      await Future.delayed(const Duration(milliseconds: 500));
-      if (context.mounted) {
-        Navigator.pop(context, 3 - _fouls.max(2));
-      }
-      return;
-    }
-    var child = steps[index.value];
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    if (child.type == ContentType.bot) {
-      if (!context.mounted) return;
-      await updateContent();
-      index.value += step;
-      await serviceLocator<Speaker>()
-          .play(child.targetValue, narrator: child.type.narrator);
-      child = steps[index.value];
-    }
-
-    if (!context.mounted) return;
-    headerSize.value = getFooterHeight(context);
-    runStep(child);
+  Widget footerChromeBuilder() {
+    return ValueListenableBuilder(
+        valueListenable: controller.stepIndex,
+        builder: (context, value, child) {
+          var talk = controller.steps[controller.stepIndex.value] as Talk;
+          if (!talk.isQuiz) return const SizedBox();
+          return Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            // curve: value == 0 ? Curves.easeIn : Curves.easeOutBack,
+            // duration: const Duration(milliseconds: 300),
+            child: Container(
+              key: footerKey,
+              decoration: BoxDecoration(
+                color: TColors.primary0,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(32.d),
+                  topRight: Radius.circular(32.d),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 7,
+                    spreadRadius: 5,
+                    color: TColors.primary20,
+                    offset: Offset(0, -2.d), // changes position of shadow
+                  ),
+                ],
+              ),
+              padding: EdgeInsets.fromLTRB(16.d, 12.d, 16.d, 8.d),
+              child: footerBuilder(),
+            ),
+          );
+        });
   }
-
-  void runStep(Content child) {}
 
   double getFooterHeight(BuildContext context) {
     double height = 500.d;
@@ -122,29 +146,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     return height;
   }
 
-  updateContent() {}
+  Widget footerBuilder() => const SizedBox();
 
-  Future<void> onStepResult(BuildContext context, bool isSuccess) async {
-    if (isSuccess) {
-      serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
-      _streakCorrects++;
-      _maxCorrects = _streakCorrects.min(_maxCorrects);
-
-      // Waiting for celebration
-      await Future.delayed(const Duration(milliseconds: 500));
-      if (!context.mounted) return;
-
-      headerSize.value = 0;
-      await updateContent();
-      index.value += 1;
-
-      await Future.delayed(const Duration(milliseconds: 500));
-      if (!context.mounted) return;
-      changeStep(context, 1);
-    } else {
-      ++_fouls;
-      _streakCorrects = 0;
-      serviceLocator<Sounds>().play("wrong");
-    }
-  }
+  Widget childBuilder(double paddingTop) => const SizedBox();
 }
