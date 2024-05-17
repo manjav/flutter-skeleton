@@ -32,6 +32,7 @@ class RadioBox extends StatelessWidget {
           ? MainAxisAlignment.start
           : MainAxisAlignment.end;
     }
+    simplify(text) => text?.replaceAll(RegExp(r'[ًٍَُِّ]'), '');
     return Row(
       mainAxisAlignment: alignment,
       children: [
@@ -54,20 +55,22 @@ class RadioBox extends StatelessWidget {
                     strokeColor: strokeColor),
                 child: Column(
                   children: [
+                    DirText(
+                      simplify(text),
                       style: textStyle ?? TStyles.medium,
                       textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: translation == null ? 0 : 4.d),
                     translation == null
                         ? const SizedBox()
-                        : DirText(translation!,
+                        : DirText(simplify(translation!),
                             style: TStyles.small
                                 .copyWith(color: TColors.primary40)),
                   ],
                 )),
             Positioned(
               top: margin - 2.d,
-              right: translation != null ? null : 30.d,
+              // right: translation != null ? null : 30.d,
               child: SpeakerBox(
                 narrator: narrator!,
                 value: text,
