@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../app_export.dart';
 
-mixin LessonMixin {
+mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   List<Content> steps = [];
   double headerHeight = 76.d;
   final GlobalKey footerKey = GlobalKey();

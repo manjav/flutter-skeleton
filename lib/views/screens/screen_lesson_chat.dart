@@ -11,7 +11,8 @@ class LessonChatScreen extends AbstractScreen {
 }
 
 class _ScreenState extends AbstractScreenState<LessonChatScreen>
-    with LessonChatMixin {
+    with LessonMixin {
+
   @override
   Future<void> runStep(Content child) async {
     // await Future.delayed(const Duration(seconds: 2));
