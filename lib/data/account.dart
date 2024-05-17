@@ -11,7 +11,7 @@ class AccountProvider extends ChangeNotifier {
   Map<String, Word> words = {};
   List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
-
+  
   void initialize(dynamic account) {
     this.account = account;
     metadata = jsonDecode(account.user.metadata!);
@@ -57,7 +57,7 @@ class AccountProvider extends ChangeNotifier {
     var talks = <Talk>[];
     for (var i = 0; i < list.length; i++) {
       talks.add(
-        Talk.create(i, list[i], account.user.langTag!,
+        Talk.create(group, i, list[i], account.user.langTag!,
             metadata["targetLanguage"], account.user.displayName!),
       );
     }

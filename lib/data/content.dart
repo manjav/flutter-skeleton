@@ -3,21 +3,22 @@ import 'package:lingai/app_export.dart';
 class Content {
   int index = 0;
   final String id;
+  final Content? parent;
   ContentType type = ContentType.none;
   String nativeValue = "", targetValue = "";
-  Content.create(this.id, Map map) {
+  Content.create(this.parent, this.id, Map map) {
     index = map["index"];
   }
 
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];
     for (var entry in map.entries) {
+      var category = ParentContent.create(null, entry.key, entry.value);
       var groups = <GroupContent>[];
       for (var gentry in entry.value["groups"].entries) {
-        groups.add(GroupContent.create(gentry.key, gentry.value));
+        groups.add(GroupContent.create(category, gentry.key, gentry.value));
       }
       groups.sort((a, b) => a.index - b.index);
-      var category = ParentContent.create(entry.key, entry.value);
       category.type = ContentType.category;
       category.children = groups;
       categories.add(category);
@@ -30,15 +31,16 @@ class Content {
 class ParentContent extends Content {
   List<Content> children = [];
   String title = "", description = "", iconUrl = "";
-  ParentContent.create(String id, Map map) : super.create(id, map) {
+  ParentContent.create(Content? parent, String id, Map map)
+      : super.create(parent, id, map) {
     title = map["title"];
-    description = map["description"]??"";
-    iconUrl = map["iconUrl"]??"";
+    description = map["description"] ?? "";
+    iconUrl = map["iconUrl"] ?? "";
   }
 }
 
 class GroupContent extends ParentContent {
-  GroupContent.create(super.id, super.map) : super.create() {
+  GroupContent.create(super.parent, super.id, super.map) : super.create() {
     type = ContentType.group;
   }
 
@@ -52,8 +54,8 @@ class GroupContent extends ParentContent {
     //   all.addAll((talk as Talk).words);
     // }
     for (var i = 0; i < ids.length; i++) {
-      result.add(Word.create(
-          ids[i], {"native": natives[i], "target": targets[i], "index": i}));
+      result.add(Word.create(parent, ids[i],
+          {"native": natives[i], "target": targets[i], "index": i}));
     }
 
     return result;
@@ -63,9 +65,9 @@ class GroupContent extends ParentContent {
 class Talk extends Content {
   String personId = "";
   Set<String> get words => {...targetValue.split(" ")};
-  Talk.create(int index, Map map, String nativeLanguage, String targetLanguage,
-      String name)
-      : super.create(map["id"], map) {
+  Talk.create(Content parent, int index, Map map, String nativeLanguage,
+      String targetLanguage, String name)
+      : super.create(parent, map["id"], map) {
     this.index = index;
     personId = map["person_id"];
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
@@ -96,7 +98,8 @@ class Word extends Content {
   DateTime? firstReview;
   DateTime? lastReview;
   DateTime? nextReview;
-  Word.create(String id, Map map) : super.create(id, map) {
+  Word.create(Content? parent, String id, Map map)
+      : super.create(parent, id, map) {
     count = map["count"] ?? 0;
     nativeValue = map["native"] ?? "";
     targetValue = map["target"] ?? "";
@@ -106,7 +109,8 @@ class Word extends Content {
     nextReview = DateExtension.fromDaysSinceEpoch(map["next"]);
   }
 
-  static Word fromMap(String id, Map map) => Word.create(id, map);
+  static Word fromMap(Content? parent, String id, Map map) =>
+      Word.create(parent, id, map);
 
   Map<String, dynamic> toMap() {
     return {
@@ -122,7 +126,7 @@ class Word extends Content {
   static Map<String, Word> allFromMap(Map data) {
     var map = <String, Word>{};
     for (var entry in data.entries) {
-      map[entry.key] = Word.fromMap(entry.key, entry.value);
+      map[entry.key] = Word.fromMap(null, entry.key, entry.value);
     }
     return map;
   }
