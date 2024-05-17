@@ -60,20 +60,20 @@ class RadioBox extends StatelessWidget {
                 width: margin * 2,
               ),
             ),
-            translation != null
+            /* translation != null
                 ? const SizedBox()
                 : Positioned(
                     top: 0,
                     right: 76.d,
                     child: _button(context, Asset.load<SvgPicture>("?"),
-                        margin * 2, _translate))
+                        margin * 2, _translate)) */
           ],
         ),
       ],
     );
   }
 
-  Widget _button(
+  /* Widget _button(
       BuildContext context, Widget child, double size, Function() onPressed) {
     return Widgets.button(context,
         color: TColors.transparent,
@@ -92,7 +92,7 @@ class RadioBox extends StatelessWidget {
         onPressed: onPressed);
   }
 
-  _translate() {}
+  _translate() {} */
 }
 
 class SpeakerBox extends StatelessWidget {
