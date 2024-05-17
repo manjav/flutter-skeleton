@@ -167,13 +167,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           await serviceLocator<AccountProvider>().loadTalks(group);
         }
 
-        var routName =
-            group.children.where((t) => (t as Talk).personId == "name").isEmpty
-                ? Routes.speak
-                : Routes.intro;
+        // var routName =
+        //     group.children.where((t) => (t as Talk).personId == "name").isEmpty
+        //         ? Routes.chat
+        //         : Routes.intro;
 
         // print(group.words);
-        var s = await Get.toNamed(routName,
+        var s = await Get.toNamed(Routes.chat,
             arguments: {"content": group, "challengeMode": type == 2});
         if (s == null || s <= scoreNotifier.value) return;
         await serviceLocator<AccountProvider>().saveScore(id, s);

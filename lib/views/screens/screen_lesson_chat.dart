@@ -12,19 +12,128 @@ class LessonChatScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<LessonChatScreen>
     with LessonMixin {
+  final List<Talk> _animatedItems = [];
+  final _animatedListKey = GlobalKey<AnimatedListState>();
+  final ScrollController _chatScrollController = ScrollController();
 
   @override
-  Future<void> runStep(Content child) async {
-    // await Future.delayed(const Duration(seconds: 2));
-    // _onQuizResult(QuizState.success, child.targetValue);
+  void initState() {
+    controller.steps = Get.arguments["content"].children;
+    // if (!controller.steps[1].isChat) controller.steps.removeRange(1, 3); // Temp
+    controller.onQuizStart = _startQuizCallback;
+    controller.onQuizEnd = _endQuizCallback;
+    controller.changeStep(1);
+    super.initState();
+  }
 
+  @override
+  Widget childBuilder(double paddingTop) {
+    return AnimatedList(
+        key: _animatedListKey,
+        controller: _chatScrollController,
+        padding: EdgeInsets.fromLTRB(
+            padding, paddingTop + padding * 6, padding, 300.d),
+        itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a));
+  }
+
+  Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
+    return ScaleTransition(
+      alignment: switch (talk.type) {
+        ContentType.user => Alignment.bottomRight,
+        ContentType.bot => Alignment.topLeft,
+        _ => Alignment.center,
+      },
+      scale: CurvedAnimation(
+        parent: animation.drive(Tween<double>(begin: 0, end: 1)),
+        curve: Curves.easeOutBack,
+      ),
+      child: switch (talk.type) {
+        ContentType.image => _imageBuilder(talk),
+        _ => _chatBuilder(talk),
+      },
+    );
+  }
+
+  Widget _imageBuilder(Talk talk) {
+    final border = BorderRadius.all(Radius.circular(12.d));
+    return Widgets.rect(
+      decoration: BoxDecoration(
+        borderRadius: border,
+        border: Border.all(
+          width: 2.d,
+          color: TColors.primary20,
+        ),
+        shape: BoxShape.rectangle,
+      ),
+      padding: EdgeInsets.all(1.d),
+      alignment: Alignment.center,
+      margin: EdgeInsets.all(24.d),
+      child: ClipRRect(
+        borderRadius: border,
+        child: LoaderWidget(
+          AssetType.image,
+          talk.targetValue,
+          height: 180.d,
+        ),
+      ),
+    );
+  }
+
+  Widget _chatBuilder(Talk talk) {
+    var tip = switch (talk.type) {
+      ContentType.user => BalloonTipPosition.rightBottom,
+      ContentType.bot => BalloonTipPosition.leftTop,
+      _ => BalloonTipPosition.none,
+    };
+
+    var isTarget = talk.isChat || talk.isName;
+    var main = isTarget ? talk.targetValue : talk.nativeValue;
+    var translate = isTarget ? talk.nativeValue : null;
+    return RadioBox(
+      main,
+      ballonPosition: tip,
+      narrator: talk.type.narrator,
+      translation: translate,
+      textStyle:
+          talk.isChat ? null : (talk.isName ? TStyles.large : TStyles.small),
+      color: talk.isChat
+          ? null
+          : (talk.isName ? TColors.cream : TColors.primary10),
+    );
+  }
+
+  void _startQuizCallback(Content step) {
+    if (!step.isQuiz) return;
     var account = serviceLocator<AccountProvider>();
     serviceLocator<STT>().start(
       locale: account.metadata["targetLanguage"],
-      pattern: child.targetValue,
+      pattern: step.targetValue,
       exceptions: [account.account.user.displayName!.simple()],
       onResult: _onQuizResult,
     );
+  }
+
+  Future<void> _endQuizCallback(Content step) async {
+    const duration = Duration(milliseconds: 500);
+    _animatedListKey.currentState?.insertItem(_animatedItems.length);
+    _animatedItems.add(step as Talk);
+    await _chatScrollController.animateTo(
+        _chatScrollController.position.maxScrollExtent,
+        duration: duration,
+        curve: Curves.easeOutQuart);
+    if (step.isQuiz || step.type == ContentType.image) {
+      await Future.delayed(const Duration(milliseconds: 10));
+    } else {
+      final text =
+          step.isChat || step.isName ? step.targetValue : step.nativeValue;
+      final narrator = step.isName
+          ? Narrator.nova
+          : step.isChat
+              ? Narrator.fable
+              : Narrator.onyx;
+      await serviceLocator<Speaker>().play(text, narrator: narrator);
+    }
+    await Future.delayed(duration);
   }
 
   Future<void> _onQuizResult(QuizState state, String text) async {
@@ -34,10 +143,10 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
       await Future.delayed(duration);
       serviceLocator<STT>().state.value = QuizState.none;
       if (mounted) {
-        onStepResult(context, true);
+        controller.onStepResult(true);
       }
     } else if (state == QuizState.fail) {
-      onStepResult(context, false);
+      controller.onStepResult(false);
       await Future.delayed(duration);
       serviceLocator<STT>().start();
     }
@@ -45,14 +154,28 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
 
   @override
   Widget footerBuilder() {
-    if (index.value >= steps.length) {
+    if (controller.stepIndex.value >= controller.steps.length) {
       return const SizedBox();
     }
-    return Column(children: [
-      DirText("speaking_hint".l()),
+    var step = controller.steps[controller.stepIndex.value] as Talk;
+    if (!step.isQuiz) {
+      return const SizedBox();
+    }
+
+    var footer = Column(children: [
+      DirText(controller.practice,
+          textAlign: TextAlign.center, style: TStyles.small),
       SizedBox(height: 24.d),
-      ListenerBox(steps[index.value] as Talk,
-          challengeMode: Get.arguments["challengeMode"])
+      ListenerBox(step, challengeMode: Get.arguments["challengeMode"])
     ]);
+
+    controller.footerSize.value = getFooterHeight(context);
+    return footer;
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
