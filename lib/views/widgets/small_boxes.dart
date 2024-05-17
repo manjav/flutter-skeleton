@@ -8,12 +8,18 @@ class RadioBox extends StatelessWidget {
   final String? translation;
   final Narrator? narrator;
   final BalloonTipPosition? ballonPosition;
+  final Color? color;
+  final Color? strokeColor;
+  final TextStyle? textStyle;
 
   const RadioBox(
     this.text, {
     this.translation,
     this.ballonPosition = BalloonTipPosition.bottomRight,
     this.narrator = Narrator.onyx,
+    this.color,
+    this.strokeColor,
+    this.textStyle,
     super.key,
   });
 
@@ -33,16 +39,24 @@ class RadioBox extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Widgets.rect(
-                constraints:
-                    BoxConstraints(maxWidth: DeviceInfo.size.width * 0.84),
+                constraints: BoxConstraints(
+                    maxWidth: DeviceInfo.size.width *
+                        (ballonPosition == BalloonTipPosition.none
+                            ? 0.75
+                            : 0.9)),
                 margin:
                     EdgeInsets.fromLTRB(margin, margin * 2 - 2.d, margin, 0),
                 padding: EdgeInsets.fromLTRB(
                     margin * 2, margin * 2, margin * 2, margin),
-                decoration: BalloonDecoration(tipPosition: ballonPosition),
+                decoration: BalloonDecoration(
+                    tipPosition: ballonPosition,
+                    mainColor: color,
+                    strokeColor: strokeColor),
                 child: Column(
                   children: [
-                    DirText(text, style: TStyles.medium),
+                      style: textStyle ?? TStyles.medium,
+                      textAlign: TextAlign.justify,
+                    ),
                     SizedBox(height: translation == null ? 0 : 4.d),
                     translation == null
                         ? const SizedBox()
