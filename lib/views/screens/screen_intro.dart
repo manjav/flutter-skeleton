@@ -116,7 +116,78 @@ class _IntroScreenState extends AbstractScreenState<IntroScreen> {
                 width: 341.d,
               ),
             );
-          })
+          }),
+          TutorialCharacter(
+            show: steps[0],
+            text: "olive_says_that_we're_under_attack",
+            dialogueSide: DialogueSide.right,
+            characterName: "character_olive",
+            bottom: 400.d,
+          ),
+          TutorialCharacter(
+            show: steps[1],
+            text: "sarhang_is_suprised",
+            dialogueSide: DialogueSide.left,
+            characterName: "character_sarhang",
+            bottom: 400.d,
+          ),
+          TutorialCharacter(
+            show: steps[2],
+            text: "porteghula_enters",
+            dialogueSide: DialogueSide.top,
+            characterName: "character_porteghula",
+            bottom: 400.d,
+            characterSize: Size(666.d, 859.d),
+          ),
+          TutorialCharacter(
+            show: steps[3],
+            text: "sarhang_asks_player_for_help",
+            dialogueSide: DialogueSide.left,
+            characterName: "character_sarhang",
+            bottom: 400.d,
+          ),
+          ValueListenableBuilder(
+            valueListenable: enableTouch,
+            builder: (context, value, child) {
+              if (!value) return const SizedBox();
+              return Widgets.touchable(
+                context,
+                onTap: () async {
+                  if (index == -1) return;
+                  steps[index++].value = false;
+                  if (index == 4) {
+                    await accountProvider.updateTutorial(context, 1, 10);
+                    Get.offNamed(Routes.deck);
+                    return;
+                  }
+                  serviceLocator<AccountProvider>().update(
+                      context, {"tutorial_index": index, "tutorial_id": index});
+                  await Future.delayed(700.ms);
+                  steps[index].value = true;
+                },
+              );
+            },
+          ),
+          Consumer<AccountProvider>(builder: (context, account, child) {
+            if (account.account.tutorial_id < 1) return const SizedBox();
+            return Positioned(
+              top: 82.d,
+              left: 59.d,
+              child: AnimatedOpacity(
+                duration: 200.ms,
+                opacity: account.account.tutorial_id == 0 ? 0.0 : 1.0,
+                child: SkinnedButton(
+                  label: "already_have_a_village".l(),
+                  width: 380.d,
+                  onPressed: () async {
+                    serviceLocator<RouteService>()
+                        .to(Routes.popupRestore, args: {"onlySet": true});
+                  },
+                  color: ButtonColor.violet,
+                ),
+              ),
+            );
+          }),
         ],
       ),
     );
