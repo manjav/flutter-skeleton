@@ -856,6 +856,7 @@ class Tutorial {
             "handQuarterTurns": 3,
             "breakPoint": true,
             "bottom": 700.d,
+            "dialogueHeight": 370.d,
           },
         ],
       },
