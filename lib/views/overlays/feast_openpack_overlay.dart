@@ -79,6 +79,25 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   }
 
   @override
+  void onScreenTouched() {
+    if (state == RewardAnimationState.shown &&
+        !_heroSelected &&
+        _cards[0].base.isHero) {
+      return;
+    }
+    super.onScreenTouched();
+  }
+
+  @override
+  Widget closeButton() {
+    if (_cards.isNotEmpty && _cards[0].base.isHero) {
+      closeButtonController = null;
+      return const SizedBox();
+    }
+    return super.closeButton();
+  }
+
+  @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
