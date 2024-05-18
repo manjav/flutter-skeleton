@@ -28,6 +28,7 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
       var account = serviceLocator<AccountProvider>().account;
       if (widget.building.type == Buildings.base && account.tutorial_id == 24) {
         destroyTrigger?.value = true;
+        serviceLocator<Sounds>().play("explosion",channel: "building");
         _levelInput?.value = -1;
       }
       if (!widget.building.getIsAvailable(account)) return;
