@@ -134,7 +134,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
         }
       }
       if (_cards[0].base.isHero) {
-        updateRiveText("commentText", "select a hero".l());
+        updateRiveText("commentText", "select_hero".l());
       } else {
         updateRiveText("commentText", "tap_close".l());
       }
@@ -179,6 +179,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     process(() async {
       var result = await accountProvider.openPack(context, _pack,
           selectedCardId: _cards[index].base.id);
+      _heroSelected = true;
+      updateRiveText("commentText", "tap_close".l());
       return result;
     });
   }

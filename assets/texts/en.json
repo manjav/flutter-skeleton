@@ -193,6 +193,7 @@
     "error": "Error",
     "choose_deck_title": "Choose Deck",
     "bid": "Bid",
+    "select_hero":"Select a hero card",
     "addedPowerCaptionText": "Added to card power",
     "card_category_0": "Common Cards",
     "card_category_1": "Christmas Cards",
