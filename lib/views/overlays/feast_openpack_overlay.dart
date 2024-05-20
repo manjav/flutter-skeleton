@@ -139,8 +139,9 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
         updateRiveText("commentText", "tap_close".l());
       }
     }
-    if (event.name == "choose") {
-      _chooseHero(event.properties["card"].toInt());
+    if (event.name.startsWith("choose")) {
+      var index = int.parse(event.name.replaceAll("choose_", ""));
+      _chooseHero(index);
     }
   }
 
