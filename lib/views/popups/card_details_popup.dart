@@ -75,7 +75,8 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                   ),
                   _button(
                       width: 420.d,
-                      isEnable: _account.tribe != null && isUpgradable,
+                      isEnable: isTutorial ||
+                          (_account.tribe != null && isUpgradable),
                       label: "˨  ${"evolve_l".l()}",
                       onPressed: () => _onButtonsTap(_card.base.isHero
                           ? Routes.popupHeroEvolve
