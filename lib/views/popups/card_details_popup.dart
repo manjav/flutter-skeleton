@@ -152,6 +152,13 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   }
 
   _onButtonsTap(String route) async {
+    if (isTutorial && route == Routes.popupCardEvolve) {
+      var gp = accountProvider.account.cards.values
+          .groupListsBy((element) => element.base.id);
+      _card =
+          gp.values.firstWhereOrNull((element) => element.length > 1)?.first ??
+              _card;
+    }
     await serviceLocator<RouteService>().to(route, args: {"card": _card});
     if (mounted && !accountProvider.account.cards.containsKey(_card.id)) {
       serviceLocator<RouteService>().popUntil((route) => route.isFirst);
