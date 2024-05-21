@@ -46,6 +46,7 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
   }
 
   Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
+    talk.scrollPosition = _chatScrollController.position.pixels;
     return ScaleTransition(
       alignment: switch (talk.type) {
         ContentType.user => Alignment.bottomRight,
@@ -204,7 +205,15 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
       valueListenable: _name,
       builder: (context, value, child) {
         if (_name.value == null) return const SizedBox();
-        return _chatBuilder(value!);
+        return Widgets.touchable(
+          context,
+          child: _chatBuilder(value!),
+          onTap: () {
+            _chatScrollController.animateTo(value.scrollPosition - 200.d,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOutQuart);
+          },
+        );
       },
     );
   }
