@@ -121,18 +121,24 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
         _chatScrollController.position.maxScrollExtent,
         duration: duration,
         curve: Curves.easeOutQuart);
+
     if (step.isQuiz || step.type == ContentType.image) {
       await Future.delayed(const Duration(milliseconds: 10));
     } else {
       final text =
           step.isChat || step.isName ? step.targetValue : step.nativeValue;
+      if (step.isChat || step.isName) {
       final narrator = step.isName
           ? Narrator.nova
           : step.isChat
               ? Narrator.fable
               : Narrator.onyx;
-      await serviceLocator<Speaker>().play(text, narrator: narrator);
+        serviceLocator<Speaker>().play(text, narrator: narrator);
+      } else {
+        duration = Duration(milliseconds: text.length * 40);
+      }
     }
+
     await Future.delayed(duration);
   }
 
