@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -180,12 +181,18 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           ],
         ),
       ),
-      PositionedDirectional(
-        bottom: 350.d,
-        start: 32.d,
-        child: Indicator("home", Values.leagueRank,
-            hasPlusIcon: false,
-            onTap: () => serviceLocator<RouteService>().to(Routes.popupLeague)),
+      Consumer<AccountProvider>(
+        builder: (context, value, child) {
+          if (value.account.level < 8) return const SizedBox();
+          return PositionedDirectional(
+            bottom: 350.d,
+            start: 32.d,
+            child: Indicator("home", Values.leagueRank,
+                hasPlusIcon: false,
+                onTap: () =>
+                    serviceLocator<RouteService>().to(Routes.popupLeague)),
+          );
+        },
       ),
       PositionedDirectional(
           bottom: 220.d,
