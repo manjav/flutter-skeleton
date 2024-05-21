@@ -17,13 +17,18 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
     return Consumer<AccountProvider>(builder: (_, state, child) {
       var potion = state.account.potion;
       var price = state.account.potionPrice;
+      var building = accountProvider.account.buildings[Buildings.lab]!;
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Asset.load<Image>("icon_potion", height: 210.d),
+          SizedBox(width: 360.d, child: BuildingWidget(building)),
+          SkinnedText("level_l".l([building.level])),
           SizedBox(height: 32.d),
-          Text("potion_description".l(),
-              style: TStyles.medium.copyWith(height: 2.7.d)),
+          SkinnedText(
+            "building_${building.type.name}_d".l(),
+            style: TStyles.medium.copyWith(height: 2.7.d),
+            hideStroke: true,
+          ),
           Widgets.divider(margin: 36.d, width: 700.d),
           Widgets.slider(
             0,
