@@ -67,8 +67,8 @@ class GroupContent extends ParentContent {
 
 class Talk extends Content {
   String personId = "";
-  bool get isName => personId == "name";
-
+  double scrollPosition = 0;
+  bool get isName => type == ContentType.name;
   Set<String> get words => {...targetValue.split(" ")};
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
@@ -77,7 +77,9 @@ class Talk extends Content {
     personId = map["person_id"];
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
-    if (personId.endsWith("_1")) {
+    if (personId == "name") {
+      type = ContentType.name;
+    } else if (personId.endsWith("_1")) {
       type = ContentType.user;
     } else if (personId.endsWith("_2")) {
       type = ContentType.bot;
@@ -87,7 +89,7 @@ class Talk extends Content {
   }
 }
 
-enum ContentType { none, category, group, hint, user, bot, image }
+enum ContentType { none, category, group, name, hint, user, bot, image }
 
 extension ContentTypeExtension on ContentType {
   static ContentType getEnum(String type) {
