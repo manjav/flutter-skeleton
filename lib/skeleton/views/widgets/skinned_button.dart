@@ -96,7 +96,7 @@ class _SkinnedButtonState extends State<SkinnedButton> {
                       ? const SizedBox()
                       : SkinnedText(widget.label!,
                           style: TStyles.large
-                              .autoSize(widget.label!.length, 10, 55.d),
+                              .autoSize(widget.label!.length, 15, 55.d),
                           shadowScale: _isPressed ? 1.2 : 1),
                 ])
               : widget.child!),
