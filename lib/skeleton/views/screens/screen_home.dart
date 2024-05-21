@@ -86,7 +86,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              isSelected ? _groupsBuilder(category, index) : const SizedBox(),
+              _groupsBuilder(category, index),
               DirText(category.title, style: TStyles.largeInvert),
               isSelected
                   ? const SizedBox()
