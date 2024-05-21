@@ -77,8 +77,10 @@ class Talk extends Content {
     personId = map["person_id"];
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
-    if (personId.startsWith(parent.id)) {
-      type = personId.endsWith("2") ? ContentType.bot : ContentType.user;
+    if (personId.endsWith("_1")) {
+      type = ContentType.user;
+    } else if (personId.endsWith("_2")) {
+      type = ContentType.bot;
     } else {
       type = personId == "image" ? ContentType.image : ContentType.hint;
     }
