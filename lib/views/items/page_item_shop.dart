@@ -422,6 +422,15 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       // }
     }
 
+    //check for enught gold or nectar to buy
+    var count = accountProvider.account
+        .getValue(Values.values.byName(item.base.currency));
+    var price = ShopData.getPrice(accountProvider.account, item);
+    if (count < price) {
+      toast("not_enough_${item.base.currency}".l());
+      return;
+    }
+
     if (item.base.section == ShopSections.boost) {
       Overlays.insert(
           context,
