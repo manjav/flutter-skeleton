@@ -39,20 +39,20 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
 
       if (widget.building.type == Buildings.treasury) {
         var x = ((5 * account.bank_account_balance) / widget.building.benefit);
-        x = x.isInfinite ? 0 : x;
+        x = x.isInfinite ? 0 : x.roundToDouble();
         _goldInput?.value = x.toDouble();
         return;
       }
 
       if (widget.building.type == Buildings.lab) {
-        _levelInput?.value = (account.potion ~/ 10).toDouble();
+        _levelInput?.value = (account.potion ~/ 10).roundToDouble();
         return;
       }
 
       if (widget.building.type == Buildings.mine) {
         var x = ((5 * collectableGold(account)) / widget.building.benefit)
             .toDouble();
-        x = x.isInfinite ? 0 : x;
+        x = x.isInfinite ? 0 : x.roundToDouble();
         _goldInput?.value = x;
         return;
       }
