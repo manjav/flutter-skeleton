@@ -20,12 +20,12 @@ class DeviceInfo extends IService {
   static String model = "";
   static double osVersion = 0;
   static String baseVersion = "";
-  static Map<String, dynamic> _deviceData = {};
   static String packageName = "";
   static String buildNumber = "";
   static String version = "";
   static String appName = "";
   static bool isPreInitialized = false;
+  static Map<String, dynamic> _deviceData = {};
 
   static Future<bool> preInitialize(BuildContext context,
       [bool forced = false]) async {

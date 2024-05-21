@@ -44,7 +44,7 @@ class RadioBox extends StatelessWidget {
                     maxWidth: DeviceInfo.size.width *
                         (ballonPosition == BalloonTipPosition.none
                             ? 0.75
-                            : 0.9)),
+                            : 0.85)),
                 margin:
                     EdgeInsets.fromLTRB(margin, margin * 2 - 2.d, margin, 0),
                 padding: EdgeInsets.fromLTRB(

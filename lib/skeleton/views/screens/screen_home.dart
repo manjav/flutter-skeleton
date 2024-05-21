@@ -88,11 +88,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             children: [
               isSelected ? _groupsBuilder(category, index) : const SizedBox(),
               DirText(category.title, style: TStyles.largeInvert),
-              DirText(category.description, style: TStyles.tiny),
               isSelected
                   ? const SizedBox()
                   : DirText(category.description,
-                      style: TStyles.smallInvert.copyWith(height: 1)),
+                      style: TStyles.tiny.copyWith(height: 1)),
 
               // Image.network(category.iconUrl,
               //     height: isSelected ? 50.d : 100.d),
@@ -127,18 +126,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       child: Column(
         textDirection: TextDirection.rtl,
         children: [
-          Row(
-            textDirection: TextDirection.rtl,
-            children: [
-              // Image.network(group.iconUrl, height: 40.d),
-              // SizedBox(width: 12.d),
-              SizedBox(
-                width: DeviceInfo.size.width * 0.6,
-                child: DirText(group.title),
-              )
-            ],
-          ),
-          for (var i = 0; i >= 0; i--) _lessonItemBuilder(group, i),
+          _lessonItemBuilder(group, 0),
         ],
       ),
     );
@@ -149,12 +137,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     var scoreNotifier = ValueNotifier(_scores![id] ?? 0);
     return Widgets.button(
       context,
-      height: 50.d,
-      width: DeviceInfo.size.width * 0.6,
+      height: 22.d,
+      width: DeviceInfo.size.width * 0.8,
       child: Row(
         textDirection: TextDirection.rtl,
         children: [
-          DirText("lesson_$type".l(), style: TStyles.small),
+          DirText(group.title, style: TStyles.small),
           SizedBox(width: 16.d),
           ValueListenableBuilder(
               valueListenable: scoreNotifier,
