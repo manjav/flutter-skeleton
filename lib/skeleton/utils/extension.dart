@@ -87,11 +87,13 @@ extension StringExtension on String {
   }
 
   String xorEncrypt({String? secret}) {
-    var secretKey = secret ?? _getDefaultSecret();
-    var result = "";
-    for (var i = 0; i < length; i++) {
-      result += String.fromCharCode(
-          codeUnitAt(i) ^ secretKey.codeUnitAt(i % secretKey.length));
+    List<int> valueBytes = utf8.encode(this);
+    List<int> keyBytes = utf8.encode(secret ?? _getDefaultSecret());
+    int keyLength = keyBytes.length;
+    List<int> resultBytes = [];
+
+    for (int i = 0; i < valueBytes.length; i++) {
+      resultBytes.add(valueBytes[i] ^ keyBytes[i % keyLength]);
     }
     return utf8.fuse(base64).encode(result);
   }
