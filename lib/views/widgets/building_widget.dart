@@ -44,6 +44,11 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
         return;
       }
 
+      if (widget.building.type == Buildings.lab) {
+        _levelInput?.value = (account.potion ~/ 10).toDouble();
+        return;
+      }
+
       if (widget.building.type == Buildings.mine) {
         var x = ((5 * collectableGold(account)) / widget.building.benefit)
             .toDouble();
