@@ -13,6 +13,7 @@ class LessonChatScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<LessonChatScreen>
     with LessonMixin {
   final List<Talk> _animatedItems = [];
+  final ValueNotifier<Talk?> _name = ValueNotifier(null);
   final _animatedListKey = GlobalKey<AnimatedListState>();
   final ScrollController _chatScrollController = ScrollController();
 
@@ -28,12 +29,20 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
 
   @override
   Widget childBuilder(double paddingTop) {
-    return AnimatedList(
-        key: _animatedListKey,
-        controller: _chatScrollController,
-        padding: EdgeInsets.fromLTRB(
-            padding, paddingTop + padding * 6, padding, 300.d),
-        itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a));
+    return Column(children: [
+      SizedBox(height: 90.d),
+      _nameDisplayBuilder(),
+      SizedBox(height: 10.d),
+      Expanded(
+        child: AnimatedList(
+            key: _animatedListKey,
+            controller: _chatScrollController,
+            padding: EdgeInsets.fromLTRB(
+                padding, paddingTop + padding * 6, padding, 300.d),
+            itemBuilder: (c, i, a) =>
+                _animatedItemBuilder(_animatedItems[i], a)),
+      )
+    ]);
   }
 
   Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
@@ -49,6 +58,7 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
+        // ContentType.name => SizedBox(height: 10.d),
         _ => _chatBuilder(talk),
       },
     );
@@ -114,9 +124,13 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
   }
 
   Future<void> _endQuizCallback(Content step) async {
-    const duration = Duration(milliseconds: 500);
+    step = step as Talk;
+    var duration = const Duration(milliseconds: 500);
+    if (step.isName) {
+      _name.value = step;
+    }
     _animatedListKey.currentState?.insertItem(_animatedItems.length);
-    _animatedItems.add(step as Talk);
+    _animatedItems.add(step);
     await _chatScrollController.animateTo(
         _chatScrollController.position.maxScrollExtent,
         duration: duration,
@@ -128,11 +142,11 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
       final text =
           step.isChat || step.isName ? step.targetValue : step.nativeValue;
       if (step.isChat || step.isName) {
-      final narrator = step.isName
-          ? Narrator.nova
-          : step.isChat
-              ? Narrator.fable
-              : Narrator.onyx;
+        final narrator = step.isName
+            ? Narrator.nova
+            : step.isChat
+                ? Narrator.fable
+                : Narrator.onyx;
         serviceLocator<Speaker>().play(text, narrator: narrator);
       } else {
         duration = Duration(milliseconds: text.length * 40);
@@ -183,5 +197,15 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  Widget _nameDisplayBuilder() {
+    return ValueListenableBuilder(
+      valueListenable: _name,
+      builder: (context, value, child) {
+        if (_name.value == null) return const SizedBox();
+        return _chatBuilder(value!);
+      },
+    );
   }
 }
