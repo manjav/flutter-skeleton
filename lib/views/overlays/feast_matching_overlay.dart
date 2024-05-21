@@ -22,7 +22,7 @@ class _MatchingFeastOverlayState
   @override
   void initState() {
     super.initState();
-    startSFX = "prize";
+    startSFX = "battle";
     children = [backgroundBuilder(), animationBuilder("matching")];
 
     process(() async {
