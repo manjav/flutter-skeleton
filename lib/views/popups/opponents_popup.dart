@@ -55,13 +55,13 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
 
   @override
   void onTutorialFinish(data) {
-    if (data["id"] == 303) {
+    if (data["id"] == 304) {
       Overlays.insert(context, const MapHelpOverlay());
-    } else if (data["id"] == 304) {
+    } else if (data["id"] == 305) {
       checkTutorial();
-    } else if (data["id"] == 902) {
+    } else if (data["id"] == 903) {
       _attack();
-    } else if (data["id"] == 918) {
+    } else if (data["id"] == 920) {
       checkTutorial();
     } else if (data["id"] == 923) {
       serviceLocator<RouteService>().back();
@@ -86,7 +86,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
       var data = await rpc(RpcId.getOpponents);
 
       opponentBloc.list = Opponent.fromMap(data, 0);
-      if (isTutorial) {
+      if (isTutorial && accountProvider.account.level == 9) {
         opponentBloc.list
             .insert(0, Opponent.create(-1, "تست خونگی")..status = 1);
       }

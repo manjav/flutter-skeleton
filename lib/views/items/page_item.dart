@@ -32,7 +32,7 @@ class AbstractPageItemState<T extends AbstractPageItem> extends State<T>
   }
 
   checkTutorial() {
-    serviceLocator<TutorialManager>().checkToturial(context, widget.name);
+    serviceLocator<TutorialManager>().checkToturial(widget.name);
   }
 
   @override

@@ -45,6 +45,7 @@ class _EvolveFeastOverlayState extends AbstractOverlayState<EvolveFeastOverlay>
           "cardNameText$i", "${_mergedCard.base.fruit.name}_title".l());
       updateRiveText("cardLevelText$i", _mergedCard.base.rarity.convert());
       updateRiveText("cardPowerText$i", "ˢ${_mergedCard.power.compact()}");
+      updateRiveText("addedPowerCaptionText", "added_power_caption_text".l());
     }
     updateRiveText("titleText", "evolve_l".l());
     return controller;

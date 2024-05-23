@@ -172,13 +172,14 @@ class AbstractCard {
   int get maxPrice => (power * powerToGoldRatio * maxPriceRatio).round();
 
   int getRemainingCooldown({bool isTutorial = false}) {
+    if (isTutorial) return base.cooldown;
     var benefit = account.tribe != null
         ? account.buildings[Buildings.cards]!.getBenefit()
         : 1.0;
     var delta = account.getTime() - lastUsedAt;
     var cooldownTime = base.cooldown * benefit;
-    if (isTutorial) return cooldownTime.toInt().min(0);
-    return (cooldownTime - delta).ceil().min(0);
+    var res = (cooldownTime - delta).ceil().min(0);
+    return res;
   }
 
   Fruit get fruit => base.fruit;
@@ -263,6 +264,7 @@ class AuctionCard extends AbstractCard {
 class AccountCard extends AbstractCard with ClassFinderMixin {
   bool isDeployed = false;
   RxBool loadingCoolOff = false.obs;
+  int lastCoolOff = 0;
 
   AccountCard(super.account, super.map, {int? ownerId}) {
     id = map['id'] ?? -1;
@@ -270,11 +272,18 @@ class AccountCard extends AbstractCard with ClassFinderMixin {
     lastUsedAt = map['last_used_at'] ?? 0;
   }
 
-  Future<void> coolOff(BuildContext context) async {
+  Future<void> coolOff(BuildContext context, {bool isTutorial = false}) async {
     try {
       loadingCoolOff.value = true;
-      var data = await serviceLocator<HttpConnection>()
-          .tryRpc(context, RpcId.coolOff, params: {RpcParams.card_id.name: id});
+      lastCoolOff = account.getTime();
+      // if (isTutorial) {
+      //   lastUsedAt = 0;
+      //   getAccountProvider(context).update(context, {});
+      //   return;
+      // }
+      var data = await serviceLocator<HttpConnection>().tryRpc(
+          context, RpcId.coolOff,
+          params: {RpcParams.card_id.name: id}, showError: false);
       lastUsedAt = 0;
       if (context.mounted) {
         getAccountProvider(context).update(context, data);
@@ -282,6 +291,9 @@ class AccountCard extends AbstractCard with ClassFinderMixin {
     } on SkeletonException catch (e) {
       if (e.statusCode == StatusCode.C178_CARD_ALREADY_COOL.value) {
         lastUsedAt = 0;
+        if (context.mounted) {
+          getAccountProvider(context).update(context, {});
+        }
       }
     } finally {
       loadingCoolOff.value = false;

@@ -97,7 +97,9 @@ class _CardItemState extends State<CardItem> {
   @override
   void initState() {
     super.initState();
-    _remainingCooldown.value = widget.card.getRemainingCooldown();
+    _remainingCooldown.value = widget.isTutorial
+        ? widget.card.base.cooldown
+        : widget.card.getRemainingCooldown(isTutorial: widget.isTutorial);
     if (!widget.isTutorial &&
         widget.showCoolOff &&
         _remainingCooldown.value > 0) {
@@ -115,6 +117,10 @@ class _CardItemState extends State<CardItem> {
     var baseCard = widget.card.base;
     var level = baseCard.rarity;
     var cooldown = baseCard.cooldown;
+
+    _remainingCooldown.value = widget.isTutorial
+        ? widget.card.base.cooldown
+        : widget.card.getRemainingCooldown(isTutorial: widget.isTutorial);
 
     var s = widget.size / 256;
     if (_tiny == null) {
@@ -201,10 +207,11 @@ class _CardItemState extends State<CardItem> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "ˣ ${widget.isTutorial ? baseCard.cooldown : _remainingCooldown.value.toRemainingTime().convert()}",
+                        "ˣ ${_remainingCooldown.value.toRemainingTime().convert()}",
                         style: TStyles.medium.copyWith(
                           color: TColors.white,
                         ),
+                        textDirection: Localization.textDirection,
                       ),
                       SizedBox(height: 5.d),
                       Stack(
@@ -243,13 +250,13 @@ class _CardItemState extends State<CardItem> {
                           ),
                           Text(
                               widget.card
-                                  .cooldownTimeToCost(widget.isTutorial
-                                      ? baseCard.cooldown
-                                      : _remainingCooldown.value)
+                                .cooldownTimeToCost(_remainingCooldown.value)
                                   .compact(),
                               style: TStyles.medium.copyWith(
                                 color: TColors.white,
-                              )),
+                            ),
+                            textDirection: Localization.textDirection,
+                          ),
                         ],
                       ),
                     ],

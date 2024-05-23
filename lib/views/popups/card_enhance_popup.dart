@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../app_export.dart';
 
 class CardEnhancePopup extends AbstractPopup {
@@ -22,7 +23,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   @override
   void onTutorialStep(data) {
-    if (data["id"] == 400) {
+    if (data["id"] == 326) {
       selectedCards.addCard(cards[0]);
     }
     super.onTutorialStep(data);
@@ -30,7 +31,10 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   @override
   void onTutorialFinish(data) {
+    if (data["id"] == 327) {
     _sacrifice();
+      serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+    }
     super.onTutorialFinish(data);
   }
 
@@ -148,9 +152,17 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   _sacrifice() async {
     if (!_isSacrificeAvailable) return;
     Overlays.insert(
-        context,
+      Get.overlayContext!,
         EnhanceFeastOverlay(
-            args: {"card": card, "sacrificedCards": selectedCards}));
+        args: {"card": card, "sacrificedCards": selectedCards},
+        onClose: (data) {
+          if (isTutorial) {
+            Overlays.closeAll();
+            services.changeState(ServiceStatus.changeTab, data: {"index": 2});
+          }
+        },
+      ),
+    );
     if (mounted) {
       Navigator.pop(context);
     }

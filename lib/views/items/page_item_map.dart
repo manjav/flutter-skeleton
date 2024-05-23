@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
@@ -23,9 +24,20 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       var state = services.state;
       if (state.status == ServiceStatus.changeTab && state.data["index"] == 2) {
         checkTutorial();
+        checkPlayerName();
       }
     });
+    checkPlayerName();
     super.initState();
+  }
+
+  void checkPlayerName() async {
+    var account = accountProvider.account;
+    if (account.level == 3 && account.is_name_temp == true) {
+      await Future.delayed(100.ms);
+      serviceLocator<RouteService>().to(Routes.popupChooseName,
+          args: {"canPop": false, "barrierDismissible": false});
+    }
   }
 
   @override
@@ -56,7 +68,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
               caption: "Attacked you now!"),
           context,
           isTutorial: true);
-    } else if (data["id"] == 963) {
+    } else if (data["id"] == 1001) {
       serviceLocator<EventNotification>().hideAllNotif();
     }
     super.onTutorialStep(data);
@@ -64,35 +76,67 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
 
   @override
   onTutorialFinish(data) {
-    if (data["index"] == 11) {
-      services.changeState(ServiceStatus.changeTab, data: {"index": 0});
-    } else if (data["index"] == 15 || data["index"] == 45) {
+    if (data["id"] == 22) {
+      //first buy card tutorial
+      services.changeState(ServiceStatus.changeTab,
+          data: {"index": 0, "section": ShopSections.card});
+    } else if (data["id"] == 24) {
+      // accountProvider.account.buildings[Buildings.base]!.level = -2;
+      // accountProvider.update();
       checkTutorial();
-    } else if (data["index"] == 17) {
+    } else if (data["id"] == 650) {
+      checkTutorial();
+    } else if (data["id"] == 26) {
+      //quest tutorial
       var account = accountProvider.account;
       _onBuildingTap(account, account.buildings[Buildings.quest]!);
-    } else if (data["index"] == 18 || data["id"] == 7300) {
-      services.changeState(ServiceStatus.changeTab, data: {"index": 1});
-    } else if (data["id"] == 700) {
-      services.changeState(ServiceStatus.changeTab, data: {"index": 4});
-    } else if (data["id"] == 800) {
-      serviceLocator<RouteService>().to(Routes.popupLeague);
-    } else if (data["id"] == 1002) {
-      services.changeState(ServiceStatus.changeTab, data: {"index": 0});
-    } else if (data["id"] == 1201) {
-      services.changeState(ServiceStatus.changeTab, data: {"index": 0});
-    } else if (data["id"] == 402) {
-      services.changeState(ServiceStatus.changeTab, data: {"index": 1});
-    } else if (data["id"] == 302) {
+    } else if (data["id"] == 303 || data["id"] == 902) {
+      //opponent tutorial
       var account = accountProvider.account;
       _onBuildingTap(account, account.buildings[Buildings.base]!);
+    } else if (data["id"] == 322 || data["id"] == 403 || data["id"] == 652) {
+      services.changeState(ServiceStatus.changeTab, data: {"index": 1});
+    } else if (data["id"] == 801) {
+      //auction tutorial
+      services.changeState(ServiceStatus.changeTab, data: {"index": 4});
+    } else if (data["id"] == 802) {
+      //league tutorial
+      serviceLocator<RouteService>().to(Routes.popupLeague);
+    } else if (data["id"] == 1200) {
+      services.changeState(ServiceStatus.changeTab,
+          data: {"index": 0, "section": ShopSections.gold});
+    } else if (data["id"] == 1500) {
+      services.changeState(ServiceStatus.changeTab,
+          data: {"index": 0, "section": ShopSections.boost});
     } else if (data["id"] == 1501) {
       Get.toNamed(Routes.popupCombo);
-    } else if (data["id"] == 901) {
-      var account = accountProvider.account;
-      _onBuildingTap(account, account.buildings[Buildings.base]!);
-    } else if (data["id"] == 923) {
+    } else if (data["id"] == 402) {
+      var card = accountProvider
+          .account.loadingData.shopItems[ShopSections.card]!
+          .firstWhereOrNull((element) => element.id == 32);
+      if (card == null) return;
+      Overlays.insert(
+        context,
+        OpenPackFeastOverlay(
+          args: {"pack": card},
+          onClose: (d) async {
+            services.changeState(ServiceStatus.punch, data: 1);
+            bool haveHero = accountProvider.account
+                    .getReadyCards()
+                    .firstWhereOrNull((element) => element.base.isHero) !=
+                null;
+            //if buy hero success save as a breakPoint
+            if (haveHero) {
+              accountProvider.updateTutorial(
+                  context,
+                  accountProvider.account.index,
+                  accountProvider.account.tutorial_id);
+            }
+            await Future.delayed(100.ms);
       checkTutorial();
+          },
+        ),
+      );
     }
   }
 
@@ -255,7 +299,9 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       return;
     }
     await serviceLocator<RouteService>().to(type, args: {"building": building});
+    if (account.level == 3 || account.level == 9) {
     checkTutorial();
+  }
   }
 
   Widget _box(double type, String title) {
@@ -315,7 +361,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           const GiftRewardFeastOverlay(),
         );
       });
-      ads.show(AdType.rewarded);
+      serviceLocator<RouteService>().to(Routes.popupFreeGold);
     }
   }
 

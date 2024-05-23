@@ -1,8 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -39,6 +37,14 @@ class _AttackOutcomeStateFeastOverlay
   late AnimationController _animationController;
 
   @override
+  void onTutorialFinish(data) {
+    if (data["id"] == 321) {
+      closeInput?.value = true;
+      serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+    }
+  }
+
+  @override
   void initState() {
     _animationController = AnimationController(
         vsync: this, upperBound: 3, duration: const Duration(seconds: 2));
@@ -65,7 +71,9 @@ class _AttackOutcomeStateFeastOverlay
       MapEntry("xp", widget.args['xp_added'] ?? 0),
     ];
     if (widget.type == Routes.battleOut) {
+      if (accountProvider.account.level > 7) {
       _prizes.add(MapEntry("league_bonus", widget.args['league_bonus'] ?? 0));
+      }
       _prizes.add(MapEntry("seed", widget.args['seed_added'] ?? 0));
     }
 
@@ -196,32 +204,6 @@ class _AttackOutcomeStateFeastOverlay
   }
 
   @override
-  void onTutorialFinish(data) {
-    if (data["id"] == 401) {
-      var card = accountProvider
-          .account.loadingData.shopItems[ShopSections.card]!
-          .firstWhereOrNull((element) => element.id == 32);
-      if (card == null) return;
-      closeInput?.value = true;
-      super.onTutorialFinish(data);
-      Overlays.insert(
-        context,
-        OpenPackFeastOverlay(
-          args: {"pack": card},
-          onClose: (d) async {
-            services.changeState(ServiceStatus.punch, data: 1);
-            if (isTutorial) {
-              await Future.delayed(300.ms);
-              services.changeState(ServiceStatus.changeTab, data: {"index": 2});
-            }
-          },
-        ),
-      );
-      return;
-    }
-  }
-
-  @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.shown && isTutorial) {
@@ -235,7 +217,7 @@ class _AttackOutcomeStateFeastOverlay
 
   @override
   void dismiss() {
-    _animationController.stop();
+    _animationController.dispose();
     super.dismiss();
   }
 

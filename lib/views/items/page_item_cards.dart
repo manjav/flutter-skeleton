@@ -20,6 +20,12 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
   @override
   initState() {
     super.initState();
+    services.addListener(() {
+      var state = services.state;
+      if (state.status == ServiceStatus.changeTab && state.data["index"] == 1) {
+        checkTutorial();
+      }
+    });
     _sortController = AnimationController(
       vsync: this,
       duration: 300.ms,
@@ -29,11 +35,11 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   @override
   void onTutorialFinish(data) {
-    if (data["index"] == 18 || data["index"] == 46) {
-      var cards = accountProvider.account.getReadyCards();
+    if (data["id"] == 323 || data["id"] == 653) {
+      var cards = accountProvider.account.getReadyCards(removeHeroes: true);
       serviceLocator<RouteService>()
           .to(Routes.popupCardDetails, args: {'card': cards[0]});
-    } else if (data["id"] == 403) {
+    } else if (data["id"] == 404) {
       var cards = accountProvider.account.getReadyCards();
       serviceLocator<RouteService>()
           .to(Routes.popupCardDetails, args: {'card': cards[0]});

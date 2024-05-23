@@ -67,11 +67,15 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
 
   @override
   void onTutorialStep(data) {
-    if (data["id"] == 405) {
+    if (data["id"] == 406) {
       _itemHolderPress(0, null);
-    } else if (data["id"] == 407 || data["id"] == 406) {
-      //todo: check minions index for starter account
-      _setItem(_minions[0], 0, null, null);
+    } else if (data["id"] == 407) {
+      _setItem(_minions[1], 0, null, null);
+    } else if (data["id"] == 501) {
+      var item = _minions[1];
+      var host = item.getHost(_heroes);
+      var heroItem = item.getUsage(_account.heroItems.values.toList());
+      _setItem(_minions[1], 0, heroItem, host);
     }
     super.onTutorialStep(data);
   }
@@ -102,7 +106,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
             }
 
             return Column(children: [
-              SkinnedText("${name}_t".l()),
+              SkinnedText("${name}_title".l()),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -360,12 +364,15 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
           await _tryRPC(RpcId.buyHeroItem, {RpcParams.id.name: item.id});
       int id = result["heroitem_id"];
       _account.heroItems[id] = HeroItem(id, item, 0);
-    } finally {}
+    } finally {
+      setState(() {});
+    }
   }
 
   _tryRPC(RpcId id, Map<String, dynamic> params) async {
     try {
-      var data = await rpc(id, params: params);
+      var data =
+          await rpc(id, params: params, showError: isTutorial ? false : true);
       if (!mounted) return;
       accountProvider.update(context, data);
       setState(() {});

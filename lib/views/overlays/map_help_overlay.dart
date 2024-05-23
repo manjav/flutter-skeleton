@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';
@@ -24,7 +25,8 @@ class _MapHelpOverlayState extends AbstractOverlayState<MapHelpOverlay> {
   initState() {
     super.initState();
     checkTutorial();
-    serviceLocator<TutorialManager>().toggleIgnorePointer(true);
+    Future.delayed(100.ms,
+        () => serviceLocator<TutorialManager>().toggleIgnorePointer(true));
   }
 
   @override

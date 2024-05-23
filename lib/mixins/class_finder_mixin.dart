@@ -10,8 +10,8 @@ mixin ClassFinderMixin {
 mixin ClassFinderWidgetMixin<S extends StatefulWidget> on State<S> {
   AccountProvider get accountProvider => serviceLocator<AccountProvider>();
 
-  Future<dynamic> rpc(RpcId id, {Map? params}) async {
+  Future<dynamic> rpc(RpcId id, {Map? params, bool showError = true}) async {
     return await serviceLocator<HttpConnection>()
-        .tryRpc(context, id, params: params);
+        .tryRpc(context, id, params: params, showError: showError);
   }
 }

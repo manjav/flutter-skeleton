@@ -38,6 +38,55 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   List<Widget> appBarElementsRight() => [];
 
   @override
+  void onTutorialStart(data) {
+    if (data["id"] == 903) {
+      _pageController.jumpToPage(5);
+    }
+    super.onTutorialStart(data);
+  }
+
+  @override
+  void onTutorialStep(data) async {
+    if (data["id"] == 904) {
+      //deploy card
+      _warriors[_account.id]!
+          .cards
+          .setAtCard(0, _deckCards.value[5], toggleMode: false);
+      // _warriors[1]!.cards.setAtCard(index, cards[index]);
+      var slot = _slotState.value;
+      _gotoNextSlot(0, slot);
+      _updatePowerBalance();
+    } else if (data["id"] == 906) {
+      //second card and show time
+    } else if (data["id"] == 908) {
+      //timeout second card
+      _warriors[_account.id]!
+          .cards
+          .setAtCard(_slotState.value.i, null, toggleMode: false);
+      _gotoNextSlot(1, _slotState.value);
+    } else if (data["id"] == 912) {
+      //add tribemate
+      _addWarrior(_account.id, 2, "یار کمکی");
+    } else if (data["id"] == 913) {
+      //add tribemate
+      _warriors[2]!.cards.setAtCard(1, _deckCards.value[5], toggleMode: false);
+    } else if (data["id"] == 915) {
+      //go to hero page
+      _pageController.jumpToPage(0);
+    } else if (data["id"] == 918) {
+      //deploy hero card
+      _warriors[_account.id]!
+          .cards
+          .setAtCard(4, _deckCards.value[0], toggleMode: false);
+      _updatePowerBalance();
+    } else if (data["id"] == 920) {
+      //close and go to opponent for status guid
+      _close();
+    }
+    super.onTutorialStep(data);
+  }
+
+  @override
   void initState() {
     _account = accountProvider.account;
     _battleId = widget.args["battle_id"] ?? 0;
@@ -100,7 +149,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       return y - x;
     });
     _maxPower = _account.calculateMaxPower();
-    _pageController = PageController(viewportFraction: 0.25);
+    _pageController = PageController(viewportFraction: 0.40);
     super.initState();
     _setSlotTime(0);
     WidgetsBinding.instance.addPostFrameCallback((d) {
@@ -109,6 +158,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             (t) => _setSlotTime((_seconds += 0.334).round()));
         _pageController.jumpToPage(0);
       }
+      _pageController.jumpToPage(1);
     });
     if (_battleId == 0) {
       _warriorsNotifier.add(
@@ -132,55 +182,6 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
       // }
       // });
     }
-  }
-
-  @override
-  void onTutorialStart(data) {
-    if (data["id"] == 903) {
-      _pageController.jumpToPage(5);
-    }
-    super.onTutorialStart(data);
-  }
-
-  @override
-  void onTutorialStep(data) async {
-    if (data["id"] == 904) {
-      //deploy card
-      _warriors[_account.id]!
-          .cards
-          .setAtCard(0, _deckCards.value[5], toggleMode: false);
-      // _warriors[1]!.cards.setAtCard(index, cards[index]);
-      var slot = _slotState.value;
-      _gotoNextSlot(0, slot);
-      _updatePowerBalance();
-    } else if (data["id"] == 906) {
-      //second card and show time
-    } else if (data["id"] == 908) {
-      //timeout second card
-      _warriors[_account.id]!
-          .cards
-          .setAtCard(_slotState.value.i, null, toggleMode: false);
-      _gotoNextSlot(1, _slotState.value);
-    } else if (data["id"] == 912) {
-      //add tribemate
-      _addWarrior(_account.id, 2, "یار کمکی");
-    } else if (data["id"] == 913) {
-      //add tribemate
-      _warriors[2]!.cards.setAtCard(1, _deckCards.value[5], toggleMode: false);
-    } else if (data["id"] == 915) {
-      //go to hero page
-      _pageController.jumpToPage(0);
-    } else if (data["id"] == 917) {
-      //deploy hero card
-      _warriors[_account.id]!
-          .cards
-          .setAtCard(4, _deckCards.value[0], toggleMode: false);
-      _updatePowerBalance();
-    } else if (data["id"] == 918) {
-      //close and go to opponent for status guid
-      _close();
-    }
-    super.onTutorialStep(data);
   }
 
   GlobalKey heroKey = GlobalKey();
@@ -215,7 +216,7 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
             LiveTribe(
                 _oppositesHead.id, _battleId, _helpCost, _warriorsNotifier),
             LiveTribe(_friendsHead.id, _battleId, _helpCost, _warriorsNotifier,
-                isTutorial: true),
+                isTutorial: isTutorial),
             Positioned(
                 width: 120.d,
                 right: 40.d,

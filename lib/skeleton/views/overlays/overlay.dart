@@ -57,7 +57,7 @@ class AbstractOverlayState<T extends AbstractOverlay> extends State<T>
       serviceLocator.get<TutorialManager>().isTutorial(widget.route);
 
   checkTutorial() {
-    serviceLocator<TutorialManager>().checkToturial(context, widget.route);
+    serviceLocator<TutorialManager>().checkToturial(widget.route);
   }
 
   void onTutorialFinish(dynamic data) {}

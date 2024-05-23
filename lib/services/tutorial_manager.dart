@@ -12,9 +12,8 @@ class TutorialManager {
   var onFinish = Rx<dynamic>(null);
   var onStart = Rx<dynamic>(null);
   final ValueNotifier<bool> _ignorePointer = ValueNotifier<bool>(false);
-  dynamic _currentItem;
+  Map<String, dynamic>? _currentItem;
   int _index = 0;
-  late BuildContext _context;
 
   void toggleIgnorePointer(bool ignore) {
     _ignorePointer.value = ignore;
@@ -24,86 +23,94 @@ class TutorialManager {
     if (!Tutorial.tutorials.containsKey(route)) return false;
 
     var account = serviceLocator<AccountProvider>().account;
-    int currentIndex = account.tutorial_index;
+    int currentId = account.tutorial_id;
 
-    var data = (Tutorial.tutorials[route]! as List)
-        .lastWhereOrNull((element) => element["lastIndex"] >= currentIndex
-            //&& account.level == element["level"]
-            );
+    var data = (Tutorial.tutorials[route]! as List).lastWhereOrNull((element) =>
+        element["startId"] <= currentId &&
+        element["lastId"] >= currentId &&
+        account.level == element["level"]);
     if (data == null) return false;
     return true;
   }
 
-  checkToturial(BuildContext context, String route) async {
+  checkToturial(String route) async {
     if (!Tutorial.tutorials.containsKey(route)) return;
 
     var account = serviceLocator<AccountProvider>().account;
-    int currentIndex = account.tutorial_index;
-    _context = context;
+    int currentId = account.tutorial_id;
 
-    var data = (Tutorial.tutorials[route]! as List)
-        .firstWhereOrNull((element) => element["startIndex"] == currentIndex
-            //&& account.level == element["level"]
-            );
+    var data = (Tutorial.tutorials[route]! as List).firstWhereOrNull(
+        (element) =>
+            element["startId"] == currentId &&
+            account.level == element["level"]);
     if (data == null) return;
-    // if (_currentSequnce != null) return;
+    if (_currentSequnce != null) return;
     _currentSequnce = data["sequnces"] as List;
     await Future.delayed(Duration(milliseconds: data["delay"] as int));
 
-    if (context.mounted) {
-      _index = 0;
-      onStart(_currentSequnce[0]);
-      showOverlay();
-    }
+    _index = 0;
+    onStart(_currentSequnce[0]);
+    showOverlay();
   }
 
   showOverlay() async {
-    if (_index == _currentSequnce.length) {
-      onFinish.value = _currentSequnce[--_index];
+    if (_index >= _currentSequnce.length) {
+      var data = _currentSequnce[--_index];
+      _currentSequnce = null;
+      onFinish.value = data;
       return;
     }
     _currentItem = _currentSequnce[_index];
-    await Future.delayed(Duration(milliseconds: _currentItem["delay"] as int));
-    if (_context.mounted) {
-      Overlays.insert(
-        _context,
-        TutorialOverlay(
-          center: _currentItem["center"],
-          characterName: _currentItem["characterName"],
-          dialogueSide: _currentItem["side"],
-          showBackground: _currentItem["background"],
-          showCharacter: _currentItem["character"],
-          showHand: _currentItem["hand"],
-          handPosition: _currentItem["handPosition"],
-          handQuarterTurns: _currentItem["handQuarterTurns"] ?? 0,
-          showFocus: _currentItem["showFocus"] ?? false,
-          text: (_currentItem["text"] as String).l(),
-          characterSize: _currentItem["characterSize"],
-          bottom: _currentItem["bottom"],
-          ignorePointer: _ignorePointer,
-          radius: _currentItem["radius"],
-          onTap: onTapOverlay,
-        ),
-      );
-    }
+    await Future.delayed(Duration(milliseconds: _currentItem!["delay"] as int));
+    Overlays.insert(
+      Get.overlayContext!,
+      TutorialOverlay(
+        center: _currentItem!["center"],
+        characterName: _currentItem!["characterName"],
+        dialogueSide: _currentItem!["side"],
+        showBackground: _currentItem!["background"],
+        showCharacter: _currentItem!["character"],
+        showHand: _currentItem!["hand"],
+        handPosition: _currentItem!["handPosition"],
+        handQuarterTurns: _currentItem!["handQuarterTurns"] ?? 0,
+        showFocus: _currentItem!["showFocus"] ?? false,
+        text: (_currentItem!["text"] as String).l(),
+        characterSize: _currentItem!["characterSize"],
+        bottom: _currentItem!["bottom"],
+        ignorePointer: _ignorePointer,
+        radius: _currentItem!["radius"],
+        dialogueHeight: _currentItem!["dialogueHeight"],
+        onTap: onTapOverlay,
+      ),
+    );
   }
 
   onTapOverlay() {
+    var item = _currentItem as Map<String, dynamic>;
     Overlays.remove(OverlaysName.tutorial);
-    updateTutorialIndex(_context, _currentItem["index"], _currentItem["id"]);
-    onStepChange.value = _currentItem;
+    updateTutorialIndex(
+      Get.overlayContext!,
+      item["index"],
+      item["id"],
+      updateRemote:
+          item.containsKey("breakPoint") && item["breakPoint"] == true,
+    );
+    onStepChange.value = item;
     ++_index;
     showOverlay();
   }
 
-  updateTutorialIndex(BuildContext context, int index, int id) async {
+  updateTutorialIndex(BuildContext context, int index, int id,
+      {bool updateRemote = true}) async {
     try {
-      // await serviceLocator<HttpConnection>().tryRpc(
-      //     context, RpcId.tutorialState,
-      //     params: {"index": 11, "id": id});
       if (context.mounted) {
         serviceLocator<AccountProvider>()
             .update(context, {"tutorial_index": index, "tutorial_id": id});
+      }
+      if (updateRemote) {
+        await serviceLocator<HttpConnection>().tryRpc(
+            context, RpcId.tutorialState,
+            params: {"index": index, "id": id});
       }
     } catch (e) {
       log('$e');
