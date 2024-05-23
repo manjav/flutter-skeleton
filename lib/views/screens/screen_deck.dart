@@ -519,8 +519,12 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     var opponentPower = "????";
     if (opponent.isRevealed) {
       opponentPower = opponent.defPower.compact();
-    } else if (widget.args["opponent"] == null) {
-      opponentPower = "~${opponent.defPower.compact()}";
+    } else {
+      if (opponent.id == 0) {
+        opponentPower = "~${opponent.defPower.compact()}";
+      } else {
+        opponentPower = powerRatingText(opponent.powerRatio);
+      }
     }
     return Expanded(
       child: Stack(
