@@ -23,7 +23,7 @@ class _MatchingFeastOverlayState
   void initState() {
     super.initState();
     startSFX = "battle";
-    children = [backgroundBuilder(), animationBuilder("matching")];
+    children = [animationBuilder("matching")];
 
     process(() async {
       await Future.delayed(const Duration(milliseconds: 300));
