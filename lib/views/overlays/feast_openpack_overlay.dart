@@ -86,12 +86,23 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
         var card = _cards[i];
         updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
         updateRiveText("cardLevelText$i", card.base.rarity.convert());
-        updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
+        updateRiveText("cardPowerText$i", "ˢ${card.base.power.compact()}");
         loadCardIcon(_cardIconAssets[i]!, card.base.getName());
         loadCardFrame(_cardFrameAssets[i]!, card.base);
         if (card.base.isHero) {
-          updateRiveText(
-              "cardCaptionText$i", "${card.base.getName()}_title".l());
+          var heroText = "";
+          switch (card.base.heroType) {
+            case 0:
+              heroText = "power";
+              break;
+            case 1:
+              heroText = "wisdom";
+              break;
+            case 2:
+              heroText = "blessing";
+              break;
+          }
+          updateRiveText("cardCaptionText$i", "${heroText}_title".l());
           updateRiveText("benefitCooldownText$i",
               card.base.attributes[HeroAttribute.wisdom].toString().convert());
           updateRiveText(
@@ -103,7 +114,11 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
               card.base.attributes[HeroAttribute.power].toString().convert());
         }
       }
-      updateRiveText("commentText", "select a hero".l());
+      if (_cards[0].base.isHero) {
+        updateRiveText("commentText", "select a hero".l());
+      } else {
+        updateRiveText("commentText", "tap_close".l());
+      }
     }
     if (event.name == "choose") {
       _chooseHero(event.properties["card"].toInt());
