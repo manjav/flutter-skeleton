@@ -291,6 +291,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                       alignment: Alignment.center,
                       size: ButtonSize.medium,
                       onPressed: _attack,
+                      isEnable: opponents.isNotEmpty,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
