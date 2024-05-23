@@ -6,7 +6,7 @@ import '../../app_export.dart';
 class LevelupFeastOverlay extends AbstractOverlay {
   final Map<String, dynamic> args;
   const LevelupFeastOverlay({required this.args, super.onClose, super.key})
-      : super();
+      : super(route: OverlaysName.feastLevelUp);
 
   @override
   createState() => _LevelupScreenState();
@@ -39,6 +39,9 @@ class _LevelupScreenState extends AbstractOverlayState<LevelupFeastOverlay>
     updateRiveText("cardNameText", "${_card!.base.fruit.name}_title".l());
     updateRiveText("cardLevelText", _card!.base.rarity.convert());
     updateRiveText("cardPowerText", "ˢ${_card!.power.compact()}");
+    updateRiveText("text_ribbon", "level_up".l());
+    updateRiveText("text_ribbon_shadow", "level_up".l());
+    updateRiveText("text_ribbon_stroke", "level_up".l());
     return controller;
   }
 
