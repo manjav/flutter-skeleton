@@ -48,4 +48,5 @@ class Routes {
   static const popupCardSelectCategory = "/popupCardSelectCategory";
   static const popupChooseName = "/popupChooseName";
   static const popupHelp = "/popupHelp";
+  static const popupFreeGold = "/popupFreeGold";
 }

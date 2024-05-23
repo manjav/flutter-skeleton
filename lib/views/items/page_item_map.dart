@@ -315,7 +315,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           const GiftRewardFeastOverlay(),
         );
       });
-      ads.show(AdType.rewarded);
+      serviceLocator<RouteService>().to(Routes.popupFreeGold);
     }
   }
 

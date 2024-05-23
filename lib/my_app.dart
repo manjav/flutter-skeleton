@@ -133,6 +133,7 @@ class _MyAppState extends State<MyApp>
             _getPage(Routes.popupCardSelectCategory, () => const SelectCardCategoryPopup()),
             _getPage(Routes.popupChooseName, () => const ChooseNamePopup()),
             _getPage(Routes.popupHelp, () => const HelpPopup()),
+            _getPage(Routes.popupFreeGold, () => const FreeGoldPopup()),
           ],
         ),
       ),
