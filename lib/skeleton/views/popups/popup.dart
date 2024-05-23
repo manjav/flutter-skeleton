@@ -42,7 +42,7 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
   }
 
   checkTutorial() {
-    serviceLocator<TutorialManager>().checkToturial(context, widget.route);
+    serviceLocator<TutorialManager>().checkToturial(widget.route);
   }
 
   void onTutorialFinish(dynamic data) {}

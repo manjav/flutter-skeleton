@@ -39,7 +39,8 @@ class LoadingData {
             'treasury': 5,
             'popupOpponents': 9,
             'tribeChange': 150,
-            'lab': 1
+            'lab': 1,
+            'base': 3
           },
           'mineBallonActiveRatio': 0.1
         };
