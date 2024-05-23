@@ -330,6 +330,10 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
     try {
       await rpc(RpcId.scout);
       _selectedOpponent.value.isRevealed = true;
+      if (context.mounted) {
+        accountProvider.update(
+            context, {"gold": accountProvider.account.gold - 2000000000});
+      }
       setState(() {});
     } finally {}
   }
