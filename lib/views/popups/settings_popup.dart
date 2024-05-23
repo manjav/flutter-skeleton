@@ -156,9 +156,11 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
     return Widgets.button(
       context,
       child: SkinnedText("settings_${local.languageCode}".l()),
-      onPressed: () {
+      onPressed: () async {
         Pref.language.setString(local.languageCode);
-        MyApp.restartApp(context);
+        await serviceLocator<Localization>().changeLocal(local);
+        Get.updateLocale(local);
+        if (context.mounted) Get.back();
       },
     );
   }
