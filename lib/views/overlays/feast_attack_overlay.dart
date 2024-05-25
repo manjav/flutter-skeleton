@@ -197,6 +197,14 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     }
     if (event.name == "hit") {
       serviceLocator<Sounds>().play("hit", channel: "hit");
+      for (var i = 0; i < _playerCards.length; i++) {
+        updateRiveText(
+            "cardPowerText$i", "ˢ${_cardPowers[i]?.value.toInt().compact()}");
+      }
+      for (var i = 0; i < _oppositeCards.length; i++) {
+        updateRiveText("cardPowerText${10 + i}",
+            "ˢ${_cardPowers[10 + i]?.value.toInt().compact()}");
+      }
     }
     if (state == RewardAnimationState.started) {
       var attackerCombo = _outcomeData["attacker_combo_info"] as List;
@@ -211,7 +219,6 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
         e["cards"].forEach((x) => defenderComboIds.add(x["id"]));
       }
 
-      
       updateCard(i, AccountCard card) {
         updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
         updateRiveText("cardLevelText$i", card.base.rarity.convert());
