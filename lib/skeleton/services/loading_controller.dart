@@ -42,6 +42,8 @@ class LoadingController extends GetxController {
 
       if (context.mounted) {
         accountProvider.initialize(data.account);
+        accountProvider.updateBuildingsLevel();
+
         serviceLocator<MissionManager>().initialize();
 
         var noobSocket = serviceLocator<NoobSocket>();

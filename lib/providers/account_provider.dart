@@ -25,11 +25,13 @@ class AccountProvider extends ChangeNotifier {
     account.tutorial_index = index;
     notifyListeners();
   }
+
   ///Update buildings level after account level up
   void updateBuildingsLevel() {
     for (var building in account.buildings.values) {
       var isAvailable = building.getIsAvailable(account);
-      if (isAvailable && account.buildings[building.type]!.level == 0) {
+      if (!isAvailable) building.level = 0;
+      if (account.buildings[building.type]!.level == 0) {
         building.level = 1;
       }
     }
