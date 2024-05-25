@@ -31,8 +31,10 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
         _levelInput?.value = -1;
       }
       if (!widget.building.getIsAvailable(account)) return;
-      _levelInput?.value =
-          account.buildings[widget.building.type]!.level.toDouble();
+
+      var level = account.buildings[widget.building.type]!.level.toDouble();
+      _levelInput?.value = level;
+
       if (widget.building.type == Buildings.treasury) {
         var x = ((5 * account.bank_account_balance) / widget.building.benefit);
         x = x.isInfinite ? 0 : x;
