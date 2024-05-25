@@ -22,6 +22,7 @@ mixin MineMixin {
     var capacity = account.buildings[Buildings.mine]!.benefit;
     var goldPerSec = building.getCardsBenefit(account) / 3600;
     var collected = collectableGold(account);
+    if (goldPerSec <= 0) return -1;
 
     return (capacity - collected) ~/ goldPerSec;
   }
@@ -34,6 +35,7 @@ mixin MineMixin {
     var capacity = account.buildings[Buildings.mine]!.benefit *
         account.loadingData.rules["mineBallonActiveRatio"]!;
     var goldPerSec = building.getCardsBenefit(account) / 3600;
+    if (goldPerSec <= 0) return -1;
 
     return (capacity - collected) ~/ goldPerSec;
   }

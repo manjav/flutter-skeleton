@@ -40,12 +40,12 @@ class HttpConnection extends IService {
     loadData.account = Account.initialize(data, loadData);
 
     // Check internal version, public users avoidance
-    var test = _config["updates"]["test"];
-    if (test["version"] < version) {
-      if (!test["testers"].contains(loadData.account.id)) {
-        throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
-      }
-    }
+    // var test = _config["updates"]["test"];
+    // if (test["version"] < version) {
+    //   if (!test["testers"].contains(loadData.account.id)) {
+    //     throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
+    //   }
+    // }
     Pref.restoreKey.setString(loadData.account.restoreKey);
     super.initialize();
     return loadData;

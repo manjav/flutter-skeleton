@@ -52,7 +52,8 @@ class Sounds extends ISounds {
     var file = await Loader().load(
         '$name.$extension', '${LoaderWidget.baseURL}/sounds/$name.$extension',
         hash: md5);
-    player.play(_sounds[name] = DeviceFileSource(file!.path));
+    if (file == null) return;
+    player.play(_sounds[name] = DeviceFileSource(file.path));
   }
 
   ///we have bug here because in mouse down and mouse up we get same audio player

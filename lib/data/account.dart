@@ -4,8 +4,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get/get.dart';
 
 import '../app_export.dart';
 
@@ -295,7 +296,7 @@ class Account extends Player with MineMixin {
   void _updateInteger(Map<String, dynamic> map) {
     q = Convert.toInt(map["q"], q);
     xp = Convert.toInt(map["xp"], xp);
-    gold = Convert.toInt(map["gold"], xp);
+    gold = Convert.toInt(map["gold"], gold);
     nectar = Convert.toInt(map["nectar"], nectar);
     potion = Convert.toInt(map["potion_number"], potion);
     activity_status = Convert.toInt(map["activity_status"], activity_status);
@@ -507,13 +508,18 @@ class Account extends Player with MineMixin {
     var achieveCards = <AccountCard>[];
     addCard(dynamic newCard) {
       if (newCard == null) return null;
-      var card = cards[newCard["id"]];
+      var card = cards[newCard is AccountCard ? newCard.id : newCard["id"]];
       if (card == null) {
-        cards[newCard["id"]] = card = AccountCard(this, newCard);
+        cards[newCard["id"]] = card =
+            newCard is AccountCard ? newCard : AccountCard(this, newCard);
       } else {
-        card.power = newCard["power"];
-        card.lastUsedAt = newCard["last_used_at"];
-        card.base = loadingData.baseCards[newCard['base_card_id']]!;
+        card.power = newCard is AccountCard ? newCard.power : newCard["power"];
+        card.lastUsedAt = newCard is AccountCard
+            ? newCard.lastUsedAt
+            : newCard["last_used_at"];
+        card.base = loadingData.baseCards[newCard is AccountCard
+            ? newCard.base.id
+            : newCard['base_card_id']]!;
       }
       achieveCards.add(card);
       return card;
@@ -540,14 +546,32 @@ class Account extends Player with MineMixin {
     // Level Up
     data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
-      if (data["level"] == 5) {
-        serviceLocator<Trackers>().design("level_5");
-      }
-      Timer(const Duration(milliseconds: 100),
-          () => Overlays.insert(context, LevelupFeastOverlay(args: data)));
+      // if (data["level"] == 5) {
+      //   serviceLocator<Trackers>().design("level_5");
+      // }
+      Timer(
+        const Duration(milliseconds: 300),
+        () {
+          Overlays.insert(
+            context,
+            LevelupFeastOverlay(
+              args: data,
+              onClose: (_) {
+                serviceLocator<ServicesProvider>()
+                    .changeState(ServiceStatus.changeTab, data: {"index": 2});
+              },
+            ),
+          );
+          Future.delayed(200.ms, () {
+            serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+            Overlays.closeAll(except: OverlaysName.feastLevelUp);
+          });
+        },
+      );
     }
 
     data["achieveCards"] = achieveCards;
+    deadlines.clear();
     _addDeadline(data, xpBoostCreatedAt, xpBoostId);
     _addDeadline(data, pwBoostCreatedAt, pwBoostId);
     return data;

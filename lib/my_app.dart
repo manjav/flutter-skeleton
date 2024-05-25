@@ -49,6 +49,7 @@ class _MyAppState extends State<MyApp>
     Get.reset(clearRouteBindings: true);
 
     serviceLocator<Sounds>().stopAll();
+    serviceLocator<NoobSocket>().disconnect();
     await serviceLocator.reset();
     initServices();
 

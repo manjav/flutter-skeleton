@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../app_export.dart';
 
@@ -9,15 +10,26 @@ class Overlays {
     if (!_entries.containsKey(overlay.route)) {
       var entry = OverlayEntry(builder: (c) => overlay);
       _entries[overlay.route] = entry;
-      Overlay.of(context).insert(entry);
+      Overlay.of(Get.overlayContext!).insert(entry);
     }
   }
 
   static remove(String route) {
     if (_entries.containsKey(route)) {
       _entries[route]?.remove();
+      _entries[route]?.dispose();
       _entries.remove(route);
     }
+  }
+
+  static closeAll({String except = ""}) {
+    _entries.forEach((key, value) {
+      if (key != except) {
+        _entries[key]?.remove();
+        _entries[key]?.dispose();
+      }
+    });
+    _entries.removeWhere((key, value) => key != except);
   }
 
   static void clear() => _entries.clear();
