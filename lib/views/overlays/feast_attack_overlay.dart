@@ -207,13 +207,13 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       }
     }
     if (state == RewardAnimationState.started) {
-      var attackerCombo = _outcomeData["attacker_combo_info"] as List;
+      var attackerCombo = _outcomeData["attacker_combo_info"] ?? [];
       List<int> attackerComboIds = [];
       for (var e in attackerCombo) {
         e["cards"].forEach((x) => attackerComboIds.add(x["id"]));
       }
 
-      var defenderCombo = _outcomeData["defender_combo_info"] as List;
+      var defenderCombo = _outcomeData["defender_combo_info"] ?? [];
       List<int> defenderComboIds = [];
       for (var e in defenderCombo) {
         e["cards"].forEach((x) => defenderComboIds.add(x["id"]));
