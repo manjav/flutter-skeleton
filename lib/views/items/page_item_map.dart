@@ -122,10 +122,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           args: {"pack": card},
           onClose: (d) async {
             services.changeState(ServiceStatus.punch, data: 1);
-            bool haveHero = accountProvider.account
-                    .getReadyCards()
-                    .firstWhereOrNull((element) => element.base.isHero) !=
-                null;
+            bool haveHero = accountProvider.account.heroes.isNotEmpty;
             //if buy hero success save as a breakPoint
             if (haveHero) {
               accountProvider.updateTutorial(
@@ -292,16 +289,19 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       Buildings.lab => Routes.popupPotion,
       _ => "",
     };
+
+    // Get availability level from account
+    if (!building.getIsAvailable(account)) {
+      return;
+    }
+
     // Offense and defense buildings need tribe membership.
     if (type == Routes.popupSupportiveBuilding &&
         (account.tribe == null || account.tribe!.id <= 0)) {
       toast("error_149".l());
       return;
     }
-    // Get availability level from account
-    if (!building.getIsAvailable(account)) {
-      return;
-    }
+
     if (type == "") {
       return;
     }
@@ -373,9 +373,16 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   }
 
   void _riveEventsListener(RiveEvent event) {
-    Timer(const Duration(milliseconds: 100), () {
-      setState(
-          () => _buildingPositions = jsonDecode(event.properties["buildings"]));
-    });
+    if (event.name == "splat") {
+      serviceLocator<Sounds>().play("splat", channel: "splat");
+      return;
+    }
+    if (event.name == "loading") {
+      Timer(const Duration(milliseconds: 100), () {
+        setState(() {
+          _buildingPositions = jsonDecode(event.properties["buildings"]);
+        });
+      });
+    }
   }
 }
