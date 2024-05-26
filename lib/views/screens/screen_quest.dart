@@ -19,7 +19,6 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
   int _arenaIndex = 0, _firstArena = 0, _lastArena = 0;
   bool _waitingMode = true;
   late ScrollController _scrollController;
-  List<RxList<City>> _arenas = [];
 
   double _mapHeight = 0;
 
@@ -39,7 +38,6 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
     var location = _questsCount % 130;
     _firstArena = (_arenaIndex - _padding).min(0);
     _lastArena = _arenaIndex + _padding + 1;
-    _arenas = List.generate(4, (index) => <City>[].obs);
     _scrollController = ScrollController(
         keepScrollOffset: false,
         initialScrollOffset:
@@ -70,12 +68,8 @@ class _QuestScreenState extends AbstractScreenState<QuestScreen> {
     );
   }
 
-  Widget _mapItemRenderer(int index) => ArenaItemRenderer(
-      _arenaIndex, index, _getArena(index), _questsCount, _waitingMode);
-
-  RxList<City> _getArena(int index) {
-    return _arenas[index >= _arenas.length ? _arenas.length - 1 : index];
-  }
+  Widget _mapItemRenderer(int index) =>
+      ArenaItemRenderer(_arenaIndex, index, _questsCount, _waitingMode);
 }
 
 class ArenaItemRenderer extends StatefulWidget {
@@ -83,9 +77,8 @@ class ArenaItemRenderer extends StatefulWidget {
   final int questsCount;
   final int currentIndex;
   final bool waitingMode;
-  final RxList<City> arena;
-  const ArenaItemRenderer(this.currentIndex, this.index, this.arena,
-      this.questsCount, this.waitingMode,
+  const ArenaItemRenderer(
+      this.currentIndex, this.index, this.questsCount, this.waitingMode,
       {super.key});
 
   @override
@@ -98,6 +91,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
   bool _waitingMode = true;
   SMIInput<double>? _boatPosition;
   SMINumber? _state;
+  RxList<City> arena = <City>[].obs;
 
   @override
   void initState() {
@@ -119,7 +113,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
       if (_questsCount != accountProvider.account.questsCount - 1) {
         _questsCount = accountProvider.account.questsCount - 1;
         if (_state!.value >= 9) {
-          widget.arena.refresh();
+          arena.refresh();
         } else {
           _state?.value++;
         }
@@ -133,24 +127,33 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
     return SizedBox(
       width: DeviceInfo.size.width,
       child: Stack(alignment: Alignment.center, children: [
-        LoaderWidget(AssetType.animation, "quest_map_${widget.index % 3}",
-            onRiveInit: (Artboard artboard) {
-          var controller = StateMachineController.fromArtboard(artboard, "Map");
-          controller?.addEventListener((event) => _riveEventsListener(event));
-          controller?.findInput<bool>("boatActive")?.value =
-              widget.index == widget.currentIndex;
-          _boatPosition = controller?.findInput<double>("boatPosition");
-          artboard.addController(controller!);
-        }, fit: BoxFit.fitWidth),
+        LoaderWidget(
+          AssetType.animation,
+          "quest_map_${widget.index % 3}",
+          onRiveInit: (Artboard artboard) {
+            var controller =
+                StateMachineController.fromArtboard(artboard, "Map");
+            controller?.addEventListener((event) => _riveEventsListener(event));
+            controller?.findInput<bool>("boatActive")?.value =
+                widget.index == widget.currentIndex;
+            _boatPosition = controller?.findInput<double>("boatPosition");
+            artboard.addController(controller!);
+          },
+          fit: BoxFit.fitWidth,
+        ),
         StreamBuilder<List<City>>(
-            stream: widget.arena.stream,
+            stream: arena.stream,
             builder: (context, snapshot) {
               if (snapshot.data == null) return const SizedBox();
-              return Stack(children: [
-                for (var i = 0; i < snapshot.data!.length; i++)
-                  _cityRenderer(snapshot.data!.length - i - 1,
-                      snapshot.data![snapshot.data!.length - i - 1])
-              ]);
+              return Stack(
+                children: [
+                  for (var i = 0; i < snapshot.data!.length; i++)
+                    _cityRenderer(
+                      snapshot.data!.length - i - 1,
+                      snapshot.data![snapshot.data!.length - i - 1],
+                    ),
+                ],
+              );
             }),
         Positioned(
             top: 140.d,
@@ -182,7 +185,7 @@ class _ArenaItemRendererState extends State<ArenaItemRenderer>
             }
           }
         }
-        widget.arena.value = positions;
+        arena.value = positions;
       }
     });
   }
