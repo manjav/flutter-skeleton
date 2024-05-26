@@ -60,14 +60,15 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
           if (section == ShopSections.gold &&
               !result.containsKey(item.id.toString())) continue;
           var price = 0;
+          var storeId = FlavorConfig.instance.variables["storeId"];
           if (item.inStore) {
-            var storeId = FlavorConfig.instance.variables["storeId"];
             price =
                 int.parse(result[item.id.toString()]["price"][storeId] ?? 0);
           }
           _items[section]!.add(ShopItemVM(
             item,
             price,
+            result[item.id.toString()]?["onsale"]?[storeId],
             8,
             section == ShopSections.nectar ? 11 : 12,
           ));
@@ -83,8 +84,8 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
               _items[section]![i].mainCells = 10;
             }
           }
-          _items[section]!.insert(
-              len - 2, ShopItemVM(ShopItem(ShopSections.none, {}), 0, 2, 10));
+          _items[section]!.insert(len - 2,
+              ShopItemVM(ShopItem(ShopSections.none, {}), 0, null, 2, 10));
         }
         _account.loadingData.shopProceedItems = _items;
       }
@@ -265,6 +266,10 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
 
   Widget _itemGoldBuilder(int index, ShopItemVM item) {
     var title = item.getTitle();
+    double onSale =
+        item.onSale != null ? double.parse(item.onSale[2].toString()) / 100 : 0;
+    double extraGold =
+        (item.base.value * ShopData.getMultiplier(_account.level)) * onSale;
     return _baseItemBuilder(
         index,
         title,
@@ -283,12 +288,13 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 Asset.load<Image>("icon_gold", width: 76.d),
                 SkinnedText(
-                    (item.base.value * ShopData.getMultiplier(_account.level))
+                    (item.base.value * ShopData.getMultiplier(_account.level) +
+                            (_account.better_gold_pack_ratio ? extraGold : 0))
                         .round()
                         .compact(),
                     style: TStyles.large.copyWith(color: TColors.orange))
               ])),
-          _percentageBadge(item.base.ratio),
+          _percentageBadge(item.base.ratio + onSale),
           _rewardBadge(item.base.reward),
         ]));
   }
