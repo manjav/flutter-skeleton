@@ -72,7 +72,7 @@ class _AttackOutcomeStateFeastOverlay
     ];
     if (widget.type == Routes.battleOut) {
       if (accountProvider.account.level > 7) {
-      _prizes.add(MapEntry("league_bonus", widget.args['league_bonus'] ?? 0));
+        _prizes.add(MapEntry("league_bonus", widget.args['league_bonus'] ?? 0));
       }
       _prizes.add(MapEntry("seed", widget.args['seed_added'] ?? 0));
     }

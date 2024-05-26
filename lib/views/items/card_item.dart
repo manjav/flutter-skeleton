@@ -35,7 +35,7 @@ class CardItem extends StatefulWidget {
 
   static Image getCardBackground(int category, int rarity) {
     var level = category == 0 ? "_$rarity" : "";
-    return Asset.load<Image>("card_frame_$category$level");
+    return Asset.load<Image>("card_frame_$category$level", fit: BoxFit.fill);
   }
 
   static LoaderWidget getCardImage(FruitCard card, double size, {Key? key}) {
@@ -145,17 +145,20 @@ class _CardItemState extends State<CardItem> {
       items.add(Positioned(
           top: 6 * s,
           left: 22 * s,
-          height: 52 * s,
+          height: 60 * s,
           width: 180 * s,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: SkinnedText("${baseCard.fruit.name}_title".l(),
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.left,
-                    alignment: Alignment.centerLeft,
-                    style: _small!.autoSize(baseCard.name.length, 8, 40 * s)),
+                child: SkinnedText(
+                  "${baseCard.fruit.name}_title".l(),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
+                  alignment: Alignment.centerLeft,
+                  style:
+                      _small!.autoSize(baseCard.fruit.name.length, 12, 40 * s),
+                ),
               ),
             ],
           )));
@@ -249,11 +252,11 @@ class _CardItemState extends State<CardItem> {
                             width: 5.d,
                           ),
                           Text(
-                              widget.card
+                            widget.card
                                 .cooldownTimeToCost(_remainingCooldown.value)
-                                  .compact(),
-                              style: TStyles.medium.copyWith(
-                                color: TColors.white,
+                                .compact(),
+                            style: TStyles.medium.copyWith(
+                              color: TColors.white,
                             ),
                             textDirection: Localization.textDirection,
                           ),

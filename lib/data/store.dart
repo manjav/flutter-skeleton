@@ -42,8 +42,9 @@ class ShopData {
   static String calculatePrice(Account account,
       Map<String, SkuDetails> productDetails, ShopItemVM item) {
     var price = item.base.value;
-    if (item.inStore && productDetails.containsKey(item.base.productID)) {
-      return productDetails[item.base.productID]!.mPrice!;
+    if (item.inStore) {
+      return item.price.getFormattedPrice();
+      // return productDetails[item.base.productID]!.mPrice!;
     }
     if (item.base.section == ShopSections.boost) {
       // Converts gold multiplier to nectar for boost packs

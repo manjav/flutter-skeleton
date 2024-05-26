@@ -133,7 +133,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
                   accountProvider.account.tutorial_id);
             }
             await Future.delayed(100.ms);
-      checkTutorial();
+            checkTutorial();
           },
         ),
       );
@@ -300,8 +300,8 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     }
     await serviceLocator<RouteService>().to(type, args: {"building": building});
     if (account.level == 3 || account.level == 9) {
-    checkTutorial();
-  }
+      checkTutorial();
+    }
   }
 
   Widget _box(double type, String title) {

@@ -167,235 +167,236 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     return PopScope(
       canPop: !isTutorial,
       child: Consumer<AccountProvider>(
-      builder: (_, state, child) {
-        return Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            SizedBox(
-              height: Get.height,
-              width: Get.width,
-              child: const LoaderWidget(
-                AssetType.image,
-                "background0",
-                subFolder: "backgrounds",
+        builder: (_, state, child) {
+          return Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              SizedBox(
+                height: Get.height,
+                width: Get.width,
+                child: const LoaderWidget(
+                  AssetType.image,
+                  "background0",
+                  subFolder: "backgrounds",
                   fit: BoxFit.fill,
+                ),
               ),
-            ),
-            Positioned(
-              top: paddingTop + headerSize + 13,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Widgets.rect(color: TColors.black25, height: 500),
-            ),
-            Positioned(
-              top: paddingTop + headerSize + 30,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              child: ValueListenableBuilder<List<AccountCard?>>(
+              Positioned(
+                top: paddingTop + headerSize + 13,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Widgets.rect(color: TColors.black25, height: 500),
+              ),
+              Positioned(
+                top: paddingTop + headerSize + 30,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                child: ValueListenableBuilder<List<AccountCard?>>(
+                    valueListenable: _selectedCards,
+                    builder: (context, value, child) {
+                      return StreamBuilder<bool>(
+                          stream: _sortByPower.stream,
+                          builder: (context, snapshot) {
+                            return GridView.builder(
+                                padding:
+                                    EdgeInsets.fromLTRB(gap, gap, gap, 270.d),
+                                itemCount: cards.length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: CardItem.aspectRatio,
+                                        crossAxisCount: crossAxisCount,
+                                        crossAxisSpacing: gap,
+                                        mainAxisSpacing: gap),
+                                itemBuilder: (c, i) => _cardItemBuilder(
+                                    c, i, state.account, cards[i], itemSize));
+                          });
+                    }),
+              ),
+              Positioned(
+                top: 200.d,
+                height: 150.d,
+                left: 0,
+                right: 0,
+                child: Row(
+                  children: [
+                    _opponentInfo(CrossAxisAlignment.start, account, account),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.d),
+                      child: Asset.load<Image>("icon_vs",
+                          height: 72.d, width: 72.d),
+                    ),
+                    _opponentInfo(CrossAxisAlignment.end, account, _opponent!),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: paddingTop + headerSize,
+                left: 37.d,
+                right: 37.d,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Asset.load<Image>(
+                      "deck_divider",
+                      height: 72.d,
+                    ),
+                    Text(
+                      "choose_deck_title".l(),
+                      style: TStyles.medium.copyWith(color: TColors.primary50),
+                    )
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 370.d,
+                left: 37.d,
+                right: 37.d,
+                child: ValueListenableBuilder<List<AccountCard?>>(
                   valueListenable: _selectedCards,
                   builder: (context, value, child) {
-                    return StreamBuilder<bool>(
-                        stream: _sortByPower.stream,
-                        builder: (context, snapshot) {
-                          return GridView.builder(
-                              padding:
-                                  EdgeInsets.fromLTRB(gap, gap, gap, 270.d),
-                              itemCount: cards.length,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: CardItem.aspectRatio,
-                                      crossAxisCount: crossAxisCount,
-                                      crossAxisSpacing: gap,
-                                      mainAxisSpacing: gap),
-                              itemBuilder: (c, i) => _cardItemBuilder(
-                                  c, i, state.account, cards[i], itemSize));
-                        });
-                  }),
-            ),
-            Positioned(
-              top: 200.d,
-              height: 150.d,
-              left: 0,
-              right: 0,
-              child: Row(
-                children: [
-                  _opponentInfo(CrossAxisAlignment.start, account, account),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.d),
-                    child:
-                        Asset.load<Image>("icon_vs", height: 72.d, width: 72.d),
-                  ),
-                  _opponentInfo(CrossAxisAlignment.end, account, _opponent!),
-                ],
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        for (var i = 0; i < _selectedCards.value.length; i++)
+                          CardHolder(
+                              card: _selectedCards.value[i],
+                              heroMode: i == 2,
+                              onTap: () => _selectedCards.setAtCard(i, null))
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
-            Positioned(
-              top: paddingTop + headerSize,
-              left: 37.d,
-              right: 37.d,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Asset.load<Image>(
-                    "deck_divider",
-                    height: 72.d,
-                  ),
-                  Text(
-                    "Choose Deck",
-                    style: TStyles.medium.copyWith(color: TColors.primary50),
-                  )
-                ],
+              Positioned(
+                top: 340.d,
+                left: 0.d,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 37.d),
+                  child: SkinnedText(account.name),
+                ),
               ),
-            ),
-            Positioned(
-              top: 370.d,
-              left: 37.d,
-              right: 37.d,
-              child: ValueListenableBuilder<List<AccountCard?>>(
-                valueListenable: _selectedCards,
-                builder: (context, value, child) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      for (var i = 0; i < _selectedCards.value.length; i++)
-                        CardHolder(
-                            card: _selectedCards.value[i],
-                            heroMode: i == 2,
-                            onTap: () => _selectedCards.setAtCard(i, null))
-                    ],
-                  );
-                },
+              Positioned(
+                top: 340.d,
+                right: 0.d,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 37.d),
+                  child: SkinnedText(_opponent!.name),
+                ),
               ),
-            ),
-            Positioned(
-              top: 340.d,
-              left: 0.d,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 37.d),
-                child: SkinnedText(account.name),
-              ),
-            ),
-            Positioned(
-              top: 340.d,
-              right: 0.d,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 37.d),
-                child: SkinnedText(_opponent!.name),
-              ),
-            ),
 
-            // Positioned(
-            //     top: paddingTop,
-            //     right: 16.d,
-            //     height: headerSize,
-            //     child: _header(state.account)),
-            // PositionedDirectional(
-            //   top: paddingTop + headerSize + 40.d,
-            //   end: 20.d,
-            //   width: 292.d,
-            //   height: 88.d,
-            //   child: Widgets.touchable(
-            //     context,
-            //     onTap: () {
-            //       cards = cards.reversed.toList();
-            //       _sortByPower.value = !_sortByPower.value;
-            //       if (_sortByPower.value) {
-            //         _sortController.reverse(from: 0.5);
-            //       } else {
-            //         _sortController.forward(from: 0.0);
-            //       }
-            //     },
-            //     child: Widgets.rect(
-            //       decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.circular(50.d),
-            //           border: Border.all(color: TColors.primary50),
-            //           color: TColors.red20),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.center,
-            //         children: [
-            //           Text(
-            //             "Sort by power",
-            //             style: TStyles.small.copyWith(color: TColors.primary50),
-            //           ),
-            //           SizedBox(
-            //             width: 20.d,
-            //           ),
-            //           RotationTransition(
-            //             turns: Tween(begin: 0.0, end: 1.0)
-            //                 .animate(_sortController),
-            //             child: Asset.load<Image>("icon_arrow_down",
-            //                 height: 28.d, width: 21.d),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            Positioned(
-              height: 200.d,
-              bottom: 50.d,
-              width: Get.width * 0.95,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  isTutorial
-                      ? const SizedBox()
-                      : SkinnedButton(
-                          alignment: Alignment.center,
-                          color: ButtonColor.violet,
-                          size: ButtonSize.medium,
-                          width: 221.d,
-                          onPressed: () => Get.back(),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Asset.load<Image>("ui_arrow_back", height: 74.d),
-                            ],
+              // Positioned(
+              //     top: paddingTop,
+              //     right: 16.d,
+              //     height: headerSize,
+              //     child: _header(state.account)),
+              // PositionedDirectional(
+              //   top: paddingTop + headerSize + 40.d,
+              //   end: 20.d,
+              //   width: 292.d,
+              //   height: 88.d,
+              //   child: Widgets.touchable(
+              //     context,
+              //     onTap: () {
+              //       cards = cards.reversed.toList();
+              //       _sortByPower.value = !_sortByPower.value;
+              //       if (_sortByPower.value) {
+              //         _sortController.reverse(from: 0.5);
+              //       } else {
+              //         _sortController.forward(from: 0.0);
+              //       }
+              //     },
+              //     child: Widgets.rect(
+              //       decoration: BoxDecoration(
+              //           borderRadius: BorderRadius.circular(50.d),
+              //           border: Border.all(color: TColors.primary50),
+              //           color: TColors.red20),
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Text(
+              //             "Sort by power",
+              //             style: TStyles.small.copyWith(color: TColors.primary50),
+              //           ),
+              //           SizedBox(
+              //             width: 20.d,
+              //           ),
+              //           RotationTransition(
+              //             turns: Tween(begin: 0.0, end: 1.0)
+              //                 .animate(_sortController),
+              //             child: Asset.load<Image>("icon_arrow_down",
+              //                 height: 28.d, width: 21.d),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              Positioned(
+                height: 200.d,
+                bottom: 50.d,
+                width: Get.width * 0.95,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    isTutorial
+                        ? const SizedBox()
+                        : SkinnedButton(
+                            alignment: Alignment.center,
+                            color: ButtonColor.violet,
+                            size: ButtonSize.medium,
+                            width: 221.d,
+                            onPressed: () => Get.back(),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Asset.load<Image>("ui_arrow_back",
+                                    height: 74.d),
+                              ],
+                            ),
                           ),
-                        ),
-                  SizedBox(
-                    width: isTutorial ? 0 : 20.d,
-                  ),
-                  Expanded(
-                    child: ValueListenableBuilder(
-                      valueListenable: _selectedCards,
+                    SizedBox(
+                      width: isTutorial ? 0 : 20.d,
+                    ),
+                    Expanded(
+                      child: ValueListenableBuilder(
+                        valueListenable: _selectedCards,
                         builder: (context, value, child) {
                           return SkinnedButton(
-                        alignment: Alignment.center,
-                        size: ButtonSize.medium,
-                        onPressed: () => _attack(state.account),
+                            alignment: Alignment.center,
+                            size: ButtonSize.medium,
+                            onPressed: () => _attack(state.account),
                             isEnable: isTutorial
                                 ? (value
                                         .where((element) => element == null)
                                         .length ==
                                     3)
                                 : true,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            LoaderWidget(
-                              AssetType.image,
-                              "icon_battle",
-                              height: 101.d,
-                            ),
-                            SizedBox(width: 16.d),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                LoaderWidget(
+                                  AssetType.image,
+                                  "icon_battle",
+                                  height: 101.d,
+                                ),
+                                SizedBox(width: 16.d),
                                 SkinnedText("attack_l".l(),
                                     style: TStyles.large),
-                          ],
-                        ),
+                              ],
+                            ),
                           );
                         },
-                    ),
-                  )
-                ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
-        );
-      },
+            ],
+          );
+        },
       ),
     );
   }
@@ -623,7 +624,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     if (_selectedCards.value.where((element) => element == null).length == 5) {
       await serviceLocator<RouteService>().to(
         Routes.popupMessage,
-        args: {"title": "Error", "message": "select_cards".l()},
+        args: {"title": "error".l(), "message": "select_cards".l()},
       );
       return;
     }

@@ -81,6 +81,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                             _serviceState.exception!.message
                           ])}\n${isUpdateError ? "" : "try_again".l()}",
                       textAlign: TextAlign.center,
+                      textDirection: Localization.textDirection,
                       style: TStyles.mediumInvert,
                       softWrap: true,
                     ),

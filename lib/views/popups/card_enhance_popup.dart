@@ -32,7 +32,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
   @override
   void onTutorialFinish(data) {
     if (data["id"] == 327) {
-    _sacrifice();
+      _sacrifice();
       serviceLocator<RouteService>().popUntil((route) => route.isFirst);
     }
     super.onTutorialFinish(data);

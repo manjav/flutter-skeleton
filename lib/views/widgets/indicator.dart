@@ -61,11 +61,14 @@ class _IndicatorState extends State<Indicator>
         } else {
           switch (widget.type) {
             case Values.gold:
+              serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+              services.changeState(ServiceStatus.changeTab,
+                  data: {"index": 0, "section": ShopSections.gold});
+              break;
             case Values.nectar:
               serviceLocator<RouteService>().popUntil((route) => route.isFirst);
               services.changeState(ServiceStatus.changeTab,
                   data: {"index": 0, "section": ShopSections.nectar});
-              log("Go to shop");
               break;
             case Values.potion:
               serviceLocator<RouteService>().to(Routes.popupPotion);
@@ -122,7 +125,9 @@ class _IndicatorState extends State<Indicator>
     if (widget.type == Values.leagueRank) {
       var indices = LeagueData.getIndices(league);
       return Stack(children: [
-        Asset.load<Image>("icon_league_${indices.$1}"),
+        league > 0
+            ? Asset.load<Image>("icon_league_${indices.$1}")
+            : const SizedBox(),
         Positioned(
             top: 5.d,
             width: 34.d,

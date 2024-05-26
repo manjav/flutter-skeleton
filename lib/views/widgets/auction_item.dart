@@ -83,7 +83,7 @@ class _AuctionItemState extends State<AuctionItem> {
                   borderRadius: BorderRadius.all(radius),
                   color: TColors.black25,
                   child: SkinnedText(
-                    widget.card.maxBidderName,
+                    widget.card.ownerName,
                     style: TStyles.medium,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -113,7 +113,7 @@ class _AuctionItemState extends State<AuctionItem> {
             width: 10.d,
           ),
           SizedBox(
-            width: 320.d,
+            width: 330.d,
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
@@ -136,7 +136,7 @@ class _AuctionItemState extends State<AuctionItem> {
                             ? (remainingSeconds - (snapshot.data ?? 0))
                                 .toRemainingTime()
                             : "closed_l".l();
-                        return Center(child: SkinnedText("ˣ$time"));
+                        return Center(child: SkinnedText("ˣ $time"));
                       },
                     ),
                   ),
@@ -163,8 +163,8 @@ class _AuctionItemState extends State<AuctionItem> {
                       SizedBox(height: 10.d),
                       bidable
                           ? _getBidButton(widget.card, account, imMaxBidder)
-                          : Text(
-                              "*${"auction_closed".l()}",
+                          : SkinnedText(
+                              "ˣ ${"auction_closed".l()}",
                               style: TStyles.medium.copyWith(
                                   color: imMaxBidder
                                       ? TColors.green
@@ -203,9 +203,9 @@ class _AuctionItemState extends State<AuctionItem> {
       );
     }
     return SkinnedButton(
-      padding: EdgeInsets.fromLTRB(21.d, 15.d, 12.d, 32.d),
+      padding: EdgeInsets.fromLTRB(15.d, 15.d, 10.d, 32.d),
       color: ButtonColor.teal,
-      width: 260.d,
+      width: 380.d,
       height: 130.d,
       onPressed: widget.onBid,
       child: Row(
@@ -214,16 +214,16 @@ class _AuctionItemState extends State<AuctionItem> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SkinnedText(
-            "Bid".l(),
+            "bid".l(),
             style: TStyles.medium,
           ),
           SizedBox(width: 15.d),
           Widgets.rect(
-            padding: EdgeInsets.all(7.d),
+            padding: EdgeInsets.all(10.d),
             borderRadius: BorderRadius.all(Radius.circular(21.d)),
             color: TColors.black25,
             child: SkinnedText("+${card.bidStep.compact()}",
-                style: TStyles.medium),
+                textDirection: TextDirection.ltr, style: TStyles.medium),
           ),
         ],
       ),

@@ -24,6 +24,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
   // late StreamSubscription<List<PurchaseDetails>> _subscription;
   final Map<String, SkuDetails> _productDetails = {};
   final RxBool _reloadBoosPacks = false.obs;
+  final ValueNotifier<bool> _reloadCardPacks = ValueNotifier(false);
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -55,17 +56,24 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
         var items = entry.value;
         _items[section] = [];
         for (var i = 0; i < items.length; i++) {
+          var item = items[i];
           if (section == ShopSections.gold &&
-              !result.containsKey(items[i].id.toString())) continue;
+              !result.containsKey(item.id.toString())) continue;
+          var price = 0;
+          if (item.inStore) {
+            var storeId = FlavorConfig.instance.variables["storeId"];
+            price =
+                int.parse(result[item.id.toString()]["price"][storeId] ?? 0);
+          }
           _items[section]!.add(ShopItemVM(
-            items[i],
-            0,
+            item,
+            price,
             8,
             section == ShopSections.nectar ? 11 : 12,
           ));
 
           if (section.inStore) {
-            skus.add("${section.name}_${items[i].id}");
+            skus.add("${section.name}_${item.id}");
           }
         }
         var len = _items[section]!.length;
@@ -239,7 +247,11 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
               child: switch (items[i].base.section) {
                 ShopSections.gold => _itemGoldBuilder(i, items[i]),
                 ShopSections.nectar => _itemNectarBuilder(i, items[i]),
-                ShopSections.card => _itemCardBuilder(i, items[i]),
+                ShopSections.card => ValueListenableBuilder(
+                    valueListenable: _reloadCardPacks,
+                    builder: (context, value, child) =>
+                        _itemCardBuilder(i, items[i]),
+                  ),
                 ShopSections.boost => StreamBuilder<bool>(
                     stream: _reloadBoosPacks.stream,
                     builder: (context, snapshot) {
@@ -432,6 +444,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
         OpenPackFeastOverlay(
           args: {"pack": item.base},
           onClose: (d) async {
+            _reloadCardPacks.value = !_reloadCardPacks.value;
             services.changeState(ServiceStatus.punch, data: 1);
             if (isTutorial) {
               await Future.delayed(300.ms);
@@ -461,6 +474,12 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
     // -- StoreID_Cando = "5"
     // -- StoreID_Fourtune = "6"
     // -- StoreID_Samsung = "7"
+    // -- StoreID_Myket = "8"
+    // -- StoreID_Tod = "9"
+    // -- StoreID_IraqApps = "10"
+    // -- StoreID_charkhone = "11"
+    // -- StoreID_parsian = "12"
+    // -- StoreID_Zarinpal = "13"
     var params = {
       "type": item.base.id,
       "receipt": details.mToken,

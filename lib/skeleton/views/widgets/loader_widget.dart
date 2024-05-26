@@ -112,8 +112,11 @@ class _LoaderWidgetState extends State<LoaderWidget> {
         }), fit: widget.fit);
       case AssetType.image:
         if (loader.metadata == null) return null;
-        final image =
-            Image.memory(loader.metadata as Uint8List, gaplessPlayback: true);
+        final image = Image.memory(
+          loader.metadata as Uint8List,
+          gaplessPlayback: true,
+          fit: widget.fit,
+        );
         return image;
       case AssetType.vector:
         return SvgPicture.memory(loader.metadata as Uint8List);

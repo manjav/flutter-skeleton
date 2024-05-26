@@ -48,10 +48,10 @@ class _CardSelectPopupState extends AbstractPopupState<CardSelectPopup>
               width: 980.d,
               height: 1080.d,
               child: Stack(
-                alignment: Alignment.center,
+                alignment: Alignment.topCenter,
                 children: [
                   Positioned(
-                      top: 222.d,
+                      top: 310.d,
                       left: 0,
                       right: 0,
                       bottom: 0,

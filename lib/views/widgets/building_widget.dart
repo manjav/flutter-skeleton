@@ -18,6 +18,7 @@ class BuildingWidget extends StatefulWidget {
 class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
   SMINumber? _levelInput;
   SMINumber? _goldInput;
+  SMITrigger? destroyTrigger;
   Timer? _timer;
 
   @override
@@ -25,6 +26,10 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
     super.initState();
     serviceLocator<AccountProvider>().addListener(() {
       var account = serviceLocator<AccountProvider>().account;
+      if (widget.building.type == Buildings.base && account.tutorial_id == 24) {
+        destroyTrigger?.value = true;
+        _levelInput?.value = -1;
+      }
       if (!widget.building.getIsAvailable(account)) return;
       _levelInput?.value =
           account.buildings[widget.building.type]!.level.toDouble();
@@ -84,6 +89,14 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
                   _levelInput!.value = widget.building.level.toDouble();
                 }
                 var account = serviceLocator<AccountProvider>().account;
+                if (widget.building.type == Buildings.base &&
+                    account.level < 3) {
+                  destroyTrigger =
+                      controller.findInput<bool>("destroy") as SMITrigger;
+                  if (account.tutorial_id > 24) {
+                    _levelInput!.value = -1;
+                  }
+                }
                 if (widget.building.type == Buildings.treasury) {
                   var input = controller.findInput<double>('gold');
                   _goldInput = input as SMINumber;

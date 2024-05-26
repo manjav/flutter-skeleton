@@ -21,6 +21,7 @@ class TutorialOverlay extends AbstractOverlay {
   final double? bottom;
   final ValueNotifier<bool> ignorePointer;
   final double? radius;
+  final double? dialogueHeight;
 
   const TutorialOverlay({
     required this.center,
@@ -39,6 +40,7 @@ class TutorialOverlay extends AbstractOverlay {
     this.characterSize,
     this.bottom,
     this.radius,
+    this.dialogueHeight,
     super.key,
   }) : super(route: newRoute ?? OverlaysName.tutorial);
 
@@ -108,6 +110,7 @@ class _TutorialOverlayState extends AbstractOverlayState<TutorialOverlay> {
                         bottom: widget.bottom ?? 400.d,
                         characterName: widget.characterName,
                         characterSize: widget.characterSize,
+                        dialogueHeight: widget.dialogueHeight,
                       )
                     : const SizedBox(),
                 widget.showHand

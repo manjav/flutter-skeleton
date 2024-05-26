@@ -74,7 +74,11 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Asset.load<Image>(title, height: isSelected ? 76.d : 56.d),
-            Text(title.l(), style: TStyles.mediumInvert.copyWith(height: 1.2)),
+            Text(
+              title.l(),
+              style: TStyles.mediumInvert.copyWith(height: 1.2),
+              textDirection: Localization.textDirection,
+            ),
           ],
         ),
         onPressed: () => _selectTab(tabName, index));
