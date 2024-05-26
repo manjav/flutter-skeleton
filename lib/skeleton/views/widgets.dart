@@ -248,7 +248,7 @@ class Widgets {
               BorderSide(color: borderColor ?? TColors.primary80, width: 2));
 
   static Widget clipboardGetter(BuildContext context, String text,
-      {double? width, double? height}) {
+      {double? width, double? height,VoidCallback? onCopy}) {
     return button(context,
         width: width ?? 720.d,
         height: height ?? 120.d,
@@ -261,7 +261,10 @@ class Widgets {
           SizedBox(width: 16.d),
           Asset.load<Image>("icon_copy", width: 44.d)
         ]),
-        onPressed: () => Clipboard.setData(ClipboardData(text: text)));
+        onPressed: () {
+          onCopy?.call();
+          return Clipboard.setData(ClipboardData(text: text));
+        });
   }
 
   static checkbox(BuildContext context, String label, bool isSelected,

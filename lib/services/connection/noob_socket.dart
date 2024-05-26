@@ -12,7 +12,7 @@ extension NoobCommandExtension on NoobCommand {
 
 class NoobSocket extends IService {
   List<Function(NoobMessage)> onReceive = [];
-  late TcpSocketConnection _socketConnection;
+  TcpSocketConnection? _socketConnection;
   late AccountProvider _account;
   late OpponentsProvider _opponents;
   int _lastMessageReceiveTime = 0;
@@ -21,8 +21,7 @@ class NoobSocket extends IService {
   String get _secret => "floatint201412bool23string";
   bool get isConnected =>
       DateTime.now().secondsSinceEpoch - _lastMessageReceiveTime < 60;
-  bool get isSocketConnected =>
-      _socketConnection.isConnected();
+  bool get isSocketConnected => _socketConnection?.isConnected() ?? false;
 
   @override
   initialize({List<Object>? args}) async {
@@ -36,10 +35,16 @@ class NoobSocket extends IService {
     _socketConnection =
         TcpSocketConnection(LoadingData.chatIp, LoadingData.chatPort);
     // _socketConnection.enableConsolePrint(true);
-    await _socketConnection.connect(500, _messageReceived, attempts: 3);
+    await _socketConnection?.connect(500, _messageReceived, attempts: 3);
     _lastMessageReceiveTime = DateTime.now().secondsSinceEpoch;
     subscribe("user${_account.account.id}");
-    if (_account.account.tribe != null) subscribe("tribe${_account.account.tribe?.id}");
+    if (_account.account.tribe != null) {
+      subscribe("tribe${_account.account.tribe?.id}");
+    }
+  }
+
+  disconnect() async {
+    _socketConnection?.disconnect();
   }
 
   void _messageReceived(String message) {
@@ -59,8 +64,8 @@ class NoobSocket extends IService {
       var trimmedMessage = _messageStream.substring(startIndex + 15, endIndex);
       trimmedMessage = b64.decode(trimmedMessage.xorDecrypt(secret: _secret));
 
-      var noobMessage =
-          NoobMessage.getProperMessage(_account.account, jsonDecode(trimmedMessage));
+      var noobMessage = NoobMessage.getProperMessage(
+          _account.account, jsonDecode(trimmedMessage));
       if (noobMessage.type == Noobs.chat) {
         _account.account.tribe?.chat.add(noobMessage as NoobChatMessage);
       }
@@ -85,7 +90,7 @@ class NoobSocket extends IService {
     var cmdMessage =
         "__${command.value}__${b64.encode(message).xorEncrypt(secret: _secret)}__END${command.value}__";
     log(cmdMessage);
-    _socketConnection.sendMessage(cmdMessage);
+    _socketConnection?.sendMessage(cmdMessage);
   }
 
   void subscribe(String channel) => _run(NoobCommand.subscribe, channel);
@@ -97,7 +102,7 @@ class NoobSocket extends IService {
     var b64 = utf8.fuse(base64);
     var cmdMessage =
         "__JSON__START__${b64.encode(message).xorEncrypt(secret: _secret)}__JSON__END__";
-    _socketConnection.sendMessage(cmdMessage);
+    _socketConnection?.sendMessage(cmdMessage);
   }
 
   bool _loopPlayers(List<Rank> list, NoobStatusMessage message) {

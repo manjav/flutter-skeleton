@@ -8,8 +8,8 @@ class Tutorial {
       {
         "delay": 500,
         "level": 1,
-        "startIndex": 1,
-        "lastIndex": 4,
+        "startId": 1,
+        "lastId": 4,
         "sequnces": [
           {
             "index": 1,
@@ -25,8 +25,8 @@ class Tutorial {
             "delay": 0,
           },
           {
-            "index": 1,
-            "id": 1,
+            "index": 2,
+            "id": 2,
             "type": "dialog",
             "background": false,
             "hand": false,
@@ -35,11 +35,11 @@ class Tutorial {
             "text": "sarhang_is_suprised",
             "characterName": "character_sarhang",
             "side": DialogueSide.left,
-            "delay": 300,
+            "delay": 10,
           },
           {
-            "index": 1,
-            "id": 1,
+            "index": 3,
+            "id": 3,
             "type": "dialog",
             "background": false,
             "hand": false,
@@ -48,13 +48,13 @@ class Tutorial {
             "text": "porteghula_enters",
             "characterName": "character_porteghula",
             "side": DialogueSide.top,
-            "delay": 500,
+            "delay": 10,
             "characterSize": Size(666.d, 859.d),
-            "bottom": 500.d
+            "bottom": 500.d,
           },
           {
             "index": 4,
-            "id": 1,
+            "id": 10,
             "type": "dialog",
             "background": false,
             "hand": false,
@@ -63,21 +63,22 @@ class Tutorial {
             "text": "sarhang_asks_player_for_help",
             "characterName": "character_sarhang",
             "side": DialogueSide.left,
-            "delay": 500,
+            "delay": 10,
+            "breakPoint": true,
           },
         ],
       },
     ],
     Routes.deck: [
       {
-        "delay": 500,
+        "delay": 100,
         "level": 1,
-        "startIndex": 4,
-        "lastIndex": 5,
+        "startId": 10,
+        "lastId": 11,
         "sequnces": [
           {
             "index": 4,
-            "id": 1,
+            "id": 10,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -92,7 +93,7 @@ class Tutorial {
           },
           {
             "index": 5,
-            "id": 1,
+            "id": 11,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -109,12 +110,12 @@ class Tutorial {
       {
         "delay": 1,
         "level": 1,
-        "startIndex": 6,
-        "lastIndex": 8,
+        "startId": 12,
+        "lastId": 13,
         "sequnces": [
           {
             "index": 5,
-            "id": 1,
+            "id": 12,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -128,7 +129,7 @@ class Tutorial {
           },
           {
             "index": 8,
-            "id": 80,
+            "id": 13,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -140,23 +141,24 @@ class Tutorial {
             "characterName": "character_sarhang",
             "side": DialogueSide.left,
             "delay": 300,
+            "breakPoint": true,
           },
         ],
       },
       {
         "delay": 500,
         "level": 1,
-        "startIndex": 9,
-        "lastIndex": 11,
+        "startId": 14,
+        "lastId": 20,
         "sequnces": [
           {
             "index": 9,
-            "id": 1,
+            "id": 15,
             "type": "dialog",
             "background": false,
             "character": true,
             "hand": true,
-            "handPosition": const Alignment(0, 0.2),
+            "handPosition": const Alignment(-0.4, 0.0),
             "center": const Alignment(0, 0),
             "text": "sarhang_explains_cooldown",
             "characterName": "character_sarhang",
@@ -165,7 +167,7 @@ class Tutorial {
           },
           {
             "index": 11,
-            "id": 1,
+            "id": 19,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -176,6 +178,7 @@ class Tutorial {
             "characterName": "character_sarhang",
             "side": DialogueSide.left,
             "delay": 500,
+            "breakPoint": true,
           },
         ],
       },
@@ -184,21 +187,29 @@ class Tutorial {
       {
         "delay": 100,
         "level": 1,
-        "startIndex": 12,
-        "lastIndex": 12,
+        "startId": 13,
+        "lastId": 20,
         "sequnces": [],
       },
+      // {
+      //   "delay": 100,
+      //   "level": 2,
+      //   "startId": 20,
+      //   "lastId": 20,
+      //   "sequnces": [],
+      // },
     ],
     OverlaysName.feastAttackOutcome: [
+      //first attack tutorial
       {
         "delay": 100,
         "level": 1,
-        "startIndex": 8,
-        "lastIndex": 9,
+        "startId": 13,
+        "lastId": 14,
         "sequnces": [
           {
             "index": 9,
-            "id": 1,
+            "id": 14,
             "type": "dialog",
             "background": false,
             "hand": false,
@@ -208,28 +219,7 @@ class Tutorial {
             "text": "sarhang_says_theres_more_of_them_left",
             "side": DialogueSide.left,
             "delay": 0,
-          },
-        ],
-      },
-      //hero tutorial
-      {
-        "delay": 100,
-        "level": 4,
-        "startIndex": 400,
-        "lastIndex": 401,
-        "sequnces": [
-          {
-            "index": 400,
-            "id": 401,
-            "type": "dialog",
-            "background": false,
-            "hand": false,
-            "character": true,
-            "characterName": "character_sarhang",
-            "center": const Alignment(0, 0),
-            "text": "sarhang_tells_you_that_you_can_use_hero",
-            "side": DialogueSide.left,
-            "delay": 0,
+            "breakPoint": true,
           },
         ],
       },
@@ -237,12 +227,12 @@ class Tutorial {
       {
         "delay": 100,
         "level": 3,
-        "startIndex": 305,
-        "lastIndex": 306,
+        "startId": 320,
+        "lastId": 321,
         "sequnces": [
           {
             "index": 306,
-            "id": 306,
+            "id": 321,
             "type": "dialog",
             "background": false,
             "hand": false,
@@ -258,15 +248,16 @@ class Tutorial {
       },
     ],
     Routes.pageItemMap: [
+      //welcome tutorial
       {
         "delay": 500,
-        "level": 1,
-        "startIndex": 11,
-        "lastIndex": 11,
+        "level": 2,
+        "startId": 20,
+        "lastId": 22,
         "sequnces": [
           {
-            "index": 11,
-            "id": 1,
+            "index": 12,
+            "id": 21,
             "type": "dialog",
             "background": true,
             "hand": false,
@@ -279,7 +270,7 @@ class Tutorial {
           },
           {
             "index": 11,
-            "id": 1,
+            "id": 22,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -291,19 +282,21 @@ class Tutorial {
             "side": DialogueSide.left,
             "delay": 100,
             "showFocus": true,
-            "handQuarterTurns": 3
+            "handQuarterTurns": 3,
+            "dialogueHeight": 380.d,
           },
         ],
       },
+      //warning tutorial
       {
-        "delay": 1000,
-        "level": 1,
-        "startIndex": 14,
-        "lastIndex": 15,
+        "delay": 600,
+        "level": 2,
+        "startId": 23,
+        "lastId": 24,
         "sequnces": [
           {
             "index": 15,
-            "id": 1,
+            "id": 24,
             "type": "dialog",
             "background": false,
             "hand": false,
@@ -316,15 +309,16 @@ class Tutorial {
           },
         ],
       },
+      //quest tutorial
       {
         "delay": 500,
-        "level": 1,
-        "startIndex": 15,
-        "lastIndex": 17,
+        "level": 2,
+        "startId": 24,
+        "lastId": 26,
         "sequnces": [
           {
             "index": 15,
-            "id": 1,
+            "id": 25,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -332,16 +326,16 @@ class Tutorial {
             "handPosition": const Alignment(-0.83, 0.72),
             "characterName": "character_sarhang",
             "center": const Alignment(0, 0),
-            "text":
-                "sarhang_says_that_to_defeat_porteghula_we_need_to_do_quests",
+            "text": "battle_building_under_construction_description",
             "side": DialogueSide.left,
             "delay": 100,
             "showFocus": true,
-            "handQuarterTurns": 3
+            "handQuarterTurns": 3,
+            "dialogueHeight": 330.d,
           },
           {
             "index": 17,
-            "id": 1,
+            "id": 26,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -354,20 +348,46 @@ class Tutorial {
             "side": DialogueSide.left,
             "delay": 100,
             "showFocus": true,
-            "handQuarterTurns": 0
+            "handQuarterTurns": 0,
+            "dialogueHeight": 330.d,
+            "bottom": 900.d
+          },
+        ],
+      },
+      // opponent tutorial
+      {
+        "delay": 500,
+        "level": 3,
+        "startId": 302,
+        "lastId": 307,
+        "sequnces": [
+          {
+            "index": 302,
+            "id": 303,
+            "type": "dialog",
+            "background": true,
+            "character": true,
+            "hand": true,
+            "handPosition": const Alignment(0.1, 0.0),
+            "characterName": "character_sarhang",
+            "center": const Alignment(0, 0),
+            "text": "sarhang_says_that_we_should_go_to_battle",
+            "side": DialogueSide.left,
+            "delay": 100,
+            "showFocus": true,
           },
         ],
       },
       //start card enhance tutorial
       {
-        "delay": 500,
-        "level": 1,
-        "startIndex": 18,
-        "lastIndex": 19,
+        "delay": 1500,
+        "level": 3,
+        "startId": 321,
+        "lastId": 322,
         "sequnces": [
           {
             "index": 18,
-            "id": 1,
+            "id": 322,
             "type": "dialog",
             "background": true,
             "character": false,
@@ -386,13 +406,13 @@ class Tutorial {
       // after card enhance
       {
         "delay": 500,
-        "level": 1,
-        "startIndex": 24,
-        "lastIndex": 25,
+        "level": 3,
+        "startId": 327,
+        "lastId": 401,
         "sequnces": [
           {
             "index": 25,
-            "id": 1,
+            "id": 401,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -403,30 +423,30 @@ class Tutorial {
             "text": "sarhang_sends_you_off_into_the_game",
             "side": DialogueSide.left,
             "delay": 100,
+            "breakPoint": true,
+            "dialogueHeight": 330.d
           },
         ],
       },
-      // opponent tutorial
+      //buy hero
       {
-        "delay": 500,
-        "level": 3,
-        "startIndex": 302,
-        "lastIndex": 307,
+        "delay": 100,
+        "level": 4,
+        "startId": 401,
+        "lastId": 402,
         "sequnces": [
           {
-            "index": 302,
-            "id": 302,
+            "index": 400,
+            "id": 402,
             "type": "dialog",
-            "background": true,
+            "background": false,
+            "hand": false,
             "character": true,
-            "hand": true,
-            "handPosition": const Alignment(0.1, 0.0),
             "characterName": "character_sarhang",
             "center": const Alignment(0, 0),
-            "text": "sarhang_says_that_we_should_go_to_battle",
+            "text": "sarhang_says_we_need_to_hire_hero_to_defeat_the_enemy",
             "side": DialogueSide.left,
-            "delay": 100,
-            "showFocus": true,
+            "delay": 0,
           },
         ],
       },
@@ -434,12 +454,12 @@ class Tutorial {
       {
         "delay": 500,
         "level": 4,
-        "startIndex": 401,
-        "lastIndex": 406,
+        "startId": 402,
+        "lastId": 403,
         "sequnces": [
           {
             "index": 401,
-            "id": 402,
+            "id": 403,
             "type": "dialog",
             "background": true,
             "character": false,
@@ -459,12 +479,12 @@ class Tutorial {
       {
         "delay": 500,
         "level": 5,
-        "startIndex": 40,
-        "lastIndex": 41,
+        "startId": 501,
+        "lastId": 503,
         "sequnces": [
           {
             "index": 40,
-            "id": 1,
+            "id": 502,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -476,10 +496,11 @@ class Tutorial {
             "side": DialogueSide.right,
             "delay": 100,
             "showFocus": true,
+            "dialogueHeight": 330.d,
           },
           {
             "index": 42,
-            "id": 1,
+            "id": 601,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -490,6 +511,7 @@ class Tutorial {
             "text": "fig_says_that_cards_in_buildings_don't_fight",
             "side": DialogueSide.right,
             "delay": 100,
+            "breakPoint": true,
           },
         ],
       },
@@ -497,12 +519,12 @@ class Tutorial {
       {
         "delay": 500,
         "level": 6,
-        "startIndex": 42,
-        "lastIndex": 50,
+        "startId": 601,
+        "lastId": 650,
         "sequnces": [
           {
             "index": 42,
-            "id": 1,
+            "id": 602,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -513,10 +535,11 @@ class Tutorial {
             "text": "porteghula_says_that_you_are_weak_against_tribes",
             "side": DialogueSide.right,
             "delay": 100,
+            "dialogueHeight": 370.d,
           },
           {
             "index": 42,
-            "id": 1,
+            "id": 603,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -527,10 +550,11 @@ class Tutorial {
             "text": "sarhang_says_that_he's_setup_a_tribe_for_us",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 330.d,
           },
           {
             "index": 45,
-            "id": 1,
+            "id": 650,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -542,6 +566,8 @@ class Tutorial {
             "side": DialogueSide.left,
             "delay": 100,
             "showFocus": true,
+            "breakPoint": true,
+            "dialogueHeight": 380.d,
           },
         ],
       },
@@ -549,12 +575,12 @@ class Tutorial {
       {
         "delay": 500,
         "level": 6,
-        "startIndex": 45,
-        "lastIndex": 49,
+        "startId": 650,
+        "lastId": 652,
         "sequnces": [
           {
             "index": 46,
-            "id": 1,
+            "id": 651,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -568,7 +594,7 @@ class Tutorial {
           },
           {
             "index": 46,
-            "id": 7300,
+            "id": 652,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -584,16 +610,40 @@ class Tutorial {
           },
         ],
       },
+      // after evolve tutorial
+      {
+        "delay": 500,
+        "level": 6,
+        "startId": 657,
+        "lastId": 701,
+        "sequnces": [
+          {
+            "index": 46,
+            "id": 701,
+            "type": "dialog",
+            "background": true,
+            "character": true,
+            "hand": false,
+            "handPosition": const Alignment(-0.1, -0.3),
+            "characterName": "character_scientist",
+            "center": const Alignment(-0.7, -0.3),
+            "text": "sotvan_says_that_you_should_look_for_new_tribes",
+            "side": DialogueSide.left,
+            "delay": 100,
+            "breakPoint": true,
+          },
+        ],
+      },
       // auction tutorial
       {
         "delay": 500,
-        "level": 5,
-        "startIndex": 70,
-        "lastIndex": 71,
+        "level": 7,
+        "startId": 701,
+        "lastId": 801,
         "sequnces": [
           {
             "index": 71,
-            "id": 700,
+            "id": 801,
             "type": "dialog",
             "background": true,
             "character": true,
@@ -605,20 +655,22 @@ class Tutorial {
             "side": DialogueSide.right,
             "delay": 100,
             "showFocus": true,
-            "handQuarterTurns": 2
+            "handQuarterTurns": 2,
+            "breakPoint": true,
+            "dialogueHeight": 330.d,
           },
         ],
       },
       // league tutorial
       {
         "delay": 500,
-        "level": 5,
-        "startIndex": 80,
-        "lastIndex": 86,
+        "level": 8,
+        "startId": 801,
+        "lastId": 802,
         "sequnces": [
           {
             "index": 80,
-            "id": 800,
+            "id": 802,
             "type": "dialog",
             "background": true,
             "character": false,
@@ -634,12 +686,109 @@ class Tutorial {
           },
         ],
       },
-      // discount tutorial
+      //online battle tutorial
+      {
+        "delay": 10,
+        "level": 9,
+        "startId": 901,
+        "lastId": 902,
+        "sequnces": [
+          {
+            "index": 900,
+            "id": 902,
+            "route": Routes.pageItemMap,
+            "type": "dialog",
+            "background": false,
+            "character": true,
+            "hand": false,
+            "handPosition": const Alignment(-0.7, -0.05),
+            "characterName": "character_sarhang",
+            "center": const Alignment(0.15, -0.50),
+            "text": "livebattle_greetings",
+            "side": DialogueSide.left,
+            "delay": 100,
+            "dialogueHeight": 370.d,
+          },
+        ],
+      },
+      //attack notif tutorial
+      {
+        "delay": 10,
+        "level": 9,
+        "startId": 923,
+        "lastId": 1001,
+        "sequnces": [
+          {
+            "index": 923,
+            "id": 961,
+            "type": "dialog",
+            "background": false,
+            "character": true,
+            "hand": true,
+            "handPosition": const Alignment(0.5, 0.0),
+            "characterName": "character_sarhang",
+            "center": const Alignment(0.15, -0.50),
+            "text": "LiveBattleTutState4Step2",
+            "side": DialogueSide.left,
+            "delay": 100,
+            "handQuarterTurns": 2,
+            "dialogueHeight": 430.d,
+          },
+          {
+            "index": 923,
+            "id": 962,
+            "type": "dialog",
+            "background": false,
+            "character": true,
+            "hand": false,
+            "handPosition": const Alignment(-0.7, -0.05),
+            "characterName": "character_sarhang",
+            "center": const Alignment(0.15, -0.50),
+            "text": "LiveBattleTutState4Step3",
+            "side": DialogueSide.left,
+            "delay": 100,
+            "dialogueHeight": 310.d,
+          },
+          {
+            "index": 923,
+            "id": 963,
+            "type": "dialog",
+            "background": false,
+            "character": true,
+            "hand": true,
+            "handPosition": const Alignment(0.5, 0.0),
+            "characterName": "character_sarhang",
+            "center": const Alignment(0.15, -0.50),
+            "text": "LiveBattleTutState4Step5",
+            "side": DialogueSide.left,
+            "delay": 100,
+            "handQuarterTurns": 2,
+            "dialogueHeight": 410.d,
+          },
+          {
+            "index": 923,
+            "id": 1001,
+            "type": "dialog",
+            "background": false,
+            "character": true,
+            "hand": false,
+            "handPosition": const Alignment(-0.7, -0.05),
+            "characterName": "character_sarhang",
+            "center": const Alignment(0.15, -0.50),
+            "text": "LiveBattleTutState4Step6",
+            "side": DialogueSide.left,
+            "delay": 100,
+            "dialogueHeight": 410.d,
+            "breakPoint": true,
+          },
+        ],
+      },
+       // discount tutorial
       {
         "delay": 500,
         "level": 10,
-        "startIndex": 1000,
-        "lastIndex": 1002,
+        "startId": 1001,
+        "lastId": 1200,
         "sequnces": [
           {
             "index": 1000,
@@ -657,7 +806,7 @@ class Tutorial {
           },
           {
             "index": 1002,
-            "id": 1002,
+            "id": 1200,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -668,19 +817,20 @@ class Tutorial {
             "text": "fig_explains_shop_discount",
             "side": DialogueSide.right,
             "delay": 100,
+            "breakPoint": true,
           },
         ],
       },
       // boostpack tutorial
       {
         "delay": 500,
-        "level": 10,
-        "startIndex": 1200,
-        "lastIndex": 1201,
+        "level": 12,
+        "startId": 1200,
+        "lastId": 1500,
         "sequnces": [
           {
             "index": 1201,
-            "id": 1201,
+            "id": 1500,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -691,6 +841,8 @@ class Tutorial {
             "text": "scientist_explains_boost_packs",
             "side": DialogueSide.right,
             "delay": 100,
+            "breakPoint": true,
+            "dialogueHeight": 330.d,
           },
         ],
       },
@@ -698,8 +850,8 @@ class Tutorial {
       {
         "delay": 500,
         "level": 15,
-        "startIndex": 1500,
-        "lastIndex": 1504,
+        "startId": 1500,
+        "lastId": 1504,
         "sequnces": [
           {
             "index": 1500,
@@ -714,115 +866,22 @@ class Tutorial {
             "text": "olive_says_that_you_found_new_combinations",
             "side": DialogueSide.right,
             "delay": 100,
-          },
-        ],
-      },
-      //online battle tutorial
-      {
-        "delay": 10,
-        "level": 9,
-        "startIndex": 900,
-        "lastIndex": 930,
-        "sequnces": [
-          {
-            "index": 900,
-            "id": 901,
-            "route": Routes.pageItemMap,
-            "type": "dialog",
-            "background": false,
-            "character": true,
-            "hand": false,
-            "handPosition": const Alignment(-0.7, -0.05),
-            "characterName": "character_sarhang",
-            "center": const Alignment(0.15, -0.50),
-            "text": "livebattle_greetings",
-            "side": DialogueSide.left,
-            "delay": 100,
-          },
-        ],
-      },
-      //attack notif tutorial
-      {
-        "delay": 10,
-        "level": 9,
-        "startIndex": 923,
-        "lastIndex": 930,
-        "sequnces": [
-          {
-            "index": 923,
-            "id": 961,
-            "route": Routes.pageItemMap,
-            "type": "dialog",
-            "background": false,
-            "character": true,
-            "hand": true,
-            "handPosition": const Alignment(0.5, 0.0),
-            "characterName": "character_sarhang",
-            "center": const Alignment(0.15, -0.50),
-            "text": "LiveBattleTutState4Step2",
-            "side": DialogueSide.left,
-            "delay": 100,
-            "handQuarterTurns": 2,
-          },
-          {
-            "index": 923,
-            "id": 962,
-            "route": Routes.pageItemMap,
-            "type": "dialog",
-            "background": false,
-            "character": true,
-            "hand": false,
-            "handPosition": const Alignment(-0.7, -0.05),
-            "characterName": "character_sarhang",
-            "center": const Alignment(0.15, -0.50),
-            "text": "LiveBattleTutState4Step3",
-            "side": DialogueSide.left,
-            "delay": 100,
-          },
-          {
-            "index": 923,
-            "id": 963,
-            "route": Routes.pageItemMap,
-            "type": "dialog",
-            "background": false,
-            "character": true,
-            "hand": true,
-            "handPosition": const Alignment(0.5, 0.0),
-            "characterName": "character_sarhang",
-            "center": const Alignment(0.15, -0.50),
-            "text": "LiveBattleTutState4Step3",
-            "side": DialogueSide.left,
-            "delay": 100,
-            "handQuarterTurns": 2,
-          },
-          {
-            "index": 923,
-            "id": 964,
-            "route": Routes.pageItemMap,
-            "type": "dialog",
-            "background": false,
-            "character": true,
-            "hand": false,
-            "handPosition": const Alignment(-0.7, -0.05),
-            "characterName": "character_sarhang",
-            "center": const Alignment(0.15, -0.50),
-            "text": "LiveBattleTutState4Step3",
-            "side": DialogueSide.left,
-            "delay": 100,
+            "dialogueHeight": 330.d,
           },
         ],
       },
     ],
     Routes.pageItemShop: [
+      //buy card tutorial
       {
         "delay": 1500,
-        "level": 1,
-        "startIndex": 11,
-        "lastIndex": 14,
+        "level": 2,
+        "startId": 22,
+        "lastId": 23,
         "sequnces": [
           {
             "index": 14,
-            "id": 1,
+            "id": 23,
             "type": "dialog",
             "background": true,
             "character": false,
@@ -834,6 +893,7 @@ class Tutorial {
             "side": DialogueSide.left,
             "delay": 100,
             "showFocus": true,
+            "breakPoint": true,
           },
         ],
       },
@@ -841,13 +901,13 @@ class Tutorial {
     Routes.quest: [
       {
         "delay": 1500,
-        "level": 1,
-        "startIndex": 17,
-        "lastIndex": 18,
+        "level": 2,
+        "startId": 26,
+        "lastId": 300,
         "sequnces": [
           {
             "index": 18,
-            "id": 1,
+            "id": 300,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -858,7 +918,9 @@ class Tutorial {
             "text": "sarhang_explains_single_cities_in_map",
             "side": DialogueSide.left,
             "delay": 100,
-            "handQuarterTurns": 3
+            "handQuarterTurns": 3,
+            "breakPoint": true,
+            "bottom": 700.d,
           },
         ],
       },
@@ -867,36 +929,13 @@ class Tutorial {
       //card enhance tutorial
       {
         "delay": 300,
-        "level": 1,
-        "startIndex": 18,
-        "lastIndex": 24,
+        "level": 3,
+        "startId": 322,
+        "lastId": 323,
         "sequnces": [
           {
             "index": 18,
-            "id": 1,
-            "type": "dialog",
-            "background": false,
-            "character": false,
-            "hand": true,
-            "handPosition": const Alignment(-0.4, -0.32),
-            "characterName": "character_sarhang",
-            "center": const Alignment(0.1, -0.45),
-            "text": "",
-            "side": DialogueSide.left,
-            "delay": 100,
-          },
-        ],
-      },
-      //card evolve tutorial
-      {
-        "delay": 300,
-        "level": 1,
-        "startIndex": 46,
-        "lastIndex": 49,
-        "sequnces": [
-          {
-            "index": 46,
-            "id": 1,
+            "id": 323,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -914,12 +953,12 @@ class Tutorial {
       {
         "delay": 500,
         "level": 4,
-        "startIndex": 401,
-        "lastIndex": 407,
+        "startId": 403,
+        "lastId": 404,
         "sequnces": [
           {
             "index": 401,
-            "id": 403,
+            "id": 404,
             "type": "dialog",
             "background": true,
             "character": false,
@@ -934,18 +973,41 @@ class Tutorial {
           },
         ],
       },
+      //card evolve tutorial
+      {
+        "delay": 300,
+        "level": 6,
+        "startId": 652,
+        "lastId": 653,
+        "sequnces": [
+          {
+            "index": 46,
+            "id": 653,
+            "type": "dialog",
+            "background": false,
+            "character": false,
+            "hand": true,
+            "handPosition": const Alignment(-0.1, -0.32),
+            "characterName": "character_sarhang",
+            "center": const Alignment(0.1, -0.45),
+            "text": "",
+            "side": DialogueSide.left,
+            "delay": 100,
+          },
+        ],
+      },
     ],
     Routes.popupHero: [
       // hero tutorial
       {
         "delay": 500,
         "level": 4,
-        "startIndex": 401,
-        "lastIndex": 407,
+        "startId": 405,
+        "lastId": 501,
         "sequnces": [
           {
             "index": 401,
-            "id": 405,
+            "id": 406,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -959,12 +1021,12 @@ class Tutorial {
           },
           {
             "index": 401,
-            "id": 406,
+            "id": 407,
             "type": "dialog",
             "background": false,
             "character": false,
             "hand": true,
-            "handPosition": const Alignment(0.5, 0.1),
+            "handPosition": const Alignment(0.4, 0.05),
             "characterName": "character_sarhang",
             "center": const Alignment(0.1, -0.45),
             "text": "",
@@ -974,18 +1036,19 @@ class Tutorial {
           },
           {
             "index": 407,
-            "id": 407,
+            "id": 501,
             "type": "dialog",
             "background": false,
             "character": false,
             "hand": true,
-            "handPosition": const Alignment(0.6, 0.0),
+            "handPosition": const Alignment(0.4, 0.05),
             "characterName": "character_sarhang",
             "center": const Alignment(0.1, -0.45),
             "text": "",
             "side": DialogueSide.left,
             "delay": 100,
-            "handQuarterTurns": 2
+            "handQuarterTurns": 2,
+            "breakPoint": true,
           },
         ],
       },
@@ -994,13 +1057,13 @@ class Tutorial {
       //card enhance tutorial
       {
         "delay": 10,
-        "level": 1,
-        "startIndex": 18,
-        "lastIndex": 24,
+        "level": 3,
+        "startId": 323,
+        "lastId": 324,
         "sequnces": [
           {
             "index": 18,
-            "id": 1,
+            "id": 324,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1014,39 +1077,16 @@ class Tutorial {
           },
         ],
       },
-      //card evolve tutorial
-      {
-        "delay": 10,
-        "level": 1,
-        "startIndex": 46,
-        "lastIndex": 49,
-        "sequnces": [
-          {
-            "index": 46,
-            "id": 1,
-            "type": "dialog",
-            "background": false,
-            "character": false,
-            "hand": true,
-            "handPosition": const Alignment(0.5, 0.35),
-            "characterName": "character_sarhang",
-            "center": const Alignment(0.1, -0.45),
-            "text": "",
-            "side": DialogueSide.left,
-            "delay": 100,
-          },
-        ],
-      },
       //edit hero tutorial
       {
         "delay": 10,
-        "level": 1,
-        "startIndex": 401,
-        "lastIndex": 407,
+        "level": 4,
+        "startId": 404,
+        "lastId": 405,
         "sequnces": [
           {
             "index": 401,
-            "id": 404,
+            "id": 405,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1060,18 +1100,41 @@ class Tutorial {
           },
         ],
       },
+      //card evolve tutorial
+      {
+        "delay": 10,
+        "level": 6,
+        "startId": 653,
+        "lastId": 654,
+        "sequnces": [
+          {
+            "index": 46,
+            "id": 654,
+            "type": "dialog",
+            "background": false,
+            "character": false,
+            "hand": true,
+            "handPosition": const Alignment(0.5, 0.35),
+            "characterName": "character_sarhang",
+            "center": const Alignment(0.1, -0.45),
+            "text": "",
+            "side": DialogueSide.left,
+            "delay": 100,
+          },
+        ],
+      },
     ],
     Routes.popupCardEnhance: [
       //card enhance tutorial
       {
         "delay": 10,
-        "level": 1,
-        "startIndex": 18,
-        "lastIndex": 24,
+        "level": 3,
+        "startId": 324,
+        "lastId": 327,
         "sequnces": [
           {
             "index": 18,
-            "id": 1,
+            "id": 325,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1082,10 +1145,11 @@ class Tutorial {
             "text": "scientist_talks_about_enhance",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 330.d,
           },
           {
             "index": 18,
-            "id": 400,
+            "id": 326,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1099,7 +1163,7 @@ class Tutorial {
           },
           {
             "index": 24,
-            "id": 1,
+            "id": 327,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1110,7 +1174,8 @@ class Tutorial {
             "text": "",
             "side": DialogueSide.left,
             "delay": 100,
-            "handQuarterTurns": 3
+            "handQuarterTurns": 3,
+            "breakPoint": true,
           },
         ],
       },
@@ -1119,13 +1184,13 @@ class Tutorial {
       //card evolve tutorial
       {
         "delay": 10,
-        "level": 1,
-        "startIndex": 46,
-        "lastIndex": 48,
+        "level": 6,
+        "startId": 654,
+        "lastId": 657,
         "sequnces": [
           {
             "index": 46,
-            "id": 3000,
+            "id": 655,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1139,7 +1204,7 @@ class Tutorial {
           },
           {
             "index": 46,
-            "id": 4000,
+            "id": 656,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1153,7 +1218,7 @@ class Tutorial {
           },
           {
             "index": 48,
-            "id": 1,
+            "id": 657,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1164,7 +1229,8 @@ class Tutorial {
             "text": "",
             "side": DialogueSide.left,
             "delay": 100,
-            "handQuarterTurns": 3
+            "handQuarterTurns": 3,
+            "breakPoint": true,
           },
         ],
       },
@@ -1173,13 +1239,13 @@ class Tutorial {
       //league tutorial
       {
         "delay": 10,
-        "level": 1,
-        "startIndex": 80,
-        "lastIndex": 85,
+        "level": 8,
+        "startId": 802,
+        "lastId": 85,
         "sequnces": [
           {
             "index": 46,
-            "id": 800,
+            "id": 803,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1190,10 +1256,11 @@ class Tutorial {
             "text": "fig_introduces_leagues",
             "side": DialogueSide.right,
             "delay": 100,
+            "dialogueHeight": 370.d,
           },
           {
             "index": 46,
-            "id": 801,
+            "id": 804,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1207,7 +1274,7 @@ class Tutorial {
           },
           {
             "index": 48,
-            "id": 802,
+            "id": 901,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1218,6 +1285,7 @@ class Tutorial {
             "text": "fig_tells_you_about_seeds",
             "side": DialogueSide.right,
             "delay": 100,
+            "breakPoint": true,
           },
         ],
       },
@@ -1227,12 +1295,12 @@ class Tutorial {
       {
         "delay": 10,
         "level": 3,
-        "startIndex": 302,
-        "lastIndex": 315,
+        "startId": 303,
+        "lastId": 304,
         "sequnces": [
           {
             "index": 302,
-            "id": 303,
+            "id": 304,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1246,15 +1314,16 @@ class Tutorial {
           },
         ],
       },
+      //scout
       {
         "delay": 10,
         "level": 3,
-        "startIndex": 303,
-        "lastIndex": 315,
+        "startId": 305,
+        "lastId": 319,
         "sequnces": [
           {
             "index": 303,
-            "id": 304,
+            "id": 306,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1265,10 +1334,11 @@ class Tutorial {
             "text": "sarhang_says_that_they_use_powerful_cards_to_defend",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 330.d,
           },
           {
             "index": 305,
-            "id": 305,
+            "id": 320,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1279,6 +1349,8 @@ class Tutorial {
             "text": "sarhang_says_that_if_you_doubt_you_can_win_scout_them",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 330.d,
+            "breakPoint": true,
           },
         ],
       },
@@ -1286,12 +1358,12 @@ class Tutorial {
       {
         "delay": 10,
         "level": 9,
-        "startIndex": 900,
-        "lastIndex": 930,
+        "startId": 902,
+        "lastId": 903,
         "sequnces": [
           {
             "index": 900,
-            "id": 902,
+            "id": 903,
             "type": "dialog",
             "background": false,
             "character": false,
@@ -1309,8 +1381,8 @@ class Tutorial {
       {
         "delay": 10,
         "level": 9,
-        "startIndex": 920,
-        "lastIndex": 923,
+        "startId": 920,
+        "lastId": 923,
         "sequnces": [
           {
             "index": 920,
@@ -1339,6 +1411,7 @@ class Tutorial {
             "text": "LiveBattleTutState3Step2",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 330.d,
           },
           {
             "index": 923,
@@ -1353,6 +1426,7 @@ class Tutorial {
             "text": "LiveBattleTutState3Step3",
             "side": DialogueSide.left,
             "delay": 100,
+            "breakPoint": true,
           },
         ],
       },
@@ -1362,8 +1436,8 @@ class Tutorial {
       {
         "delay": 10,
         "level": 3,
-        "startIndex": 300,
-        "lastIndex": 302,
+        "startId": 300,
+        "lastId": 302,
         "sequnces": [
           {
             "index": 300,
@@ -1378,6 +1452,7 @@ class Tutorial {
             "text": "sarhang_asks_for_players_name",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 330.d,
           },
           {
             "index": 302,
@@ -1393,6 +1468,7 @@ class Tutorial {
                 "sarhang_says_that's_a_great_name_and_asks_where_they_came_from",
             "side": DialogueSide.left,
             "delay": 100,
+            "breakPoint": true,
           },
         ],
       },
@@ -1402,8 +1478,8 @@ class Tutorial {
       {
         "delay": 10,
         "level": 15,
-        "startIndex": 1500,
-        "lastIndex": 1504,
+        "startId": 1501,
+        "lastId": 1504,
         "sequnces": [
           {
             "index": 1500,
@@ -1418,6 +1494,7 @@ class Tutorial {
             "text": "olive_says_that_you_need_potion_for_combo",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 380.d,
           },
         ],
       },
@@ -1427,8 +1504,8 @@ class Tutorial {
       {
         "delay": 10,
         "level": 15,
-        "startIndex": 1500,
-        "lastIndex": 1504,
+        "startId": 1502,
+        "lastId": 1504,
         "sequnces": [
           {
             "index": 1500,
@@ -1443,6 +1520,7 @@ class Tutorial {
             "text": "scientist_says_that_we_made_some_potion1",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 380.d,
           },
           {
             "index": 1504,
@@ -1457,6 +1535,8 @@ class Tutorial {
             "text": "scientist_says_that_we_made_some_potion2",
             "side": DialogueSide.left,
             "delay": 100,
+            "breakPoint": true,
+            "dialogueHeight": 330.d,
           },
         ],
       },
@@ -1465,13 +1545,13 @@ class Tutorial {
       //opponent tutorial
       {
         "delay": 10,
-        "level": 15,
-        "startIndex": 302,
-        "lastIndex": 1504,
+        "level": 3,
+        "startId": 304,
+        "lastId": 305,
         "sequnces": [
           {
             "index": 303,
-            "id": 304,
+            "id": 305,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1492,8 +1572,8 @@ class Tutorial {
       {
         "delay": 10,
         "level": 9,
-        "startIndex": 900,
-        "lastIndex": 950,
+        "startId": 903,
+        "lastId": 950,
         "sequnces": [
           //select card
           {
@@ -1540,6 +1620,7 @@ class Tutorial {
             "delay": 100,
             "radius": 0.9,
             "showFocus": true,
+            "dialogueHeight": 380.d,
           },
           {
             "index": 900,
@@ -1573,6 +1654,7 @@ class Tutorial {
             "delay": 100,
             "radius": 0.5,
             "showFocus": true,
+            "dialogueHeight": 380.d,
           },
           {
             "index": 900,
@@ -1589,6 +1671,7 @@ class Tutorial {
             "delay": 100,
             "radius": 0.5,
             "showFocus": true,
+            "dialogueHeight": 380.d,
           },
           //time out
           {
@@ -1606,6 +1689,7 @@ class Tutorial {
             "delay": 100,
             "radius": 0.5,
             "showFocus": true,
+            "dialogueHeight": 330.d,
           },
           {
             "index": 900,
@@ -1621,7 +1705,8 @@ class Tutorial {
             "side": DialogueSide.left,
             "delay": 100,
             "radius": 0.5,
-            "showFocus": true,
+            "showFocus": false,
+            "dialogueHeight": 380.d,
           },
           //tribemate
           {
@@ -1637,7 +1722,8 @@ class Tutorial {
             "text": "livebattletutstate2step4part1",
             "side": DialogueSide.left,
             "delay": 100,
-            "handQuarterTurns": 3
+            "handQuarterTurns": 3,
+            "dialogueHeight": 380.d,
           },
           {
             "index": 900,
@@ -1652,7 +1738,8 @@ class Tutorial {
             "text": "livebattletutstate2step4part2",
             "side": DialogueSide.left,
             "delay": 100,
-            "handQuarterTurns": 3
+            "handQuarterTurns": 3,
+            "dialogueHeight": 380.d,
           },
           {
             "index": 900,
@@ -1681,9 +1768,10 @@ class Tutorial {
             "text": "livebattletutstate2step6",
             "side": DialogueSide.left,
             "delay": 100,
-            "handQuarterTurns": 3
+            "handQuarterTurns": 3,
+            "dialogueHeight": 410.d,
           },
-          //good job 
+          //good job
           {
             "index": 900,
             "id": 915,
@@ -1697,11 +1785,12 @@ class Tutorial {
             "text": "livebattletutstate2step7",
             "side": DialogueSide.left,
             "delay": 100,
+            "dialogueHeight": 330.d,
           },
           //hero
           {
             "index": 900,
-            "id": 916,
+            "id": 917,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1713,24 +1802,25 @@ class Tutorial {
             "side": DialogueSide.left,
             "delay": 100,
           },
-          {
-            "index": 900,
-            "id": 917,
-            "type": "dialog",
-            "background": false,
-            "character": true,
-            "hand": true,
-            "handPosition": const Alignment(0.8, 0.7),
-            "characterName": "character_sarhang",
-            "center": const Alignment(0.15, -0.50),
-            "text": "livebattletutstate2step7",
-            "side": DialogueSide.left,
-            "delay": 100,
-          },
+          // {
+          //   "index": 900,
+          //   "id": 917,
+          //   "type": "dialog",
+          //   "background": false,
+          //   "character": true,
+          //   "hand": true,
+          //   "handPosition": const Alignment(0.8, 0.7),
+          //   "characterName": "character_sarhang",
+          //   "center": const Alignment(0.15, -0.50),
+          //   "text": "livebattletutstate2step7",
+          //   "side": DialogueSide.left,
+          //   "delay": 100,
+          //   "dialogueHeight": 330.d,
+          // },
           //status
           {
             "index": 920,
-            "id": 918,
+            "id": 920,
             "type": "dialog",
             "background": false,
             "character": true,
@@ -1741,6 +1831,7 @@ class Tutorial {
             "text": "LiveBattleTutStateHeroStep7",
             "side": DialogueSide.left,
             "delay": 100,
+            "breakPoint": true
           },
         ],
       },

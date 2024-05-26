@@ -11,6 +11,7 @@ export 'card_select_type_popup.dart';
 export 'choose_name_popup.dart';
 export 'combo_popup.dart';
 export 'daily_gift_popup.dart';
+export 'free_gold_popup.dart';
 export 'gift_popup.dart';
 export 'help_popup.dart';
 export 'hero_evolve_popup.dart';

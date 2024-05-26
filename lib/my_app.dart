@@ -49,6 +49,7 @@ class _MyAppState extends State<MyApp>
     Get.reset(clearRouteBindings: true);
 
     serviceLocator<Sounds>().stopAll();
+    serviceLocator<NoobSocket>().disconnect();
     await serviceLocator.reset();
     initServices();
 
@@ -82,17 +83,13 @@ class _MyAppState extends State<MyApp>
         ],
         child: GetMaterialApp(
           navigatorObservers: [MyApp._observer],
-          localizationsDelegates: const [
-            // AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-          ],
+          localizationsDelegates: GlobalMaterialLocalizations.delegates,
           supportedLocales: Localization.locales,
           theme: Themes.darkData,
           locale: Localization.locales.firstWhere((l) =>
               l.languageCode == Pref.language.getString(defaultValue: 'en')),
           initialRoute: Routes.home,
+          textDirection: Localization.dir,
           getPages: [
             _getPage(Routes.home, () => HomeScreen()),
             _getPage(Routes.deck, () => DeckScreen()),
@@ -133,6 +130,7 @@ class _MyAppState extends State<MyApp>
             _getPage(Routes.popupCardSelectCategory, () => const SelectCardCategoryPopup()),
             _getPage(Routes.popupChooseName, () => const ChooseNamePopup()),
             _getPage(Routes.popupHelp, () => const HelpPopup()),
+            _getPage(Routes.popupFreeGold, () => const FreeGoldPopup()),
           ],
         ),
       ),

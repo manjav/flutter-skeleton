@@ -36,7 +36,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
 
   @override
   void onTutorialFinish(data) {
-    if (data["index"] == 14) {
+    if (data["id"] == 23) {
       var item = _items[ShopSections.card]
           ?.firstWhereOrNull((element) => element.base.id == 2);
       if (item != null) _onItemPressed(item);

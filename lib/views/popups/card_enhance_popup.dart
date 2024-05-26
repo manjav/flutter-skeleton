@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../app_export.dart';
 
 class CardEnhancePopup extends AbstractPopup {
@@ -22,7 +23,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
 
   @override
   void onTutorialStep(data) {
-    if (data["id"] == 400) {
+    if (data["id"] == 326) {
       selectedCards.addCard(cards[0]);
     }
     super.onTutorialStep(data);
@@ -152,7 +153,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     if (!_isSacrificeAvailable) return;
     Overlays.insert(
       Get.overlayContext!,
-      EnhanceFeastOverlay(
+        EnhanceFeastOverlay(
         args: {"card": card, "sacrificedCards": selectedCards},
         onClose: (data) {
           if (isTutorial) {

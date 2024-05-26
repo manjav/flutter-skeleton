@@ -65,6 +65,13 @@ class LoadingController extends GetxController {
       serviceLocator<Games>().initialize();
 
       services.changeState(ServiceStatus.complete);
+      //todo: check if need show tutorial change routing
+      //check id is lessThan start app breakPoint
+      if (data.account.level == 1 && data.account.tutorial_id < 4) {
+        Get.toNamed(Routes.intro);
+      } else if (data.account.level == 1 && data.account.tutorial_id <= 20) {
+        Get.toNamed(Routes.deck);
+      }
     } on SkeletonException catch (e) {
       if (context.mounted) {
         services.changeState(ServiceStatus.error, exception: e);

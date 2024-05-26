@@ -1,8 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -37,6 +35,14 @@ class _AttackOutcomeStateFeastOverlay
   late Account _account;
   late Opponent _opponent;
   late AnimationController _animationController;
+
+  @override
+  void onTutorialFinish(data) {
+    if (data["id"] == 321) {
+      closeInput?.value = true;
+      serviceLocator<RouteService>().popUntil((route) => route.isFirst);
+    }
+  }
 
   @override
   void initState() {
@@ -198,32 +204,6 @@ class _AttackOutcomeStateFeastOverlay
   }
 
   @override
-  void onTutorialFinish(data) {
-    if (data["id"] == 401) {
-      var card = accountProvider
-          .account.loadingData.shopItems[ShopSections.card]!
-          .firstWhereOrNull((element) => element.id == 32);
-      if (card == null) return;
-      closeInput?.value = true;
-      super.onTutorialFinish(data);
-      Overlays.insert(
-        context,
-        OpenPackFeastOverlay(
-          args: {"pack": card},
-          onClose: (d) async {
-            services.changeState(ServiceStatus.punch, data: 1);
-            if (isTutorial) {
-              await Future.delayed(300.ms);
-              services.changeState(ServiceStatus.changeTab, data: {"index": 2});
-            }
-          },
-        ),
-      );
-      return;
-    }
-  }
-
-  @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.shown && isTutorial) {
@@ -237,7 +217,7 @@ class _AttackOutcomeStateFeastOverlay
 
   @override
   void dismiss() {
-    _animationController.stop();
+    _animationController.dispose();
     super.dismiss();
   }
 

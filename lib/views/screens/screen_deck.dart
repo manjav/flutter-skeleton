@@ -37,7 +37,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   @override
   void onTutorialFinish(data) {
-    if (data["index"] == 7) {
+    if (data["id"] == 13) {
       _attack(accountProvider.account);
     }
     super.onTutorialFinish(data);
@@ -53,7 +53,6 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
   List<Widget> appBarElementsRight() {
     if (isTutorial) return [];
     return <Widget>[
-      Indicator(widget.route, Values.potion, width: 256.d),
       Indicator(widget.route, Values.gold),
       Indicator(widget.route, Values.nectar, width: 280.d),
     ];
@@ -61,7 +60,64 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   @override
   List<Widget> appBarElementsLeft() {
-    return <Widget>[];
+    if (isTutorial) return [];
+    return <Widget>[
+      Consumer<AccountProvider>(
+        builder: (_, state, child) {
+          var levels = state.account.loadingData.rules["availabilityLevels"]!;
+          return Widgets.touchable(context,
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Asset.load<Image>("icon_combo", height: 68.d),
+                      state.account.level < levels["combo"]
+                          ? RotationTransition(
+                              turns: const AlwaysStoppedAnimation(-15 / 360),
+                              child: Widgets.rect(
+                                  color: TColors.primary20,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Asset.load<Image>("icon_exclude",
+                                          height: 28.d, width: 21.d),
+                                      SizedBox(
+                                        width: 7.d,
+                                      ),
+                                      Text(
+                                        "Level ${levels["combo"]}",
+                                        style: TStyles.small
+                                            .copyWith(color: TColors.white),
+                                      ),
+                                    ],
+                                  )),
+                            )
+                          : const SizedBox()
+                    ],
+                  ),
+                  SkinnedText(
+                    "shop_card_combo".l(),
+                    style: TStyles.small.copyWith(
+                      color: TColors.primary20,
+                    ),
+                  ),
+                ],
+              ), onTap: () {
+            // Show unavailable message
+            if (state.account.level < levels["combo"]) {
+              Overlays.insert(
+                  context,
+                  ToastOverlay(
+                    "unavailable_l".l(["popupcombo".l(), levels["combo"]]),
+                  ));
+            } else {
+              serviceLocator<RouteService>().to(Routes.popupCombo);
+            }
+          });
+        },
+      )
+    ];
   }
 
   @override
@@ -347,6 +403,9 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
 
   Widget? _cardItemBuilder(BuildContext context, int index, Account account,
       AccountCard card, double itemSize) {
+    bool coolDownTutorial =
+        [14, 15, 19].contains(accountProvider.account.tutorial_id) &&
+            card.lastCoolOff == 0;
     return Widgets.button(
       context,
       foregroundDecoration: _selectedCards.value.contains(card)
@@ -355,9 +414,14 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
               border: Border.all(color: TColors.white, width: 8.d))
           : null,
       padding: EdgeInsets.zero,
-      onPressed: () {
-        if (card.getRemainingCooldown() > 0) {
-          card.coolOff(context);
+      onPressed: () async {
+        if (card.getRemainingCooldown(isTutorial: coolDownTutorial) > 0) {
+          await card.coolOff(context, isTutorial: coolDownTutorial);
+          var cards =
+              account.getReadyCards().where((card) => card.lastCoolOff == 0);
+          if (cards.isEmpty && context.mounted && isTutorial) {
+            accountProvider.updateTutorial(context, 11, 20);
+          }
         } else {
           if (card.base.isHero) {
             _selectedCards.setAtCard(2, card);
@@ -365,21 +429,15 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             _selectedCards.setCard(card, exception: 2);
           }
         }
-        //todo: add check if we are in tutorial
         if (_selectedCards.value.where((element) => element != null).length ==
                 2 &&
             isTutorial) {
-          if (accountProvider.account.tutorial_index <= 6) {
+          if (accountProvider.account.tutorial_id <= 12 && context.mounted) {
             accountProvider.update(context, {
-              "tutorial_index": 6,
+              "tutorial_id": 12,
             });
           }
           checkTutorial();
-          //todo: we need to fix it by listen to finish (need to check)
-          // checkTutorial(context, Routes.deck,
-          //     onFinish: (data) {
-          //   _attack(account);
-          // });
         }
       },
       child: CardItem(
@@ -387,7 +445,7 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
         showCoolOff: true,
         size: itemSize,
         key: getGlobalKey(card.id),
-        isTutorial: isTutorial,
+        isTutorial: coolDownTutorial,
       ),
     );
   }
@@ -577,17 +635,17 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
           "opponent": _opponent,
           "cards": _selectedCards,
           "isBattle": widget.args.containsKey("opponent"),
-          "isTutorial": isTutorial
         },
         onClose: (data) {
           _selectedCards.clear(setNull: true);
-          serviceLocator<TutorialManager>()
-              .checkToturial(context, widget.route);
+          if (isTutorial && account.tutorial_id < 20) {
+            serviceLocator<TutorialManager>().checkToturial(widget.route);
+          }
         },
       ),
     );
     // _selectedCards.clear(setNull: true);
-    if (isTutorial) return;
+    if (isTutorial && account.tutorial_id < 20) return;
     serviceLocator<Notifications>().schedule(account.getSchedules());
     await Future.delayed(const Duration(milliseconds: 1500));
     serviceLocator<RouteService>().back();
