@@ -262,9 +262,6 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     if (!_buildingPositions.containsKey(type.name)) return const SizedBox();
 
     var building = account.buildings[type]!;
-    if (building.type == Buildings.lab) {
-      building.level = account.potion ~/ 10;
-    }
     var position = _buildingPositions[type.name]!;
     Widget child =
         type == Buildings.mine ? BuildingBalloon(building) : const SizedBox();
