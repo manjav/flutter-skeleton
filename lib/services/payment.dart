@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../app_export.dart';
 
-class Payment {
+class Payment extends IService {
   final String PURCHASE = "purchase";
   final String INVENTORY = "inventory";
   final String RESULT = "result";
@@ -14,7 +14,7 @@ class Payment {
   final MethodChannel _channel = const MethodChannel(
       'com.tcg.fruitcraft.trading.card.game.battle/payment');
 
-  Future<IabResult?> init({
+  Future<void> init({
     required String storePackageName,
     required String bindUrl,
     bool enableDebugLogging = false,
@@ -22,12 +22,12 @@ class Payment {
     var iabResult = await _channel.invokeMethod("init", <String, dynamic>{
       "storePackageName": storePackageName,
       "bindUrl": bindUrl,
-      'enableDebugLogging': enableDebugLogging,
+      'enableDebugLogging': true,
     });
     var iabResultJson = iabResult != null ? json.decode(iabResult) : null;
     this.iabResult =
         iabResultJson != null ? IabResult.fromJson(iabResultJson) : null;
-    return this.iabResult;
+    super.initialize();
   }
 
   Future<Map> launchPurchaseFlow({required String sku, String? payload}) async {
