@@ -84,6 +84,8 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
                 final controller = StateMachineController.fromArtboard(
                     artboard, "State Machine 1")!;
                 var input = controller.findInput<double>('level');
+                _fillInput =
+                    controller.findInput<double>("fill") as SMINumber?;
                 if (input != null) {
                   _levelInput = input as SMINumber;
                   _levelInput!.value = widget.building.level.toDouble();
