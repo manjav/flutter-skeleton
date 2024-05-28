@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_export.dart';
@@ -30,6 +31,39 @@ class Indicator extends StatefulWidget {
 
 class _IndicatorState extends State<Indicator>
     with TickerProviderStateMixin, ILogger, ServiceFinderWidgetMixin {
+  int _goldCount = 0;
+
+  @override
+  void initState() {
+    if (widget.type == Values.gold) {
+      var account = serviceLocator<AccountProvider>().account;
+      _goldCount = account.getValue(widget.type);
+      serviceLocator<AccountProvider>().addListener(
+        () {
+          if (account.gold != _goldCount) {
+            var paddingTop = MediaQuery.of(context).viewPadding.top;
+            if (paddingTop <= 0) {
+              paddingTop = 24.d;
+            }
+            Offset position = Offset(paddingTop.d, Get.width - 160.d - 24.d);
+
+            Overlays.insert(
+              context,
+              GoldOverlay(
+                account.gold - _goldCount,
+                "${OverlaysName.gold}_${account.getTime()}",
+                offset: position,
+              ),
+            );
+            _goldCount = account.gold;
+          }
+        },
+      );
+    }
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // if (Pref.tutorMode.value == 0) return const SizedBox();
@@ -91,26 +125,29 @@ class _IndicatorState extends State<Indicator>
     if (widget.type == Values.leagueRank && value == 0 && league == 0) {
       return const SizedBox();
     }
-    return Stack(alignment: Alignment.centerLeft, children: [
-      Positioned(
-          right: right,
-          left: left,
-          height: 64.d,
-          child: Widgets.rect(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(bottom: 8.d, left: height * 0.1),
-            decoration: Widgets.imageDecorator(
-                "ui_indicator_bg", ImageCenterSliceData(104, 69)),
-            child: _getText(value, left, right),
-          )),
-      _getIcon(league),
-      Positioned(
-          right: 0,
-          height: 84.d,
-          child: widget.hasPlusIcon
-              ? Asset.load<Image>('ui_plus')
-              : const SizedBox()),
-    ]);
+    return Stack(
+      alignment: Alignment.centerLeft,
+      children: [
+        Positioned(
+            right: right,
+            left: left,
+            height: 64.d,
+            child: Widgets.rect(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: 8.d, left: height * 0.1),
+              decoration: Widgets.imageDecorator(
+                  "ui_indicator_bg", ImageCenterSliceData(104, 69)),
+              child: _getText(value, left, right),
+            )),
+        _getIcon(league),
+        Positioned(
+            right: 0,
+            height: 84.d,
+            child: widget.hasPlusIcon
+                ? Asset.load<Image>('ui_plus')
+                : const SizedBox()),
+      ],
+    );
   }
 
   _getText(int value, double left, double right) {
