@@ -23,4 +23,5 @@ class OverlaysName {
   static const helpMap = "overlay_help_map";
   static const matching = "overlay_matching";
   static const feastIntro = "overlay_feast_intro";
+  static const gold = "overlay_gold";
 }
