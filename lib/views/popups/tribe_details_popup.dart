@@ -180,11 +180,16 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
   Widget _upgradeBuilder(Tribe tribe) {
     return Column(children: [
       Row(children: [
-        SkinnedText("tribe_gold".l(), style: TStyles.large),
-        SizedBox(width: 4.d),
-        Asset.load<Image>("icon_gold", width: 70.d),
-        SizedBox(width: 4.d),
-        SkinnedText(tribe.gold.compact(), style: TStyles.large),
+        Row(
+          textDirection: Localization.textDirection,
+          children: [
+            SkinnedText("tribe_gold".l(), style: TStyles.large),
+            SizedBox(width: 4.d),
+            Asset.load<Image>("icon_gold", width: 70.d),
+            SizedBox(width: 4.d),
+            SkinnedText(tribe.gold.compact(), style: TStyles.large),
+          ],
+        ),
         const Expanded(child: SizedBox()),
         SkinnedButton(
             label: "tribe_donate".l(),
