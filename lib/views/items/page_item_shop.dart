@@ -105,7 +105,8 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients && widget.shopSections != null) {
           Scrollable.ensureVisible(
-            GlobalObjectKey(widget.shopSections!.index).currentContext!,
+            GlobalObjectKey(widget.shopSections!.index).currentContext ??
+                context,
             alignment: 0.1,
           );
         }

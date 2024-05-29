@@ -85,7 +85,7 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
         Ranks.lists[api] = Ranks.createList<Record>(data, _account.id);
       } else {
         Ranks.lists[api] =
-            Ranks.createList<TribeRank>(data, _account.tribe!.id);
+            Ranks.createList<TribeRank>(data, _account.tribe?.id ?? 0);
       }
       setState(() {});
     } finally {}
