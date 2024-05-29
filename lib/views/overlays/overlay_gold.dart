@@ -5,9 +5,8 @@ import '../../../app_export.dart';
 class GoldOverlay extends AbstractOverlay {
   final int count;
   final Offset? offset;
-  final String route;
-  const GoldOverlay(this.count, this.route, {this.offset, super.key})
-      : super(route: route);
+  const GoldOverlay(this.count,
+      {this.offset, super.route = OverlaysName.gold, super.key});
 
   @override
   createState() => _GoldOverlayState();

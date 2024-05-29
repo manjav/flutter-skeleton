@@ -51,7 +51,7 @@ class _IndicatorState extends State<Indicator>
               context,
               GoldOverlay(
                 account.gold - _goldCount,
-                "${OverlaysName.gold}_${account.getTime()}",
+                route: "${OverlaysName.gold}_${account.getTime()}",
                 offset: position,
               ),
             );
@@ -62,7 +62,6 @@ class _IndicatorState extends State<Indicator>
     }
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
