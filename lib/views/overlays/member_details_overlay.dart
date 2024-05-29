@@ -6,7 +6,7 @@ class MemberOverlay extends AbstractOverlay {
   final double y;
   final Opponent member, me;
 
-  const MemberOverlay(this.member, this.me, this.y, {super.key})
+  const MemberOverlay(this.member, this.me, this.y, {super.onClose, super.key})
       : super(route: OverlaysName.member);
 
   @override
@@ -106,6 +106,9 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
         RpcParams.tribe_id.name: accountProvider.account.tribe!.id,
         RpcParams.member_id.name: widget.member.id,
       });
+
+      widget.onClose?.call(null);
+
       //show toast for promoted, demoted, kick and poke
       if (id != RpcId.tribeLeave) {
         var action = id.name.toLowerCase().replaceAll("tribe", "");
@@ -115,7 +118,8 @@ class _MemberOverlayState extends AbstractOverlayState<MemberOverlay> {
         accountProvider.installTribe(null);
         Navigator.pop(context);
       }
+    } finally {
       close();
-    } finally {}
+    }
   }
 }

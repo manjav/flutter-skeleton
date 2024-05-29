@@ -141,8 +141,14 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
         ]), onTapUp: (details) {
       Overlays.insert(
           context,
-          MemberOverlay(member, tribe.members.value.firstWhere((m) => m.itsMe),
-              details.globalPosition.dy - 220.d));
+          MemberOverlay(
+            member,
+            tribe.members.value.firstWhere((m) => m.itsMe),
+            details.globalPosition.dy - 220.d,
+            onClose: (data) {
+              setState(() {});
+            },
+          ));
     });
   }
 
