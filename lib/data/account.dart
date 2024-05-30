@@ -11,7 +11,7 @@ class AccountProvider extends ChangeNotifier {
   Map<String, Word> words = {};
   List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
-  
+
   void initialize(dynamic account) {
     this.account = account;
     metadata = jsonDecode(account.user.metadata!);
@@ -62,9 +62,9 @@ class AccountProvider extends ChangeNotifier {
             group, "${group.id}_$topicIndex", {"index": topicIndex});
       }
       topics[topicIndex]!.children.add(
-        Talk.create(group, i, list[i], account.user.langTag!,
-            metadata["targetLanguage"], account.user.displayName!),
-      );
+            Talk.create(group, i, list[i], account.user.langTag!,
+                metadata["targetLanguage"], account.user.displayName!),
+          );
     }
     group.children = topics.values.toList();
     group.children.sort((a, b) => a.index - b.index);

@@ -66,6 +66,7 @@ class GroupContent extends ParentContent {
 }
 
 class Talk extends Content {
+  int topicIndex = 0;
   String personId = "";
   double scrollPosition = 0;
   bool get isName => type == ContentType.name;
@@ -73,7 +74,7 @@ class Talk extends Content {
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
       : super.create(parent, map["id"], map) {
-    this.index = index;
+    topicIndex = map["topicIndex"] ?? 0;
     personId = map["person_id"];
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
