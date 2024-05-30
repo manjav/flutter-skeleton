@@ -152,7 +152,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       ),
       onPressed: () async {
         if (group.children.isEmpty) {
-          await serviceLocator<AccountProvider>().loadTalks(group);
+          await serviceLocator<AccountProvider>().loadGroup(group);
         }
 
         // var routName =
@@ -161,7 +161,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         //         : Routes.intro;
 
         // print(group.words);
-        var s = await Get.toNamed(Routes.chat,
+        var s = await Get.toNamed(Routes.intro,
             arguments: {"content": group, "challengeMode": type == 2});
         if (s == null || s <= scoreNotifier.value) return;
         await serviceLocator<AccountProvider>().saveScore(id, s);
