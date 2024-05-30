@@ -22,13 +22,13 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     return Stack(
       children: [
         childBuilder(paddingTop),
-        headerBuilder(paddingTop, Get.arguments["content"].title),
+        navigatorBuilder(paddingTop, Get.arguments["content"].title),
         footerChromeBuilder(),
       ],
     );
   }
 
-  Widget headerBuilder(double paddingTop, String title) {
+  Widget navigatorBuilder(double paddingTop, String title) {
     return Positioned(
       top: paddingTop,
       left: 0,
