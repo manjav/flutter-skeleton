@@ -84,7 +84,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
           height: 56.d,
           padding: EdgeInsets.all(16.d),
           child: Asset.load<Image>(
-              "ui_arrow_${Localization.isRTL ? "forward" : "back"}"),
+              "ui_arrow_${Localization.isRTL ? "back" : "forward"}"),
           onPressed: () => Navigator.pop(context))
     ];
   }

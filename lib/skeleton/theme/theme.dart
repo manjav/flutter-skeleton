@@ -94,7 +94,7 @@ class Themes {
 
     return ThemeData(
       colorScheme: const ColorScheme.light(
-          background: TColors.primary10,
+          background: TColors.primary30,
           primary: TColors.primary,
           outline: TColors.primary70),
       brightness: Brightness.light,
