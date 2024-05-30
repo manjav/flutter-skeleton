@@ -32,7 +32,8 @@ class RadioBox extends StatelessWidget {
           ? MainAxisAlignment.start
           : MainAxisAlignment.end;
     }
-    simplify(text) => text?.replaceAll(RegExp(r'[ًٍَُِّ]'), '');
+    simplify(text) =>
+        text?.replaceAll(RegExp(r'[ًٍَُِّ]'), '').replaceAll('|', '\n');
     return Row(
       mainAxisAlignment: alignment,
       children: [
