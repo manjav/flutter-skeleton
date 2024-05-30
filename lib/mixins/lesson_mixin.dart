@@ -149,4 +149,10 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Widget footerBuilder() => const SizedBox();
 
   Widget childBuilder(double paddingTop) => const SizedBox();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }

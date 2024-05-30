@@ -194,12 +194,6 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
     return footer;
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
   Widget _nameDisplayBuilder() {
     return ValueListenableBuilder(
       valueListenable: _name,

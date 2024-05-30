@@ -66,6 +66,7 @@ class LessonController {
 
   void dispose() {
     onComplete = null;
+    onContentChange = null;
     onQuizEnd = null;
     onQuizStart = null;
   }
