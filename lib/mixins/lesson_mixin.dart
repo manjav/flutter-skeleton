@@ -8,14 +8,12 @@ import '../app_export.dart';
 mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   final GlobalKey footerKey = GlobalKey();
   final LessonController controller = LessonController();
+  final ValueNotifier<double> footerHeight = ValueNotifier(0);
   double padding = 12.d;
 
   @override
-  List<Widget> appBarElementsLeft() => [];
-
-  @override
   Widget contentFactory(double paddingTop) {
-    if (controller.steps.isEmpty) {
+    if (controller.topics.isEmpty) {
       return const SizedBox();
     }
 
@@ -54,7 +52,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             SizedBox(width: 12.d),
             Expanded(
               child: ValueListenableBuilder(
-                valueListenable: controller.stepIndex,
+                valueListenable: controller.topicIndex,
                 builder: (context, value, child) => Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,8 +62,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut,
                       tween: Tween(
-                        begin: value / controller.steps.length,
-                        end: (value + 1) / controller.steps.length,
+                        begin: value / controller.topics.length,
+                        end: (value + 1) / controller.topics.length,
                       ),
                       builder: (context, value, _) => LinearProgressIndicator(
                         minHeight: 6.d,
@@ -76,7 +74,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                       ),
                     ),
                     Text(
-                      "${value + 1} / ${controller.steps.length}",
+                      "${value + 1} / ${controller.topics.length}",
                       style: TStyles.small.copyWith(color: TColors.primary30),
                     ),
                   ],
@@ -102,10 +100,11 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Widget footerChromeBuilder() {
     return ValueListenableBuilder(
-        valueListenable: controller.stepIndex,
+        valueListenable: footerHeight,
         builder: (context, value, child) {
-          var talk = controller.steps[controller.stepIndex.value] as Talk;
-          if (!talk.isQuiz) return const SizedBox();
+          if (value <= 0) {
+            return const SizedBox();
+          }
           return Positioned(
             left: 0,
             right: 0,

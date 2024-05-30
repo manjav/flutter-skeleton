@@ -19,30 +19,32 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
 
   @override
   void initState() {
-    controller.steps = Get.arguments["content"].children;
+    controller.topics = Get.arguments["content"].children;
     // if (!controller.steps[1].isChat) controller.steps.removeRange(1, 3); // Temp
     controller.onQuizStart = _startQuizCallback;
     controller.onQuizEnd = _endQuizCallback;
-    controller.changeStep(1);
+    controller.changeTopic(1);
     super.initState();
   }
 
   @override
   Widget childBuilder(double paddingTop) {
-    return Column(children: [
-      SizedBox(height: 90.d),
-      _nameDisplayBuilder(),
-      SizedBox(height: 10.d),
-      Expanded(
-        child: AnimatedList(
-            key: _animatedListKey,
-            controller: _chatScrollController,
-            padding: EdgeInsets.fromLTRB(
-                padding, paddingTop + padding * 6, padding, 300.d),
-            itemBuilder: (c, i, a) =>
-                _animatedItemBuilder(_animatedItems[i], a)),
-      )
-    ]);
+    return Column(
+      children: [
+        SizedBox(height: 90.d),
+        _nameDisplayBuilder(),
+        SizedBox(height: 10.d),
+        Expanded(
+          child: AnimatedList(
+              key: _animatedListKey,
+              controller: _chatScrollController,
+              padding: EdgeInsets.fromLTRB(
+                  padding, paddingTop + padding * 6, padding, 300.d),
+              itemBuilder: (c, i, a) =>
+                  _animatedItemBuilder(_animatedItems[i], a)),
+        )
+      ],
+    );
   }
 
   Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
@@ -164,10 +166,10 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
       await Future.delayed(duration);
       serviceLocator<STT>().state.value = QuizState.none;
       if (mounted) {
-        controller.onStepResult(true);
+        controller.onQuizResult(true);
       }
     } else if (state == QuizState.fail) {
-      controller.onStepResult(false);
+      controller.onQuizResult(false);
       await Future.delayed(duration);
       serviceLocator<STT>().start();
     }
@@ -175,10 +177,10 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
 
   @override
   Widget footerBuilder() {
-    if (controller.stepIndex.value >= controller.steps.length) {
+    if (controller.topicIndex.value >= controller.topics.length) {
       return const SizedBox();
     }
-    var step = controller.steps[controller.stepIndex.value] as Talk;
+    var step = controller.topics[controller.topicIndex.value] as Talk;
     if (!step.isQuiz) {
       return const SizedBox();
     }
@@ -187,10 +189,10 @@ class _ScreenState extends AbstractScreenState<LessonChatScreen>
       DirText(controller.practice,
           textAlign: TextAlign.center, style: TStyles.small),
       SizedBox(height: 24.d),
-      ListenerBox(step, challengeMode: Get.arguments["challengeMode"])
+      ListenerBox(step, challengeMode: Get.arguments["challengeMode"] ?? false)
     ]);
 
-    controller.footerSize.value = getFooterHeight(context);
+    // footerSize.value = getFooterHeight(context);
     return footer;
   }
 
