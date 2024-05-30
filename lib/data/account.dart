@@ -145,7 +145,7 @@ class Account extends Player with MineMixin {
 
   dynamic avatars,
       owned_avatars,
-      sale_info,
+      saleInfo,
       bundles,
       coach_info,
       coaching,
@@ -216,6 +216,7 @@ class Account extends Player with MineMixin {
     mobile_number_verified = map["mobile_number_verified"];
     wheel_of_fortune = map["wheel_of_fortune"];
     bundles = map["bundles"];
+    saleInfo=map["sale_info"];
 
     // Strings
     name = map["name"];
@@ -467,6 +468,10 @@ class Account extends Player with MineMixin {
         gold = Convert.toInt(data["player_gold"]);
       }
       gold += Convert.toInt(data["added_gold"]);
+    }
+
+    if (data.containsKey("sale_info")) {
+      saleInfo = data["sale_info"];
     }
 
     if (!data.containsKey("nectar")) {
