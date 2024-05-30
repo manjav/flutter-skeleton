@@ -2,19 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 
 import '../export.dart';
 
-abstract class ISounds extends IService {
-  void play(String name, {String? channel});
-  void playMusic();
-  void stop(String channel);
-  void stopAll();
-}
-
-class Sounds extends ISounds {
-  @override
-  initialize({List<Object>? args}) {
-    super.initialize();
-  }
-
+class Sounds extends IService {
 /*
  * Load, cache and play sounds
  */
@@ -22,15 +10,15 @@ class Sounds extends ISounds {
   final Map<String, AudioPlayer> _players = {};
   final _sounds = <String, DeviceFileSource>{};
 
-  @override
-  Future<void> play(String name, {String? channel, bool loop = false}) async {
+  Future<AudioPlayer?> play(String name,
+      {String? channel, bool loop = false}) async {
     AudioPlayer player;
-    if (name.isEmpty) return;
+    if (name.isEmpty) return null;
     if (channel == null) {
-      if (!Pref.sfx.getBool()) return;
+      if (!Pref.sfx.getBool()) return null;
       player = getPlayer(name);
     } else {
-      if (channel == "music" && !Pref.music.getBool()) return;
+      if (channel == "music" && !Pref.music.getBool()) return null;
       player = getPlayer(channel);
     }
 
@@ -42,7 +30,7 @@ class Sounds extends ISounds {
       } catch (e) {
         log('$e');
       }
-      return;
+      return player;
     }
 
     var extension = AssetType.sound.extension;
@@ -51,6 +39,7 @@ class Sounds extends ISounds {
         '$name.$extension', '${LoaderWidget.baseURL}/sounds/$name.$extension',
         hash: md5);
     player.play(_sounds[name] = DeviceFileSource(file!.path));
+    return player;
   }
 
   ///we have bug here because in mouse down and mouse up we get same audio player
@@ -66,12 +55,10 @@ class Sounds extends ISounds {
     return _players[name] ?? (_players[name] = AudioPlayer());
   }
 
-  @override
   void stop(String channel) {
     _players[channel]!.stop();
   }
 
-  @override
   void stopAll() {
     var entries = _players.entries;
     for (var e in entries) {
@@ -79,7 +66,6 @@ class Sounds extends ISounds {
     }
   }
 
-  @override
   void playMusic() {
     // play('main_theme', channel: "music", loop: true);
   }
