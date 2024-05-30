@@ -20,7 +20,11 @@ class Overlays {
     }
   }
 
+  static OverlayEntry? getEntry(String route) => _entries[route];
+
   static void clear() => _entries.clear();
+
+  static void removeByRoute(String route) => _entries[route]?.remove();
 }
 
 class AbstractOverlay extends StatefulWidget {
