@@ -50,18 +50,24 @@ class AccountProvider extends ChangeNotifier {
     return contents;
   }
 
-  Future<void> loadTalks(GroupContent group) async {
+  Future<void> loadGroup(GroupContent group) async {
     List list = await serviceLocator<NetConnector>()
         .rpc("content_contents", params: {"groupId": group.id});
-    list.sort((a, b) => a["index"] - b["index"]);
-    var talks = <Talk>[];
+
+    var topics = <int, GroupContent>{};
     for (var i = 0; i < list.length; i++) {
-      talks.add(
+      final topicIndex = list[i]["topic_index"];
+      if (!topics.containsKey(topicIndex)) {
+        topics[topicIndex] = GroupContent.create(
+            group, "${group.id}_$topicIndex", {"index": topicIndex});
+      }
+      topics[topicIndex]!.children.add(
         Talk.create(group, i, list[i], account.user.langTag!,
             metadata["targetLanguage"], account.user.displayName!),
       );
     }
-    group.children = talks;
+    group.children = topics.values.toList();
+    group.children.sort((a, b) => a.index - b.index);
   }
 
   Future<Map> loadStats(String type) async {
