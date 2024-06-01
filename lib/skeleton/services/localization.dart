@@ -80,7 +80,10 @@ extension LocalizationExtension on String {
       ILogger.slog(this, "$key not found!");
       return key;
     }
-    if (args != null) {
+    if (args == null) {
+      result = result!.replaceAll(RegExp(r'%s'), "");
+    }
+    else {
       for (var arg in args) {
         result = result!.replaceFirst(RegExp(r'%s'), arg.toString());
       }
