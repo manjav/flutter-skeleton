@@ -20,8 +20,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     return Stack(
       children: [
         childBuilder(paddingTop),
-        navigatorBuilder(paddingTop, Get.arguments["content"].title),
         footerChromeBuilder(),
+        navigatorBuilder(paddingTop, Get.arguments["content"].title),
       ],
     );
   }
@@ -114,7 +114,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             child: Container(
               key: footerKey,
               decoration: BoxDecoration(
-                color: TColors.primary0,
+                color: TColors.primary60,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(32.d),
                   topRight: Radius.circular(32.d),

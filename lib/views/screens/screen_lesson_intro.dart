@@ -34,6 +34,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     if (talk.isQuiz) {
       _startQuizCallback(talk);
     } else {
+      footerHeight.value = 0;
       await _addChat();
       controller.changeContent(1);
     }
@@ -54,7 +55,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
         return Align(
           alignment: const Alignment(0, 1),
           child: FractionallySizedBox(
-            heightFactor: 0.25,
+            heightFactor: 0.15,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,7 +82,6 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
                     ),
                   ],
                 ),
-                SizedBox(height: 32.d)
               ],
             ),
           ),
@@ -121,7 +121,8 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
       opacity: isEnable ? 1 : 0.4,
       child: Widgets.button(
         context,
-        padding: EdgeInsets.all(32.d),
+        height: 92.d,
+        padding: EdgeInsets.all(12.d),
         child: Asset.load<Image>(name),
         onPressed: () {
           if (isEnable) {
@@ -155,9 +156,8 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
         parent: animation.drive(Tween<double>(begin: 0, end: 1)),
         curve: Curves.easeOutBack,
       ),
-      child: switch (talk.personId) {
-        "intro" => _imageBuilder(talk),
-        "card" => _phraseBuilder(talk),
+      child: switch (talk.type) {
+        ContentType.image => _imageBuilder(talk),
         _ => _chatBuilder(talk),
         // _ => const SizedBox(),
         // ContentType.name => SizedBox(height: 10.d),
@@ -305,11 +305,9 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   @override
   Widget footerBuilder() {
     var footer = Column(children: [
-      DirText(controller.practice,
-          textAlign: TextAlign.center, style: TStyles.small),
-      SizedBox(height: 24.d),
       ListenerBox(controller.currentContent,
-          challengeMode: Get.arguments["challengeMode"] ?? false)
+          challengeMode: Get.arguments["challengeMode"] ?? false),
+      SizedBox(height: 120.d),
     ]);
 
     // footerSize.value = getFooterHeight(context);
