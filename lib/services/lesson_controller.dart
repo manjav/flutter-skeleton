@@ -6,27 +6,25 @@ import '../app_export.dart';
 
 class LessonController {
   List<Talk> contents = [];
-  List<GroupContent> topics = [];
+  List<GroupContent> slides = [];
   Function(Talk)? onQuizStart;
   Future<void> Function(Talk)? onQuizEnd;
   Future<void> Function()? onContentChange;
   Function(int, int, int)? onComplete;
-  final ValueNotifier<int> topicIndex = ValueNotifier(-1);
+  final ValueNotifier<int> slideIndex = ValueNotifier(-1);
   final ValueNotifier<int> contentIndex = ValueNotifier(-1);
 
   int _fouls = 0, _streakCorrects = 0, _maxCorrects = 0, _numQuizes = 0;
 
-  String practice = "";
+  GroupContent get currentSlide => slides[slideIndex.value];
+  Talk get currentContent => currentSlide.children[contentIndex.value] as Talk;
 
-  GroupContent get currentTopic => topics[topicIndex.value];
-  Talk get currentContent => currentTopic.children[contentIndex.value] as Talk;
-
-  Future<void> changeTopic(int stepLength) async {
-    if (topicIndex.value >= topics.length - stepLength) {
-      for (var step in topics) {
+  Future<void> changeSlide(int stepLength) async {
+    if (slideIndex.value >= slides.length - stepLength) {
+      for (var step in slides) {
         if (step.isQuiz) _numQuizes++;
       }
-      var len = (topics.length / 2).round();
+      var len = (slides.length / 2).round();
       var corrects = len - _fouls.max(5);
       debugPrint(
           "${corrects * 100 / len}% $corrects $_maxCorrects $len   ${3 - _fouls.max(2)}");
@@ -35,10 +33,10 @@ class LessonController {
       return;
     }
 
-    topicIndex.value += stepLength;
+    slideIndex.value += stepLength;
 
     contents.clear();
-    for (var child in currentTopic.children) {
+    for (var child in currentSlide.children) {
       contents.add(child as Talk);
     }
     contentIndex.value = -1;

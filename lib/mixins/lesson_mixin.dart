@@ -13,7 +13,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   @override
   Widget contentFactory(double paddingTop) {
-    if (controller.topics.isEmpty) {
+    if (controller.slides.isEmpty) {
       return const SizedBox();
     }
 

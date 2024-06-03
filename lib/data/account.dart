@@ -54,19 +54,19 @@ class AccountProvider extends ChangeNotifier {
     List list = await serviceLocator<NetConnector>()
         .rpc("content_contents", params: {"groupId": group.id});
 
-    var topics = <int, GroupContent>{};
+    var slides = <int, GroupContent>{};
     for (var i = 0; i < list.length; i++) {
-      final topicIndex = list[i]["topic_index"];
-      if (!topics.containsKey(topicIndex)) {
-        topics[topicIndex] = GroupContent.create(
-            group, "${group.id}_$topicIndex", {"index": topicIndex});
+      final slideIndex = list[i]["slide_index"];
+      if (!slides.containsKey(slideIndex)) {
+        slides[slideIndex] = GroupContent.create(
+            group, "${group.id}_$slideIndex", {"index": slideIndex});
       }
-      topics[topicIndex]!.children.add(
+      slides[slideIndex]!.children.add(
             Talk.create(group, i, list[i], account.user.langTag!,
                 metadata["targetLanguage"], account.user.displayName!),
           );
     }
-    group.children = topics.values.toList();
+    group.children = slides.values.toList();
     group.children.sort((a, b) => a.index - b.index);
   }
 

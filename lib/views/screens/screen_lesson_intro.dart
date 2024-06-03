@@ -19,12 +19,12 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
 
   @override
   void initState() {
-    controller.topics = Get.arguments["content"].children;
+    controller.slides = Get.arguments["content"].children;
     // controller.onQuizStart = _startQuizCallback;
     // controller.onQuizEnd = _endQuizCallback;
     controller.onContentChange = _contentChangeCallback;
-    controller.topicIndex.addListener(_onChangeStep);
-    controller.changeTopic(1);
+    controller.slideIndex.addListener(_onChangeStep);
+    controller.changeSlide(1);
     super.initState();
   }
 
@@ -69,24 +69,24 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _slidination(
-                    controller.topicIndex.value, controller.topics.length),
+                    controller.slideIndex.value, controller.slides.length),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _navigationButton(
                       name: "footer_prev",
-                      isEnable: controller.topicIndex.value > 0,
-                      onPress: () => controller.changeTopic(-1),
+                      isEnable: controller.slideIndex.value > 0,
+                      onPress: () => controller.changeSlide(-1),
                     ),
                     _navigationButton(
                       name: "footer_pause",
                     ),
                     _navigationButton(
                       name: "footer_next",
-                      isEnable: value < controller.topics.length &&
+                      isEnable: value < controller.slides.length &&
                           controller.contentIndex.value ==
                               controller.contents.length - 1,
-                      onPress: () => controller.changeTopic(1),
+                      onPress: () => controller.changeSlide(1),
                     ),
                   ],
                 ),
