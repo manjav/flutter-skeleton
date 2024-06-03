@@ -35,15 +35,6 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
       _startQuizCallback(talk);
     } else {
       await _addChat();
-      if (talk.personId == "explanation" ||
-          talk.personId == "card" ||
-          talk.isChat) {
-        await serviceLocator<Speaker>().play(
-            talk.personId == "explanation"
-                ? talk.nativeValue
-                : talk.targetValue,
-            narrator: talk.isChat ? Narrator.alloy : Narrator.onyx);
-      }
       controller.changeContent(1);
     }
   }
@@ -174,16 +165,6 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     );
   }
 
-  Widget _phraseBuilder(Talk talk) => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          DirText(talk.targetValue, style: TStyles.big),
-          DirText(talk.nativeValue,
-              style: TStyles.medium.copyWith(color: TColors.primary50)),
-        ],
-      );
-
   Widget _imageBuilder(Talk talk) {
     final border = BorderRadius.all(Radius.circular(12.d));
     return Widgets.rect(
@@ -216,19 +197,24 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
       _ => BalloonTipPosition.none,
     };
 
-    var isTarget = talk.isChat || talk.isName;
-    var main = isTarget ? talk.targetValue : talk.nativeValue;
-    var translate = isTarget ? talk.nativeValue : null;
+    var main = talk.textPresentationMode.hasTarget
+        ? talk.targetValue
+        : talk.nativeValue;
+    var translate =
+        talk.textPresentationMode == PresentMode.both ? talk.nativeValue : null;
     return RadioBox(
       main,
       ballonPosition: tip,
       narrator: talk.type.narrator,
       translation: translate,
-      textStyle:
-          talk.isChat ? null : (talk.isName ? TStyles.large : TStyles.small),
+      textStyle: talk.isChat
+          ? null
+          : (talk.type == ContentType.intro ? TStyles.large : TStyles.small),
       color: talk.isChat
           ? null
-          : (talk.isName ? TColors.cream : TColors.primary10),
+          : (talk.type == ContentType.intro
+              ? TColors.cream
+              : TColors.primary10),
     );
   }
 
@@ -267,7 +253,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
       exceptions: [account.account.user.displayName!.simple()],
       onResult: _onSTTResult,
     );
-    // await Future.delayed(const Duration(milliseconds: 1200));
+    // await Future.delayed(const Duration(seconds: 4));
     // _endQuizCallback();
   }
 

@@ -52,7 +52,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             SizedBox(width: 12.d),
             Expanded(
               child: ValueListenableBuilder(
-                valueListenable: controller.topicIndex,
+                valueListenable: controller.slideIndex,
                 builder: (context, value, child) => Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,8 +62,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut,
                       tween: Tween(
-                        begin: value / controller.topics.length,
-                        end: (value + 1) / controller.topics.length,
+                        begin: value / controller.slides.length,
+                        end: (value + 1) / controller.slides.length,
                       ),
                       builder: (context, value, _) => LinearProgressIndicator(
                         minHeight: 6.d,
@@ -74,7 +74,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                       ),
                     ),
                     Text(
-                      "${value + 1} / ${controller.topics.length}",
+                      "${value + 1} / ${controller.slides.length}",
                       style: TStyles.small.copyWith(color: TColors.primary30),
                     ),
                   ],
