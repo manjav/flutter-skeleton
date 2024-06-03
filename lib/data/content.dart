@@ -68,6 +68,8 @@ class GroupContent extends ParentContent {
 class Talk extends Content {
   int slideIndex = 0;
   double scrollPosition = 0;
+  PresentMode textPresentationMode = PresentMode.none;
+  PresentMode voicePresentationMode = PresentMode.none;
   Set<String> get words => {...targetValue.split(" ")};
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
@@ -75,6 +77,8 @@ class Talk extends Content {
     slideIndex = map["slide_index"] ?? 0;
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
+    textPresentationMode = PresentMode.values[map["text_mode"]];
+    voicePresentationMode = PresentMode.values[map["voice_mode"]];
     if (map["type"] == "introduce") {
       type = ContentType.intro;
     } else if (map["type"].endsWith("_1")) {
@@ -109,6 +113,16 @@ enum ContentType {
         ContentType.bot => Narrator.fable,
         _ => Narrator.onyx,
       };
+}
+
+enum PresentMode {
+  none,
+  native,
+  target,
+  both;
+
+  bool get hasNative => this == PresentMode.native || this == PresentMode.both;
+  bool get hasTarget => this == PresentMode.target || this == PresentMode.both;
 }
 
 class Word extends Content {

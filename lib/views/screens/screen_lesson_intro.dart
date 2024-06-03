@@ -233,9 +233,24 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   }
 
   Future<void> _addChat() async {
+    var talk = controller.currentContent;
+
+    if (talk.textPresentationMode != PresentMode.none) {
+      _animatedListKey.currentState?.insertItem(_animatedItems.length);
+      _animatedItems.add(controller.currentContent);
+    }
+    if (talk.type != ContentType.image) {
+      if (talk.voicePresentationMode.hasTarget) {
+        await serviceLocator<Speaker>()
+            .play(talk.targetValue, narrator: talk.type.narrator);
+      }
+      if (talk.voicePresentationMode.hasNative) {
+        await serviceLocator<Speaker>()
+            .play(talk.nativeValue, narrator: talk.type.narrator);
+      }
+    }
+
     // var duration = const Duration(milliseconds: 500);
-    _animatedListKey.currentState?.insertItem(_animatedItems.length);
-    _animatedItems.add(controller.currentContent);
     // await _chatScrollController.animateTo(
     //     _chatScrollController.position.maxScrollExtent,
     //     duration: duration,
