@@ -87,9 +87,16 @@ class Talk extends Content {
   }
 }
 
-enum ContentType { none, category, group, name, hint, user, bot, image }
+enum ContentType {
+  none,
+  category,
+  group,
+  intro,
+  hint,
+  user,
+  bot,
+  image;
 
-extension ContentTypeExtension on ContentType {
   static ContentType getEnum(String type) {
     for (var value in ContentType.values) {
       if (value.name == type) return value;
