@@ -75,14 +75,14 @@ class Talk extends Content {
     slideIndex = map["slide_index"] ?? 0;
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
-    if (personId == "name") {
-      type = ContentType.name;
-    } else if (personId.endsWith("_1")) {
+    if (map["type"] == "introduce") {
+      type = ContentType.intro;
+    } else if (map["type"].endsWith("_1")) {
       type = ContentType.user;
-    } else if (personId.endsWith("_2")) {
+    } else if (map["type"].endsWith("_2")) {
       type = ContentType.bot;
     } else {
-      type = personId == "image" ? ContentType.image : ContentType.hint;
+      type = map["type"] == "image" ? ContentType.image : ContentType.hint;
     }
   }
 }
