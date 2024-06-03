@@ -259,9 +259,10 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
 
   Future<void> _endQuizCallback() async {
     footerHeight.value = 0;
-
     await _addChat();
-    setState(() {});
+    await Future.delayed(const Duration(seconds: 1));
+    controller.changeContent(1);
+
     // var step = controller.currentContent;
     // footerSize.value = 0;
 

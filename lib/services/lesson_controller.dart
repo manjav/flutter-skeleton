@@ -45,6 +45,7 @@ class LessonController {
 
   Future<void> changeContent(int stepLength) async {
     if (contentIndex.value >= contents.length - stepLength) {
+      changeSlide(1);
       return;
     }
     contentIndex.value += stepLength;
