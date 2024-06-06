@@ -33,8 +33,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
       _startQuizCallback(talk);
     } else {
       footerHeight.value = 0;
-      await _addChat();
-      controller.changeContent(1);
+      await _addChat(controller.uniqueIndex);
     }
   }
 
@@ -216,12 +215,14 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     );
   }
 
-  Future<void> _addChat() async {
+  Future<void> _addChat(int lastIndex) async {
     var talk = controller.currentContent;
 
+    if (talk.textPresentationMode == PresentMode.none) {
       subtitle.value = talk.textPresentationMode.hasNative
           ? talk.targetValue
           : talk.nativeValue;
+    } else {
       subtitle.value = null;
       _animatedListKey.currentState?.insertItem(_animatedItems.length);
       _animatedItems.add(controller.currentContent);
@@ -236,6 +237,10 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
         await serviceLocator<Speaker>()
             .play(talk.nativeValue, narrator: talk.type.narrator);
       }
+    }
+    await Future.delayed(const Duration(seconds: 1));
+    if (controller.uniqueIndex == lastIndex) {
+      controller.changeContent(1);
     }
 
     // var duration = const Duration(milliseconds: 500);
@@ -260,9 +265,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
 
   Future<void> _endQuizCallback() async {
     footerHeight.value = 0;
-    await _addChat();
-    await Future.delayed(const Duration(seconds: 1));
-    controller.changeContent(1);
+    await _addChat(controller.uniqueIndex);
 
     // var step = controller.currentContent;
     // footerSize.value = 0;
@@ -307,8 +310,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   @override
   Widget footerBuilder() {
     var footer = Column(children: [
-      ListenerBox(controller.currentContent,
-          challengeMode: Get.arguments["challengeMode"] ?? false),
+      ListenerBox(controller.currentContent),
       SizedBox(height: 120.d),
     ]);
 
