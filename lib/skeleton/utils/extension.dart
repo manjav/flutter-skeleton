@@ -105,7 +105,7 @@ extension StringExtensions on String {
   }
 
   String simple([bool withSpace = false]) {
-    var text = replaceAll(RegExp(r'[!?.,;:"]'), '')
+    var text = replaceAll(RegExp(r'[!?.,;:"{}]'), '')
         .replaceAll(RegExp(r'’'), "'")
         .toLowerCase();
     if (withSpace) {
