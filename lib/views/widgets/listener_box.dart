@@ -99,7 +99,10 @@ class ListenerBox extends StatelessWidget {
               stt.start();
             }
           },
-            onLongPress: () => _debugMode.value = !_debugMode.value),
+          onLongPress: () =>
+              stt.onResult?.call(QuizState.success, stt.pattern!),
+          // onLongPress: () => _debugMode.value = !_debugMode.value,
+        ),
       ],
     );
   }
