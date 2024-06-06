@@ -9,6 +9,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   final GlobalKey footerKey = GlobalKey();
   final LessonController controller = LessonController();
   final ValueNotifier<double> footerHeight = ValueNotifier(0);
+  final ValueNotifier<String?> subtitle = ValueNotifier(null);
   double padding = 12.d;
 
   @override
@@ -22,6 +23,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         childBuilder(paddingTop),
         footerChromeBuilder(),
         navigatorBuilder(paddingTop, Get.arguments["content"].title),
+        subtitleBuilder(),
       ],
     );
   }
@@ -148,6 +150,29 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Widget footerBuilder() => const SizedBox();
 
   Widget childBuilder(double paddingTop) => const SizedBox();
+
+  Widget subtitleBuilder() {
+    return Positioned(
+      left: 32.d,
+      right: 32.d,
+      bottom: 12.d,
+      child: ValueListenableBuilder(
+        valueListenable: subtitle,
+        builder: (context, value, child) {
+          if (value == null) return const SizedBox();
+          return IgnorePointer(
+            ignoring: true,
+            child: Widgets.rect(
+              radius: 12.d,
+              padding: EdgeInsets.all(12.d),
+              color: TColors.black80,
+              child: DirText(value, style: TStyles.smallInvert),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   void dispose() {

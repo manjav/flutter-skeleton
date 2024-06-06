@@ -221,10 +221,14 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   Future<void> _addChat() async {
     var talk = controller.currentContent;
 
-    if (talk.textPresentationMode != PresentMode.none) {
+      subtitle.value = talk.textPresentationMode.hasNative
+          ? talk.targetValue
+          : talk.nativeValue;
+      subtitle.value = null;
       _animatedListKey.currentState?.insertItem(_animatedItems.length);
       _animatedItems.add(controller.currentContent);
     }
+
     if (talk.type != ContentType.image) {
       if (talk.voicePresentationMode.hasTarget) {
         await serviceLocator<Speaker>()
@@ -244,6 +248,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   }
 
   Future<void> _startQuizCallback(Talk step) async {
+    subtitle.value == null;
     footerHeight.value = 100.d;
     if (!step.isQuiz) return;
     var account = serviceLocator<AccountProvider>();
@@ -253,8 +258,6 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
       exceptions: [account.account.user.displayName!.simple()],
       onResult: _onSTTResult,
     );
-    // await Future.delayed(const Duration(seconds: 4));
-    // _endQuizCallback();
   }
 
   Future<void> _endQuizCallback() async {
