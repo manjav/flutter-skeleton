@@ -121,12 +121,14 @@ class ListenerBox extends StatelessWidget {
     // if (difficulty != Difficulty.simple) {
     var items = <Widget>[];
     // var patterns = talk.targetValue.toLowerCase().split(" ");
+    bool isCorrect = false;
     var values = value.split(" ");
     for (var i = 0; i < _patterns.length; i++) {
       var style = defaultStyle;
       if (i < values.length) {
         var rate = ratio(values[i].simple(), _patterns[i].value.text.simple());
-        if (rate > minMatchLevel) {
+        isCorrect = rate > minMatchLevel;
+        if (isCorrect) {
           style = _correctStyle;
         }
       }
@@ -144,7 +146,7 @@ class ListenerBox extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
               child: Text(
                   _patterns[i].value.text.replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
-                  style: isHidden && !_patterns[i].value.used
+                  style: isHidden && !_patterns[i].value.used && !isCorrect
                       ? style.copyWith(color: TColors.transparent)
                       : style),
               onPressed: () =>

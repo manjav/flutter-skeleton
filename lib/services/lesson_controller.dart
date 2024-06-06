@@ -19,6 +19,8 @@ class LessonController {
   GroupContent get currentSlide => slides[slideIndex.value];
   Talk get currentContent => currentSlide.children[contentIndex.value] as Talk;
 
+  int get uniqueIndex => slideIndex.value * 100 + contentIndex.value;
+
   Future<void> changeSlide(int stepLength) async {
     if (slideIndex.value >= slides.length - stepLength) {
       for (var step in slides) {
@@ -57,7 +59,6 @@ class LessonController {
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
       ++_streakCorrects;
       _maxCorrects = _streakCorrects.min(_maxCorrects);
-      changeContent(1);
     } else {
       ++_fouls;
       _streakCorrects = 0;
