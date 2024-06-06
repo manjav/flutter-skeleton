@@ -20,8 +20,6 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   @override
   void initState() {
     controller.slides = Get.arguments["content"].children;
-    // controller.onQuizStart = _startQuizCallback;
-    // controller.onQuizEnd = _endQuizCallback;
     controller.onContentChange = _contentChangeCallback;
     controller.slideIndex.addListener(_onChangeStep);
     controller.changeSlide(1);
