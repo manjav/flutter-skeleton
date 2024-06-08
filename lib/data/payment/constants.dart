@@ -44,4 +44,6 @@ class Constants {
   // some fields on the getSkuDetails response bundle
   static const String GET_SKU_DETAILS_ITEM_LIST = "ITEM_ID_LIST";
   static const String GET_SKU_DETAILS_ITEM_TYPE_LIST = "ITEM_TYPE_LIST";
+
+  static const int WheelOfFortune_GoldPriceModifier = 3000;
 }
