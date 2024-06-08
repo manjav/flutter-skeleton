@@ -40,7 +40,7 @@ class _IndicatorState extends State<Indicator>
       _goldCount = account.getValue(widget.type);
       serviceLocator<AccountProvider>().addListener(
         () {
-          if (account.gold != _goldCount) {
+          if (account.gold != _goldCount && mounted) {
             var paddingTop = MediaQuery.of(context).viewPadding.top;
             if (paddingTop <= 0) {
               paddingTop = 24.d;
