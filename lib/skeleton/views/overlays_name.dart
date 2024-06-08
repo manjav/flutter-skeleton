@@ -18,6 +18,7 @@ class OverlaysName {
   static const feastDailyReward = "overlay_feast_daily_reward";
   static const feastBundle = "overlay_feast_bundle";
   static const feastGiftReward = "overlay_feast_gift_reward";
+  static const feastChanceBox = "overlay_feast_chance_box";
   static const tutorial = "overlay_tutorial";
   static const mission = "overlay_mission";
   static const helpMap = "overlay_help_map";
