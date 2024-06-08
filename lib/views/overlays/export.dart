@@ -12,6 +12,7 @@ export 'feast_openpack_overlay.dart';
 export 'feast_purchase_overlay.dart';
 export 'feast_upgrade_card_overlay.dart';
 export 'feast_upgrade_overlay.dart';
+export "feast_chancebox_overlay.dart";
 export 'map_help_overlay.dart';
 export 'member_details_overlay.dart';
 export 'mission_overlay.dart';
