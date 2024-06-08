@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -20,6 +21,7 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
     with RewardScreenMixin, TickerProviderStateMixin, ServiceFinderWidgetMixin {
   late AnimationController _opacityAnimationController;
   late Account _account;
+  double rewardCount = 0;
   late Timer _timer;
   var images = <String, dynamic>{
     "cardIcon0": "",
@@ -49,7 +51,6 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
     "card2LevelText": "",
     "card3LevelText": "",
     "card4LevelText": "",
-
   };
 
   @override
@@ -73,7 +74,8 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
     var index = 0;
     if (bundle["gold_amount"] > 0) {
       images["cardIcon$index"] = "shop_gold_30";
-      texts["card${index}Text"] = int.parse(bundle["gold_amount"].toString()).compact();
+      texts["card${index}Text"] =
+          int.parse(bundle["gold_amount"].toString()).compact();
       index++;
     }
     if (bundle["nectar_amount"] > 0) {
@@ -87,11 +89,16 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
       index++;
     }
     if (bundle["boost_pack_type"] > 0) {
-      // >= 22 power
-      // <22 xp
-      images["cardIcon$index"] = "shop_boost_power";
-      texts["card${index}Text"] = "shop_boost".l();
-      index++;
+      var data = _account.loadingData.shopItems[ShopSections.boost]
+          ?.firstWhere((element) => element.id == bundle["boost_pack_type"]);
+      if (data != null) {
+        var type = bundle["boost_pack_type"] < 22 ? "xp" : "power";
+        images["cardIcon$index"] = "shop_boost_$type";
+        texts["card${index}Text"] = "shop_boost_$type".l();
+        texts["card${index}PercentText"] =
+            "${((data.ratio - 1) * 100).round()}%";
+        index++;
+      }
     }
     if (bundle["card_info"] != null) {
       if (bundle["card_info"]["type"] == 1) {
@@ -104,8 +111,10 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
           index++;
         }
       } else {
-        images["cardIcon$index"] = "shop_boost_power";
-        texts["card${index}Text"] = "shop_boost".l();
+        images["cardIcon$index"] =
+            "shop_card_${bundle["card_info"]["card_pack_type"]}";
+        texts["card${index}Text"] =
+            "shop_card_${bundle["card_info"]["card_pack_type"]}".l();
       }
     }
 
@@ -113,8 +122,8 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
       animationBuilder("bundle"),
       _buttonBuy(),
     ];
-    // todo: cooment for now because we dont have any data of bundle in response
-    // var account = accountProvider.account;
+
+    rewardCount = index.toDouble();
 
     process(() async {
       await Future.delayed(const Duration(milliseconds: 500));
@@ -129,8 +138,7 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
-    controller.findInput<double>("rewardCount")?.value =
-        _account.bundles[0]["rewards_count"].toDouble();
+    controller.findInput<double>("rewardCount")?.value = rewardCount;
     updateRiveText("titleText", "wonderful_bundle".l());
     updateRiveText("timerText", "");
     updateRiveText("card0Text", texts["card0Text"]!);
@@ -192,6 +200,11 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
   }
 
   Widget _buttonBuy() {
+    var bundle = _account.bundles[0];
+    final storeId = FlavorConfig.instance.variables["storeId"];
+    var discountRatio = bundle["discount_ratio"].toDouble();
+    var offPrice = int.parse(bundle["gold_pack_info"]["price"][storeId]);
+    var originalPrice = offPrice + (offPrice * discountRatio).toInt();
     return Positioned(
       bottom: 400.d,
       child: Material(
@@ -202,29 +215,85 @@ class _BundleFeastOverlayState extends AbstractOverlayState<BundleFeastOverlay>
               return Opacity(
                 opacity: _opacityAnimationController.value,
                 child: SkinnedButton(
-                  height: 200.d,
-                  width: 450.d,
-                  // padding: EdgeInsets.symmetric(horizontal: 120.d,vertical: 23.d),
+                  height: 210.d,
+                  width: 460.d,
                   color: ButtonColor.green,
                   child: Column(
                     children: [
                       Align(
                           alignment: const Alignment(0, 0.52),
                           child: Stack(alignment: Alignment.center, children: [
-                            SkinnedText("\$20.00", style: TStyles.medium),
+                            SkinnedText(originalPrice.getFormattedPrice(),
+                                style: TStyles.medium),
                             Asset.load<Image>("text_line", width: 160.d)
                           ])),
                       SkinnedText(
-                        "\$20.00",
+                        offPrice.getFormattedPrice(),
                         style: TStyles.large,
                       ),
                     ],
                   ),
+                  onPressed: () async {
+                    var payment = serviceLocator<Payment>();
+                    if (!payment.isAvailable) {
+                      toast("Payment not available".l());
+                      return;
+                    }
+                    
+                    var res = await payment.launchPurchaseFlow(
+                      sku: bundle["gold_pack_info"]["product_uid"],
+                    );
+
+                    IabResult? purchaseResult = res[payment.RESULT];
+                    Purchase? purchase = res[payment.PURCHASE];
+
+                    if (true == purchaseResult?.isFailure()) {
+                      return;
+                    }
+                    
+                    _deliver(ShopSections.gold, purchase!, bundle["id"], 0);
+                  },
                 ),
               );
             }),
       ),
     );
+  }
+
+  _deliver(
+      ShopSections section, Purchase details, int bundleId, int type) async {
+    var account = serviceLocator<AccountProvider>();
+    // var params = {
+    //   "bundle_id": bundleId,
+    //   "type": type,
+    //   "receipt": details.mToken,
+    //   "signature": details.mSignature,
+    //   "store": FlavorConfig.instance.variables["storeId"]
+    // };
+
+    var params = {
+      "bundle_id": 1,
+      "type": 0,
+      "receipt": "19490242",
+      "signature": "W19L/QHvGe19sXxbO85h81kRLM/duCtDtcEYzy6NxpWkC4IqQB9ES5XlCC8LItlkuHJt8Uu6Zh4J+c+GNZG94Jh34TvoaD4Rm9eVdcXLEsrU4kWiIzNSHXVBmSYTMUWNJGq0cA9ISf9+RliZScQ+Ihb0dQNRaAdkeVUEkllmWJc=",
+      "store": "8"
+    };
+
+    var res = await rpc(RpcId.buyGoldPack, params: params);
+
+    await serviceLocator<Payment>().consume(purchase: details);
+
+    if (mounted) {
+      // account.update(context, {section.name: item.base.value});
+      // Overlays.insert(
+      //   context,
+      //   PurchaseFeastOverlay(
+      //     args: {"item": item, "avatars": res["avatars"]},
+      //   ),
+      // );
+    }
+    skipInput?.value=true;
+    return;
   }
 
   @override
