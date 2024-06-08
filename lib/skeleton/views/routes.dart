@@ -49,4 +49,5 @@ class Routes {
   static const popupChooseName = "/popupChooseName";
   static const popupHelp = "/popupHelp";
   static const popupFreeGold = "/popupFreeGold";
+  static const popupRate = "/popupRate";
 }

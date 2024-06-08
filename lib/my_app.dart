@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fruitcraft/views/popups/rate_popup.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -131,6 +132,7 @@ class _MyAppState extends State<MyApp>
             _getPage(Routes.popupChooseName, () => const ChooseNamePopup()),
             _getPage(Routes.popupHelp, () => const HelpPopup()),
             _getPage(Routes.popupFreeGold, () => const FreeGoldPopup()),
+            _getPage(Routes.popupRate, () => const RatePopup()),
           ],
         ),
       ),

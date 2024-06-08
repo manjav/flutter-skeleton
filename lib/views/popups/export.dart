@@ -25,6 +25,7 @@ export 'profile_avatars_popup.dart';
 export 'profile_edit_popup.dart';
 export 'profile_popup.dart';
 export 'ranking_popup.dart';
+export 'rate_popup.dart';
 export 'restore_popup.dart';
 export 'settings_popup.dart';
 export 'tribe_details_popup.dart';
