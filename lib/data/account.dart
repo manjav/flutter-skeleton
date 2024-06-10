@@ -339,6 +339,10 @@ class Account extends Player with MineMixin {
         Convert.toInt(map["pwboost_created_at"], pwBoostCreatedAt);
     xpBoostId = Convert.toInt(map["xpboost_id"], xpBoostId);
     pwBoostId = Convert.toInt(map["pwboost_id"], pwBoostId);
+    wonBattlesCount = Convert.toInt(map["won_battle_num"], wonBattlesCount);
+    lostBattlesCount = Convert.toInt(map["lost_battle_num"], lostBattlesCount);
+    rank = Convert.toInt(map["rank"], rank);
+    tribeRank = Convert.toInt(map["tribe_rank"], tribeRank);
   }
 
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
