@@ -298,6 +298,10 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
       } else if (asset.name.startsWith("card")) {
         _imageAssets[asset.name] = asset;
         return true;
+      } else if (asset.name.startsWith("background")) {
+        asset.image = await loadImage("background${_account!.leagueId - 1}",
+            subFolder: "backgrounds");
+        return true;
       }
     }
     return super.onRiveAssetLoad(asset, embeddedBytes);
