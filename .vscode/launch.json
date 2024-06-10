@@ -31,12 +31,14 @@
         {
             "name": "fruitcraft (profile mode)",
             "request": "launch",
+            "program": "lib/main_bazaar.dart",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
             "name": "fruitcraft (release mode)",
             "request": "launch",
+            "program": "lib/main_myket.dart",
             "type": "dart",
             "flutterMode": "release",
             "preLaunchTask": "convert"
