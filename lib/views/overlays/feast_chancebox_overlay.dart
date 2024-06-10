@@ -133,11 +133,13 @@ class _ChanceBoxScreenState extends AbstractOverlayState<ChanceBoxFeastOverlay>
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
-      for (var i = 0; i < _wonPrizesNumber; i++) {
-        var gold = _prizes["$i"]["gold"]?.compact();
-        var nectar = _prizes["$i"]["nectar"]?.compact();
-        updateRiveText("boxCaptionText$i",
-            ("${gold != null ? "gift_gold".l(gold.compact()) : ""}\n${nectar != null ? "gift_nectar".l(nectar.compact()) : ""}"));
+      for (var i = 1; i <= 3; i++) {
+        var gold = _prizes["$i"]["gold"] as int?;
+        var nectar = _prizes["$i"]["nectar"] as int?;
+        var goldText = gold != null ? "gift_gold".l([gold.compact()]) : "";
+        var nectarText =
+            nectar != null ? "gift_nectar".l([nectar.compact()]) : "";
+        updateRiveText("boxCaptionText${i - 1}", "$goldText\n$nectarText");
       }
     } else if (event.name.startsWith("choose")) {
       var match = RegExp(r'\d+').firstMatch(event.name);
