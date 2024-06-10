@@ -41,7 +41,7 @@ class _RatePopupState extends AbstractPopupState<RatePopup> {
                 height: 91.d,
               ),
               SkinnedText(
-                "show_your_love_to_us".l(),
+                "rating_message".l(),
                 hideStroke: true,
               ),
               SizedBox(
@@ -63,12 +63,13 @@ class _RatePopupState extends AbstractPopupState<RatePopup> {
                               _rate.value = index + 1;
                             },
                             child: Stack(
+                              alignment: Alignment.center,
                               children: [
                                 Asset.load<Image>("icon_star_rate_outline",
-                                    height: 110.d, width: 110.d),
+                                    height: 100.d, width: 100.d),
                                 _rate.value > index
                                     ? Asset.load<Image>("icon_star_rate",
-                                            height: 110.d, width: 110.d)
+                                            height: 90.d, width: 90.d)
                                         .animate()
                                         .fade(
                                             duration: 300.ms,
@@ -99,7 +100,7 @@ class _RatePopupState extends AbstractPopupState<RatePopup> {
                             onPressed: () => Navigator.pop(context)),
                         SizedBox(width: 36.d),
                         SkinnedButton(
-                            label: "submit".l(),
+                            label: "rate_now".l(),
                             width: 340.d,
                             color: ButtonColor.green,
                             padding: EdgeInsets.only(bottom: 16.d),
@@ -116,20 +117,21 @@ class _RatePopupState extends AbstractPopupState<RatePopup> {
         return;
       }
 
-      final storeId = FlavorConfig.instance.variables["storePackageName"];
-      final url = "bazaar://details?id=${DeviceInfo.packageName}";
+      final storeId = FlavorConfig.instance.variables["storeId"];
+      final storePackageName =
+          FlavorConfig.instance.variables["storePackageName"];
+      final url = storeId == "4"
+          ? "bazaar://details?id=${DeviceInfo.packageName}"
+          : "myket://comment?id=${DeviceInfo.packageName}";
 
       if (Platform.isAndroid) {
         AndroidIntent intent = AndroidIntent(
-          action: 'action_view',
-          data: url,
-          package: "com.farsitel.bazaar"
-        );
-        // AndroidIntent intent = AndroidIntent(
-        //   action: 'action_view',
-        //   data: "myket://comment?id=${DeviceInfo.packageName}",
-        // );
-        await intent.launch();
+            action: 'action_view', data: url, package: storePackageName);
+        intent.launch();
+
+        Pref.rated.setBool(true);
+
+        serviceLocator<RouteService>().back();
       }
     } catch (e) {
       rethrow;
