@@ -20,13 +20,20 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   @override
   void initState() {
     controller.slides = Get.arguments["content"].children;
-    controller.onContentChange = _contentChangeCallback;
-    controller.slideIndex.addListener(_onChangeStep);
+    controller.slideIndex.addListener(_onChangeSlide);
+    controller.contentIndex.addListener(_onChangeLine);
     controller.changeSlide(1);
     super.initState();
   }
 
-  Future<void> _contentChangeCallback() async {
+  Future<void> _onChangeSlide() async {
+    // serviceLocator<Sounds>().stopAll();
+    _animatedItems.clear();
+    _animatedListKey.currentState
+        ?.removeAllItems((context, animation) => const SizedBox());
+  }
+
+  Future<void> _onChangeLine() async {
     await Future.delayed(const Duration(milliseconds: 500));
     var talk = controller.currentContent;
     if (talk.isQuiz) {
@@ -37,11 +44,72 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     }
   }
 
-  Future<void> _onChangeStep() async {
-    // serviceLocator<Sounds>().stopAll();
-    _animatedItems.clear();
-    _animatedListKey.currentState
-        ?.removeAllItems((context, animation) => const SizedBox());
+  Future<void> _addChat(int lastIndex) async {
+    var talk = controller.currentContent;
+    if (talk.textPresentationMode == PresentMode.none) {
+      subtitle.value = talk.textPresentationMode.hasNative
+          ? talk.targetValue
+          : talk.nativeValue;
+    } else {
+      subtitle.value = null;
+      _animatedListKey.currentState?.insertItem(_animatedItems.length);
+      _animatedItems.add(controller.currentContent);
+    }
+
+    if (talk.type != ContentType.image) {
+      if (talk.voicePresentationMode.hasTarget) {
+        await serviceLocator<Speaker>()
+            .play(talk.targetValue, narrator: talk.type.narrator);
+      }
+      if (controller.uniqueIndex != lastIndex) return;
+      if (talk.voicePresentationMode.hasNative) {
+        await serviceLocator<Speaker>()
+            .play(talk.nativeValue, narrator: talk.type.narrator);
+      }
+    }
+    if (controller.uniqueIndex != lastIndex) return;
+    controller.changeContent(1);
+
+    // var duration = const Duration(milliseconds: 500);
+    // await _chatScrollController.animateTo(
+    //     _chatScrollController.position.maxScrollExtent,
+    //     duration: duration,
+    //     curve: Curves.easeOutQuart);
+  }
+
+  Future<void> _startQuizCallback(Talk step) async {
+    subtitle.value == null;
+    footerHeight.value = 100.d;
+    if (!step.isQuiz) return;
+    var account = serviceLocator<AccountProvider>();
+    serviceLocator<STT>().start(
+      locale: account.metadata["targetLanguage"],
+      pattern: step.targetValue,
+      exceptions: [account.account.user.displayName!.simple()],
+      onResult: _onSTTResult,
+    );
+  }
+
+  Future<void> _endQuizCallback() async {
+    footerHeight.value = 0;
+    await _addChat(controller.uniqueIndex);
+  }
+
+  Future<void> _onSTTResult(QuizState state, String text) async {
+    const duration = Duration(milliseconds: 1500);
+    serviceLocator<STT>().stop();
+    if (state == QuizState.success) {
+      await Future.delayed(duration);
+      serviceLocator<STT>().state.value = QuizState.none;
+      if (mounted) {
+        controller.onQuizResult(true);
+      }
+      _endQuizCallback();
+    } else if (state == QuizState.fail) {
+      controller.onQuizResult(false);
+      await Future.delayed(duration);
+      serviceLocator<STT>().start();
+    }
   }
 
   @override
@@ -122,9 +190,9 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
         padding: EdgeInsets.all(12.d),
         child: Asset.load<Image>(name),
         onPressed: () {
-          if (isEnable) {
-            onPress?.call();
-          }
+          // if (isEnable) {
+          onPress?.call();
+          // }
         },
       ),
     );
@@ -215,98 +283,6 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     );
   }
 
-  Future<void> _addChat(int lastIndex) async {
-    var talk = controller.currentContent;
-
-    if (talk.textPresentationMode == PresentMode.none) {
-      subtitle.value = talk.textPresentationMode.hasNative
-          ? talk.targetValue
-          : talk.nativeValue;
-    } else {
-      subtitle.value = null;
-      _animatedListKey.currentState?.insertItem(_animatedItems.length);
-      _animatedItems.add(controller.currentContent);
-    }
-
-    if (talk.type != ContentType.image) {
-      if (talk.voicePresentationMode.hasTarget) {
-        await serviceLocator<Speaker>()
-            .play(talk.targetValue, narrator: talk.type.narrator);
-      }
-      if (talk.voicePresentationMode.hasNative) {
-        await serviceLocator<Speaker>()
-            .play(talk.nativeValue, narrator: talk.type.narrator);
-      }
-    }
-    await Future.delayed(const Duration(seconds: 1));
-    if (controller.uniqueIndex == lastIndex) {
-      controller.changeContent(1);
-    }
-
-    // var duration = const Duration(milliseconds: 500);
-    // await _chatScrollController.animateTo(
-    //     _chatScrollController.position.maxScrollExtent,
-    //     duration: duration,
-    //     curve: Curves.easeOutQuart);
-  }
-
-  Future<void> _startQuizCallback(Talk step) async {
-    subtitle.value == null;
-    footerHeight.value = 100.d;
-    if (!step.isQuiz) return;
-    var account = serviceLocator<AccountProvider>();
-    serviceLocator<STT>().start(
-      locale: account.metadata["targetLanguage"],
-      pattern: step.targetValue,
-      exceptions: [account.account.user.displayName!.simple()],
-      onResult: _onSTTResult,
-    );
-  }
-
-  Future<void> _endQuizCallback() async {
-    footerHeight.value = 0;
-    await _addChat(controller.uniqueIndex);
-
-    // var step = controller.currentContent;
-    // footerSize.value = 0;
-
-    // if (step.isQuiz || step.type == ContentType.image) {
-    //   await Future.delayed(const Duration(milliseconds: 10));
-    // } else {
-    //   final text =
-    //       step.isChat || step.isName ? step.targetValue : step.nativeValue;
-    //   if (step.isChat || step.isName) {
-    //     final narrator = step.isName
-    //         ? Narrator.nova
-    //         : step.isChat
-    //             ? Narrator.fable
-    //             : Narrator.onyx;
-    //     serviceLocator<Speaker>().play(text, narrator: narrator);
-    //   } else {
-    //     duration = Duration(milliseconds: text.length * 40);
-    //   }
-    // }
-
-    // await Future.delayed(duration);
-  }
-
-  Future<void> _onSTTResult(QuizState state, String text) async {
-    const duration = Duration(milliseconds: 1500);
-    serviceLocator<STT>().stop();
-    if (state == QuizState.success) {
-      await Future.delayed(duration);
-      serviceLocator<STT>().state.value = QuizState.none;
-      if (mounted) {
-        controller.onQuizResult(true);
-      }
-      _endQuizCallback();
-    } else if (state == QuizState.fail) {
-      controller.onQuizResult(false);
-      await Future.delayed(duration);
-      serviceLocator<STT>().start();
-    }
-  }
-
   @override
   Widget footerBuilder() {
     var footer = Column(children: [
@@ -316,5 +292,12 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
 
     // footerSize.value = getFooterHeight(context);
     return footer;
+  }
+
+  @override
+  void dispose() {
+    controller.slideIndex.removeListener(_onChangeSlide);
+    controller.contentIndex.removeListener(_onChangeLine);
+    super.dispose();
   }
 }

@@ -7,9 +7,6 @@ import '../app_export.dart';
 class LessonController {
   List<Talk> contents = [];
   List<GroupContent> slides = [];
-  Function(Talk)? onQuizStart;
-  Future<void> Function(Talk)? onQuizEnd;
-  Future<void> Function()? onContentChange;
   Function(int, int, int)? onComplete;
   final ValueNotifier<int> slideIndex = ValueNotifier(-1);
   final ValueNotifier<int> contentIndex = ValueNotifier(-1);
@@ -51,7 +48,6 @@ class LessonController {
       return;
     }
     contentIndex.value += stepLength;
-    await onContentChange?.call();
   }
 
   Future<void> onQuizResult(bool isSuccess) async {
@@ -68,9 +64,6 @@ class LessonController {
 
   void dispose() {
     onComplete = null;
-    onContentChange = null;
-    onQuizEnd = null;
-    onQuizStart = null;
   }
 }
 
