@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -16,7 +15,7 @@ class MainMapPageItem extends AbstractPageItem {
 }
 
 class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
-  Map<String, dynamic> _buildingPositions = {};
+  final Map<String, dynamic> _buildingPositions = {};
 
   @override
   initState() {
