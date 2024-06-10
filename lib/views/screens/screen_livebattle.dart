@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -191,38 +192,44 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
     var myCards = _warriors[_account.id]!.cards;
     var oppositesHeadCards = _warriors[_oppositesHead.id]!.cards;
     return Widgets.rect(
-        color: const Color(0xffAA9A45),
         child: Stack(
-          alignment: const Alignment(0, -0.1),
-          children: [
-            Align(
-                alignment: const Alignment(-1.1, -0.28),
-                child: ValueListenableBuilder<int>(
-                  valueListenable: _powerBalance,
-                  builder: (context, value, child) =>
-                      PowerBalance(value, _maxPower),
-                )),
-            LiveSlot(0, -0.75, -0.30, 0.20, _slotState, oppositesHeadCards),
-            LiveSlot(1, -0.26, -0.27, 0.07, _slotState, oppositesHeadCards),
-            LiveSlot(2, 0.26, -0.27, -0.07, _slotState, oppositesHeadCards),
-            LiveSlot(3, 0.75, -0.30, -0.20, _slotState, oppositesHeadCards),
-            LiveSlot(0, -0.75, 0.10, -0.20, _slotState, myCards),
-            LiveSlot(1, -0.26, 0.07, -0.07, _slotState, myCards),
-            LiveSlot(2, 0.26, 0.07, 0.07, _slotState, myCards),
-            LiveSlot(3, 0.75, 0.10, 0.20, _slotState, myCards),
-            LiveHero(_battleId, -0.45, oppositesHeadCards, key: heroKey),
-            LiveHero(_battleId, 0.35, myCards),
-            LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
-            LiveTribe(
-                _oppositesHead.id, _battleId, _helpCost, _warriorsNotifier),
-            LiveTribe(_friendsHead.id, _battleId, _helpCost, _warriorsNotifier,
-                isTutorial: isTutorial),
-            Positioned(
-                width: 120.d,
-                right: 40.d,
-                child: SkinnedButton(label: "x", onPressed: _close))
-          ],
-        ));
+      alignment: const Alignment(0, -0.1),
+      children: [
+        LoaderWidget(
+          AssetType.image,
+          "background${_account.leagueId - 1}",
+          subFolder: "backgrounds",
+          fit: BoxFit.fill,
+          height: Get.height,
+          width: Get.width,
+        ),
+        Align(
+            alignment: const Alignment(-1.1, -0.28),
+            child: ValueListenableBuilder<int>(
+              valueListenable: _powerBalance,
+              builder: (context, value, child) =>
+                  PowerBalance(value, _maxPower),
+            )),
+        LiveSlot(0, -0.75, -0.30, 0.20, _slotState, oppositesHeadCards),
+        LiveSlot(1, -0.26, -0.27, 0.07, _slotState, oppositesHeadCards),
+        LiveSlot(2, 0.26, -0.27, -0.07, _slotState, oppositesHeadCards),
+        LiveSlot(3, 0.75, -0.30, -0.20, _slotState, oppositesHeadCards),
+        LiveSlot(0, -0.75, 0.10, -0.20, _slotState, myCards),
+        LiveSlot(1, -0.26, 0.07, -0.07, _slotState, myCards),
+        LiveSlot(2, 0.26, 0.07, 0.07, _slotState, myCards),
+        LiveSlot(3, 0.75, 0.10, 0.20, _slotState, myCards),
+        LiveHero(_battleId, -0.45, oppositesHeadCards, key: heroKey),
+        LiveHero(_battleId, 0.35, myCards),
+        LiveDeck(_pageController, _deckCards, _onDeckFocus, _onDeckSelect),
+        LiveTribe(_oppositesHead.id, _battleId, _helpCost, _warriorsNotifier),
+        LiveTribe(_friendsHead.id, _battleId, _helpCost, _warriorsNotifier,
+            isTutorial: isTutorial),
+        Positioned(
+            width: 120.d,
+            right: 40.d,
+            child: SkinnedButton(label: "x", onPressed: _close))
+      ],
+    ));
   }
 
   void _onDeckFocus(int index, AccountCard focusedCard) {
