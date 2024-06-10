@@ -151,7 +151,18 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
         var controller =
             StateMachineController.fromArtboard(artboard, "State Machine 1");
         controller?.addEventListener((event) => _riveEventsListener(event));
+
+        artboard.forEachComponent((component) {
+          if (component is Shape &&
+              component.name.toBuildings() != Buildings.none) {
+            _buildingPositions[component.name] = [
+              (artboard.width / 2 - component.translation.x) * -1,
+              (artboard.height / 2 - component.translation.y) * -1
+            ];
+          }
+        });
         artboard.addController(controller!);
+        setState(() {});
       }),
       PositionedDirectional(
         top: paddingTop,
@@ -375,13 +386,6 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     if (event.name == "splat") {
       serviceLocator<Sounds>().play("splat", channel: "splat");
       return;
-    }
-    if (event.name == "loading") {
-      Timer(const Duration(milliseconds: 100), () {
-        setState(() {
-          _buildingPositions = jsonDecode(event.properties["buildings"]);
-        });
-      });
     }
   }
 }
