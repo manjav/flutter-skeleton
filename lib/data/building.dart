@@ -35,6 +35,21 @@ extension BuildingIntExtension on int {
   }
 }
 
+extension BuildingStringExtension on String {
+  Buildings toBuildings() {
+    return switch (this) {
+      "mine" => Buildings.mine,
+      "offense" => Buildings.offense,
+      "defense" => Buildings.defense,
+      "treasury" => Buildings.treasury,
+      "lab" => Buildings.lab,
+      "quest" => Buildings.quest,
+      "base" => Buildings.base,
+      _ => Buildings.none,
+    };
+  }
+}
+
 extension BuildingExtension on Buildings {
   int get id {
     return switch (this) {
