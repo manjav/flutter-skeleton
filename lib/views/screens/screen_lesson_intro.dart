@@ -27,14 +27,12 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   }
 
   Future<void> _onChangeSlide() async {
-    // serviceLocator<Sounds>().stopAll();
     _animatedItems.clear();
     _animatedListKey.currentState
         ?.removeAllItems((context, animation) => const SizedBox());
   }
 
   Future<void> _onChangeLine() async {
-    await Future.delayed(const Duration(milliseconds: 500));
     var talk = controller.currentContent;
     if (talk.isQuiz) {
       _startQuizCallback(talk);
@@ -45,6 +43,9 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   }
 
   Future<void> _addChat(int lastIndex) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (controller.uniqueIndex != lastIndex) return;
+    serviceLocator<Sounds>().stopAll();
     var talk = controller.currentContent;
     if (talk.textPresentationMode == PresentMode.none) {
       subtitle.value = talk.textPresentationMode.hasNative
