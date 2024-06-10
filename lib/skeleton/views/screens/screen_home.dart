@@ -61,7 +61,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         child: ListView.builder(
           itemCount: _categories.length,
           itemBuilder: _categoryItemBuilder,
-          reverse: true,
         ),
       ),
     );
