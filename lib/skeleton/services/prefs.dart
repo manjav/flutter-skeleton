@@ -62,6 +62,7 @@ enum Pref {
   tutorStep,
   visitCount,
   skipUpdate,
+  rated,
 }
 
 extension PrefExtension on Pref {
