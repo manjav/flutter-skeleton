@@ -257,6 +257,16 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
               closeInput?.value = true;
               closeButtonController?.reverse();
               accountProvider.update(Get.context!, _outcomeData);
+
+              if (_outcomeData['outcome'] == true && (accountProvider.account.wonBattlesCount + 1) %
+                          Constants.RATING_WINNER_DIVISOR ==
+                      0 &&
+                  Pref.rated.getBool() == false) {
+                Overlays.closeAll();
+                serviceLocator<RouteService>()
+                    .popUntil((route) => route.isFirst);
+                serviceLocator<RouteService>().to(Routes.popupRate);
+              }
             },
           ),
         );
