@@ -48,7 +48,6 @@ class _ChanceBoxScreenState extends AbstractOverlayState<ChanceBoxFeastOverlay>
 
       if (mounted) {
         accountProvider.update(context, res);
-        
       }
 
       setState(() {
@@ -135,8 +134,10 @@ class _ChanceBoxScreenState extends AbstractOverlayState<ChanceBoxFeastOverlay>
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
       for (var i = 0; i < _wonPrizesNumber; i++) {
+        var gold = _prizes["$i"]["gold"]?.compact();
+        var nectar = _prizes["$i"]["nectar"]?.compact();
         updateRiveText("boxCaptionText$i",
-            ("${_prizes["$i"]["gold"]?.compact()}\n${_prizes["$i"]["nectar"]?.compact()}"));
+            ("${gold != null ? "gift_gold".l(gold.compact()) : ""}\n${nectar != null ? "gift_nectar".l(nectar.compact()) : ""}"));
       }
     } else if (event.name.startsWith("choose")) {
       var match = RegExp(r'\d+').firstMatch(event.name);
