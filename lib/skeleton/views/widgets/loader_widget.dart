@@ -118,6 +118,8 @@ class _LoaderWidgetState extends State<LoaderWidget> {
           loader.metadata as Uint8List,
           gaplessPlayback: true,
           fit: widget.fit,
+          height: widget.height,
+          width: widget.width,
         );
         return image;
       case AssetType.vector:
