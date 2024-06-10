@@ -46,4 +46,5 @@ class Constants {
   static const String GET_SKU_DETAILS_ITEM_TYPE_LIST = "ITEM_TYPE_LIST";
 
   static const int WheelOfFortune_GoldPriceModifier = 3000;
+  static const int RATING_WINNER_DIVISOR = 10;
 }
