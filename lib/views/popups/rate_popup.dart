@@ -114,6 +114,7 @@ class _RatePopupState extends AbstractPopupState<RatePopup> {
   _submit() async {
     try {
       if (_rate.value < 4) {
+        serviceLocator<RouteService>().back();
         return;
       }
 
