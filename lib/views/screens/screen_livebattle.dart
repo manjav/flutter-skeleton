@@ -235,14 +235,22 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   void _onDeckFocus(int index, AccountCard focusedCard) {
     var slot = _slotState.value;
     var mySlots = _warriors[_account.id]!.cards;
+
     if (focusedCard.base.isHero) {
-      if (slot.i < 5) {
+      if (slot.i < 5 && !mySlots.isDeployed(slot.i)) {
         mySlots.setAtCard(slot.i, null);
       }
       mySlots.setAtCard(4, focusedCard);
       return;
+    } else if (!mySlots.isDeployed(4)) {
+      mySlots.setAtCard(4, null);
     }
+
     if (slot.i == 5) return;
+    if (mySlots.isDeployed(slot.i)) {
+      return;
+    }
+
     mySlots.setAtCard(slot.i, focusedCard);
     if (mySlots.value[4] != null && !mySlots.value[4]!.isDeployed) {
       mySlots.setAtCard(4, null);
@@ -301,16 +309,18 @@ class _LiveBattleScreenState extends AbstractScreenState<LiveBattleScreen> {
   }
 
   void _setSlotTime(int tick) {
-    if (_slotState.value.i == 5) return;
+    if (_slotState.value.i > 5) return;
     var sum = 0.0;
     for (var i = 0; i < LiveBattleScreen.deadlines.length; i++) {
       sum += LiveBattleScreen.deadlines[i];
       if (tick < sum) {
         if (i > _slotState.value.i) {
           var mySlots = _warriors[_friendsHead.id]!.cards;
-          mySlots.setAtCard(_slotState.value.i, null, toggleMode: false);
-          var index = _pageController.page!.round();
-          _gotoNextSlot(index, _slotState.value);
+          if (!mySlots.isDeployed(_slotState.value.i)) {
+            mySlots.setAtCard(_slotState.value.i, null, toggleMode: false);
+            var index = _pageController.page!.round();
+            _gotoNextSlot(index, _slotState.value);
+          }
         }
         _setSlot(i, (sum - tick).round());
         return;

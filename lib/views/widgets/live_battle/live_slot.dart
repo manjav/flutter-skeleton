@@ -75,8 +75,11 @@ class LiveSlot extends StatelessWidget with KeyProvider {
         valueListenable: currentState!,
         builder: (context, value, child) {
           var visible = index == value.i && alignY > 0;
+          if (value.i > index && index == 3 && alignY > 0) visible = true;
           var duration = const Duration(milliseconds: 500);
-          if (visible) {
+          if (index == value.i &&
+              alignY > 0 &&
+              deployedCards.value[index]?.isDeployed == false) {
             if (turns == 0.0) turns = 0.008;
             turns *= -1.0;
           }
