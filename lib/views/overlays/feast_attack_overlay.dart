@@ -251,7 +251,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
             args: _outcomeData,
             type: route,
             onClose: (data) async {
-              widget.onClose?.call(result);
+              // widget.onClose?.call(result);
               onRiveEvent(const RiveEvent(
                   name: "closing", secondsDelay: 0, properties: {}));
               closeInput?.value = true;
