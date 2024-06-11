@@ -16,9 +16,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   List<ParentContent> _categories = [];
   final PageController _pageController = PageController(viewportFraction: 0.8);
   LoadingController controller = Get.put(LoadingController());
-  final ValueNotifier<int> _selectedCategory = ValueNotifier(0);
-
-  Map<String, int>? _scores;
+  TabController? _tabController;
 
 // Consumer<AccountProvider>(builder: (_, state, child) {
   @override
@@ -38,6 +36,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         }
         _categories = (await account.loadCategories());
         _scores = await account.loadScores();
+        _tabController = TabController(length: _categories.length, vsync: this);
         setState(() {});
         // await Future.delayed(const Duration(seconds: 1));
         // Get.toNamed(Routes.popupMentor, args: {
@@ -63,6 +62,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         children: [
           Align(
             alignment: const Alignment(0, 0.4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 SizedBox(
                   width: DeviceInfo.size.width,
                   height: 340.d,
@@ -76,6 +78,15 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                           duration: const Duration(microseconds: 800));
                     },
                   ),
+                ),
+                TabPageSelector(
+                  indicatorSize: 8.d,
+                  controller: _tabController,
+                  color: TColors.white30,
+                  selectedColor: TColors.white,
+                  borderStyle: BorderStyle.none,
+                )
+              ],
                 ),
           ),
         ],
