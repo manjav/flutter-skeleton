@@ -297,6 +297,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
 
   @override
   void dispose() {
+    serviceLocator<Sounds>().stopAll();
     controller.slideIndex.removeListener(_onChangeSlide);
     controller.contentIndex.removeListener(_onChangeLine);
     super.dispose();
