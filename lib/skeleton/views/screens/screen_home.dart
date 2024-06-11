@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rive/rive.dart';
 
 import '../../../app_export.dart';
 
@@ -60,6 +61,17 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       child: Stack(
         alignment: Alignment.center,
         children: [
+          LoaderWidget(
+            AssetType.animation,
+            "home",
+            fit: BoxFit.fill,
+            onRiveInit: (artboard) {
+              final controller = StateMachineController.fromArtboard(
+                  artboard, "State Machine 1");
+              _categoryIndex = controller?.findInput<double>("category");
+              artboard.addController(controller!);
+            },
+          ),
           Align(
             alignment: const Alignment(0, 0.4),
             child: Column(
@@ -70,8 +82,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                   height: 340.d,
                   child: PageView.builder(
                     controller: _pageController,
-          itemCount: _categories.length,
-          itemBuilder: _categoryItemBuilder,
+                    itemCount: _categories.length,
+                    itemBuilder: _categoryItemBuilder,
                     onPageChanged: (value) {
                       _categoryIndex?.value = value.toDouble();
                       _tabController?.animateTo(value,
@@ -87,7 +99,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                   borderStyle: BorderStyle.none,
                 )
               ],
-                ),
+            ),
           ),
         ],
       ),
