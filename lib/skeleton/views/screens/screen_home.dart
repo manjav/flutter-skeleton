@@ -11,7 +11,10 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+  Map<String, int>? _scores;
+  SMIInput<double>? _categoryIndex;
   List<ParentContent> _categories = [];
+  final PageController _pageController = PageController(viewportFraction: 0.8);
   LoadingController controller = Get.put(LoadingController());
   final ValueNotifier<int> _selectedCategory = ValueNotifier(0);
 
@@ -55,103 +58,84 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     }
     return PopScope(
       canPop: false,
-      child: Widgets.rect(
-        height: 555,
+      child: Stack(
         alignment: Alignment.center,
-        child: ListView.builder(
+        children: [
+          Align(
+            alignment: const Alignment(0, 0.4),
+                SizedBox(
+                  width: DeviceInfo.size.width,
+                  height: 340.d,
+                  child: PageView.builder(
+                    controller: _pageController,
           itemCount: _categories.length,
           itemBuilder: _categoryItemBuilder,
-        ),
+                    onPageChanged: (value) {
+                      _categoryIndex?.value = value.toDouble();
+                      _tabController?.animateTo(value,
+                          duration: const Duration(microseconds: 800));
+                    },
+                  ),
+                ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _categoryItemBuilder(BuildContext context, int index) {
     var category = _categories[index];
-    const colors = [
-      TColors.cyan,
-      TColors.orange,
-      TColors.blue,
-      TColors.green,
-      TColors.teal,
-      TColors.primary60,
-      TColors.red,
-      TColors.gray
-    ];
-    return ValueListenableBuilder(
-      valueListenable: _selectedCategory,
-      builder: (context, value, child) {
-        var isSelected = value == index;
-        return Widgets.button(
-          context,
-          padding: EdgeInsets.all(12.d),
-          margin: const EdgeInsets.all(12),
-          color: colors[index % colors.length],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _groupsBuilder(category, index),
-              DirText(category.title, style: TStyles.largeInvert),
-              isSelected
-                  ? const SizedBox()
-                  : DirText(category.description,
-                      style: TStyles.tiny.copyWith(height: 1)),
 
-              // Image.network(category.iconUrl,
-              //     height: isSelected ? 50.d : 100.d),
+    return Widgets.rect(
+      margin: const EdgeInsets.all(12),
+      padding: EdgeInsets.fromLTRB(10.d, 20.d, 10.d, 10.d),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20.d)),
+        shape: BoxShape.rectangle,
+        boxShadow: [BoxShadow(blurRadius: 8.d, color: TColors.primary50)],
+        color: TColors.primary10,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          DirText(category.title, style: TStyles.big),
+          DirText("? lessons",
+              style: TStyles.medium.copyWith(color: TColors.primary40)),
+          // DirText(category.description,
+          //     style: TStyles.tiny.copyWith(height: 1)),
+          const Expanded(child: SizedBox()),
+          Column(
+            children: [
+              for (var i = 0; i < category.children.length; i++)
+                _lessonItemBuilder(category.children[i] as GroupContent, i)
             ],
           ),
-          onPressed: () {
-            _selectedCategory.value = isSelected ? -1 : index;
-          },
-        );
-      },
-    );
-  }
-
-  Widget _groupsBuilder(ParentContent category, int index) {
-    return Widgets.rect(
-      radius: 12.d,
-      color: TColors.white50,
-      padding: EdgeInsets.all(8.d),
-      child: Column(
-        children: [
-          for (var i = category.children.length - 1; i >= 0; i--)
-            _contentItemBuilder(category.children[i] as GroupContent)
         ],
       ),
     );
   }
 
-  Widget _contentItemBuilder(GroupContent group) {
-    return Widgets.rect(
-      radius: 16.d,
-      padding: EdgeInsets.all(12.d),
-      child: Column(
-        textDirection: TextDirection.rtl,
-        children: [
-          _lessonItemBuilder(group, 0),
-        ],
-      ),
-    );
-  }
-
-  Widget _lessonItemBuilder(GroupContent group, int type) {
-    var id = "${group.id}_$type";
+  Widget _lessonItemBuilder(GroupContent group, int index) {
+    var id = "${group.id}_$index";
     var scoreNotifier = ValueNotifier(_scores![id] ?? 0);
     return Widgets.button(
       context,
-      height: 22.d,
-      width: DeviceInfo.size.width * 0.8,
+      height: 52.d,
+      radius: 12.d,
+      margin: EdgeInsets.all(2.d),
+      padding: EdgeInsets.all(10.d),
+      color: [TColors.blue, TColors.orange, TColors.purpule][index],
+      // width: DeviceInfo.size.width * 0.8,
       child: Row(
-        textDirection: TextDirection.rtl,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          DirText(group.title, style: TStyles.small),
+          DirText(group.title, style: TStyles.largeInvert),
           SizedBox(width: 16.d),
-          ValueListenableBuilder(
-              valueListenable: scoreNotifier,
-              builder: (context, value, child) =>
-                  Text(["☆☆☆", "★☆☆", "★★☆", "★★★"][scoreNotifier.value])),
+          // ValueListenableBuilder(
+          //   valueListenable: scoreNotifier,
+          //   builder: (context, value, child) =>
+          //       Text(["☆☆☆", "★☆☆", "★★☆", "★★★"][scoreNotifier.value]),
+          // ),
         ],
       ),
       onPressed: () async {
@@ -165,8 +149,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         //         : Routes.intro;
 
         // print(group.words);
-        var s = await Get.toNamed(Routes.intro,
-            arguments: {"content": group, "challengeMode": type == 2});
+        var s = await Get.toNamed(Routes.intro, arguments: {"content": group});
         if (s == null || s <= scoreNotifier.value) return;
         await serviceLocator<AccountProvider>().saveScore(id, s);
         scoreNotifier.value = s;
