@@ -534,6 +534,12 @@ class Account extends Player with MineMixin {
       return card;
     }
 
+    if (data.containsKey("tutorial_required_cards")) {
+      for (var card in data["tutorial_required_cards"]) {
+        addCard(card);
+      }
+    }
+
     if (data["achieveCards"] != null) {
       for (var card in data["achieveCards"]) {
         addCard(card);
