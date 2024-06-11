@@ -168,8 +168,8 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                                         SizedBox(
                                           width: 7.d,
                                         ),
-                                        Text(
-                                          "Level ${levels["combo"]}",
+                                        SkinnedText(
+                                          "combo_level".l([levels["combo"]]),
                                           style: TStyles.small
                                               .copyWith(color: TColors.white),
                                         ),
@@ -187,15 +187,9 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                     ),
                   ],
                 ), onTap: () {
-              // Show unavailable message
               if (state.account.level < levels["combo"]) {
-                Overlays.insert(
-                    context,
-                    ToastOverlay(
-                      "unavailable_l".l(["popupcombo".l(), levels["combo"]]),
-                    ));
-              } else {
-                serviceLocator<RouteService>().to(Routes.popupCombo);
+                toast("unavailable_l".l(["popupcombo".l(), levels["combo"]]));
+                return;
               }
             }))
       ]);
