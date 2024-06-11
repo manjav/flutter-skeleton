@@ -18,12 +18,13 @@ class TColors {
   static const green = Color(0xFF009C51);
   static const black = Color(0xFF000000);
   static const black80 = Color(0xAA000000);
-  static const blue = Color(0xFF017AFA);
+  static const blue = Color(0xFF4848FF);
   static const cream = Color(0xFFF6E5D0);
   static const clay = Color(0xFFD29774);
   static const cyan = Color(0xFF3FC1B9);
   static const gray = Color(0xFFA4A4A4);
-  static const orange = Color(0xFFFF8B21);
+  static const orange = Color(0xFFFF7F48);
+  static const purpule = Color(0xFFDA48FF);
   static const teal = Color(0xFF59AFC2);
   static const transparent = Color(0x00000000);
   static const white = Color(0xFFFFFFFF);
@@ -63,8 +64,8 @@ class Themes {
     TStyles.tiny = _style(size: 10.d, weight: FontWeight.w100);
     TStyles.small = _style(size: 14.d, weight: FontWeight.w300);
     TStyles.medium = _style(size: 16.d, weight: FontWeight.w600);
-    TStyles.large = _style(size: 20.d, weight: FontWeight.w800);
-    TStyles.big = _style(size: 24.d, weight: FontWeight.w900);
+    TStyles.large = _style(size: 19.d, weight: FontWeight.w800);
+    TStyles.big = _style(size: 22.d, weight: FontWeight.w900);
     TStyles.tinyInvert =
         _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary10);
     TStyles.smallInvert =
@@ -72,7 +73,7 @@ class Themes {
     TStyles.mediumInvert =
         _style(size: 16.d, weight: FontWeight.w600, color: TColors.primary10);
     TStyles.largeInvert =
-        _style(size: 20.d, weight: FontWeight.w800, color: TColors.primary10);
+        _style(size: 19.d, weight: FontWeight.w800, color: TColors.primary10);
   }
 
   static ThemeData? get darkData {
