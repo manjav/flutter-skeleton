@@ -73,9 +73,10 @@ class _GoldOverlayState extends AbstractOverlayState<GoldOverlay>
                   child: Opacity(
                     opacity: opacity,
                     child: SkinnedText(
-                      widget.count.compact(),
+                      "${widget.count > 0 ? "+" : ""}${widget.count.compact()}",
                       style: TStyles.medium,
                       textAlign: TextAlign.center,
+                      textDirection: TextDirection.ltr,
                     ),
                   ),
                 );
