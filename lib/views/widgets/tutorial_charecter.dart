@@ -94,7 +94,7 @@ class _TutorialCharecterState extends State<TutorialCharacter> {
                       : -800.d
                   : null,
               width: 600.d,
-              height: widget.dialogueHeight ?? 280.d,
+              height: (widget.text.l().length * 4.d).clamp(280.d, 800.d),
               child: Dialogue(
                 text: widget.text.l(),
                 side: widget.dialogueSide,
