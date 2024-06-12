@@ -49,7 +49,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     var talk = controller.currentContent;
     if (talk.textPresentationMode == PresentMode.none) {
       subtitle.value = talk.textPresentationMode.hasNative
-          ? talk.targetValue
+              ? talk.targetValue
           : talk.nativeValue;
     } else {
       subtitle.value = null;
@@ -86,7 +86,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     serviceLocator<STT>().start(
       locale: account.metadata["targetLanguage"],
       pattern: step.targetValue,
-      exceptions: [account.account.user.displayName!.simple()],
+      exceptions: [account.account.user.displayName!.patternize()],
       onResult: _onSTTResult,
     );
   }

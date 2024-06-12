@@ -126,7 +126,8 @@ class ListenerBox extends StatelessWidget {
     for (var i = 0; i < _patterns.length; i++) {
       var style = defaultStyle;
       if (i < values.length) {
-        var rate = ratio(values[i].simple(), _patterns[i].value.text.simple());
+        var rate =
+            ratio(values[i].patternize(), _patterns[i].value.text.patternize());
         isCorrect = rate > minMatchLevel;
         if (isCorrect) {
           style = _correctStyle;

@@ -13,7 +13,7 @@ class Dictator extends Quiz {
   @override
   initialize({List<Object>? args}) async {
     currentStage = args![0] as Content;
-    var text = currentStage!.targetValue.simple();
+    var text = currentStage!.targetValue.patternize();
     var pattern = text.split(" ");
     _pattern = [];
     if (pattern.length > 10) {

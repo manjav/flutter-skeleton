@@ -104,7 +104,7 @@ extension StringExtensions on String {
     return [substring(0, length), ...substring(length).splitByLength(length)];
   }
 
-  String simple([bool withSpace = false]) {
+  String patternize([bool withSpace = false]) {
     var text = replaceAll(RegExp(r'[!?.,;:"{}]'), '')
         .replaceAll(RegExp(r'’'), "'")
         .toLowerCase();

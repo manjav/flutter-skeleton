@@ -86,7 +86,7 @@ class STT extends Quiz {
     // serviceLocator<Sounds>().stopAll();
     super.start(onResult: onResult);
     if (locale != null) this.locale = locale;
-    if (pattern != null) this.pattern = pattern.simple();
+    if (pattern != null) this.pattern = pattern.patternize();
     if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
@@ -129,7 +129,7 @@ class STT extends Quiz {
       // words.first.recognizedWords;
       recognizedWords.value = result.recognizedWords;
       if (result.finalResult) {
-        var insert = result.recognizedWords.simple();
+        var insert = result.recognizedWords.patternize();
         var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
             orElse: () => "");
         var rate = ratio(pattern!, insert);
