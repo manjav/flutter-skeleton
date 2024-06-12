@@ -46,6 +46,12 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
   @override
   getCards(Account account) {
     var all = allReadyCards;
+    if (isTutorial) {
+      var cards = all.where((element) => element.base.id == 108).toList();
+      if (cards.length < 2) return [];
+
+      return cards;
+    }
     if (selectedCards.value.isNotEmpty) {
       return all.where((c) => c.base == selectedCards.value[0]!.base).toList();
     }

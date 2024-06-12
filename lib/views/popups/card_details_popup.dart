@@ -151,6 +151,9 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
         child: child);
   }
 
+  List<AccountCard> get allReadyCards =>
+      accountProvider.account.getReadyCards();
+
   _onButtonsTap(String route) async {
     await serviceLocator<RouteService>().to(route, args: {"card": _card});
     if (mounted && !accountProvider.account.cards.containsKey(_card.id)) {
