@@ -216,7 +216,7 @@ class Account extends Player with MineMixin {
     mobile_number_verified = map["mobile_number_verified"];
     wheel_of_fortune = map["wheel_of_fortune"];
     bundles = map["bundles"];
-    saleInfo=map["sale_info"];
+    saleInfo = map["sale_info"];
 
     // Strings
     name = map["name"];
@@ -534,7 +534,7 @@ class Account extends Player with MineMixin {
       return card;
     }
 
-    if (data.containsKey("tutorial_required_cards")) {
+    if (data["tutorial_required_cards"] != null) {
       for (var card in data["tutorial_required_cards"]) {
         addCard(card);
       }
