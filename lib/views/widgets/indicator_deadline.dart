@@ -86,6 +86,7 @@ class _DeadlineIndicatorState extends State<DeadlineIndicator>
                           widget.deadline.boost.id < 22
                               ? "shop_boost_xp"
                               : "shop_boost_power",
+                          subFolder: 'shop',
                           height: 150.d,
                           width: 150.d,
                         ),
