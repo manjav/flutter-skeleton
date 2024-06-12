@@ -113,6 +113,9 @@ extension StringExtensions on String {
     }
     return text;
   }
+
+  String simplify() =>
+      replaceAll(RegExp(r'[ًٍَُِّ{}]'), '').replaceAll('|', '\n');
 }
 
 extension DateExtension on DateTime {

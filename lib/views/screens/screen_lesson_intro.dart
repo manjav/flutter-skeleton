@@ -48,9 +48,10 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     serviceLocator<Sounds>().stopAll();
     var talk = controller.currentContent;
     if (talk.textPresentationMode == PresentMode.none) {
-      subtitle.value = talk.textPresentationMode.hasNative
+      subtitle.value = (talk.textPresentationMode.hasNative
               ? talk.targetValue
-          : talk.nativeValue;
+              : talk.nativeValue)
+          .simplify();
     } else {
       subtitle.value = null;
       _animatedListKey.currentState?.insertItem(_animatedItems.length);

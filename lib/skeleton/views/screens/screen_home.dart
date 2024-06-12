@@ -152,7 +152,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          DirText(group.title, style: TStyles.largeInvert),
+          DirText(group.title.simplify(), style: TStyles.largeInvert),
           SizedBox(width: 16.d),
           // ValueListenableBuilder(
           //   valueListenable: scoreNotifier,

@@ -22,7 +22,7 @@ class Speaker extends IService {
         player.stop();
         return;
       }
-      player.setPlaybackRate(narrator == Narrator.onyx ? 1.1 : 0.8);
+      player.setPlaybackRate(narrator == Narrator.onyx ? 1.3 : 0.8);
       if (onComplete != null) {
         player.eventStream.listen((event) {
           if (event.eventType == AudioEventType.complete) {
