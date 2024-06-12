@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fruitcraft/app_export.dart';
 import 'package:get/get.dart';
 
-class TutorialManager {
+class TutorialManager extends IService {
   dynamic _currentSequnce;
 
   var onStepChange = Rx<dynamic>(null);
@@ -14,6 +14,30 @@ class TutorialManager {
   final ValueNotifier<bool> _ignorePointer = ValueNotifier<bool>(false);
   Map<String, dynamic>? _currentItem;
   int _index = 0;
+
+  @override
+  initialize({List<Object>? args}) {
+    super.initialize();
+  }
+
+  updateCheckPointAtLevelUp(int level) {
+    var checkPoint = {
+      3: 300,
+      4: 401,
+      5: 501,
+      6: 601,
+      7: 701,
+      8: 801,
+      9: 901,
+      10: 1001,
+      12: 1200,
+      15: 1500
+    };
+    if (checkPoint.containsKey(level)) {
+      updateTutorialIndex(
+          Get.context!, checkPoint[level]!, checkPoint[level]!);
+    }
+  }
 
   void toggleIgnorePointer(bool ignore) {
     _ignorePointer.value = ignore;
