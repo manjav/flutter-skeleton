@@ -561,9 +561,8 @@ class Account extends Player with MineMixin {
     // Level Up
     data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
-      // if (data["level"] == 5) {
-      //   serviceLocator<Trackers>().design("level_5");
-      // }
+      serviceLocator<TutorialManager>()
+          .updateCheckPointAtLevelUp(data["level"]);
       Timer(
         const Duration(milliseconds: 300),
         () {
