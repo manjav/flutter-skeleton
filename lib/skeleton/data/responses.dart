@@ -1,15 +1,23 @@
 // ignore_for_file: constant_identifier_names
 
 enum StatusCode {
-  C0_SUCCESS,
-  C154_INVALID_RESTORE_KEY,
-  C403_SERVICE_UNAVAILABLE,
-  C503_SERVICE_UNAVAILABLE,
-  C700_UPDATE_NOTICE,
-  C701_UPDATE_FORCE,
-  C702_UPDATE_TEST,
-  C901_ENCRYPTION_ERROR,
-  C999_UNKNOWN_ERROR,
+  ALREADY_EXISTS(-3),
+  NOT_ENOUGH_RESOURCE(-1),
+  SUCCESS(0),
+  INVALID_RESTORE_KEY(154),
+  FORBIDDEN(403),
+  NOT_FOUND(404),
+  UNAVAILABLE(503),
+  UPDATE_NOTICE(700),
+  UPDATE_FORCE(701),
+  UPDATE_TEST(702),
+  UNKNOWN_ERROR(999);
+
+  final int value;
+  const StatusCode(this.value);
+
+  bool get isSuccess => this == StatusCode.SUCCESS;
+  bool get isFailure => this != StatusCode.SUCCESS;
 }
 
 extension StatusCodeintEx on int {
@@ -17,22 +25,7 @@ extension StatusCodeintEx on int {
     for (var r in StatusCode.values) {
       if (this == r.value) return r;
     }
-    return StatusCode.C999_UNKNOWN_ERROR;
-  }
-}
-
-extension StatusCodeExtension on StatusCode {
-  int get value {
-    return switch (this) {
-      StatusCode.C0_SUCCESS => 0,
-      StatusCode.C154_INVALID_RESTORE_KEY => 154,
-      StatusCode.C403_SERVICE_UNAVAILABLE => 403,
-      StatusCode.C503_SERVICE_UNAVAILABLE => 503,
-      StatusCode.C700_UPDATE_NOTICE => 700,
-      StatusCode.C701_UPDATE_FORCE => 701,
-      StatusCode.C702_UPDATE_TEST => 702,
-      _ => 999
-    };
+    return StatusCode.UNKNOWN_ERROR;
   }
 }
 

@@ -41,8 +41,7 @@ class NetConnector extends IService {
     } catch (e) {
       var error = "$e";
       if (_isDisconnected(error)) {
-        throw SkeletonException(
-            StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
+        throw SkeletonException(StatusCode.UNAVAILABLE.value, error);
       }
     }
     if (response!.statusCode == 200) {
@@ -50,11 +49,11 @@ class NetConnector extends IService {
       var updates = configs["updates"];
       if (updates["force"]["version"] > version) {
         throw SkeletonException(
-            StatusCode.C701_UPDATE_FORCE.value, updates["force"]["message"]);
+            StatusCode.UPDATE_FORCE.value, updates["force"]["message"]);
       } else if (!Pref.skipUpdate.getBool() &&
           updates["notice"]["version"] > version) {
         throw SkeletonException(
-            StatusCode.C700_UPDATE_NOTICE.value, updates["notice"]["message"]);
+            StatusCode.UPDATE_NOTICE.value, updates["notice"]["message"]);
       }
       Pref.skipUpdate.setBool(false);
       LoaderWidget.baseURL = configs["assetsServer"]!;
@@ -62,7 +61,7 @@ class NetConnector extends IService {
       log("Config loaded.");
     } else {
       throw SkeletonException(
-          StatusCode.C999_UNKNOWN_ERROR.value, "Failed to load config file");
+          StatusCode.UNKNOWN_ERROR.value, "Failed to load config file");
     }
   }
 
@@ -138,7 +137,7 @@ class NetConnector extends IService {
       } else {
         error = "RPC: $id Error: $e";
       }
-      throw SkeletonException(StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
+      throw SkeletonException(StatusCode.UNAVAILABLE.value, error);
     }
   }
 
@@ -153,8 +152,7 @@ class NetConnector extends IService {
     } catch (e) {
       var error = "$e";
       if (_isDisconnected(error)) {
-        throw SkeletonException(
-            StatusCode.C503_SERVICE_UNAVAILABLE.value, error);
+        throw SkeletonException(StatusCode.UNAVAILABLE.value, error);
       }
     }
     final status = response!.statusCode;
