@@ -7,26 +7,21 @@ plugins {
 
 // Local Properties
 def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
+def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
+    localPropertiesFile.withReader("UTF-8") { reader ->
         localProperties.load(reader)
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
 if (flutterVersionCode == null) {
-    throw new GradleException("versionCode not found in local.properties")
+    flutterVersionCode = "1"
 }
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
-    throw new GradleException("versionName not found in local.properties")
+    flutterVersionName = "1.0"
 }
 
 // SDK Properties
@@ -59,38 +54,29 @@ def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
-
 android {
-    namespace "com.tcg.fruitcraft.trading.card.game.battle"
-    compileSdkVersion flutterCompileSdkVersion.toInteger()
-    ndkVersion "25.2.9519653"
+    namespace = "com.tcg.fruitcraft.trading.card.game.battle"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
-        applicationId "com.tcg.fruitcraft.trading.card.game.battle"
-        minSdkVersion flutterMinSdkVersion
-        targetSdkVersion flutterTargetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        applicationId = "com.tcg.fruitcraft.trading.card.game.battle"
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
     }
 
     signingConfigs {
        release {
-           keyAlias keystoreProperties['keyAlias']
-           keyPassword keystoreProperties['keyPassword']
-           storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-           storePassword keystoreProperties['storePassword']
+           keyAlias keystoreProperties["keyAlias"]
+           keyPassword keystoreProperties["keyPassword"]
+           storeFile keystoreProperties["storeFile"] ? file(keystoreProperties["storeFile"]) : null
+           storePassword keystoreProperties["storePassword"]
        }
     }
     
@@ -98,7 +84,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release 
         }
         debug
