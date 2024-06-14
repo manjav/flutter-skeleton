@@ -18,7 +18,7 @@ dependencies:
   archive: ^3.4.8
   audioplayers: ^5.2.0
   crypto: ^3.0.2
-  device_info_plus: ^10.0.0
+  device_info_plus: ^9.1.2
   # firebase_analytics: ^10.6.3
   # firebase_core: ^2.21.0
   # firebase_messaging: ^14.7.3
