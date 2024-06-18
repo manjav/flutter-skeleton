@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:rive/rive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app_export.dart';
-
 
 class LoadingOverlay extends AbstractOverlay {
   const LoadingOverlay({super.key}) : super(route: OverlaysName.loading);
@@ -123,7 +123,9 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   }
 
   void _update(bool isForceUpdate) {
-    launchUrl(Uri.parse("app_url".l()));
+    launchUrl(
+      Uri.parse(FlavorConfig.instance.variables["updateUrl"]),
+    );
     SystemNavigator.pop();
   }
 

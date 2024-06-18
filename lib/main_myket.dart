@@ -13,8 +13,10 @@ void main() async {
 
   FlavorConfig(name: "myket", variables: {
     "storePackageName": "ir.mservices.market",
-    "bindUrl":"ir.mservices.market.InAppBillingService.BIND",
-    "storeId": "8"
+    "bindUrl": "ir.mservices.market.InAppBillingService.BIND",
+    "storeId": "8",
+    "updateUrl":
+        "https://myket.ir/app/com.tcg.fruitcraft.trading.card.game.battle"
   });
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
