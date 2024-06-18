@@ -293,14 +293,14 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     if (!building.getIsAvailable(account)) {
       return;
     }
-
+    
     // Offense and defense buildings need tribe membership.
     if (type == Routes.popupSupportiveBuilding &&
         (account.tribe == null || account.tribe!.id <= 0)) {
       toast("error_149".l());
       return;
     }
-
+    
     if (type == "") {
       return;
     }

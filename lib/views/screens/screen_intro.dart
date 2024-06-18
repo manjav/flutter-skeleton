@@ -141,7 +141,7 @@ class _IntroScreenState extends AbstractScreenState<IntroScreen> {
                   if (index == -1) return;
                   steps[index++].value = false;
                   if (index == 4) {
-                    accountProvider.updateTutorial(context, 1, 10);
+                    await accountProvider.updateTutorial(context, 1, 10);
                     Get.offNamed(Routes.deck);
                     return;
                   }

@@ -25,6 +25,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   late AnimationController _opacityAnimationController;
   late AnimationController _opacityBackgroundAnimationController;
   final Map<int, ImageAsset> _cardIconAssets = {}, _cardFrameAssets = {};
+  bool _heroSelected = false;
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       var maxCards = _cards.first.base.isHero ? 4 : 2;
       if (_cards.first.base.isHero) {
         _heroInput?.value = true;
+        setState(() {});
       }
       var count = _cards.length > maxCards ? 0 : _cards.length;
       if (count == 0) {
@@ -63,6 +65,7 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     children = [
       backgroundBuilder(),
       animationBuilder("openpack"),
+      _cardsList(),
     ];
   }
 
@@ -101,7 +104,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
-      for (var i = 0; i < _cards.length; i++) {
+      var count = _cards.length > 4 ? 0 : _cards.length;
+      for (var i = 0; i < count; i++) {
         var card = _cards[i];
         updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
         updateRiveText("cardLevelText$i", card.base.rarity.convert());
@@ -138,6 +142,10 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       } else {
         updateRiveText("commentText", "tap_close".l());
       }
+    } else if (state == RewardAnimationState.closing) {
+      _opacityAnimationController.animateBack(0,
+          duration: const Duration(milliseconds: 500));
+      _opacityBackgroundAnimationController.reverse();
     }
     if (event.name.startsWith("choose")) {
       var index = int.parse(event.name.replaceAll("choose_", ""));
@@ -167,6 +175,45 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
       return true;
     }
     return false;
+  }
+
+  Widget _cardsList() {
+    var len = _cards.length;
+    if (len < 3) return const SizedBox();
+    var gap = 8.d;
+    var crossAxisCount = 2;
+    var itemSize = 240.d;
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+          alignment: Alignment.center,
+          width: DeviceInfo.size.width * 0.94,
+          height: itemSize / CardItem.aspectRatio * crossAxisCount +
+              gap * (crossAxisCount - 1),
+          child: GridView.builder(
+            itemCount: len,
+            scrollDirection: Axis.horizontal,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 1 / CardItem.aspectRatio,
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: gap,
+                mainAxisSpacing: gap),
+            itemBuilder: (c, i) => _cardItemBuilder(len, i, itemSize),
+          )),
+    );
+  }
+
+  Widget _cardItemBuilder(int len, int index, double size) {
+    return AnimatedBuilder(
+        animation: _opacityAnimationController,
+        builder: (context, child) {
+          return Opacity(
+              opacity:
+                  (_opacityAnimationController.value - 2 + (len - index) * 0.01)
+                      .clamp(0, 1),
+              child: SizedBox(
+                  width: size, child: CardItem(_cards[index], size: size)));
+        });
   }
 
   @override

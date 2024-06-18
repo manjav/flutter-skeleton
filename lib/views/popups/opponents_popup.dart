@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
@@ -132,7 +130,6 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
   }
 
   Widget? _pageItemBuilder(Opponent opponent) {
-    var random = Random();
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.d),
         child: LoaderWidget(
@@ -147,7 +144,7 @@ class _OpponentsPopupState extends AbstractPopupState<OpponentsPopup> {
                 opponent.getGoldLevel(_account.level).floorToDouble();
 
             controller.findInput<double>('building')?.value =
-                random.nextInt(4).floorToDouble();
+                opponent.powerRatio.toDouble();
             controller.findInput<double>('theme')?.value =
                 opponent.theme.toDouble();
 

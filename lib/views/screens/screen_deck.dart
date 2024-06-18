@@ -583,6 +583,21 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     // );
   }
 
+  String powerRatingText(int powerRatio) {
+    switch (powerRatio) {
+      case 1:
+        return "weak".l();
+      case 2:
+        return "average".l();
+      case 3:
+        return "strong".l();
+      case 4:
+        return "very_strong".l();
+      default:
+        return "average".l();
+    }
+  }
+
 /* This function returns the power of the next quest.
  @param tutorialPowerMultiplier, the number that will be multiplied to the real power.
  @return A table is returned with three children. 'realPower' is the actual power of the quest; 'minPower' is the approximate min value of the quest and 'maxPower'
