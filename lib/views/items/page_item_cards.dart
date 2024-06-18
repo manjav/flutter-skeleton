@@ -35,8 +35,19 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
 
   @override
   void onTutorialFinish(data) {
-    if (data["id"] == 323 || data["id"] == 653) {
+    if (data["id"] == 323) {
       var cards = accountProvider.account.getReadyCards(removeHeroes: true);
+      serviceLocator<RouteService>()
+          .to(Routes.popupCardDetails, args: {'card': cards[0]});
+    }
+    if (data["id"] == 653) {
+      var cards = accountProvider.account
+          .getReadyCards()
+          .where((element) => element.base.id == 108)
+          .toList();
+      if (cards.length != 2) {
+        //skip tutorial
+      }
       serviceLocator<RouteService>()
           .to(Routes.popupCardDetails, args: {'card': cards[0]});
     } else if (data["id"] == 404) {
@@ -63,6 +74,9 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
         (DeviceInfo.size.width - gap * (crossAxisCount + 1)) / crossAxisCount;
     return Consumer<AccountProvider>(builder: (_, state, child) {
       var cards = state.account.getReadyCards();
+      if (isTutorial && accountProvider.account.level == 6) {
+        cards.sort((a, b) => a.base.id - b.base.id);
+      }
       var levels = state.account.loadingData.rules["availabilityLevels"]!;
       var paddingTop = MediaQuery.of(context).viewPadding.top;
       if (paddingTop <= 0) {
@@ -170,7 +184,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                                           width: 7.d,
                                         ),
                                         SkinnedText(
-                                          "Level ${levels["combo"]}",
+                                          "combo_level".l([levels["combo"]]),
                                           style: TStyles.small
                                               .copyWith(color: TColors.white),
                                           hideStroke: true,
@@ -189,15 +203,9 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                     ),
                   ],
                 ), onTap: () {
-              // Show unavailable message
               if (state.account.level < levels["combo"]) {
-                Overlays.insert(
-                    context,
-                    ToastOverlay(
-                      "unavailable_l".l(["popupcombo".l(), levels["combo"]]),
-                    ));
-              } else {
-                serviceLocator<RouteService>().to(Routes.popupCombo);
+                toast("unavailable_l".l(["popupcombo".l(), levels["combo"]]));
+                return;
               }
             }))
       ]);

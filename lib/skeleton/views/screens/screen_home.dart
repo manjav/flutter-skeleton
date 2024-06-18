@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:fruitcraft/mixins/notif_mixin.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
@@ -26,6 +27,9 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
   final List<SMIBool?> _selectionInputs = List.generate(5, (index) => null);
   SMINumber? _tribeLevelInput;
   ShopSections? _shopSections;
+  SMIBool? _timerOn;
+  Timer? _shopTimer;
+  Artboard? _artboardShop;
 
   var controller = Get.put(LoadingController());
 
@@ -36,8 +40,41 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       var account = serviceLocator<AccountProvider>().account;
       _tribeLevelInput?.value =
           account.tribe?.levels[Buildings.tribe.id]?.toDouble() ?? 0.0;
+
+      checkShopTimer();
     });
     super.initState();
+  }
+
+  void checkShopTimer() {
+    var account = serviceLocator<AccountProvider>().account;
+    int storeId = int.parse(FlavorConfig.instance.variables["storeId"]);
+    var sales = account.saleInfo as List;
+    if (sales.isNotEmpty && sales[storeId] != null) {
+      if (_shopTimer == null && _artboardShop != null) {
+        var finishTime = sales[storeId][1];
+        _shopTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          int now = DateTime.now().secondsSinceEpoch;
+          if (now > finishTime) {
+            timer.cancel();
+            _shopTimer?.cancel();
+            _shopTimer = null;
+            _timerOn?.value = false;
+            return;
+          }
+          if (_timerOn?.value == false) {
+            _timerOn?.value = true;
+          }
+          var duration = Duration(seconds: finishTime - now);
+          String time =
+              "${duration.inHours.toString().padLeft(2, "0")}:${(duration.inMinutes % 60).toString().padLeft(2, "0")}:${(duration.inSeconds % 60).toString().padLeft(2, "0")}";
+          var name = "timerText";
+          _artboardShop!.component<TextValueRun>(name)?.text = time;
+          _artboardShop!.component<TextValueRun>("${name}_stroke")?.text = time;
+          _artboardShop!.component<TextValueRun>("${name}_shadow")?.text = time;
+        });
+      }
+    }
   }
 
   @override
@@ -144,7 +181,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
             Positioned(
                 top: index == 3 ? 10.d : 0,
                 width: size * (index == 3 ? 0.6 : 1),
-                height: size * (index == 3 ? 0.6 : 1),
+                height: size * (index == 3 ? 0.6 : 1.3),
                 child: LoaderWidget(
                   AssetType.animation,
                   "tab_$index",
@@ -158,7 +195,16 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
                     _selectionInputs[index] =
                         controller.findInput<bool>("active") as SMIBool;
                     _selectionInputs[index]!.value = index == _selectedTabIndex;
-                    if (index == 3) {
+                    if (index == 0) {
+                      _timerOn =
+                          controller.findInput<bool>("timerOn") as SMIBool?;
+                      int storeId =
+                          int.parse(FlavorConfig.instance.variables["storeId"]);
+                      var sales = account.saleInfo as List;
+                      _timerOn?.value =
+                          sales.isNotEmpty && sales[storeId] != null;
+                      _artboardShop = artboard;
+                    } else if (index == 3) {
                       _tribeLevelInput =
                           controller.findInput<double>("level") as SMINumber;
                       _tribeLevelInput?.value = account.tribe != null
@@ -167,6 +213,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
                           : 0.0;
                     }
                     artboard.addController(controller);
+                    checkShopTimer();
                   },
                 )),
             _selectedTabIndex == index

@@ -14,7 +14,9 @@ void main() async {
   FlavorConfig(name: "bazaar", variables: {
     "storePackageName": "com.farsitel.bazaar",
     "bindUrl": "ir.cafebazaar.pardakht.InAppBillingService.BIND",
-    "storeId": "4"
+    "storeId": "4",
+    "updateUrl":
+        "https://cafebazaar.ir/app/com.tcg.fruitcraft.trading.card.game.battle"
   });
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

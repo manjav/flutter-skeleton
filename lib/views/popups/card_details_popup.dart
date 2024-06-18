@@ -155,7 +155,7 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
   }
 
   List<AccountCard> get allReadyCards =>
-      accountProvider.account.getReadyCards(removeMaxLevels: true);
+      accountProvider.account.getReadyCards();
 
   _onButtonsTap(String route) async {
     if (isTutorial && route == Routes.popupCardEvolve) {

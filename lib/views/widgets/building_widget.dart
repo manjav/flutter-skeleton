@@ -30,6 +30,7 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
         destroyTrigger?.value = true;
         serviceLocator<Sounds>().play("explosion", channel: "building");
         _levelInput?.value = -1;
+        return;
       }
 
       if (!widget.building.getIsAvailable(account)) return;
@@ -41,6 +42,11 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
         var x = ((5 * account.bank_account_balance) / widget.building.benefit);
         x = x.isInfinite ? 0 : x.roundToDouble();
         _fillInput?.value = x.toDouble();
+        return;
+      }
+
+      if (widget.building.type == Buildings.base && account.level > 3) {
+        _levelInput?.value = account.leagueId.toDouble();
         return;
       }
 
@@ -94,19 +100,21 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
                 final controller = StateMachineController.fromArtboard(
                     artboard, "State Machine 1")!;
                 var input = controller.findInput<double>('level');
-                _fillInput =
-                    controller.findInput<double>('"fill"') as SMINumber?;
+                _fillInput = controller.findInput<double>("fill") as SMINumber?;
                 if (input != null) {
                   _levelInput = input as SMINumber;
                   _levelInput!.value = widget.building.level.toDouble();
                 }
                 var account = serviceLocator<AccountProvider>().account;
-                if (widget.building.type == Buildings.base &&
-                    account.level < 3) {
-                  destroyTrigger =
-                      controller.findInput<bool>("destroy") as SMITrigger;
-                  if (account.tutorial_id > 24) {
-                    _levelInput!.value = -1;
+                if (widget.building.type == Buildings.base) {
+                  if (account.level < 3) {
+                    destroyTrigger =
+                        controller.findInput<bool>("destroy") as SMITrigger;
+                    if (account.tutorial_id > 24) {
+                      _levelInput!.value = -1;
+                    }
+                  } else {
+                    _levelInput?.value = account.leagueId.toDouble();
                   }
                 }
                 if (widget.building.type == Buildings.treasury) {

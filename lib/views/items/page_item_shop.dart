@@ -89,27 +89,13 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
         }
         _account.loadingData.shopProceedItems = _items;
       }
-      var inAppPurchaseService = serviceLocator<Payment>();
-
-      final bool available = inAppPurchaseService.isAvailable;
-      if (available) {
-        var response = await inAppPurchaseService.queryInventory(
-            skus: skus.toList(), querySkuDetails: true);
-        var result = response[inAppPurchaseService.RESULT] as IabResult;
-        if (result.isSuccess()) {
-          var inventory = response[inAppPurchaseService.INVENTORY] as Inventory;
-          var products = inventory.mSkuMap.values.toList();
-          for (var product in products) {
-            _productDetails[product.mSku!] = product;
-          }
-        }
-      }
     } finally {
       setState(() {});
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients && widget.shopSections != null) {
           Scrollable.ensureVisible(
-            GlobalObjectKey(widget.shopSections!.index).currentContext!,
+            GlobalObjectKey(widget.shopSections!.index).currentContext ??
+                context,
             alignment: 0.1,
           );
         }

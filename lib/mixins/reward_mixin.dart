@@ -26,7 +26,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   String waitingSFX = "waiting", startSFX = "levelup";
   SMITrigger? startInput, skipInput, closeInput;
   RewardAnimationState state = RewardAnimationState.none;
-  final ValueNotifier<bool> _progressbarNotifier = ValueNotifier(true);
+  final ValueNotifier<bool> progressbarNotifier = ValueNotifier(true);
   AnimationController? closeButtonController;
 
   List<Widget> appBarElementsLeft() => [];
@@ -122,7 +122,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
         serviceLocator<Sounds>().play(startSFX);
       }
       WidgetsBinding.instance
-          .addPostFrameCallback((t) => _progressbarNotifier.value = false);
+          .addPostFrameCallback((t) => progressbarNotifier.value = false);
     } else if (state == RewardAnimationState.closed) {
       WidgetsBinding.instance.addPostFrameCallback((t) => dismiss());
     }
@@ -187,7 +187,7 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
   }
 
   Widget _progressbarBuilder() => ValueListenableBuilder(
-      valueListenable: _progressbarNotifier,
+      valueListenable: progressbarNotifier,
       builder: (context, value, child) {
         if (value) {
           return Align(

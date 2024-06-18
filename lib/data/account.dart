@@ -145,7 +145,7 @@ class Account extends Player with MineMixin {
 
   dynamic avatars,
       owned_avatars,
-      sale_info,
+      saleInfo,
       bundles,
       coach_info,
       coaching,
@@ -216,6 +216,7 @@ class Account extends Player with MineMixin {
     mobile_number_verified = map["mobile_number_verified"];
     wheel_of_fortune = map["wheel_of_fortune"];
     bundles = map["bundles"];
+    saleInfo = map["sale_info"];
 
     // Strings
     name = map["name"];
@@ -338,6 +339,10 @@ class Account extends Player with MineMixin {
         Convert.toInt(map["pwboost_created_at"], pwBoostCreatedAt);
     xpBoostId = Convert.toInt(map["xpboost_id"], xpBoostId);
     pwBoostId = Convert.toInt(map["pwboost_id"], pwBoostId);
+    wonBattlesCount = Convert.toInt(map["won_battle_num"], wonBattlesCount);
+    lostBattlesCount = Convert.toInt(map["lost_battle_num"], lostBattlesCount);
+    rank = Convert.toInt(map["rank"], rank);
+    tribeRank = Convert.toInt(map["tribe_rank"], tribeRank);
   }
 
 /*  Returns total power of the given cards array, taking into account any offensive tribe bonuses that the player might have 
@@ -469,6 +474,10 @@ class Account extends Player with MineMixin {
       gold += Convert.toInt(data["added_gold"]);
     }
 
+    if (data.containsKey("sale_info")) {
+      saleInfo = data["sale_info"];
+    }
+
     if (!data.containsKey("nectar")) {
       nectar += Convert.toInt(data["added_nectar"]);
     }
@@ -533,6 +542,12 @@ class Account extends Player with MineMixin {
       return card;
     }
 
+    if (data["tutorial_required_cards"] != null) {
+      for (var card in data["tutorial_required_cards"]) {
+        addCard(card);
+      }
+    }
+
     if (data["achieveCards"] != null) {
       for (var card in data["achieveCards"]) {
         addCard(card);
@@ -554,9 +569,8 @@ class Account extends Player with MineMixin {
     // Level Up
     data["gift_card"] = addCard(data["gift_card"]);
     if ((data["levelup_gold_added"] ?? 0) > 0) {
-      // if (data["level"] == 5) {
-      //   serviceLocator<Trackers>().design("level_5");
-      // }
+      serviceLocator<TutorialManager>()
+          .updateCheckPointAtLevelUp(data["level"]);
       Timer(
         const Duration(milliseconds: 300),
         () {

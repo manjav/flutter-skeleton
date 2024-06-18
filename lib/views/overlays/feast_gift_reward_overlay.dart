@@ -22,7 +22,7 @@ class GiftRewardFeastOverlay extends AbstractOverlay {
 class _GiftRewardFeastOverlayState
     extends AbstractOverlayState<GiftRewardFeastOverlay>
     with RewardScreenMixin, BackgroundMixin {
-  late ShopItemVM _item;
+  // late ShopItemVM _item;
   late int addedGold;
   late bool hasOffer;
 
@@ -40,7 +40,7 @@ class _GiftRewardFeastOverlayState
 
       var res = await rpc(RpcId.claimAdvertismentReward, params: params);
       addedGold = res["added_gold"];
-      hasOffer = res["has_special_offer"];
+      hasOffer = res["has_special_offer"] ?? false;
       if (mounted) {
         accountProvider.update(context, res);
       }
@@ -86,5 +86,5 @@ class _GiftRewardFeastOverlayState
       asset.image = await loadImage(name, subFolder: "avatars");
 
   Future<void> _loadItemIcon(ImageAsset asset) async =>
-      asset.image = await loadImage(_item.getTitle(), subFolder: "shop");
+      asset.image = await loadImage("shop_free_gold", subFolder: "shop");
 }

@@ -31,6 +31,7 @@ class Dialogue extends StatelessWidget {
           top: top,
           bottom: bottom,
           child: Widgets.rect(
+            padding: EdgeInsets.all(45.d),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40.d),
               color: TColors.primary,
@@ -39,9 +40,6 @@ class Dialogue extends StatelessWidget {
                 width: 6.d,
               ),
             ),
-            width: width ?? 600.d,
-            height: height ?? 236.d,
-            padding: EdgeInsets.all(45.d),
             child: Material(
               type: MaterialType.transparency,
               child: SkinnedText(

@@ -523,6 +523,13 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     if (opponent.isRevealed) {
       opponentPower = opponent.defPower.compact();
     } else {
+      ///code for range of power need for next version
+      //  var defPower = getQuestPower(account);
+      //   if (account.better_choose_deck && account.level < 3) {
+      //     opponentPower =
+      //         "~${(defPower[0] + defPower[1] / 2).round().compact()}";
+      //   }
+      //   opponentPower = "${defPower[0].compact()}~${defPower[1].compact()}";
       if (opponent.id == 0) {
         opponentPower = "~${opponent.defPower.compact()}";
       } else {

@@ -82,6 +82,7 @@ enum RpcId {
 
   //Advertisement reward
   claimAdvertismentReward,
+  turnTheWheel,
 }
 
 extension RpcIdEx on RpcId {
@@ -151,6 +152,7 @@ extension RpcIdEx on RpcId {
       RpcId.auctionSells => "auction/loadmyauctions",
       RpcId.auctionSellNow => "auction/sellnow",
       RpcId.claimAdvertismentReward => "player/claimadvertismentreward",
+      RpcId.turnTheWheel => "player/turnthewheel",
     };
   }
 

@@ -14,7 +14,8 @@ void main() async {
   FlavorConfig(name: "google", variables: {
     "storePackageName": "com.android.vending",
     "bindUrl": "com.android.vending.BILLING",
-    "storeId": "3"
+    "storeId": "3",
+    "updateUrl": "https://play.google.com/store/apps/details?id=com.tcg.fruitcraft.trading.card.game.battle"
   });
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

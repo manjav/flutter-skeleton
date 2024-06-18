@@ -3,6 +3,7 @@ export 'building_balloon.dart';
 export 'building_widget.dart';
 export 'card_holder.dart';
 export 'dialogue.dart';
+export 'golden_time_deadline.dart';
 export 'indicator.dart';
 export 'indicator_deadline.dart';
 export 'indicator_level.dart';

@@ -122,6 +122,7 @@ class _IntroScreenState extends AbstractScreenState<IntroScreen> {
             dialogueSide: DialogueSide.top,
             characterName: "character_porteghula",
             bottom: 400.d,
+            dialogueHeight: 350.d,
             characterSize: Size(666.d, 859.d),
           ),
           TutorialCharacter(
@@ -163,6 +164,7 @@ class _IntroScreenState extends AbstractScreenState<IntroScreen> {
                 opacity: account.account.tutorial_id == 0 ? 0.0 : 1.0,
                 child: SkinnedButton(
                   label: "already_have_a_village".l(),
+                  width: 400.d,
                   width: 380.d,
                   onPressed: () async {
                     serviceLocator<RouteService>()
@@ -179,15 +181,22 @@ class _IntroScreenState extends AbstractScreenState<IntroScreen> {
   }
 
   onSelectLanguage(Locale locale) async {
-    await Get.updateLocale(locale);
+    Overlays.insert(
+      context,
+      IntroFeastOverlay(
+        onClose: (data) {
+          if (context.mounted) {
+            serviceLocator<AccountProvider>()
+                .update(context, {"tutorial_index": 1, "tutorial_id": 1});
+            index = 0;
+            enableTouch.value = true;
+            steps[0].value = true;
+          }
+        },
+      ),
+    );
     Pref.language.setString(locale.languageCode);
     await serviceLocator<Localization>().changeLocal(locale);
-    if (context.mounted) {
-      serviceLocator<AccountProvider>()
-          .update(context, {"tutorial_index": 1, "tutorial_id": 1});
-      index = 0;
-      enableTouch.value = true;
-      steps[0].value = true;
-    }
+    await Get.updateLocale(locale);
   }
 }

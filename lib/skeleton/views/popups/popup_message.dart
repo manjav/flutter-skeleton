@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../app_export.dart';
 
 class MessagePopup extends AbstractPopup {
-  const MessagePopup({super.key})
-      : super("popupMessage");
+  const MessagePopup({super.key}) : super("popupMessage");
 
   @override
   createState() => _MessagePopupState();
@@ -18,7 +17,10 @@ class _MessagePopupState extends AbstractPopupState<MessagePopup> {
   contentFactory() {
     var items = <Widget>[
       SizedBox(height: 64.d),
-      SkinnedText(widget.args["message"], style: TStyles.medium,hideStroke: true),
+      SkinnedText(widget.args["message"],
+          textDirection: Localization.textDirection,
+          style: TStyles.medium,
+          hideStroke: true),
       SizedBox(height: 86.d),
     ];
     if (widget.args.containsKey("isConfirm")) {
