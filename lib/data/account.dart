@@ -521,6 +521,14 @@ class Account extends Player with MineMixin {
             ? newCard.base.id
             : newCard['base_card_id']]!;
       }
+      if (card.base.isHero) {
+        var hero = HeroCard(cards[card.id]!, 0);
+        hero.items = <HeroItem>[];
+        heroes[card.id] = hero;
+        if (level == 4 && hero_max_rarity == 0) {
+          hero_max_rarity = 1;
+        }
+      }
       achieveCards.add(card);
       return card;
     }

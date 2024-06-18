@@ -146,9 +146,16 @@ class _AttackOutcomeStateFeastOverlay
         widget.args["opponent_cards"].length.toDouble();
     controller.findInput<double>("cardsUsedPlayer")?.value =
         widget.args["attack_cards"].length.toDouble();
-    controller.findInput<double>("xp")?.value = widget.args['xp'].toDouble();
-    controller.findInput<double>("xpNew ")?.value =
-        widget.args['xp_added'].toDouble();
+
+    int minXp = Account.getXpRequired(_account.level - 1);
+    int maxXp = Account.getXpRequired(_account.level);
+
+    var levelGap = maxXp - minXp;
+    var currentXP = _account.xp - minXp;
+    var earnedXP = widget.args['xp'] - minXp;
+    
+    controller.findInput<double>("xp")?.value = (currentXP / levelGap) * 100.0;
+    controller.findInput<double>("xpNew")?.value = (earnedXP / levelGap) * 100.0;
 
     updateRiveText("titleText", "fight_label_$_color".l());
     updateRiveText("titleText_stroke", "fight_label_$_color".l());
@@ -162,9 +169,9 @@ class _AttackOutcomeStateFeastOverlay
     updateRiveText("playerNameText_stroke", _account.name);
     updateRiveText("playerNameText_shadow", _account.name);
 
-    updateRiveText("playerXpText", _account.xp.toString());
-    updateRiveText("playerXpText_stroke", _account.xp.toString());
-    updateRiveText("playerXpText_shadow", _account.xp.toString());
+    updateRiveText("playerXpText", widget.args['xp'].toString());
+    updateRiveText("playerXpText_stroke", widget.args['xp'].toString());
+    updateRiveText("playerXpText_shadow", widget.args['xp'].toString());
 
     updateRiveText("playerTribeText", _account.tribeName);
     updateRiveText("playerTribeText_stroke", _account.tribeName);
