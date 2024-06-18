@@ -65,6 +65,29 @@ class ShopData {
     return price.compact();
   }
 
+  static int getPrice(Account account, ShopItemVM item) {
+    var price = item.base.value;
+    if (item.inStore) {
+      return 0;
+    }
+    if (item.base.section == ShopSections.boost) {
+      // Converts gold multiplier to nectar for boost packs
+      var boostNectarMultiplier =
+          getMultiplier(account.level) / account.nectarPrice;
+      return switch (price) {
+        10 => (30000 * boostNectarMultiplier).round(),
+        20 => (90000 * boostNectarMultiplier).round(),
+        50 => (300000 * boostNectarMultiplier).round(),
+        100 => (1000000 * boostNectarMultiplier).round(),
+        _ => price,
+      };
+    }
+    if (item.base.id == 32) {
+      return (150 + (account.heroes.length - 1) * 50);
+    }
+    return price;
+  }
+
   static const boostDeadline = 18000;
   static Map<ShopSections, List<ShopItem>> init(Map shopItems) {
     var map = <ShopSections, List<ShopItem>>{};
@@ -103,6 +126,8 @@ class ShopItemVM {
   final ShopItem base;
   int price, mainCells, crossCells;
   bool get inStore => base.inStore;
-  ShopItemVM(this.base, this.price, this.mainCells, this.crossCells);
+  final dynamic onSale;
+  ShopItemVM(
+      this.base, this.price, this.onSale, this.mainCells, this.crossCells);
   String getTitle() => "shop_${base.section.name}_${base.id}";
 }

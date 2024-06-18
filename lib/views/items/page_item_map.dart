@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -121,8 +122,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           args: {"pack": card},
           onClose: (d) async {
             services.changeState(ServiceStatus.punch, data: 1);
-            bool haveHero = accountProvider.account
-                    .heroes.isNotEmpty;
+            bool haveHero = accountProvider.account.heroes.isNotEmpty;
             //if buy hero success save as a breakPoint
             if (haveHero) {
               accountProvider.updateTutorial(
@@ -178,12 +178,18 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           ],
         ),
       ),
-      PositionedDirectional(
-        bottom: 350.d,
-        start: 32.d,
-        child: Indicator("home", Values.leagueRank,
-            hasPlusIcon: false,
-            onTap: () => serviceLocator<RouteService>().to(Routes.popupLeague)),
+      Consumer<AccountProvider>(
+        builder: (context, value, child) {
+          if (value.account.level < 8) return const SizedBox();
+          return PositionedDirectional(
+            bottom: 350.d,
+            start: 32.d,
+            child: Indicator("home", Values.leagueRank,
+                hasPlusIcon: false,
+                onTap: () =>
+                    serviceLocator<RouteService>().to(Routes.popupLeague)),
+          );
+        },
       ),
       PositionedDirectional(
           bottom: 220.d,
@@ -258,9 +264,6 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
     if (!_buildingPositions.containsKey(type.name)) return const SizedBox();
 
     var building = account.buildings[type]!;
-    if (building.type == Buildings.lab) {
-      building.level = account.potion ~/ 10;
-    }
     var position = _buildingPositions[type.name]!;
     Widget child =
         type == Buildings.mine ? BuildingBalloon(building) : const SizedBox();
@@ -370,9 +373,16 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
   }
 
   void _riveEventsListener(RiveEvent event) {
-    Timer(const Duration(milliseconds: 100), () {
-      setState(
-          () => _buildingPositions = jsonDecode(event.properties["buildings"]));
-    });
+    if (event.name == "splat") {
+      serviceLocator<Sounds>().play("splat", channel: "splat");
+      return;
+    }
+    if (event.name == "loading") {
+      Timer(const Duration(milliseconds: 100), () {
+        setState(() {
+          _buildingPositions = jsonDecode(event.properties["buildings"]);
+        });
+      });
+    }
   }
 }

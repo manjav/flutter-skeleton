@@ -13,6 +13,7 @@ class AccountProvider extends ChangeNotifier {
     if (data != null) {
       result = account.update(context!, data);
     }
+    updateBuildingsLevel();
     notifyListeners();
     return result;
   }
@@ -22,6 +23,19 @@ class AccountProvider extends ChangeNotifier {
         params: {"index": index == 0 ? 1 : index, "id": id});
     account.tutorial_id = id;
     account.tutorial_index = index;
+    notifyListeners();
+  }
+
+  ///Update buildings level after account level up
+  void updateBuildingsLevel() {
+    for (var building in account.buildings.values) {
+      var isAvailable = building.getIsAvailable(account);
+      if (!isAvailable) {
+        building.level = 0;
+      } else {
+        if (building.level == 0) building.level = 1;
+      }
+    }
     notifyListeners();
   }
 

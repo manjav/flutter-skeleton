@@ -30,6 +30,7 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
   final List<AccountCard> _playerCards = [], _oppositeCards = [];
   SMIInput<double>? _playerCardsCount, _oppositeCardsCount;
   final Map<int, SMIInput<double>?> _cardPowers = {};
+  final Map<int, SMIInput<bool>?> _cardCombo = {};
   bool _isBattle = false;
 
   @override
@@ -172,6 +173,9 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     for (var i = 0; i < 5; i++) {
       _cardPowers[i] = controller.findInput<double>("cardPower$i");
       _cardPowers[i + 10] = controller.findInput<double>("cardPower${i + 10}");
+
+      _cardCombo[i] = controller.findInput<bool>("cardCombo$i");
+      _cardCombo[i + 10] = controller.findInput<bool>("cardCombo${i + 10}");
     }
     updateRiveText("playerNameText", "you_l".l());
     updateRiveText("opponentNameText", _opponent!.name);
@@ -193,14 +197,42 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
     }
     if (event.name == "hit") {
       serviceLocator<Sounds>().play("hit", channel: "hit");
+      for (var i = 0; i < _playerCards.length; i++) {
+        updateRiveText(
+            "cardPowerText$i", "ˢ${_cardPowers[i]?.value.toInt().compact()}");
+      }
+      for (var i = 0; i < _oppositeCards.length; i++) {
+        updateRiveText("cardPowerText${10 + i}",
+            "ˢ${_cardPowers[10 + i]?.value.toInt().compact()}");
+      }
     }
     if (state == RewardAnimationState.started) {
+      var attackerCombo = _outcomeData["attacker_combo_info"] ?? [];
+      List<int> attackerComboIds = [];
+      for (var e in attackerCombo) {
+        e["cards"].forEach((x) => attackerComboIds.add(x["id"]));
+      }
+
+      var defenderCombo = _outcomeData["defender_combo_info"] ?? [];
+      List<int> defenderComboIds = [];
+      for (var e in defenderCombo) {
+        e["cards"].forEach((x) => defenderComboIds.add(x["id"]));
+      }
+
       updateCard(i, AccountCard card) {
         updateRiveText("cardNameText$i", "${card.base.fruit.name}_title".l());
         updateRiveText("cardLevelText$i", card.base.rarity.convert());
         updateRiveText("cardPowerText$i", "ˢ${card.power.compact()}");
         loadCardIcon(_imageAssets["cardIcon$i"]!, card.base.getName());
         loadCardFrame(_imageAssets["cardFrame$i"]!, card.base);
+
+        if (card.ownerId == accountProvider.account.id) {
+          bool enableCombo = attackerComboIds.contains(card.id);
+          _cardCombo[i]?.value = enableCombo;
+        } else {
+          bool enableCombo = defenderComboIds.contains(card.id);
+          _cardCombo[10 + i]?.value = enableCombo;
+        }
       }
 
       for (var i = 0; i < _playerCards.length; i++) {
