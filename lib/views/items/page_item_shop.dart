@@ -94,10 +94,13 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       if (available) {
         var response = await inAppPurchaseService.queryInventory(
             skus: skus.toList(), querySkuDetails: true);
-        var inventory = response[inAppPurchaseService.INVENTORY] as Inventory;
-        var products = inventory.mSkuMap.values.toList();
-        for (var product in products) {
-          _productDetails[product.mSku!] = product;
+        var result = response[inAppPurchaseService.RESULT] as IabResult;
+        if (result.isSuccess()) {
+          var inventory = response[inAppPurchaseService.INVENTORY] as Inventory;
+          var products = inventory.mSkuMap.values.toList();
+          for (var product in products) {
+            _productDetails[product.mSku!] = product;
+          }
         }
       }
     } finally {
@@ -408,7 +411,11 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       //     purchaseParam: PurchaseParam(
       //         productDetails: _productDetails[item.base.productID]!));
       // }
+      // }
       var payment = serviceLocator<Payment>();
+      if (!payment.isAvailable) {
+        return;
+      }
 
       var res = await payment.launchPurchaseFlow(sku: item.base.productID);
 
@@ -421,7 +428,6 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
 
       _purchaseUpdated(purchase!, item);
       return;
-      // }
     }
 
     if (item.base.section == ShopSections.boost) {
@@ -489,7 +495,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       "store": FlavorConfig.instance.variables["storeId"]
     };
 
-    await rpc(RpcId.buyGoldPack, params: params);
+    var res = await rpc(RpcId.buyGoldPack, params: params);
 
     await serviceLocator<Payment>().consume(purchase: details);
 
@@ -498,7 +504,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       Overlays.insert(
         context,
         PurchaseFeastOverlay(
-          args: {"item": item},
+          args: {"item": item, "avatars": res["avatars"]},
         ),
       );
     }

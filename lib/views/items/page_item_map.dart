@@ -122,9 +122,7 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
           onClose: (d) async {
             services.changeState(ServiceStatus.punch, data: 1);
             bool haveHero = accountProvider.account
-                    .getReadyCards()
-                    .firstWhereOrNull((element) => element.base.isHero) !=
-                null;
+                    .heroes.isNotEmpty;
             //if buy hero success save as a breakPoint
             if (haveHero) {
               accountProvider.updateTutorial(
@@ -287,16 +285,19 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
       Buildings.lab => Routes.popupPotion,
       _ => "",
     };
+
+    // Get availability level from account
+    if (!building.getIsAvailable(account)) {
+      return;
+    }
+    
     // Offense and defense buildings need tribe membership.
     if (type == Routes.popupSupportiveBuilding &&
         (account.tribe == null || account.tribe!.id <= 0)) {
       toast("error_149".l());
       return;
     }
-    // Get availability level from account
-    if (!building.getIsAvailable(account)) {
-      return;
-    }
+    
     if (type == "") {
       return;
     }

@@ -67,9 +67,9 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
     _artboard = artboard;
     var controller =
         StateMachineController.fromArtboard(artboard, stateMachineName)!;
-    startInput = controller.findInput<bool>("start") as SMITrigger;
-    skipInput = controller.findInput<bool>("skip") as SMITrigger;
-    closeInput = controller.findInput<bool>("close") as SMITrigger;
+    startInput = controller.findInput<bool>("start") as SMITrigger?;
+    skipInput = controller.findInput<bool>("skip") as SMITrigger?;
+    closeInput = controller.findInput<bool>("close") as SMITrigger?;
     updateRiveText("commentText", "tap_close".l());
     controller.addEventListener(onRiveEvent);
     artboard.addController(controller);

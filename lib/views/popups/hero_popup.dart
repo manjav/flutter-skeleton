@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
@@ -45,6 +46,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   late List<GlobalKey> _keys;
   final List<BaseHeroItem> _minions = [];
   final List<BaseHeroItem> _weapons = [];
+  final ValueNotifier<bool> onBuy = ValueNotifier(false);
 
   @override
   void initState() {
@@ -209,72 +211,88 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     var isWeapons = index > 1;
     var items = isWeapons ? _weapons : _minions;
     return Widgets.rect(
-        decoration: BoxDecoration(
-          color: TColors.primary90,
-          border: Border.all(color: TColors.clay, width: 8.d),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(80.d)),
-        ),
-        child: Column(
-          children: [
-            SizedBox(height: 20.d),
-            SkinnedText(isWeapons ? "weapons_l".l() : "minions_l".l(),
-                style: TStyles.large),
-            Expanded(
-                child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(100.d)),
-                    child: ListView.builder(
-                        padding: EdgeInsets.all(12.d),
-                        itemExtent: 240.d,
-                        itemBuilder: (c, i) => _itemBuilder(items[i], index),
-                        itemCount: items.length))),
-          ],
-        ));
+      decoration: BoxDecoration(
+        color: TColors.primary90,
+        border: Border.all(color: TColors.clay, width: 8.d),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(80.d)),
+      ),
+      child: Column(
+        children: [
+          SizedBox(height: 20.d),
+          SkinnedText(isWeapons ? "weapons_l".l() : "minions_l".l(),
+              style: TStyles.large),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(100.d)),
+              child: ValueListenableBuilder(
+                valueListenable: onBuy,
+                builder: (context, value, child) {
+                  return ListView.builder(
+                    padding: EdgeInsets.all(12.d),
+                    itemExtent: 240.d,
+                    itemBuilder: (c, i) => _itemBuilder(items[i], index),
+                    itemCount: items.length,
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget? _itemBuilder(BaseHeroItem item, int position) {
     var host = item.getHost(_heroes);
     var heroItem = item.getUsage(_account.heroItems.values.toList());
+    bool haveItem = _account.heroItems.values
+            .firstWhereOrNull((element) => element.base.id == item.id) !=
+        null;
     var isActive = host == null || heroItem != null;
     return Widgets.button(context,
         radius: 44.d,
         color: TColors.primary80,
         margin: EdgeInsets.all(12.d),
         padding: EdgeInsets.all(12.d),
-        child: Row(children: [
-          Opacity(
-              opacity: isActive ? 1 : 0.5,
-              child: Asset.load<Image>("heroitem_${item.image}",
-                  width: 180.d, height: 180.d)),
-          SizedBox(width: 24.d),
-          Expanded(
-              child: Opacity(
-            opacity: isActive ? 1 : 0.6,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SkinnedText("heroitem_${item.id}".l()),
-                  Expanded(
-                    child: SkinnedText(
-                      "heroitem_${item.id}_description".l(),
-                      style: TStyles.small.copyWith(height: 1),
-                      hideStroke: true,
+        child: Row(
+          children: [
+            Opacity(
+                opacity: isActive ? 1 : 0.5,
+                child: Asset.load<Image>("heroitem_${item.image}",
+                    width: 180.d, height: 180.d)),
+            SizedBox(width: 24.d),
+            Expanded(
+                child: Opacity(
+              opacity: isActive ? 1 : 0.6,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SkinnedText("heroitem_${item.id}".l()),
+                    Expanded(
+                      child: SkinnedText(
+                        "heroitem_${item.id}_description".l(),
+                        style: TStyles.small.copyWith(height: 1),
+                        hideStroke: true,
+                      ),
                     ),
-                  ),
-                  Row(children: [
-                    _itemAttributeBuilder(item, HeroAttribute.blessing),
-                    _itemAttributeBuilder(item, HeroAttribute.power),
-                    _itemAttributeBuilder(item, HeroAttribute.wisdom),
-                  ])
-                ]),
-          )),
-          SizedBox(width: 12.d),
-          Widgets.rect(
+                    Row(children: [
+                      _itemAttributeBuilder(item, HeroAttribute.blessing),
+                      _itemAttributeBuilder(item, HeroAttribute.power),
+                      _itemAttributeBuilder(item, HeroAttribute.wisdom),
+                    ])
+                  ]),
+            )),
+            SizedBox(width: 12.d),
+            Widgets.rect(
               alignment: Alignment.center,
               width: 200.d,
               child: IgnorePointer(
-                  child: _itemActionBuilder(item, heroItem != null, host))),
-        ]),
+                child: _itemActionBuilder(item, haveItem, host),
+              ),
+            ),
+          ],
+        ),
         onPressed: () => _setItem(item, position, heroItem, host));
   }
 
@@ -288,7 +306,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   _itemActionBuilder(BaseHeroItem item, bool isAvailable, HeroCard? host) {
     if (isAvailable) {
       if (host != null) {
-        return _lockItem("icon_used", "${host.card.fruit.name}_t".l());
+        return _lockItem("icon_used", "${host.card.fruit.name}_title".l());
       }
       return SkinnedButton(
         width: 320.d,
@@ -343,7 +361,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     }
 
     if (host != null) {
-      toast("heroitem_used".l(["${host.card.fruit.name}_t".l()]));
+      toast("heroitem_used".l(["${host.card.fruit.name}_title".l()]));
       return;
     }
 
@@ -377,9 +395,8 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
           await _tryRPC(RpcId.buyHeroItem, {RpcParams.id.name: item.id});
       int id = result["heroitem_id"];
       _account.heroItems[id] = HeroItem(id, item, 0);
-    } finally {
-      setState(() {});
-    }
+      onBuy.value = true;
+    } finally {}
   }
 
   _tryRPC(RpcId id, Map<String, dynamic> params) async {
