@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
@@ -7,7 +7,9 @@ import 'package:rive/src/rive_core/assets/file_asset.dart' as rive;
 import '../../export.dart';
 
 class LoaderWidget extends StatefulWidget {
-  static String baseURL = "https://iran.fruitcraft.ir/fc";
+  static String baseURL = kReleaseMode
+      ? "https://iran.fruitcraft.ir/fc"
+      : "https://8ball.turnedondigital.com/fc";
   static Map<String, String> hashMap = {};
 
   final String name;

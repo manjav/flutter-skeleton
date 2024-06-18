@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,7 +56,9 @@ class HttpConnection extends IService {
     http.Response? response;
     try {
       response = await http
-          .get(Uri.parse('https://iran.fruitcraft.ir/fc/configs.json'));
+          .get(Uri.parse(kReleaseMode
+              ? 'https://iran.fruitcraft.ir/fc/configs.json'
+              : 'https://8ball.turnedondigital.com/fc/configs.json'));
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {
