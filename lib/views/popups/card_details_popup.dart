@@ -59,10 +59,11 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
                           size: 500.d, heroTag: "hero_${_card.id}");
                     })),
                 SizedBox(height: 70.d),
-                Text(
+                SkinnedText(
                   "${_name}_description".l(),
                   style: TStyles.mediumInvert.copyWith(height: 2.7.d),
                   textDirection: Localization.textDirection,
+                  hideStroke: true,
                 ),
                 SizedBox(height: 100.d),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [

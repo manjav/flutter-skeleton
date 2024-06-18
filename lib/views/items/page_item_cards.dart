@@ -108,9 +108,10 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  SkinnedText(
                     "sort_by_power".l(),
                     style: TStyles.small.copyWith(color: TColors.primary50),
+                    hideStroke: true,
                   ),
                   SizedBox(
                     width: 20.d,
@@ -168,10 +169,11 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                                         SizedBox(
                                           width: 7.d,
                                         ),
-                                        Text(
+                                        SkinnedText(
                                           "Level ${levels["combo"]}",
                                           style: TStyles.small
                                               .copyWith(color: TColors.white),
+                                          hideStroke: true,
                                         ),
                                       ],
                                     )),

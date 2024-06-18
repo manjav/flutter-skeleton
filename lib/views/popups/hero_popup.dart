@@ -299,7 +299,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   Widget _itemAttributeBuilder(BaseHeroItem item, HeroAttribute attribute) {
     return Row(children: [
       Asset.load<Image>("benefit_${attribute.benefit}", width: 56.d),
-      Text(" +${item.attributes[attribute]}   "),
+      SkinnedText(" +${item.attributes[attribute]}   ", hideStroke: true),
     ]);
   }
 
@@ -330,15 +330,23 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   }
 
   Widget _lockItem(String icon, String text) {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
-      Asset.load<Image>(icon, height: 60.d),
-      SizedBox(height: 12.d),
-      Widgets.rect(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Asset.load<Image>(icon, height: 60.d),
+        SizedBox(height: 12.d),
+        Widgets.rect(
           padding: EdgeInsets.symmetric(horizontal: 8.d),
           radius: 12.d,
           color: TColors.primary10,
-          child: Text(text, style: TStyles.smallInvert))
-    ]);
+          child: SkinnedText(
+            text,
+            style: TStyles.smallInvert,
+            hideStroke: true,
+          ),
+        ),
+      ],
+    );
   }
 
   _setItem(

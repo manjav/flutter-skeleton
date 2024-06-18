@@ -75,11 +75,12 @@ class _MissionOverlayState extends AbstractOverlayState<MissionOverlay> {
                           SizedBox(
                             width: 10.d,
                           ),
-                          Text(
+                          SkinnedText(
                             widget.missions[index].mission.l(),
                             style: TStyles.medium.copyWith(
                               color: TColors.primary,
                             ),
+                            hideStroke: true,
                           ),
                         ],
                       );

@@ -56,9 +56,10 @@ class _IntroScreenState extends AbstractScreenState<IntroScreen> {
                       EdgeInsets.symmetric(vertical: 20.d, horizontal: 70.d),
                   child: Column(
                     children: [
-                      Text(
+                      SkinnedText(
                         "Select your language",
                         style: TStyles.medium.copyWith(color: TColors.white),
+                        hideStroke: true,
                       ),
                       SizedBox(
                         height: 39.d,

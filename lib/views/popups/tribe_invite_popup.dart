@@ -16,8 +16,11 @@ class _TribeInvitePopupState extends AbstractPopupState<TribeInvitePopup> {
   contentFactory() {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       SizedBox(width: 860.d, height: 60.d),
-      Text("tribe_invite_description".l(),
-          style: TStyles.medium.copyWith(height: 1)),
+      SkinnedText(
+        "tribe_invite_description".l(),
+        style: TStyles.medium.copyWith(height: 1),
+        hideStroke: true,
+      ),
       SizedBox(height: 50.d),
       Widgets.skinnedInput(
           width: 700.d,

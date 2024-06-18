@@ -97,10 +97,11 @@ class _ChooseNamePopupState extends AbstractPopupState<ChooseNamePopup> {
                                           "checkbox_${selectedName.value == name ? "on" : "off"}",
                                           width: 64.d),
                                       SizedBox(width: 12.d),
-                                      Text(
+                                      SkinnedText(
                                         name,
                                         style: TStyles.medium
                                             .copyWith(color: TColors.primary20),
+                                        hideStroke: true,
                                       ),
                                     ],
                                   ),

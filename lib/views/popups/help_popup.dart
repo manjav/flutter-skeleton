@@ -214,10 +214,11 @@ class _HelpPopupState extends AbstractPopupState<HelpPopup> {
                           horizontal: 74.d, vertical: 60.d),
                       child: ValueListenableBuilder(
                         valueListenable: selectedDescription,
-                        builder: (context, value, child) => Text(
+                        builder: (context, value, child) => SkinnedText(
                           value,
                           style:
                               TStyles.medium.copyWith(color: TColors.primary20),
+                          hideStroke: true,
                         ),
                       ),
                     ),

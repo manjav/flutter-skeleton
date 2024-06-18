@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
 
-
 class DailyGiftPopup extends AbstractPopup {
   const DailyGiftPopup({super.key}) : super(Routes.popupDailyGift);
 
@@ -44,7 +43,11 @@ class _RewardPopupState extends AbstractPopupState<DailyGiftPopup> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(height: 30.d),
-        Text("daily_gift_message".l(), style: style),
+        SkinnedText(
+          "daily_gift_message".l(),
+          style: style,
+          hideStroke: true,
+        ),
         SizedBox(height: 50.d),
         SizedBox(
             height: 380.d,
@@ -60,7 +63,7 @@ class _RewardPopupState extends AbstractPopupState<DailyGiftPopup> {
             width: 440.d,
             label: "claim_l".l(),
             color: ButtonColor.green,
-            onPressed: (){
+            onPressed: () {
               Navigator.pop(context);
               Overlays.insert(context, const DailyRewardFeastOverlay());
             }),
