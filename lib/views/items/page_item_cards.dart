@@ -40,9 +40,9 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
       serviceLocator<RouteService>()
           .to(Routes.popupCardDetails, args: {'card': cards[0]});
     } else if (data["id"] == 404) {
-      var cards = accountProvider.account.getReadyCards();
+      var cards = accountProvider.account.heroes.values.toList();
       serviceLocator<RouteService>()
-          .to(Routes.popupCardDetails, args: {'card': cards[0]});
+          .to(Routes.popupCardDetails, args: {'card': cards[0].card});
     }
     super.onTutorialFinish(data);
   }

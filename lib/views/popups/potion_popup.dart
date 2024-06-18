@@ -10,7 +10,7 @@ class PotionPopup extends AbstractPopup {
   createState() => _PotionPopupState();
 }
 
-class _PotionPopupState extends AbstractPopupState<PotionPopup> {
+class _PotionPopupState extends AbstractPopupState<PotionPopup> with BuildingPopupMixin {
   static const capacity = 50.0;
   @override
   contentFactory() {
@@ -20,10 +20,11 @@ class _PotionPopupState extends AbstractPopupState<PotionPopup> {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Asset.load<Image>("icon_potion", height: 210.d),
+          getBuildingIcon(),
+          SkinnedText("level_l".l([building.level])),
           SizedBox(height: 32.d),
           SkinnedText(
-            "potion_description".l(),
+            descriptionBuilder(),
             style: TStyles.medium.copyWith(height: 2.7.d),
             hideStroke: true,
           ),

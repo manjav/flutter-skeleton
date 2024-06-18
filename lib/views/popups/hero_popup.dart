@@ -53,9 +53,10 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
     _account = accountProvider.account;
     var heroes = _account.heroes.values.toList();
     _heroes = List.generate(heroes.length, (index) => heroes[index].clone());
-    _selectedIndex.value =
-        _heroes.indexWhere((h) => h.card.fruit.id == widget.selectedHero);
     _keys = List.generate(_heroes.length, (index) => GlobalKey());
+    int index =
+        _heroes.indexWhere((h) => h.card.fruit.id == widget.selectedHero);
+    _selectedIndex.value = index == -1 && _heroes.isNotEmpty ? 0 : index;
     for (var item in _account.loadingData.baseHeroItems.values) {
       if (item.category == 1) {
         _minions.add(item);

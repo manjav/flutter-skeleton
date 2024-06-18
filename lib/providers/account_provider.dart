@@ -17,7 +17,7 @@ class AccountProvider extends ChangeNotifier {
     return result;
   }
 
-  void updateTutorial(BuildContext context, int index, int id) async {
+  Future<void> updateTutorial(BuildContext context, int index, int id) async {
     await serviceLocator<HttpConnection>().tryRpc(context, RpcId.tutorialState,
         params: {"index": index == 0 ? 1 : index, "id": id});
     account.tutorial_id = id;
