@@ -22,6 +22,8 @@ class _PurchaseFeastOverlayState
     extends AbstractOverlayState<PurchaseFeastOverlay>
     with RewardScreenMixin, BackgroundMixin {
   late ShopItemVM _item;
+  List<int> _avatars = [];
+  bool _avatarSelected = false;
 
   @override
   void initState() {
@@ -76,6 +78,16 @@ class _PurchaseFeastOverlayState
     });
   }
 
+    @override
+  void onScreenTouched() {
+    if (state == RewardAnimationState.shown &&
+        !_avatarSelected &&
+        _item.base.reward.isNotEmpty) {
+      return;
+    }
+    super.onScreenTouched();
+  }
+
   @override
   void onScreenTouched() {
     if (state == RewardAnimationState.shown &&
@@ -116,6 +128,27 @@ class _PurchaseFeastOverlayState
       }
     }
     return super.onRiveAssetLoad(asset, embeddedBytes);
+  }
+
+  @override
+  onRiveEvent(RiveEvent event) {
+    if (event.name.startsWith("choose")) {
+      int index = int.parse(event.name.replaceAll("choose_", ""));
+      selectAvatar(index);
+    }
+    super.onRiveEvent(event);
+  }
+
+  selectAvatar(int index) async {
+    process(() async {
+      await serviceLocator<HttpConnection>().tryRpc(
+          context, RpcId.setProfileInfo,
+          params: {"avatar_id": _avatars[index]});
+      accountProvider.account.avatarId = _avatars[index];
+      accountProvider.update();
+      _avatarSelected = true;
+      return true;
+    });
   }
 
   Future<void> _loadRewardIcon(ImageAsset asset, String name) async =>

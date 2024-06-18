@@ -59,13 +59,19 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 15.d),
-                    Text("profile_name_error".l(),
-                        style: TStyles.medium
-                            .copyWith(height: 3.d, color: TColors.red)),
+                    SkinnedText(
+                      "profile_name_error".l(),
+                      style: TStyles.medium
+                          .copyWith(height: 3.d, color: TColors.red),
+                      hideStroke: true,
+                    ),
                     SizedBox(height: 15.d),
-                    Text("profile_name_suggest".l(),
-                        style: TStyles.medium
-                            .copyWith(height: 3.d, color: TColors.primary20)),
+                    SkinnedText(
+                      "profile_name_suggest".l(),
+                      style: TStyles.medium
+                          .copyWith(height: 3.d, color: TColors.primary20),
+                      hideStroke: true,
+                    ),
                     StreamBuilder(
                         stream: selectedName.stream,
                         builder: (ctx, snapshot) {
@@ -90,10 +96,11 @@ class _ProfileEditPopupState extends AbstractPopupState<ProfileEditPopup> {
                                                 "checkbox_${selectedName.value == name ? "on" : "off"}",
                                                 width: 64.d),
                                             SizedBox(width: 12.d),
-                                            Text(
+                                            SkinnedText(
                                               name,
                                               style: TStyles.medium.copyWith(
                                                   color: TColors.primary20),
+                                              hideStroke: true,
                                             ),
                                           ],
                                         ),

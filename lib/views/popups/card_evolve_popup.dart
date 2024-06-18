@@ -21,9 +21,7 @@ class _CardEvolvePopupState extends AbstractPopupState<CardEvolvePopup>
 
   @override
   void onTutorialStep(data) {
-    if (data["id"] == 655) {
-      onSelectCard(0, cards[0]);
-    } else if (data["id"] == 656) {
+    if (data["id"] == 656) {
       onSelectCard(1, cards[1]);
     }
     super.onTutorialStep(data);

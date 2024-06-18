@@ -8,6 +8,7 @@ export 'feast_evolve_overlay.dart';
 export 'feast_gift_reward_overlay.dart';
 export 'feast_intro_overlay.dart';
 export 'feast_levelup_overlay.dart';
+export 'feast_matching_overlay.dart';
 export 'feast_openpack_overlay.dart';
 export 'feast_purchase_overlay.dart';
 export 'feast_upgrade_card_overlay.dart';

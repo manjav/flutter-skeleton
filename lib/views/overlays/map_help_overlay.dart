@@ -84,11 +84,12 @@ class _MapHelpOverlayState extends AbstractOverlayState<MapHelpOverlay> {
                             decoration: Widgets.imageDecorator(
                                 "opponent_frame_caption"),
                             child: Center(
-                              child: Text(
+                              child: SkinnedText(
                                 data[index]["text"]!.l(),
                                 style: TStyles.large.copyWith(
                                   color: TColors.primary90,
                                 ),
+                                hideStroke: true,
                               ),
                             ),
                           ),

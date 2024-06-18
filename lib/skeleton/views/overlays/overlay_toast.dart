@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../app_export.dart';
 
@@ -58,12 +59,15 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
                               scaleY:
                                   animationController.value.clamp(0, 1 / 3) * 3,
                               child: Widgets.rect(
+                                  width: Get.width * 0.9,
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 40.d),
                                   decoration:
                                       Widgets.imageDecorator("ui_shadow"),
-                                  child: SkinnedText(widget.message,
-                                      style: TStyles.large))),
+                                  child: Expanded(
+                                    child: SkinnedText(widget.message,
+                                        style: TStyles.large,textAlign: TextAlign.center,),
+                                  ))),
                         ));
                   })
             ])));

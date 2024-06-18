@@ -59,7 +59,10 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
             value: _member?.status == 1, onChanged: _changeVisibility),
         Asset.load<Image>("tribe_visibility", width: 44.d),
         SizedBox(width: 12.d),
-        Text("tribe_visibility".l()),
+        SkinnedText(
+          "tribe_visibility".l(),
+          hideStroke: true,
+        ),
         const Expanded(child: SizedBox()),
         _indicator(
             "icon_population",
@@ -112,29 +115,36 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
                   width: 76.d, height: 76.d, subFolder: "avatars")),
           SizedBox(width: 20.d),
           Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(textDirection: TextDirection.ltr, children: [
-                  member.status == 1
-                      ? Asset.load<Image>("tribe_online", height: 32.d)
-                      : const SizedBox(),
-                  SizedBox(width: member.status == 1 ? 12.d : 0),
-                  SkinnedText(member.name,
-                      style: TStyles.medium.copyWith(height: 1.1)),
-                ]),
-                SizedBox(height: 8.d),
-                Row(textDirection: TextDirection.ltr, children: [
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(textDirection: TextDirection.ltr, children: [
+                member.status == 1
+                    ? Asset.load<Image>("tribe_online", height: 32.d)
+                    : const SizedBox(),
+                SizedBox(width: member.status == 1 ? 12.d : 0),
+                SkinnedText(member.name,
+                    style: TStyles.medium.copyWith(height: 1.1)),
+              ]),
+              SizedBox(height: 8.d),
+              Row(
+                textDirection: TextDirection.ltr,
+                children: [
                   member.tribePosition.index < 2
                       ? const SizedBox()
                       : Asset.load<Image>(
                           "position_${member.tribePosition.index}",
                           height: 40.d),
                   SizedBox(width: member.tribePosition.index < 2 ? 0 : 12.d),
-                  Text("tribe_degree_${member.tribePosition.index}".l(),
-                      style: TStyles.small)
-                ]),
-              ]),
+                  SkinnedText(
+                    "tribe_degree_${member.tribePosition.index}".l(),
+                    style: TStyles.small,
+                    hideStroke: true,
+                  ),
+                ],
+              ),
+            ],
+          ),
           const Expanded(child: SizedBox()),
           _indicator("icon_xp", member.xp.compact(), 60.d,
               EdgeInsets.only(right: 16.d)),
@@ -228,11 +238,15 @@ class _TribeDetailsPopupState extends AbstractPopupState<TribeDetailsPopup>
                 top: 80.d,
                 child: SkinnedText("upgrade_t_$id".l(), style: TStyles.large)),
             Positioned(
-                top: 160.d,
-                width: 400.d,
-                child: Text("upgrade_d_$id".l([tribe.getOption(id).convert()]),
-                    textAlign: TextAlign.center,
-                    style: TStyles.medium.copyWith(height: 1))),
+              top: 160.d,
+              width: 400.d,
+              child: SkinnedText(
+                "upgrade_d_$id".l([tribe.getOption(id).convert()]),
+                textAlign: TextAlign.center,
+                style: TStyles.medium.copyWith(height: 1),
+                hideStroke: true,
+              ),
+            ),
             Positioned(
                 bottom: 0, right: 0, left: 0, child: _upgradeButton(tribe, id))
           ]),

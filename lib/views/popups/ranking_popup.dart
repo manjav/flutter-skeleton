@@ -129,25 +129,43 @@ class _RankingPopupState extends AbstractPopupState<RankingPopup>
         padding: EdgeInsets.only(left: 8.d, right: 16.d),
         child: Row(children: [
           Widgets.rect(
-              radius: 24.d,
-              width: 144.d,
-              height: 76.d,
-              alignment: Alignment.center,
-              color: rank < 4 ? TColors.transparent : TColors.primary20,
-              child: rank < 4
-                  ? Asset.load<Image>("medal_$rank")
-                  : Text('$rank', style: TStyles.smallInvert)),
+            radius: 24.d,
+            width: 144.d,
+            height: 76.d,
+            alignment: Alignment.center,
+            color: rank < 4 ? TColors.transparent : TColors.primary20,
+            child: rank < 4
+                ? Asset.load<Image>("medal_$rank")
+                : SkinnedText(
+                    '$rank',
+                    style: TStyles.smallInvert,
+                    hideStroke: true,
+                  ),
+          ),
           SizedBox(width: 16.d),
-          Expanded(child: Text(record.name, style: TStyles.tiny)),
+          Expanded(
+            child: SkinnedText(
+              record.name,
+              style: TStyles.tiny,
+            ),
+          ),
           SizedBox(width: 4.d),
           SizedBox(
               width: 220.d,
               child: rpcId == RpcId.rankingGlobal
-                  ? Text((record as Record).tribeName,
-                      style: TStyles.small, textAlign: TextAlign.center)
+                  ? SkinnedText(
+                      (record as Record).tribeName,
+                      style: TStyles.small,
+                      textAlign: TextAlign.center,
+                      hideStroke: true,
+                    )
                   : null),
           SizedBox(width: 79.d),
-          Text(score.compact(), style: TStyles.small),
+          SkinnedText(
+            score.compact(),
+            style: TStyles.small,
+            hideStroke: true,
+          ),
         ]), onPressed: () async {
       if (rpcId == RpcId.rankingGlobal && !record.itsMe) {
         serviceLocator<RouteService>()

@@ -51,9 +51,9 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
       serviceLocator<RouteService>()
           .to(Routes.popupCardDetails, args: {'card': cards[0]});
     } else if (data["id"] == 404) {
-      var cards = accountProvider.account.getReadyCards();
+      var cards = accountProvider.account.heroes.values.toList();
       serviceLocator<RouteService>()
-          .to(Routes.popupCardDetails, args: {'card': cards[0]});
+          .to(Routes.popupCardDetails, args: {'card': cards[0].card});
     }
     super.onTutorialFinish(data);
   }
@@ -122,9 +122,10 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  SkinnedText(
                     "sort_by_power".l(),
                     style: TStyles.small.copyWith(color: TColors.primary50),
+                    hideStroke: true,
                   ),
                   SizedBox(
                     width: 20.d,
@@ -186,6 +187,7 @@ class _CardsPageItemState extends AbstractPageItemState<AbstractPageItem>
                                           "combo_level".l([levels["combo"]]),
                                           style: TStyles.small
                                               .copyWith(color: TColors.white),
+                                          hideStroke: true,
                                         ),
                                       ],
                                     )),

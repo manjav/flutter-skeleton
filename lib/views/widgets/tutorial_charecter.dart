@@ -12,6 +12,7 @@ class TutorialCharacter extends StatefulWidget {
   final double? bottom;
   final Size? characterSize;
   final double? dialogueHeight;
+  final VoidCallback? onEnd;
   const TutorialCharacter({
     required this.show,
     required this.text,
@@ -20,6 +21,7 @@ class TutorialCharacter extends StatefulWidget {
     this.bottom,
     this.characterSize,
     this.dialogueHeight,
+    this.onEnd,
     super.key,
   });
 
@@ -82,6 +84,7 @@ class _TutorialCharecterState extends State<TutorialCharacter> {
           builder: (context, value, child) {
             return AnimatedPositioned(
               duration: 400.ms,
+              onEnd: widget.onEnd,
               bottom: (widget.bottom ?? 800.d) + 50.d,
               left: widget.dialogueSide == DialogueSide.right
                   ? value
@@ -127,6 +130,7 @@ class _TutorialCharecterState extends State<TutorialCharacter> {
           builder: (context, value, child) {
             return AnimatedPositioned(
               duration: 400.ms,
+              onEnd: widget.onEnd,
               bottom: value
                   ? ((widget.characterSize?.height ?? 382.d) +
                       (widget.bottom ?? 300.d))

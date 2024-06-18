@@ -76,22 +76,24 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                           ? RotationTransition(
                               turns: const AlwaysStoppedAnimation(-15 / 360),
                               child: Widgets.rect(
-                                  color: TColors.primary20,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Asset.load<Image>("icon_exclude",
-                                          height: 28.d, width: 21.d),
-                                      SizedBox(
-                                        width: 7.d,
-                                      ),
-                                      Text(
-                                        "Level ${levels["combo"]}",
-                                        style: TStyles.small
-                                            .copyWith(color: TColors.white),
-                                      ),
-                                    ],
-                                  )),
+                                color: TColors.primary20,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Asset.load<Image>("icon_exclude",
+                                        height: 28.d, width: 21.d),
+                                    SizedBox(
+                                      width: 7.d,
+                                    ),
+                                    SkinnedText(
+                                      "Level ${levels["combo"]}",
+                                      style: TStyles.small
+                                          .copyWith(color: TColors.white),
+                                      hideStroke: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             )
                           : const SizedBox()
                     ],
@@ -242,9 +244,10 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
                       "deck_divider",
                       height: 72.d,
                     ),
-                    Text(
+                    SkinnedText(
                       "choose_deck_title".l(),
                       style: TStyles.medium.copyWith(color: TColors.primary50),
+                      hideStroke: true,
                     )
                   ],
                 ),
@@ -552,14 +555,16 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
             child: itsMe
                 ? ValueListenableBuilder<List<AccountCard?>>(
                     valueListenable: _selectedCards,
-                    builder: (context, value, child) => Text(
+                    builder: (context, value, child) => SkinnedText(
                       account.calculatePower(_selectedCards.value).compact(),
                       style: TStyles.big.copyWith(color: TColors.green),
+                      hideStroke: true,
                     ),
                   )
-                : Text(
+                : SkinnedText(
                     opponentPower,
                     style: TStyles.big.copyWith(color: TColors.red),
+                    hideStroke: true,
                   ),
           )
         ],
@@ -583,6 +588,21 @@ class _DeckScreenState extends AbstractScreenState<DeckScreen>
     //         SizedBox(height: 16.d)
     //       ]),
     // );
+  }
+
+  String powerRatingText(int powerRatio) {
+    switch (powerRatio) {
+      case 1:
+        return "weak".l();
+      case 2:
+        return "average".l();
+      case 3:
+        return "strong".l();
+      case 4:
+        return "very_strong".l();
+      default:
+        return "average".l();
+    }
   }
 
 /* This function returns the power of the next quest.

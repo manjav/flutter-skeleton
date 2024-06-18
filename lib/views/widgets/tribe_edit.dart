@@ -71,8 +71,11 @@ class _EditTribeState extends State<EditTribe> with ClassFinderWidgetMixin {
                 "arrow_${Localization.isRTL ? "left" : "right"}")),
       ]),
       SizedBox(height: 24.d),
-      Text("tribe_help_${_account.tribe == null ? "new" : "edit"}".l(),
-          style: TStyles.medium.copyWith(height: 1)),
+      SkinnedText(
+        "tribe_help_${_account.tribe == null ? "new" : "edit"}".l(),
+        style: TStyles.medium.copyWith(height: 1),
+        hideStroke: true,
+      ),
       SizedBox(height: 32.d),
       _submitButton()
     ]);

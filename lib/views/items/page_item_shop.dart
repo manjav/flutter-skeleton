@@ -334,11 +334,13 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
           Expanded(child: child),
           description.isEmpty
               ? const SizedBox()
-              : Text(
+              : SkinnedText(
                   "${description}_desc"
                       .l([ShopData.boostDeadline.toRemainingTime()]),
                   style: TStyles.small.copyWith(height: 0.9),
-                  textAlign: TextAlign.center),
+                  textAlign: TextAlign.center,
+                  hideStroke: true,
+                ),
           SizedBox(height: description.isEmpty ? 0 : 20.d),
           IgnorePointer(
               child: SkinnedButton(
@@ -395,7 +397,11 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       //     purchaseParam: PurchaseParam(
       //         productDetails: _productDetails[item.base.productID]!));
       // }
+      // }
       var payment = serviceLocator<Payment>();
+      if (!payment.isAvailable) {
+        return;
+      }
 
       var res = await payment.launchPurchaseFlow(sku: item.base.productID);
 
@@ -408,7 +414,6 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
 
       _purchaseUpdated(purchase!, item);
       return;
-      // }
     }
 
     if (item.base.section == ShopSections.boost) {
@@ -476,7 +481,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       "store": FlavorConfig.instance.variables["storeId"]
     };
 
-    await rpc(RpcId.buyGoldPack, params: params);
+    var res = await rpc(RpcId.buyGoldPack, params: params);
 
     await serviceLocator<Payment>().consume(purchase: details);
 
@@ -485,7 +490,7 @@ class _ShopPageItemState extends AbstractPageItemState<ShopPageItem> {
       Overlays.insert(
         context,
         PurchaseFeastOverlay(
-          args: {"item": item},
+          args: {"item": item, "avatars": res["avatars"]},
         ),
       );
     }

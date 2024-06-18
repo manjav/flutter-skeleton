@@ -45,9 +45,7 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
         padding: EdgeInsets.fromLTRB(24.d, 10.d, 16.d, 16.d),
         decoration: Widgets.imageDecorator("iconed_item_bg",
             ImageCenterSliceData(132, 68, const Rect.fromLTWH(100, 30, 2, 2))),
-        child: Row(
-          textDirection: TextDirection.ltr,
-          children: [
+        child: Row(textDirection: TextDirection.ltr, children: [
           Asset.load<Image>("inbox_item_${message.type.subject.name}",
               width: 60.d),
           SizedBox(width: 32.d),
@@ -56,15 +54,22 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                 SizedBox(height: 24.d),
-                Text(message.getText(),
-                    textDirection: message.getText().getDirection()),
+                SkinnedText(
+                  message.getText(),
+                  textDirection: message.getText().getDirection(),
+                  hideStroke: true,
+                ),
                 SizedBox(height: 16.d),
                 _getConfirmButtons(message),
               ])),
         ]),
       ),
       Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-        Text((now - message.createdAt).toElapsedTime(), style: titleStyle),
+        SkinnedText(
+          (now - message.createdAt).toElapsedTime(),
+          style: titleStyle,
+          hideStroke: true,
+        ),
         SizedBox(width: 24.d),
       ]),
       SizedBox(height: 20.d)
@@ -92,16 +97,17 @@ class _InboxPopupState extends AbstractPopupState<InboxPopup> {
       SkinnedButton(
           padding: padding,
           color: ButtonColor.green,
-          label: "˥", onPressed: () async {
-        if (accountProvider.account.tribe != null) {
-          toast("error_195".l());
-          return;
-        }
-        var data =
-            await message.decideTribeRequest(context, message.intData[0], true);
-        accountProvider.account.installTribe(data["tribe"]);
-        if (mounted) Navigator.pop(context);
-      }),
+          label: "˥",
+          onPressed: () async {
+            if (accountProvider.account.tribe != null) {
+              toast("error_195".l());
+              return;
+            }
+            var data = await message.decideTribeRequest(
+                context, message.intData[0], true);
+            accountProvider.account.installTribe(data["tribe"]);
+            if (mounted) Navigator.pop(context);
+          }),
     ]);
   }
 }

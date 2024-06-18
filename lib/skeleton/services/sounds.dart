@@ -53,6 +53,8 @@ class Sounds extends ISounds {
         '$name.$extension', '${LoaderWidget.baseURL}/sounds/$name.$extension',
         hash: md5);
     if (file == null) return;
+    var isExits = await file.exists();
+    if (!isExits) return;
     player.play(_sounds[name] = DeviceFileSource(file.path));
   }
 

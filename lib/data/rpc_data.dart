@@ -40,7 +40,10 @@ class LoadingData {
             'popupOpponents': 9,
             'tribeChange': 150,
             'lab': 1,
-            'base': 3
+            'base': 3,
+            "mine": 5,
+            "offense": 6,
+            "defense": 6
           },
           'mineBallonActiveRatio': 0.1
         };
