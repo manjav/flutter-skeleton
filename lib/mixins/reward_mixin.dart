@@ -110,8 +110,8 @@ mixin RewardScreenMixin<T extends AbstractOverlay> on State<T> {
       "closed" => RewardAnimationState.closed,
       _ => RewardAnimationState.none,
     };
-    if (state == RewardAnimationState.none) return;
     this.state = state;
+    if (state == RewardAnimationState.none) return;
     if (state == RewardAnimationState.waiting) {
       if (result != null) {
         startInput?.value = true;

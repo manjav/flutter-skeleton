@@ -60,14 +60,13 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
                                   animationController.value.clamp(0, 1 / 3) * 3,
                               child: Widgets.rect(
                                   width: Get.width * 0.9,
+                                  height: 200.d,
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 40.d),
                                   decoration:
                                       Widgets.imageDecorator("ui_shadow"),
-                                  child: Expanded(
-                                    child: SkinnedText(widget.message,
-                                        style: TStyles.large,textAlign: TextAlign.center,),
-                                  ))),
+                                  child: SkinnedText(widget.message,
+                                      style: TStyles.large,textAlign: TextAlign.center,))),
                         ));
                   })
             ])));

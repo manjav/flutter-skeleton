@@ -88,7 +88,7 @@ extension StringExtension on String {
 
   String xorEncrypt({String? secret}) {
     List<int> valueBytes = utf8.encode(this);
-    List<int> keyBytes = utf8.encode(_getDefaultSecret());
+    List<int> keyBytes = utf8.encode(secret ?? _getDefaultSecret());
     int keyLength = keyBytes.length;
     List<int> resultBytes = [];
 

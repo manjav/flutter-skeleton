@@ -39,7 +39,7 @@ class LoadingData {
             'treasury': 5,
             'popupOpponents': 9,
             'tribeChange': 150,
-            'lab': 1,
+            'lab': 15,
             'base': 3,
             "mine": 5,
             "offense": 6,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../app_export.dart';
 
@@ -57,7 +58,10 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
         child: Row(children: [
           Asset.load<Image>("icon_${setting.name}", height: 70.d),
           SizedBox(width: 20.d),
-          SkinnedText("settings_${setting.name}".l(),hideStroke: true,),
+          SkinnedText(
+            "settings_${setting.name}".l(),
+            hideStroke: true,
+          ),
           const Expanded(child: SizedBox()),
           IgnorePointer(child: action),
         ]),
@@ -114,8 +118,7 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
       "invite" => Routes.popupInvite,
       _ => Routes.popupRedeemGift,
     };
-    serviceLocator<RouteService>()
-        .to(route);
+    serviceLocator<RouteService>().to(route);
   }
 
   void _showLocales() {
@@ -135,7 +138,10 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Asset.load<Image>("icon_language", height: 70.d),
                 SizedBox(width: 20.d),
-                SkinnedText("settings_language".l(),hideStroke: true,),
+                SkinnedText(
+                  "settings_language".l(),
+                  hideStroke: true,
+                ),
               ]),
               SizedBox(height: 20.d),
               Expanded(
@@ -156,9 +162,11 @@ class _SettingsPopupState extends AbstractPopupState<SettingsPopup> {
     return Widgets.button(
       context,
       child: SkinnedText("settings_${local.languageCode}".l()),
-      onPressed: () {
+      onPressed: () async {
         Pref.language.setString(local.languageCode);
-        MyApp.restartApp(context);
+        await serviceLocator<Localization>().changeLocal(local);
+        Get.updateLocale(local);
+        if (context.mounted) Get.back();
       },
     );
   }

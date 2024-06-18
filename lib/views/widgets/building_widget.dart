@@ -17,7 +17,7 @@ class BuildingWidget extends StatefulWidget {
 
 class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
   SMINumber? _levelInput;
-  SMINumber? _goldInput;
+  SMINumber? _fillInput;
   SMITrigger? destroyTrigger;
   Timer? _timer;
 
@@ -36,7 +36,7 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
       if (!widget.building.getIsAvailable(account)) return;
 
       var level = account.buildings[widget.building.type]!.level.toDouble();
-      _levelInput?.value = level == 0 ? 1 : level;
+      _levelInput?.value = level;
 
       if (widget.building.type == Buildings.treasury) {
         var x = ((5 * account.bank_account_balance) / widget.building.benefit);
@@ -54,12 +54,12 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
         _fillInput?.value = (account.potion / 10).roundToDouble();
         return;
       }
-
+      
       if (widget.building.type == Buildings.mine) {
         var x = ((5 * collectableGold(account)) / widget.building.benefit)
             .toDouble();
         x = x.isInfinite ? 0 : x.roundToDouble();
-        _goldInput?.value = x;
+        _fillInput?.value = x;
         return;
       }
     });
@@ -68,7 +68,7 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
     if (widget.building.type == Buildings.mine) {
       _timer = Timer.periodic(const Duration(seconds: 10), (_) {
         var x = goldLevel(account).toDouble();
-        _goldInput?.value = x;
+        _fillInput?.value = x;
       });
     }
   }
@@ -118,24 +118,21 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
                   }
                 }
                 if (widget.building.type == Buildings.treasury) {
-                  var input = controller.findInput<double>('gold');
-                  _goldInput = input as SMINumber;
-
                   var x = widget.building.level == 0
                       ? 0
                       : ((5 * account.bank_account_balance) /
                               widget.building.benefit)
                           .round();
-                  _goldInput?.value = x.toDouble();
+                  _fillInput?.value = x.toDouble();
                 }
                 if (widget.building.type == Buildings.mine) {
-                  var input = controller.findInput<double>('gold');
-                  _goldInput = input as SMINumber;
-
                   var x = widget.building.level == 0
                       ? 0.0
                       : goldLevel(account).toDouble();
-                  _goldInput?.value = x;
+                  _fillInput?.value = x;
+                }
+                if (widget.building.type == Buildings.lab) {
+                  _fillInput?.value = (account.potion / 10).roundToDouble();
                 }
                 artboard.addController(controller);
               },
