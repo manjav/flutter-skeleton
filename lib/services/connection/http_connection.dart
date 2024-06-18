@@ -57,8 +57,8 @@ class HttpConnection extends IService {
     try {
       response = await http
           .get(Uri.parse(kReleaseMode
-              ? 'https://iran.fruitcraft.ir/fc/configs.json'
-              : 'https://8ball.turnedondigital.com/fc/configs.json'));
+              ? 'https://${Localization.serverType == "local" ? "iran" : "global"}.fruitcraft.ir/fc/${Localization.serverType}-configs.json'
+              : 'https://8ball.turnedondigital.com/fc/${Localization.serverType}-configs.json'));
     } catch (e) {
       var error = '$e';
       if (_isDisconnected(error)) {

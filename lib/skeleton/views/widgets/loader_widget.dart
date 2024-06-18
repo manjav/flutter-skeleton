@@ -8,7 +8,7 @@ import '../../export.dart';
 
 class LoaderWidget extends StatefulWidget {
   static String baseURL = kReleaseMode
-      ? "https://iran.fruitcraft.ir/fc"
+      ? "https://${Localization.serverType == "local" ? "iran" : "global"}.fruitcraft.ir/fc"
       : "https://8ball.turnedondigital.com/fc";
   static Map<String, String> hashMap = {};
 
