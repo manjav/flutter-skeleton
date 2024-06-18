@@ -89,7 +89,8 @@ class _PurchaseFeastOverlayState
   @override
   onRiveEvent(RiveEvent event) {
     if (event.name.startsWith("choose")) {
-      selectAvatar(event.properties["choose"].toInt());
+      int index = int.parse(event.name.replaceAll("choose_", ""));
+      selectAvatar(index);
     }
     super.onRiveEvent(event);
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
@@ -331,12 +332,13 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
         valueListenable: line.selectedIndex,
         builder: (context, value, child) {
           return Widgets.rect(
-              margin: EdgeInsets.only(top: 60.d),
+              margin: EdgeInsets.only(bottom: 60.d),
               decoration: Widgets.imageDecorator(
                   "frame_header_cheese",
                   ImageCenterSliceData(
                       114, 226, const Rect.fromLTWH(58, 61, 2, 2))),
-              height: 400.d,
+              height: 400.d + ("achievement_${line.type.id}_message"
+                            .l([line.format(line.steps[value].max)]).length * 0.35),
               child: Stack(
                   alignment: Alignment.center,
                   clipBehavior: Clip.none,
@@ -347,9 +349,14 @@ class _ProfilePopupState extends AbstractPopupState<ProfilePopup>
                         child: SkinnedText(
                             "${"achievement_${line.type.id}_title".l()} $title")),
                     Positioned(
-                        bottom: 25.d,
-                        child: Text("achievement_${line.type.id}_message"
-                            .l([line.format(line.steps[value].max)]))),
+                      bottom: 25.d,
+                      width: Get.width * 0.8,
+                      child: SkinnedText(
+                        "achievement_${line.type.id}_message"
+                            .l([line.format(line.steps[value].max)]),
+                        hideStroke: true,
+                      ),
+                    ),
                     Positioned(
                         top: 40.d,
                         width: line.steps.length == 1 ? 230.d : null,

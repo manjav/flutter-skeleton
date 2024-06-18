@@ -203,39 +203,41 @@ class _MainMapItemState extends AbstractPageItemState<MainMapPageItem> {
             onPressed: () =>
                 serviceLocator<RouteService>().to(Routes.popupInbox),
           )),
-      account.bundles != null
-          ? PositionedDirectional(
-              bottom: 210.d,
-              end: 150.d,
-              height: 150.d,
-              child: StreamBuilder<dynamic>(
-                  stream: Stream.periodic(const Duration(seconds: 1)),
-                  builder: (context, snapshot) {
-                    var endDate = Convert.toInt(account.bundles[0]["end_date"]);
-                    var duration = Duration(
-                        seconds: endDate - DateTime.now().secondsSinceEpoch);
-                    String time =
-                        "${duration.inHours.toString().padLeft(2, "0")}:${(duration.inMinutes % 60).toString().padLeft(2, "0")}:${(duration.inSeconds % 60).toString().padLeft(2, "0")}";
-                    return _box(0, time);
-                  }),
-            )
-          : const SizedBox(),
-      PositionedDirectional(
-        bottom: 210.d,
-        end: 150.d,
-        height: 150.d,
-        child: _box(0, "06:12:06".l()),
-      ),
-      PositionedDirectional(
-          bottom: 210.d,
-          end: 330.d,
-          height: 150.d,
-          child: _box(1, "chance_box".l())),
-      PositionedDirectional(
-          bottom: 210.d,
-          end: 510.d,
-          height: 150.d,
-          child: _box(2, "gift_reward".l())),
+      // account.bundles != null
+      //     ? PositionedDirectional(
+      //         bottom: 210.d,
+      //         end: 150.d,
+      //         height: 150.d,
+      //         child: StreamBuilder<dynamic>(
+      //             stream: Stream.periodic(const Duration(seconds: 1)),
+      //             builder: (context, snapshot) {
+      //               var endDate = Convert.toInt(account.bundles[0]["end_date"]);
+      //               var duration = Duration(
+      //                   seconds: endDate - DateTime.now().secondsSinceEpoch);
+      //               String time =
+      //                   "${duration.inHours.toString().padLeft(2, "0")}:${(duration.inMinutes % 60).toString().padLeft(2, "0")}:${(duration.inSeconds % 60).toString().padLeft(2, "0")}";
+      //               return _box(0, time);
+      //             }),
+      //       )
+      //     : const SizedBox(),
+
+      /// Disable for now
+      // PositionedDirectional(
+      //   bottom: 210.d,
+      //   end: 150.d,
+      //   height: 150.d,
+      //   child: _box(0, "06:12:06".l()),
+      // ),
+      // PositionedDirectional(
+      //     bottom: 210.d,
+      //     end: 330.d,
+      //     height: 150.d,
+      //     child: _box(1, "chance_box".l())),
+      // PositionedDirectional(
+      //     bottom: 210.d,
+      //     end: 510.d,
+      //     height: 150.d,
+      //     child: _box(2, "gift_reward".l())),
       _building(account, Buildings.defense),
       _building(account, Buildings.offense),
       _building(account, Buildings.base),

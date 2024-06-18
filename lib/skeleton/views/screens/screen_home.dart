@@ -47,7 +47,11 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
       var state = services.state;
       if (state.status == ServiceStatus.initialize) {
         if (accountProvider.account.dailyReward.containsKey("day_index")) {
-          serviceLocator<RouteService>().to(Routes.popupDailyGift);
+          if (!serviceLocator
+              .get<TutorialManager>()
+              .isTutorial(Routes.pageItemMap)) {
+            serviceLocator<RouteService>().to(Routes.popupDailyGift);
+          }
         }
         serviceLocator<NoobSocket>().onReceive.add(_onNoobReceive);
         setState(() {});
