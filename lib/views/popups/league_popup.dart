@@ -26,7 +26,7 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
 
   @override
   void onTutorialStep(data) {
-    if(data["id"]== 804){
+    if (data["id"] == 804) {
       selectedTabIndex = 1;
     }
     super.onTutorialStep(data);
@@ -181,17 +181,33 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
               color: record.rank < 4 ? TColors.transparent : TColors.primary20,
               child: record.rank < 4
                   ? Asset.load<Image>("medal_${record.rank}")
-                  : Text("${record.rank}", style: TStyles.smallInvert)),
+                  : SkinnedText(
+                      "${record.rank}",
+                      style: TStyles.smallInvert,
+                      hideStroke: true,
+                    )),
           SizedBox(width: 16.d),
-          Expanded(child: Text(record.name, style: TStyles.tiny)),
+          Expanded(
+              child: SkinnedText(
+            record.name,
+            style: TStyles.tiny,
+            hideStroke: true,
+          )),
           SizedBox(width: 4.d),
           SizedBox(
               width: 200.d,
-              child: Text(record.tribeName,
-                  style: TStyles.small.copyWith(height: 1),
-                  textAlign: TextAlign.center)),
+              child: SkinnedText(
+                record.tribeName,
+                style: TStyles.small.copyWith(height: 1),
+                textAlign: TextAlign.center,
+                hideStroke: true,
+              )),
           SizedBox(width: 100.d),
-          Text(record.weeklyScore.compact(), style: TStyles.small),
+          SkinnedText(
+            record.weeklyScore.compact(),
+            style: TStyles.small,
+            hideStroke: true,
+          ),
         ]), onPressed: () async {
       if (!record.itsMe) {
         serviceLocator<RouteService>()
@@ -212,8 +228,16 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
                 bottom: 0,
                 child: const LoaderWidget(AssetType.image, "league_roadmap")),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text("league_bonus_current".l(), style: TStyles.small),
-              Text("league_bonus_next".l(), style: TStyles.small)
+              SkinnedText(
+                "league_bonus_current".l(),
+                style: TStyles.small,
+                hideStroke: true,
+              ),
+              SkinnedText(
+                "league_bonus_next".l(),
+                style: TStyles.small,
+                hideStroke: true,
+              )
             ]),
             Positioned(
                 top: 50.d,
@@ -221,10 +245,16 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
                 left: 0,
                 child: Row(children: [
                   Asset.load<Image>("icon_gold", width: 60.d),
-                  Text("  ${_leagueData!.currentBonus}"),
+                  SkinnedText(
+                    "  ${_leagueData!.currentBonus}",
+                    hideStroke: true,
+                  ),
                   const Expanded(child: SizedBox()),
                   Asset.load<Image>("icon_gold", width: 60.d),
-                  Text("  ${_leagueData!.nextBonus}"),
+                  SkinnedText(
+                    "  ${_leagueData!.nextBonus}",
+                    hideStroke: true,
+                  ),
                 ])),
           ],
         ));
@@ -332,11 +362,18 @@ class _LeaguePopupState extends AbstractPopupState<LeaguePopup>
     var indices = LeagueData.getIndices(step);
     var lines = <Widget>[];
     if (step > 1) {
-      lines.add(Widgets.rect(
+      lines.add(
+        Widgets.rect(
           height: 92.d,
           color: TColors.teal,
           alignment: Alignment.center,
-          child: Text("l_${indices.$2}".l(), style: TStyles.mediumInvert)));
+          child: SkinnedText(
+            "l_${indices.$2}".l(),
+            style: TStyles.mediumInvert,
+            hideStroke: true,
+          ),
+        ),
+      );
     }
     for (var rank in _leagueHistory!.lists["$step"]!) {
       lines.add(_itemBuilder(context, rank));

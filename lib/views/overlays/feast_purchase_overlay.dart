@@ -72,6 +72,27 @@ class _PurchaseFeastOverlayState
     return super.onRiveAssetLoad(asset, embeddedBytes);
   }
 
+  @override
+  onRiveEvent(RiveEvent event) {
+    if (event.name.startsWith("choose")) {
+      int index = int.parse(event.name.replaceAll("choose_", ""));
+      selectAvatar(index);
+    }
+    super.onRiveEvent(event);
+  }
+
+  selectAvatar(int index) async {
+    process(() async {
+      await serviceLocator<HttpConnection>().tryRpc(
+          context, RpcId.setProfileInfo,
+          params: {"avatar_id": _avatars[index]});
+      accountProvider.account.avatarId = _avatars[index];
+      accountProvider.update();
+      _avatarSelected = true;
+      return true;
+    });
+  }
+
   Future<void> _loadRewardIcon(ImageAsset asset, String name) async =>
       asset.image = await loadImage(name, subFolder: "avatars");
 

@@ -209,12 +209,13 @@ class _CardItemState extends State<CardItem> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      SkinnedText(
                         "ˣ ${_remainingCooldown.value.toRemainingTime().convert()}",
                         style: TStyles.medium.copyWith(
                           color: TColors.white,
                         ),
                         textDirection: Localization.textDirection,
+                        hideStroke: true,
                       ),
                       SizedBox(height: 5.d),
                       Stack(
@@ -251,7 +252,7 @@ class _CardItemState extends State<CardItem> {
                           SizedBox(
                             width: 5.d,
                           ),
-                          Text(
+                          SkinnedText(
                             widget.card
                                 .cooldownTimeToCost(_remainingCooldown.value)
                                 .compact(),
@@ -259,6 +260,7 @@ class _CardItemState extends State<CardItem> {
                               color: TColors.white,
                             ),
                             textDirection: Localization.textDirection,
+                            hideStroke: true,
                           ),
                         ],
                       ),

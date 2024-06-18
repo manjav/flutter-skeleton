@@ -31,8 +31,11 @@ class _InvitePopupState extends AbstractPopupState<InvitePopup> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(height: 30.d),
-        Text("settings_invite_get".l(),
-            style: TStyles.medium.copyWith(height: 1)),
+        SkinnedText(
+          "settings_invite_get".l(),
+          style: TStyles.medium.copyWith(height: 1),
+          hideStroke: true,
+        ),
         SizedBox(height: 30.d),
         SkinnedText("settings_invite_yours".l()),
         SizedBox(height: 10.d),

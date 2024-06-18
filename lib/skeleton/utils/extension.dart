@@ -95,7 +95,8 @@ extension StringExtension on String {
     for (int i = 0; i < valueBytes.length; i++) {
       resultBytes.add(valueBytes[i] ^ keyBytes[i % keyLength]);
     }
-    return utf8.fuse(base64).encode(result);
+
+    return base64Encode(resultBytes);
   }
 
   String xorDecrypt({String? secret}) {

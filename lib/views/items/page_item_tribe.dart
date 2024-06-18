@@ -118,12 +118,16 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           ]),
           SizedBox(height: 20.d),
           SizedBox(
-              height: account.tribe!.description.length >= 50
-                  ? (account.tribe!.description.length / 50).round() * 44.d
-                  : 44.d,
-              child: Text(account.tribe!.description,
-                  textDirection: account.tribe!.description.getDirection(),
-                  style: TStyles.medium.copyWith(height: 1.1))),
+            height: account.tribe!.description.length >= 50
+                ? (account.tribe!.description.length / 50).round() * 44.d
+                : 44.d,
+            child: SkinnedText(
+              account.tribe!.description,
+              textDirection: account.tribe!.description.getDirection(),
+              style: TStyles.medium.copyWith(height: 1.1),
+              hideStroke: true,
+            ),
+          ),
           SizedBox(height: 32.d),
           _upgradeLineBuilder(account.tribe!)
         ]),
@@ -269,8 +273,12 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                 Asset.load<Image>("icon_pin", width: 50.d),
                 SizedBox(width: 32.d),
                 Expanded(
-                    child: Text(value.text,
-                        textDirection: value.text.getDirection())),
+                  child: SkinnedText(
+                    value.text,
+                    textDirection: value.text.getDirection(),
+                    hideStroke: true,
+                  ),
+                ),
               ]));
         });
   }
@@ -346,13 +354,19 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(message.sender,
-                              style: titleStyle,
-                              textAlign: message.itsMe
-                                  ? TextAlign.right
-                                  : TextAlign.left),
-                          Text(message.text,
-                              textDirection: message.text.getDirection())
+                          SkinnedText(
+                            message.sender,
+                            style: titleStyle,
+                            textAlign: message.itsMe
+                                ? TextAlign.right
+                                : TextAlign.left,
+                            hideStroke: true,
+                          ),
+                          SkinnedText(
+                            message.text,
+                            textDirection: message.text.getDirection(),
+                            hideStroke: true,
+                          )
                         ]),
                     onTapUp: (details) =>
                         _onChatItemTap(account, details, message))),
@@ -360,8 +374,11 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
           ]),
       Row(children: [
         SizedBox(width: padding + 24.d),
-        Text((now - message.creationDate).toElapsedTime(),
-            style: TStyles.smallInvert)
+        SkinnedText(
+          (now - message.creationDate).toElapsedTime(),
+          style: TStyles.smallInvert,
+          hideStroke: true,
+        )
       ]),
       SizedBox(height: 20.d)
     ]);
@@ -377,7 +394,7 @@ class _TribePageItemState extends AbstractPageItemState<TribePageItem> {
         child: Column(
             crossAxisAlignment: serviceLocator<Localization>().columnAlign,
             children: [
-              Text(message.text),
+              SkinnedText(message.text,hideStroke: true,),
               SizedBox(height: 16.d),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                 SkinnedButton(

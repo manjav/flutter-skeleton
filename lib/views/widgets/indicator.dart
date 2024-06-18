@@ -124,20 +124,24 @@ class _IndicatorState extends State<Indicator>
   Widget _getIcon(int league) {
     if (widget.type == Values.leagueRank) {
       var indices = LeagueData.getIndices(league);
-      return Stack(children: [
-        league > 0
-            ? Asset.load<Image>("icon_league_${indices.$1}")
-            : const SizedBox(),
-        Positioned(
+      return Stack(
+        children: [
+          league > 0
+              ? Asset.load<Image>("icon_league_${indices.$1}")
+              : const SizedBox(),
+          Positioned(
             top: 5.d,
             width: 34.d,
             right: 3.d,
-            child: Text(
+            child: SkinnedText(
               "l_${indices.$2}".l(),
               style: TStyles.tiny,
               textAlign: TextAlign.center,
-            ))
-      ]);
+              hideStroke: true,
+            ),
+          ),
+        ],
+      );
     }
     return Asset.load<Image>("icon_${widget.type.name}");
   }

@@ -28,8 +28,10 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
       var account = serviceLocator<AccountProvider>().account;
       if (widget.building.type == Buildings.base && account.tutorial_id == 24) {
         destroyTrigger?.value = true;
+        serviceLocator<Sounds>().play("explosion", channel: "building");
         _levelInput?.value = -1;
       }
+
       if (!widget.building.getIsAvailable(account)) return;
 
       var level = account.buildings[widget.building.type]!.level.toDouble();
@@ -46,7 +48,7 @@ class _BuildingWidgetState extends State<BuildingWidget> with MineMixin {
         _fillInput?.value = (account.potion / 10).roundToDouble();
         return;
       }
-
+      
       if (widget.building.type == Buildings.mine) {
         var x = ((5 * collectableGold(account)) / widget.building.benefit)
             .toDouble();

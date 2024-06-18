@@ -79,6 +79,25 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
   }
 
   @override
+  void onScreenTouched() {
+    if (state == RewardAnimationState.shown &&
+        !_heroSelected &&
+        _cards[0].base.isHero) {
+      return;
+    }
+    super.onScreenTouched();
+  }
+
+  @override
+  Widget closeButton() {
+    if (_cards.isNotEmpty && _cards[0].base.isHero) {
+      closeButtonController = null;
+      return const SizedBox();
+    }
+    return super.closeButton();
+  }
+
+  @override
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
@@ -115,13 +134,14 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
         }
       }
       if (_cards[0].base.isHero) {
-        updateRiveText("commentText", "select a hero".l());
+        updateRiveText("commentText", "select_hero".l());
       } else {
         updateRiveText("commentText", "tap_close".l());
       }
     }
-    if (event.name == "choose") {
-      _chooseHero(event.properties["card"].toInt());
+    if (event.name.startsWith("choose")) {
+      var index = int.parse(event.name.replaceAll("choose_", ""));
+      _chooseHero(index);
     }
   }
 
@@ -160,6 +180,8 @@ class _OpenPackScreenState extends AbstractOverlayState<OpenPackFeastOverlay>
     process(() async {
       var result = await accountProvider.openPack(context, _pack,
           selectedCardId: _cards[index].base.id);
+      _heroSelected = true;
+      updateRiveText("commentText", "tap_close".l());
       return result;
     });
   }

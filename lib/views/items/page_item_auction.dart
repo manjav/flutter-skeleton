@@ -74,10 +74,11 @@ class _AuctionPageItemState extends AbstractPageItemState<AbstractPageItem>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Asset.load<Image>(title, height: isSelected ? 76.d : 56.d),
-            Text(
+            SkinnedText(
               title.l(),
               style: TStyles.mediumInvert.copyWith(height: 1.2),
               textDirection: Localization.textDirection,
+              hideStroke: true,
             ),
           ],
         ),

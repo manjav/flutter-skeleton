@@ -42,7 +42,7 @@ class _ConfirmOverlayState extends AbstractOverlayState<ConfirmOverlay> {
 
   Widget _contentFactory() {
     return Row(children: [
-      Expanded(child: Text(widget.message)),
+      Expanded(child: SkinnedText(widget.message,hideStroke: true,)),
       SizedBox(width: 24.d),
       Column(children: [
         _button(widget.declineLabel, color: ButtonColor.yellow),
