@@ -32,7 +32,7 @@ class _RewardPopupState extends AbstractPopupState<RedeemGiftPopup> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(height: 30.d),
-        Text("settings_gift_set".l(), style: style),
+        SkinnedText("settings_gift_set".l(), style: style, hideStroke: true),
         SizedBox(height: 50.d),
         Widgets.skinnedInput(
             maxLines: 1,

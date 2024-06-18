@@ -41,7 +41,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
 
     if (!widget.args.containsKey("onlySet")) {
       items.addAll([
-        Text("settings_restore_get".l(), style: style),
+        SkinnedText("settings_restore_get".l(), style: style,hideStroke: true,),
         SizedBox(height: 20.d),
         SkinnedText("settings_restore_yours".l()),
         Widgets.clipboardGetter(
@@ -53,7 +53,7 @@ class _RestorePopupState extends AbstractPopupState<RestorePopup> {
       ]);
     }
     items.addAll([
-      Text("settings_restore_set".l(), style: style),
+      SkinnedText("settings_restore_set".l(), style: style,hideStroke: true,),
       SizedBox(height: 20.d),
       Widgets.skinnedInput(
           maxLines: 1,

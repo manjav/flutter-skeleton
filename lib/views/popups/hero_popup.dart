@@ -255,8 +255,12 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
                 children: [
                   SkinnedText("heroitem_${item.id}".l()),
                   Expanded(
-                      child: Text("heroitem_${item.id}_description".l(),
-                          style: TStyles.small.copyWith(height: 1))),
+                    child: SkinnedText(
+                      "heroitem_${item.id}_description".l(),
+                      style: TStyles.small.copyWith(height: 1),
+                      hideStroke: true,
+                    ),
+                  ),
                   Row(children: [
                     _itemAttributeBuilder(item, HeroAttribute.blessing),
                     _itemAttributeBuilder(item, HeroAttribute.power),
@@ -277,7 +281,7 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   Widget _itemAttributeBuilder(BaseHeroItem item, HeroAttribute attribute) {
     return Row(children: [
       Asset.load<Image>("benefit_${attribute.benefit}", width: 56.d),
-      Text(" +${item.attributes[attribute]}   "),
+      SkinnedText(" +${item.attributes[attribute]}   ", hideStroke: true),
     ]);
   }
 
@@ -308,15 +312,23 @@ class _HeroPopupState extends AbstractPopupState<HeroPopup> {
   }
 
   Widget _lockItem(String icon, String text) {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
-      Asset.load<Image>(icon, height: 60.d),
-      SizedBox(height: 12.d),
-      Widgets.rect(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Asset.load<Image>(icon, height: 60.d),
+        SizedBox(height: 12.d),
+        Widgets.rect(
           padding: EdgeInsets.symmetric(horizontal: 8.d),
           radius: 12.d,
           color: TColors.primary10,
-          child: Text(text, style: TStyles.smallInvert))
-    ]);
+          child: SkinnedText(
+            text,
+            style: TStyles.smallInvert,
+            hideStroke: true,
+          ),
+        ),
+      ],
+    );
   }
 
   _setItem(

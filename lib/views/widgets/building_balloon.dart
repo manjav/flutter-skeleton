@@ -29,10 +29,16 @@ class _BuildingBalloonState extends State<BuildingBalloon>
               radius: 40.d,
               color: TColors.primary,
               padding: EdgeInsets.all(12.d),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Asset.load<Image>("icon_gold", width: 72.d),
-                Text(collectableGold(account).compact())
-              ]),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Asset.load<Image>("icon_gold", width: 72.d),
+                  SkinnedText(
+                    collectableGold(account).compact(),
+                    hideStroke: true,
+                  ),
+                ],
+              ),
               onPressed: () => _onPressed(account));
         });
   }

@@ -24,12 +24,13 @@ class _RewardPopupState extends AbstractPopupState<FreeGoldPopup> {
           width: 657.d,
         ),
         SizedBox(height: 40.d),
-        Text(
+        SkinnedText(
           "popup_free_gold_description".l(),
           style: TStyles.medium.copyWith(
             color: TColors.primary20,
           ),
           textDirection: Localization.textDirection,
+          hideStroke: true,
         ),
         SizedBox(height: 40.d),
         SkinnedButton(

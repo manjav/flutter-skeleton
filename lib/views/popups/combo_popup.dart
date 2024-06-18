@@ -84,7 +84,7 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
     if (!combo.isAvailable) {
       return <Widget>[
         SizedBox(height: 124.d),
-        Text("combo_unavailable_description".l())
+        SkinnedText("combo_unavailable_description".l(), hideStroke: true)
       ];
     }
     return [
@@ -104,8 +104,11 @@ class _ComboPopupState extends AbstractPopupState<ComboPopup> with KeyProvider {
         SkinnedText("combo_suit_${combo.fruit}".l(), style: style2),
       ]),
       SizedBox(height: 24.d),
-      Text("combo_${combo.id}_description".l(),
-          style: TStyles.medium.copyWith(height: 1)),
+      SkinnedText(
+        "combo_${combo.id}_description".l(),
+        style: TStyles.medium.copyWith(height: 1),
+        hideStroke: true,
+      ),
     ];
   }
 

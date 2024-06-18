@@ -27,8 +27,11 @@ class _SupportiveBuildingPopupState
             "${"building_${building.type.name}_value".l()}  ${state.account.calculateMaxPower().compact()}",
             " + ${benefits.compact()}"),
         SizedBox(height: 16.d),
-        Text(descriptionBuilder(),
-            style: TStyles.medium.copyWith(height: 2.7.d)),
+        SkinnedText(
+          descriptionBuilder(),
+          style: TStyles.medium.copyWith(height: 2.7.d),
+          hideStroke: true,
+        ),
         Widgets.divider(margin: 36.d, width: 700.d),
         dualColorText("building_cards_benefit".l(), benefits.compact(),
             style: TStyles.medium),
