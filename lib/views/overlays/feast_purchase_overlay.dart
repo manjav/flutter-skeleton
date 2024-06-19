@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart';
@@ -62,30 +61,19 @@ class _PurchaseFeastOverlayState
     ];
 
     process(() async {
-      // if (!_item.inStore) {
-      //   if (_item.base.section == ShopSections.boost) {
-      //     var res = await accountProvider.boostPack(
-      //         context, widget.args["item"].base);
-      //     return res;
-      //   } else {
-      //     await accountProvider.openPack(context, widget.args["item"].base);
-      //   }
-      // } else {
-      //   await Future.delayed(const Duration(milliseconds: 500));
-      // }
-      await Future.delayed(const Duration(milliseconds: 500));
+      if (!_item.inStore) {
+        if (_item.base.section == ShopSections.boost) {
+          var res = await accountProvider.boostPack(
+              context, widget.args["item"].base);
+          return res;
+        } else {
+          await accountProvider.openPack(context, widget.args["item"].base);
+        }
+      } else {
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
       return true;
     });
-  }
-
-    @override
-  void onScreenTouched() {
-    if (state == RewardAnimationState.shown &&
-        !_avatarSelected &&
-        _item.base.reward.isNotEmpty) {
-      return;
-    }
-    super.onScreenTouched();
   }
 
   @override
@@ -107,7 +95,8 @@ class _PurchaseFeastOverlayState
     updateRiveText("headerText", "success_l".l());
     if (_item.base.section == ShopSections.boost) {
       var title = _item.base.id < 22 ? "shop_boost_xp" : "shop_boost_power";
-      updateRiveText("valueText", "${title}_desc".l([ShopData.boostDeadline.toRemainingTime()]));
+      updateRiveText("valueText",
+          "${title}_desc".l([ShopData.boostDeadline.toRemainingTime()]));
     } else {
       updateRiveText("valueText", "+${_item.base.value.compact()}");
     }
