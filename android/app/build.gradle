@@ -57,9 +57,7 @@ android {
         jvmTarget = '1.8'
     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+    flavorDimensions "default"
 
     defaultConfig {
         applicationId "com.tcg.fruitcraft.trading.card.game.battle"
@@ -88,6 +86,33 @@ android {
         debug
         {
             signingConfig signingConfigs.release 
+        }
+    }
+
+    productFlavors {
+        bazaar {
+            dimension "default"
+        }
+        myket {
+            dimension "default"
+        }
+        google {
+            dimension "default"
+        }
+    }
+
+    sourceSets {
+        bazaar {
+            manifest.srcFile 'src/bazaar/AndroidManifest.xml'
+            main.java.srcDirs += 'src/main/kotlin'
+        }
+        myket {
+            manifest.srcFile 'src/myket/AndroidManifest.xml'
+            main.java.srcDirs += 'src/main/kotlin'
+        }
+        google {
+            manifest.srcFile 'src/google/AndroidManifest.xml'
+            main.java.srcDirs += 'src/main/kotlin'
         }
     }
 }
