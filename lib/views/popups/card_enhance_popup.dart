@@ -153,7 +153,7 @@ class _CardEnhancePopupState extends AbstractPopupState<CardEnhancePopup>
     if (!_isSacrificeAvailable) return;
     Overlays.insert(
       Get.overlayContext!,
-        EnhanceFeastOverlay(
+      EnhanceFeastOverlay(
         args: {"card": card, "sacrificedCards": selectedCards},
         onClose: (data) {
           if (isTutorial) {
