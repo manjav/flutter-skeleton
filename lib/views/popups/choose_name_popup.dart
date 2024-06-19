@@ -57,9 +57,11 @@ class _ChooseNamePopupState extends AbstractPopupState<ChooseNamePopup> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 15.d),
-              Text("profile_name_error".l(),
-                  style:
-                      TStyles.medium.copyWith(height: 3.d, color: TColors.red)),
+              SkinnedText(
+                "profile_name_error".l(),
+                style: TStyles.medium.copyWith(height: 3.d, color: TColors.red),
+                hideStroke: true,
+              ),
               SizedBox(height: 15.d),
               StreamBuilder(
                   stream: showError.stream,

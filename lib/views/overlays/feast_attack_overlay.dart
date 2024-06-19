@@ -251,12 +251,22 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
             args: _outcomeData,
             type: route,
             onClose: (data) async {
-              widget.onClose?.call(result);
+              // widget.onClose?.call(result);
               onRiveEvent(const RiveEvent(
                   name: "closing", secondsDelay: 0, properties: {}));
               closeInput?.value = true;
               closeButtonController?.reverse();
               accountProvider.update(Get.context!, _outcomeData);
+
+              if (_outcomeData['outcome'] == true && (accountProvider.account.wonBattlesCount + 1) %
+                          Constants.RATING_WINNER_DIVISOR ==
+                      0 &&
+                  Pref.rated.getBool() == false) {
+                Overlays.closeAll();
+                serviceLocator<RouteService>()
+                    .popUntil((route) => route.isFirst);
+                serviceLocator<RouteService>().to(Routes.popupRate);
+              }
             },
           ),
         );
@@ -287,6 +297,10 @@ class _AttackFeastOverlayState extends AbstractOverlayState<AttackFeastOverlay>
         return true;
       } else if (asset.name.startsWith("card")) {
         _imageAssets[asset.name] = asset;
+        return true;
+      } else if (asset.name.startsWith("background")) {
+        asset.image = await loadImage("background${_account!.leagueId - 1}",
+            subFolder: "backgrounds");
         return true;
       }
     }

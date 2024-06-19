@@ -24,7 +24,6 @@ class _ChanceBoxScreenState extends AbstractOverlayState<ChanceBoxFeastOverlay>
     with RewardScreenMixin, TickerProviderStateMixin, BackgroundMixin {
   bool _giftSelected = false;
   dynamic _prizes;
-  int _wonPrizesNumber = 0;
 
   @override
   void initState() {
@@ -44,7 +43,6 @@ class _ChanceBoxScreenState extends AbstractOverlayState<ChanceBoxFeastOverlay>
 
       var res = await rpc(RpcId.turnTheWheel, params: params, showError: false);
       _prizes = res["prizes"];
-      _wonPrizesNumber = res["won_prize_number"];
 
       if (mounted) {
         accountProvider.update(context, res);
@@ -109,6 +107,7 @@ class _ChanceBoxScreenState extends AbstractOverlayState<ChanceBoxFeastOverlay>
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     var controller = super.onRiveInit(artboard, stateMachineName);
+    updateRiveText("titleText", "chance_box_l".l());
     return controller;
   }
 
@@ -133,11 +132,13 @@ class _ChanceBoxScreenState extends AbstractOverlayState<ChanceBoxFeastOverlay>
   void onRiveEvent(RiveEvent event) {
     super.onRiveEvent(event);
     if (state == RewardAnimationState.started) {
-      for (var i = 0; i < _wonPrizesNumber; i++) {
-        var gold = _prizes["$i"]["gold"]?.compact();
-        var nectar = _prizes["$i"]["nectar"]?.compact();
-        updateRiveText("boxCaptionText$i",
-            ("${gold != null ? "gift_gold".l(gold.compact()) : ""}\n${nectar != null ? "gift_nectar".l(nectar.compact()) : ""}"));
+      for (var i = 1; i <= 3; i++) {
+        var gold = _prizes["$i"]["gold"] as int?;
+        var nectar = _prizes["$i"]["nectar"] as int?;
+        var goldText = gold != null ? "gift_gold".l([gold.compact()]) : "";
+        var nectarText =
+            nectar != null ? "gift_nectar".l([nectar.compact()]) : "";
+        updateRiveText("boxText${i - 1}", "$goldText\n$nectarText");
       }
     } else if (event.name.startsWith("choose")) {
       var match = RegExp(r'\d+').firstMatch(event.name);
@@ -157,10 +158,8 @@ class _ChanceBoxScreenState extends AbstractOverlayState<ChanceBoxFeastOverlay>
   }
 
   Future<void> _chooseGift(int index) async {
-    // var result = await accountProvider.openPack(context, _pack,
-    //     selectedCardId: _cards[index].base.id);
+    await Future.delayed(300.ms);
     _giftSelected = true;
-    await Future.delayed(1.seconds);
     updateRiveText("commentText", "tap_close".l());
   }
 }

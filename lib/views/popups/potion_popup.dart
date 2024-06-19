@@ -10,7 +10,7 @@ class PotionPopup extends AbstractPopup {
   createState() => _PotionPopupState();
 }
 
-class _PotionPopupState extends AbstractPopupState<PotionPopup> with BuildingPopupMixin {
+class _PotionPopupState extends AbstractPopupState<PotionPopup> {
   static const capacity = 50.0;
   @override
   contentFactory() {

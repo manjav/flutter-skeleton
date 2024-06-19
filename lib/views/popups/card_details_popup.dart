@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -158,14 +157,6 @@ class _CardPopupState extends AbstractPopupState<CardDetailsPopup> {
       accountProvider.account.getReadyCards();
 
   _onButtonsTap(String route) async {
-    if (isTutorial && route == Routes.popupCardEvolve) {
-      var all = allReadyCards;
-      var card = all
-          .where(
-              (c) => all.where((c1) => c.base == c1.base && c != c1).isNotEmpty)
-          .firstOrNull;
-      _card = card ?? _card;
-    }
     await serviceLocator<RouteService>().to(route, args: {"card": _card});
     if (mounted && !accountProvider.account.cards.containsKey(_card.id)) {
       serviceLocator<RouteService>().popUntil((route) => route.isFirst);

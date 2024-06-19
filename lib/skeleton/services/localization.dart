@@ -14,6 +14,7 @@ class Localization extends IService {
   static TextDirection dir = TextDirection.ltr;
   static TextDirection textDirection = TextDirection.ltr;
   static bool isRTL = false;
+  static String serverType = "local";
 
   Localization();
 
@@ -31,6 +32,9 @@ class Localization extends IService {
     _sentences = {};
     await _getData("keys.json");
     await _getData("$languageCode.json");
+    var tz = DateTime.now().timeZoneOffset;
+    var isLocal = tz.inMinutes == 210 || tz.inMinutes == 270;
+    serverType = isLocal ? "local" : "global";
     super.initialize();
   }
 

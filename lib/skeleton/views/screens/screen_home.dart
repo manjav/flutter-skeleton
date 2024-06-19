@@ -181,7 +181,7 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
             Positioned(
                 top: index == 3 ? 10.d : 0,
                 width: size * (index == 3 ? 0.6 : 1),
-                height: size * (index == 3 ? 0.6 : 1.3),
+                height: size * (index == 3 ? 0.6 : 1),
                 child: LoaderWidget(
                   AssetType.animation,
                   "tab_$index",
@@ -230,6 +230,11 @@ class _HomeScreenState extends AbstractScreenState<HomeScreen>
     if (asset is ImageAsset && asset.name == "background") {
       var bytes = await rootBundle.load('assets/images/tab_background.webp');
       asset.image = await ImageAsset.parseBytes(bytes.buffer.asUint8List());
+      return true;
+    }
+    if (asset is FontAsset) {
+      var bytes = await rootBundle.load('assets/fonts/${asset.name}');
+      asset.font = await FontAsset.parseBytes(bytes.buffer.asUint8List());
       return true;
     }
     return false;

@@ -165,7 +165,6 @@ class _IntroScreenState extends AbstractScreenState<IntroScreen> {
                 child: SkinnedButton(
                   label: "already_have_a_village".l(),
                   width: 400.d,
-                  width: 380.d,
                   onPressed: () async {
                     serviceLocator<RouteService>()
                         .to(Routes.popupRestore, args: {"onlySet": true});

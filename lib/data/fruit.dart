@@ -551,6 +551,9 @@ class SelectedCards extends ValueNotifier<List<AccountCard?>> {
     notifyListeners();
   }
 
+  isDeployed(int index) =>
+      value.elementAt(index) != null && value[index]!.isDeployed == true;
+
   getIds() =>
       "[${value.map((c) => c?.id).where((id) => id != null).join(',')}]";
 

@@ -8,7 +8,7 @@ import '../../export.dart';
 
 class LoaderWidget extends StatefulWidget {
   static String baseURL = kReleaseMode
-      ? "https://iran.fruitcraft.ir/fc"
+      ? "https://${Localization.serverType == "local" ? "iran" : "global"}.fruitcraft.ir/fc"
       : "https://8ball.turnedondigital.com/fc";
   static Map<String, String> hashMap = {};
 
@@ -118,6 +118,8 @@ class _LoaderWidgetState extends State<LoaderWidget> {
           loader.metadata as Uint8List,
           gaplessPlayback: true,
           fit: widget.fit,
+          height: widget.height,
+          width: widget.width,
         );
         return image;
       case AssetType.vector:
