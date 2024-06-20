@@ -10,7 +10,7 @@
             "request": "launch",
             "type": "dart",
             "preLaunchTask": "convert",
-            "args": ["--target", "lib/main_bazaar.dart" ]
+            "args": ["--target", "lib/main_bazaar.dart" , "--flavor" , "bazaar" ]
         },
         {
             "name": "fruitcraft myket",
@@ -18,7 +18,7 @@
             "request": "launch",
             "type": "dart",
             "preLaunchTask": "convert",
-            "args": ["--target", "lib/main_myket.dart" ]
+            "args": ["--target", "lib/main_myket.dart" , "--flavor" , "myket"]
         },
         {
             "name": "fruitcraft google",
@@ -26,7 +26,7 @@
             "request": "launch",
             "type": "dart",
             "preLaunchTask": "convert",
-            "args": ["--target", "lib/main_google.dart" ]
+            "args": ["--target", "lib/main_google.dart", "--flavor" , "google" ]
         },
         {
             "name": "fruitcraft (profile mode)",
