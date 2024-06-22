@@ -73,17 +73,17 @@ runs:
 
     - name: Build APK for CafeBazaar
       if: ${{ inputs.build-apk }}
-      run: flutter build apk --release -t lib/main_bazaar.dart --falvor bazaar
+      run: flutter build apk --release -t lib/main_bazaar.dart --flavor bazaar
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 
     - name: Build APK for Myket
       if: ${{ inputs.build-apk }}
-      run: flutter build apk --release -t lib/main_myket.dart --falvor myket
+      run: flutter build apk --release -t lib/main_myket.dart --flavor myket
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 
     - name: Build AAB
-      run: flutter build appbundle --dart-define release=google-play
+      run: flutter build appbundle -t lib/main_google.dart --flavor google
       shell: bash
       working-directory: ${{ inputs.working-directory }}
