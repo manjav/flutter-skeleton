@@ -41,6 +41,12 @@ runs:
         java-version: "17.x"
         cache: "gradle"
 
+     - name: Create local.properties
+       run: |
+         echo "flutter.minSdkVersion=21" >> local.properties
+         echo "flutter.compileSdkVersion=34" >> local.properties
+         echo "flutter.targetSdkVersion=34" >> local.properties
+
     - name: Check flutter found
       id: check_flutter
       shell: bash
