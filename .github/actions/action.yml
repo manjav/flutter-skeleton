@@ -1,0 +1,89 @@
+name: build
+description: Build Android and iOS
+inputs:
+  working-directory:
+    description: The root directory of the flutter app within this repository
+    default: ./
+  store-base64:
+    description: "keyAlias with which to sign the app"
+    required: true
+  store-pass:
+    description: "The password for the key used to sign the app"
+    required: true
+  key-alias:
+    description: "The alias for the keyAlias"
+    required: true
+  key-pass:
+    description: "The password for the store  used to sign the app"
+    required: true
+  build-apk:
+    description: "Build APKs for internal releases"
+    default: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check java found
+      id: check_java
+      shell: bash
+      run: |
+        if java --version; then
+            echo "installed=true" >> "$GITHUB_OUTPUT"
+        else
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Install java
+      if: steps.check_java.outputs.installed == 'false'
+      uses: actions/setup-java@v3
+      with:
+        distribution: "zulu"
+        java-version: "17.x"
+        cache: "gradle"
+
+    - name: Check flutter found
+      id: check_flutter
+      shell: bash
+      run: |
+        if flutter --version; then
+            echo "installed=true" >> "$GITHUB_OUTPUT"
+        else
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Setup flutter
+      if: steps.check_flutter.outputs.installed == 'false'
+      uses: subosito/flutter-action@v2
+      with:
+        channel: "stable"
+        cache: true
+
+    - run: flutter --version
+      shell: bash
+
+    - name: Decode keystore and create jks and properties file for signing the app
+      shell: bash
+      run: |
+        echo "${{ inputs.store-base64 }}" | base64 --decode > app/keystore.jks
+        echo "storeFile=keystore.jks" >> key.properties
+        echo "storePassword=${{ inputs.store-pass }}" >> key.properties
+        echo "keyAlias=${{ inputs.key-alias }}" >> key.properties
+        echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
+      working-directory: ${{ inputs.working-directory }}/android
+
+    - name: Build APK for CafeBazaar
+      if: ${{ inputs.build-apk }}
+      run: flutter build apk --release -t lib/main_bazaar.dart --falvor bazaar
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Build APK for Myket
+      if: ${{ inputs.build-apk }}
+      run: flutter build apk --release -t lib/main_myket.dart --falvor myket
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Build AAB
+      run: flutter build appbundle --dart-define release=google-play
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
