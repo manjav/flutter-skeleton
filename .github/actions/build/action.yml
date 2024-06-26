@@ -1,0 +1,117 @@
+name: build
+description: Build Android and iOS
+inputs:
+  working-directory:
+    description: The root directory of the flutter app within this repository
+    default: ./
+  store-base64:
+    description: "keyAlias with which to sign the app"
+    required: true
+  store-pass:
+    description: "The password for the key used to sign the app"
+    required: true
+  key-alias:
+    description: "The alias for the keyAlias"
+    required: true
+  key-pass:
+    description: "The password for the store  used to sign the app"
+    required: true
+  build-apk:
+    description: "Build APKs for internal releases"
+    default: true
+  build-aab:
+    description: "Build AAB for Playstore"
+    default: true
+  build-ipa:
+    description: "Build iOS and upload to TestFlight"
+    default: true
+  ios-certificate-base64:
+    description: "iOS Certificate Base64"
+    required: false
+  ios-certificate-password:
+    description: "iOS Certificate Password"
+    required: false
+  ios-provisioning-profile-base64:
+    description: "iOS Provisioning Base64"
+    required: false
+  ios-keychain-password:
+    description: "iOS Keychain Password"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check java found
+      id: check_java
+      shell: bash
+      run: |
+        if java --version; then
+            echo "installed=true" >> "$GITHUB_OUTPUT"
+        else
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Install java
+      if: steps.check_java.outputs.installed == 'false'
+      uses: actions/setup-java@v3
+      with:
+        distribution: "adopt"
+        java-version: "17"
+        cache: "gradle"
+
+    - name: Check flutter found
+      id: check_flutter
+      shell: bash
+      run: |
+        if flutter --version; then
+            echo "installed=true" >> "$GITHUB_OUTPUT"
+        else
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Setup flutter
+      if: steps.check_flutter.outputs.installed == 'false'
+      uses: subosito/flutter-action@v2
+      with:
+        # channel: stable
+        flutter-version: '3.19.3'
+        cache: true
+
+    - run: flutter doctor -v
+      shell: bash
+
+    - run: flutter --version
+      shell: bash
+
+    - name: Decode keystore and create jks and properties file for signing the app
+      shell: bash
+      run: |
+        echo "${{ inputs.store-base64 }}" | base64 --decode > app/keystore.jks
+        echo "storeFile=keystore.jks" >> key.properties
+        echo "storePassword=${{ inputs.store-pass }}" >> key.properties
+        echo "keyAlias=${{ inputs.key-alias }}" >> key.properties
+        echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
+      working-directory: ${{ inputs.working-directory }}/android
+
+    - name: Build apk
+      if: inputs.build-apk  == 'true'
+      run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Build aab
+      if: inputs.build-aab == 'true'
+      run: flutter build appbundle --dart-define release=google-play
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Build ipa
+      if: inputs.build-ipa == 'true'
+      uses: cedvdb/action-flutter-build-ios@v1
+      with:
+        # always use --export-options-plist=ios/GithubActionsExportOptions.plist
+        build-cmd: flutter build ipa --release --export-options-plist=ios/GithubActionsExportOptions.plist
+        certificate-base64: ${{ inputs.ios-certificate-base64 }}
+        certificate-password: ${{ inputs.ios-certificate-password }}
+        provisioning-profile-base64: ${{ inputs.ios-provisioning-profile-base64 }}
+        keychain-password: ${{ inputs.ios-keychain-password }}

@@ -5,81 +5,77 @@ plugins {
     // id "com.google.gms.google-services"
 }
 
+// Local Properties
 def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
+def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
+    localPropertiesFile.withReader("UTF-8") { reader ->
         localProperties.load(reader)
     }
 }
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
 if (flutterVersionCode == null) {
-    throw new GradleException("versionCode not found in local.properties")
+    flutterVersionCode = "1"
 }
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
-    throw new GradleException("versionName not found in local.properties")
+    flutterVersionName = "1.0"
 }
 
-def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion')
-if (flutterMinSdkVersion == null) {
-    throw new GradleException("minSdkVersion not found in local.properties")
+// SDK Properties
+def sdkProperties = new Properties()
+def sdkPropertiesFile = rootProject.file('sdk.properties')
+if (sdkPropertiesFile.exists()) {
+    sdkPropertiesFile.withReader('UTF-8') { reader ->
+        sdkProperties.load(reader)
+    }
+}
+def minSdkVersion = sdkProperties.getProperty('minSdkVersion').toInteger()
+if (minSdkVersion == null) {
+    throw new GradleException("minSdkVersion not found in sdk.properties")
+}
+def targetSdkVersion = sdkProperties.getProperty('targetSdkVersion').toInteger()
+if (targetSdkVersion == null) {
+    throw new GradleException("targetSdkVersion not found in sdk.properties")
+}
+def compileSdkVersion = sdkProperties.getProperty('compileSdkVersion').toInteger()
+if (compileSdkVersion == null) {
+    throw new GradleException("compileSdkVersion not found in sdk.properties")
+}
+def ndkVersionName = sdkProperties.getProperty('ndkVersion')
+if (ndkVersionName == null) {
+    throw new GradleException("ndkVersion not found in sdk.properties")
 }
 
-def flutterCompileSdkVersion = localProperties.getProperty('flutter.compileSdkVersion')
-if (flutterCompileSdkVersion == null) {
-    throw new GradleException("compileSdkVersion not found in local.properties")
-}
-
-def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion')
-if (flutterTargetSdkVersion == null) {
-    throw new GradleException("targetSdkVersion not found in local.properties")
-}
-
+// Keystore Properties
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
-
 android {
-    namespace "com.tcg.fruitcraft.trading.card.game.battle"
-    compileSdkVersion flutterCompileSdkVersion.toInteger()
-    ndkVersion "25.2.9519653"
+    namespace = "com.lifetalk.learn.language.speaks"
+    ndkVersion = ndkVersionName
+    compileSdk = compileSdkVersion
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
-        applicationId "com.tcg.fruitcraft.trading.card.game.battle"
-        minSdkVersion flutterMinSdkVersion
-        targetSdkVersion flutterTargetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        applicationId = "com.lifetalk.learn.language.speaks"
+        minSdk = minSdkVersion
+        targetSdk = targetSdkVersion
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
     }
 
     signingConfigs {
        release {
-           keyAlias keystoreProperties['keyAlias']
-           keyPassword keystoreProperties['keyPassword']
-           storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-           storePassword keystoreProperties['storePassword']
+           keyAlias keystoreProperties["keyAlias"]
+           keyPassword keystoreProperties["keyPassword"]
+           storeFile keystoreProperties["storeFile"] ? file(keystoreProperties["storeFile"]) : null
+           storePassword keystoreProperties["storePassword"]
        }
     }
     
@@ -87,7 +83,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release 
         }
         debug
