@@ -54,7 +54,7 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 android {
-    namespace = "com.tcg.fruitcraft.trading.card.game.battle"
+    namespace = "com.lifetalk.learn.language.speaks"
     ndkVersion = ndkVersionName
     compileSdk = compileSdkVersion
     compileOptions {
@@ -63,7 +63,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.tcg.fruitcraft.trading.card.game.battle"
+        applicationId = "com.lifetalk.learn.language.speaks"
         minSdk = minSdkVersion
         targetSdk = targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
