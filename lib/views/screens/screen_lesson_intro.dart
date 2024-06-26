@@ -33,6 +33,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
   }
 
   Future<void> _onChangeLine() async {
+    if (controller.contentIndex.value <= -1) return;
     var talk = controller.currentContent;
     if (talk.isQuiz) {
       _startQuizCallback(talk);
@@ -48,10 +49,7 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
     serviceLocator<Sounds>().stopAll();
     var talk = controller.currentContent;
     if (talk.textPresentationMode == PresentMode.none) {
-      subtitle.value = (talk.textPresentationMode.hasNative
-              ? talk.targetValue
-              : talk.nativeValue)
-          .simplify();
+      subtitle.value = talk;
     } else {
       subtitle.value = null;
       _animatedListKey.currentState?.insertItem(_animatedItems.length);

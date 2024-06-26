@@ -47,6 +47,7 @@ class LessonController {
       changeSlide(1);
       return;
     }
+    await Future.delayed(const Duration(milliseconds: 500));
     contentIndex.value += stepLength;
   }
 

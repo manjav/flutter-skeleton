@@ -9,7 +9,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   final GlobalKey footerKey = GlobalKey();
   final LessonController controller = LessonController();
   final ValueNotifier<double> footerHeight = ValueNotifier(0);
-  final ValueNotifier<String?> subtitle = ValueNotifier(null);
+  final ValueNotifier<Talk?> subtitle = ValueNotifier(null);
   double padding = 12.d;
 
   @override
