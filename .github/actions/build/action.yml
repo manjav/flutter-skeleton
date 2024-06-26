@@ -73,11 +73,12 @@ runs:
       if: steps.check_flutter.outputs.installed == 'false'
       uses: subosito/flutter-action@v2
       with:
-        channel: stable
+        # channel: stable
+        flutter-version: '3.19.3'
         cache: true
 
-    # - run: flutter doctor -v
-    #   shell: bash
+    - run: flutter doctor -v
+      shell: bash
 
     - run: flutter --version
       shell: bash
