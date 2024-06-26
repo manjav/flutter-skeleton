@@ -94,7 +94,7 @@ extension StringExtensions on String {
   String truncate(int length, {String postfix = "..."}) =>
       "${substring(0, this.length.max(length))}$postfix";
 
-  String suffle([int len = 1]) {
+  String shuffle([int len = 1]) {
     var r = _rnd.nextInt(length - len + 1);
     return substring(r, len);
   }

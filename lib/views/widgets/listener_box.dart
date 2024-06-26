@@ -170,7 +170,7 @@ class ListenerBox extends StatelessWidget {
     // );
   }
 
-  List<TextSpan> _getWords(String value) {
+  /* List<TextSpan> _getWords(String value) {
     var target = talk.targetValue;
     if (talk.targetValue == value) {
       return [TextSpan(text: target, style: _correctStyle)];
@@ -193,5 +193,5 @@ class ListenerBox extends StatelessWidget {
     } else {
       return [TextSpan(text: target)];
     }
-  }
+  } */
 }
