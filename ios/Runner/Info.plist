@@ -53,5 +53,7 @@
 	<string>ca-app-pub-5018637481206902~2875726229</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Uses only for speech to text library</string>
 </dict>
 </plist>
