@@ -22,7 +22,7 @@ class Speaker extends IService {
         player.stop();
         return;
       }
-      player.setPlaybackRate(narrator == Narrator.onyx ? 1.3 : 0.8);
+      // player.setPlaybackRate(narrator == Narrator.onyx ? 1.3 : 0.8);
       if (onComplete != null) {
         player.eventStream.listen((event) {
           if (event.eventType == AudioEventType.complete) {
@@ -35,6 +35,7 @@ class Speaker extends IService {
             //narrator == Narrator.onyx?
             // "https://s1.matnyaar.ir/gpt/tts-ms.php?locale=fa-IR&voice=fa-IR-FaridNeural&input=$text${reset ? "&nocache" : ""}":
             "https://s1.matnyaar.ir/gpt/tts.php?voice=${narrator.name}&input=$text${reset ? "&nocache" : ""}"),
+            volume: 1
       );
       await Future.doWhile(() =>
           Future.delayed(const Duration(milliseconds: 50))
