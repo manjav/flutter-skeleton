@@ -23,10 +23,10 @@ jobs:
         
       - uses: ./.github/actions/build
         with:
-          store-base64: ${{ secrets.ANDROID_SIGNING_KEY }}
-          store-pass: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
-          key-alias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
-          key-pass: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+          store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
+          store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
+          key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
+          key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
           # build-aab: false
           # build-ipa: false
 
