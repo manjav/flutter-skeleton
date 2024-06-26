@@ -13,12 +13,10 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
-
 def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
 if (flutterVersionCode == null) {
     flutterVersionCode = "1"
 }
-
 def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
@@ -32,20 +30,21 @@ if (sdkPropertiesFile.exists()) {
         sdkProperties.load(reader)
     }
 }
-
-def flutterMinSdkVersion = sdkProperties.getProperty('flutter.minSdkVersion')
-if (flutterMinSdkVersion == null) {
+def minSdkVersion = sdkProperties.getProperty('minSdkVersion').toInteger()
+if (minSdkVersion == null) {
     throw new GradleException("minSdkVersion not found in sdk.properties")
 }
-
-def flutterCompileSdkVersion = sdkProperties.getProperty('flutter.compileSdkVersion')
-if (flutterCompileSdkVersion == null) {
+def targetSdkVersion = sdkProperties.getProperty('targetSdkVersion').toInteger()
+if (targetSdkVersion == null) {
+    throw new GradleException("targetSdkVersion not found in sdk.properties")
+}
+def compileSdkVersion = sdkProperties.getProperty('compileSdkVersion').toInteger()
+if (compileSdkVersion == null) {
     throw new GradleException("compileSdkVersion not found in sdk.properties")
 }
-
-def flutterTargetSdkVersion = sdkProperties.getProperty('flutter.targetSdkVersion')
-if (flutterTargetSdkVersion == null) {
-    throw new GradleException("targetSdkVersion not found in sdk.properties")
+def ndkVersionName = sdkProperties.getProperty('ndkVersion')
+if (ndkVersionName == null) {
+    throw new GradleException("ndkVersion not found in sdk.properties")
 }
 
 // Keystore Properties
@@ -56,8 +55,8 @@ if (keystorePropertiesFile.exists()) {
 }
 android {
     namespace = "com.tcg.fruitcraft.trading.card.game.battle"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = ndkVersionName
+    compileSdk = compileSdkVersion
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -65,8 +64,8 @@ android {
 
     defaultConfig {
         applicationId = "com.tcg.fruitcraft.trading.card.game.battle"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = minSdkVersion
+        targetSdk = targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
