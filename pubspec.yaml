@@ -12,8 +12,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
   # adivery: ^4.6.1
   advertising_id: ^2.6.0
   archive: ^3.4.8

@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -82,13 +81,6 @@ class _MyAppState extends State<MyApp>
               create: (_) => serviceLocator<AccountProvider>()),
         ],
         child: GetMaterialApp(
-          // navigatorObservers: [MyApp._observer],
-          localizationsDelegates: const [
-            // AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-          ],
           supportedLocales: Localization.locales,
           theme: Themes.darkData,
           locale:
