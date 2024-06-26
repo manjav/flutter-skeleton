@@ -18,7 +18,7 @@
 		<string>LifeTalkStaging-distribution-profile</string>
 	</dict>
 	 <!-- <key>signingCertificate</key>
-	<string>C9E2A443516B54D15A088C9B7FCEF6BAEC0AD6F9</string>  -->
+	<string>5A2AD016E84E2725A92619D69E21FEC83E72091E</string>  -->
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>teamID</key>
