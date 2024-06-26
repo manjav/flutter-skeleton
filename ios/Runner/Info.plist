@@ -54,6 +54,8 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Uses only for speech to text library</string>
+	<string>Microphone only uses for speech to text library</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>To train your speaking skills we need to access Speech Recognition permissions on your device.</string>
 </dict>
 </plist>
