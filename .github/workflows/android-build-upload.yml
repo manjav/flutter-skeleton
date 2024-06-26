@@ -1,11 +1,11 @@
-name: Release Tag
+name: Build and upload new version
 on:
   push:
     tags:
-    - 'v[0-9]+*'
+    - 'v[0-9]+.[0-9]+.[0-9]+*'
 jobs:
   build:
-    name: Build Android and iOS release
+    name: Build and upload Android app
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
