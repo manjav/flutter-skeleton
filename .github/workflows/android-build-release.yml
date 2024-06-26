@@ -1,0 +1,56 @@
+name: Release Tag
+on:
+  push:
+    tags:
+    - 'r[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  release:
+    name: release
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+      # - name: Get version
+      #   id: yq
+      #   uses: mikefarah/yq@master
+      #   with:
+      #     cmd: yq -r '.version' 'pubspec.yaml'
+          
+      # - name: Get project version
+      #   run: echo "PROJECT_VERSION=v${{ steps.yq.outputs.result }}" >> $GITHUB_ENV
+        
+      - uses: ./.github/actions/build
+        with:
+          store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
+          store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
+          key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
+          key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
+          # build-aab: false
+          # build-ipa: false
+
+      # - name: Test1
+      #   shell: bash
+      #   run: |
+      #     if startsWith($PROJECT_VERSION, $GITHUB_REF_NAME) then
+      #       echo "IS_EQUAL=true" >> $GITHUB_ENV
+      #     else
+      #       echo "IS_EQUAL=false" >> $GITHUB_ENV
+      #     fi
+      
+      # - name: Test2
+      #   run: echo $IS_EQUAL
+    
+      # VERSIONS_EQUAL: ${{ startsWith("v${{ steps.yq.outputs.result }}", $GITHUB_REF_NAME) }}
+      # run: echo "${{ steps.yq.outputs.result }} $GITHUB_REF_NAME"
+
+      # - name: Check equals tag with version
+      #   if: ${{ steps.equal.result == 'false' }}
+      #   run: "echo pubspec version and tag version must be equal "${{ steps.equal.result }}"
+
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./build/app/outputs/apk/release/*.apk,./build/app/outputs/bundle/release/app-release.aab"
+          tag: ${{ github.ref_name }}
