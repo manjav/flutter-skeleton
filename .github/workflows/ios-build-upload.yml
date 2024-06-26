@@ -1,0 +1,37 @@
+name: Build iOS
+on:
+  push:
+    tags:
+    - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  build:
+    name: Build iOS App
+    permissions: write-all
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: cedvdb/action-flutter-build-ios@v1
+        with:
+          # always use --export-options-plist=ios/GithubActionsExportOptions.plist
+          build-cmd: flutter build ipa --release --export-options-plist=ios/GithubActionsExportOptions.plist
+          certificate-base64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
+          certificate-password: ${{ secrets.IOS_BUILD_CERTIFICATE_PASSWORD }}
+          provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
+          keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
+          
+
+      # - name: Upload application
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: release.ipa
+      #     path: ./build/ios/ipa/flutter_build.ipa
+
+      # - name: Upload iOS app to TestFlight
+      #   uses: apple-actions/upload-testflight-build@v1
+      #   with: 
+      #     app-path: build/ios/ipa/flutter_build.ipa 
+      #     issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+      #     api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}

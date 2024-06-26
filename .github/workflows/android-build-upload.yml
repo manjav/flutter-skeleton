@@ -1,0 +1,41 @@
+name: Release Tag
+on:
+  push:
+    tags:
+    - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  build:
+    name: Build Android and iOS release
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/build
+        with:
+          store-base64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          store-pass: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
+          key-alias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
+          key-pass: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+          ios-certificate-base64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
+          ios-certificate-password: ${{ secrets.IOS_BUILD_CERTIFICATE_PASSWORD }}
+          ios-provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
+          build-apk: false
+          build-ipa: false
+
+      # - uses: r0adkll/upload-google-play@v1
+      #   with:
+      #     serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
+      #     packageName: com.lifetalk.learn.language.speaks
+      #     releaseFiles: ./build/app/outputs/bundle/release/app-release.aab
+      #     track: internal
+      #     status: draft
+
+
+      # - name: Upload iOS app to TestFlight
+      #   uses: apple-actions/upload-testflight-build@v1
+      #   with: 
+      #     app-path: build/ios/ipa/flutter_build.ipa
+      #     issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+      #     api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
