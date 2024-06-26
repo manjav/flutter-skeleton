@@ -160,18 +160,47 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         valueListenable: subtitle,
         builder: (context, value, child) {
           if (value == null) return const SizedBox();
-          return IgnorePointer(
-            ignoring: true,
-            child: Widgets.rect(
-              radius: 12.d,
-              padding: EdgeInsets.all(12.d),
-              color: TColors.black80,
-              child: DirText(value, style: TStyles.smallInvert),
+          var text = (value.textPresentationMode.hasNative
+                  ? value.targetValue
+                  : value.nativeValue)
+              .simplify();
+          var dir = value.textPresentationMode.hasNative
+              ? TextDirection.ltr
+              : TextDirection.rtl;
+          return Widgets.button(
+            context,
+            radius: 12.d,
+            padding: EdgeInsets.all(12.d),
+            color: TColors.black80,
+            child: Text(
+              text,
+              style: TStyles.smallInvert,
+              textDirection: dir,
             ),
+            onLongPress: () => playSound(value, force: true),
           );
         },
       ),
     );
+  }
+
+  Future<void> playSound(
+    Talk talk, {
+    int lastIndex = -1,
+    bool force = false,
+  }) async {
+    if (talk.type == ContentType.image) return;
+    if (talk.voicePresentationMode.hasTarget) {
+      await serviceLocator<Speaker>()
+          .play(talk.targetValue, narrator: talk.type.narrator, force: force);
+    }
+    if (lastIndex != -1) {
+      if (controller.uniqueIndex != lastIndex) return;
+    }
+    if (talk.voicePresentationMode.hasNative) {
+      await serviceLocator<Speaker>()
+          .play(talk.nativeValue, narrator: talk.type.narrator, force: force);
+    }
   }
 
   @override

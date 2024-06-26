@@ -58,18 +58,9 @@ class _ScreenState extends AbstractScreenState<LessonIntroScreen>
       _animatedItems.add(controller.currentContent);
     }
 
-    if (talk.type != ContentType.image) {
-      if (talk.voicePresentationMode.hasTarget) {
-        await serviceLocator<Speaker>()
-            .play(talk.targetValue, narrator: talk.type.narrator);
-      }
-      if (controller.uniqueIndex != lastIndex) return;
-      if (talk.voicePresentationMode.hasNative) {
-        await serviceLocator<Speaker>()
-            .play(talk.nativeValue, narrator: talk.type.narrator);
-      }
-    }
+    await playSound(talk, lastIndex: lastIndex);
     if (controller.uniqueIndex != lastIndex) return;
+
     controller.changeContent(1);
 
     // var duration = const Duration(milliseconds: 500);
