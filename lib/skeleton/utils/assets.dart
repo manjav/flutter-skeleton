@@ -93,7 +93,7 @@ extension AssetTypeExtension on AssetType {
       AssetType.animation || AssetType.animationZipped => "riv",
       AssetType.font => "ttf",
       AssetType.image => "webp",
-      AssetType.sound => "ogg",
+      AssetType.sound => "mp3",
       AssetType.text => "json",
       AssetType.vector => "svg"
     };
