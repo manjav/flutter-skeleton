@@ -7,7 +7,7 @@ class Content {
   ContentType type = ContentType.none;
   String nativeValue = "", targetValue = "";
   Content.create(this.parent, this.id, Map map) {
-    index = map["index"];
+    index = map["index"] ?? 0;
   }
 
   bool get isChat => type == ContentType.bot || type == ContentType.user;
@@ -66,6 +66,7 @@ class GroupContent extends ParentContent {
 }
 
 class Talk extends Content {
+  int serieIndex = 0;
   int slideIndex = 0;
   double scrollPosition = 0;
   PresentMode textPresentationMode = PresentMode.none;
@@ -74,6 +75,7 @@ class Talk extends Content {
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
       : super.create(parent, map["id"], map) {
+    serieIndex = map["serie_index"] ?? 0;
     slideIndex = map["slide_index"] ?? 0;
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
