@@ -4,15 +4,14 @@ import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
-class LessonIntroScreen extends AbstractScreen {
-  LessonIntroScreen({super.key}) : super(Routes.intro);
+class LessonScreen extends AbstractScreen {
+  LessonScreen({super.key}) : super(Routes.lesson);
 
   @override
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<LessonIntroScreen>
-    with LessonMixin {
+class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
   final List<Talk> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
   final ScrollController _chatScrollController = ScrollController();

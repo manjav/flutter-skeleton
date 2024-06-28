@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
@@ -79,7 +80,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               children: [
                 SizedBox(
                   width: DeviceInfo.size.width,
-                  height: 340.d,
+                  height: 300.d,
                   child: PageView.builder(
                     controller: _pageController,
                     itemCount: _categories.length,
@@ -113,19 +114,15 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       margin: const EdgeInsets.all(12),
       padding: EdgeInsets.fromLTRB(10.d, 20.d, 10.d, 10.d),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20.d)),
         shape: BoxShape.rectangle,
-        boxShadow: [BoxShadow(blurRadius: 8.d, color: TColors.primary50)],
         color: TColors.primary10,
+        borderRadius: BorderRadius.all(Radius.circular(20.d)),
+        boxShadow: [BoxShadow(blurRadius: 8.d, color: TColors.primary50)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           DirText(category.title, style: TStyles.big),
-          DirText("? lessons",
-              style: TStyles.medium.copyWith(color: TColors.primary40)),
-          // DirText(category.description,
-          //     style: TStyles.tiny.copyWith(height: 1)),
           const Expanded(child: SizedBox()),
           Column(
             children: [
@@ -152,8 +149,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(width: 16.d),
           DirText(group.title.simplify(), style: TStyles.largeInvert),
           SizedBox(width: 16.d),
+          Asset.load<SvgPicture>(group.mode),
           // ValueListenableBuilder(
           //   valueListenable: scoreNotifier,
           //   builder: (context, value, child) =>
@@ -166,13 +165,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           await serviceLocator<AccountProvider>().loadGroup(group);
         }
 
-        // var routName =
-        //     group.children.where((t) => (t as Talk).personId == "name").isEmpty
-        //         ? Routes.chat
-        //         : Routes.intro;
-
-        // print(group.words);
-        var s = await Get.toNamed(Routes.intro, arguments: {"content": group});
+        var routName = group.mode == "lessons" ? Routes.lesson : Routes.series;
+        var s = await Get.toNamed(routName, arguments: {"content": group});
         if (s == null || s <= scoreNotifier.value) return;
         await serviceLocator<AccountProvider>().saveScore(id, s);
         scoreNotifier.value = s;

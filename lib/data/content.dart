@@ -33,12 +33,13 @@ class Content {
 
 class ParentContent extends Content {
   List<Content> children = [];
-  String title = "", description = "", iconUrl = "";
+  String title = "", description = "", iconUrl = "", mode = "";
   ParentContent.create(Content? parent, String id, Map map)
       : super.create(parent, id, map) {
     title = map["title"] ?? "";
     description = map["description"] ?? "";
     iconUrl = map["iconUrl"] ?? "";
+    mode = map["mode"] ?? "";
   }
 }
 
