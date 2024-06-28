@@ -30,9 +30,8 @@ class Localization extends IService {
       languageCode = args[0] as String;
       isRTL = isRTLMode(languageCode);
       dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
-      var localizations = await serviceLocator<NetConnector>().rpc(
-          "content_localizations",
-          params: {"nativeLanguage": languageCode});
+      var localizations = await serviceLocator<NetConnector>()
+          .rpc("content_locales_get", params: {"nativeLanguage": languageCode});
 
       await _getData(localizations);
     }
