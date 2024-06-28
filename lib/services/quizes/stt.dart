@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -19,8 +21,8 @@ class STT extends Quiz {
   SpeechRecognitionResult result = SpeechRecognitionResult([], true);
   final ValueNotifier<String> recognizedWords = ValueNotifier("");
 
-  final double _minSoundLevel = -10;
-  final double _maxSoundLevel = 10;
+  final double _minSoundLevel = Platform.isIOS ? -70 : -10;
+  final double _maxSoundLevel = Platform.isIOS ? -20 : 10;
   DateTime _lastLevelChanged = DateTime.now();
 
   List<String> exceptions = [];
@@ -52,8 +54,10 @@ class STT extends Quiz {
   }
 
   void _soundLevelListener(double level) {
-    var value = (level.clamp(_minSoundLevel, _maxSoundLevel) + 10) /
-        (_maxSoundLevel - _minSoundLevel);
+    var value =
+        ((level.clamp(_minSoundLevel, _maxSoundLevel) - _minSoundLevel) /
+                (_maxSoundLevel - _minSoundLevel))
+            .abs();
     var d = DateTime.now();
     if (d.difference(_lastLevelChanged).inMilliseconds < levelInterval) {
       return;
@@ -104,8 +108,8 @@ class STT extends Quiz {
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
-      pauseFor: const Duration(seconds: 5),
-      listenFor: const Duration(seconds: 30),
+      // pauseFor: const Duration(seconds: 2),
+      // listenFor: const Duration(seconds: 30),
       onSoundLevelChange: _soundLevelListener,
       onResult: _resultListener,
     );
@@ -128,19 +132,20 @@ class STT extends Quiz {
       //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
       // words.first.recognizedWords;
       recognizedWords.value = result.recognizedWords;
-      if (result.finalResult) {
-        var insert = result.recognizedWords.patternize();
-        var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
-            orElse: () => "");
-        var rate = ratio(pattern!, insert);
-        if (exception.isNotEmpty) {
-          minMatchLevel =
-              100 - (100 * exception.length / pattern!.length).round();
-        }
-        logs = "$insert ratio: $rate/$minMatchLevel";
-        // log(log);
-        state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
+      // if (result.finalResult) {
+      var insert = result.recognizedWords.patternize();
+      var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
+          orElse: () => "");
+      var rate = ratio(pattern!, insert);
+      if (exception.isNotEmpty) {
+        minMatchLevel =
+            100 - (100 * exception.length / pattern!.length).round();
       }
+      logs = "$insert ratio: $rate/$minMatchLevel";
+      // log(log);
+      state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
+      if (state.value == QuizState.success) stop();
+      // }
     }
   }
 }
