@@ -18,13 +18,16 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       return const SizedBox();
     }
 
-    return Stack(
-      children: [
-        childBuilder(paddingTop),
-        footerChromeBuilder(),
-        navigatorBuilder(paddingTop, Get.arguments["content"].title),
-        subtitleBuilder(),
-      ],
+    return Widgets.rect(
+      color: TColors.primary30,
+      child: Stack(
+        children: [
+          childBuilder(paddingTop),
+          footerChromeBuilder(),
+          navigatorBuilder(paddingTop, Get.arguments["content"].title),
+          subtitleBuilder(),
+        ],
+      ),
     );
   }
 
