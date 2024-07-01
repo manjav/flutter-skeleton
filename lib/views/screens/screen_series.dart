@@ -50,56 +50,70 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
         curve: Curves.easeOut);
   }
 
-
   @override
   Widget childBuilder(double paddingTop) {
-    return AnimatedList(
-        key: _animatedListKey,
-        controller: _chatScrollController,
-        padding: EdgeInsets.fromLTRB(
-            padding, paddingTop + padding * 6, padding, 200.d),
-        itemBuilder: (c, i, a) {
-          final slide = _animatedItems[i];
-          if (slide.type == ContentType.category) {
-            return Widgets.button(
-              context,
-              height: 160.d,
-              alignment: const Alignment(0, 0.5),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Asset.load<SvgPicture>("wand"),
-                  SizedBox(width: 12.d),
-                  Text("next_slide".l(),
-                      style: TStyles.medium.copyWith(color: TColors.primary40)),
-                ],
-              ),
-              onPressed: () => controller.changeSlide(1),
-            );
-          }
-          var items = <Widget>[];
-          for (var c = 0; c < slide.children.length; c++) {
-            items.add(_contentItem(slide.children[c] as Talk));
-            items.add(SizedBox(height: 12.d));
-          }
+    final topRadius = Radius.circular(20.d);
+    final bottomRadius = Radius.circular(46.d);
+    return Positioned(
+      top: paddingTop + 48.d,
+      left: padding,
+      right: padding,
+      bottom: padding,
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+            topLeft: topRadius,
+            topRight: topRadius,
+            bottomLeft: bottomRadius,
+            bottomRight: bottomRadius),
+        child: AnimatedList(
+            key: _animatedListKey,
+            controller: _chatScrollController,
+            itemBuilder: (c, i, a) {
+              final slide = _animatedItems[i];
+              if (slide.type == ContentType.category) {
+                return Widgets.button(
+                  context,
+                  height: 160.d,
+                  alignment: const Alignment(0, 0.5),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Asset.load<SvgPicture>("wand"),
+                      SizedBox(width: 12.d),
+                      Text("next_slide".l(),
+                          style: TStyles.medium
+                              .copyWith(color: TColors.primary40)),
+                    ],
+                  ),
+                  onPressed: () => controller.changeSlide(1),
+                );
+              }
+              var items = <Widget>[];
+              for (var c = 0; c < slide.children.length; c++) {
+                items.add(_contentItem(slide.children[c] as Talk));
+                items.add(SizedBox(height: 12.d));
+              }
 
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.5),
-              end: const Offset(0, 0),
-            ).animate(a),
-            child: Widgets.rect(
-              radius: 24.d,
-              height: 320.d,
-              color: TColors.primary0,
-              width: DeviceInfo.size.width,
-              margin: EdgeInsets.symmetric(vertical: 5.d),
-              padding: EdgeInsets.symmetric(horizontal: 32.d),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, children: items),
-            ),
-          );
-        });
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 0.5),
+                  end: const Offset(0, 0),
+                ).animate(a),
+                child: Widgets.rect(
+                  radius: 24.d,
+                  height: 320.d,
+                  color: TColors.primary0,
+                  width: DeviceInfo.size.width,
+                  margin: EdgeInsets.symmetric(vertical: 5.d),
+                  padding: EdgeInsets.symmetric(horizontal: 32.d),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: items),
+                ),
+              );
+            }),
+      ),
+    );
   }
 
   Widget _contentItem(Talk talk) {
