@@ -50,7 +50,7 @@ class AccountProvider extends ChangeNotifier {
     return contents;
   }
 
-  Future<void> loadGroup(GroupContent group) async {
+  Future<void> loadGroup(ParentContent group) async {
     List list = await serviceLocator<NetConnector>()
         .rpc("content_contents", params: {"groupId": group.id});
 

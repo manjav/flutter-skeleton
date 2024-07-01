@@ -127,7 +127,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           Column(
             children: [
               for (var i = 0; i < category.children.length; i++)
-                _lessonItemBuilder(category.children[i] as GroupContent, i)
+                _lessonItemBuilder(category.children[i] as ParentContent, i)
             ],
           ),
         ],
@@ -135,7 +135,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  Widget _lessonItemBuilder(GroupContent group, int index) {
+  Widget _lessonItemBuilder(ParentContent group, int index) {
     var id = "${group.id}_$index";
     var scoreNotifier = ValueNotifier(_scores![id] ?? 0);
     return Widgets.button(

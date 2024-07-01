@@ -16,10 +16,21 @@ class Content {
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];
     for (var entry in map.entries) {
-      var category = ParentContent.create(null, entry.key, entry.value);
-      var groups = <GroupContent>[];
+      var category = ParentContent.create(
+        null,
+        ContentType.category,
+        entry.key,
+        entry.value,
+      );
+
+      var groups = <ParentContent>[];
       for (var gentry in entry.value["groups"].entries) {
-        groups.add(GroupContent.create(category, gentry.key, gentry.value));
+        groups.add(ParentContent.create(
+          category,
+          ContentType.group,
+          gentry.key,
+          gentry.value,
+        ));
       }
       groups.sort((a, b) => a.index - b.index);
       category.type = ContentType.category;
@@ -34,8 +45,13 @@ class Content {
 class ParentContent extends Content {
   List<Content> children = [];
   String title = "", description = "", iconUrl = "", mode = "";
-  ParentContent.create(Content? parent, String id, Map map)
-      : super.create(parent, id, map) {
+  ParentContent.create(
+    Content? parent,
+    ContentType type,
+    String id,
+    Map map,
+  ) : super.create(parent, id, map) {
+    this.type = type;
     title = map["title"] ?? "";
     description = map["description"] ?? "";
     iconUrl = map["iconUrl"] ?? "";
@@ -43,28 +59,6 @@ class ParentContent extends Content {
   }
 }
 
-class GroupContent extends ParentContent {
-  GroupContent.create(super.parent, super.id, super.map) : super.create() {
-    type = ContentType.group;
-  }
-
-  List<Word> get words {
-    var result = <Word>[];
-    var ids = ["Egg", "Yogurt", "Bread", "Lemon"];
-    var targets = ["Yumurta", "Yogurt", "Ekmek", "Limon"];
-    var natives = ["تخم مرغ", "ماست", "نان", "لیمو"];
-    // Set<String> all = {};
-    // for (var talk in children) {
-    //   all.addAll((talk as Talk).words);
-    // }
-    for (var i = 0; i < ids.length; i++) {
-      result.add(Word.create(parent, ids[i],
-          {"native": natives[i], "target": targets[i], "index": i}));
-    }
-
-    return result;
-  }
-}
 
 class Talk extends Content {
   int serieIndex = 0;
