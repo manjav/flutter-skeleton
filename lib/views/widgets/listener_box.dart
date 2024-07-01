@@ -7,12 +7,20 @@ import '../../app_export.dart';
 enum Difficulty { simple, hint, hidden }
 
 class ListenerBox extends StatelessWidget {
-  final Talk talk;
+  final String hint;
+  final String answer;
+  final Narrator narrator;
   final Difficulty difficulty;
   final ValueNotifier<bool> _debugMode = ValueNotifier(false);
   final List<ValueNotifier<Choice>> _patterns = [];
 
-  ListenerBox(this.talk, {this.difficulty = Difficulty.simple, super.key});
+  ListenerBox({
+    required this.hint,
+    required this.answer,
+    required this.narrator,
+    this.difficulty = Difficulty.simple,
+    super.key,
+  });
   final _correctStyle = TStyles.medium
       .copyWith(color: TColors.green, fontWeight: FontWeight.w900, height: 1);
 
@@ -25,14 +33,14 @@ class ListenerBox extends StatelessWidget {
         color: difficulty == Difficulty.simple
             ? TColors.primary80
             : TColors.transparent);
-    var words = talk.targetValue.toLowerCase().split(" ");
+    var words = answer.split(" ");
     _patterns.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
     return Row(
       children: [
         SpeakerBox(
-          narrator: talk.type.narrator,
-          value: talk.targetValue,
+          narrator: narrator,
+          value: hint,
           width: 50.d,
         ),
         SizedBox(width: 10.d),
@@ -45,7 +53,7 @@ class ListenerBox extends StatelessWidget {
                     _answeringBuilder(
                         context, defaultStyle, value, stt.minMatchLevel),
                     SizedBox(height: 4.d),
-                    DirText(talk.nativeValue,
+                    DirText(hint,
                         style:
                             TStyles.small.copyWith(color: TColors.primary40)),
                     SizedBox(height: 6.d),
