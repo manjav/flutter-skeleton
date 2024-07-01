@@ -153,6 +153,45 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Widget childBuilder(double paddingTop) => const SizedBox();
 
+  Widget indicatorBuilder() {
+    if (controller.contentIndex.value < 0) return const SizedBox();
+    final seriesCount = controller.series.length;
+    final serieIndex = controller.serieIndex.value;
+    final height = 5.d;
+    final margin = EdgeInsets.symmetric(horizontal: height);
+    final width =
+        (DeviceInfo.size.width - height * 10) / seriesCount - height * 2;
+    return SizedBox(
+      height: height,
+      child: ListView.builder(
+        itemCount: seriesCount,
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: height * 5),
+        itemBuilder: (context, index) {
+          if (index != serieIndex) {
+            return Widgets.rect(
+              radius: 4.d,
+              width: width,
+              height: height,
+              margin: margin,
+              color: index <= serieIndex ? TColors.white : TColors.primary20,
+            );
+          }
+          return Padding(
+            padding: margin,
+            child: Widgets.slider(0, controller.slideIndex.value.toDouble() + 1,
+                controller.currentSerie.children.length.toDouble(),
+                padding: 0,
+                width: width,
+                height: height,
+                backgroundColor: TColors.primary20,
+                progressColor: TColors.white),
+          );
+        },
+      ),
+    );
+  }
+
   Widget subtitleBuilder() {
     return Positioned(
       left: 32.d,

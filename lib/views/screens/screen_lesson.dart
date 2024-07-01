@@ -116,8 +116,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _slidination(
-                    controller.slideIndex.value, controller.slides.length),
+                indicatorBuilder(),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -143,28 +142,6 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
           ),
         );
       },
-    );
-  }
-
-  Widget _slidination(int value, int length) {
-    final margin = 3.d;
-    final width = (DeviceInfo.size.width - margin * 12) / length - margin * 2;
-    return SizedBox(
-      height: 10.d,
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: margin * 6),
-        scrollDirection: Axis.horizontal,
-        itemCount: length,
-        itemBuilder: (context, index) {
-          return Widgets.rect(
-            radius: 4.d,
-            width: width,
-            height: margin,
-            margin: EdgeInsets.all(margin),
-            color: index <= value ? TColors.white : TColors.primary20,
-          );
-        },
-      ),
     );
   }
 
