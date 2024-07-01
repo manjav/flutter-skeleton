@@ -48,7 +48,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     if (controller.uniqueIndex != lastIndex) return;
     serviceLocator<Sounds>().stopAll();
     var talk = controller.currentContent;
-    if (talk.textPresentationMode == PresentMode.none) {
+    if (talk.type == ContentType.caption) {
       subtitle.value = talk;
     } else {
       subtitle.value = null;
@@ -230,24 +230,17 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
       _ => BalloonTipPosition.none,
     };
 
-    var main = talk.textPresentationMode.hasTarget
-        ? talk.targetValue
-        : talk.nativeValue;
-    var translate =
-        talk.textPresentationMode == PresentMode.both ? talk.nativeValue : null;
     return RadioBox(
-      main,
+      talk.targetValue, // main,
       ballonPosition: tip,
       narrator: talk.type.narrator,
-      translation: translate,
+      translation: talk.nativeValue, // translate,
       textStyle: talk.isChat
           ? null
-          : (talk.type == ContentType.intro ? TStyles.large : TStyles.small),
+          : (talk.type == ContentType.head ? TStyles.large : TStyles.small),
       color: talk.isChat
           ? null
-          : (talk.type == ContentType.intro
-              ? TColors.cream
-              : TColors.primary10),
+          : (talk.type == ContentType.head ? TColors.cream : TColors.primary10),
     );
   }
 

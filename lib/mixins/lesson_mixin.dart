@@ -201,22 +201,15 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         valueListenable: subtitle,
         builder: (context, value, child) {
           if (value == null) return const SizedBox();
-          var text = (value.textPresentationMode.hasNative
-                  ? value.targetValue
-                  : value.nativeValue)
-              .simplify();
-          var dir = value.textPresentationMode.hasNative
-              ? TextDirection.ltr
-              : TextDirection.rtl;
           return Widgets.button(
             context,
             radius: 12.d,
             padding: EdgeInsets.all(12.d),
             color: TColors.black80,
             child: Text(
-              text,
+              value.nativeValue, // text,
               style: TStyles.smallInvert,
-              textDirection: dir,
+              textDirection: TextDirection.rtl, // dir,
             ),
             onLongPress: () => playSound(value, force: true),
           );
@@ -231,14 +224,18 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     bool force = false,
   }) async {
     if (talk.type == ContentType.image) return;
-    if (talk.voicePresentationMode.hasTarget) {
+    final hasTarget =
+        talk.type == ContentType.bot || talk.type == ContentType.user;
+    if (hasTarget) {
       await serviceLocator<Speaker>()
           .play(talk.targetValue, narrator: talk.type.narrator, force: force);
     }
     if (lastIndex != -1) {
       if (controller.uniqueIndex != lastIndex) return;
     }
-    if (talk.voicePresentationMode.hasNative) {
+
+    final hasNative = talk.type == ContentType.caption;
+    if (hasNative) {
       await serviceLocator<Speaker>()
           .play(talk.nativeValue, narrator: talk.type.narrator, force: force);
     }

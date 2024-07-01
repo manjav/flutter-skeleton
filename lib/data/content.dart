@@ -11,7 +11,10 @@ class Content {
   }
 
   bool get isChat => type == ContentType.bot || type == ContentType.user;
-  bool get isQuiz => type == ContentType.user;
+  bool get isQuiz =>
+      type == ContentType.user ||
+      type == ContentType.repeat ||
+      type == ContentType.translate;
 
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];
@@ -64,8 +67,6 @@ class Talk extends Content {
   int serieIndex = 0;
   int slideIndex = 0;
   double scrollPosition = 0;
-  PresentMode textPresentationMode = PresentMode.none;
-  PresentMode voicePresentationMode = PresentMode.none;
   Set<String> get words => {...targetValue.split(" ")};
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
@@ -74,16 +75,12 @@ class Talk extends Content {
     slideIndex = map["slide_index"] ?? 0;
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
-    textPresentationMode = PresentMode.values[map["text_mode"]];
-    voicePresentationMode = PresentMode.values[map["voice_mode"]];
-    if (map["type"] == "introduce") {
-      type = ContentType.intro;
-    } else if (map["type"].endsWith("_1")) {
+    if (map["type"].endsWith("_1")) {
       type = ContentType.user;
     } else if (map["type"].endsWith("_2")) {
       type = ContentType.bot;
     } else {
-      type = map["type"] == "image" ? ContentType.image : ContentType.hint;
+      type = ContentType.getEnum(map["type"]);
     }
   }
 }
@@ -92,8 +89,14 @@ enum ContentType {
   none,
   category,
   group,
-  intro,
-  hint,
+  slide,
+  serie,
+  talk,
+  head,
+  text,
+  caption,
+  repeat,
+  translate,
   user,
   bot,
   image;

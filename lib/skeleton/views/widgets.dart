@@ -168,7 +168,7 @@ class Widgets {
       double? radius,
       Color? backgroundColor,
       Color progressColor = TColors.green}) {
-    var w = width ?? 760.d;
+    var w = width ?? 320.d;
     var h = height ?? 104.d;
     var p = padding ?? 9.d;
     var r = (1 - value / (max - min)).clamp(0, 1);
