@@ -108,8 +108,8 @@ class STT extends Quiz {
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
-      // pauseFor: const Duration(seconds: 2),
-      // listenFor: const Duration(seconds: 30),
+      pauseFor: const Duration(seconds: 5),
+      listenFor: const Duration(seconds: 30),
       onSoundLevelChange: _soundLevelListener,
       onResult: _resultListener,
     );
