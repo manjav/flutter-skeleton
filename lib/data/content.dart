@@ -98,6 +98,14 @@ enum ContentType {
   bot,
   image;
 
+  ContentType getChild() {
+    return switch (this) {
+      ContentType.serie => ContentType.slide,
+      ContentType.slide => ContentType.talk,
+      _ => none,
+    };
+  }
+
   static ContentType getEnum(String type) {
     for (var value in ContentType.values) {
       if (value.name == type) return value;

@@ -18,10 +18,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
 
   @override
   void initState() {
-    controller.slides = Get.arguments["content"].children;
+    var list = Get.arguments["content"].children;
+    controller.series = List.generate(list.length, (i) => list[i]);
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
-    controller.changeSlide(1);
+    controller.changeSerie(1);
     super.initState();
   }
 
@@ -130,10 +131,10 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
                     ),
                     _navigationButton(
                       name: "footer_next",
-                      isEnable: value < controller.slides.length &&
+                      isEnable: value < controller.series.length &&
                           controller.contentIndex.value ==
-                              controller.contents.length - 1,
-                      onPress: () => controller.changeSlide(1),
+                              controller.currentSerie.children.length - 1,
+                      onPress: () => controller.changeSerie(1),
                     ),
                   ],
                 ),

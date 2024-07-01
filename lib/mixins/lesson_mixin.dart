@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:lingai/services/lesson_controller.dart';
 
 import '../app_export.dart';
 
@@ -14,7 +13,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   @override
   Widget contentFactory(double paddingTop) {
-    if (controller.slides.isEmpty) {
+    if (controller.series.isEmpty) {
       return const SizedBox();
     }
 
@@ -67,8 +66,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut,
                       tween: Tween(
-                        begin: value / controller.slides.length,
-                        end: (value + 1) / controller.slides.length,
+                        begin: value / controller.series.length,
+                        end: (value + 1) / controller.series.length,
                       ),
                       builder: (context, value, _) => LinearProgressIndicator(
                         minHeight: 6.d,
@@ -79,7 +78,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                       ),
                     ),
                     Text(
-                      "${value + 1} / ${controller.slides.length}",
+                      "${value + 1} / ${controller.series.length}",
                       style: TStyles.small.copyWith(color: TColors.primary30),
                     ),
                   ],
