@@ -42,64 +42,41 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
     }
     _animatedListKey.currentState?.insertItem(_animatedItems.length - 1);
     _animatedItems.insert(_animatedItems.length - 1, controller.currentSlide);
-
-    await playSound(talk, lastIndex: lastIndex);
-    if (controller.uniqueIndex != lastIndex) return;
-
-    controller.changeContent(1);
-
-    // var duration = const Duration(milliseconds: 500);
-    // await _chatScrollController.animateTo(
-    //     _chatScrollController.position.maxScrollExtent,
-    //     duration: duration,
-    //     curve: Curves.easeOutQuart);
-  }
-
-  Future<void> _startQuizCallback(Talk step) async {
-    subtitle.value == null;
-    footerHeight.value = 100.d;
-    if (!step.isQuiz) return;
-    var account = serviceLocator<AccountProvider>();
-    serviceLocator<STT>().start(
-      locale: account.metadata["targetLanguage"],
-      pattern: step.targetValue,
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: _onSTTResult,
-    );
-  }
-
-  Future<void> _endQuizCallback() async {
-    footerHeight.value = 0;
-    await _addChat(controller.uniqueIndex);
-  }
-
-  Future<void> _onSTTResult(QuizState state, String text) async {
-    const duration = Duration(milliseconds: 1500);
-    serviceLocator<STT>().stop();
-    if (state == QuizState.success) {
-      await Future.delayed(duration);
-      serviceLocator<STT>().state.value = QuizState.none;
-      if (mounted) {
-        controller.onQuizResult(true);
-      }
-      _endQuizCallback();
-    } else if (state == QuizState.fail) {
-      controller.onQuizResult(false);
-      await Future.delayed(duration);
-      serviceLocator<STT>().start();
-    }
+    await Future.delayed(const Duration(milliseconds: 100));
+    _playSounds();
+    _chatScrollController.animateTo(
+        _chatScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOut);
   }
 
 
   @override
   Widget childBuilder(double paddingTop) {
     return AnimatedList(
-      key: _animatedListKey,
-      controller: _chatScrollController,
-      padding: EdgeInsets.fromLTRB(
-          padding, paddingTop + padding * 6, padding, 200.d),
+        key: _animatedListKey,
+        controller: _chatScrollController,
+        padding: EdgeInsets.fromLTRB(
+            padding, paddingTop + padding * 6, padding, 200.d),
         itemBuilder: (c, i, a) {
           final slide = _animatedItems[i];
+          if (slide.type == ContentType.category) {
+            return Widgets.button(
+              context,
+              height: 160.d,
+              alignment: const Alignment(0, 0.5),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Asset.load<SvgPicture>("wand"),
+                  SizedBox(width: 12.d),
+                  Text("next_slide".l(),
+                      style: TStyles.medium.copyWith(color: TColors.primary40)),
+                ],
+              ),
+              onPressed: () => controller.changeSlide(1),
+            );
+          }
           var items = <Widget>[];
           for (var c = 0; c < slide.children.length; c++) {
             items.add(_contentItem(slide.children[c] as Talk));
@@ -127,7 +104,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
 
   Widget _contentItem(Talk talk) {
     return switch (talk.type) {
-        ContentType.image => _imageBuilder(talk),
+      ContentType.image => _imageBuilder(talk),
       ContentType.head => DirText(
           talk.nativeValue,
           style: TStyles.big,
@@ -138,11 +115,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
           textAlign: TextAlign.center,
         ),
     };
-        _ => _chatBuilder(talk),
-        // _ => const SizedBox(),
-        // ContentType.name => SizedBox(height: 10.d),
-      },
-    );
+  }
+
+  Future<void> _playSounds() async {
+    for (var content in controller.currentSlide.children) {
+      await playSound(content as Talk);
+    }
   }
 
   Widget _imageBuilder(Talk talk) {
@@ -167,27 +145,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
           height: 180.d,
         ),
       ),
-    );
-  }
-
-  Widget _chatBuilder(Talk talk) {
-    var tip = switch (talk.type) {
-      ContentType.user => BalloonTipPosition.rightBottom,
-      ContentType.bot => BalloonTipPosition.leftTop,
-      _ => BalloonTipPosition.none,
-    };
-
-    return RadioBox(
-      talk.targetValue, //main,
-      ballonPosition: tip,
-      narrator: talk.type.narrator,
-      translation: talk.nativeValue, //translate,
-      textStyle: talk.isChat
-          ? null
-          : (talk.type == ContentType.head ? TStyles.large : TStyles.small),
-      color: talk.isChat
-          ? null
-          : (talk.type == ContentType.head ? TColors.cream : TColors.primary10),
     );
   }
 
