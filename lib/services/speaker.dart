@@ -31,7 +31,6 @@ class Speaker extends IService {
           }
         });
       }
-      print(defaultNarrator);
       var url = defaultNarrator == Narrator.farid
           ? "https://s1.matnyaar.ir/gpt/tts-ms.php?locale=fa-IR&voice=fa-IR-FaridNeural&input=$text${reset ? "&nocache" : ""}"
           : "https://s1.matnyaar.ir/gpt/tts.php?voice=${defaultNarrator.name}&input=$text${reset ? "&nocache" : ""}";

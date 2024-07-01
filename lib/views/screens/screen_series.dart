@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';
@@ -12,7 +13,7 @@ class SeriesScreen extends AbstractScreen {
 }
 
 class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
-  final List<Talk> _animatedItems = [];
+  final List<ParentContent> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
   final ScrollController _chatScrollController = ScrollController();
 
@@ -20,41 +21,27 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   void initState() {
     var list = Get.arguments["content"].children;
     controller.series = List.generate(list.length, (i) => list[i]);
+    controller.serieIndex.addListener(_onChangeSerie);
     controller.slideIndex.addListener(_onChangeSlide);
-    controller.contentIndex.addListener(_onChangeLine);
     controller.changeSerie(1);
     super.initState();
   }
 
-  Future<void> _onChangeSlide() async {
+  Future<void> _onChangeSerie() async {
     _animatedItems.clear();
     _animatedListKey.currentState
         ?.removeAllItems((context, animation) => const SizedBox());
   }
 
-  Future<void> _onChangeLine() async {
-    if (controller.contentIndex.value <= -1) return;
-    var talk = controller.currentContent;
-    if (talk.isQuiz) {
-      _startQuizCallback(talk);
-    } else {
-      footerHeight.value = 0;
-      await _addChat(controller.uniqueIndex);
-    }
-  }
-
-  Future<void> _addChat(int lastIndex) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (controller.uniqueIndex != lastIndex) return;
-    serviceLocator<Sounds>().stopAll();
-    var talk = controller.currentContent;
-    if (talk.type == ContentType.caption) {
-      subtitle.value = talk;
-    } else {
-      subtitle.value = null;
+  Future<void> _onChangeSlide() async {
+    if (controller.slideIndex.value <= -1) return;
+    if (_animatedItems.isEmpty) {
       _animatedListKey.currentState?.insertItem(_animatedItems.length);
-      _animatedItems.add(controller.currentContent);
+      _animatedItems
+          .add(ParentContent.create(null, ContentType.category, "", {}));
     }
+    _animatedListKey.currentState?.insertItem(_animatedItems.length - 1);
+    _animatedItems.insert(_animatedItems.length - 1, controller.currentSlide);
 
     await playSound(talk, lastIndex: lastIndex);
     if (controller.uniqueIndex != lastIndex) return;
@@ -111,24 +98,46 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
       controller: _chatScrollController,
       padding: EdgeInsets.fromLTRB(
           padding, paddingTop + padding * 6, padding, 200.d),
-      itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a),
-    );
+        itemBuilder: (c, i, a) {
+          final slide = _animatedItems[i];
+          var items = <Widget>[];
+          for (var c = 0; c < slide.children.length; c++) {
+            items.add(_contentItem(slide.children[c] as Talk));
+            items.add(SizedBox(height: 12.d));
+          }
+
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.5),
+              end: const Offset(0, 0),
+            ).animate(a),
+            child: Widgets.rect(
+              radius: 24.d,
+              height: 320.d,
+              color: TColors.primary0,
+              width: DeviceInfo.size.width,
+              margin: EdgeInsets.symmetric(vertical: 5.d),
+              padding: EdgeInsets.symmetric(horizontal: 32.d),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center, children: items),
+            ),
+          );
+        });
   }
 
-  Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
-    talk.scrollPosition = _chatScrollController.position.pixels;
-    return ScaleTransition(
-      alignment: switch (talk.type) {
-        ContentType.user => Alignment.bottomRight,
-        ContentType.bot => Alignment.topLeft,
-        _ => Alignment.center,
-      },
-      scale: CurvedAnimation(
-        parent: animation.drive(Tween<double>(begin: 0, end: 1)),
-        curve: Curves.easeOutBack,
-      ),
-      child: switch (talk.type) {
+  Widget _contentItem(Talk talk) {
+    return switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
+      ContentType.head => DirText(
+          talk.nativeValue,
+          style: TStyles.big,
+          textAlign: TextAlign.center,
+        ),
+      _ => DirText(
+          talk.nativeValue,
+          textAlign: TextAlign.center,
+        ),
+    };
         _ => _chatBuilder(talk),
         // _ => const SizedBox(),
         // ContentType.name => SizedBox(height: 10.d),
@@ -207,8 +216,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   @override
   void dispose() {
     serviceLocator<Sounds>().stopAll();
+    controller.serieIndex.removeListener(_onChangeSerie);
     controller.slideIndex.removeListener(_onChangeSlide);
-    controller.contentIndex.removeListener(_onChangeLine);
     super.dispose();
   }
 }
