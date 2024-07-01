@@ -103,68 +103,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
     }
   }
 
-  @override
-  Widget navigatorBuilder(double paddingTop, String title) {
-    return ValueListenableBuilder(
-      valueListenable: controller.contentIndex,
-      builder: (context, value, child) {
-        return Align(
-          alignment: const Alignment(0, 1),
-          child: FractionallySizedBox(
-            heightFactor: 0.15,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                indicatorBuilder(),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _navigationButton(
-                      name: "footer_prev",
-                      isEnable: controller.slideIndex.value > 0,
-                      onPress: () => controller.changeSlide(-1),
-                    ),
-                    _navigationButton(
-                      name: "footer_pause",
-                    ),
-                    _navigationButton(
-                      name: "footer_next",
-                      isEnable: value < controller.series.length &&
-                          controller.contentIndex.value ==
-                              controller.currentSerie.children.length - 1,
-                      onPress: () => controller.changeSerie(1),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _navigationButton({
-    required name,
-    bool isEnable = true,
-    Function()? onPress,
-  }) {
-    return Opacity(
-      opacity: isEnable ? 1 : 0.4,
-      child: Widgets.button(
-        context,
-        height: 92.d,
-        padding: EdgeInsets.all(12.d),
-        child: Asset.load<Image>(name),
-        onPressed: () {
-          // if (isEnable) {
-          onPress?.call();
-          // }
-        },
-      ),
-    );
-  }
 
   @override
   Widget childBuilder(double paddingTop) {

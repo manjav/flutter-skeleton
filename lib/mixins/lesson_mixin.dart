@@ -9,7 +9,11 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   final LessonController controller = LessonController();
   final ValueNotifier<double> footerHeight = ValueNotifier(0);
   final ValueNotifier<Talk?> subtitle = ValueNotifier(null);
-  double padding = 12.d;
+  double padding = 8.d;
+
+  @override
+  Widget appBarFactory(double paddingTop) =>
+      navigatorBuilder(paddingTop, Get.arguments["content"].title);
 
   @override
   Widget contentFactory(double paddingTop) {
@@ -23,7 +27,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         children: [
           childBuilder(paddingTop),
           footerChromeBuilder(),
-          navigatorBuilder(paddingTop, Get.arguments["content"].title),
           subtitleBuilder(),
         ],
       ),
@@ -33,71 +36,81 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Widget navigatorBuilder(double paddingTop, String title) {
     return Positioned(
       top: paddingTop,
-      left: 0,
-      right: 0,
-      child: Widgets.rect(
-        padding: EdgeInsets.fromLTRB(padding, paddingTop, paddingTop, 0),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: const [
-                0.7,
-                1
-              ],
-              colors: <Color>[
-                TColors.primary10,
-                TColors.primary10.withOpacity(0)
-              ]),
-        ),
-        child: Row(
-          children: [
-            Avatar("person", 64.d),
-            SizedBox(width: 12.d),
-            Expanded(
-              child: ValueListenableBuilder(
-                valueListenable: controller.slideIndex,
-                builder: (context, value, child) => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      left: 12.d,
+      right: 12.d,
+      child: Row(
+        children: [
+          Widgets.button(
+            context,
+            width: 36.d,
+            height: 36.d,
+            padding: EdgeInsets.all(8.d),
+            child: Asset.load<SvgPicture>("close",
+                svgColorFilter:
+                    const ColorFilter.mode(TColors.primary50, BlendMode.srcIn)),
+            onPressed: () => Navigator.pop(context),
+          ),
+          Expanded(
+            child: ValueListenableBuilder(
+              valueListenable: controller.contentIndex,
+              builder: (context, value, child) {
+                return Column(
                   children: [
-                    Text(title),
-                    TweenAnimationBuilder<double>(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                      tween: Tween(
-                        begin: value / controller.series.length,
-                        end: (value + 1) / controller.series.length,
-                      ),
-                      builder: (context, value, _) => LinearProgressIndicator(
-                        minHeight: 6.d,
-                        value: value,
-                        color: TColors.green,
-                        backgroundColor: TColors.primary20,
-                        borderRadius: BorderRadius.all(Radius.circular(6.d)),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(title),
+                        SizedBox(width: 8.d),
+                        Asset.load<SvgPicture>("chevron"),
+                      ],
                     ),
-                    Text(
-                      "${value + 1} / ${controller.series.length}",
-                      style: TStyles.small.copyWith(color: TColors.primary30),
-                    ),
+                    SizedBox(height: 4.d),
+                    indicatorBuilder()
                   ],
-                ),
-              ),
+                );
+              },
             ),
-            SizedBox(width: 12.d),
-            Widgets.button(
-              context,
-              width: 32.d,
-              height: 32.d,
-              radius: 32.d,
-              color: TColors.primary20,
-              padding: EdgeInsets.all(8.d),
-              child: Asset.load<SvgPicture>("close"),
-              onPressed: () => Navigator.pop(context),
-            )
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget indicatorBuilder() {
+    final seriesCount = controller.series.length;
+    final serieIndex = controller.serieIndex.value;
+    final height = 5.d;
+    final margin = EdgeInsets.symmetric(horizontal: height);
+    final width =
+        (DeviceInfo.size.width - height * 10) / seriesCount - height * 4;
+    if (controller.contentIndex.value < 0) return SizedBox(height: height);
+    return SizedBox(
+      height: height,
+      child: ListView.builder(
+        itemCount: seriesCount,
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: height * 5),
+        itemBuilder: (context, index) {
+          if (index != serieIndex) {
+            return Widgets.rect(
+              radius: 4.d,
+              width: width,
+              height: height,
+              margin: margin,
+              color: index <= serieIndex ? TColors.green : TColors.white50,
+            );
+          }
+          return Padding(
+            padding: margin,
+            child: Widgets.slider(0, controller.slideIndex.value.toDouble() + 1,
+                controller.currentSerie.children.length.toDouble(),
+                padding: 0,
+                width: width,
+                height: height,
+                backgroundColor: TColors.white50,
+                progressColor: TColors.green),
+          );
+        },
       ),
     );
   }
@@ -152,45 +165,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Widget footerBuilder() => const SizedBox();
 
   Widget childBuilder(double paddingTop) => const SizedBox();
-
-  Widget indicatorBuilder() {
-    if (controller.contentIndex.value < 0) return const SizedBox();
-    final seriesCount = controller.series.length;
-    final serieIndex = controller.serieIndex.value;
-    final height = 5.d;
-    final margin = EdgeInsets.symmetric(horizontal: height);
-    final width =
-        (DeviceInfo.size.width - height * 10) / seriesCount - height * 2;
-    return SizedBox(
-      height: height,
-      child: ListView.builder(
-        itemCount: seriesCount,
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: height * 5),
-        itemBuilder: (context, index) {
-          if (index != serieIndex) {
-            return Widgets.rect(
-              radius: 4.d,
-              width: width,
-              height: height,
-              margin: margin,
-              color: index <= serieIndex ? TColors.white : TColors.primary20,
-            );
-          }
-          return Padding(
-            padding: margin,
-            child: Widgets.slider(0, controller.slideIndex.value.toDouble() + 1,
-                controller.currentSerie.children.length.toDouble(),
-                padding: 0,
-                width: width,
-                height: height,
-                backgroundColor: TColors.primary20,
-                progressColor: TColors.white),
-          );
-        },
-      ),
-    );
-  }
 
   Widget subtitleBuilder() {
     return Positioned(
