@@ -41,14 +41,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
       _animatedItems
           .add(ParentContent.create(null, ContentType.category, "", {}));
     }
+    var end = _slidesScrollController!.position.pixels + _slideHeight;
     _animatedListKey.currentState?.insertItem(_animatedItems.length - 1);
     _animatedItems.insert(_animatedItems.length - 1, controller.currentSlide);
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 500));
     _playSounds();
-    _chatScrollController.animateTo(
-        _chatScrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOut);
+    _scrollTo(end);
   }
 
   @override
@@ -78,7 +76,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
               if (slide.type == ContentType.category) {
                 return Widgets.button(
                   context,
-                  height: 160.d,
+                  height: 100.d,
                   alignment: const Alignment(0, 0.5),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -98,22 +96,23 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
                 items.add(_contentItem(slide.children[c] as Talk));
                 items.add(SizedBox(height: 12.d));
               }
-
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(0, 0.5),
                   end: const Offset(0, 0),
                 ).animate(a),
-                child: Widgets.rect(
+                child: Widgets.button(
+                  context,
                   radius: 24.d,
-                  height: 320.d,
+                  height: _slideHeight,
                   color: TColors.primary0,
                   width: DeviceInfo.size.width,
                   margin: EdgeInsets.symmetric(vertical: 5.d),
-                  padding: EdgeInsets.symmetric(horizontal: 32.d),
+                  padding: EdgeInsets.symmetric(horizontal: 20.d),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: items),
+                  onPressed: () => _scrollTo(_slideHeight * i),
                 ),
               );
             }),
