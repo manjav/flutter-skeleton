@@ -128,6 +128,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   Widget _contentItem(Talk talk) {
     return switch (talk.type) {
       ContentType.image => _imageBuilder(talk),
+      ContentType.repeat || ContentType.translate => _quizBuilder(talk),
       ContentType.head => DirText(
           talk.nativeValue,
           style: TStyles.big,
@@ -143,7 +144,45 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   Future<void> _playSounds() async {
     for (var content in controller.currentSlide.children) {
       await playSound(content as Talk);
+      if (content.isQuiz) _startQuiz(content);
     }
+  }
+
+  Future<void> _startQuiz(Talk talk) async {
+    var account = serviceLocator<AccountProvider>();
+    serviceLocator<STT>().start(
+      pattern: talk.targetValue,
+      locale: account.metadata["targetLanguage"],
+      exceptions: [account.account.user.displayName!.patternize()],
+      onResult: _onSTTResult,
+    );
+  }
+
+  Future<void> _onSTTResult(QuizState state, String text) async {
+    const duration = Duration(milliseconds: 1500);
+    serviceLocator<STT>().stop();
+    if (state == QuizState.success) {
+      await Future.delayed(duration);
+      // serviceLocator<STT>().state.value = QuizState.none;
+      if (mounted) {
+        controller.onQuizResult(true);
+      }
+    } else if (state == QuizState.fail) {
+      controller.onQuizResult(false);
+      // await Future.delayed(duration);
+      // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
+    }
+  }
+
+  Widget _quizBuilder(Talk talk) {
+    final hint = talk.type == ContentType.translate
+        ? talk.nativeValue
+        : talk.targetValue;
+    return ListenerBox(
+      hint: hint,
+      answer: talk.targetValue,
+      narrator: talk.type.narrator,
+    );
   }
 
   Widget _imageBuilder(Talk talk) {
