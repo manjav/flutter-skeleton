@@ -163,28 +163,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   }
 
   @override
-  Widget footerBuilder() {
-    final talk = controller.currentContent;
-    final answer = talk.targetValue.toLowerCase();
-    final hint = talk.type == ContentType.translate
-        ? talk.nativeValue
-        : talk.targetValue;
-    serviceLocator<Speaker>()
-        .play(talk.nativeValue, narrator: talk.type.narrator);
-    var footer = Column(children: [
-      ListenerBox(
-        answer: answer,
-        hint: hint,
-        narrator: talk.type.narrator,
-      ),
-      SizedBox(height: 120.d),
-    ]);
-
-    // footerSize.value = getFooterHeight(context);
-    return footer;
-  }
-
-  @override
   void dispose() {
     serviceLocator<Sounds>().stopAll();
     controller.serieIndex.removeListener(_onChangeSerie);
