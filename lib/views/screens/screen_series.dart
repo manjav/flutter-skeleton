@@ -15,7 +15,8 @@ class SeriesScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   final List<ParentContent> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
-  final ScrollController _chatScrollController = ScrollController();
+  final _slideHeight = DeviceInfo.size.height * 0.5;
+  PageController? _slidesScrollController;
 
   @override
   void initState() {
@@ -52,6 +53,9 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
 
   @override
   Widget childBuilder(double paddingTop) {
+    _slidesScrollController ??= PageController(
+        viewportFraction:
+            _slideHeight / (DeviceInfo.size.height - paddingTop - padding));
     final topRadius = Radius.circular(20.d);
     final bottomRadius = Radius.circular(46.d);
     return Positioned(
@@ -67,7 +71,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
             bottomRight: bottomRadius),
         child: AnimatedList(
             key: _animatedListKey,
-            controller: _chatScrollController,
+            physics: const PageScrollPhysics(),
+            controller: _slidesScrollController,
             itemBuilder: (c, i, a) {
               final slide = _animatedItems[i];
               if (slide.type == ContentType.category) {
@@ -114,6 +119,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
             }),
       ),
     );
+  }
+
+  void _scrollTo(double offset) {
+    _slidesScrollController!.animateTo(offset,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
   }
 
   Widget _contentItem(Talk talk) {
