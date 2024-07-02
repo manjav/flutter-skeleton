@@ -62,7 +62,6 @@ class ParentContent extends Content {
   }
 }
 
-
 class Talk extends Content {
   int serieIndex = 0;
   int slideIndex = 0;
@@ -118,7 +117,10 @@ enum ContentType {
 
   Narrator get narrator => switch (this) {
         ContentType.user => Narrator.nova,
-        ContentType.bot => Narrator.fable,
+        ContentType.bot ||
+        ContentType.repeat ||
+        ContentType.translate =>
+          Narrator.alloy,
         _ => Narrator.onyx,
       };
 }
