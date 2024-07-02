@@ -31,9 +31,9 @@ class Speaker extends IService {
           }
         });
       }
-      var url = defaultNarrator == Narrator.farid
+      var url = narrator == Narrator.farid
           ? "https://s1.matnyaar.ir/gpt/tts-ms.php?locale=fa-IR&voice=fa-IR-FaridNeural&input=$text${reset ? "&nocache" : ""}"
-          : "https://s1.matnyaar.ir/gpt/tts.php?voice=${defaultNarrator.name}&input=$text${reset ? "&nocache" : ""}";
+          : "https://s1.matnyaar.ir/gpt/tts.php?voice=${narrator.name}&input=$text${reset ? "&nocache" : ""}";
       await player.play(UrlSource(url), volume: 1);
       await Future.doWhile(() =>
           Future.delayed(const Duration(milliseconds: 50))
