@@ -74,22 +74,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
             itemBuilder: (c, i, a) {
               final slide = _animatedItems[i];
               if (slide.type == ContentType.category) {
-                return Widgets.button(
-                  context,
-                  height: 100.d,
-                  alignment: const Alignment(0, 0.5),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Asset.load<SvgPicture>("wand"),
-                      SizedBox(width: 12.d),
-                      Text("next_slide".l(),
-                          style: TStyles.medium
-                              .copyWith(color: TColors.primary40)),
-                    ],
-                  ),
-                  onPressed: () => controller.changeSlide(1),
-                );
+                return _nextSerieButton();
               }
               var items = <Widget>[];
               for (var c = 0; c < slide.children.length; c++) {
@@ -216,5 +201,56 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
     controller.serieIndex.removeListener(_onChangeSerie);
     controller.slideIndex.removeListener(_onChangeSlide);
     super.dispose();
+  }
+
+  Widget _nextSerieButton() {
+    var last = _animatedItems[_animatedItems.length - 2];
+    if (last.id == controller.currentSerie.children.last.id) {
+      return Column(
+        children: [
+          SizedBox(height: 50.d),
+          Widgets.rect(
+            radius: 12.d,
+            color: TColors.orange,
+            padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
+            transform: Transform.rotate(angle: -0.08).transform,
+            child: Text("serie_from_to".l([]), style: TStyles.largeInvert),
+          ),
+          SizedBox(height: 30.d),
+          Text("slide_finish".l([]), style: TStyles.huge),
+          SizedBox(height: 30.d),
+          SkinnedButton(
+            color: TColors.blue,
+            height: 64.d,
+            width: DeviceInfo.size.width * 0.8,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("next_serie".l(), style: TStyles.largeInvert),
+                SizedBox(width: 16.d),
+                Asset.load<Image>("ui_arrow_forward", height: 32.d),
+              ],
+            ),
+            onPressed: () => controller.changeSlide(1),
+          ),
+          SizedBox(height: 30.d),
+        ],
+      );
+    }
+    return Widgets.button(
+      context,
+      height: 100.d,
+      alignment: const Alignment(0, 0.5),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Asset.load<SvgPicture>("wand"),
+          SizedBox(width: 12.d),
+          Text("next_slide".l(),
+              style: TStyles.medium.copyWith(color: TColors.primary40)),
+        ],
+      ),
+      onPressed: () => controller.changeSlide(1),
+    );
   }
 }
