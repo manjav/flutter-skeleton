@@ -41,12 +41,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Get version  
-      id: read-version
-      uses: NiklasLehnfeld/flutter-version-number-action@main
-      with:
-        file-path: pubspec.yaml
-
     - name: Parse pubspec.yaml for version
       id: get_version
       shell: bash
