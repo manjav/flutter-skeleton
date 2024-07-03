@@ -15,10 +15,15 @@ class HomeScreen extends AbstractScreen {
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Map<String, int>? _scores;
   SMIInput<double>? _categoryIndex;
-  List<ParentContent> _categories = [];
-  final PageController _pageController = PageController(viewportFraction: 0.8);
-  LoadingController controller = Get.put(LoadingController());
   TabController? _tabController;
+  List<ParentContent> _categories = [];
+  LoadingController controller = Get.put(LoadingController());
+  final PageController _pageController = PageController(viewportFraction: 0.8);
+  final _colors = {
+    "lessons": TColors.blue,
+    "drills": TColors.orange,
+    "": TColors.purpule
+  };
 
 // Consumer<AccountProvider>(builder: (_, state, child) {
   @override
@@ -144,7 +149,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       radius: 12.d,
       margin: EdgeInsets.all(2.d),
       padding: EdgeInsets.all(10.d),
-      color: [TColors.blue, TColors.orange, TColors.purpule][index],
+      color: _colors[group.mode],
       // width: DeviceInfo.size.width * 0.8,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
