@@ -49,6 +49,7 @@ runs:
 
     - name: Get the tag and remove the first character
       id: get_tag
+      shell: bash
       run: |
         TAG=${GITHUB_REF#refs/tags/}
         TAG_WITHOUT_FIRST_CHAR=${TAG:1}
