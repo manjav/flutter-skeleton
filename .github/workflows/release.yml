@@ -21,7 +21,7 @@ jobs:
       # - name: Get project version
       #   run: echo "PROJECT_VERSION=v${{ steps.yq.outputs.result }}" >> $GITHUB_ENV
         
-      - uses: ./.github/actions/build/build.yml
+      - uses: ./.github/actions/build
         with:
           store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
           store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
