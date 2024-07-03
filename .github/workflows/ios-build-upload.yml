@@ -28,10 +28,10 @@ jobs:
       #     name: release.ipa
       #     path: ./build/ios/ipa/flutter_build.ipa
 
-      - name: Upload iOS app to TestFlight
-        uses: apple-actions/upload-testflight-build@v1
-        with: 
-          app-path: build/ios/ipa/flutter_build.ipa
-          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+      # - name: Upload iOS app to TestFlight
+      #   uses: apple-actions/upload-testflight-build@v1
+      #   with: 
+      #     app-path: build/ios/ipa/flutter_build.ipa
+      #     issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+      #     api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
