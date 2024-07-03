@@ -12,9 +12,7 @@ class Content {
 
   bool get isChat => type == ContentType.bot || type == ContentType.user;
   bool get isQuiz =>
-      type == ContentType.user ||
-      type == ContentType.repeat ||
-      type == ContentType.translate;
+      type == ContentType.repeat || type == ContentType.translate;
 
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];

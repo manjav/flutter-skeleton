@@ -36,11 +36,9 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     if (controller.contentIndex.value <= -1) return;
     var talk = controller.currentContent;
     if (talk.isQuiz) {
-      _startQuizCallback(talk);
-    } else {
-      footerHeight.value = 0;
-      await _addChat(controller.uniqueIndex);
+      _startQuiz(talk);
     }
+    await _addChat(controller.uniqueIndex);
   }
 
   Future<void> _addChat(int lastIndex) async {
@@ -58,49 +56,13 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
 
     await playSound(talk, lastIndex: lastIndex);
     if (controller.uniqueIndex != lastIndex) return;
-
-    controller.changeContent(1);
+    if (!talk.isQuiz) controller.changeContent(1);
 
     // var duration = const Duration(milliseconds: 500);
     // await _chatScrollController.animateTo(
     //     _chatScrollController.position.maxScrollExtent,
     //     duration: duration,
     //     curve: Curves.easeOutQuart);
-  }
-
-  Future<void> _startQuizCallback(Talk step) async {
-    subtitle.value == null;
-    footerHeight.value = 100.d;
-    if (!step.isQuiz) return;
-    var account = serviceLocator<AccountProvider>();
-    serviceLocator<STT>().start(
-      locale: account.metadata["targetLanguage"],
-      pattern: step.targetValue,
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: _onSTTResult,
-    );
-  }
-
-  Future<void> _endQuizCallback() async {
-    footerHeight.value = 0;
-    await _addChat(controller.uniqueIndex);
-  }
-
-  Future<void> _onSTTResult(QuizState state, String text) async {
-    const duration = Duration(milliseconds: 1500);
-    serviceLocator<STT>().stop();
-    if (state == QuizState.success) {
-      await Future.delayed(duration);
-      serviceLocator<STT>().state.value = QuizState.none;
-      if (mounted) {
-        controller.onQuizResult(true);
-      }
-      _endQuizCallback();
-    } else if (state == QuizState.fail) {
-      controller.onQuizResult(false);
-      await Future.delayed(duration);
-      serviceLocator<STT>().start();
-    }
   }
 
   // @override
@@ -191,9 +153,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
-        _ => _chatBuilder(talk),
-        // _ => const SizedBox(),
-        // ContentType.name => SizedBox(height: 10.d),
+        _ => _contentItem(talk),
       },
     );
   }
@@ -223,13 +183,15 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     );
   }
 
-  Widget _chatBuilder(Talk talk) {
+  Widget _contentItem(Talk talk) {
     var tip = switch (talk.type) {
       ContentType.user => BalloonTipPosition.rightBottom,
       ContentType.bot => BalloonTipPosition.leftTop,
       _ => BalloonTipPosition.none,
     };
-
+    if (talk.isQuiz) {
+      return _quizBuilder(talk);
+    }
     return RadioBox(
       talk.targetValue, // main,
       ballonPosition: tip,
@@ -244,26 +206,48 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     );
   }
 
-  @override
-  Widget footerBuilder() {
-    final talk = controller.currentContent;
-    final answer = talk.targetValue.toLowerCase();
+  Widget _quizBuilder(Talk talk) {
     final hint = talk.type == ContentType.translate
         ? talk.nativeValue
         : talk.targetValue;
-    serviceLocator<Speaker>()
-        .play(talk.nativeValue, narrator: talk.type.narrator);
-    var footer = Column(children: [
-      ListenerBox(
-        answer: answer,
-        hint: hint,
-        narrator: talk.type.narrator,
-      ),
-      SizedBox(height: 120.d),
-    ]);
+    return ListenerBox(
+      hint: hint,
+      answer: talk.targetValue,
+      narrator: talk.type.narrator,
+    );
+  }
 
-    // footerSize.value = getFooterHeight(context);
-    return footer;
+  Future<void> _startQuiz(Talk talk) async {
+    subtitle.value == null;
+    var account = serviceLocator<AccountProvider>();
+    serviceLocator<STT>().start(
+      pattern: talk.targetValue,
+      locale: account.metadata["targetLanguage"],
+      exceptions: [account.account.user.displayName!.patternize()],
+      onResult: (state, text) => _onSTTResult(state, talk),
+    );
+  }
+
+  Future<void> _onSTTResult(QuizState state, Talk talk) async {
+    const duration = Duration(milliseconds: 500);
+    serviceLocator<STT>().stop();
+    if (state == QuizState.success) {
+      await Future.delayed(duration);
+      // serviceLocator<STT>().state.value = QuizState.none;
+      if (mounted) {
+        controller.onQuizResult(true);
+        _animatedListKey.currentState?.removeItem(_animatedItems.length - 1,
+            (context, animation) => const SizedBox());
+        _animatedItems.removeLast();
+        talk.type = ContentType.user;
+        await Future.delayed(duration);
+        _addChat(controller.uniqueIndex);
+      }
+    } else if (state == QuizState.fail) {
+      controller.onQuizResult(false);
+      // await Future.delayed(duration);
+      // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
+    }
   }
 
   @override
