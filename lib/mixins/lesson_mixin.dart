@@ -7,7 +7,6 @@ import '../app_export.dart';
 mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   final GlobalKey footerKey = GlobalKey();
   final LessonController controller = LessonController();
-  final ValueNotifier<double> footerHeight = ValueNotifier(0);
   final ValueNotifier<Talk?> subtitle = ValueNotifier(null);
   double padding = 8.d;
 
@@ -22,7 +21,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     }
 
     return Widgets.rect(
-      color: TColors.primary30,
+      color: TColors.primary10,
       child: Stack(
         children: [
           childBuilder(paddingTop),
@@ -112,55 +111,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       ),
     );
   }
-
-  Widget footerChromeBuilder() {
-    return ValueListenableBuilder(
-        valueListenable: footerHeight,
-        builder: (context, value, child) {
-          if (value <= 0) {
-            return const SizedBox();
-          }
-          return Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            // curve: value == 0 ? Curves.easeIn : Curves.easeOutBack,
-            // duration: const Duration(milliseconds: 300),
-            child: Container(
-              key: footerKey,
-              decoration: BoxDecoration(
-                color: TColors.primary60,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(32.d),
-                  topRight: Radius.circular(32.d),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 7,
-                    spreadRadius: 5,
-                    color: TColors.primary20,
-                    offset: Offset(0, -2.d), // changes position of shadow
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.fromLTRB(16.d, 12.d, 16.d, 8.d),
-              child: footerBuilder(),
-            ),
-          );
-        });
-  }
-
-  double getFooterHeight(BuildContext context) {
-    double height = 500.d;
-    final keyContext = footerKey.currentContext;
-    if (context.mounted && keyContext != null) {
-      final box = keyContext.findRenderObject() as RenderBox;
-      height = box.size.height;
-    }
-    return height;
-  }
-
-  Widget footerBuilder() => const SizedBox();
 
   Widget childBuilder(double paddingTop) => const SizedBox();
 
