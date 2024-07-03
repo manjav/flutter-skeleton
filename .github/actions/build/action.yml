@@ -56,6 +56,7 @@ runs:
         echo "base_version=$base_version" >> $GITHUB_ENV
 
     - name: Display app version
+      shell: bash
       run: echo "App base version is ${{ env.base_version }}"
 
     - name: Get the tag and remove the first character
