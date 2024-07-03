@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build/build.yml
         with:
           store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
           store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}

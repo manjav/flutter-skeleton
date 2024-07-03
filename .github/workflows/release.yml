@@ -1,4 +1,4 @@
-name: Release Tag
+name: Release
 on:
   push:
     tags:
@@ -21,14 +21,14 @@ jobs:
       # - name: Get project version
       #   run: echo "PROJECT_VERSION=v${{ steps.yq.outputs.result }}" >> $GITHUB_ENV
         
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build/build.yml
         with:
           store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
           store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
           key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
           key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
           build-aab: false
-          build-ipa: false
+          build-ipa: true
 
       # - name: Test1
       #   shell: bash
@@ -49,8 +49,8 @@ jobs:
       #   if: ${{ steps.equal.result == 'false' }}
       #   run: "echo pubspec version and tag version must be equal "${{ steps.equal.result }}"
 
-      # - name: Push to Releases
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     artifacts: "./build/app/outputs/apk/release/*.apk,./build/app/outputs/bundle/release/app-release.aab"
-      #     tag: ${{ github.ref_name }}
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./build/app/outputs/apk/release/*.apk,./build/app/outputs/bundle/release/app-release.aab"
+          tag: ${{ github.ref_name }}
