@@ -49,6 +49,7 @@ runs:
 
     - name: Parse pubspec.yaml for version
       id: get_version
+      shell: bash
       run: |
         version=$(grep '^version:' pubspec.yaml | awk '{print $2}')
         base_version=$(echo $version | cut -d '+' -f 1)
