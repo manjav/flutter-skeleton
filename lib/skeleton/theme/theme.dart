@@ -39,6 +39,7 @@ class TStyles {
   static TextStyle medium = _style();
   static TextStyle large = _style();
   static TextStyle big = _style();
+  static TextStyle huge = _style();
   static TextStyle tinyInvert = _style();
   static TextStyle smallInvert = _style();
   static TextStyle mediumInvert = _style();
@@ -67,16 +68,17 @@ class Themes {
     TStyles.medium = _style(size: 16.d, weight: FontWeight.w400);
     TStyles.large = _style(size: 19.d, weight: FontWeight.w600);
     TStyles.big = _style(size: 22.d, weight: FontWeight.w700);
+    TStyles.huge = _style(size: 36.d, weight: FontWeight.w800);
     TStyles.tinyInvert =
-        _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary10);
+        _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary0);
     TStyles.smallInvert =
-        _style(size: 14.d, weight: FontWeight.w300, color: TColors.primary10);
+        _style(size: 14.d, weight: FontWeight.w300, color: TColors.primary0);
     TStyles.mediumInvert =
-        _style(size: 16.d, weight: FontWeight.w400, color: TColors.primary10);
+        _style(size: 16.d, weight: FontWeight.w400, color: TColors.primary0);
     TStyles.largeInvert =
-        _style(size: 19.d, weight: FontWeight.w600, color: TColors.primary10);
+        _style(size: 19.d, weight: FontWeight.w600, color: TColors.primary0);
     TStyles.largeInvert =
-        _style(size: 22.d, weight: FontWeight.w700, color: TColors.primary10);
+        _style(size: 22.d, weight: FontWeight.w700, color: TColors.primary0);
   }
 
   static ThemeData? get darkData {

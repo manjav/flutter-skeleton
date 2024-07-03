@@ -25,7 +25,7 @@ class ListenerBox extends StatelessWidget {
     this.difficulty = Difficulty.simple,
   });
   final _correctStyle =
-      TStyles.medium.copyWith(fontSize: 36.d, color: TColors.green, height: 1);
+      TStyles.huge.copyWith(color: TColors.green, height: 1);
 
   @override
   Widget build(BuildContext context) {
