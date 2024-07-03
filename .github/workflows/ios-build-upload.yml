@@ -12,6 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup flutter
+        # if: steps.check_flutter.outputs.installed == 'false'
+        uses: subosito/flutter-action@v2
+        with:
+          # channel: stable
+          flutter-version: '3.19.3'
+
       - uses: cedvdb/action-flutter-build-ios@v1
         with:
           # always use --export-options-plist=ios/GithubActionsExportOptions.plist
