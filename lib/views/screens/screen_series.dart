@@ -112,7 +112,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
 
   Widget _contentItem(Talk talk) {
     return switch (talk.type) {
-      ContentType.image => _imageBuilder(talk),
       ContentType.repeat || ContentType.translate => _quizBuilder(talk),
       ContentType.head => DirText(
           talk.nativeValue,
@@ -167,31 +166,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
       hint: hint,
       answer: talk.targetValue,
       narrator: talk.type.narrator,
-    );
-  }
-
-  Widget _imageBuilder(Talk talk) {
-    final border = BorderRadius.all(Radius.circular(12.d));
-    return Widgets.rect(
-      decoration: BoxDecoration(
-        borderRadius: border,
-        border: Border.all(
-          width: 2.d,
-          color: TColors.primary20,
-        ),
-        shape: BoxShape.rectangle,
-      ),
-      padding: EdgeInsets.all(1.d),
-      alignment: Alignment.center,
-      margin: EdgeInsets.all(24.d),
-      child: ClipRRect(
-        borderRadius: border,
-        child: LoaderWidget(
-          AssetType.image,
-          talk.targetValue,
-          height: 180.d,
-        ),
-      ),
     );
   }
 
