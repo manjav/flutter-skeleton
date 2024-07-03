@@ -8,7 +8,7 @@ jobs:
   release:
     name: release
     permissions: write-all
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
 
       - uses: actions/checkout@v3
@@ -27,8 +27,8 @@ jobs:
           store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
           key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
           key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
-          # build-aab: false
-          # build-ipa: false
+          build-aab: false
+          build-ipa: false
 
       # - name: Test1
       #   shell: bash
@@ -49,8 +49,8 @@ jobs:
       #   if: ${{ steps.equal.result == 'false' }}
       #   run: "echo pubspec version and tag version must be equal "${{ steps.equal.result }}"
 
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "./build/app/outputs/apk/release/*.apk,./build/app/outputs/bundle/release/app-release.aab"
-          tag: ${{ github.ref_name }}
+      # - name: Push to Releases
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     artifacts: "./build/app/outputs/apk/release/*.apk,./build/app/outputs/bundle/release/app-release.aab"
+      #     tag: ${{ github.ref_name }}
