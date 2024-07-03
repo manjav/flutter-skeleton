@@ -47,6 +47,16 @@ runs:
       with:
         file-path: pubspec.yaml
 
+    - name: Parse pubspec.yaml for version
+      id: get_version
+      run: |
+        version=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+        base_version=$(echo $version | cut -d '+' -f 1)
+        echo "base_version=$base_version" >> $GITHUB_ENV
+
+    - name: Display app version
+      run: echo "App base version is ${{ env.base_version }}"
+
     - name: Get the tag and remove the first character
       id: get_tag
       shell: bash
@@ -58,7 +68,7 @@ runs:
     - uses: nick-invision/assert-action@v1
       with:
         expected: ${{ env.TAG_WITHOUT_FIRST_CHAR }}
-        actual: ${{ steps.read-version.outputs.version-number }}
+        actual: ${{ env.base_version }}
 
     - name: Check java found
       id: check_java
