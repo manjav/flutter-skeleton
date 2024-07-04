@@ -218,7 +218,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
               children: [
                 Text("next_serie".l(), style: TStyles.largeInvert),
                 SizedBox(width: 16.d),
-                Asset.load<Image>("ui_arrow_forward", height: 32.d),
+                Asset.load<SvgPicture>("arrow_right", height: 20.d),
               ],
             ),
             onPressed: () => controller.changeSlide(1),
