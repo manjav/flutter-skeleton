@@ -200,7 +200,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
             transform: Transform.rotate(angle: -0.08).transform,
             child: Text(
               "serie_from_to".l([
-                controller.slideIndex.value.convert(),
+                (controller.serieIndex.value + 1).convert(),
                 controller.series.length.convert()
               ]),
               style: TStyles.largeInvert,
