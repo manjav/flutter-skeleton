@@ -36,7 +36,7 @@ class STT extends Quiz {
         onError: _errorListener,
         onStatus: _statusListener,
       );
-      state.value = success ? QuizState.ready : QuizState.error;
+      state.value = success ? QuizState.initialized : QuizState.error;
     } catch (e) {
       state.value = QuizState.error;
     }
