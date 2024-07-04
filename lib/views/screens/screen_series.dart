@@ -152,13 +152,17 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
     serviceLocator<STT>().stop();
     if (state == QuizState.success) {
       await Future.delayed(duration);
-      // serviceLocator<STT>().state.value = QuizState.none;
       if (mounted) {
         controller.onQuizResult(true);
       }
+      if (talk.type != ContentType.repeat) {
+        await serviceLocator<Speaker>()
+            .play(talk.targetValue, narrator: talk.type.narrator);
+      }
     } else if (state == QuizState.fail) {
       controller.onQuizResult(false);
-      // await Future.delayed(duration);
+      await Future.delayed(duration);
+      serviceLocator<STT>().state.value = QuizState.none;
       // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
     }
   }
