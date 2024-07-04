@@ -24,15 +24,14 @@ class ListenerBox extends StatelessWidget {
     required this.narrator,
     this.difficulty = Difficulty.simple,
   });
-  final _correctStyle =
-      TStyles.huge.copyWith(color: TColors.green, height: 1);
+  final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
 
   @override
   Widget build(BuildContext context) {
     var stt = serviceLocator<STT>();
     if (_recognizedWords.value == "__waiting__") {
-      var pattern = answer.patternize();
       _recognizedWords.value = "";
+      var pattern = answer.patternize();
       stt.state.addListener(() {
         if (stt.pattern == pattern) {
           _state.value = stt.state.value;
@@ -59,133 +58,125 @@ class ListenerBox extends StatelessWidget {
     var words = answer.split(" ");
     _patterns.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
-    return ValueListenableBuilder(
-        valueListenable: _recognizedWords,
-        builder: (context, value, child) {
-          return Column(
-            children: [
-              SizedBox(height: 10.d),
-              _answeringBuilder(
-                  context, defaultStyle, value, stt.minMatchLevel),
-              SizedBox(height: 14.d),
-              DirText(hint,
-                  style: TStyles.small.copyWith(color: TColors.primary40)),
-              SizedBox(height: 36.d),
-              stt.state.value == QuizState.fail
-                  ? DirText(
-                      value,
-                      style: TStyles.small
-                          .copyWith(color: TColors.error, height: 1),
-                      textAlign: TextAlign.center,
-                    )
-                  : const SizedBox(),
-              ValueListenableBuilder(
-                  valueListenable: _debugMode,
-                  builder: (context, value, child) => value
-                      ? Text(stt.logs,
-                          style: TStyles.tiny.copyWith(color: TColors.error))
-                      : const SizedBox()),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
+      children: [
+        SizedBox(height: 10.d),
+        DirText(hint, style: TStyles.small.copyWith(color: TColors.primary40)),
+        SizedBox(height: 10.d),
+        _answeringBuilder(context, defaultStyle, stt.minMatchLevel),
+        SizedBox(height: 20.d),
+        ValueListenableBuilder(
+            valueListenable: _debugMode,
+            builder: (context, value, child) => value
+                ? Text(stt.logs,
+                    style: TStyles.tiny.copyWith(color: TColors.error))
+                : const SizedBox()),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SpeakerBox(
+              narrator: narrator,
+              value: hint,
+              width: 50.d,
+            ),
+            Widgets.button(
+              context,
+              width: size,
+              height: size,
+              radius: size,
+              padding: EdgeInsets.zero,
+              alignment: Alignment.center,
+              color: TColors.primary10,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  SpeakerBox(
-                    narrator: narrator,
-                    value: hint,
-                    width: 50.d,
-                  ),
-                  Widgets.button(
-                    context,
-                    width: size,
-                    height: size,
-                    radius: size,
-                    padding: EdgeInsets.zero,
-                    alignment: Alignment.center,
-                    color: TColors.primary10,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        ValueListenableBuilder(
-                          valueListenable: _audioLevel,
-                          builder: (context, value, child) => AnimatedContainer(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(size)),
-                              color: TColors.primary20,
-                            ),
-                            width: size * _audioLevel.value,
-                            height: size * _audioLevel.value,
-                            duration:
-                                const Duration(milliseconds: STT.levelInterval),
-                          ),
-                        ),
-                        _getIcon(size)
-                      ],
+                  ValueListenableBuilder(
+                    valueListenable: _audioLevel,
+                    builder: (context, value, child) => AnimatedContainer(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(size)),
+                        color: TColors.primary20,
+                      ),
+                      width: size * _audioLevel.value,
+                      height: size * _audioLevel.value,
+                      duration: const Duration(milliseconds: STT.levelInterval),
                     ),
-                    onPressed: () {
-                      // if (stt.state.value == QuizState.ready) {
-                      stt.start(pattern: answer.patternize());
-                      // }
-                    },
-                    onLongPress: () =>
-                        stt.onResult?.call(QuizState.success, stt.pattern!),
-                  )
+                  ),
+                  _getIcon(size)
                 ],
               ),
-              // onLongPress: () => _debugMode.value = !_debugMode.value,
-            ],
-          );
-        });
+              onPressed: () {
+                // if (stt.state.value == QuizState.ready) {
+                stt.start(pattern: answer.patternize());
+                // }
+              },
+              onLongPress: () =>
+                  stt.onResult?.call(QuizState.success, stt.pattern!),
+            )
+          ],
+        ),
+        SizedBox(height: 20.d),
+        _wrongResultBuilder(),
+      ],
+    );
   }
 
   Widget _getIcon(double size) => ValueListenableBuilder(
       valueListenable: _state,
-      builder: (context, value, child) {
-        return Asset.load<SvgPicture>("mic_${value.name}", width: size * 0.3);
-      });
+      builder: (context, value, child) =>
+          Asset.load<SvgPicture>("mic_${value.name}", width: size * 0.3));
 
-  Widget _answeringBuilder(BuildContext context, TextStyle defaultStyle,
-      String value, int minMatchLevel) {
-    // if (difficulty != Difficulty.simple) {
-    var items = <Widget>[];
-    // var patterns = talk.targetValue.toLowerCase().split(" ");
-    bool isCorrect = false;
-    var values = value.split(" ");
-    for (var i = 0; i < _patterns.length; i++) {
-      var style = defaultStyle;
-      if (i < values.length) {
-        var rate =
-            ratio(values[i].patternize(), _patterns[i].value.text.patternize());
-        isCorrect = rate > minMatchLevel;
-        if (isCorrect) {
-          style = _correctStyle;
-        }
-      }
-      var isHidden = _patterns[i].value.text.contains("{") ||
-          _patterns[i].value.text.contains("}");
-      items.add(
-        ValueListenableBuilder(
-          valueListenable: _patterns[i],
-          builder: (context, value, child) {
-            return Widgets.button(
-              context,
-              radius: 6.d,
-              color: isHidden ? TColors.primary10 : TColors.transparent,
-              margin: EdgeInsets.all(2.d),
-              padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
-              child: Text(
-                  _patterns[i].value.text.replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
-                  style: isHidden && !_patterns[i].value.used && !isCorrect
-                      ? style.copyWith(color: TColors.transparent)
-                      : style),
-              onPressed: () =>
-                  _patterns[i].value = Choice(value.text)..used = true,
+  Widget _answeringBuilder(
+      BuildContext context, TextStyle defaultStyle, int minMatchLevel) {
+    return ValueListenableBuilder(
+        valueListenable: _recognizedWords,
+        builder: (context, value, child) {
+          // if (difficulty != Difficulty.simple) {
+          var items = <Widget>[];
+          // var patterns = talk.targetValue.toLowerCase().split(" ");
+          bool isCorrect = false;
+          var values = value.split(" ");
+          for (var i = 0; i < _patterns.length; i++) {
+            var style = defaultStyle;
+            if (i < values.length) {
+              var rate = ratio(
+                  values[i].patternize(), _patterns[i].value.text.patternize());
+              isCorrect = rate > minMatchLevel;
+              if (isCorrect) {
+                style = _correctStyle;
+              }
+            }
+            var isHidden = _patterns[i].value.text.contains("{") ||
+                _patterns[i].value.text.contains("}");
+            items.add(
+              ValueListenableBuilder(
+                valueListenable: _patterns[i],
+                builder: (context, value, child) {
+                  return Widgets.button(
+                    context,
+                    radius: 6.d,
+                    color: isHidden ? TColors.primary10 : TColors.transparent,
+                    margin: EdgeInsets.all(2.d),
+                    padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
+                    child: Text(
+                        _patterns[i]
+                            .value
+                            .text
+                            .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
+                        style:
+                            isHidden && !_patterns[i].value.used && !isCorrect
+                                ? style.copyWith(color: TColors.transparent)
+                                : style),
+                    onPressed: () =>
+                        _patterns[i].value = Choice(value.text)..used = true,
+                  );
+                },
+              ),
             );
-          },
-        ),
-      );
-    }
-    return Wrap(children: items);
+          }
+          return Wrap(children: items);
+        });
+
     // }
 
     // return RichText(
@@ -196,6 +187,21 @@ class ListenerBox extends StatelessWidget {
     //     children: _getWords(value),
     //   ),
     // );
+  }
+
+  Widget _wrongResultBuilder() {
+    return ValueListenableBuilder(
+        valueListenable: _state,
+        builder: (context, value, child) {
+          return value == QuizState.fail
+              ? DirText(
+                  _recognizedWords.value,
+                  style:
+                      TStyles.small.copyWith(color: TColors.error, height: 1),
+                  textAlign: TextAlign.center,
+                )
+              : SizedBox(height: 12.d);
+        });
   }
 
   /* List<TextSpan> _getWords(String value) {
