@@ -133,16 +133,20 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   }
 
   Future<void> _startQuiz(Talk talk) async {
-    var account = serviceLocator<AccountProvider>();
+    final account = serviceLocator<AccountProvider>();
+    final voice = talk.type == ContentType.translate
+        ? talk.nativeValue
+        : talk.targetValue;
+    await serviceLocator<Speaker>().play(voice, narrator: talk.type.narrator);
     serviceLocator<STT>().start(
       pattern: talk.targetValue,
       locale: account.metadata["targetLanguage"],
       exceptions: [account.account.user.displayName!.patternize()],
-      onResult: _onSTTResult,
+      onResult: (state, text) => _onSTTResult(state, talk),
     );
   }
 
-  Future<void> _onSTTResult(QuizState state, String text) async {
+  Future<void> _onSTTResult(QuizState state, Talk talk) async {
     const duration = Duration(milliseconds: 1500);
     serviceLocator<STT>().stop();
     if (state == QuizState.success) {
@@ -159,11 +163,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   }
 
   Widget _quizBuilder(Talk talk) {
-    final hint = talk.type == ContentType.translate
+    var voice = talk.type == ContentType.translate
         ? talk.nativeValue
         : talk.targetValue;
     return ListenerBox(
-      hint: hint,
+      voiceHint: voice,
+      hint: talk.nativeValue,
       answer: talk.targetValue,
       narrator: talk.type.narrator,
     );

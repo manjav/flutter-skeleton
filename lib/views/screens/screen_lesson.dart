@@ -207,13 +207,14 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
   }
 
   Widget _quizBuilder(Talk talk) {
-    final hint = talk.type == ContentType.translate
+    var voice = talk.type == ContentType.translate
         ? talk.nativeValue
         : talk.targetValue;
     return ListenerBox(
-      hint: hint,
+      hint: talk.nativeValue,
       answer: talk.targetValue,
       narrator: talk.type.narrator,
+      voiceHint: voice,
     );
   }
 

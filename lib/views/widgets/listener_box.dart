@@ -9,6 +9,7 @@ enum Difficulty { simple, hint, hidden }
 class ListenerBox extends StatelessWidget {
   final String hint;
   final String answer;
+  final String voiceHint;
   final Narrator narrator;
   final Difficulty difficulty;
   final List<ValueNotifier<Choice>> _patterns = [];
@@ -22,6 +23,7 @@ class ListenerBox extends StatelessWidget {
     required this.hint,
     required this.answer,
     required this.narrator,
+    required this.voiceHint,
     this.difficulty = Difficulty.simple,
   });
   final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
@@ -76,7 +78,7 @@ class ListenerBox extends StatelessWidget {
           children: [
             SpeakerBox(
               narrator: narrator,
-              value: hint,
+              value: voiceHint,
               width: 50.d,
             ),
             Widgets.button(
