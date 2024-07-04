@@ -127,8 +127,9 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
 
   Future<void> _playSounds() async {
     for (var content in controller.currentSlide.children) {
-      await playSound(content as Talk);
-      if (content.isQuiz) _startQuiz(content);
+      if (content.isQuiz) {
+        _startQuiz(content as Talk);
+      }
     }
   }
 
