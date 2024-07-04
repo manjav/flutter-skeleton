@@ -188,7 +188,13 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
             color: TColors.orange,
             padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
             transform: Transform.rotate(angle: -0.08).transform,
-            child: Text("serie_from_to".l([]), style: TStyles.largeInvert),
+            child: Text(
+              "serie_from_to".l([
+                controller.slideIndex.value.convert(),
+                controller.series.length.convert()
+              ]),
+              style: TStyles.largeInvert,
+            ),
           ),
           SizedBox(height: 30.d),
           Text("slide_finish".l([]), style: TStyles.huge),
