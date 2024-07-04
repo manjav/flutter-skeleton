@@ -131,7 +131,7 @@ class SpeakerBox extends StatelessWidget {
       width: size,
       height: size,
       radius: size,
-      color: TColors.primary20,
+      color: TColors.primary10,
       alignment: Alignment.center,
       padding: EdgeInsets.zero,
       child: StreamBuilder(

@@ -32,9 +32,9 @@ class ListenerBox extends StatelessWidget {
   Widget build(BuildContext context) {
     var stt = serviceLocator<STT>();
     if (_recognizedWords.value == "__waiting__") {
-      _recognizedWords.value = "";
       var pattern = answer.patternize();
       stt.state.addListener(() {
+        _recognizedWords.value = "";
         if (stt.pattern == pattern) {
           _state.value = stt.state.value;
         }
@@ -62,10 +62,11 @@ class ListenerBox extends StatelessWidget {
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
     return Column(
       children: [
+        _answeringBuilder(context, defaultStyle, stt.minMatchLevel),
         SizedBox(height: 10.d),
         DirText(hint, style: TStyles.small.copyWith(color: TColors.primary40)),
-        SizedBox(height: 10.d),
-        _answeringBuilder(context, defaultStyle, stt.minMatchLevel),
+        SizedBox(height: 50.d),
+        _wrongResultBuilder(),
         SizedBox(height: 20.d),
         ValueListenableBuilder(
             valueListenable: _debugMode,
@@ -74,13 +75,15 @@ class ListenerBox extends StatelessWidget {
                     style: TStyles.tiny.copyWith(color: TColors.error))
                 : const SizedBox()),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             SpeakerBox(
               narrator: narrator,
               value: voiceHint,
-              width: 50.d,
+              width: 40.d,
             ),
+            SizedBox(width: 50.d),
             Widgets.button(
               context,
               width: size,
@@ -114,11 +117,10 @@ class ListenerBox extends StatelessWidget {
               },
               onLongPress: () =>
                   stt.onResult?.call(QuizState.success, stt.pattern!),
-            )
+            ),
+            SizedBox(width: 90.d),
           ],
         ),
-        SizedBox(height: 20.d),
-        _wrongResultBuilder(),
       ],
     );
   }
