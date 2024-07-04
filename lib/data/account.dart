@@ -60,8 +60,13 @@ class AccountProvider extends ChangeNotifier {
     var children = <Content>[];
     if (type == ContentType.talk) {
       for (var i = 0; i < list.length; i++) {
-        children.add(Talk.create(group, i, list[i], account.user.langTag!,
-            metadata["targetLanguage"], account.user.displayName!));
+        if (list[i]["type"] == "title") {
+          (group.parent! as ParentContent).title =
+              list[i][account.user.langTag!];
+        } else {
+          children.add(Talk.create(group, i, list[i], account.user.langTag!,
+              metadata["targetLanguage"], account.user.displayName!));
+        }
       }
     } else {
       final key = "${type.name}_index";

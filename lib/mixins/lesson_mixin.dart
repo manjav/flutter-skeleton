@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 
 import '../app_export.dart';
 
@@ -11,8 +10,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   double padding = 8.d;
 
   @override
-  Widget appBarFactory(double paddingTop) =>
-      navigatorBuilder(paddingTop, Get.arguments["content"].title);
+  Widget appBarFactory(double paddingTop) => navigatorBuilder(paddingTop);
 
   @override
   Widget contentFactory(double paddingTop) {
@@ -31,7 +29,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
-  Widget navigatorBuilder(double paddingTop, String title) {
+  Widget navigatorBuilder(double paddingTop) {
     return Positioned(
       top: paddingTop,
       left: 12.d,
@@ -57,7 +55,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(title),
+                        DirText(controller.currentSerie.title),
                         SizedBox(width: 8.d),
                         Asset.load<SvgPicture>("chevron"),
                       ],
