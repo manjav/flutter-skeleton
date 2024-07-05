@@ -42,6 +42,10 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
           .add(ParentContent.create(null, ContentType.category, "", {}));
     }
     var end = _slidesScrollController!.position.pixels + _slideHeight;
+    if (_animatedItems.length == controller.currentSerie.children.length) {
+      end += 150.d;
+    }
+
     _animatedListKey.currentState?.insertItem(_animatedItems.length - 1);
     _animatedItems.insert(_animatedItems.length - 1, controller.currentSlide);
     await Future.delayed(const Duration(milliseconds: 500));
@@ -69,7 +73,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
             bottomRight: bottomRadius),
         child: AnimatedList(
             key: _animatedListKey,
-            physics: const PageScrollPhysics(),
+            physics: const PageScrollPhysics(parent: ClampingScrollPhysics()),
             controller: _slidesScrollController,
             itemBuilder: (c, i, a) {
               final slide = _animatedItems[i];
