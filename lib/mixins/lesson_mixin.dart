@@ -50,20 +50,22 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             child: ValueListenableBuilder(
               valueListenable: controller.contentIndex,
               builder: (context, value, child) {
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                return Widgets.touchable(context,
+                    child: Column(
                       children: [
-                        DirText(controller.currentSerie.title),
-                        SizedBox(width: 8.d),
-                        Asset.load<SvgPicture>("chevron"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            DirText(controller.currentSerie.title),
+                            SizedBox(width: 8.d),
+                            Asset.load<SvgPicture>("chevron"),
+                          ],
+                        ),
+                        SizedBox(height: 4.d),
+                        indicatorBuilder()
                       ],
                     ),
-                    SizedBox(height: 4.d),
-                    indicatorBuilder()
-                  ],
-                );
+                    onTap: openSerieSelector);
               },
             ),
           ),
@@ -161,4 +163,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     controller.dispose();
     super.dispose();
   }
+
+  void openSerieSelector() {}
 }

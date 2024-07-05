@@ -187,6 +187,41 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
     super.dispose();
   }
 
+  @override
+  void openSerieSelector() {
+    final itemHeight = 50.d;
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Widgets.rect(
+          color: TColors.primary0,
+          radius: 30.d,
+          height: itemHeight * (controller.series.length + 1),
+          child: ListView.builder(
+            padding: EdgeInsets.only(
+                top: itemHeight * 0.5, bottom: itemHeight * 0.5),
+            itemCount: controller.series.length,
+            itemBuilder: (context, index) {
+              return Widgets.button(
+                context,
+                height: itemHeight,
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: itemHeight),
+                child: DirText(controller.series[index].title),
+                onPressed: () {
+                  controller.serieIndex.value = index;
+                  controller.slideIndex.value = -1;
+                  controller.changeSlide(1);
+                  Navigator.pop(context);
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   Widget _nextSerieButton() {
     var last = _animatedItems[_animatedItems.length - 2];
     if (last.id == controller.currentSerie.children.last.id) {
