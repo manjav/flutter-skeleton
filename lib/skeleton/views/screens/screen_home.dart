@@ -33,11 +33,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       if (services.state.status == ServiceStatus.initialize) {
         var account = serviceLocator<AccountProvider>();
         if (!account.metadata.containsKey("targetLanguage")) {
+          Localization.languageCode = "fa";
           await serviceLocator<AccountProvider>().update(
-              nativeLanguage: "fa",
+              nativeLanguage: Localization.languageCode,
               targetLanguage: "en",
               displayName: "guest_${DeviceInfo.model}");
-
           // await Future.delayed(const Duration(seconds: 1));
           // await Get.toNamed(Routes.onboarding);
         }
@@ -97,13 +97,17 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     },
                   ),
                 ),
-                TabPageSelector(
-                  indicatorSize: 8.d,
-                  controller: _tabController,
-                  color: TColors.white30,
-                  selectedColor: TColors.white,
-                  borderStyle: BorderStyle.none,
-                )
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 50.d),
+                  child: TabPageSelector(
+                    indicatorSize: 8.d,
+                    controller: _tabController,
+                    color: TColors.white30,
+                    selectedColor: TColors.white,
+                    borderStyle: BorderStyle.none,
+                  ),
+                ),
               ],
             ),
           ),
@@ -120,7 +124,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       padding: EdgeInsets.fromLTRB(10.d, 20.d, 10.d, 10.d),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: TColors.primary10,
+        color: TColors.primary0,
         borderRadius: BorderRadius.all(Radius.circular(20.d)),
         boxShadow: [BoxShadow(blurRadius: 8.d, color: TColors.primary50)],
       ),
