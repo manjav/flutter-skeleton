@@ -119,7 +119,7 @@ enum ContentType {
         ContentType.repeat ||
         ContentType.translate =>
           Narrator.alloy,
-        _ => Narrator.onyx,
+        _ => Narrator.farid,
       };
 }
 

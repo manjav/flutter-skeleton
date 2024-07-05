@@ -5,12 +5,12 @@ import '../app_export.dart';
 enum Narrator { alloy, echo, fable, nova, onyx, shimmer, farid }
 
 class Speaker extends IService {
-  Narrator defaultNarrator = Narrator.onyx;
+  Narrator defaultNarrator = Narrator.farid;
   Future<void> play(
     String text, {
     bool force = false,
     bool reset = false,
-    Narrator narrator = Narrator.onyx,
+    Narrator narrator = Narrator.farid,
     Function()? onComplete,
   }) async {
     try {
