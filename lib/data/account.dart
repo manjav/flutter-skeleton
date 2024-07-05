@@ -83,7 +83,9 @@ class AccountProvider extends ChangeNotifier {
         var child = ParentContent.create(
             group, type, "${group.id}_${entry.key}", {"index": entry.key});
         _addContentChildren(child, entry.value, type.getChild());
+        if (child.children.isNotEmpty) {
         children.add(child);
+        }
       }
     }
     children.sort((a, b) => a.index - b.index);
