@@ -84,7 +84,7 @@ class AccountProvider extends ChangeNotifier {
             group, type, "${group.id}_${entry.key}", {"index": entry.key});
         _addContentChildren(child, entry.value, type.getChild());
         if (child.children.isNotEmpty) {
-        children.add(child);
+          children.add(child);
         }
       }
     }
