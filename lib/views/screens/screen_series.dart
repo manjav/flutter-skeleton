@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';
@@ -12,283 +12,274 @@ class SeriesScreen extends AbstractScreen {
 }
 
 class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
-  final List<Talk> _animatedItems = [];
+  final List<ParentContent> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
-  final ScrollController _chatScrollController = ScrollController();
+  final _slideHeight = DeviceInfo.size.height * 0.5;
+  PageController? _slidesScrollController;
 
   @override
   void initState() {
-    controller.slides = Get.arguments["content"].children;
+    var list = Get.arguments["content"].children;
+    controller.series = List.generate(list.length, (i) => list[i]);
+    // controller.series.removeRange(0, 2);
+    controller.serieIndex.addListener(_onChangeSerie);
     controller.slideIndex.addListener(_onChangeSlide);
-    controller.contentIndex.addListener(_onChangeLine);
-    controller.changeSlide(1);
+    controller.changeSerie(1);
     super.initState();
   }
 
-  Future<void> _onChangeSlide() async {
+  Future<void> _onChangeSerie() async {
     _animatedItems.clear();
     _animatedListKey.currentState
         ?.removeAllItems((context, animation) => const SizedBox());
   }
 
-  Future<void> _onChangeLine() async {
-    if (controller.contentIndex.value <= -1) return;
-    var talk = controller.currentContent;
-    if (talk.isQuiz) {
-      _startQuizCallback(talk);
-    } else {
-      footerHeight.value = 0;
-      await _addChat(controller.uniqueIndex);
-    }
-  }
-
-  Future<void> _addChat(int lastIndex) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (controller.uniqueIndex != lastIndex) return;
-    serviceLocator<Sounds>().stopAll();
-    var talk = controller.currentContent;
-    if (talk.textPresentationMode == PresentMode.none) {
-      subtitle.value = talk;
-    } else {
-      subtitle.value = null;
+  Future<void> _onChangeSlide() async {
+    if (controller.slideIndex.value <= -1) return;
+    if (_animatedItems.isEmpty) {
       _animatedListKey.currentState?.insertItem(_animatedItems.length);
-      _animatedItems.add(controller.currentContent);
+      _animatedItems
+          .add(ParentContent.create(null, ContentType.category, "", {}));
+    }
+    var end = _slidesScrollController!.position.pixels + _slideHeight;
+    if (_animatedItems.length == controller.currentSerie.children.length) {
+      end += 150.d;
     }
 
-    await playSound(talk, lastIndex: lastIndex);
-    if (controller.uniqueIndex != lastIndex) return;
-
-    controller.changeContent(1);
-
-    // var duration = const Duration(milliseconds: 500);
-    // await _chatScrollController.animateTo(
-    //     _chatScrollController.position.maxScrollExtent,
-    //     duration: duration,
-    //     curve: Curves.easeOutQuart);
+    _animatedListKey.currentState?.insertItem(_animatedItems.length - 1);
+    _animatedItems.insert(_animatedItems.length - 1, controller.currentSlide);
+    await Future.delayed(const Duration(milliseconds: 500));
+    _playSounds();
+    _scrollTo(end);
   }
 
-  Future<void> _startQuizCallback(Talk step) async {
-    subtitle.value == null;
-    footerHeight.value = 100.d;
-    if (!step.isQuiz) return;
-    var account = serviceLocator<AccountProvider>();
-    serviceLocator<STT>().start(
-      locale: account.metadata["targetLanguage"],
-      pattern: step.targetValue,
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: _onSTTResult,
+  @override
+  Widget childBuilder(double paddingTop) {
+    _slidesScrollController ??= PageController(
+        viewportFraction:
+            _slideHeight / (DeviceInfo.size.height - paddingTop - padding));
+    final topRadius = Radius.circular(20.d);
+    final bottomRadius = Radius.circular(46.d);
+    return Positioned(
+      top: paddingTop + 48.d,
+      left: padding,
+      right: padding,
+      bottom: padding,
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+            topLeft: topRadius,
+            topRight: topRadius,
+            bottomLeft: bottomRadius,
+            bottomRight: bottomRadius),
+        child: AnimatedList(
+            key: _animatedListKey,
+            physics: const PageScrollPhysics(parent: ClampingScrollPhysics()),
+            controller: _slidesScrollController,
+            itemBuilder: (c, i, a) {
+              final slide = _animatedItems[i];
+              if (slide.type == ContentType.category) {
+                return _nextSerieButton();
+              }
+              var items = <Widget>[];
+              for (var c = 0; c < slide.children.length; c++) {
+                items.add(_contentItem(slide.children[c] as Talk));
+                items.add(SizedBox(height: 12.d));
+              }
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 0.5),
+                  end: const Offset(0, 0),
+                ).animate(a),
+                child: Widgets.button(
+                  context,
+                  radius: 24.d,
+                  height: _slideHeight,
+                  color: TColors.primary0,
+                  width: DeviceInfo.size.width,
+                  margin: EdgeInsets.symmetric(vertical: 5.d),
+                  padding: EdgeInsets.symmetric(horizontal: 20.d),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: items),
+                  onPressed: () => _scrollTo(_slideHeight * i),
+                ),
+              );
+            }),
+      ),
     );
   }
 
-  Future<void> _endQuizCallback() async {
-    footerHeight.value = 0;
-    await _addChat(controller.uniqueIndex);
+  void _scrollTo(double offset) {
+    _slidesScrollController!.animateTo(offset,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
   }
 
-  Future<void> _onSTTResult(QuizState state, String text) async {
+  Widget _contentItem(Talk talk) {
+    return switch (talk.type) {
+      ContentType.repeat || ContentType.translate => _quizBuilder(talk),
+      ContentType.head => DirText(
+          talk.nativeValue,
+          style: TStyles.big,
+          textAlign: TextAlign.center,
+        ),
+      _ => DirText(
+          talk.nativeValue,
+          textAlign: TextAlign.center,
+        ),
+    };
+  }
+
+  Future<void> _playSounds() async {
+    for (var content in controller.currentSlide.children) {
+      if (content.isQuiz) {
+        _startQuiz(content as Talk);
+      }
+    }
+  }
+
+  Future<void> _startQuiz(Talk talk) async {
+    final account = serviceLocator<AccountProvider>();
+    final voice = talk.type == ContentType.translate
+        ? talk.nativeValue
+        : talk.targetValue;
+    await serviceLocator<Speaker>().play(voice, narrator: talk.type.narrator);
+    serviceLocator<STT>().start(
+      pattern: talk.targetValue,
+      locale: account.metadata["targetLanguage"],
+      exceptions: [account.account.user.displayName!.patternize()],
+      onResult: (state, text) => _onSTTResult(state, talk),
+    );
+  }
+
+  Future<void> _onSTTResult(QuizState state, Talk talk) async {
     const duration = Duration(milliseconds: 1500);
     serviceLocator<STT>().stop();
     if (state == QuizState.success) {
       await Future.delayed(duration);
-      serviceLocator<STT>().state.value = QuizState.none;
       if (mounted) {
         controller.onQuizResult(true);
       }
-      _endQuizCallback();
+      if (talk.type != ContentType.repeat) {
+        await serviceLocator<Speaker>()
+            .play(talk.targetValue, narrator: talk.type.narrator);
+      }
     } else if (state == QuizState.fail) {
       controller.onQuizResult(false);
       await Future.delayed(duration);
-      serviceLocator<STT>().start();
+      serviceLocator<STT>().state.value = QuizState.none;
+      // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
     }
   }
 
+  Widget _quizBuilder(Talk talk) {
+    var voice = talk.type == ContentType.translate
+        ? talk.nativeValue
+        : talk.targetValue;
+    return ListenerBox(
+      voiceHint: voice,
+      hint: talk.nativeValue,
+      answer: talk.targetValue,
+      narrator: talk.type.narrator,
+    );
+  }
+
   @override
-  Widget navigatorBuilder(double paddingTop, String title) {
-    return ValueListenableBuilder(
-      valueListenable: controller.contentIndex,
-      builder: (context, value, child) {
-        return Align(
-          alignment: const Alignment(0, 1),
-          child: FractionallySizedBox(
-            heightFactor: 0.15,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _slidination(
-                    controller.slideIndex.value, controller.slides.length),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _navigationButton(
-                      name: "footer_prev",
-                      isEnable: controller.slideIndex.value > 0,
-                      onPress: () => controller.changeSlide(-1),
-                    ),
-                    _navigationButton(
-                      name: "footer_pause",
-                    ),
-                    _navigationButton(
-                      name: "footer_next",
-                      isEnable: value < controller.slides.length &&
-                          controller.contentIndex.value ==
-                              controller.contents.length - 1,
-                      onPress: () => controller.changeSlide(1),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+  void dispose() {
+    serviceLocator<Sounds>().stopAll();
+    controller.serieIndex.removeListener(_onChangeSerie);
+    controller.slideIndex.removeListener(_onChangeSlide);
+    super.dispose();
+  }
+
+  @override
+  void openSerieSelector() {
+    final itemHeight = 50.d;
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Widgets.rect(
+          color: TColors.primary0,
+          radius: 30.d,
+          height: itemHeight * (controller.series.length + 1),
+          child: ListView.builder(
+            padding: EdgeInsets.only(
+                top: itemHeight * 0.5, bottom: itemHeight * 0.5),
+            itemCount: controller.series.length,
+            itemBuilder: (context, index) {
+              return Widgets.button(
+                context,
+                height: itemHeight,
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: itemHeight),
+                child: DirText(controller.series[index].title),
+                onPressed: () {
+                  controller.serieIndex.value = index;
+                  controller.slideIndex.value = -1;
+                  controller.changeSlide(1);
+                  Navigator.pop(context);
+                },
+              );
+            },
           ),
         );
       },
     );
   }
 
-  Widget _slidination(int value, int length) {
-    final margin = 3.d;
-    final width = (DeviceInfo.size.width - margin * 12) / length - margin * 2;
-    return SizedBox(
-      height: 10.d,
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: margin * 6),
-        scrollDirection: Axis.horizontal,
-        itemCount: length,
-        itemBuilder: (context, index) {
-          return Widgets.rect(
-            radius: 4.d,
-            width: width,
-            height: margin,
-            margin: EdgeInsets.all(margin),
-            color: index <= value ? TColors.white : TColors.primary20,
-          );
-        },
+  Widget _nextSerieButton() {
+    var last = _animatedItems[_animatedItems.length - 2];
+    if (last.id == controller.currentSerie.children.last.id) {
+      return Column(
+        children: [
+          SizedBox(height: 50.d),
+          Widgets.rect(
+            radius: 12.d,
+            color: TColors.orange,
+            padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
+            transform: Transform.rotate(angle: -0.08).transform,
+            child: Text(
+              "serie_from_to".l([
+                (controller.serieIndex.value + 1).convert(),
+                controller.series.length.convert()
+              ]),
+              style: TStyles.largeInvert,
+            ),
+          ),
+          SizedBox(height: 30.d),
+          Text("slide_finish".l([]), style: TStyles.huge),
+          SizedBox(height: 30.d),
+          SkinnedButton(
+            color: TColors.blue,
+            height: 64.d,
+            width: DeviceInfo.size.width * 0.8,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("next_serie".l(), style: TStyles.largeInvert),
+                SizedBox(width: 16.d),
+                Asset.load<SvgPicture>("arrow_right", height: 20.d),
+              ],
+            ),
+            onPressed: () => controller.changeSlide(1),
+          ),
+          SizedBox(height: 30.d),
+        ],
+      );
+    }
+    return Widgets.button(
+      context,
+      height: 100.d,
+      alignment: const Alignment(0, 0.5),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Asset.load<SvgPicture>("wand"),
+          SizedBox(width: 12.d),
+          Text("next_slide".l(),
+              style: TStyles.medium.copyWith(color: TColors.primary40)),
+        ],
       ),
+      onPressed: () => controller.changeSlide(1),
     );
-  }
-
-  Widget _navigationButton({
-    required name,
-    bool isEnable = true,
-    Function()? onPress,
-  }) {
-    return Opacity(
-      opacity: isEnable ? 1 : 0.4,
-      child: Widgets.button(
-        context,
-        height: 92.d,
-        padding: EdgeInsets.all(12.d),
-        child: Asset.load<Image>(name),
-        onPressed: () {
-          // if (isEnable) {
-          onPress?.call();
-          // }
-        },
-      ),
-    );
-  }
-
-  @override
-  Widget childBuilder(double paddingTop) {
-    return AnimatedList(
-      key: _animatedListKey,
-      controller: _chatScrollController,
-      padding: EdgeInsets.fromLTRB(
-          padding, paddingTop + padding * 6, padding, 200.d),
-      itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a),
-    );
-  }
-
-  Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
-    talk.scrollPosition = _chatScrollController.position.pixels;
-    return ScaleTransition(
-      alignment: switch (talk.type) {
-        ContentType.user => Alignment.bottomRight,
-        ContentType.bot => Alignment.topLeft,
-        _ => Alignment.center,
-      },
-      scale: CurvedAnimation(
-        parent: animation.drive(Tween<double>(begin: 0, end: 1)),
-        curve: Curves.easeOutBack,
-      ),
-      child: switch (talk.type) {
-        ContentType.image => _imageBuilder(talk),
-        _ => _chatBuilder(talk),
-        // _ => const SizedBox(),
-        // ContentType.name => SizedBox(height: 10.d),
-      },
-    );
-  }
-
-  Widget _imageBuilder(Talk talk) {
-    final border = BorderRadius.all(Radius.circular(12.d));
-    return Widgets.rect(
-      decoration: BoxDecoration(
-        borderRadius: border,
-        border: Border.all(
-          width: 2.d,
-          color: TColors.primary20,
-        ),
-        shape: BoxShape.rectangle,
-      ),
-      padding: EdgeInsets.all(1.d),
-      alignment: Alignment.center,
-      margin: EdgeInsets.all(24.d),
-      child: ClipRRect(
-        borderRadius: border,
-        child: LoaderWidget(
-          AssetType.image,
-          talk.targetValue,
-          height: 180.d,
-        ),
-      ),
-    );
-  }
-
-  Widget _chatBuilder(Talk talk) {
-    var tip = switch (talk.type) {
-      ContentType.user => BalloonTipPosition.rightBottom,
-      ContentType.bot => BalloonTipPosition.leftTop,
-      _ => BalloonTipPosition.none,
-    };
-
-    var main = talk.textPresentationMode.hasTarget
-        ? talk.targetValue
-        : talk.nativeValue;
-    var translate =
-        talk.textPresentationMode == PresentMode.both ? talk.nativeValue : null;
-    return RadioBox(
-      main,
-      ballonPosition: tip,
-      narrator: talk.type.narrator,
-      translation: translate,
-      textStyle: talk.isChat
-          ? null
-          : (talk.type == ContentType.intro ? TStyles.large : TStyles.small),
-      color: talk.isChat
-          ? null
-          : (talk.type == ContentType.intro
-              ? TColors.cream
-              : TColors.primary10),
-    );
-  }
-
-  @override
-  Widget footerBuilder() {
-    var footer = Column(children: [
-      ListenerBox(controller.currentContent),
-      SizedBox(height: 120.d),
-    ]);
-
-    // footerSize.value = getFooterHeight(context);
-    return footer;
-  }
-
-  @override
-  void dispose() {
-    serviceLocator<Sounds>().stopAll();
-    controller.slideIndex.removeListener(_onChangeSlide);
-    controller.contentIndex.removeListener(_onChangeLine);
-    super.dispose();
   }
 }

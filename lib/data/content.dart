@@ -11,15 +11,27 @@ class Content {
   }
 
   bool get isChat => type == ContentType.bot || type == ContentType.user;
-  bool get isQuiz => type == ContentType.user;
+  bool get isQuiz =>
+      type == ContentType.repeat || type == ContentType.translate;
 
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];
     for (var entry in map.entries) {
-      var category = ParentContent.create(null, entry.key, entry.value);
-      var groups = <GroupContent>[];
+      var category = ParentContent.create(
+        null,
+        ContentType.category,
+        entry.key,
+        entry.value,
+      );
+
+      var groups = <ParentContent>[];
       for (var gentry in entry.value["groups"].entries) {
-        groups.add(GroupContent.create(category, gentry.key, gentry.value));
+        groups.add(ParentContent.create(
+          category,
+          ContentType.group,
+          gentry.key,
+          gentry.value,
+        ));
       }
       groups.sort((a, b) => a.index - b.index);
       category.type = ContentType.category;
@@ -34,8 +46,13 @@ class Content {
 class ParentContent extends Content {
   List<Content> children = [];
   String title = "", description = "", iconUrl = "", mode = "";
-  ParentContent.create(Content? parent, String id, Map map)
-      : super.create(parent, id, map) {
+  ParentContent.create(
+    Content? parent,
+    ContentType type,
+    String id,
+    Map map,
+  ) : super.create(parent, id, map) {
+    this.type = type;
     title = map["title"] ?? "";
     description = map["description"] ?? "";
     iconUrl = map["iconUrl"] ?? "";
@@ -43,35 +60,10 @@ class ParentContent extends Content {
   }
 }
 
-class GroupContent extends ParentContent {
-  GroupContent.create(super.parent, super.id, super.map) : super.create() {
-    type = ContentType.group;
-  }
-
-  List<Word> get words {
-    var result = <Word>[];
-    var ids = ["Egg", "Yogurt", "Bread", "Lemon"];
-    var targets = ["Yumurta", "Yogurt", "Ekmek", "Limon"];
-    var natives = ["تخم مرغ", "ماست", "نان", "لیمو"];
-    // Set<String> all = {};
-    // for (var talk in children) {
-    //   all.addAll((talk as Talk).words);
-    // }
-    for (var i = 0; i < ids.length; i++) {
-      result.add(Word.create(parent, ids[i],
-          {"native": natives[i], "target": targets[i], "index": i}));
-    }
-
-    return result;
-  }
-}
-
 class Talk extends Content {
   int serieIndex = 0;
   int slideIndex = 0;
   double scrollPosition = 0;
-  PresentMode textPresentationMode = PresentMode.none;
-  PresentMode voicePresentationMode = PresentMode.none;
   Set<String> get words => {...targetValue.split(" ")};
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
@@ -80,16 +72,12 @@ class Talk extends Content {
     slideIndex = map["slide_index"] ?? 0;
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
-    textPresentationMode = PresentMode.values[map["text_mode"]];
-    voicePresentationMode = PresentMode.values[map["voice_mode"]];
-    if (map["type"] == "introduce") {
-      type = ContentType.intro;
-    } else if (map["type"].endsWith("_1")) {
+    if (map["type"].endsWith("_1")) {
       type = ContentType.user;
     } else if (map["type"].endsWith("_2")) {
       type = ContentType.bot;
     } else {
-      type = map["type"] == "image" ? ContentType.image : ContentType.hint;
+      type = ContentType.getEnum(map["type"]);
     }
   }
 }
@@ -98,11 +86,25 @@ enum ContentType {
   none,
   category,
   group,
-  intro,
-  hint,
+  slide,
+  serie,
+  talk,
+  head,
+  text,
+  caption,
+  repeat,
+  translate,
   user,
   bot,
   image;
+
+  ContentType getChild() {
+    return switch (this) {
+      ContentType.serie => ContentType.slide,
+      ContentType.slide => ContentType.talk,
+      _ => none,
+    };
+  }
 
   static ContentType getEnum(String type) {
     for (var value in ContentType.values) {
@@ -113,8 +115,11 @@ enum ContentType {
 
   Narrator get narrator => switch (this) {
         ContentType.user => Narrator.nova,
-        ContentType.bot => Narrator.fable,
-        _ => Narrator.onyx,
+        ContentType.bot ||
+        ContentType.repeat ||
+        ContentType.translate =>
+          Narrator.alloy,
+        _ => Narrator.farid,
       };
 }
 

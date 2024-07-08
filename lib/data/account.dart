@@ -50,24 +50,46 @@ class AccountProvider extends ChangeNotifier {
     return contents;
   }
 
-  Future<void> loadGroup(GroupContent group) async {
+  Future<void> loadGroup(ParentContent group) async {
     List list = await serviceLocator<NetConnector>()
         .rpc("content_contents", params: {"groupId": group.id});
+    _addContentChildren(group, list, ContentType.serie);
+  }
 
-    var slides = <int, GroupContent>{};
-    for (var i = 0; i < list.length; i++) {
-      final slideIndex = list[i]["slide_index"];
-      if (!slides.containsKey(slideIndex)) {
-        slides[slideIndex] = GroupContent.create(
-            group, "${group.id}_$slideIndex", {"index": slideIndex});
+  void _addContentChildren(ParentContent group, List list, ContentType type) {
+    var children = <Content>[];
+    if (type == ContentType.talk) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i]["type"] == "title") {
+          (group.parent! as ParentContent).title =
+              list[i][account.user.langTag!];
+        } else {
+          children.add(Talk.create(group, i, list[i], account.user.langTag!,
+              metadata["targetLanguage"], account.user.displayName!));
+        }
       }
-      slides[slideIndex]!.children.add(
-            Talk.create(group, i, list[i], account.user.langTag!,
-                metadata["targetLanguage"], account.user.displayName!),
-          );
+    } else {
+      final key = "${type.name}_index";
+      var map = <int, List>{};
+      for (var i = 0; i < list.length; i++) {
+        final index = list[i][key];
+        if (!map.containsKey(index)) {
+          map[index] = [];
+        }
+        map[index]!.add(list[i]);
+      }
+
+      for (var entry in map.entries) {
+        var child = ParentContent.create(
+            group, type, "${group.id}_${entry.key}", {"index": entry.key});
+        _addContentChildren(child, entry.value, type.getChild());
+        if (child.children.isNotEmpty) {
+          children.add(child);
+        }
+      }
     }
-    group.children = slides.values.toList();
-    group.children.sort((a, b) => a.index - b.index);
+    children.sort((a, b) => a.index - b.index);
+    group.children = children;
   }
 
   Future<Map> loadStats(String type) async {

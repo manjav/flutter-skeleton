@@ -18,10 +18,11 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
 
   @override
   void initState() {
-    controller.slides = Get.arguments["content"].children;
+    var list = Get.arguments["content"].children;
+    controller.series = List.generate(list.length, (i) => list[i]);
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
-    controller.changeSlide(1);
+    controller.changeSerie(1);
     super.initState();
   }
 
@@ -35,11 +36,9 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     if (controller.contentIndex.value <= -1) return;
     var talk = controller.currentContent;
     if (talk.isQuiz) {
-      _startQuizCallback(talk);
-    } else {
-      footerHeight.value = 0;
-      await _addChat(controller.uniqueIndex);
+      _startQuiz(talk);
     }
+    await _addChat(controller.uniqueIndex);
   }
 
   Future<void> _addChat(int lastIndex) async {
@@ -47,7 +46,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     if (controller.uniqueIndex != lastIndex) return;
     serviceLocator<Sounds>().stopAll();
     var talk = controller.currentContent;
-    if (talk.textPresentationMode == PresentMode.none) {
+    if (talk.type == ContentType.caption) {
       subtitle.value = talk;
     } else {
       subtitle.value = null;
@@ -57,8 +56,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
 
     await playSound(talk, lastIndex: lastIndex);
     if (controller.uniqueIndex != lastIndex) return;
-
-    controller.changeContent(1);
+    if (!talk.isQuiz) controller.changeContent(1);
 
     // var duration = const Duration(milliseconds: 500);
     // await _chatScrollController.animateTo(
@@ -67,126 +65,68 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     //     curve: Curves.easeOutQuart);
   }
 
-  Future<void> _startQuizCallback(Talk step) async {
-    subtitle.value == null;
-    footerHeight.value = 100.d;
-    if (!step.isQuiz) return;
-    var account = serviceLocator<AccountProvider>();
-    serviceLocator<STT>().start(
-      locale: account.metadata["targetLanguage"],
-      pattern: step.targetValue,
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: _onSTTResult,
-    );
-  }
+  // @override
+  // Widget navigatorBuilder(double paddingTop, String title) {
+  //   return ValueListenableBuilder(
+  //     valueListenable: controller.contentIndex,
+  //     builder: (context, value, child) {
+  //       return Align(
+  //         alignment: const Alignment(0, 1),
+  //         child: FractionallySizedBox(
+  //           heightFactor: 0.15,
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             crossAxisAlignment: CrossAxisAlignment.center,
+  //             children: [
+  //               indicatorBuilder(),
+  //               Row(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: [
+  //                   _navigationButton(
+  //                     name: "footer_prev",
+  //                     isEnable: controller.slideIndex.value > 0,
+  //                     onPress: () => controller.changeSlide(-1),
+  //                   ),
+  //                   _navigationButton(
+  //                     name: "footer_pause",
+  //                   ),
+  //                   _navigationButton(
+  //                     name: "footer_next",
+  //                     isEnable: value < controller.series.length &&
+  //                         controller.contentIndex.value ==
+  //                             controller.currentSerie.children.length - 1,
+  //                     onPress: () => controller.changeSerie(1),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-  Future<void> _endQuizCallback() async {
-    footerHeight.value = 0;
-    await _addChat(controller.uniqueIndex);
-  }
-
-  Future<void> _onSTTResult(QuizState state, String text) async {
-    const duration = Duration(milliseconds: 1500);
-    serviceLocator<STT>().stop();
-    if (state == QuizState.success) {
-      await Future.delayed(duration);
-      serviceLocator<STT>().state.value = QuizState.none;
-      if (mounted) {
-        controller.onQuizResult(true);
-      }
-      _endQuizCallback();
-    } else if (state == QuizState.fail) {
-      controller.onQuizResult(false);
-      await Future.delayed(duration);
-      serviceLocator<STT>().start();
-    }
-  }
-
-  @override
-  Widget navigatorBuilder(double paddingTop, String title) {
-    return ValueListenableBuilder(
-      valueListenable: controller.contentIndex,
-      builder: (context, value, child) {
-        return Align(
-          alignment: const Alignment(0, 1),
-          child: FractionallySizedBox(
-            heightFactor: 0.15,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _slidination(
-                    controller.slideIndex.value, controller.slides.length),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _navigationButton(
-                      name: "footer_prev",
-                      isEnable: controller.slideIndex.value > 0,
-                      onPress: () => controller.changeSlide(-1),
-                    ),
-                    _navigationButton(
-                      name: "footer_pause",
-                    ),
-                    _navigationButton(
-                      name: "footer_next",
-                      isEnable: value < controller.slides.length &&
-                          controller.contentIndex.value ==
-                              controller.contents.length - 1,
-                      onPress: () => controller.changeSlide(1),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _slidination(int value, int length) {
-    final margin = 3.d;
-    final width = (DeviceInfo.size.width - margin * 12) / length - margin * 2;
-    return SizedBox(
-      height: 10.d,
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: margin * 6),
-        scrollDirection: Axis.horizontal,
-        itemCount: length,
-        itemBuilder: (context, index) {
-          return Widgets.rect(
-            radius: 4.d,
-            width: width,
-            height: margin,
-            margin: EdgeInsets.all(margin),
-            color: index <= value ? TColors.white : TColors.primary20,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _navigationButton({
-    required name,
-    bool isEnable = true,
-    Function()? onPress,
-  }) {
-    return Opacity(
-      opacity: isEnable ? 1 : 0.4,
-      child: Widgets.button(
-        context,
-        height: 92.d,
-        padding: EdgeInsets.all(12.d),
-        child: Asset.load<Image>(name),
-        onPressed: () {
-          // if (isEnable) {
-          onPress?.call();
-          // }
-        },
-      ),
-    );
-  }
+  // Widget _navigationButton({
+  //   required name,
+  //   bool isEnable = true,
+  //   Function()? onPress,
+  // }) {
+  //   return Opacity(
+  //     opacity: isEnable ? 1 : 0.4,
+  //     child: Widgets.button(
+  //       context,
+  //       height: 92.d,
+  //       padding: EdgeInsets.all(12.d),
+  //       child: Asset.load<Image>(name),
+  //       onPressed: () {
+  //         // if (isEnable) {
+  //         onPress?.call();
+  //         // }
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   Widget childBuilder(double paddingTop) {
@@ -213,9 +153,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
-        _ => _chatBuilder(talk),
-        // _ => const SizedBox(),
-        // ContentType.name => SizedBox(height: 10.d),
+        _ => _contentItem(talk),
       },
     );
   }
@@ -245,43 +183,72 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     );
   }
 
-  Widget _chatBuilder(Talk talk) {
+  Widget _contentItem(Talk talk) {
     var tip = switch (talk.type) {
       ContentType.user => BalloonTipPosition.rightBottom,
       ContentType.bot => BalloonTipPosition.leftTop,
       _ => BalloonTipPosition.none,
     };
-
-    var main = talk.textPresentationMode.hasTarget
-        ? talk.targetValue
-        : talk.nativeValue;
-    var translate =
-        talk.textPresentationMode == PresentMode.both ? talk.nativeValue : null;
+    if (talk.isQuiz) {
+      return _quizBuilder(talk);
+    }
     return RadioBox(
-      main,
+      talk.targetValue, // main,
       ballonPosition: tip,
       narrator: talk.type.narrator,
-      translation: translate,
+      translation: talk.nativeValue, // translate,
       textStyle: talk.isChat
           ? null
-          : (talk.type == ContentType.intro ? TStyles.large : TStyles.small),
+          : (talk.type == ContentType.head ? TStyles.large : TStyles.small),
       color: talk.isChat
           ? null
-          : (talk.type == ContentType.intro
-              ? TColors.cream
-              : TColors.primary10),
+          : (talk.type == ContentType.head ? TColors.cream : TColors.primary10),
     );
   }
 
-  @override
-  Widget footerBuilder() {
-    var footer = Column(children: [
-      ListenerBox(controller.currentContent),
-      SizedBox(height: 120.d),
-    ]);
+  Widget _quizBuilder(Talk talk) {
+    var voice = talk.type == ContentType.translate
+        ? talk.nativeValue
+        : talk.targetValue;
+    return ListenerBox(
+      hint: talk.nativeValue,
+      answer: talk.targetValue,
+      narrator: talk.type.narrator,
+      voiceHint: voice,
+    );
+  }
 
-    // footerSize.value = getFooterHeight(context);
-    return footer;
+  Future<void> _startQuiz(Talk talk) async {
+    subtitle.value == null;
+    var account = serviceLocator<AccountProvider>();
+    serviceLocator<STT>().start(
+      pattern: talk.targetValue,
+      locale: account.metadata["targetLanguage"],
+      exceptions: [account.account.user.displayName!.patternize()],
+      onResult: (state, text) => _onSTTResult(state, talk),
+    );
+  }
+
+  Future<void> _onSTTResult(QuizState state, Talk talk) async {
+    const duration = Duration(milliseconds: 500);
+    serviceLocator<STT>().stop();
+    if (state == QuizState.success) {
+      await Future.delayed(duration);
+      // serviceLocator<STT>().state.value = QuizState.none;
+      if (mounted) {
+        controller.onQuizResult(true);
+        _animatedListKey.currentState?.removeItem(_animatedItems.length - 1,
+            (context, animation) => const SizedBox());
+        _animatedItems.removeLast();
+        talk.type = ContentType.user;
+        await Future.delayed(duration);
+        _addChat(controller.uniqueIndex);
+      }
+    } else if (state == QuizState.fail) {
+      controller.onQuizResult(false);
+      // await Future.delayed(duration);
+      // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
+    }
   }
 
   @override

@@ -11,7 +11,7 @@ class Quiz extends IService {
     Function(QuizState, String)? onResult,
   }) {
     isEnable = true;
-    state.value = QuizState.ready;
+    state.value = QuizState.waiting;
     if (onResult != null) this.onResult = onResult;
   }
 
@@ -20,4 +20,4 @@ class Quiz extends IService {
   }
 }
 
-enum QuizState { none, ready, success, fail, error }
+enum QuizState { none, initialized, waiting, ready, success, fail, error }

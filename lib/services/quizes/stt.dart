@@ -36,7 +36,7 @@ class STT extends Quiz {
         onError: _errorListener,
         onStatus: _statusListener,
       );
-      state.value = success ? QuizState.ready : QuizState.error;
+      state.value = success ? QuizState.initialized : QuizState.error;
     } catch (e) {
       state.value = QuizState.error;
     }
@@ -73,8 +73,10 @@ class STT extends Quiz {
   }
 
   void _statusListener(String status) {
-    log('Received listener status: $status, listening: ${_speech.isListening}');
-    if (status == "done") {
+    log('Received listener status: => $status, listening: ${_speech.isListening}');
+    if (status == "listening") {
+      state.value = QuizState.ready;
+    } else if (status == "done") {
       stop();
     }
   }
@@ -96,7 +98,7 @@ class STT extends Quiz {
     recognizedWords.value = "";
     final options = SpeechListenOptions(
         onDevice: false,
-        listenMode: ListenMode.confirmation,
+        listenMode: ListenMode.deviceDefault,
         cancelOnError: true,
         partialResults: true,
         autoPunctuation: true,
@@ -108,8 +110,8 @@ class STT extends Quiz {
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
-      // pauseFor: const Duration(seconds: 2),
-      // listenFor: const Duration(seconds: 30),
+      pauseFor: const Duration(seconds: 5),
+      listenFor: const Duration(seconds: 3),
       onSoundLevelChange: _soundLevelListener,
       onResult: _resultListener,
     );
@@ -134,16 +136,18 @@ class STT extends Quiz {
       recognizedWords.value = result.recognizedWords;
       // if (result.finalResult) {
       var insert = result.recognizedWords.patternize();
-      var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
-          orElse: () => "");
+      // var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
+      //     orElse: () => "");
       var rate = ratio(pattern!, insert);
-      if (exception.isNotEmpty) {
-        minMatchLevel =
-            100 - (100 * exception.length / pattern!.length).round();
-      }
-      logs = "$insert ratio: $rate/$minMatchLevel";
+      // if (exception.isNotEmpty) {
+      //   minMatchLevel =
+      //       100 - (100 * exception.length / pattern!.length).round();
+      // }
+      logs = "=> $insert ratio: $rate/$minMatchLevel";
       // log(log);
-      state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
+      if (result.finalResult) {
+        state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
+      }
       if (state.value == QuizState.success) stop();
       // }
     }
