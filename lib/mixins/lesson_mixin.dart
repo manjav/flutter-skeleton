@@ -32,14 +32,14 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Widget navigatorBuilder(double paddingTop) {
     return Positioned(
       top: paddingTop,
-      left: 12.d,
+      left: 8.d,
       right: 12.d,
       child: Row(
         children: [
           Widgets.button(
             context,
-            width: 36.d,
-            height: 36.d,
+            width: 32.d,
+            height: 32.d,
             padding: EdgeInsets.all(8.d),
             child: Asset.load<SvgPicture>("close",
                 svgColorFilter:
@@ -50,24 +50,26 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             child: ValueListenableBuilder(
               valueListenable: controller.contentIndex,
               builder: (context, value, child) {
-                return Widgets.touchable(context,
-                    child: Column(
-                      children: [
-                        controller.series.length > 1
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  DirText(controller.currentSerie.title),
-                                  SizedBox(width: 8.d),
-                                  Asset.load<SvgPicture>("chevron"),
-                                ],
-                              )
-                            : const SizedBox(),
-                        SizedBox(height: 4.d),
-                        indicatorBuilder()
-                      ],
-                    ),
-                    onTap: openSerieSelector);
+                return Widgets.touchable(
+                  context,
+                  child: Column(
+                    children: [
+                      controller.series.length > 1
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                DirText(controller.currentSerie.title),
+                                SizedBox(width: 8.d),
+                                Asset.load<SvgPicture>("chevron"),
+                              ],
+                            )
+                          : const SizedBox(),
+                      SizedBox(height: 4.d),
+                      indicatorBuilder()
+                    ],
+                  ),
+                  onTap: openSerieSelector,
+                );
               },
             ),
           ),
@@ -81,20 +83,18 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     final serieIndex = controller.serieIndex.value;
     final height = 5.d;
     final margin = EdgeInsets.symmetric(horizontal: height);
-    final width =
-        (DeviceInfo.size.width - height * 10) / seriesCount - height * 4;
+    final width = (DeviceInfo.size.width - height * 10) / seriesCount - height;
     return SizedBox(
       height: height,
-      child: ListView.builder(
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: width / height, crossAxisCount: seriesCount),
         itemCount: seriesCount,
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: height * 5),
+        padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
           if (index != serieIndex) {
             return Widgets.rect(
               radius: 4.d,
-              width: width,
-              height: height,
               margin: margin,
               color: index <= serieIndex ? TColors.green : TColors.white50,
             );
