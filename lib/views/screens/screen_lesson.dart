@@ -11,7 +11,8 @@ class LessonScreen extends AbstractScreen {
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
+class _ScreenState extends AbstractScreenState<LessonScreen>
+    with LessonMixin, ListeningMixin {
   final List<Talk> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
   final ScrollController _chatScrollController = ScrollController();
@@ -36,7 +37,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     if (controller.contentIndex.value <= -1) return;
     var talk = controller.currentContent;
     if (talk.isQuiz) {
-      _startQuiz(talk);
+      listen(talk);
     }
     await _addChat(controller.uniqueIndex);
   }
@@ -190,7 +191,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
       _ => BalloonTipPosition.none,
     };
     if (talk.isQuiz) {
-      return _quizBuilder(talk);
+      return listenerBuilder(talk);
     }
     return RadioBox(
       talk.targetValue, // main,
@@ -206,30 +207,14 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     );
   }
 
-  Widget _quizBuilder(Talk talk) {
-    var voice = talk.type == ContentType.translate
-        ? talk.nativeValue
-        : talk.targetValue;
-    return ListenerBox(
-      hint: talk.nativeValue,
-      answer: talk.targetValue,
-      narrator: talk.type.narrator,
-      voiceHint: voice,
-    );
-  }
-
-  Future<void> _startQuiz(Talk talk) async {
+  @override
+  Future<void> listen(Talk talk) async {
     subtitle.value == null;
-    var account = serviceLocator<AccountProvider>();
-    serviceLocator<STT>().start(
-      pattern: talk.targetValue,
-      locale: account.metadata["targetLanguage"],
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: (state, text) => _onSTTResult(state, talk),
-    );
+    await super.listen(talk);
   }
 
-  Future<void> _onSTTResult(QuizState state, Talk talk) async {
+  @override
+  Future<void> onListeningResult(QuizState state, Talk talk) async {
     const duration = Duration(milliseconds: 500);
     serviceLocator<STT>().stop();
     if (state == QuizState.success) {

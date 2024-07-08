@@ -11,7 +11,8 @@ class SeriesScreen extends AbstractScreen {
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
+class _ScreenState extends AbstractScreenState<SeriesScreen>
+    with LessonMixin, ListeningMixin {
   final List<ParentContent> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
   final _slideHeight = DeviceInfo.size.height * 0.5;
@@ -132,26 +133,13 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   Future<void> _playSounds() async {
     for (var content in controller.currentSlide.children) {
       if (content.isQuiz) {
-        _startQuiz(content as Talk);
+        listen(content as Talk);
       }
     }
   }
 
-  Future<void> _startQuiz(Talk talk) async {
-    final account = serviceLocator<AccountProvider>();
-    final voice = talk.type == ContentType.translate
-        ? talk.nativeValue
-        : talk.targetValue;
-    await serviceLocator<Speaker>().play(voice, narrator: talk.type.narrator);
-    serviceLocator<STT>().start(
-      pattern: talk.targetValue,
-      locale: account.metadata["targetLanguage"],
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: (state, text) => _onSTTResult(state, talk),
-    );
-  }
-
-  Future<void> _onSTTResult(QuizState state, Talk talk) async {
+  @override
+  Future<void> onListeningResult(QuizState state, Talk talk) async {
     const duration = Duration(milliseconds: 1500);
     serviceLocator<STT>().stop();
     if (state == QuizState.success) {
