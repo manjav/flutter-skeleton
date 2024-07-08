@@ -21,6 +21,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   void initState() {
     var list = Get.arguments["content"].children;
     controller.series = List.generate(list.length, (i) => list[i]);
+    controller.series[0].children.removeRange(0, 1);
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
     controller.changeSerie(1);

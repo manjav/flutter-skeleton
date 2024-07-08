@@ -37,7 +37,7 @@ class NetConnector extends IService {
     http.Response? response;
     try {
       response = await http.get(
-          Uri.parse("https://8ball.turnedondigital.com/lingai/configs.json"));
+          Uri.parse("https://8ball.turnedondigital.com/lifetalk/configs.json"));
     } catch (e) {
       var error = "$e";
       if (_isDisconnected(error)) {

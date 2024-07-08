@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingai/app_export.dart';
+import 'package:lifetalk/app_export.dart';
 
 enum ButtonMode { text, image, voice }
 

@@ -1,4 +1,4 @@
-import 'package:lingai/app_export.dart';
+import 'package:lifetalk/app_export.dart';
 
 class Content {
   int index = 0;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingai/app_export.dart';
+import 'package:lifetalk/app_export.dart';
 
 class MentorPopup extends AbstractPopup {
   const MentorPopup({super.key}) : super(Routes.popupMentor);

@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:701520098502:android:14865a821419c0fed713c7",
         "android_client_info": {
-          "package_name": "com.lingai"
+          "package_name": "com.lifetalk"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "701520098502-75e3v48ck9v49otcqnb1jgsngpje4a7p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.lingai",
+            "package_name": "com.lifetalk",
             "certificate_hash": "ad9d5b7e08984473afe2a13253a708801754ea66"
           }
         },

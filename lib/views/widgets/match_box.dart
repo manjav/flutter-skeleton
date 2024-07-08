@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lingai/app_export.dart';
+import 'package:lifetalk/app_export.dart';
 
 class MatchBox extends StatefulWidget {
   final ButtonMode mode;

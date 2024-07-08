@@ -5,19 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "lingai",
+            "name": "lifetalk",
             "request": "launch",
             "type": "dart",
             "preLaunchTask": "convert"
         },
         {
-            "name": "lingai (profile mode)",
+            "name": "lifetalk (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "lingai (release mode)",
+            "name": "lifetalk (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",
