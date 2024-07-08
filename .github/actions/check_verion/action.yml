@@ -1,4 +1,4 @@
-name: Check-Version
+name: check_version
 description: Check version in pubspec.yaml
 inputs:
   working-directory:
