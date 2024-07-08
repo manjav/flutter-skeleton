@@ -53,14 +53,16 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                 return Widgets.touchable(context,
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            DirText(controller.currentSerie.title),
-                            SizedBox(width: 8.d),
-                            Asset.load<SvgPicture>("chevron"),
-                          ],
-                        ),
+                        controller.series.length > 1
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  DirText(controller.currentSerie.title),
+                                  SizedBox(width: 8.d),
+                                  Asset.load<SvgPicture>("chevron"),
+                                ],
+                              )
+                            : const SizedBox(),
                         SizedBox(height: 4.d),
                         indicatorBuilder()
                       ],
