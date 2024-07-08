@@ -42,7 +42,7 @@ runs:
   using: "composite"
   steps:
     - name: Check Version
-      uses: ./.github/actions/check_versions
+      uses: ./.github/actions/check_version
 
     - name: Check java found
       id: check_java
