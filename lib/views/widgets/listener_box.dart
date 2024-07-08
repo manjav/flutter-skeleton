@@ -159,7 +159,7 @@ class ListenerBox extends StatelessWidget {
                   return Widgets.button(
                     context,
                     radius: 6.d,
-                    color: isHidden ? TColors.primary10 : TColors.transparent,
+                    color: isHidden ? TColors.primary0 : TColors.transparent,
                     margin: EdgeInsets.all(2.d),
                     padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
                     child: Text(
