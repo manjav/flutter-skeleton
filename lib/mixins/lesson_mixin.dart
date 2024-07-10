@@ -21,9 +21,9 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     return Widgets.rect(
       color: TColors.primary10,
       child: Stack(
+        alignment: Alignment.center,
         children: [
           childBuilder(paddingTop),
-          subtitleBuilder(),
         ],
       ),
     );
@@ -46,15 +46,14 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                     const ColorFilter.mode(TColors.primary50, BlendMode.srcIn)),
             onPressed: () => Navigator.pop(context),
           ),
-          Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: controller.contentIndex,
-              builder: (context, value, child) {
-                return Widgets.touchable(
-                  context,
-                  child: Column(
-                    children: [
-                      controller.series.length > 1
+          Expanded(child: leftSideAppBar()),
+        ],
+      ),
+    );
+  }
+
+  Widget shortcutBuilder() {
+    return controller.series.length > 1
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -63,22 +62,12 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                                 Asset.load<SvgPicture>("chevron"),
                               ],
                             )
-                          : const SizedBox(),
-                      SizedBox(height: 4.d),
-                      indicatorBuilder()
-                    ],
-                  ),
-                  onTap: openSerieSelector,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+        : const SizedBox();
   }
 
-  Widget indicatorBuilder() {
+  Widget leftSideAppBar() => const SizedBox();
+
+  Widget progressSliderBuilder() {
     final seriesCount = controller.series.length;
     final serieIndex = controller.serieIndex.value;
     final height = 5.d;
