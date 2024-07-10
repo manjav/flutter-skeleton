@@ -36,7 +36,7 @@ class STT extends Quiz {
         onError: _errorListener,
         onStatus: _statusListener,
       );
-      state.value = success ? QuizState.initialize : QuizState.error;
+      state.value = success ? QuizState.ready : QuizState.error;
     } catch (e) {
       state.value = QuizState.error;
     }
@@ -75,7 +75,7 @@ class STT extends Quiz {
   void _statusListener(String status) {
     log('Received listener status: => $status, listening: ${_speech.isListening}');
     if (status == "listening") {
-      state.value = QuizState.ready;
+      state.value = QuizState.listening;
     } else if (status == "done") {
       stop();
     }

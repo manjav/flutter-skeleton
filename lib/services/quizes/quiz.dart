@@ -22,9 +22,8 @@ class Quiz extends IService {
 
 enum QuizState {
   none,
-  initialize,
-  waiting,
   ready,
+  waiting,
   listening,
   success,
   failure,
