@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
+import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
 
 enum Difficulty { simple, hint, hidden }
 
+// ignore: must_be_immutable
 class ListenerBox extends StatelessWidget {
   final String hint;
   final String answer;
@@ -13,10 +14,12 @@ class ListenerBox extends StatelessWidget {
   final Narrator narrator;
   final Difficulty difficulty;
   final List<ValueNotifier<Choice>> _patterns = [];
-  final ValueNotifier<double> _audioLevel = ValueNotifier(0);
   final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
   final ValueNotifier<String> _recognizedWords = ValueNotifier("__waiting__");
   final ValueNotifier<bool> _debugMode = ValueNotifier(false);
+
+  SMIInput<double>? _stateInput;
+  SMIInput<double>? _soundLevelInput;
 
   ListenerBox({
     super.key,
@@ -36,12 +39,12 @@ class ListenerBox extends StatelessWidget {
       stt.state.addListener(() {
         _recognizedWords.value = "";
         if (stt.pattern == pattern) {
-          _state.value = stt.state.value;
+          _stateInput?.value = stt.state.value.index.toDouble();
         }
       });
       stt.audioLevel.addListener(() {
         if (stt.pattern == pattern) {
-          _audioLevel.value = stt.audioLevel.value;
+          _soundLevelInput?.value = stt.audioLevel.value * 100;
         }
       });
       stt.recognizedWords.addListener(() {
@@ -83,7 +86,7 @@ class ListenerBox extends StatelessWidget {
               width: 40.d,
             ),
             SizedBox(width: 50.d),
-            _micButtonBuilder(stt),
+            _micButtonBuilder(context, stt),
             SizedBox(width: 90.d),
           ],
         ),
@@ -91,35 +94,24 @@ class ListenerBox extends StatelessWidget {
     );
   }
 
-  Widget _micButtonBuilder(STT stt) {
+  Widget _micButtonBuilder(BuildContext context, STT stt) {
     var size = 120.d;
-    return Widgets.button(
+    return Widgets.touchable(
       context,
+      child: LoaderWidget(
+        AssetType.animation,
+        "mic_button",
         width: size,
         height: size,
-      radius: size,
-      padding: EdgeInsets.zero,
-      alignment: Alignment.center,
-      color: TColors.primary10,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          ValueListenableBuilder(
-            valueListenable: _audioLevel,
-            builder: (context, value, child) => AnimatedContainer(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(size)),
-                color: TColors.primary20,
-              ),
-              width: size * _audioLevel.value,
-              height: size * _audioLevel.value,
-              duration: const Duration(milliseconds: STT.levelInterval),
-            ),
-          ),
-          _getIcon(size)
-        ],
+        onRiveInit: (artboard) {
+          final controller =
+              StateMachineController.fromArtboard(artboard, "State Machine 1");
+          _stateInput = controller?.findInput<double>("state");
+          _soundLevelInput = controller?.findInput<double>("soundLevel");
+          artboard.addController(controller!);
+        },
       ),
-      onPressed: () {
+      onTap: () {
         // if (stt.state.value == QuizState.ready) {
         stt.start(pattern: answer.patternize());
         // }
@@ -127,11 +119,6 @@ class ListenerBox extends StatelessWidget {
       onLongPress: () => stt.onResult?.call(QuizState.success, stt.pattern!),
     );
   }
-
-  Widget _getIcon(double size) => ValueListenableBuilder(
-      valueListenable: _state,
-      builder: (context, value, child) =>
-          Asset.load<SvgPicture>("mic_${value.name}", width: size * 0.3));
 
   Widget _answeringBuilder(
       BuildContext context, TextStyle defaultStyle, int minMatchLevel) {
