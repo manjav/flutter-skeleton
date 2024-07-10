@@ -50,7 +50,6 @@ class ListenerBox extends StatelessWidget {
         }
       });
     }
-    var size = 120.d;
     var defaultStyle = TStyles.big.copyWith(
         fontSize: 36.d,
         height: 1,
@@ -66,7 +65,7 @@ class ListenerBox extends StatelessWidget {
         SizedBox(height: 10.d),
         DirText(hint, style: TStyles.small.copyWith(color: TColors.primary40)),
         SizedBox(height: 50.d),
-        _wrongResultBuilder(),
+        _wrongResultBuilder(stt),
         SizedBox(height: 20.d),
         ValueListenableBuilder(
             valueListenable: _debugMode,
@@ -84,44 +83,48 @@ class ListenerBox extends StatelessWidget {
               width: 40.d,
             ),
             SizedBox(width: 50.d),
-            Widgets.button(
-              context,
-              width: size,
-              height: size,
-              radius: size,
-              padding: EdgeInsets.zero,
-              alignment: Alignment.center,
-              color: TColors.primary10,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  ValueListenableBuilder(
-                    valueListenable: _audioLevel,
-                    builder: (context, value, child) => AnimatedContainer(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(size)),
-                        color: TColors.primary20,
-                      ),
-                      width: size * _audioLevel.value,
-                      height: size * _audioLevel.value,
-                      duration: const Duration(milliseconds: STT.levelInterval),
-                    ),
-                  ),
-                  _getIcon(size)
-                ],
-              ),
-              onPressed: () {
-                // if (stt.state.value == QuizState.ready) {
-                stt.start(pattern: answer.patternize());
-                // }
-              },
-              onLongPress: () =>
-                  stt.onResult?.call(QuizState.success, stt.pattern!),
-            ),
+            _micButtonBuilder(stt),
             SizedBox(width: 90.d),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _micButtonBuilder(STT stt) {
+    var size = 120.d;
+    return Widgets.button(
+      context,
+      width: size,
+      height: size,
+      radius: size,
+      padding: EdgeInsets.zero,
+      alignment: Alignment.center,
+      color: TColors.primary10,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          ValueListenableBuilder(
+            valueListenable: _audioLevel,
+            builder: (context, value, child) => AnimatedContainer(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(size)),
+                color: TColors.primary20,
+              ),
+              width: size * _audioLevel.value,
+              height: size * _audioLevel.value,
+              duration: const Duration(milliseconds: STT.levelInterval),
+            ),
+          ),
+          _getIcon(size)
+        ],
+      ),
+      onPressed: () {
+        // if (stt.state.value == QuizState.ready) {
+        stt.start(pattern: answer.patternize());
+        // }
+      },
+      onLongPress: () => stt.onResult?.call(QuizState.success, stt.pattern!),
     );
   }
 
@@ -193,7 +196,7 @@ class ListenerBox extends StatelessWidget {
     // );
   }
 
-  Widget _wrongResultBuilder() {
+  Widget _wrongResultBuilder(STT stt) {
     return ValueListenableBuilder(
         valueListenable: _state,
         builder: (context, value, child) {
