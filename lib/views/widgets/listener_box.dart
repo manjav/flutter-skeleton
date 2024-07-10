@@ -95,8 +95,8 @@ class ListenerBox extends StatelessWidget {
     var size = 120.d;
     return Widgets.button(
       context,
-      width: size,
-      height: size,
+        width: size,
+        height: size,
       radius: size,
       padding: EdgeInsets.zero,
       alignment: Alignment.center,
@@ -200,7 +200,7 @@ class ListenerBox extends StatelessWidget {
     return ValueListenableBuilder(
         valueListenable: _state,
         builder: (context, value, child) {
-          return value == QuizState.fail
+          return value == QuizState.failure
               ? DirText(
                   _recognizedWords.value,
                   style:

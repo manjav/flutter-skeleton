@@ -273,7 +273,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         // _addChat(controller.uniqueIndex);
         controller.changeContent(1);
       }
-    } else if (state == QuizState.fail) {
+    } else if (state == QuizState.failure) {
       controller.onQuizResult(false);
       // await Future.delayed(duration);
       // serviceLocator<STT>().start(activeId: controller.uniqueIndex);

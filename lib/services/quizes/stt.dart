@@ -36,7 +36,7 @@ class STT extends Quiz {
         onError: _errorListener,
         onStatus: _statusListener,
       );
-      state.value = success ? QuizState.initialized : QuizState.error;
+      state.value = success ? QuizState.initialize : QuizState.error;
     } catch (e) {
       state.value = QuizState.error;
     }
@@ -128,7 +128,7 @@ class STT extends Quiz {
 
   void _proccessResult() {
     if (pattern == null) {
-      state.value = result.finalResult ? QuizState.success : QuizState.fail;
+      state.value = result.finalResult ? QuizState.success : QuizState.failure;
     } else {
       // var words = result.alternates.where((a) =>
       //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
@@ -146,7 +146,8 @@ class STT extends Quiz {
       logs = "=> $insert ratio: $rate/$minMatchLevel";
       // log(log);
       if (result.finalResult) {
-        state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
+        state.value =
+            rate > minMatchLevel ? QuizState.success : QuizState.failure;
       }
       if (state.value == QuizState.success) stop();
       // }

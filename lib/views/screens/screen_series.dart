@@ -171,7 +171,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         await serviceLocator<Speaker>()
             .play(talk.targetValue, narrator: talk.type.narrator);
       }
-    } else if (state == QuizState.fail) {
+    } else if (state == QuizState.failure) {
       controller.onQuizResult(false);
       await Future.delayed(duration);
       serviceLocator<STT>().state.value = QuizState.none;

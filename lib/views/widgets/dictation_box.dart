@@ -78,7 +78,7 @@ class _DictationBoxState extends State<DictationBox> {
                   buttonId: dictator.state.value == QuizState.ready ? 30 : -1,
                   color: switch (dictator.state.value) {
                     QuizState.success => TColors.green.withOpacity(0.2),
-                    QuizState.fail => TColors.error.withOpacity(0.2),
+                    QuizState.failure => TColors.error.withOpacity(0.2),
                     _ => TColors.primary20,
                   },
                   child: Container(
@@ -88,7 +88,7 @@ class _DictationBoxState extends State<DictationBox> {
                     child: switch (dictator.state.value) {
                       QuizState.success =>
                         Asset.load<SvgPicture>("mic_success", width: 32.d),
-                      QuizState.fail =>
+                      QuizState.failure =>
                         Asset.load<SvgPicture>("mic_fail", width: 32.d),
                       _ => Asset.load<SvgPicture>("clear", width: 24.d),
                     },

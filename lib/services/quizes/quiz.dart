@@ -20,4 +20,13 @@ class Quiz extends IService {
   }
 }
 
-enum QuizState { none, initialized, waiting, ready, success, fail, error }
+enum QuizState {
+  none,
+  initialize,
+  waiting,
+  ready,
+  listening,
+  success,
+  failure,
+  error;
+}
