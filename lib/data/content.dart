@@ -123,7 +123,7 @@ enum ContentType {
         ContentType.repeat ||
         ContentType.translate =>
           Narrator.alloy,
-        _ => Narrator.farid,
+        _ => Narrator.ali,
       };
 }
 
