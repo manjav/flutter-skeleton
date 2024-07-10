@@ -55,6 +55,26 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   @override
+  Widget leftSideAppBar() {
+    return ValueListenableBuilder(
+      valueListenable: controller.contentIndex,
+      builder: (context, value, child) {
+        return Widgets.touchable(
+          context,
+          child: Column(
+            children: [
+              shortcutBuilder(),
+              SizedBox(height: 4.d),
+              progressSliderBuilder()
+            ],
+          ),
+          onTap: openSerieSelector,
+        );
+      },
+    );
+  }
+
+  @override
   Widget childBuilder(double paddingTop) {
     _slidesScrollController ??= PageController(
         viewportFraction:
@@ -179,7 +199,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     super.dispose();
   }
 
-  @override
   void openSerieSelector() {
     final itemHeight = 50.d;
     showModalBottomSheet<void>(

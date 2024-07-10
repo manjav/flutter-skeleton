@@ -67,6 +67,24 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     //     curve: Curves.easeOutQuart);
   }
 
+  @override
+  Widget contentFactory(double paddingTop) {
+    if (controller.series.isEmpty) {
+      return const SizedBox();
+    }
+
+    return Widgets.rect(
+      color: TColors.primary10,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          _subtitleBuilder(),
+          childBuilder(paddingTop),
+          _navigatorBuilder(),
+        ],
+      ),
+    );
+  }
 
   Widget _subtitleBuilder() {
     return FractionallySizedBox(
@@ -95,27 +113,64 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     );
   }
 
+  Widget _navigatorBuilder() {
+    return Align(
+      alignment: const Alignment(0, 0.7),
+      child: ValueListenableBuilder(
+        valueListenable: controller.contentIndex,
+        builder: (context, value, child) {
+          return SizedBox(
+            width: 270.d,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                progressSliderBuilder(),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _navigationButton(
+                      name: "footer_prev",
+                      isEnable: controller.slideIndex.value > 0,
+                      onPress: () => controller.changeSlide(-1),
+                    ),
+                    _navigationButton(
+                      name: "footer_pause",
+                    ),
+                    _navigationButton(
+                      name: "footer_next",
+                      isEnable: value < controller.series.length &&
+                          controller.contentIndex.value ==
+                              controller.currentSerie.children.length - 1,
+                      onPress: () => controller.changeSlide(1),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
 
-  // Widget _navigationButton({
-  //   required name,
-  //   bool isEnable = true,
-  //   Function()? onPress,
-  // }) {
-  //   return Opacity(
-  //     opacity: isEnable ? 1 : 0.4,
-  //     child: Widgets.button(
-  //       context,
-  //       height: 92.d,
-  //       padding: EdgeInsets.all(12.d),
-  //       child: Asset.load<Image>(name),
-  //       onPressed: () {
-  //         // if (isEnable) {
-  //         onPress?.call();
-  //         // }
-  //       },
-  //     ),
-  //   );
-  // }
+  Widget _navigationButton({
+    required name,
+    bool isEnable = true,
+    Function()? onPress,
+  }) {
+    return Widgets.button(
+      context,
+      height: 92.d,
+      padding: EdgeInsets.all(12.d),
+      child: Asset.load<Image>(name),
+      onPressed: () {
+        // if (isEnable) {
+        onPress?.call();
+        // }
+      },
+    );
+  }
 
   @override
   Widget childBuilder(double paddingTop) {
@@ -123,7 +178,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       key: _animatedListKey,
       controller: _chatScrollController,
       padding: EdgeInsets.fromLTRB(
-          padding, paddingTop + padding * 6, padding, 200.d),
+          padding, paddingTop + padding * 16, padding, 200.d),
       itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a),
     );
   }
@@ -210,12 +265,13 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       // serviceLocator<STT>().state.value = QuizState.none;
       if (mounted) {
         controller.onQuizResult(true);
-        _animatedListKey.currentState?.removeItem(_animatedItems.length - 1,
-            (context, animation) => const SizedBox());
-        _animatedItems.removeLast();
-        talk.type = ContentType.user;
+        // _animatedListKey.currentState?.removeItem(_animatedItems.length - 1,
+        //     (context, animation) => const SizedBox());
+        // _animatedItems.removeLast();
+        // talk.type = ContentType.user;
         await Future.delayed(duration);
-        _addChat(controller.uniqueIndex);
+        // _addChat(controller.uniqueIndex);
+        controller.changeContent(1);
       }
     } else if (state == QuizState.fail) {
       controller.onQuizResult(false);
