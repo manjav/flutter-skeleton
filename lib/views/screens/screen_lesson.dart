@@ -67,47 +67,34 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     //     curve: Curves.easeOutQuart);
   }
 
-  // @override
-  // Widget navigatorBuilder(double paddingTop, String title) {
-  //   return ValueListenableBuilder(
-  //     valueListenable: controller.contentIndex,
-  //     builder: (context, value, child) {
-  //       return Align(
-  //         alignment: const Alignment(0, 1),
-  //         child: FractionallySizedBox(
-  //           heightFactor: 0.15,
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             crossAxisAlignment: CrossAxisAlignment.center,
-  //             children: [
-  //               indicatorBuilder(),
-  //               Row(
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 children: [
-  //                   _navigationButton(
-  //                     name: "footer_prev",
-  //                     isEnable: controller.slideIndex.value > 0,
-  //                     onPress: () => controller.changeSlide(-1),
-  //                   ),
-  //                   _navigationButton(
-  //                     name: "footer_pause",
-  //                   ),
-  //                   _navigationButton(
-  //                     name: "footer_next",
-  //                     isEnable: value < controller.series.length &&
-  //                         controller.contentIndex.value ==
-  //                             controller.currentSerie.children.length - 1,
-  //                     onPress: () => controller.changeSerie(1),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+
+  Widget _subtitleBuilder() {
+    return FractionallySizedBox(
+      widthFactor: 0.9,
+      child: Align(
+        alignment: const Alignment(0, -0.7),
+        child: ValueListenableBuilder(
+          valueListenable: subtitle,
+          builder: (context, value, child) {
+            if (value == null) return const SizedBox();
+            return Widgets.button(
+              context,
+              radius: 16.d,
+              padding: EdgeInsets.all(16.d),
+              color: TColors.green,
+              child: Text(
+                value.nativeValue, // text,
+                style: TStyles.mediumInvert,
+                textDirection: TextDirection.rtl, // dir,
+              ),
+              onLongPress: () => playSound(value, force: true),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
 
   // Widget _navigationButton({
   //   required name,

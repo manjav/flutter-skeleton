@@ -54,14 +54,14 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Widget shortcutBuilder() {
     return controller.series.length > 1
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DirText(controller.currentSerie.title),
-                                SizedBox(width: 8.d),
-                                Asset.load<SvgPicture>("chevron"),
-                              ],
-                            )
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DirText(controller.currentSerie.title),
+              SizedBox(width: 8.d),
+              Asset.load<SvgPicture>("chevron"),
+            ],
+          )
         : const SizedBox();
   }
 
@@ -105,32 +105,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Widget childBuilder(double paddingTop) => const SizedBox();
 
-  Widget subtitleBuilder() {
-    return Positioned(
-      left: 32.d,
-      right: 32.d,
-      bottom: 12.d,
-      child: ValueListenableBuilder(
-        valueListenable: subtitle,
-        builder: (context, value, child) {
-          if (value == null) return const SizedBox();
-          return Widgets.button(
-            context,
-            radius: 12.d,
-            padding: EdgeInsets.all(12.d),
-            color: TColors.black80,
-            child: Text(
-              value.nativeValue, // text,
-              style: TStyles.smallInvert,
-              textDirection: TextDirection.rtl, // dir,
-            ),
-            onLongPress: () => playSound(value, force: true),
-          );
-        },
-      ),
-    );
-  }
-
   Future<void> playSound(
     Talk talk, {
     int lastIndex = -1,
@@ -154,6 +128,4 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     controller.dispose();
     super.dispose();
   }
-
-  void openSerieSelector() {}
 }
