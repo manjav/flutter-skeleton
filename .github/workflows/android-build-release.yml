@@ -20,6 +20,9 @@ jobs:
           
       # - name: Get project version
       #   run: echo "PROJECT_VERSION=v${{ steps.yq.outputs.result }}" >> $GITHUB_ENV
+
+      - name: Check Version
+        uses: ./.github/actions/check_verion
         
       - uses: ./.github/actions/build
         with:
