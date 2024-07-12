@@ -84,8 +84,8 @@ class _ButtonPainter extends BoxPainter {
             o -
             (pressed ? 0 : strokeSize) -
             (_hasOutline ? 0 : outlineSize),
-        cr * (_hasOutline ? 0.8 : 1.0),
-        cr * (_hasOutline ? 0.8 : 1.0));
+        cr * (_hasOutline ? 0.9 : 1.0),
+        cr * (_hasOutline ? 0.9 : 1.0));
     canvas.drawRRect(fr, _mainPaint);
   }
 }

@@ -234,7 +234,15 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       _ => BalloonTipPosition.none,
     };
     if (talk.isQuiz) {
-      return listenerBuilder(talk);
+      return Widgets.rect(
+          radius: 24.d,
+          height: 400.d,
+          color: TColors.primary0,
+          alignment: Alignment.center,
+          width: DeviceInfo.size.width,
+          margin: EdgeInsets.symmetric(vertical: 5.d),
+          padding: EdgeInsets.symmetric(horizontal: 20.d),
+          child: listenerBuilder(talk));
     }
     return RadioBox(
       talk.targetValue, // main,
