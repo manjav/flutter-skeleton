@@ -137,7 +137,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   Widget _contentItem(Talk talk) {
     return switch (talk.type) {
-      ContentType.repeat || ContentType.translate => _quizBuilder(talk),
+      ContentType.repeat || ContentType.translate => listenerBuilder(talk),
       ContentType.head => DirText(
           talk.nativeValue,
           style: TStyles.big,
@@ -177,18 +177,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       serviceLocator<ListenerQuiz>().state.value = QuizState.none;
       // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
     }
-  }
-
-  Widget _quizBuilder(Talk talk) {
-    var voice = talk.type == ContentType.translate
-        ? talk.nativeValue
-        : talk.targetValue;
-    return ListenerBox(
-      voiceHint: voice,
-      hint: talk.nativeValue,
-      answer: talk.targetValue,
-      narrator: talk.type.narrator,
-    );
   }
 
   @override
