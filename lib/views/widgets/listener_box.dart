@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:rive/rive.dart';
 
@@ -7,66 +8,68 @@ import '../../app_export.dart';
 enum Difficulty { simple, hint, hidden }
 
 // ignore: must_be_immutable
-class ListenerBox extends StatelessWidget {
+class ListenerBox extends StatefulWidget {
   final String hint;
+  final String voice;
   final String answer;
-  final String voiceHint;
   final Narrator narrator;
   final Difficulty difficulty;
+
+  const ListenerBox({
+    super.key,
+    required this.hint,
+    required this.voice,
+    required this.answer,
+    required this.narrator,
+    this.difficulty = Difficulty.simple,
+  });
+
+  @override
+  State<ListenerBox> createState() => _ListenerBoxState();
+}
+
+class _ListenerBoxState extends State<ListenerBox> {
   final List<ValueNotifier<Choice>> _patterns = [];
   final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
-  final ValueNotifier<String> _recognizedWords = ValueNotifier("__waiting__");
+  final ValueNotifier<String> _recognizedWords = ValueNotifier("");
   final ValueNotifier<bool> _debugMode = ValueNotifier(false);
+  final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
 
   SMIInput<double>? _stateInput;
   SMIInput<double>? _soundLevelInput;
 
-  ListenerBox({
-    super.key,
-    required this.hint,
-    required this.answer,
-    required this.narrator,
-    required this.voiceHint,
-    this.difficulty = Difficulty.simple,
-  });
-  final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
+  String _pattern = "";
+
+  @override
+  void initState() {
+    _pattern = widget.answer.patternize();
+    final listener = serviceLocator<ListenerQuiz>();
+    listener.state.addListener(_stateListener);
+    listener.audioLevel.addListener(_soundLevelListener);
+    listener.recognizedWords.addListener(_resultListener);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var listener = serviceLocator<ListenerQuiz>();
-    if (_recognizedWords.value == "__waiting__") {
-      var pattern = answer.patternize();
-      listener.state.addListener(() {
-        _recognizedWords.value = "";
-        if (listener.pattern == pattern) {
-          _stateInput?.value = listener.state.value.index.toDouble();
-        }
-      });
-      listener.audioLevel.addListener(() {
-        if (listener.pattern == pattern) {
-          _soundLevelInput?.value = listener.audioLevel.value * 100;
-        }
-      });
-      listener.recognizedWords.addListener(() {
-        if (listener.pattern == pattern) {
-          _recognizedWords.value = listener.recognizedWords.value;
-        }
-      });
-    }
+    final listener = serviceLocator<ListenerQuiz>();
     var defaultStyle = TStyles.big.copyWith(
         fontSize: 36.d,
         height: 1,
-        color: difficulty == Difficulty.simple
+        color: widget.difficulty == Difficulty.simple
             ? TColors.primary80
             : TColors.transparent);
-    var words = answer.split(" ");
+    var words = widget.answer.split(" ");
+    _patterns.clear();
     _patterns.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         _answeringBuilder(context, defaultStyle, listener.minMatchLevel),
         SizedBox(height: 10.d),
-        DirText(hint, style: TStyles.small.copyWith(color: TColors.primary40)),
+        DirText(widget.hint,
+            style: TStyles.small.copyWith(color: TColors.primary40)),
         SizedBox(height: 50.d),
         _wrongResultBuilder(listener),
         SizedBox(height: 20.d),
@@ -80,11 +83,24 @@ class ListenerBox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            SpeakerBox(
-              narrator: narrator,
-              value: voiceHint,
-              width: 40.d,
+            SkinnedButton(
+              color: TColors.white,
+              width: 62.d,
+              height: 62.d,
+              cornerRadius: 22.d,
+              child: Asset.load<SvgPicture>("reset"),
+              onPressed: () => listener.listen(
+                hint: widget.voice,
+                pattern: widget.answer,
+                narrator: widget.narrator,
+              ),
             ),
+            // SpeakerBox(
+            //   width: 40.d,
+            //   value: listener.hint,
+            //   narrator: listener.narrator,
+            //   icon:"reset"
+            // ),
             SizedBox(width: 50.d),
             _micButtonBuilder(context, listener),
             SizedBox(width: 90.d),
@@ -111,12 +127,9 @@ class ListenerBox extends StatelessWidget {
           artboard.addController(controller!);
         },
       ),
-      onTap: () {
-        // if (stt.state.value == QuizState.ready) {
-        listner.start(pattern: answer.patternize());
-        // }
-      },
-      onLongPress: () => listner.onResult?.call(QuizState.success, listner.pattern!),
+      onTap: () {},
+      onLongPress: () =>
+          listner.onResult?.call(QuizState.success, listner.pattern),
     );
   }
 
@@ -149,7 +162,7 @@ class ListenerBox extends StatelessWidget {
                   return Widgets.button(
                     context,
                     radius: 6.d,
-                    color: isHidden ? TColors.primary0 : TColors.transparent,
+                    color: isHidden ? TColors.primary10 : TColors.transparent,
                     margin: EdgeInsets.all(2.d),
                     padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
                     child: Text(
@@ -198,28 +211,32 @@ class ListenerBox extends StatelessWidget {
         });
   }
 
-  /* List<TextSpan> _getWords(String value) {
-    var target = talk.targetValue;
-    if (talk.targetValue == value) {
-      return [TextSpan(text: target, style: _correctStyle)];
-    }
-    var index = target.toLowerCase().indexOf(value);
-    if (index > -1) {
-      var spans = <TextSpan>[];
-      if (index > 0) {
-        spans.add(TextSpan(text: target.substring(0, index)));
-      }
-      if (value.isNotEmpty) {
-        spans.add(TextSpan(
-            text: target.substring(index, index + value.length),
-            style: _correctStyle..copyWith(backgroundColor: TColors.black)));
-      }
-      if (index + value.length < target.length - 1) {
-        spans.add(TextSpan(text: target.substring(index + value.length)));
-      }
-      return spans;
-    } else {
-      return [TextSpan(text: target)];
-    }
-  } */
+  @override
+  void dispose() {
+    final listener = serviceLocator<ListenerQuiz>();
+    listener.state.removeListener(_stateListener);
+    listener.audioLevel.removeListener(_soundLevelListener);
+    listener.recognizedWords.removeListener(_resultListener);
+    super.dispose();
+  }
+
+  void _stateListener() {
+    final listener = serviceLocator<ListenerQuiz>();
+    if (listener.pattern != _pattern) return;
+    print("s ==> ${listener.state.value} $_pattern");
+    _state.value = listener.state.value;
+    _stateInput?.value = listener.state.value.index.toDouble();
+  }
+
+  void _soundLevelListener() {
+    final listener = serviceLocator<ListenerQuiz>();
+    if (listener.pattern != _pattern) return;
+    _soundLevelInput?.value = listener.audioLevel.value * 100;
+  }
+
+  void _resultListener() {
+    final listener = serviceLocator<ListenerQuiz>();
+    if (listener.pattern != _pattern) return;
+    _recognizedWords.value = listener.recognizedWords.value;
+  }
 }
