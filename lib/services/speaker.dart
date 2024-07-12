@@ -39,30 +39,27 @@ class Speaker extends IService {
     Narrator narrator = Narrator.ali,
     Function()? onComplete,
   }) async {
-    try {
-      serviceLocator<ListenerQuiz>().stop();
-      // serviceLocator<Sounds>().stopAll();
-      var player = serviceLocator<Sounds>().getPlayer(text);
-      if (force) {
-        player.stop();
-      } else if (player.state == PlayerState.playing) {
-        player.stop();
-        return;
-      }
-      // player.setPlaybackRate(narrator == Narrator.onyx ? 1.3 : 0.8);
-      if (onComplete != null) {
-        player.eventStream.listen((event) {
-          if (event.eventType == AudioEventType.complete) {
-            onComplete();
-          }
-        });
-      }
+    serviceLocator<ListenerQuiz>().stop();
+    // serviceLocator<Sounds>().stopAll();
+    var player = serviceLocator<Sounds>().getPlayer(text);
+    if (force) {
+      player.stop();
+    } else if (player.state == PlayerState.playing) {
+      player.stop();
+      return;
+    }
+    // player.setPlaybackRate(narrator == Narrator.onyx ? 1.3 : 0.8);
+    if (onComplete != null) {
+      player.eventStream.listen((event) {
+        if (event.eventType == AudioEventType.complete) {
+          onComplete();
+        }
+      });
+    }
 
-      final url = "${narrator.url}$text${reset ? "&nocache" : ""}";
-      await player.play(UrlSource(url), volume: 1);
-      await Future.doWhile(() =>
-          Future.delayed(const Duration(milliseconds: 1050))
-              .then((_) => player.state != PlayerState.completed));
-    } finally {}
+    final url = "${narrator.url}$text${reset ? "&nocache" : ""}";
+    await player.play(UrlSource(url), volume: 1);
+    await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 100))
+        .then((_) => player.state != PlayerState.completed));
   }
 }

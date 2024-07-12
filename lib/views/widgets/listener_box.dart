@@ -223,7 +223,6 @@ class _ListenerBoxState extends State<ListenerBox> {
   void _stateListener() {
     final listener = serviceLocator<ListenerQuiz>();
     if (listener.pattern != _pattern) return;
-    print("s ==> ${listener.state.value} $_pattern");
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
   }
