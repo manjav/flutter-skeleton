@@ -47,6 +47,7 @@ dependencies:
   # unity_ads_plugin: ^0.3.10
   url_launcher: ^6.1.14
   speech_to_text: ^6.6.0
+  wakelock_plus: ^1.1.4
 
 dev_dependencies:
   flutter_test:
