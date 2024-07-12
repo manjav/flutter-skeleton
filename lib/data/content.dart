@@ -122,7 +122,7 @@ enum ContentType {
         ContentType.answer ||
         ContentType.repeat ||
         ContentType.translate =>
-          Narrator.alloy,
+          Narrator.shimmer,
         _ => Narrator.ali,
       };
 }

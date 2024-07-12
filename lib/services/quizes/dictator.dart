@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../app_export.dart';
 
-class Dictator extends Quiz {
+class DictatorQuiz extends Quiz {
   bool charByChar = false;
   List<Choice> choices = [];
   List<String> _pattern = [];
@@ -72,7 +72,7 @@ class Dictator extends Quiz {
     if (choice.used) return;
     answers.add(choice.text);
     choice.used = true;
-    serviceLocator<Dictator>().checkAnswers();
+    serviceLocator<DictatorQuiz>().checkAnswers();
   }
 
   void deselectChoice() {

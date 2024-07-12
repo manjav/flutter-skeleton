@@ -40,7 +40,7 @@ class Speaker extends IService {
     Function()? onComplete,
   }) async {
     try {
-      serviceLocator<STT>().stop();
+      serviceLocator<ListenerQuiz>().stop();
       // serviceLocator<Sounds>().stopAll();
       var player = serviceLocator<Sounds>().getPlayer(text);
       if (force) {
@@ -61,7 +61,7 @@ class Speaker extends IService {
       final url = "${narrator.url}$text${reset ? "&nocache" : ""}";
       await player.play(UrlSource(url), volume: 1);
       await Future.doWhile(() =>
-          Future.delayed(const Duration(milliseconds: 50))
+          Future.delayed(const Duration(milliseconds: 1050))
               .then((_) => player.state != PlayerState.completed));
     } finally {}
   }

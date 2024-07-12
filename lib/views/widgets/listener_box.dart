@@ -33,23 +33,23 @@ class ListenerBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var stt = serviceLocator<STT>();
+    var listener = serviceLocator<ListenerQuiz>();
     if (_recognizedWords.value == "__waiting__") {
       var pattern = answer.patternize();
-      stt.state.addListener(() {
+      listener.state.addListener(() {
         _recognizedWords.value = "";
-        if (stt.pattern == pattern) {
-          _stateInput?.value = stt.state.value.index.toDouble();
+        if (listener.pattern == pattern) {
+          _stateInput?.value = listener.state.value.index.toDouble();
         }
       });
-      stt.audioLevel.addListener(() {
-        if (stt.pattern == pattern) {
-          _soundLevelInput?.value = stt.audioLevel.value * 100;
+      listener.audioLevel.addListener(() {
+        if (listener.pattern == pattern) {
+          _soundLevelInput?.value = listener.audioLevel.value * 100;
         }
       });
-      stt.recognizedWords.addListener(() {
-        if (stt.pattern == pattern) {
-          _recognizedWords.value = stt.recognizedWords.value;
+      listener.recognizedWords.addListener(() {
+        if (listener.pattern == pattern) {
+          _recognizedWords.value = listener.recognizedWords.value;
         }
       });
     }
@@ -64,16 +64,16 @@ class ListenerBox extends StatelessWidget {
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
     return Column(
       children: [
-        _answeringBuilder(context, defaultStyle, stt.minMatchLevel),
+        _answeringBuilder(context, defaultStyle, listener.minMatchLevel),
         SizedBox(height: 10.d),
         DirText(hint, style: TStyles.small.copyWith(color: TColors.primary40)),
         SizedBox(height: 50.d),
-        _wrongResultBuilder(stt),
+        _wrongResultBuilder(listener),
         SizedBox(height: 20.d),
         ValueListenableBuilder(
             valueListenable: _debugMode,
             builder: (context, value, child) => value
-                ? Text(stt.logs,
+                ? Text(listener.logs,
                     style: TStyles.tiny.copyWith(color: TColors.error))
                 : const SizedBox()),
         Row(
@@ -86,7 +86,7 @@ class ListenerBox extends StatelessWidget {
               width: 40.d,
             ),
             SizedBox(width: 50.d),
-            _micButtonBuilder(context, stt),
+            _micButtonBuilder(context, listener),
             SizedBox(width: 90.d),
           ],
         ),
@@ -94,7 +94,7 @@ class ListenerBox extends StatelessWidget {
     );
   }
 
-  Widget _micButtonBuilder(BuildContext context, STT stt) {
+  Widget _micButtonBuilder(BuildContext context, ListenerQuiz listner) {
     var size = 120.d;
     return Widgets.touchable(
       context,
@@ -113,10 +113,10 @@ class ListenerBox extends StatelessWidget {
       ),
       onTap: () {
         // if (stt.state.value == QuizState.ready) {
-        stt.start(pattern: answer.patternize());
+        listner.start(pattern: answer.patternize());
         // }
       },
-      onLongPress: () => stt.onResult?.call(QuizState.success, stt.pattern!),
+      onLongPress: () => listner.onResult?.call(QuizState.success, listner.pattern!),
     );
   }
 
@@ -183,7 +183,7 @@ class ListenerBox extends StatelessWidget {
     // );
   }
 
-  Widget _wrongResultBuilder(STT stt) {
+  Widget _wrongResultBuilder(ListenerQuiz stt) {
     return ValueListenableBuilder(
         valueListenable: _state,
         builder: (context, value, child) {

@@ -13,7 +13,7 @@ class DictationBox extends StatefulWidget {
 class _DictationBoxState extends State<DictationBox> {
   @override
   Widget build(BuildContext context) {
-    final dictator = serviceLocator<Dictator>();
+    final dictator = serviceLocator<DictatorQuiz>();
     return ValueListenableBuilder<List<String>>(
       valueListenable: dictator.answers,
       builder: (context, value, child) {
@@ -48,7 +48,7 @@ class _DictationBoxState extends State<DictationBox> {
     );
   }
 
-  Widget _answerBox(Dictator dictator) {
+  Widget _answerBox(DictatorQuiz dictator) {
     return Widgets.rect(
       radius: 20.d,
       color: TColors.primary10,
@@ -112,7 +112,7 @@ class _DictationBoxState extends State<DictationBox> {
   }
 
   Widget _choiceItemBuilder(int index) {
-    final dictator = serviceLocator<Dictator>();
+    final dictator = serviceLocator<DictatorQuiz>();
     var choice = dictator.choices[index];
     return Widgets.button(
       context,

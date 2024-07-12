@@ -259,7 +259,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   @override
   Future<void> onListeningResult(QuizState state, Talk talk) async {
     const duration = Duration(milliseconds: 500);
-    serviceLocator<STT>().stop();
+    serviceLocator<ListenerQuiz>().stop();
     if (state == QuizState.success) {
       await Future.delayed(duration);
       // serviceLocator<STT>().state.value = QuizState.none;

@@ -21,7 +21,7 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         ? talk.nativeValue
         : talk.targetValue;
     await serviceLocator<Speaker>().play(voice, narrator: talk.type.narrator);
-    serviceLocator<STT>().start(
+    serviceLocator<ListenerQuiz>().start(
       pattern: talk.targetValue,
       locale: account.metadata["targetLanguage"],
       exceptions: [account.account.user.displayName!.patternize()],

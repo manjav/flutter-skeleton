@@ -10,7 +10,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import '../../app_export.dart';
 
-class STT extends Quiz {
+class ListenerQuiz extends Quiz {
   static const int levelInterval = 100;
   String? locale;
   String? pattern;
@@ -90,6 +90,7 @@ class STT extends Quiz {
     List<String>? exceptions,
   }) {
     // serviceLocator<Sounds>().stopAll();
+    print("listener start $pattern");
     super.start(onResult: onResult);
     if (locale != null) this.locale = locale;
     if (pattern != null) this.pattern = pattern.patternize();
