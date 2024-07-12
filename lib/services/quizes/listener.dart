@@ -128,30 +128,33 @@ class ListenerQuiz extends Quiz {
   }
 
   void _proccessResult() {
-    if (pattern == null) {
-      state.value = result.finalResult ? QuizState.success : QuizState.failure;
-    } else {
+    // if (pattern == null) {
+    //   state.value = result.finalResult ? QuizState.success : QuizState.failure;
+    // } else {
       // var words = result.alternates.where((a) =>
       //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
       // words.first.recognizedWords;
       recognizedWords.value = result.recognizedWords;
-      // if (result.finalResult) {
       var insert = result.recognizedWords.patternize();
       // var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
       //     orElse: () => "");
-      var rate = ratio(pattern!, insert);
+    var rate = ratio(pattern, insert);
       // if (exception.isNotEmpty) {
       //   minMatchLevel =
       //       100 - (100 * exception.length / pattern!.length).round();
       // }
       logs = "=> $insert ratio: $rate/$minMatchLevel";
       // log(log);
-      if (result.finalResult) {
-        state.value =
-            rate > minMatchLevel ? QuizState.success : QuizState.failure;
-      }
-      if (state.value == QuizState.success) stop();
-      // }
+    if (rate > minMatchLevel) {
+      state.value = QuizState.success;
+      onResult?.call(state.value, result.recognizedWords);
+      stop();
     }
+    if (result.finalResult && state.value != QuizState.success) {
+      state.value = QuizState.failure;
+      onResult?.call(state.value, result.recognizedWords);
+    }
+    // }
+    // }
   }
 }
