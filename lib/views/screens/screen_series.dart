@@ -160,21 +160,19 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   Future<void> onListeningResult(QuizState state, Talk talk) async {
-    const duration = Duration(milliseconds: 1500);
-    serviceLocator<ListenerQuiz>().stop();
     if (state == QuizState.success) {
-      await Future.delayed(duration);
-      if (mounted) {
-        controller.onQuizResult(true);
-      }
       if (talk.type != ContentType.repeat) {
         await serviceLocator<Speaker>()
             .play(talk.targetValue, narrator: talk.type.narrator);
       }
+      if (mounted) {
+        controller.onQuizResult(true);
+      }
     } else if (state == QuizState.failure) {
       controller.onQuizResult(false);
-      await Future.delayed(duration);
-      serviceLocator<ListenerQuiz>().state.value = QuizState.none;
+    // const duration = Duration(milliseconds: 1500);
+      // await Future.delayed(duration);
+      // serviceLocator<ListenerQuiz>().state.value = QuizState.none;
       // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
     }
   }
