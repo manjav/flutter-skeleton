@@ -39,7 +39,7 @@ dependencies:
   # metrix_plugin: ^1.5.0
   nakama: ^1.0.5
   # onesignal_flutter: ^5.0.3 
-  package_info_plus: ^5.0.1
+  package_info_plus: ^6.0.0
   path_provider: ^2.1.0
   provider: ^6.1.1
   rive: ^0.12.3
@@ -47,7 +47,7 @@ dependencies:
   # unity_ads_plugin: ^0.3.10
   url_launcher: ^6.1.14
   speech_to_text: ^6.6.0
-  wakelock_plus: ^1.1.4
+  wakelock_plus: ^1.2.5
 
 dev_dependencies:
   flutter_test:
