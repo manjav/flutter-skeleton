@@ -5,11 +5,16 @@ on:
     - 'v[0-9]+.[0-9]+.[0-9]+*'
 jobs:
   build:
-    name: Build and upload Android app
+    name: build_upload
     permissions: write-all
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
+
       - uses: actions/checkout@v3
+
+      - name: Check Version
+        uses: ./.github/actions/check_verion
+        
       - uses: ./.github/actions/build
         with:
           store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
@@ -19,8 +24,8 @@ jobs:
           ios-certificate-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
           ios-certificate-password: ${{ secrets.IOS_CERTIFICATE_PASS }}
           ios-provisioning-profile-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          ios-keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
           build-apk: false
-          build-ipa: false
 
       - uses: r0adkll/upload-google-play@v1
         with:
@@ -30,11 +35,10 @@ jobs:
           track: internal
           status: draft
 
-
-      # - name: Upload iOS app to TestFlight
-      #   uses: apple-actions/upload-testflight-build@v1
-      #   with: 
-      #     app-path: build/ios/ipa/flutter_build.ipa
-      #     issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-      #     api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-      #     api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+      - name: Upload iOS app to TestFlight
+        uses: apple-actions/upload-testflight-build@v1
+        with: 
+          app-path: build/ios/ipa/flutter_build.ipa 
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}

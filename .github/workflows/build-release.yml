@@ -1,0 +1,35 @@
+name: Build and release new version
+on:
+  push:
+    tags:
+    - 'r[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  release:
+    name: build_release
+    permissions: write-all
+    runs-on: macos-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Check Version
+        uses: ./.github/actions/check_verion
+        
+      - uses: ./.github/actions/build
+        with:
+          store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
+          store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
+          key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
+          key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
+          ios-certificate-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          ios-certificate-password: ${{ secrets.IOS_CERTIFICATE_PASS }}
+          ios-provisioning-profile-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          ios-keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
+          build-aab: false
+
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./build/app/outputs/apk/release/*.apk,./build/ios/ipa/flutter_build.ipa"
+          tag: ${{ github.ref_name }}
