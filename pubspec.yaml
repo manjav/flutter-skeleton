@@ -44,16 +44,16 @@ dependencies:
   provider: ^6.1.1
   rive: ^0.13.9
   shared_preferences: ^2.2.0
+  speech_to_text: ^6.6.2
   # unity_ads_plugin: ^0.3.10
   url_launcher: ^6.1.14
-  speech_to_text: ^6.6.0
   wakelock_plus: ^1.2.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^3.0.2
+  flutter_lints: ^4.0.0
 
 flutter:
   uses-material-design: true
