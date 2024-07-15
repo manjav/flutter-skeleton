@@ -1,30 +1,18 @@
 name: build
 description: Build Android and iOS
 inputs:
-  working-directory:
-    description: The root directory of the flutter app within this repository
-    default: ./
-  store-base64:
+  android-store-base64:
     description: "keyAlias with which to sign the app"
     required: true
-  store-pass:
+  android-store-pass:
     description: "The password for the key used to sign the app"
     required: true
-  key-alias:
+  android-key-alias:
     description: "The alias for the keyAlias"
     required: true
-  key-pass:
-    description: "The password for the store  used to sign the app"
+  android-key-pass:
+    description: "The password for the store used to sign the app"
     required: true
-  build-apk:
-    description: "Build APKs for internal releases"
-    default: true
-  build-aab:
-    description: "Build AAB for Playstore"
-    default: true
-  build-ipa:
-    description: "Build iOS and upload to TestFlight"
-    default: true
   ios-certificate-base64:
     description: "iOS Certificate Base64"
     required: false
@@ -37,6 +25,18 @@ inputs:
   ios-keychain-password:
     description: "iOS Keychain Password"
     required: false
+  build-apk:
+    description: "Build APKs for internal releases"
+    default: true
+  build-aab:
+    description: "Build AAB for Playstore"
+    default: true
+  build-ipa:
+    description: "Build iOS for TestFlight"
+    default: true
+  working-directory:
+    description: The root directory of the flutter app within this repository
+    default: ./
 
 runs:
   using: "composite"
@@ -85,11 +85,11 @@ runs:
     - name: Decode keystore and create jks and properties file for signing the app
       shell: bash
       run: |
-        echo "${{ inputs.store-base64 }}" | base64 --decode > app/keystore.jks
+        echo "${{ inputs.android-store-base64 }}" | base64 --decode > app/keystore.jks
         echo "storeFile=keystore.jks" >> key.properties
-        echo "storePassword=${{ inputs.store-pass }}" >> key.properties
-        echo "keyAlias=${{ inputs.key-alias }}" >> key.properties
-        echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
+        echo "storePassword=${{ inputs.android-store-pass }}" >> key.properties
+        echo "keyAlias=${{ inputs.android-key-alias }}" >> key.properties
+        echo "keyPassword=${{ inputs.android-key-pass }}" >> key.properties
       working-directory: ${{ inputs.working-directory }}/android
 
     - name: Build apk

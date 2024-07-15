@@ -17,10 +17,10 @@ jobs:
         
       - uses: ./.github/actions/build
         with:
-          store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
-          store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
-          key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
-          key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
+          android-store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
+          android-store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
+          android-key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
+          android-key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
           ios-certificate-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
           ios-certificate-password: ${{ secrets.IOS_CERTIFICATE_PASS }}
           ios-provisioning-profile-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
