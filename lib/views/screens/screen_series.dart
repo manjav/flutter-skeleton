@@ -11,7 +11,8 @@ class SeriesScreen extends AbstractScreen {
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
+class _ScreenState extends AbstractScreenState<SeriesScreen>
+    with LessonMixin, ListeningMixin {
   final List<ParentContent> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
   final _slideHeight = DeviceInfo.size.height * 0.5;
@@ -51,6 +52,26 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
     await Future.delayed(const Duration(milliseconds: 500));
     _playSounds();
     _scrollTo(end);
+  }
+
+  @override
+  Widget leftSideAppBar() {
+    return ValueListenableBuilder(
+      valueListenable: controller.contentIndex,
+      builder: (context, value, child) {
+        return Widgets.touchable(
+          context,
+          child: Column(
+            children: [
+              shortcutBuilder(),
+              SizedBox(height: 4.d),
+              progressSliderBuilder()
+            ],
+          ),
+          onTap: openSerieSelector,
+        );
+      },
+    );
   }
 
   @override
@@ -116,7 +137,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
 
   Widget _contentItem(Talk talk) {
     return switch (talk.type) {
-      ContentType.repeat || ContentType.translate => _quizBuilder(talk),
+      ContentType.repeat || ContentType.translate => listenerBuilder(talk),
       ContentType.head => DirText(
           talk.nativeValue,
           style: TStyles.big,
@@ -132,55 +153,28 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
   Future<void> _playSounds() async {
     for (var content in controller.currentSlide.children) {
       if (content.isQuiz) {
-        _startQuiz(content as Talk);
+        listen(content as Talk);
       }
     }
   }
 
-  Future<void> _startQuiz(Talk talk) async {
-    final account = serviceLocator<AccountProvider>();
-    final voice = talk.type == ContentType.translate
-        ? talk.nativeValue
-        : talk.targetValue;
-    await serviceLocator<Speaker>().play(voice, narrator: talk.type.narrator);
-    serviceLocator<STT>().start(
-      pattern: talk.targetValue,
-      locale: account.metadata["targetLanguage"],
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: (state, text) => _onSTTResult(state, talk),
-    );
-  }
-
-  Future<void> _onSTTResult(QuizState state, Talk talk) async {
-    const duration = Duration(milliseconds: 1500);
-    serviceLocator<STT>().stop();
+  @override
+  Future<void> onListeningResult(QuizState state, Talk talk) async {
     if (state == QuizState.success) {
-      await Future.delayed(duration);
-      if (mounted) {
-        controller.onQuizResult(true);
-      }
       if (talk.type != ContentType.repeat) {
         await serviceLocator<Speaker>()
             .play(talk.targetValue, narrator: talk.type.narrator);
       }
-    } else if (state == QuizState.fail) {
+      if (mounted) {
+        controller.onQuizResult(true);
+      }
+    } else if (state == QuizState.failure) {
       controller.onQuizResult(false);
-      await Future.delayed(duration);
-      serviceLocator<STT>().state.value = QuizState.none;
+    // const duration = Duration(milliseconds: 1500);
+      // await Future.delayed(duration);
+      // serviceLocator<ListenerQuiz>().state.value = QuizState.none;
       // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
     }
-  }
-
-  Widget _quizBuilder(Talk talk) {
-    var voice = talk.type == ContentType.translate
-        ? talk.nativeValue
-        : talk.targetValue;
-    return ListenerBox(
-      voiceHint: voice,
-      hint: talk.nativeValue,
-      answer: talk.targetValue,
-      narrator: talk.type.narrator,
-    );
   }
 
   @override
@@ -191,7 +185,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen> with LessonMixin {
     super.dispose();
   }
 
-  @override
   void openSerieSelector() {
     final itemHeight = 50.d;
     showModalBottomSheet<void>(

@@ -6,13 +6,13 @@ final serviceLocator = GetIt.instance;
 
 void initServices() {
   serviceLocator.registerSingleton<ServicesProvider>(ServicesProvider());
-  
+
   serviceLocator.registerLazySingleton<DeviceInfo>(() => DeviceInfo());
   serviceLocator.registerLazySingleton<Localization>(() => Localization());
-  serviceLocator.registerLazySingleton<Dictator>(() => Dictator());
+  serviceLocator.registerLazySingleton<DictatorQuiz>(() => DictatorQuiz());
+  serviceLocator.registerLazySingleton<ListenerQuiz>(() => ListenerQuiz());
   serviceLocator.registerLazySingleton<Speaker>(() => Speaker());
   serviceLocator.registerLazySingleton<Sounds>(() => Sounds());
-  serviceLocator.registerLazySingleton<STT>(() => STT());
   serviceLocator.registerLazySingleton<NetConnector>(() => NetConnector());
   serviceLocator
       .registerLazySingleton<AccountProvider>(() => AccountProvider());

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../app_export.dart';
 
-class Dictator extends Quiz {
+class DictatorQuiz extends Quiz {
   bool charByChar = false;
   List<Choice> choices = [];
   List<String> _pattern = [];
@@ -63,7 +63,7 @@ class Dictator extends Quiz {
 
   Future<void> checkAnswers() async {
     if (answers.value.length == _pattern.length) {
-      state.value = _chechAnswers() ? QuizState.success : QuizState.fail;
+      state.value = _chechAnswers() ? QuizState.success : QuizState.failure;
       onResult?.call(state.value, "");
     }
   }
@@ -72,7 +72,7 @@ class Dictator extends Quiz {
     if (choice.used) return;
     answers.add(choice.text);
     choice.used = true;
-    serviceLocator<Dictator>().checkAnswers();
+    serviceLocator<DictatorQuiz>().checkAnswers();
   }
 
   void deselectChoice() {

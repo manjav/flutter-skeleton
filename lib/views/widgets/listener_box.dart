@@ -1,123 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
+import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
 
 enum Difficulty { simple, hint, hidden }
 
-class ListenerBox extends StatelessWidget {
+// ignore: must_be_immutable
+class ListenerBox extends StatefulWidget {
   final String hint;
+  final String voice;
   final String answer;
-  final String voiceHint;
   final Narrator narrator;
   final Difficulty difficulty;
-  final List<ValueNotifier<Choice>> _patterns = [];
-  final ValueNotifier<double> _audioLevel = ValueNotifier(0);
-  final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
-  final ValueNotifier<String> _recognizedWords = ValueNotifier("__waiting__");
-  final ValueNotifier<bool> _debugMode = ValueNotifier(false);
 
-  ListenerBox({
+  const ListenerBox({
     super.key,
     required this.hint,
+    required this.voice,
     required this.answer,
     required this.narrator,
-    required this.voiceHint,
     this.difficulty = Difficulty.simple,
   });
+
+  @override
+  State<ListenerBox> createState() => _ListenerBoxState();
+}
+
+class _ListenerBoxState extends State<ListenerBox> {
+  final List<ValueNotifier<Choice>> _patterns = [];
+  final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
+  final ValueNotifier<String> _recognizedWords = ValueNotifier("");
+  final ValueNotifier<bool> _debugMode = ValueNotifier(false);
   final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
+
+  SMIInput<double>? _stateInput;
+  SMIInput<double>? _soundLevelInput;
+
+  String _pattern = "";
+
+  @override
+  void initState() {
+    _pattern = widget.answer.patternize();
+    final listener = serviceLocator<ListenerQuiz>();
+    listener.state.addListener(_stateListener);
+    listener.audioLevel.addListener(_soundLevelListener);
+    listener.recognizedWords.addListener(_resultListener);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var stt = serviceLocator<STT>();
-    if (_recognizedWords.value == "__waiting__") {
-      var pattern = answer.patternize();
-      stt.state.addListener(() {
-        _recognizedWords.value = "";
-        if (stt.pattern == pattern) {
-          _state.value = stt.state.value;
-        }
-      });
-      stt.audioLevel.addListener(() {
-        if (stt.pattern == pattern) {
-          _audioLevel.value = stt.audioLevel.value;
-        }
-      });
-      stt.recognizedWords.addListener(() {
-        if (stt.pattern == pattern) {
-          _recognizedWords.value = stt.recognizedWords.value;
-        }
-      });
-    }
-    var size = 120.d;
+    final listener = serviceLocator<ListenerQuiz>();
     var defaultStyle = TStyles.big.copyWith(
         fontSize: 36.d,
         height: 1,
-        color: difficulty == Difficulty.simple
+        color: widget.difficulty == Difficulty.simple
             ? TColors.primary80
             : TColors.transparent);
-    var words = answer.split(" ");
+    var words = widget.answer.split(" ");
+    _patterns.clear();
     _patterns.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        _answeringBuilder(context, defaultStyle, stt.minMatchLevel),
+        _answeringBuilder(context, defaultStyle, listener.minMatchLevel),
         SizedBox(height: 10.d),
-        DirText(hint, style: TStyles.small.copyWith(color: TColors.primary40)),
+        DirText(widget.hint,
+            style: TStyles.small.copyWith(color: TColors.primary40)),
         SizedBox(height: 50.d),
-        _wrongResultBuilder(),
+        _wrongResultBuilder(listener),
         SizedBox(height: 20.d),
         ValueListenableBuilder(
             valueListenable: _debugMode,
             builder: (context, value, child) => value
-                ? Text(stt.logs,
+                ? Text(listener.logs,
                     style: TStyles.tiny.copyWith(color: TColors.error))
                 : const SizedBox()),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            SpeakerBox(
-              narrator: narrator,
-              value: voiceHint,
-              width: 40.d,
-            ),
-            SizedBox(width: 50.d),
-            Widgets.button(
-              context,
-              width: size,
-              height: size,
-              radius: size,
-              padding: EdgeInsets.zero,
-              alignment: Alignment.center,
-              color: TColors.primary10,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  ValueListenableBuilder(
-                    valueListenable: _audioLevel,
-                    builder: (context, value, child) => AnimatedContainer(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(size)),
-                        color: TColors.primary20,
-                      ),
-                      width: size * _audioLevel.value,
-                      height: size * _audioLevel.value,
-                      duration: const Duration(milliseconds: STT.levelInterval),
-                    ),
-                  ),
-                  _getIcon(size)
-                ],
+            SkinnedButton(
+              color: TColors.white,
+              width: 62.d,
+              height: 62.d,
+              cornerRadius: 22.d,
+              child: Asset.load<SvgPicture>("reset"),
+              onPressed: () => listener.listen(
+                hint: widget.voice,
+                pattern: widget.answer,
+                narrator: widget.narrator,
               ),
-              onPressed: () {
-                // if (stt.state.value == QuizState.ready) {
-                stt.start(pattern: answer.patternize());
-                // }
-              },
-              onLongPress: () =>
-                  stt.onResult?.call(QuizState.success, stt.pattern!),
             ),
+            // SpeakerBox(
+            //   width: 40.d,
+            //   value: listener.hint,
+            //   narrator: listener.narrator,
+            //   icon:"reset"
+            // ),
+            SizedBox(width: 50.d),
+            _micButtonBuilder(context, listener),
             SizedBox(width: 90.d),
           ],
         ),
@@ -125,10 +110,28 @@ class ListenerBox extends StatelessWidget {
     );
   }
 
-  Widget _getIcon(double size) => ValueListenableBuilder(
-      valueListenable: _state,
-      builder: (context, value, child) =>
-          Asset.load<SvgPicture>("mic_${value.name}", width: size * 0.3));
+  Widget _micButtonBuilder(BuildContext context, ListenerQuiz listner) {
+    var size = 120.d;
+    return Widgets.touchable(
+      context,
+      child: LoaderWidget(
+        AssetType.animation,
+        "mic_button",
+        width: size,
+        height: size,
+        onRiveInit: (artboard) {
+          final controller =
+              StateMachineController.fromArtboard(artboard, "State Machine 1");
+          _stateInput = controller?.findInput<double>("state");
+          _soundLevelInput = controller?.findInput<double>("soundLevel");
+          artboard.addController(controller!);
+        },
+      ),
+      onTap: () {},
+      onLongPress: () =>
+          listner.onResult?.call(QuizState.success, listner.pattern),
+    );
+  }
 
   Widget _answeringBuilder(
       BuildContext context, TextStyle defaultStyle, int minMatchLevel) {
@@ -193,11 +196,11 @@ class ListenerBox extends StatelessWidget {
     // );
   }
 
-  Widget _wrongResultBuilder() {
+  Widget _wrongResultBuilder(ListenerQuiz stt) {
     return ValueListenableBuilder(
         valueListenable: _state,
         builder: (context, value, child) {
-          return value == QuizState.fail
+          return value == QuizState.failure
               ? DirText(
                   _recognizedWords.value,
                   style:
@@ -208,28 +211,31 @@ class ListenerBox extends StatelessWidget {
         });
   }
 
-  /* List<TextSpan> _getWords(String value) {
-    var target = talk.targetValue;
-    if (talk.targetValue == value) {
-      return [TextSpan(text: target, style: _correctStyle)];
-    }
-    var index = target.toLowerCase().indexOf(value);
-    if (index > -1) {
-      var spans = <TextSpan>[];
-      if (index > 0) {
-        spans.add(TextSpan(text: target.substring(0, index)));
-      }
-      if (value.isNotEmpty) {
-        spans.add(TextSpan(
-            text: target.substring(index, index + value.length),
-            style: _correctStyle..copyWith(backgroundColor: TColors.black)));
-      }
-      if (index + value.length < target.length - 1) {
-        spans.add(TextSpan(text: target.substring(index + value.length)));
-      }
-      return spans;
-    } else {
-      return [TextSpan(text: target)];
-    }
-  } */
+  @override
+  void dispose() {
+    final listener = serviceLocator<ListenerQuiz>();
+    listener.state.removeListener(_stateListener);
+    listener.audioLevel.removeListener(_soundLevelListener);
+    listener.recognizedWords.removeListener(_resultListener);
+    super.dispose();
+  }
+
+  void _stateListener() {
+    final listener = serviceLocator<ListenerQuiz>();
+    if (listener.pattern != _pattern) return;
+    _state.value = listener.state.value;
+    _stateInput?.value = listener.state.value.index.toDouble();
+  }
+
+  void _soundLevelListener() {
+    final listener = serviceLocator<ListenerQuiz>();
+    if (listener.pattern != _pattern) return;
+    _soundLevelInput?.value = listener.audioLevel.value * 100;
+  }
+
+  void _resultListener() {
+    final listener = serviceLocator<ListenerQuiz>();
+    if (listener.pattern != _pattern) return;
+    _recognizedWords.value = listener.recognizedWords.value;
+  }
 }

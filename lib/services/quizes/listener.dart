@@ -10,12 +10,14 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import '../../app_export.dart';
 
-class STT extends Quiz {
+class ListenerQuiz extends Quiz {
   static const int levelInterval = 100;
   String? locale;
-  String? pattern;
+  String hint = "";
+  String pattern = "";
   String logs = "none";
   int minMatchLevel = 90;
+  Narrator narrator = Narrator.shimmer;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
   SpeechRecognitionResult result = SpeechRecognitionResult([], true);
@@ -36,7 +38,7 @@ class STT extends Quiz {
         onError: _errorListener,
         onStatus: _statusListener,
       );
-      state.value = success ? QuizState.initialized : QuizState.error;
+      state.value = success ? QuizState.ready : QuizState.error;
     } catch (e) {
       state.value = QuizState.error;
     }
@@ -47,9 +49,6 @@ class STT extends Quiz {
   void _resultListener(SpeechRecognitionResult result) {
     this.result = result;
     _proccessResult();
-    if (result.finalResult) {
-      onResult?.call(state.value, result.recognizedWords);
-    }
     log('Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
   }
 
@@ -75,27 +74,34 @@ class STT extends Quiz {
   void _statusListener(String status) {
     log('Received listener status: => $status, listening: ${_speech.isListening}');
     if (status == "listening") {
-      state.value = QuizState.ready;
+      state.value = QuizState.listening;
     } else if (status == "done") {
       stop();
     }
   }
 
-  @override
-  void start({
-    Function(QuizState p1, String p2)? onResult,
+  void listen({
+    required String hint,
+    required String pattern,
+    required Narrator narrator,
     String? locale,
-    String? pattern,
     int minMatchLevel = 90,
     List<String>? exceptions,
-  }) {
+    Function(QuizState p1, String p2)? onResult,
+  }) async {
     // serviceLocator<Sounds>().stopAll();
-    super.start(onResult: onResult);
+    this.hint = hint;
+    this.narrator = narrator;
+    this.pattern = pattern.patternize();
     if (locale != null) this.locale = locale;
-    if (pattern != null) this.pattern = pattern.patternize();
     if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
+
+    await Future.delayed(const Duration(milliseconds: 600));
+    await serviceLocator<Speaker>().play(hint, narrator: narrator);
+    super.start(onResult: onResult);
+
     final options = SpeechListenOptions(
         onDevice: false,
         listenMode: ListenMode.deviceDefault,
@@ -127,29 +133,33 @@ class STT extends Quiz {
   }
 
   void _proccessResult() {
-    if (pattern == null) {
-      state.value = result.finalResult ? QuizState.success : QuizState.fail;
-    } else {
-      // var words = result.alternates.where((a) =>
-      //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
-      // words.first.recognizedWords;
-      recognizedWords.value = result.recognizedWords;
-      // if (result.finalResult) {
-      var insert = result.recognizedWords.patternize();
-      // var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
-      //     orElse: () => "");
-      var rate = ratio(pattern!, insert);
-      // if (exception.isNotEmpty) {
-      //   minMatchLevel =
-      //       100 - (100 * exception.length / pattern!.length).round();
-      // }
-      logs = "=> $insert ratio: $rate/$minMatchLevel";
-      // log(log);
-      if (result.finalResult) {
-        state.value = rate > minMatchLevel ? QuizState.success : QuizState.fail;
-      }
-      if (state.value == QuizState.success) stop();
-      // }
+    // if (pattern == null) {
+    //   state.value = result.finalResult ? QuizState.success : QuizState.failure;
+    // } else {
+    // var words = result.alternates.where((a) =>
+    //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
+    // words.first.recognizedWords;
+    recognizedWords.value = result.recognizedWords;
+    var insert = result.recognizedWords.patternize();
+    // var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
+    //     orElse: () => "");
+    var rate = ratio(pattern, insert);
+    // if (exception.isNotEmpty) {
+    //   minMatchLevel =
+    //       100 - (100 * exception.length / pattern!.length).round();
+    // }
+    logs = "=> $insert ratio: $rate/$minMatchLevel";
+    // log(log);
+    if (rate > minMatchLevel) {
+      state.value = QuizState.success;
+      onResult?.call(state.value, result.recognizedWords);
+      stop();
     }
+    if (result.finalResult && state.value != QuizState.success) {
+      state.value = QuizState.failure;
+      onResult?.call(state.value, result.recognizedWords);
+    }
+    // }
+    // }
   }
 }

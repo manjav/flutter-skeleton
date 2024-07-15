@@ -21,9 +21,9 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     return Widgets.rect(
       color: TColors.primary10,
       child: Stack(
+        alignment: Alignment.center,
         children: [
           childBuilder(paddingTop),
-          subtitleBuilder(),
         ],
       ),
     );
@@ -32,67 +32,58 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Widget navigatorBuilder(double paddingTop) {
     return Positioned(
       top: paddingTop,
-      left: 12.d,
+      left: 8.d,
       right: 12.d,
       child: Row(
         children: [
           Widgets.button(
             context,
-            width: 36.d,
-            height: 36.d,
+            width: 32.d,
+            height: 32.d,
             padding: EdgeInsets.all(8.d),
             child: Asset.load<SvgPicture>("close",
                 svgColorFilter:
                     const ColorFilter.mode(TColors.primary50, BlendMode.srcIn)),
             onPressed: () => Navigator.pop(context),
           ),
-          Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: controller.contentIndex,
-              builder: (context, value, child) {
-                return Widgets.touchable(context,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            DirText(controller.currentSerie.title),
-                            SizedBox(width: 8.d),
-                            Asset.load<SvgPicture>("chevron"),
-                          ],
-                        ),
-                        SizedBox(height: 4.d),
-                        indicatorBuilder()
-                      ],
-                    ),
-                    onTap: openSerieSelector);
-              },
-            ),
-          ),
+          Expanded(child: leftSideAppBar()),
         ],
       ),
     );
   }
 
-  Widget indicatorBuilder() {
+  Widget shortcutBuilder() {
+    return controller.series.length > 1
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DirText(controller.currentSerie.title),
+              SizedBox(width: 8.d),
+              Asset.load<SvgPicture>("chevron"),
+            ],
+          )
+        : const SizedBox();
+  }
+
+  Widget leftSideAppBar() => const SizedBox();
+
+  Widget progressSliderBuilder() {
     final seriesCount = controller.series.length;
     final serieIndex = controller.serieIndex.value;
     final height = 5.d;
     final margin = EdgeInsets.symmetric(horizontal: height);
-    final width =
-        (DeviceInfo.size.width - height * 10) / seriesCount - height * 4;
+    final width = (DeviceInfo.size.width - height * 10) / seriesCount - height;
     return SizedBox(
       height: height,
-      child: ListView.builder(
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: width / height, crossAxisCount: seriesCount),
         itemCount: seriesCount,
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: height * 5),
+        padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
           if (index != serieIndex) {
             return Widgets.rect(
               radius: 4.d,
-              width: width,
-              height: height,
               margin: margin,
               color: index <= serieIndex ? TColors.green : TColors.white50,
             );
@@ -113,32 +104,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Widget childBuilder(double paddingTop) => const SizedBox();
-
-  Widget subtitleBuilder() {
-    return Positioned(
-      left: 32.d,
-      right: 32.d,
-      bottom: 12.d,
-      child: ValueListenableBuilder(
-        valueListenable: subtitle,
-        builder: (context, value, child) {
-          if (value == null) return const SizedBox();
-          return Widgets.button(
-            context,
-            radius: 12.d,
-            padding: EdgeInsets.all(12.d),
-            color: TColors.black80,
-            child: Text(
-              value.nativeValue, // text,
-              style: TStyles.smallInvert,
-              textDirection: TextDirection.rtl, // dir,
-            ),
-            onLongPress: () => playSound(value, force: true),
-          );
-        },
-      ),
-    );
-  }
 
   Future<void> playSound(
     Talk talk, {
@@ -163,6 +128,4 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     controller.dispose();
     super.dispose();
   }
-
-  void openSerieSelector() {}
 }

@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lingai/app_export.dart';
+import 'package:lifetalk/app_export.dart';
 
 class RadioBox extends StatelessWidget {
   final String text;

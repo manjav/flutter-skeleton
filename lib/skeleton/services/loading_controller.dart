@@ -21,7 +21,7 @@ class LoadingController extends GetxController {
     sounds.initialize();
 
     serviceLocator<Speaker>().initialize();
-    serviceLocator<STT>().initialize();
+    serviceLocator<ListenerQuiz>().initialize();
 
     try {
       var data = await serviceLocator<NetConnector>().initialize();

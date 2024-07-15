@@ -1,0 +1,34 @@
+name: check_version
+description: Check version in pubspec.yaml
+inputs:
+  working-directory:
+    description: The root directory of the flutter app within this repository
+    default: ./
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Parse pubspec.yaml for version
+      id: get_version
+      shell: bash
+      run: |
+        version=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+        base_version=$(echo $version | cut -d '+' -f 1)
+        echo "base_version=$base_version" >> $GITHUB_ENV
+
+    - name: Display app version
+      shell: bash
+      run: echo "App base version is ${{ env.base_version }}"
+
+    - name: Get the tag and remove the first character
+      id: get_tag
+      shell: bash
+      run: |
+        TAG=${GITHUB_REF#refs/tags/}
+        TAG_WITHOUT_FIRST_CHAR=${TAG:1}
+        echo "TAG_WITHOUT_FIRST_CHAR=$TAG_WITHOUT_FIRST_CHAR" >> $GITHUB_ENV
+
+    - uses: nick-invision/assert-action@v1
+      with:
+        expected: ${{ env.TAG_WITHOUT_FIRST_CHAR }}
+        actual: ${{ env.base_version }}

@@ -11,7 +11,8 @@ class LessonScreen extends AbstractScreen {
   createState() => _ScreenState();
 }
 
-class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
+class _ScreenState extends AbstractScreenState<LessonScreen>
+    with LessonMixin, ListeningMixin {
   final List<Talk> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
   final ScrollController _chatScrollController = ScrollController();
@@ -20,6 +21,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
   void initState() {
     var list = Get.arguments["content"].children;
     controller.series = List.generate(list.length, (i) => list[i]);
+    // controller.series[0].children.removeRange(0, 1);
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
     controller.changeSerie(1);
@@ -36,7 +38,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     if (controller.contentIndex.value <= -1) return;
     var talk = controller.currentContent;
     if (talk.isQuiz) {
-      _startQuiz(talk);
+      listen(talk);
     }
     await _addChat(controller.uniqueIndex);
   }
@@ -65,68 +67,110 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     //     curve: Curves.easeOutQuart);
   }
 
-  // @override
-  // Widget navigatorBuilder(double paddingTop, String title) {
-  //   return ValueListenableBuilder(
-  //     valueListenable: controller.contentIndex,
-  //     builder: (context, value, child) {
-  //       return Align(
-  //         alignment: const Alignment(0, 1),
-  //         child: FractionallySizedBox(
-  //           heightFactor: 0.15,
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             crossAxisAlignment: CrossAxisAlignment.center,
-  //             children: [
-  //               indicatorBuilder(),
-  //               Row(
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 children: [
-  //                   _navigationButton(
-  //                     name: "footer_prev",
-  //                     isEnable: controller.slideIndex.value > 0,
-  //                     onPress: () => controller.changeSlide(-1),
-  //                   ),
-  //                   _navigationButton(
-  //                     name: "footer_pause",
-  //                   ),
-  //                   _navigationButton(
-  //                     name: "footer_next",
-  //                     isEnable: value < controller.series.length &&
-  //                         controller.contentIndex.value ==
-  //                             controller.currentSerie.children.length - 1,
-  //                     onPress: () => controller.changeSerie(1),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  @override
+  Widget contentFactory(double paddingTop) {
+    if (controller.series.isEmpty) {
+      return const SizedBox();
+    }
 
-  // Widget _navigationButton({
-  //   required name,
-  //   bool isEnable = true,
-  //   Function()? onPress,
-  // }) {
-  //   return Opacity(
-  //     opacity: isEnable ? 1 : 0.4,
-  //     child: Widgets.button(
-  //       context,
-  //       height: 92.d,
-  //       padding: EdgeInsets.all(12.d),
-  //       child: Asset.load<Image>(name),
-  //       onPressed: () {
-  //         // if (isEnable) {
-  //         onPress?.call();
-  //         // }
-  //       },
-  //     ),
-  //   );
-  // }
+    return Widgets.rect(
+      color: TColors.primary10,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          _subtitleBuilder(),
+          childBuilder(paddingTop),
+          _navigatorBuilder(),
+        ],
+      ),
+    );
+  }
+
+  Widget _subtitleBuilder() {
+    return FractionallySizedBox(
+      widthFactor: 0.9,
+      child: Align(
+        alignment: const Alignment(0, -0.7),
+        child: ValueListenableBuilder(
+          valueListenable: subtitle,
+          builder: (context, value, child) {
+            if (value == null) return const SizedBox();
+            return Widgets.button(
+              context,
+              radius: 16.d,
+              padding: EdgeInsets.all(16.d),
+              color: TColors.green,
+              child: Text(
+                value.nativeValue, // text,
+                style: TStyles.mediumInvert,
+                textDirection: TextDirection.rtl, // dir,
+              ),
+              onLongPress: () => playSound(value, force: true),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _navigatorBuilder() {
+    return Align(
+      alignment: const Alignment(0, 0.7),
+      child: ValueListenableBuilder(
+        valueListenable: controller.contentIndex,
+        builder: (context, value, child) {
+          return SizedBox(
+            width: 270.d,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                progressSliderBuilder(),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _navigationButton(
+                      name: "footer_prev",
+                      isEnable: controller.slideIndex.value > 0,
+                      onPress: () => controller.changeSlide(-1),
+                    ),
+                    _navigationButton(
+                      name: "footer_pause",
+                    ),
+                    _navigationButton(
+                      name: "footer_next",
+                      isEnable: value < controller.series.length &&
+                          controller.contentIndex.value ==
+                              controller.currentSerie.children.length - 1,
+                      onPress: () => controller.changeSlide(1),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _navigationButton({
+    required name,
+    bool isEnable = true,
+    Function()? onPress,
+  }) {
+    return Widgets.button(
+      context,
+      height: 92.d,
+      padding: EdgeInsets.all(12.d),
+      child: Asset.load<Image>(name),
+      onPressed: () {
+        // if (isEnable) {
+        onPress?.call();
+        // }
+      },
+    );
+  }
 
   @override
   Widget childBuilder(double paddingTop) {
@@ -134,7 +178,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
       key: _animatedListKey,
       controller: _chatScrollController,
       padding: EdgeInsets.fromLTRB(
-          padding, paddingTop + padding * 6, padding, 200.d),
+          padding, paddingTop + padding * 16, padding, 200.d),
       itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a),
     );
   }
@@ -190,7 +234,15 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
       _ => BalloonTipPosition.none,
     };
     if (talk.isQuiz) {
-      return _quizBuilder(talk);
+      return Widgets.rect(
+          radius: 24.d,
+          height: 400.d,
+          color: TColors.primary0,
+          alignment: Alignment.center,
+          width: DeviceInfo.size.width,
+          margin: EdgeInsets.symmetric(vertical: 5.d),
+          padding: EdgeInsets.symmetric(horizontal: 20.d),
+          child: listenerBuilder(talk));
     }
     return RadioBox(
       talk.targetValue, // main,
@@ -206,45 +258,30 @@ class _ScreenState extends AbstractScreenState<LessonScreen> with LessonMixin {
     );
   }
 
-  Widget _quizBuilder(Talk talk) {
-    var voice = talk.type == ContentType.translate
-        ? talk.nativeValue
-        : talk.targetValue;
-    return ListenerBox(
-      hint: talk.nativeValue,
-      answer: talk.targetValue,
-      narrator: talk.type.narrator,
-      voiceHint: voice,
-    );
-  }
-
-  Future<void> _startQuiz(Talk talk) async {
+  @override
+  Future<void> listen(Talk talk) async {
     subtitle.value == null;
-    var account = serviceLocator<AccountProvider>();
-    serviceLocator<STT>().start(
-      pattern: talk.targetValue,
-      locale: account.metadata["targetLanguage"],
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: (state, text) => _onSTTResult(state, talk),
-    );
+    await super.listen(talk);
   }
 
-  Future<void> _onSTTResult(QuizState state, Talk talk) async {
+  @override
+  Future<void> onListeningResult(QuizState state, Talk talk) async {
     const duration = Duration(milliseconds: 500);
-    serviceLocator<STT>().stop();
+    serviceLocator<ListenerQuiz>().stop();
     if (state == QuizState.success) {
       await Future.delayed(duration);
       // serviceLocator<STT>().state.value = QuizState.none;
       if (mounted) {
         controller.onQuizResult(true);
-        _animatedListKey.currentState?.removeItem(_animatedItems.length - 1,
-            (context, animation) => const SizedBox());
-        _animatedItems.removeLast();
-        talk.type = ContentType.user;
+        // _animatedListKey.currentState?.removeItem(_animatedItems.length - 1,
+        //     (context, animation) => const SizedBox());
+        // _animatedItems.removeLast();
+        // talk.type = ContentType.user;
         await Future.delayed(duration);
-        _addChat(controller.uniqueIndex);
+        // _addChat(controller.uniqueIndex);
+        controller.changeContent(1);
       }
-    } else if (state == QuizState.fail) {
+    } else if (state == QuizState.failure) {
       controller.onQuizResult(false);
       // await Future.delayed(duration);
       // serviceLocator<STT>().start(activeId: controller.uniqueIndex);

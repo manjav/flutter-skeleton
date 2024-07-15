@@ -1,4 +1,4 @@
-import 'package:lingai/app_export.dart';
+import 'package:lifetalk/app_export.dart';
 
 class Content {
   int index = 0;
@@ -12,7 +12,9 @@ class Content {
 
   bool get isChat => type == ContentType.bot || type == ContentType.user;
   bool get isQuiz =>
-      type == ContentType.repeat || type == ContentType.translate;
+      type == ContentType.answer ||
+      type == ContentType.repeat ||
+      type == ContentType.translate;
 
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];
@@ -92,6 +94,7 @@ enum ContentType {
   head,
   text,
   caption,
+  answer,
   repeat,
   translate,
   user,
@@ -116,10 +119,11 @@ enum ContentType {
   Narrator get narrator => switch (this) {
         ContentType.user => Narrator.nova,
         ContentType.bot ||
+        ContentType.answer ||
         ContentType.repeat ||
         ContentType.translate =>
-          Narrator.alloy,
-        _ => Narrator.farid,
+          Narrator.onyx,
+        _ => Narrator.ali,
       };
 }
 
