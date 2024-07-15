@@ -41,47 +41,46 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Check java found
-      id: check_java
-      shell: bash
-      run: |
-        if java --version; then
-            echo "installed=true" >> "$GITHUB_OUTPUT"
-        else
-            echo "installed=false" >> "$GITHUB_OUTPUT"
-        fi
+    # - name: Check java found
+    #   id: check_java
+    #   shell: bash
+    #   run: |
+    #     if java --version; then
+    #         echo "installed=true" >> "$GITHUB_OUTPUT"
+    #     else
+    #         echo "installed=false" >> "$GITHUB_OUTPUT"
+    #     fi
 
     - name: Install java
-      if: steps.check_java.outputs.installed == 'false'
+      # if: steps.check_java.outputs.installed == 'false'
       uses: actions/setup-java@v3
       with:
         distribution: "adopt"
-        java-version: "17"
-        cache: "gradle"
+        java-version: "11"
 
-    - name: Check flutter found
-      id: check_flutter
-      shell: bash
-      run: |
-        if flutter --version; then
-            echo "installed=true" >> "$GITHUB_OUTPUT"
-        else
-            echo "installed=false" >> "$GITHUB_OUTPUT"
-        fi
+    # - name: Check flutter found
+    #   id: check_flutter
+    #   shell: bash
+    #   run: |
+    #     if flutter --version; then
+    #         echo "installed=true" >> "$GITHUB_OUTPUT"
+    #     else
+    #         echo "installed=false" >> "$GITHUB_OUTPUT"
+    #     fi
 
     - name: Setup flutter
-      if: steps.check_flutter.outputs.installed == 'false'
+      # if: steps.check_flutter.outputs.installed == 'false'
       uses: subosito/flutter-action@v2
       with:
         # channel: stable
         flutter-version: '3.19.3'
-        cache: true
 
-    - run: flutter doctor -v
-      shell: bash
 
-    - run: flutter --version
-      shell: bash
+    # - run: flutter doctor -v
+    #   shell: bash
+
+    # - run: flutter --version
+    #   shell: bash
 
     - name: Decode keystore and create jks and properties file for signing the app
       shell: bash
@@ -95,7 +94,7 @@ runs:
 
     - name: Build apk
       if: inputs.build-apk  == 'true'
-      run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
+      run: flutter build apk --release
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 

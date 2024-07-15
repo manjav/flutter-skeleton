@@ -1,4 +1,4 @@
-name: Release Tag
+name: Release
 on:
   push:
     tags:
@@ -8,7 +8,7 @@ jobs:
   release:
     name: release
     permissions: write-all
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
 
       - uses: actions/checkout@v3
@@ -30,8 +30,12 @@ jobs:
           store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
           key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
           key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
-          # build-aab: false
-          # build-ipa: false
+          ios-certificate-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          ios-certificate-password: ${{ secrets.IOS_CERTIFICATE_PASS }}
+          ios-provisioning-profile-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          ios-keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
+          build-aab: false
+          build-ipa: true
 
       # - name: Test1
       #   shell: bash

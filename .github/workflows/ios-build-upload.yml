@@ -2,7 +2,7 @@ name: Build iOS
 on:
   push:
     tags:
-    - 'v[0-9]+.[0-9]+.[0-9]+*'
+    - 'i[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
   build:
@@ -11,6 +11,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup flutter
+        # if: steps.check_flutter.outputs.installed == 'false'
+        uses: subosito/flutter-action@v2
+        with:
+          # channel: stable
+          flutter-version: '3.19.3'
 
       - uses: cedvdb/action-flutter-build-ios@v1
         with:
@@ -28,10 +35,10 @@ jobs:
       #     name: release.ipa
       #     path: ./build/ios/ipa/flutter_build.ipa
 
-      - name: Upload iOS app to TestFlight
-        uses: apple-actions/upload-testflight-build@v1
-        with: 
-          app-path: build/ios/ipa/flutter_build.ipa
-          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+      # - name: Upload iOS app to TestFlight
+      #   uses: apple-actions/upload-testflight-build@v1
+      #   with: 
+      #     app-path: build/ios/ipa/flutter_build.ipa
+      #     issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+      #     api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
