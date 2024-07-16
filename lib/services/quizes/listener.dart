@@ -153,11 +153,13 @@ class ListenerQuiz extends Quiz {
     if (rate > minMatchLevel) {
       state.value = QuizState.success;
       onResult?.call(state.value, result.recognizedWords);
+      onResult = null;
       stop();
     }
-    if (result.finalResult && state.value != QuizState.success) {
+    if (result.finalResult) {
       state.value = QuizState.failure;
       onResult?.call(state.value, result.recognizedWords);
+      onResult = null;
     }
     // }
     // }
