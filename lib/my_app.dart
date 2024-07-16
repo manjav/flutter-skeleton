@@ -81,8 +81,8 @@ class _MyAppState extends State<MyApp>
               create: (_) => serviceLocator<AccountProvider>()),
         ],
         child: GetMaterialApp(
-          supportedLocales: Localization.locales,
           theme: Themes.darkData,
+          supportedLocales: Localization.locales,
           locale:
               Localization.locales.firstWhere((l) => l.languageCode == "en"),
           getPages: [
