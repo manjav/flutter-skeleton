@@ -29,9 +29,13 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   Future<void> _onChangeSlide() async {
+    for (var i = 0; i <= _animatedItems.length - 1; i++) {
+      _animatedListKey.currentState!.removeItem(
+        0,
+        (BuildContext context, Animation<double> animation) => const SizedBox(),
+      );
+    }
     _animatedItems.clear();
-    _animatedListKey.currentState
-        ?.removeAllItems((context, animation) => const SizedBox());
   }
 
   Future<void> _onChangeLine() async {
