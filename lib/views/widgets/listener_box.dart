@@ -233,9 +233,13 @@ class _ListenerBoxState extends State<ListenerBox> {
   void _stateListener() {
     final listener = serviceLocator<ListenerQuiz>();
     if (listener.pattern != _pattern) return;
+    if (_state.value == QuizState.ready) {
+      for (var pattern in _patterns) {
+        pattern.value = Choice(pattern.value.text)..used = false;
+      }
+    }
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
-
   }
 
   void _soundLevelListener() {
