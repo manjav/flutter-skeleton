@@ -87,9 +87,11 @@ class ListenerQuiz extends Quiz {
     String? locale,
     int minMatchLevel = 90,
     List<String>? exceptions,
+    bool shouldPlayHint = true,
     Function(QuizState p1, String p2)? onResult,
   }) async {
     // serviceLocator<Sounds>().stopAll();
+    state.value = QuizState.ready;
     this.hint = hint;
     this.narrator = narrator;
     this.pattern = pattern.patternize();
@@ -98,8 +100,10 @@ class ListenerQuiz extends Quiz {
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
 
-    await Future.delayed(const Duration(milliseconds: 600));
-    await serviceLocator<Speaker>().play(hint, narrator: narrator);
+    if (shouldPlayHint) {
+      await Future.delayed(const Duration(milliseconds: 600));
+      await serviceLocator<Speaker>().play(hint, narrator: narrator);
+    }
     super.start(onResult: onResult);
 
     final options = SpeechListenOptions(
@@ -123,12 +127,29 @@ class ListenerQuiz extends Quiz {
     );
   }
 
+  Future<void> toggle(
+      {required String hint,
+      required String pattern,
+      required Narrator narrator}) async {
+    recognizedWords.value = "";
+    if (state.value == QuizState.listening ||
+        state.value == QuizState.waiting) {
+      await stop();
+      state.value = QuizState.ready;
+      return;
+    }
+    listen(
+        hint: hint,
+        pattern: pattern,
+        narrator: narrator,
+        shouldPlayHint: false);
+  }
+
   @override
-  void stop() {
+  Future<void> stop() async {
     if (!isEnable) return;
     super.stop();
-    log('stop');
-    _speech.stop();
+    await _speech.stop();
     audioLevel.value = 0.0;
   }
 

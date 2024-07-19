@@ -127,7 +127,13 @@ class _ListenerBoxState extends State<ListenerBox> {
           artboard.addController(controller!);
         },
       ),
-      onTap: () {},
+      onTap: () {
+        listner.toggle(
+          hint: widget.voice,
+          pattern: widget.answer,
+          narrator: widget.narrator,
+        );
+      },
       onLongPress: () =>
           listner.onResult?.call(QuizState.success, listner.pattern),
     );
@@ -225,6 +231,7 @@ class _ListenerBoxState extends State<ListenerBox> {
     if (listener.pattern != _pattern) return;
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
+
   }
 
   void _soundLevelListener() {
