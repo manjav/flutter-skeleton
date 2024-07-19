@@ -170,6 +170,7 @@ class ListenerQuiz extends Quiz {
     //   minMatchLevel =
     //       100 - (100 * exception.length / pattern!.length).round();
     // }
+    if (state.value.index > QuizState.listening.index) return;
     logs = "=> $insert ratio: $rate/$minMatchLevel";
     if (rate > minMatchLevel) {
       state.value = QuizState.success;
@@ -177,14 +178,13 @@ class ListenerQuiz extends Quiz {
         await serviceLocator<Speaker>().play(pattern, narrator: narrator);
       }
       onResult?.call(state.value, result.recognizedWords);
-      onResult = null;
       stop();
+      return;
     }
-    if (onResult != null && result.finalResult) {
+    if (result.finalResult) {
       state.value =
           recognizedWords.value.isEmpty ? QuizState.ready : QuizState.failure;
       onResult?.call(state.value, result.recognizedWords);
-      onResult = null;
     }
   }
 }
