@@ -29,7 +29,7 @@ class DeviceInfo extends IService {
 
   static Future<bool> preInitialize(BuildContext context,
       [bool forced = false]) async {
-    if (!forced && isPreInitialized) return false;
+    if (!forced && isPreInitialized) return false; 
 
     // Get screen info
     var q = MediaQuery.of(context);

@@ -154,35 +154,29 @@ class ListenerQuiz extends Quiz {
   }
 
   void _proccessResult() {
-    // if (pattern == null) {
-    //   state.value = result.finalResult ? QuizState.success : QuizState.failure;
-    // } else {
-    // var words = result.alternates.where((a) =>
-    //     pattern!.toLowerCase().contains(a.recognizedWords.toLowerCase()));
-    // words.first.recognizedWords;
+    // for (var alternate in result.alternates) {
+    //   print("${alternate.recognizedWords} ${alternate.confidence}");
+    // }
     recognizedWords.value = result.recognizedWords;
     var insert = result.recognizedWords.patternize();
-    // var exception = exceptions.firstWhere((ex) => pattern!.contains(ex),
-    //     orElse: () => "");
+
     var rate = ratio(pattern, insert);
     // if (exception.isNotEmpty) {
     //   minMatchLevel =
     //       100 - (100 * exception.length / pattern!.length).round();
     // }
     logs = "=> $insert ratio: $rate/$minMatchLevel";
-    // log(log);
     if (rate > minMatchLevel) {
       state.value = QuizState.success;
       onResult?.call(state.value, result.recognizedWords);
       onResult = null;
       stop();
     }
-    if (result.finalResult) {
-      state.value = QuizState.failure;
+    if (onResult != null && result.finalResult) {
+      state.value =
+          recognizedWords.value.isEmpty ? QuizState.ready : QuizState.failure;
       onResult?.call(state.value, result.recognizedWords);
       onResult = null;
     }
-    // }
-    // }
   }
 }
