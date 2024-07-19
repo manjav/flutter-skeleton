@@ -12,6 +12,7 @@ class ListenerBox extends StatefulWidget {
   final String hint;
   final String voice;
   final String answer;
+  final String repeatVoice;
   final Narrator narrator;
   final Difficulty difficulty;
 
@@ -21,6 +22,7 @@ class ListenerBox extends StatefulWidget {
     required this.voice,
     required this.answer,
     required this.narrator,
+    required this.repeatVoice,
     this.difficulty = Difficulty.simple,
   });
 
@@ -93,6 +95,7 @@ class _ListenerBoxState extends State<ListenerBox> {
                 hint: widget.voice,
                 pattern: widget.answer,
                 narrator: widget.narrator,
+                repeatVoice: widget.repeatVoice,
               ),
             ),
             // SpeakerBox(
@@ -132,6 +135,7 @@ class _ListenerBoxState extends State<ListenerBox> {
           hint: widget.voice,
           pattern: widget.answer,
           narrator: widget.narrator,
+          repeatVoice: widget.repeatVoice,
         );
       },
       onLongPress: () =>

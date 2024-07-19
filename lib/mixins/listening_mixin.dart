@@ -12,6 +12,7 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       hint: talk.nativeValue,
       answer: talk.targetValue,
       narrator: talk.type.narrator,
+      repeatVoice: talk.type != ContentType.repeat ? talk.targetValue : "",
     );
   }
 
@@ -25,6 +26,7 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       pattern: talk.targetValue,
       narrator: talk.type.narrator,
       locale: account.metadata["targetLanguage"],
+      repeatVoice: talk.type != ContentType.repeat ? talk.targetValue : "",
       exceptions: [account.account.user.displayName!.patternize()],
       onResult: (state, text) => onListeningResult(state, talk),
     );

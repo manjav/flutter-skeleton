@@ -15,6 +15,7 @@ class ListenerQuiz extends Quiz {
   String? locale;
   String hint = "";
   String pattern = "";
+  String repeatVoice = "";
   String logs = "none";
   int minMatchLevel = 90;
   Narrator narrator = Narrator.shimmer;
@@ -84,6 +85,7 @@ class ListenerQuiz extends Quiz {
     required String hint,
     required String pattern,
     required Narrator narrator,
+    required String repeatVoice,
     String? locale,
     int minMatchLevel = 90,
     List<String>? exceptions,
@@ -94,6 +96,7 @@ class ListenerQuiz extends Quiz {
     state.value = QuizState.ready;
     this.hint = hint;
     this.narrator = narrator;
+    this.repeatVoice = repeatVoice;
     this.pattern = pattern.patternize();
     if (locale != null) this.locale = locale;
     if (exceptions != null) this.exceptions = exceptions;
@@ -130,6 +133,7 @@ class ListenerQuiz extends Quiz {
   Future<void> toggle(
       {required String hint,
       required String pattern,
+      required String repeatVoice,
       required Narrator narrator}) async {
     recognizedWords.value = "";
     if (state.value == QuizState.listening ||
@@ -142,6 +146,7 @@ class ListenerQuiz extends Quiz {
         hint: hint,
         pattern: pattern,
         narrator: narrator,
+        repeatVoice: repeatVoice,
         shouldPlayHint: false);
   }
 
@@ -153,7 +158,7 @@ class ListenerQuiz extends Quiz {
     audioLevel.value = 0.0;
   }
 
-  void _proccessResult() {
+  Future<void> _proccessResult() async {
     // for (var alternate in result.alternates) {
     //   print("${alternate.recognizedWords} ${alternate.confidence}");
     // }
@@ -168,6 +173,9 @@ class ListenerQuiz extends Quiz {
     logs = "=> $insert ratio: $rate/$minMatchLevel";
     if (rate > minMatchLevel) {
       state.value = QuizState.success;
+      if (repeatVoice.isNotEmpty) {
+        await serviceLocator<Speaker>().play(pattern, narrator: narrator);
+      }
       onResult?.call(state.value, result.recognizedWords);
       onResult = null;
       stop();
