@@ -138,9 +138,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
                       isEnable: controller.slideIndex.value > 0,
                       onPress: () => controller.changeSlide(-1),
                     ),
-                    _navigationButton(
-                      name: "footer_pause",
-                    ),
+                    SizedBox(width: 150.d),
                     _navigationButton(
                       name: "footer_next",
                       isEnable: value < controller.series.length &&
