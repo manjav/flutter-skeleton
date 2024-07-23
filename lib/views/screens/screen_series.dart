@@ -20,13 +20,9 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   void initState() {
     var list = Get.arguments["content"].children;
     controller.series = List.generate(list.length, (i) => list[i]);
-    controller.serieIndex.addListener(_onChangeSerie);
     controller.slideIndex.addListener(_onChangeSlide);
     controller.changeSerie(1);
     super.initState();
-  }
-
-  Future<void> _onChangeSerie() async {
   }
 
   Future<void> _onChangeSlide() async {
@@ -209,14 +205,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     }
   }
 
-  @override
-  void dispose() {
-    serviceLocator<Sounds>().stopAll();
-    controller.serieIndex.removeListener(_onChangeSerie);
-    controller.slideIndex.removeListener(_onChangeSlide);
-    super.dispose();
-  }
-
   void openSerieSelector() {
     final itemHeight = 50.d;
     showModalBottomSheet<void>(
@@ -249,5 +237,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    serviceLocator<Sounds>().stopAll();
+    controller.slideIndex.removeListener(_onChangeSlide);
+    super.dispose();
   }
 }
