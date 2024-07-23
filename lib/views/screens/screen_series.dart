@@ -68,24 +68,25 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       right: padding,
       bottom: padding,
       child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              topLeft: topRadius,
-              topRight: topRadius,
-              bottomLeft: bottomRadius,
-              bottomRight: bottomRadius),
-          child: ValueListenableBuilder(
-            valueListenable: controller.slideIndex,
-            builder: (context, value, child) {
-              _scrollTo(0);
-              return PageView.builder(
-                  padEnds: false,
-                  scrollDirection: Axis.vertical,
-                  controller: _slidesScrollController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.currentSerie.children.length + 1,
-                  itemBuilder: _slideItemBiulder);
-            },
-          )),
+        borderRadius: BorderRadius.only(
+            topLeft: topRadius,
+            topRight: topRadius,
+            bottomLeft: bottomRadius,
+            bottomRight: bottomRadius),
+        child: ValueListenableBuilder(
+          valueListenable: controller.slideIndex,
+          builder: (context, value, child) {
+            _scrollTo(0);
+            return PageView.builder(
+                padEnds: false,
+                scrollDirection: Axis.vertical,
+                controller: _slidesScrollController,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: controller.currentSerie.children.length + 1,
+                itemBuilder: _slideItemBiulder);
+          },
+        ),
+      ),
     );
   }
 
@@ -99,17 +100,29 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       items.add(_contentItem(slide.children[c] as Talk));
       items.add(SizedBox(height: 12.d));
     }
-    return Widgets.button(
+    return Widgets.touchable(
       context,
-      radius: 24.d,
-      height: _slideHeight,
-      color: TColors.primary0,
-      width: DeviceInfo.size.width,
-      margin: EdgeInsets.symmetric(vertical: 5.d),
-      padding: EdgeInsets.symmetric(horizontal: 20.d),
-      child:
-          Column(mainAxisAlignment: MainAxisAlignment.center, children: items),
-      onPressed: () => _scrollTo(index),
+      child: Widgets.rect(
+        radius: 24.d,
+        height: _slideHeight,
+        color: TColors.primary0,
+        width: DeviceInfo.size.width,
+        margin: EdgeInsets.symmetric(vertical: 5.d),
+        padding: EdgeInsets.symmetric(horizontal: 20.d),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, children: items),
+      ),
+      onTap: () => _scrollTo(index),
+      onVerticalDragEnd: (DragEndDetails details) {
+        final velocity = (details.primaryVelocity ?? 0);
+        final absoluteVelocity = velocity.abs();
+        if (absoluteVelocity > 500) {
+          final page = ((_slidesScrollController!.page ?? 0) +
+                  (velocity / absoluteVelocity) * -1)
+              .round();
+          _scrollTo(page);
+        }
+      },
     );
   }
 
@@ -171,6 +184,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   Future<void> _scrollTo(int page) async {
     if (_slidesScrollController!.positions.isEmpty) return;
+    if (page < 0 || page > controller.currentSerie.children.length) return;
     await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
   }
