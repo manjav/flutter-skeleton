@@ -32,8 +32,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   Future<void> _onChangeSlide() async {
     if (controller.slideIndex.value <= -1) return;
     await Future.delayed(const Duration(milliseconds: 500));
-    _playSounds();
-    _scrollTo(end);
+    for (var content in controller.currentSlide.children) {
+      if (content.isQuiz) {
+        listen(content as Talk);
+      }
+    }
   }
 
   @override
@@ -69,11 +72,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       right: padding,
       bottom: padding,
       child: ClipRRect(
-        borderRadius: BorderRadius.only(
-            topLeft: topRadius,
-            topRight: topRadius,
-            bottomLeft: bottomRadius,
-            bottomRight: bottomRadius),
+          borderRadius: BorderRadius.only(
+              topLeft: topRadius,
+              topRight: topRadius,
+              bottomLeft: bottomRadius,
+              bottomRight: bottomRadius),
           child: ValueListenableBuilder(
             valueListenable: controller.slideIndex,
             builder: (context, value, child) {
@@ -81,7 +84,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
               return PageView.builder(
                   padEnds: false,
                   scrollDirection: Axis.vertical,
-            controller: _slidesScrollController,
+                  controller: _slidesScrollController,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: controller.currentSerie.children.length + 1,
                   itemBuilder: _slideItemBiulder);
@@ -92,22 +95,22 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   Widget _slideItemBiulder(BuildContext context, int index) {
     if (index >= controller.currentSerie.children.length) {
-                return _nextSerieButton();
-              }
+      return _nextSerieButton();
+    }
     final slide = controller.currentSerie.children[index] as ParentContent;
-              var items = <Widget>[];
-              for (var c = 0; c < slide.children.length; c++) {
-                items.add(_contentItem(slide.children[c] as Talk));
-                items.add(SizedBox(height: 12.d));
-              }
+    var items = <Widget>[];
+    for (var c = 0; c < slide.children.length; c++) {
+      items.add(_contentItem(slide.children[c] as Talk));
+      items.add(SizedBox(height: 12.d));
+    }
     return Widgets.button(
-                  context,
-                  radius: 24.d,
-                  height: _slideHeight,
-                  color: TColors.primary0,
-                  width: DeviceInfo.size.width,
-                  margin: EdgeInsets.symmetric(vertical: 5.d),
-                  padding: EdgeInsets.symmetric(horizontal: 20.d),
+      context,
+      radius: 24.d,
+      height: _slideHeight,
+      color: TColors.primary0,
+      width: DeviceInfo.size.width,
+      margin: EdgeInsets.symmetric(vertical: 5.d),
+      padding: EdgeInsets.symmetric(horizontal: 20.d),
       child:
           Column(mainAxisAlignment: MainAxisAlignment.center, children: items),
       onPressed: () => _scrollTo(index),
@@ -188,14 +191,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
           textAlign: TextAlign.center,
         ),
     };
-  }
-
-  Future<void> _playSounds() async {
-    for (var content in controller.currentSlide.children) {
-      if (content.isQuiz) {
-        listen(content as Talk);
-      }
-    }
   }
 
   @override
