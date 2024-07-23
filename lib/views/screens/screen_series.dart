@@ -173,8 +173,9 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     );
   }
 
-  void _scrollTo(double offset) {
-    _slidesScrollController!.animateTo(offset,
+  Future<void> _scrollTo(int page) async {
+    if (_slidesScrollController!.positions.isEmpty) return;
+    await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
   }
 
