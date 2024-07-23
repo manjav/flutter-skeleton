@@ -174,17 +174,21 @@ class ListenerQuiz extends Quiz {
     logs = "=> $insert ratio: $rate/$minMatchLevel";
     if (rate > minMatchLevel) {
       state.value = QuizState.success;
-      if (repeatVoice.isNotEmpty) {
-        await serviceLocator<Speaker>().play(pattern, narrator: narrator);
-      }
-      onResult?.call(state.value, result.recognizedWords);
-      stop();
+      dispatchresult();
       return;
     }
     if (result.finalResult) {
       state.value =
           recognizedWords.value.isEmpty ? QuizState.ready : QuizState.failure;
-      onResult?.call(state.value, result.recognizedWords);
+      dispatchresult();
     }
+  }
+
+  void dispatchresult() async {
+    if (repeatVoice.isNotEmpty) {
+      await serviceLocator<Speaker>().play(pattern, narrator: narrator);
+    }
+    onResult?.call(state.value, result.recognizedWords);
+    stop();
   }
 }
