@@ -87,7 +87,7 @@ class ListenerQuiz extends Quiz {
     required Narrator narrator,
     required String repeatVoice,
     String? locale,
-    int minMatchLevel = 90,
+    int minMatchLevel = 92,
     List<String>? exceptions,
     bool shouldPlayHint = true,
     Function(QuizState p1, String p2)? onResult,
