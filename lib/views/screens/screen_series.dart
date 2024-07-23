@@ -13,16 +13,13 @@ class SeriesScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<SeriesScreen>
     with LessonMixin, ListeningMixin {
-  final List<ParentContent> _animatedItems = [];
-  final _animatedListKey = GlobalKey<AnimatedListState>();
-  final _slideHeight = DeviceInfo.size.height * 0.5;
+  final _slideHeight = DeviceInfo.size.height * 0.6;
   PageController? _slidesScrollController;
 
   @override
   void initState() {
     var list = Get.arguments["content"].children;
     controller.series = List.generate(list.length, (i) => list[i]);
-    // controller.series.removeRange(0, 2);
     controller.serieIndex.addListener(_onChangeSerie);
     controller.slideIndex.addListener(_onChangeSlide);
     controller.changeSerie(1);
@@ -30,25 +27,10 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   Future<void> _onChangeSerie() async {
-    _animatedItems.clear();
-    _animatedListKey.currentState
-        ?.removeAllItems((context, animation) => const SizedBox());
   }
 
   Future<void> _onChangeSlide() async {
     if (controller.slideIndex.value <= -1) return;
-    if (_animatedItems.isEmpty) {
-      _animatedListKey.currentState?.insertItem(_animatedItems.length);
-      _animatedItems
-          .add(ParentContent.create(null, ContentType.category, "", {}));
-    }
-    var end = _slidesScrollController!.position.pixels + _slideHeight;
-    if (_animatedItems.length == controller.currentSerie.children.length) {
-      end += 150.d;
-    }
-
-    _animatedListKey.currentState?.insertItem(_animatedItems.length - 1);
-    _animatedItems.insert(_animatedItems.length - 1, controller.currentSlide);
     await Future.delayed(const Duration(milliseconds: 500));
     _playSounds();
     _scrollTo(end);
@@ -92,26 +74,33 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
             topRight: topRadius,
             bottomLeft: bottomRadius,
             bottomRight: bottomRadius),
-        child: AnimatedList(
-            key: _animatedListKey,
-            physics: const PageScrollPhysics(parent: ClampingScrollPhysics()),
+          child: ValueListenableBuilder(
+            valueListenable: controller.slideIndex,
+            builder: (context, value, child) {
+              _scrollTo(0);
+              return PageView.builder(
+                  padEnds: false,
+                  scrollDirection: Axis.vertical,
             controller: _slidesScrollController,
-            itemBuilder: (c, i, a) {
-              final slide = _animatedItems[i];
-              if (slide.type == ContentType.category) {
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.currentSerie.children.length + 1,
+                  itemBuilder: _slideItemBiulder);
+            },
+          )),
+    );
+  }
+
+  Widget _slideItemBiulder(BuildContext context, int index) {
+    if (index >= controller.currentSerie.children.length) {
                 return _nextSerieButton();
               }
+    final slide = controller.currentSerie.children[index] as ParentContent;
               var items = <Widget>[];
               for (var c = 0; c < slide.children.length; c++) {
                 items.add(_contentItem(slide.children[c] as Talk));
                 items.add(SizedBox(height: 12.d));
               }
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, 0.5),
-                  end: const Offset(0, 0),
-                ).animate(a),
-                child: Widgets.button(
+    return Widgets.button(
                   context,
                   radius: 24.d,
                   height: _slideHeight,
@@ -119,14 +108,65 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                   width: DeviceInfo.size.width,
                   margin: EdgeInsets.symmetric(vertical: 5.d),
                   padding: EdgeInsets.symmetric(horizontal: 20.d),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: items),
-                  onPressed: () => _scrollTo(_slideHeight * i),
-                ),
-              );
-            }),
+      child:
+          Column(mainAxisAlignment: MainAxisAlignment.center, children: items),
+      onPressed: () => _scrollTo(index),
+    );
+  }
+
+  Widget _nextSerieButton() {
+    if (controller.currentSerie == controller.series.last) {
+      return Column(
+        children: [
+          SizedBox(height: 30.d),
+          Widgets.rect(
+            radius: 12.d,
+            color: TColors.orange,
+            padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
+            transform: Transform.rotate(angle: -0.08).transform,
+            child: Text(
+              "serie_from_to".l([
+                (controller.serieIndex.value + 1).convert(),
+                controller.series.length.convert()
+              ]),
+              style: TStyles.largeInvert,
+            ),
+          ),
+          SizedBox(height: 12.d),
+          Text("slide_finish".l([]), style: TStyles.huge),
+          SizedBox(height: 12.d),
+          SkinnedButton(
+            color: TColors.blue,
+            height: 60.d,
+            width: DeviceInfo.size.width * 0.7,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("next_serie".l(), style: TStyles.largeInvert),
+                SizedBox(width: 16.d),
+                Asset.load<SvgPicture>("arrow_right", height: 20.d),
+              ],
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          SizedBox(height: 30.d),
+        ],
+      );
+    }
+    return Widgets.button(
+      context,
+      height: 100.d,
+      alignment: const Alignment(0, -0.5),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Asset.load<SvgPicture>("wand"),
+          SizedBox(width: 12.d),
+          Text("next_slide".l(),
+              style: TStyles.medium.copyWith(color: TColors.primary40)),
+        ],
       ),
+      onPressed: () => controller.changeSerie(1),
     );
   }
 
@@ -212,63 +252,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
           ),
         );
       },
-    );
-  }
-
-  Widget _nextSerieButton() {
-    var last = _animatedItems[_animatedItems.length - 2];
-    if (last.id == controller.currentSerie.children.last.id) {
-      return Column(
-        children: [
-          SizedBox(height: 50.d),
-          Widgets.rect(
-            radius: 12.d,
-            color: TColors.orange,
-            padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
-            transform: Transform.rotate(angle: -0.08).transform,
-            child: Text(
-              "serie_from_to".l([
-                (controller.serieIndex.value + 1).convert(),
-                controller.series.length.convert()
-              ]),
-              style: TStyles.largeInvert,
-            ),
-          ),
-          SizedBox(height: 30.d),
-          Text("slide_finish".l([]), style: TStyles.huge),
-          SizedBox(height: 30.d),
-          SkinnedButton(
-            color: TColors.blue,
-            height: 64.d,
-            width: DeviceInfo.size.width * 0.8,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("next_serie".l(), style: TStyles.largeInvert),
-                SizedBox(width: 16.d),
-                Asset.load<SvgPicture>("arrow_right", height: 20.d),
-              ],
-            ),
-            onPressed: () => controller.changeSlide(1),
-          ),
-          SizedBox(height: 30.d),
-        ],
-      );
-    }
-    return Widgets.button(
-      context,
-      height: 100.d,
-      alignment: const Alignment(0, 0.5),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Asset.load<SvgPicture>("wand"),
-          SizedBox(width: 12.d),
-          Text("next_slide".l(),
-              style: TStyles.medium.copyWith(color: TColors.primary40)),
-        ],
-      ),
-      onPressed: () => controller.changeSlide(1),
     );
   }
 }
