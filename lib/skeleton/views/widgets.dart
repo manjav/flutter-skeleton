@@ -9,38 +9,45 @@ class Widgets {
     String? sfx,
     int id = 30,
     Function()? onTap,
-    Function(TapUpDetails details)? onTapUp,
-    Function(dynamic details)? onTapDown,
-    Function()? onTapCancel,
     Function()? onLongPress,
+    Function()? onTapCancel,
+    Function(dynamic details)? onTapDown,
+    Function(TapUpDetails details)? onTapUp,
+    Function(DragEndDetails)? onVerticalDragEnd,
     Widget? child,
   }) {
     return GestureDetector(
-        onTap: () {
-          if (_isActive(id)) onTap?.call();
-        },
-        onTapUp: _isActive(id)
-            ? (details) {
-                serviceLocator<Sounds>().play(sfx ?? "mouse_up");
-                onTapUp?.call(details);
+      onTap: () {
+        if (_isActive(id)) onTap?.call();
+      },
+      onTapUp: _isActive(id)
+          ? (details) {
+              serviceLocator<Sounds>().play(sfx ?? "mouse_up");
+              onTapUp?.call(details);
+            }
+          : null,
+      onTapDown: _isActive(id)
+          ? (details) {
+              if (sfx == null) {
+                serviceLocator<Sounds>().play("mouse_down");
               }
-            : null,
-        onTapDown: _isActive(id)
-            ? (details) {
-                if (sfx == null) {
-                  serviceLocator<Sounds>().play("mouse_down");
-                }
-                onTapDown?.call(details);
-              }
-            : null,
-        onTapCancel: () {
-          if (_isActive(id)) {
-            serviceLocator<Sounds>().play(sfx ?? "mouse_up");
-            onTapCancel?.call();
-          }
-        },
-        onLongPress: _isActive(id) ? () => onLongPress?.call() : null,
-        child: child);
+              onTapDown?.call(details);
+            }
+          : null,
+      onTapCancel: () {
+        if (_isActive(id)) {
+          serviceLocator<Sounds>().play(sfx ?? "mouse_up");
+          onTapCancel?.call();
+        }
+      },
+      onLongPress: () {
+        if (_isActive(id)) onLongPress?.call();
+      },
+      onVerticalDragEnd: (details) {
+        if (_isActive(id)) onVerticalDragEnd?.call(details);
+      },
+      child: child,
+    );
   }
 
   static bool _isActive(int id) {
