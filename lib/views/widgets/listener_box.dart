@@ -36,7 +36,7 @@ class _ListenerBoxState extends State<ListenerBox> {
   final ValueNotifier<String> _recognizedWords = ValueNotifier("");
   final ValueNotifier<bool> _debugMode = ValueNotifier(false);
   final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
-
+  final _defaultStyle = TStyles.huge.copyWith(height: 1);
   SMIInput<double>? _stateInput;
   SMIInput<double>? _soundLevelInput;
 
@@ -55,12 +55,7 @@ class _ListenerBoxState extends State<ListenerBox> {
   @override
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
-    var defaultStyle = TStyles.big.copyWith(
-        fontSize: 36.d,
-        height: 1,
-        color: widget.difficulty == Difficulty.simple
-            ? TColors.primary80
-            : TColors.transparent);
+
     var words = widget.answer.split(" ");
     _patterns.clear();
     _patterns.addAll(
@@ -68,7 +63,7 @@ class _ListenerBoxState extends State<ListenerBox> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _answeringBuilder(context, defaultStyle, listener.minMatchLevel),
+        _answeringBuilder(context, listener.minMatchLevel),
         SizedBox(height: 10.d),
         DirText(widget.hint,
             style: TStyles.small.copyWith(color: TColors.primary40)),
