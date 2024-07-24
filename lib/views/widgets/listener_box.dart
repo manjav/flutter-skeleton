@@ -80,17 +80,21 @@ class _ListenerBoxState extends State<ListenerBox> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            SkinnedButton(
-              color: TColors.white,
-              width: 62.d,
-              height: 62.d,
-              cornerRadius: 22.d,
-              child: Asset.load<SvgPicture>("reset"),
-              onPressed: () => listener.listen(
-                hint: widget.voice,
-                pattern: widget.answer,
-                narrator: widget.narrator,
-                repeatVoice: widget.repeatVoice,
+            ValueListenableBuilder(
+              valueListenable: _state,
+              builder: (context, value, child) => SkinnedButton(
+                color: TColors.white,
+                width: 62.d,
+                height: 62.d,
+                cornerRadius: 22.d,
+                isEnable: value != QuizState.waiting,
+                child: Asset.load<SvgPicture>("reset"),
+                onPressed: () => listener.listen(
+                  hint: widget.voice,
+                  pattern: widget.answer,
+                  narrator: widget.narrator,
+                  repeatVoice: widget.repeatVoice,
+                ),
               ),
             ),
             // SpeakerBox(
@@ -138,8 +142,7 @@ class _ListenerBoxState extends State<ListenerBox> {
     );
   }
 
-  Widget _answeringBuilder(
-      BuildContext context, TextStyle defaultStyle, int minMatchLevel) {
+  Widget _answeringBuilder(BuildContext context, int minMatchLevel) {
     return ValueListenableBuilder(
         valueListenable: _recognizedWords,
         builder: (context, value, child) {
@@ -149,7 +152,7 @@ class _ListenerBoxState extends State<ListenerBox> {
           bool isCorrect = false;
           var values = value.split(" ");
           for (var i = 0; i < _patterns.length; i++) {
-            var style = defaultStyle;
+            var style = _defaultStyle;
             if (i < values.length) {
               var rate = ratio(
                   values[i].patternize(), _patterns[i].value.text.patternize());
