@@ -77,6 +77,9 @@ class ListenerQuiz extends Quiz {
     if (status == "listening") {
       state.value = QuizState.listening;
     } else if (status == "done") {
+      if (recognizedWords.value.isEmpty) {
+        state.value = QuizState.ready;
+      }
       stop();
     }
   }
@@ -104,7 +107,7 @@ class ListenerQuiz extends Quiz {
     recognizedWords.value = "";
 
     if (shouldPlayHint) {
-      await Future.delayed(const Duration(milliseconds: 600));
+      await Future.delayed(const Duration(milliseconds: 200));
       await serviceLocator<Speaker>().play(hint, narrator: narrator);
     }
     super.start(onResult: onResult);
@@ -123,8 +126,8 @@ class ListenerQuiz extends Quiz {
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
-      // pauseFor: const Duration(seconds: 5),
-      // listenFor: const Duration(seconds: 3),
+      pauseFor: const Duration(seconds: 10),
+      listenFor: const Duration(seconds: 10),
       onSoundLevelChange: _soundLevelListener,
       onResult: _resultListener,
     );
@@ -186,6 +189,7 @@ class ListenerQuiz extends Quiz {
 
   void dispatchresult() async {
     if (repeatVoice.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 200));
       await serviceLocator<Speaker>().play(pattern, narrator: narrator);
     }
     onResult?.call(state.value, result.recognizedWords);
