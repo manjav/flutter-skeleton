@@ -96,6 +96,10 @@ class ListenerQuiz extends Quiz {
     Function(QuizState p1, String p2)? onResult,
   }) async {
     // serviceLocator<Sounds>().stopAll();
+    if (state.value.index <= QuizState.listening.index) {
+      _speech.cancel();
+    }
+
     state.value = QuizState.ready;
     this.hint = hint;
     this.narrator = narrator;
@@ -141,7 +145,7 @@ class ListenerQuiz extends Quiz {
     recognizedWords.value = "";
     if (state.value == QuizState.listening ||
         state.value == QuizState.waiting) {
-      await stop();
+      _speech.cancel();
       state.value = QuizState.ready;
       return;
     }
