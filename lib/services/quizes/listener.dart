@@ -169,8 +169,12 @@ class ListenerQuiz extends Quiz {
     // for (var alternate in result.alternates) {
     //   print("${alternate.recognizedWords} ${alternate.confidence}");
     // }
-    recognizedWords.value = result.recognizedWords;
     var insert = result.recognizedWords.patternize();
+    if (insert.contains(pattern)) {
+      insert = recognizedWords.value = pattern;
+    } else {
+      recognizedWords.value = result.recognizedWords;
+    }
 
     var rate = ratio(pattern, insert);
     // if (exception.isNotEmpty) {
