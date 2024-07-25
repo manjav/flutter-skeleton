@@ -110,16 +110,10 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     int lastIndex = -1,
     bool force = false,
   }) async {
-    if (talk.type == ContentType.image) return;
-    final hasTarget = talk.type == ContentType.bot ||
-        talk.type == ContentType.user ||
-        talk.type == ContentType.repeat;
-    if (hasTarget) {
+    final soundId = talk.getSoundId();
+    if (soundId != null && !talk.isQuiz) {
       await serviceLocator<Speaker>()
-          .play(talk.targetValue, narrator: talk.type.narrator, force: force);
-    } else {
-      await serviceLocator<Speaker>()
-          .play(talk.nativeValue, narrator: talk.type.narrator, force: force);
+          .play(soundId, narrator: talk.type.narrator, force: force);
     }
   }
 

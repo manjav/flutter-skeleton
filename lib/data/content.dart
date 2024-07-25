@@ -82,6 +82,16 @@ class Talk extends Content {
       type = ContentType.getEnum(map["type"]);
     }
   }
+
+  String? getSoundId() {
+    if (type == ContentType.image) return null;
+    if (type == ContentType.bot ||
+        type == ContentType.user ||
+        type == ContentType.repeat) {
+      return targetValue;
+    }
+    return nativeValue;
+  }
 }
 
 enum ContentType {
