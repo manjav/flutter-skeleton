@@ -45,7 +45,6 @@ class LessonController {
       changeSerie(1);
       return;
     }
-    await Future.delayed(const Duration(milliseconds: 500));
     slideIndex.value += stepLength;
     contentIndex.value = -1;
     changeContent(1);
@@ -57,7 +56,6 @@ class LessonController {
       changeSlide(1);
       return;
     }
-    await Future.delayed(const Duration(milliseconds: 500));
     contentIndex.value += stepLength;
   }
 

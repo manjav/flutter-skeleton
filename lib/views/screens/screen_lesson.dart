@@ -48,7 +48,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   Future<void> _addChat(int lastIndex) async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 200));
     if (controller.uniqueIndex != lastIndex) return;
     serviceLocator<Sounds>().stopAll();
     var talk = controller.currentContent;
@@ -266,6 +266,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   @override
   Future<void> listen(Talk talk) async {
     subtitle.value == null;
+    await Future.delayed(const Duration(seconds: 1));
     await super.listen(talk);
   }
 
