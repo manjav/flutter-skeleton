@@ -10,6 +10,7 @@ class LessonController {
   final ValueNotifier<int> serieIndex = ValueNotifier(-1);
   final ValueNotifier<int> slideIndex = ValueNotifier(-1);
   final ValueNotifier<int> contentIndex = ValueNotifier(-1);
+  final ValueNotifier<bool> slidePassed = ValueNotifier(true);
 
   // int _fouls = 0, _streakCorrects = 0, _maxCorrects = 0, _numQuizes = 0;
 
@@ -48,6 +49,7 @@ class LessonController {
     slideIndex.value += stepLength;
     contentIndex.value = -1;
     changeContent(1);
+    slidePassed.value = false;
   }
 
   Future<void> changeContent(int stepLength) async {
@@ -67,6 +69,7 @@ class LessonController {
     } else {
       // ++_fouls;
       // _streakCorrects = 0;
+      slidePassed.value = true;
       serviceLocator<Sounds>().play("wrong");
     }
   }

@@ -119,36 +119,39 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   Widget _navigatorBuilder() {
     return Align(
-      alignment: const Alignment(0, 0.7),
+      alignment: const Alignment(0, 0.8),
       child: ValueListenableBuilder(
-        valueListenable: controller.contentIndex,
+        valueListenable: controller.slidePassed,
         builder: (context, value, child) {
-          return SizedBox(
+          return Visibility(
+            visible: value,
+            child: SizedBox(
             width: 270.d,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                progressSliderBuilder(),
+                  // progressSliderBuilder(),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _navigationButton(
-                      name: "footer_prev",
-                      isEnable: controller.slideIndex.value > 0,
-                      onPress: () => controller.changeSlide(-1),
-                    ),
-                    SizedBox(width: 150.d),
+                      // _navigationButton(
+                      //   name: "footer_prev",
+                      //   isEnable: controller.slideIndex.value > 0 && value,
+                      //   onPress: () => controller.changeSlide(-1),
+                      // ),
+                      // SizedBox(width: 250.d),
                     _navigationButton(
                       name: "footer_next",
-                      isEnable: value < controller.series.length &&
-                          controller.contentIndex.value ==
-                              controller.currentSerie.children.length - 1,
+                        isEnable: /* controller.slideIndex.value <
+                              controller.currentSerie.children.length && */
+                            true,
                       onPress: () => controller.changeSlide(1),
                     ),
                   ],
                 ),
               ],
+              ),
             ),
           );
         },
@@ -167,9 +170,9 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       padding: EdgeInsets.all(12.d),
       child: Asset.load<Image>(name),
       onPressed: () {
-        // if (isEnable) {
+        if (isEnable) {
         onPress?.call();
-        // }
+        }
       },
     );
   }
