@@ -186,7 +186,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     if (_slidesScrollController!.positions.isEmpty) return;
     if (page < 0 || page > controller.currentSerie.children.length) return;
     await _slidesScrollController!.animateToPage(page,
-        duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
+        duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
   }
 
   Widget _contentItem(Talk talk) {
