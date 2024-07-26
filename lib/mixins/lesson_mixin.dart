@@ -112,8 +112,9 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }) async {
     final soundId = talk.getSoundId();
     if (soundId != null && !talk.isQuiz) {
-      await serviceLocator<Speaker>()
-          .play(soundId, narrator: talk.type.narrator, force: force);
+      // await serviceLocator<Speaker>()
+      //     .play(soundId, narrator: talk.type.narrator, force: force);
+      await serviceLocator<Speaker>().playLocal(talk.id);
     }
   }
 

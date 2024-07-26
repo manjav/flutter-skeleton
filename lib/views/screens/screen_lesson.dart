@@ -24,7 +24,9 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     // controller.series[0].children.removeRange(0, 1);
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
-    controller.changeSerie(1);
+    serviceLocator<Speaker>().loadAllSounds(controller.series, () {
+      controller.changeSerie(1);
+    });
     super.initState();
   }
 
@@ -126,31 +128,31 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
           return Visibility(
             visible: value,
             child: SizedBox(
-            width: 270.d,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              width: 270.d,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                   // progressSliderBuilder(),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       // _navigationButton(
                       //   name: "footer_prev",
                       //   isEnable: controller.slideIndex.value > 0 && value,
                       //   onPress: () => controller.changeSlide(-1),
                       // ),
                       // SizedBox(width: 250.d),
-                    _navigationButton(
-                      name: "footer_next",
+                      _navigationButton(
+                        name: "footer_next",
                         isEnable: /* controller.slideIndex.value <
                               controller.currentSerie.children.length && */
                             true,
-                      onPress: () => controller.changeSlide(1),
-                    ),
-                  ],
-                ),
-              ],
+                        onPress: () => controller.changeSlide(1),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );
@@ -171,7 +173,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       child: Asset.load<Image>(name),
       onPressed: () {
         if (isEnable) {
-        onPress?.call();
+          onPress?.call();
         }
       },
     );
@@ -266,7 +268,6 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   @override
   Future<void> listen(Talk talk) async {
     subtitle.value == null;
-    await Future.delayed(const Duration(seconds: 1));
     await super.listen(talk);
   }
 
