@@ -21,6 +21,7 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         ? talk.nativeValue
         : talk.targetValue;
     final account = serviceLocator<AccountProvider>();
+    await Future.delayed(const Duration(seconds: 2));
     serviceLocator<ListenerQuiz>().listen(
       hint: voice,
       pattern: talk.targetValue,
