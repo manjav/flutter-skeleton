@@ -128,11 +128,9 @@ enum ContentType {
 
   Narrator get narrator => switch (this) {
         ContentType.user => Narrator.nova,
-        ContentType.bot ||
-        ContentType.answer ||
-        ContentType.repeat ||
-        ContentType.translate =>
-          Narrator.onyx,
+        // ContentType.bot ||
+        ContentType.answer || ContentType.repeat => Narrator.onyx,
+        // ContentType.translate =>
         _ => Narrator.ali,
       };
 }

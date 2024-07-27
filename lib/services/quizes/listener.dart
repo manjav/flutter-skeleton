@@ -198,7 +198,8 @@ class ListenerQuiz extends Quiz {
   void dispatchresult() async {
     if (repeatVoice.isNotEmpty) {
       await Future.delayed(const Duration(milliseconds: 200));
-      await serviceLocator<Speaker>().play(repeatVoice, narrator: narrator);
+      await serviceLocator<Speaker>()
+          .play(repeatVoice, narrator: Narrator.onyx);
     }
     onResult?.call(state.value, result.recognizedWords);
     stop();
