@@ -63,7 +63,9 @@ class ListenerQuiz extends Quiz {
       return;
     }
     _lastLevelChanged = d;
+    if ((audioLevel.value - value).abs() > 0.1) {
     audioLevel.value = Curves.easeInSine.transform(value);
+    }
   }
 
   void _errorListener(SpeechRecognitionError error) {
