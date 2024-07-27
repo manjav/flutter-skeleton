@@ -17,7 +17,7 @@ class ListenerQuiz extends Quiz {
   String pattern = "";
   String repeatVoice = "";
   String logs = "none";
-  int minMatchLevel = 90;
+  int minMatchLevel = 95;
   Narrator narrator = Narrator.shimmer;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
