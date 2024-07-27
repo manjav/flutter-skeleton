@@ -64,7 +64,7 @@ class ListenerQuiz extends Quiz {
     }
     _lastLevelChanged = d;
     if ((audioLevel.value - value).abs() > 0.1) {
-    audioLevel.value = Curves.easeInSine.transform(value);
+      audioLevel.value = Curves.easeInSine.transform(value);
     }
   }
 
@@ -168,27 +168,27 @@ class ListenerQuiz extends Quiz {
   }
 
   Future<void> _proccessResult() async {
-    // for (var alternate in result.alternates) {
-    //   print("${alternate.recognizedWords} ${alternate.confidence}");
-    // }
-    var insert = result.recognizedWords.patternize();
-    if (insert.contains(pattern)) {
-      insert = recognizedWords.value = pattern;
-    } else {
-      recognizedWords.value = result.recognizedWords;
-    }
+    for (var alternate in result.alternates) {
+      // print("${alternate.recognizedWords} ${alternate.confidence}");
+      var insert = alternate.recognizedWords.patternize();
+      if (insert.contains(pattern)) {
+        insert = recognizedWords.value = pattern;
+      } else {
+        recognizedWords.value = alternate.recognizedWords;
+      }
 
-    var rate = ratio(pattern, insert);
-    // if (exception.isNotEmpty) {
-    //   minMatchLevel =
-    //       100 - (100 * exception.length / pattern!.length).round();
-    // }
-    if (state.value.index > QuizState.listening.index) return;
-    logs = "=> $insert ratio: $rate/$minMatchLevel";
-    if (rate > minMatchLevel) {
-      state.value = QuizState.success;
-      dispatchresult();
-      return;
+      var rate = ratio(pattern, insert);
+      // if (exception.isNotEmpty) {
+      //   minMatchLevel =
+      //       100 - (100 * exception.length / pattern!.length).round();
+      // }
+      if (state.value.index > QuizState.listening.index) return;
+      logs = "=> $insert ratio: $rate/$minMatchLevel";
+      if (rate > minMatchLevel) {
+        state.value = QuizState.success;
+        dispatchresult();
+        return;
+      }
     }
     if (result.finalResult) {
       state.value =
