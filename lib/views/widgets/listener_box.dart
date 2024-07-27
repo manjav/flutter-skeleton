@@ -37,6 +37,8 @@ class _ListenerBoxState extends State<ListenerBox> {
   final ValueNotifier<bool> _debugMode = ValueNotifier(false);
   final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
   final _defaultStyle = TStyles.huge.copyWith(height: 1);
+  final _hiddenStyle =
+      TStyles.huge.copyWith(height: 1, color: TColors.transparent);
   SMIInput<double>? _stateInput;
   SMIInput<double>? _soundLevelInput;
 
@@ -55,8 +57,7 @@ class _ListenerBoxState extends State<ListenerBox> {
   @override
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
-
-    var words = widget.answer.split(" ");
+    final words = widget.answer.split(" ");
     _patterns.clear();
     _patterns.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
@@ -97,12 +98,6 @@ class _ListenerBoxState extends State<ListenerBox> {
                 ),
               ),
             ),
-            // SpeakerBox(
-            //   width: 40.d,
-            //   value: listener.hint,
-            //   narrator: listener.narrator,
-            //   icon:"reset"
-            // ),
             SizedBox(width: 50.d),
             _micButtonBuilder(context, listener),
             SizedBox(width: 90.d),
@@ -146,27 +141,27 @@ class _ListenerBoxState extends State<ListenerBox> {
     return ValueListenableBuilder(
         valueListenable: _recognizedWords,
         builder: (context, value, child) {
-          // if (difficulty != Difficulty.simple) {
           var items = <Widget>[];
           // var patterns = talk.targetValue.toLowerCase().split(" ");
-          bool isCorrect = false;
-          var values = value.split(" ");
+        var words = value.split(" ");
           for (var i = 0; i < _patterns.length; i++) {
+          var isCorrect = false;
+          var isHidden = _patterns[i].value.text.contains("{") ||
+              _patterns[i].value.text.contains("}");
             var style = _defaultStyle;
-            if (i < values.length) {
+          if (i < words.length) {
               var rate = ratio(
-                  values[i].patternize(), _patterns[i].value.text.patternize());
+                words[i].patternize(), _patterns[i].value.text.patternize());
               isCorrect = rate > minMatchLevel;
               if (isCorrect) {
                 style = _correctStyle;
               }
             }
-            var isHidden = _patterns[i].value.text.contains("{") ||
-                _patterns[i].value.text.contains("}");
             items.add(
               ValueListenableBuilder(
                 valueListenable: _patterns[i],
                 builder: (context, value, child) {
+                // print("Hide:$isHidden Correct:$isCorrect =>${_state.value}");
                   return Widgets.button(
                     context,
                     radius: 6.d,
@@ -178,9 +173,8 @@ class _ListenerBoxState extends State<ListenerBox> {
                             .value
                             .text
                             .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
-                        style:
-                            isHidden && !_patterns[i].value.used && !isCorrect
-                                ? style.copyWith(color: TColors.transparent)
+                      style: isHidden && !_patterns[i].value.used && !isCorrect
+                          ? _hiddenStyle
                                 : style),
                     onPressed: () =>
                         _patterns[i].value = Choice(value.text)..used = true,
@@ -190,18 +184,8 @@ class _ListenerBoxState extends State<ListenerBox> {
             );
           }
           return Wrap(children: items);
-        });
-
-    // }
-
-    // return RichText(
-    //   textDirection: talk.targetValue.getDirection(),
-    //   textAlign: TextAlign.center,
-    //   text: TextSpan(
-    //     style: defaultStyle,
-    //     children: _getWords(value),
-    //   ),
-    // );
+      },
+    );
   }
 
   Widget _wrongResultBuilder(ListenerQuiz stt) {
