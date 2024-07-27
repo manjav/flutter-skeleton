@@ -132,8 +132,8 @@ class ListenerQuiz extends Quiz {
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
-      pauseFor: const Duration(seconds: 10),
-      listenFor: const Duration(seconds: 10),
+      pauseFor: const Duration(milliseconds: 2100),
+      listenFor: const Duration(seconds: 30),
       onSoundLevelChange: _soundLevelListener,
       onResult: _resultListener,
     );
