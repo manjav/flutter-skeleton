@@ -26,6 +26,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     controller.contentIndex.addListener(_onChangeLine);
     serviceLocator<Speaker>().loadAllSounds(controller.series, () {
       controller.changeSerie(1);
+      setState(() {});
     });
     super.initState();
   }
@@ -79,6 +80,16 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       return const SizedBox();
     }
 
+    if (controller.serieIndex.value < 0) {
+      return const Stack(
+        alignment: Alignment.center,
+        children: [
+          CircularProgressIndicator(
+            color: TColors.cyan,
+          ),
+        ],
+      );
+    }
     return Widgets.rect(
       color: TColors.primary10,
       child: Stack(
