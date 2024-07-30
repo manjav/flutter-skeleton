@@ -20,11 +20,11 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     final pattern = talk.targetValue;
     var minMatchLevel = 95;
     if (pattern.length < 10) {
-      minMatchLevel = 70;
+      minMatchLevel = 82;
     } else if (pattern.length < 20) {
-      minMatchLevel = 80;
+      minMatchLevel = 88;
     } else if (pattern.length < 30) {
-      minMatchLevel = 90;
+      minMatchLevel = 92;
     }
 
     serviceLocator<ListenerQuiz>().listen(

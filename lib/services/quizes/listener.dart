@@ -27,7 +27,7 @@ class ListenerQuiz extends Quiz {
   final double _minSoundLevel = Platform.isIOS ? -70 : -10;
   final double _maxSoundLevel = Platform.isIOS ? -20 : 10;
   DateTime _lastLevelChanged = DateTime.now();
-
+  bool _isRepeatPlayed = false;
   List<String> exceptions = [];
 
   @override
@@ -93,7 +93,7 @@ class ListenerQuiz extends Quiz {
     required String hintVoice,
     required String repeatVoice,
     String? locale,
-    int minMatchLevel = 93,
+    int minMatchLevel = 95,
     List<String>? exceptions,
     bool shouldPlayHint = true,
     Function(QuizState p1, String p2)? onResult,
