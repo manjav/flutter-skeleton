@@ -91,9 +91,8 @@ class _ListenerBoxState extends State<ListenerBox> {
                 isEnable: value != QuizState.waiting,
                 child: Asset.load<SvgPicture>("reset"),
                 onPressed: () => listener.listen(
-                  hint: widget.voice,
                   pattern: widget.answer,
-                  narrator: widget.narrator,
+                  hintVoice: widget.voice,
                   repeatVoice: widget.repeatVoice,
                 ),
               ),
@@ -126,9 +125,8 @@ class _ListenerBoxState extends State<ListenerBox> {
       ),
       onTap: () {
         listner.toggle(
-          hint: widget.voice,
           pattern: widget.answer,
-          narrator: widget.narrator,
+          hintVoice: widget.voice,
           repeatVoice: widget.repeatVoice,
         );
       },
@@ -139,51 +137,51 @@ class _ListenerBoxState extends State<ListenerBox> {
 
   Widget _answeringBuilder(BuildContext context, int minMatchLevel) {
     return ValueListenableBuilder(
-        valueListenable: _recognizedWords,
-        builder: (context, value, child) {
-          var items = <Widget>[];
-          // var patterns = talk.targetValue.toLowerCase().split(" ");
+      valueListenable: _recognizedWords,
+      builder: (context, value, child) {
+        var items = <Widget>[];
+        // var patterns = talk.targetValue.toLowerCase().split(" ");
         var words = value.split(" ");
-          for (var i = 0; i < _patterns.length; i++) {
+        for (var i = 0; i < _patterns.length; i++) {
           var isCorrect = false;
           var isHidden = _patterns[i].value.text.contains("{") ||
               _patterns[i].value.text.contains("}");
-            var style = _defaultStyle;
+          var style = _defaultStyle;
           if (i < words.length) {
-              var rate = ratio(
+            var rate = ratio(
                 words[i].patternize(), _patterns[i].value.text.patternize());
-              isCorrect = rate > minMatchLevel;
-              if (isCorrect) {
-                style = _correctStyle;
-              }
+            isCorrect = rate > minMatchLevel;
+            if (isCorrect) {
+              style = _correctStyle;
             }
-            items.add(
-              ValueListenableBuilder(
-                valueListenable: _patterns[i],
-                builder: (context, value, child) {
+          }
+          items.add(
+            ValueListenableBuilder(
+              valueListenable: _patterns[i],
+              builder: (context, value, child) {
                 // print("Hide:$isHidden Correct:$isCorrect =>${_state.value}");
-                  return Widgets.button(
-                    context,
-                    radius: 6.d,
-                    color: isHidden ? TColors.primary10 : TColors.transparent,
-                    margin: EdgeInsets.all(2.d),
-                    padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
-                    child: Text(
-                        _patterns[i]
-                            .value
-                            .text
-                            .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
+                return Widgets.button(
+                  context,
+                  radius: 6.d,
+                  color: isHidden ? TColors.primary10 : TColors.transparent,
+                  margin: EdgeInsets.all(2.d),
+                  padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
+                  child: Text(
+                      _patterns[i]
+                          .value
+                          .text
+                          .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
                       style: isHidden && !_patterns[i].value.used && !isCorrect
                           ? _hiddenStyle
-                                : style),
-                    onPressed: () =>
-                        _patterns[i].value = Choice(value.text)..used = true,
-                  );
-                },
-              ),
-            );
-          }
-          return Wrap(children: items);
+                          : style),
+                  onPressed: () =>
+                      _patterns[i].value = Choice(value.text)..used = true,
+                );
+              },
+            ),
+          );
+        }
+        return Wrap(children: items);
       },
     );
   }

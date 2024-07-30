@@ -5,6 +5,7 @@ class Content {
   final String id;
   final Content? parent;
   ContentType type = ContentType.none;
+  TranslationSide side = TranslationSide.none;
   String nativeValue = "", targetValue = "";
   Content.create(this.parent, this.id, Map map) {
     index = map["index"] ?? 0;
@@ -42,6 +43,14 @@ class Content {
     }
     categories.sort((a, b) => a.index - b.index);
     return categories;
+  }
+
+  String getText(TranslationSide side) {
+    return switch (side) {
+      TranslationSide.native => nativeValue,
+      TranslationSide.target => targetValue,
+      _ => '',
+    };
   }
 }
 
@@ -82,17 +91,9 @@ class Talk extends Content {
       type = ContentType.getEnum(map["type"]);
     }
   }
-
-  String? getSoundId() {
-    if (type == ContentType.image) return null;
-    if (type == ContentType.bot ||
-        type == ContentType.user ||
-        type == ContentType.repeat) {
-      return targetValue;
-    }
-    return nativeValue;
-  }
 }
+
+enum TranslationSide { none, native, target }
 
 enum ContentType {
   none,
@@ -126,13 +127,16 @@ enum ContentType {
     return ContentType.none;
   }
 
-  Narrator get narrator => switch (this) {
-        ContentType.user => Narrator.nova,
-        // ContentType.bot ||
-        ContentType.answer || ContentType.repeat => Narrator.onyx,
-        // ContentType.translate =>
-        _ => Narrator.ali,
-      };
+  TranslationSide get textSide {
+    return switch (this) {
+      ContentType.image => TranslationSide.none,
+      ContentType.caption || ContentType.translate => TranslationSide.native,
+      _ => TranslationSide.target,
+    };
+  }
+
+  Narrator get narrator =>
+      textSide == TranslationSide.native ? Narrator.ali : Narrator.onyx;
 }
 
 enum PresentMode {

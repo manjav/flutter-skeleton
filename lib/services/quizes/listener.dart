@@ -13,8 +13,8 @@ import '../../app_export.dart';
 class ListenerQuiz extends Quiz {
   static const int levelInterval = 100;
   String? locale;
-  String hint = "";
   String pattern = "";
+  String hintVoice = "";
   String repeatVoice = "";
   String logs = "none";
   int minMatchLevel = 95;
@@ -87,9 +87,8 @@ class ListenerQuiz extends Quiz {
   }
 
   void listen({
-    required String hint,
     required String pattern,
-    required Narrator narrator,
+    required String hintVoice,
     required String repeatVoice,
     String? locale,
     int minMatchLevel = 93,
@@ -103,8 +102,7 @@ class ListenerQuiz extends Quiz {
     }
 
     state.value = QuizState.ready;
-    this.hint = hint;
-    this.narrator = narrator;
+    this.hintVoice = hintVoice;
     this.repeatVoice = repeatVoice;
     this.pattern = pattern.patternize();
     if (locale != null) this.locale = locale;
@@ -114,7 +112,7 @@ class ListenerQuiz extends Quiz {
 
     if (shouldPlayHint) {
       await Future.delayed(const Duration(milliseconds: 200));
-      await serviceLocator<Speaker>().play(hint, narrator: narrator);
+      await serviceLocator<Speaker>().playLocal(hintVoice);
     }
     super.start(onResult: onResult);
 
@@ -139,11 +137,11 @@ class ListenerQuiz extends Quiz {
     );
   }
 
-  Future<void> toggle(
-      {required String hint,
-      required String pattern,
+  Future<void> toggle({
+    required String pattern,
+      required String hintVoice,
       required String repeatVoice,
-      required Narrator narrator}) async {
+  }) async {
     recognizedWords.value = "";
     if (state.value == QuizState.listening ||
         state.value == QuizState.waiting) {
@@ -152,9 +150,8 @@ class ListenerQuiz extends Quiz {
       return;
     }
     listen(
-        hint: hint,
         pattern: pattern,
-        narrator: narrator,
+        hintVoice: hintVoice,
         repeatVoice: repeatVoice,
         shouldPlayHint: false);
   }
@@ -199,9 +196,7 @@ class ListenerQuiz extends Quiz {
 
   void dispatchresult() async {
     if (repeatVoice.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 200));
-      await serviceLocator<Speaker>()
-          .play(repeatVoice, narrator: Narrator.onyx);
+      await serviceLocator<Speaker>().playLocal(repeatVoice);
     }
     onResult?.call(state.value, result.recognizedWords);
     stop();

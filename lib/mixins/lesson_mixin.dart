@@ -110,11 +110,11 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     int lastIndex = -1,
     bool force = false,
   }) async {
-    final soundId = talk.getSoundId();
-    if (soundId != null && !talk.isQuiz) {
+    if (talk.type.textSide != TranslationSide.none && !talk.isQuiz) {
       // await serviceLocator<Speaker>()
       //     .play(soundId, narrator: talk.type.narrator, force: force);
-      await serviceLocator<Speaker>().playLocal(talk.id);
+      await serviceLocator<Speaker>()
+          .playLocal(talk.getText(talk.type.textSide));
     }
   }
 

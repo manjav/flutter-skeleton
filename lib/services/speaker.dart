@@ -67,19 +67,24 @@ class Speaker extends IService {
       for (var slide in serie.children) {
         for (var talk in (slide as ParentContent).children) {
           talk = talk as Talk;
-          final soundText = talk.getSoundId();
-          if (soundText != null) {
-            _loadFile(
-                talk.id, "${talk.type.narrator.url}$soundText", onComplete);
+          final side = talk.type.textSide;
+          if (side != TranslationSide.none) {
+            var text = talk.getText(side);
+            _loadFile(text, talk.type.narrator, onComplete);
+          }
+          if (talk.type == ContentType.translate) {
+            var text = talk.targetValue;
+            _loadFile(text, Narrator.onyx, onComplete);
           }
         }
       }
     }
   }
 
-  Future<void> _loadFile(String id, String url, Function() onComplete) async {
-    _sounds[id] = null;
-    var request = await HttpClient().getUrl(Uri.parse(url));
+  Future<void> _loadFile(
+      String text, Narrator narrator, Function() onComplete) async {
+    _sounds[text] = null;
+    var request = await HttpClient().getUrl(Uri.parse("${narrator.url}$text"));
     var response = await request.close();
     if (response.statusCode != 200) {
       log('Failure status code 😱');
@@ -89,10 +94,10 @@ class Speaker extends IService {
     final unit8 = bytes!.buffer.asUint8List(32, bytes.lengthInBytes - 32);
     Directory dir = await getApplicationDocumentsDirectory();
 
-    var tmpFile = "${dir.path}/$id.mp3";
+    var tmpFile = "${dir.path}/$text.mp3";
     // ignore: unused_local_variable
     var writeFile = File(tmpFile).writeAsBytesSync(unit8);
-    _sounds[id] = DeviceFileSource(tmpFile);
+    _sounds[text] = DeviceFileSource(tmpFile);
 
     if (_sounds.isEmpty) return;
     for (var entry in _sounds.entries) {
@@ -112,21 +117,15 @@ class Speaker extends IService {
     return completer.future;
   }
 
-  Future<void> playLocal(
-    String id, {
-    bool force = false,
-  }) async {
+  Future<void> playLocal(String text) async {
     serviceLocator<ListenerQuiz>().stop();
-    // serviceLocator<Sounds>().stopAll();
-    var player = serviceLocator<Sounds>().getPlayer(id);
-    if (force) {
-      player.stop();
-    } else if (player.state == PlayerState.playing) {
+    var player = serviceLocator<Sounds>().getPlayer(text);
+    if (player.state == PlayerState.playing) {
       player.stop();
       return;
     }
 
-    await player.play(_sounds[id]!);
+    await player.play(_sounds[text]!);
     await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 100))
         .then((_) => player.state != PlayerState.completed));
   }
