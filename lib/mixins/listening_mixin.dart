@@ -15,9 +15,21 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Future<void> listen(Talk talk) async {
     final account = serviceLocator<AccountProvider>();
-    await Future.delayed(const Duration(seconds: 2));
+
+    // Change fuzzy acceptance level based on answer length
+    final pattern = talk.targetValue;
+    var minMatchLevel = 95;
+    if (pattern.length < 10) {
+      minMatchLevel = 70;
+    } else if (pattern.length < 20) {
+      minMatchLevel = 80;
+    } else if (pattern.length < 30) {
+      minMatchLevel = 90;
+    }
+
     serviceLocator<ListenerQuiz>().listen(
-      pattern: talk.targetValue,
+      pattern: pattern,
+      minMatchLevel: minMatchLevel,
       locale: account.metadata["targetLanguage"],
       hintVoice: talk.getText(talk.type.textSide),
       repeatVoice: talk.type == ContentType.repeat ? "" : talk.targetValue,
