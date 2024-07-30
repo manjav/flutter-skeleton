@@ -81,8 +81,10 @@ class ListenerQuiz extends Quiz {
     } else if (status == "done") {
       if (recognizedWords.value.isEmpty) {
         state.value = QuizState.ready;
+        onResult?.call(state.value, result.recognizedWords);
+      } else if (_isRepeatPlayed) {
+        onResult?.call(state.value, result.recognizedWords);
       }
-      stop();
     }
   }
 
@@ -110,8 +112,8 @@ class ListenerQuiz extends Quiz {
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
 
+    await Future.delayed(const Duration(milliseconds: 500));
     if (shouldPlayHint) {
-      await Future.delayed(const Duration(milliseconds: 200));
       await serviceLocator<Speaker>().playLocal(hintVoice);
     }
     super.start(onResult: onResult);
@@ -202,10 +204,16 @@ class ListenerQuiz extends Quiz {
   }
 
   void dispatchresult() async {
+    _isRepeatPlayed = false;
+    stop();
     if (repeatVoice.isNotEmpty) {
       await serviceLocator<Speaker>().playLocal(repeatVoice);
+    } else {
+      await Future.delayed(const Duration(seconds: 1));
     }
+    _isRepeatPlayed = true;
+    if (_speech.lastStatus == "done") {
     onResult?.call(state.value, result.recognizedWords);
-    stop();
+    }
   }
 }
