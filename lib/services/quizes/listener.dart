@@ -98,7 +98,6 @@ class ListenerQuiz extends Quiz {
     bool shouldPlayHint = true,
     Function(QuizState p1, String p2)? onResult,
   }) async {
-    // serviceLocator<Sounds>().stopAll();
     if (state.value.index <= QuizState.listening.index) {
       _speech.cancel();
     }
@@ -141,8 +140,8 @@ class ListenerQuiz extends Quiz {
 
   Future<void> toggle({
     required String pattern,
-      required String hintVoice,
-      required String repeatVoice,
+    required String hintVoice,
+    required String repeatVoice,
   }) async {
     recognizedWords.value = "";
     if (state.value == QuizState.listening ||
@@ -213,7 +212,7 @@ class ListenerQuiz extends Quiz {
     }
     _isRepeatPlayed = true;
     if (_speech.lastStatus == "done") {
-    onResult?.call(state.value, result.recognizedWords);
+      onResult?.call(state.value, result.recognizedWords);
     }
   }
 }

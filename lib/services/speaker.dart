@@ -44,7 +44,6 @@ class Speaker extends IService {
     Narrator narrator = Narrator.ali,
   }) async {
     serviceLocator<ListenerQuiz>().stop();
-    // serviceLocator<Sounds>().stopAll();
     var player = serviceLocator<Sounds>().getPlayer(text);
     if (force) {
       player.stop();

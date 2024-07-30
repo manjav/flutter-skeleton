@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../app_export.dart';
@@ -284,25 +283,14 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   Future<void> onListeningResult(QuizState state, Talk talk) async {
-    const duration = Duration(milliseconds: 500);
     serviceLocator<ListenerQuiz>().stop();
     if (state == QuizState.success) {
-      await Future.delayed(duration);
-      // serviceLocator<STT>().state.value = QuizState.none;
       if (mounted) {
         controller.onQuizResult(true);
-        // _animatedListKey.currentState?.removeItem(_animatedItems.length - 1,
-        //     (context, animation) => const SizedBox());
-        // _animatedItems.removeLast();
-        // talk.type = ContentType.user;
-        await Future.delayed(duration);
-        // _addChat(controller.uniqueIndex);
         controller.changeContent(1);
       }
     } else if (state == QuizState.failure) {
       controller.onQuizResult(false);
-      // await Future.delayed(duration);
-      // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
     }
   }
 
