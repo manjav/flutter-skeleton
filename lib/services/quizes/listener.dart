@@ -187,6 +187,13 @@ class ListenerQuiz extends Quiz {
         return;
       }
     }
+
+    if (result.recognizedWords.length > pattern.length * 2) {
+      state.value = QuizState.failure;
+      dispatchresult();
+      return;
+    }
+
     if (result.finalResult) {
       state.value =
           recognizedWords.value.isEmpty ? QuizState.ready : QuizState.failure;
