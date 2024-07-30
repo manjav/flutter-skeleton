@@ -128,11 +128,13 @@ class ListenerQuiz extends Quiz {
     // systems recognition will be stopped before this value is reached.
     // Similarly `pauseFor` is a maximum not a minimum and may be ignored
     // on some devices.
+
+    var duration = (this.pattern.length * 220).min(2000);
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
       listenFor: const Duration(seconds: 30),
-      pauseFor: Duration(milliseconds: this.pattern.length * 220),
+      pauseFor: Duration(milliseconds: duration),
       onSoundLevelChange: _soundLevelListener,
       onResult: _resultListener,
     );
