@@ -69,6 +69,10 @@ class LessonController {
       // _streakCorrects = 0;
       slidePassed.value = true;
       serviceLocator<Sounds>().play("wrong");
+      serviceLocator<NetConnector>().rpc(
+        "account_log_set",
+        params: {"answer": answer, "type": "speaking", "expected": expected},
+      );
     }
   }
 
