@@ -10,9 +10,10 @@ import 'package:nakama/nakama.dart';
 import '../../app_export.dart';
 
 class NetConnector extends IService {
-  NakamaGrpcClient? _nakamaClient;
-  static Map<String, dynamic> configs = {};
   Session? _session;
+  NakamaGrpcClient? _nakamaClient;
+  final Map<String, DateTime> _rpcTimes = {};
+  static Map<String, dynamic> configs = {};
 
   @override
   initialize({List<Object>? args}) async {
@@ -116,7 +117,16 @@ class NetConnector extends IService {
   }
 
   Future<T> rpc<T>(String id, {Map? params}) async {
-    params = params ?? {};
+    /// Frequent RPC avoidance
+    final now = DateTime.now();
+    if (_rpcTimes.containsKey(id) &&
+        now.difference(_rpcTimes[id]!).inMilliseconds < 500) {
+      throw SkeletonException(
+          StatusCode.ALREADY_EXISTS.value, "Frequent RPC $id");
+    }
+    _rpcTimes[id] = now;
+    params ??= {};
+
     try {
       var data = await _nakamaClient!
           .rpc(session: _session!, id: id, payload: jsonEncode(params));
