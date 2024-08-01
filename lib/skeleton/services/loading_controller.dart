@@ -10,12 +10,8 @@ class LoadingController extends GetxController {
     Overlays.insert(Get.overlayContext!, const LoadingOverlay());
 
     serviceLocator<DeviceInfo>().initialize();
-
+    await serviceLocator<Trackers>().initialize();
     await serviceLocator<Localization>().initialize();
-
-    // var trackers = Trackers();
-    // await trackers.initialize();
-    // services.addService(trackers);
 
     var sounds = serviceLocator<Sounds>();
     sounds.initialize();
@@ -36,6 +32,11 @@ class LoadingController extends GetxController {
       }
 
       services.changeState(ServiceStatus.initialize);
+
+      serviceLocator<Trackers>().sendUserData(
+        id: account.account.user.id,
+        name: account.account.user.username!,
+      );
 
       // var notifications = Notifications();
       // notifications.initialize(args: ["", <String, int>{}]);

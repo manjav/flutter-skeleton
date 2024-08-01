@@ -42,11 +42,11 @@ class Trackers extends IService {
     }
   }
 
-  void sendUserData(
-    String id,
-    String name,
-  ) {
-    // Set user data
+  // Set user data
+  void sendUserData({
+    required String id,
+    required String name,
+  }) {
     for (var sdk in _sdks.values) {
       sdk.setProperties({
         "buildType": _buildType.name,
@@ -124,7 +124,7 @@ class Trackers extends IService {
   //   GameAnalytics.addProgressionEvent(map);
   // }
 
-  funnel(String type, [String? name]) {
+  void funnel(String type, [String? name]) {
     name = name == null ? type : "${type}_$name";
     var step = Prefs.increase(name, 1);
 
@@ -141,7 +141,7 @@ class Trackers extends IService {
     _funnel(name, step);
   }
 
-  _funnel(String name, [int step = -1]) {
+  void _funnel(String name, [int step = -1]) {
     var args = step > 0 ? {"step": '$step'} : null;
     design(name, parameters: args);
   }
