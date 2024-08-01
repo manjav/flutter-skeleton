@@ -22,7 +22,7 @@ class Trackers extends IService {
     // TrackerSDK.gameAnalytics: GameAnalyticsTracker(),
     // TrackerSDK.kochava: KochavaaTracker(),
     // TrackerSDK.metrix: MetrixTracker(),
-    // TrackerSDK.smartlook: SmartlookTracker(),
+    TrackerSDK.smartlook: SmartlookTracker(),
   };
   int variant = 1;
   final _testName = "_";

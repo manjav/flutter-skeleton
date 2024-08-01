@@ -6,6 +6,8 @@ PODS:
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_smartlook (4.1.23):
+    - Flutter
   - flutter_timezone (0.0.1):
     - Flutter
   - in_app_purchase_storekit (0.0.1):
@@ -35,6 +37,7 @@ DEPENDENCIES:
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
+  - flutter_smartlook (from `.symlinks/plugins/flutter_smartlook/ios`)
   - flutter_timezone (from `.symlinks/plugins/flutter_timezone/ios`)
   - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/darwin`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -58,6 +61,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
+  flutter_smartlook:
+    :path: ".symlinks/plugins/flutter_smartlook/ios"
   flutter_timezone:
     :path: ".symlinks/plugins/flutter_timezone/ios"
   in_app_purchase_storekit:
@@ -82,6 +87,7 @@ SPEC CHECKSUMS:
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_smartlook: 55a0dab1a117fcba312e15bf29a6a6c32b6eeeca
   flutter_timezone: ffb07bdad3c6276af8dada0f11978d8a1f8a20bb
   in_app_purchase_storekit: 8c3b0b3eb1b0f04efbff401c3de6266d4258d433
   package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
