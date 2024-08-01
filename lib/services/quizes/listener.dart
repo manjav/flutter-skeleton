@@ -96,7 +96,7 @@ class ListenerQuiz extends Quiz {
     int minMatchLevel = 95,
     List<String>? exceptions,
     bool shouldPlayHint = true,
-    Function(QuizState p1, String p2)? onResult,
+    Function(QuizState state, String text)? onResult,
   }) async {
     if (state.value.index <= QuizState.listening.index) {
       _speech.cancel();

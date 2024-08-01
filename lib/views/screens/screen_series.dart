@@ -205,17 +205,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   @override
-  Future<void> onListeningResult(QuizState state, Talk talk) async {
+  void onListeningResult(QuizState state, Talk talk, String text) {
     if (state == QuizState.success) {
-      if (mounted) {
-        controller.onQuizResult(true);
-      }
+      controller.onQuizResult(true, talk.targetValue, text);
     } else if (state == QuizState.failure) {
-      controller.onQuizResult(false);
-      // const duration = Duration(milliseconds: 1500);
-      // await Future.delayed(duration);
-      // serviceLocator<ListenerQuiz>().state.value = QuizState.none;
-      // serviceLocator<STT>().start(activeId: controller.uniqueIndex);
+      controller.onQuizResult(false, talk.targetValue, text);
     }
   }
 

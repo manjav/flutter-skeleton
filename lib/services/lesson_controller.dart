@@ -59,7 +59,7 @@ class LessonController {
     contentIndex.value += stepLength;
   }
 
-  Future<void> onQuizResult(bool isSuccess) async {
+  void onQuizResult(bool isSuccess, String expected, String answer) {
     if (isSuccess) {
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
       // ++_streakCorrects;

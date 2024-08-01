@@ -282,15 +282,12 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  Future<void> onListeningResult(QuizState state, Talk talk) async {
-    serviceLocator<ListenerQuiz>().stop();
+  void onListeningResult(QuizState state, Talk talk, String text) {
     if (state == QuizState.success) {
-      if (mounted) {
-        controller.onQuizResult(true);
+      controller.onQuizResult(true, talk.targetValue, text);
         controller.changeContent(1);
-      }
     } else if (state == QuizState.failure) {
-      controller.onQuizResult(false);
+      controller.onQuizResult(false, talk.targetValue, text);
     }
   }
 
