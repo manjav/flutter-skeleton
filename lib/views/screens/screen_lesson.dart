@@ -89,16 +89,13 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         ],
       );
     }
-    return Widgets.rect(
-      color: TColors.primary10,
-      child: Stack(
+    return Stack(
         alignment: Alignment.center,
         children: [
           _subtitleBuilder(),
           childBuilder(paddingTop),
           _navigatorBuilder(),
         ],
-      ),
     );
   }
 

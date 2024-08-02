@@ -18,14 +18,11 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       return const SizedBox();
     }
 
-    return Widgets.rect(
-      color: TColors.primary10,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          childBuilder(paddingTop),
-        ],
-      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        childBuilder(paddingTop),
+      ],
     );
   }
 
