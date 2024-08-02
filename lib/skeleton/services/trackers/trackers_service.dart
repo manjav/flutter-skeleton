@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../export.dart';
@@ -32,6 +33,7 @@ class Trackers extends IService {
 
   @override
   initialize({List<Object>? args}) async {
+    if (kDebugMode) return;
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
       sdk.initialize(logCallback: log);
@@ -47,6 +49,7 @@ class Trackers extends IService {
     required String id,
     required String name,
   }) {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.setProperties({
         "buildType": _buildType.name,
@@ -80,6 +83,7 @@ class Trackers extends IService {
   }
 
   Future<void> ad(Placement placement, AdState state) async {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.ad(placement, state);
     }
@@ -87,18 +91,21 @@ class Trackers extends IService {
 
   Future<void> resource(ResourceFlowType type, String currency, int amount,
       String itemType, String itemId) async {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.resource(type, currency, amount, itemType, itemId);
     }
   }
 
   Future<void> design(String name, {Map<String, dynamic>? parameters}) async {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.design(name, parameters: parameters);
     }
   }
 
   Future<void> setScreen(String screenName) async {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.setScreen(screenName);
     }
@@ -125,6 +132,7 @@ class Trackers extends IService {
   // }
 
   void funnel(String type, [String? name]) {
+    if (kDebugMode) return;
     name = name == null ? type : "${type}_$name";
     var step = Prefs.increase(name, 1);
 
