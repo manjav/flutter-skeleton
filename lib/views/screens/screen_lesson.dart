@@ -192,7 +192,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       key: _animatedListKey,
       controller: _chatScrollController,
       padding: EdgeInsets.fromLTRB(
-          padding, paddingTop + padding * 16, padding, 200.d),
+          padding, paddingTop + padding * 18, padding, 180.d),
       itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a),
     );
   }
