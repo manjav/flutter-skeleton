@@ -95,6 +95,7 @@ class ListenerQuiz extends Quiz {
     String? locale,
     int minMatchLevel = 95,
     List<String>? exceptions,
+    bool autoStart = true,
     bool shouldPlayHint = true,
     Function(QuizState state, String text)? onResult,
   }) async {
@@ -102,7 +103,7 @@ class ListenerQuiz extends Quiz {
       _speech.cancel();
     }
 
-    state.value = QuizState.ready;
+    state.value = QuizState.none;
     this.hintVoice = hintVoice;
     this.repeatVoice = repeatVoice;
     this.pattern = pattern.patternize();
@@ -110,6 +111,10 @@ class ListenerQuiz extends Quiz {
     if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
+    state.value = QuizState.ready;
+    if (!autoStart) {
+      return;
+    }
     log("Start listen ${this.pattern}");
 
     await Future.delayed(const Duration(milliseconds: 500));

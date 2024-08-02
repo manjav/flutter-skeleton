@@ -205,6 +205,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     if (page < 0 || page > controller.currentSerie.children.length) return;
     await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+    final slide = controller.currentSerie.children[page] as ParentContent;
+    if (controller.contentIndex.value <= -1) return;
+    if (slide.children.first.isQuiz) {
+      listen(slide.children.first as Talk, autoStart: false);
+    }
   }
 
   Widget _contentItem(Talk talk) {
