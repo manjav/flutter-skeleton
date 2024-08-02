@@ -17,7 +17,7 @@ dependencies:
   archive: ^3.4.8
   audioplayers: ^6.0.0
   crypto: ^3.0.2
-  device_info_plus: ^10.1.0
+  device_info_plus: ^10.1.1
   # firebase_analytics: ^10.6.3
   # firebase_core: ^2.21.0
   # firebase_crashlytics: ^3.4.14
@@ -39,15 +39,15 @@ dependencies:
   # metrix_plugin: ^1.5.0
   nakama: ^1.0.5
   # onesignal_flutter: ^5.0.3 
-  package_info_plus: ^8.0.0
-  path_provider: ^2.1.0
+  package_info_plus: ^8.0.1
+  path_provider: ^2.1.4
   provider: ^6.1.1
   rive: ^0.13.10
-  shared_preferences: ^2.2.0
+  shared_preferences: ^2.3.1
   speech_to_text: ^6.6.2
   # unity_ads_plugin: ^0.3.10
   url_launcher: ^6.1.14
-  wakelock_plus: ^1.2.5
+  wakelock_plus: ^1.2.7
 
 dev_dependencies:
   flutter_test:
