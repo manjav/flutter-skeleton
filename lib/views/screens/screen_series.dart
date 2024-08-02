@@ -13,7 +13,7 @@ class SeriesScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<SeriesScreen>
     with LessonMixin, ListeningMixin {
-  final _slideHeight = DeviceInfo.size.height * 0.6;
+  final _slideHeight = DeviceInfo.size.height * 0.8;
   PageController? _slidesScrollController;
 
   @override
@@ -22,7 +22,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     controller.series = List.generate(list.length, (i) => list[i]);
     controller.slideIndex.addListener(_onChangeSlide);
     serviceLocator<Speaker>().loadAllSounds(controller.series, () {
-    controller.changeSerie(1);
+      controller.changeSerie(1);
       setState(() {});
     }, loadCaptions: false);
     super.initState();
@@ -125,7 +125,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         height: _slideHeight,
         color: TColors.primary0,
         width: DeviceInfo.size.width,
-        margin: EdgeInsets.symmetric(vertical: 5.d),
+        margin: EdgeInsets.symmetric(vertical: 35.d),
         padding: EdgeInsets.symmetric(horizontal: 20.d),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center, children: items),

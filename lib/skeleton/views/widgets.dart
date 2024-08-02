@@ -43,9 +43,11 @@ class Widgets {
       onLongPress: () {
         if (_isActive(id)) onLongPress?.call();
       },
-      onVerticalDragEnd: (details) {
-        if (_isActive(id)) onVerticalDragEnd?.call(details);
-      },
+      onVerticalDragEnd: onVerticalDragEnd != null
+          ? (details) {
+              if (_isActive(id)) onVerticalDragEnd(details);
+            }
+          : null,
       child: child,
     );
   }
