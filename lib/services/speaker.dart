@@ -85,6 +85,7 @@ class Speaker extends IService {
 
   Future<void> _loadFile(
       String text, Narrator narrator, Function() onComplete) async {
+    if (_sounds.containsKey(text)) return;
     _sounds[text] = null;
     var request = await HttpClient().getUrl(Uri.parse("${narrator.url}$text"));
     var response = await request.close();
