@@ -17,6 +17,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   final double _titleHeight = 40.d;
   final double _categoryHeight = 74.d;
   final double _lessonHeight = 64.d;
+  final double _roadWidth = 64.d;
   final TextStyle _unitStyle = TStyles.small.copyWith(
       color: TColors.primary40, fontWeight: FontWeight.w100, height: 0.9);
   final TextStyle _numberStyle = TStyles.big.copyWith(
@@ -93,45 +94,27 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           Stack(
             alignment: Alignment.center,
             children: [
-            fit: BoxFit.fill,
-            onRiveInit: (artboard) {
-              final controller = StateMachineController.fromArtboard(
-                  artboard, "State Machine 1");
-              _categoryIndex = controller?.findInput<double>("category");
-              artboard.addController(controller!);
-            },
-          ),
-          Align(
-            alignment: const Alignment(0, 0.4),
+              Positioned(
+                top: 0,
+                bottom: 0,
+                width: 4.d,
+                child: Widgets.rect(color: TColors.primary20),
+              ),
+              Widgets.rect(
+                width: _roadWidth,
+                padding: EdgeInsets.only(top: 2.d, bottom: 0),
+                color: TColors.primary10,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                SizedBox(
-                  width: DeviceInfo.size.width,
-                  height: 300.d,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: _categories.length,
-                    itemBuilder: _categoryItemBuilder,
-                    onPageChanged: (value) {
-                      _categoryIndex?.value = value.toDouble();
-                      _tabController?.animateTo(value,
-                          duration: const Duration(microseconds: 800));
-                    },
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 50.d),
-                  child: TabPageSelector(
-                    indicatorSize: 8.d,
-                    controller: _tabController,
-                    color: TColors.white30,
-                    selectedColor: TColors.white,
-                    borderStyle: BorderStyle.none,
+                    Text("UNIT", style: _unitStyle),
+                    Text(NumberFormat("00").format(category.index + 1),
+                        style: _numberStyle)
+                  ],
                 ),
               ),
             ],
+          ),
           Expanded(
             child: Widgets.button(
               context,
@@ -185,10 +168,22 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     final scoreNotifier = ValueNotifier(_scores![id] ?? 0);
     return Row(
       children: [
-  Widget _lessonItemBuilder(ParentContent group, int index) {
-    var id = "${group.id}_$index";
-    var scoreNotifier = ValueNotifier(_scores![id] ?? 0);
-    return Widgets.button(
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            SizedBox(
+              width: _roadWidth,
+              height: _lessonHeight,
+            ),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              width: 4.d,
+              child: Widgets.rect(color: TColors.primary20),
+            ),
+            Asset.load<SvgPicture>("checkpoint", width: 18.d),
+          ],
+        ),
         Expanded(
           child: Widgets.rect(
             decoration: BoxDecoration(
