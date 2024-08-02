@@ -273,7 +273,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  Future<void> listen(Talk talk) async {
+  Future<void> listen(Talk talk, {bool autoStart = true}) async {
     subtitle.value == null;
     await super.listen(talk);
   }
