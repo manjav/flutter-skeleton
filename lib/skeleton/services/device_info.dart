@@ -29,7 +29,7 @@ class DeviceInfo extends IService {
 
   static Future<bool> preInitialize(BuildContext context,
       [bool forced = false]) async {
-    if (!forced && isPreInitialized) return false; 
+    if (!forced && isPreInitialized) return false;
 
     // Get screen info
     var q = MediaQuery.of(context);
@@ -44,7 +44,10 @@ class DeviceInfo extends IService {
     try {
       adId = (await AdvertisingId.id(true))!;
     } on PlatformException {
-      adId = StringExtensions.getRandomString(12);
+      adId = StringExtensions.getRandomString(20);
+    }
+    if (adId.isEmpty) {
+      adId = StringExtensions.getRandomString(20);
     }
 
     // Get app info

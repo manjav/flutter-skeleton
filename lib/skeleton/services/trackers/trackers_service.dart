@@ -37,8 +37,6 @@ class Trackers extends IService {
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
       sdk.initialize(logCallback: log);
-      var deviceId = await sdk.getDeviceId();
-      if (deviceId != null) DeviceInfo.adId = deviceId;
       var variant = await sdk.getVariantId(_testName);
       if (variant != 0) this.variant = variant;
     }
