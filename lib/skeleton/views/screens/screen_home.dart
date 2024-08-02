@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:rive/rive.dart';
+import 'package:intl/intl.dart';
 
 import '../../../app_export.dart';
 
@@ -13,19 +13,18 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
+  int _categoryIndex = 0;
+  final double _titleHeight = 40.d;
+  final double _categoryHeight = 74.d;
+  final double _lessonHeight = 64.d;
+  final TextStyle _unitStyle = TStyles.small.copyWith(
+      color: TColors.primary40, fontWeight: FontWeight.w100, height: 0.9);
+  final TextStyle _numberStyle = TStyles.big.copyWith(
+      color: TColors.primary40, fontWeight: FontWeight.w600, height: 0.9);
+
   Map<String, int>? _scores;
-  SMIInput<double>? _categoryIndex;
-  TabController? _tabController;
   List<ParentContent> _categories = [];
   LoadingController controller = Get.put(LoadingController());
-  final PageController _pageController = PageController(viewportFraction: 0.8);
-  final _colors = {
-    "lessons": TColors.blue,
-    "drills": TColors.orange,
-    "": TColors.purpule
-  };
-
-// Consumer<AccountProvider>(builder: (_, state, child) {
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
@@ -43,13 +42,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         }
         _categories = (await account.loadCategories());
         _scores = await account.loadScores();
-        _tabController = TabController(length: _categories.length, vsync: this);
         setState(() {});
-        // await Future.delayed(const Duration(seconds: 1));
-        // Get.toNamed(Routes.popupMentor, args: {
-        //   "message":
-        //       "سلام من قلیدونم. به ده ما خوش اومدی!\nما تو دهاتمون به ترکی صحبت می‌کنیم اما نگران نباش. من به تو کمک می‌کنم تا بتونی زبون ما رو یاد بگیری. خوب بریم اول بقالی محل کمی خرید کنیم."
-        // });
       }
     });
   }
@@ -64,12 +57,42 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     }
     return PopScope(
       canPop: false,
-      child: Stack(
-        alignment: Alignment.center,
+      child: ListView.builder(
+        padding: EdgeInsets.fromLTRB(0, 80.d, 14.d, 20.d),
+        itemCount: _categories.length,
+        itemBuilder: _categoryItemBuilder,
+      ),
+    );
+  }
+
+  Widget _categoryItemBuilder(BuildContext context, int index) {
+    final category = _categories[index];
+    return Column(
+      children: [
+        _sectionTitleBuilder(category),
+        _categoryTitleBuilder(category),
+        _categoryOpenBuilder(category),
+      ],
+    );
+  }
+
+  Widget _sectionTitleBuilder(ParentContent category) {
+    if (category.index != 0) return const SizedBox();
+    return SizedBox(
+        height: _titleHeight,
+        child: Text("⭠⭑ Section 1 ⭢  ",
+            style: TStyles.large.copyWith(color: TColors.primary40)));
+  }
+
+  Widget _categoryTitleBuilder(ParentContent category) {
+    return SizedBox(
+      height: _categoryHeight,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          LoaderWidget(
-            AssetType.animation,
-            "home",
+          Stack(
+            alignment: Alignment.center,
+            children: [
             fit: BoxFit.fill,
             onRiveInit: (artboard) {
               final controller = StateMachineController.fromArtboard(
@@ -80,9 +103,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           ),
           Align(
             alignment: const Alignment(0, 0.4),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                 SizedBox(
                   width: DeviceInfo.size.width,
                   height: 300.d,
@@ -106,9 +129,32 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     color: TColors.white30,
                     selectedColor: TColors.white,
                     borderStyle: BorderStyle.none,
-                  ),
                 ),
-              ],
+              ),
+            ],
+          Expanded(
+            child: Widgets.button(
+              context,
+              margin: EdgeInsets.all(2.d),
+              padding: EdgeInsets.all(20.d),
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: TColors.primary0,
+                border: category.index == _categoryIndex
+                    ? Border.all(color: TColors.primary20, width: 1.5.d)
+                    : null,
+                borderRadius: BorderRadius.all(Radius.circular(16.d)),
+              ),
+              child: Row(
+                textDirection: Localization.dir,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Asset.load<Image>("tick", width: 32.d),
+                  DirText(category.title),
+                  SizedBox(width: 32.d),
+                ],
+              ),
+              onPressed: () => setState(() => _categoryIndex = category.index),
             ),
           ),
         ],
@@ -116,70 +162,95 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  Widget _categoryItemBuilder(BuildContext context, int index) {
-    var category = _categories[index];
-
-    return Widgets.rect(
-      margin: const EdgeInsets.all(12),
-      padding: EdgeInsets.fromLTRB(10.d, 20.d, 10.d, 10.d),
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: TColors.primary0,
-        borderRadius: BorderRadius.all(Radius.circular(20.d)),
-        boxShadow: [BoxShadow(blurRadius: 8.d, color: TColors.primary50)],
-      ),
+  Widget _categoryOpenBuilder(ParentContent category) {
+    var length =
+        category.index == _categoryIndex ? category.children.length : 0;
+    // if (category.index != _categoryIndex) return const SizedBox();
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      height: length * _lessonHeight,
+      // padding: EdgeInsets.fromLTRB(0, 4.d, 8.d, 4.d),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          DirText(category.title, style: TStyles.big),
-          const Expanded(child: SizedBox()),
-          Column(
-            children: [
-              for (var i = 0; i < category.children.length; i++)
-                _lessonItemBuilder(category.children[i] as ParentContent, i)
-            ],
-          ),
+          for (var i = 0; i < length; i++) _lessonItemBuilder(category, i)
         ],
       ),
     );
   }
 
+  Widget _lessonItemBuilder(ParentContent category, int index) {
+    final group = category.children[index] as ParentContent;
+    final id = "${group.id}_$index";
+    final scoreNotifier = ValueNotifier(_scores![id] ?? 0);
+    return Row(
+      children: [
   Widget _lessonItemBuilder(ParentContent group, int index) {
     var id = "${group.id}_$index";
     var scoreNotifier = ValueNotifier(_scores![id] ?? 0);
     return Widgets.button(
-      context,
-      height: 52.d,
-      radius: 12.d,
-      margin: EdgeInsets.all(2.d),
-      padding: EdgeInsets.all(10.d),
-      color: _colors[group.mode],
-      // width: DeviceInfo.size.width * 0.8,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(width: 16.d),
-          DirText(group.title.simplify(), style: TStyles.largeInvert),
-          SizedBox(width: 16.d),
-          Asset.load<SvgPicture>(group.mode),
-          // ValueListenableBuilder(
-          //   valueListenable: scoreNotifier,
-          //   builder: (context, value, child) =>
-          //       Text(["☆☆☆", "★☆☆", "★★☆", "★★★"][scoreNotifier.value]),
-          // ),
-        ],
-      ),
-      onPressed: () async {
-        if (group.children.isEmpty) {
-          await serviceLocator<AccountProvider>().loadGroup(group);
-        }
+        Expanded(
+          child: Widgets.rect(
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              color: TColors.primary20,
+              borderRadius: _getRaduis(index, category.children.length),
+            ),
+            height: _lessonHeight,
+            child: Widgets.button(
+              context,
+              radius: 12.d,
+              margin: EdgeInsets.symmetric(horizontal: 12.d, vertical: 4.d),
+              padding: EdgeInsets.all(14.d),
+              color: TColors.primary0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: DirText(
+                      group.title.simplify(),
+                      textAlign: TextAlign.center,
+                      style: TStyles.large,
+                    ),
+                  ),
+                  Asset.load<SvgPicture>(group.mode, width: 20.d),
+                  // ValueListenableBuilder(
+                  //   valueListenable: scoreNotifier,
+                  //   builder: (context, value, child) =>
+                  //       Text(["☆☆☆", "★☆☆", "★★☆", "★★★"][scoreNotifier.value]),
+                  // ),
+                ],
+              ),
+              onPressed: () async {
+                if (group.children.isEmpty) {
+                  await serviceLocator<AccountProvider>().loadGroup(group);
+                }
 
-        var routName = group.mode == "lessons" ? Routes.lesson : Routes.series;
-        var s = await Get.toNamed(routName, arguments: {"content": group});
-        if (s == null || s <= scoreNotifier.value) return;
-        await serviceLocator<AccountProvider>().saveScore(id, s);
-        scoreNotifier.value = s;
-      },
+                var routName =
+                    group.mode == "lessons" ? Routes.lesson : Routes.series;
+                var s =
+                    await Get.toNamed(routName, arguments: {"content": group});
+                if (s == null || s <= scoreNotifier.value) return;
+                await serviceLocator<AccountProvider>().saveScore(id, s);
+                scoreNotifier.value = s;
+              },
+            ),
+          ),
+        ),
+      ],
     );
+  }
+
+  BorderRadius? _getRaduis(int index, int length) {
+    final raduis = Radius.circular(16.d);
+    if (length == 1) {
+      return BorderRadius.all(raduis);
+    } else if (index == 0) {
+      return BorderRadius.only(topLeft: raduis, topRight: raduis);
+    } else if (index >= length - 1) {
+      return BorderRadius.only(bottomLeft: raduis, bottomRight: raduis);
+    } else {
+      return null;
+    }
   }
 }
