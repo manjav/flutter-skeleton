@@ -9,9 +9,9 @@ class SmartlookTracker extends AbstractTracker {
   void initialize({List? args, Function(dynamic)? logCallback}) async {
     super.initialize(args: args, logCallback: logCallback);
     sdk = TrackerSDK.smartlook;
+    await Smartlook.instance.start();
     await Smartlook.instance.preferences.setProjectKey(
         "tracker_${sdk.name}_${Platform.operatingSystem}_key".l());
-    await Smartlook.instance.start();
   }
 
   @override
@@ -31,8 +31,8 @@ class SmartlookTracker extends AbstractTracker {
       String receipt, String signature) {}
 
   @override
-  void resource(ResourceFlowType type, String currency, int amount, String itemType,
-      String itemId) {}
+  void resource(ResourceFlowType type, String currency, int amount,
+      String itemType, String itemId) {}
 
   @override
   void setScreen(String screenName) {}
