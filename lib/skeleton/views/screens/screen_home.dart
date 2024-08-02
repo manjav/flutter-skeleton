@@ -111,6 +111,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               ],
             ),
           ),
+          Align(
+              alignment: const Alignment(0, 0.85),
+              child: Widgets.rect(
+                  radius: 12.d,
+                  color: TColors.purpule,
+                  padding: EdgeInsets.all(12.d),
+                  child: const Text("      نسخه آزمایشی      "))),
         ],
       ),
     );
