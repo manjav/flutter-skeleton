@@ -50,7 +50,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Widget shortcutBuilder() {
-    return controller.series.length > 1
+    return controller.series.length > 1 && controller.serieIndex.value > -1
         ? Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

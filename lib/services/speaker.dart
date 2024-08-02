@@ -59,14 +59,17 @@ class Speaker extends IService {
   }
 
   final _sounds = <String, DeviceFileSource?>{};
-  Future<void> loadAllSounds(
-      List<ParentContent> series, Function() onComplete) async {
+  Future<void> loadAllSounds(List<ParentContent> series, Function() onComplete,
+      {bool loadCaptions = true}) async {
     _sounds.clear();
     for (var serie in series) {
       for (var slide in serie.children) {
         for (var talk in (slide as ParentContent).children) {
           talk = talk as Talk;
           final side = talk.type.textSide;
+          if (!loadCaptions && talk.type == ContentType.caption) {
+            continue; // Load captions only for lessons
+          }
           if (side != TranslationSide.none) {
             var text = talk.getText(side);
             _loadFile(text, talk.type.narrator, onComplete);
