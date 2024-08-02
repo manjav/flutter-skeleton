@@ -10,12 +10,10 @@ class LoadingController extends GetxController {
     Overlays.insert(Get.overlayContext!, const LoadingOverlay());
 
     serviceLocator<DeviceInfo>().initialize();
-    await serviceLocator<Trackers>().initialize();
     await serviceLocator<Localization>().initialize();
+    await serviceLocator<Trackers>().initialize();
 
-    var sounds = serviceLocator<Sounds>();
-    sounds.initialize();
-
+    serviceLocator<Sounds>().initialize();
     serviceLocator<Speaker>().initialize();
     serviceLocator<ListenerQuiz>().initialize();
 
