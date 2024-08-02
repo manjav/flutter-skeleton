@@ -110,6 +110,7 @@ class ListenerQuiz extends Quiz {
     if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
+    log("Start listen ${this.pattern}");
 
     await Future.delayed(const Duration(milliseconds: 500));
     if (shouldPlayHint) {

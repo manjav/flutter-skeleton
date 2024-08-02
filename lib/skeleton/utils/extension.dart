@@ -105,8 +105,9 @@ extension StringExtensions on String {
   }
 
   String patternize([bool withSpace = false]) {
-    var text = replaceAll(RegExp(r'[!?.,;:"{}]'), '')
+    var text = replaceAll(RegExp(r'[!?.;:“”"{}]'), '')
         .replaceAll(RegExp(r'’'), "'")
+        .replaceAll(RegExp(r'，'), ",")
         .toLowerCase();
     if (withSpace) {
       text = text.replaceAll(RegExp(' '), '');

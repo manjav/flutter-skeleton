@@ -57,7 +57,7 @@ class _ListenerBoxState extends State<ListenerBox> {
   @override
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
-    final words = widget.answer.split(" ");
+    final words = widget.answer.patternize().split(" ");
     _patterns.clear();
     _patterns.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
@@ -140,7 +140,6 @@ class _ListenerBoxState extends State<ListenerBox> {
       valueListenable: _recognizedWords,
       builder: (context, value, child) {
         var items = <Widget>[];
-        // var patterns = talk.targetValue.toLowerCase().split(" ");
         var words = value.split(" ");
         for (var i = 0; i < _patterns.length; i++) {
           var isCorrect = false;
@@ -148,8 +147,7 @@ class _ListenerBoxState extends State<ListenerBox> {
               _patterns[i].value.text.contains("}");
           var style = _defaultStyle;
           if (i < words.length) {
-            var rate = ratio(
-                words[i].patternize(), _patterns[i].value.text.patternize());
+            var rate = ratio(words[i], _patterns[i].value.text);
             isCorrect = rate > minMatchLevel;
             if (isCorrect) {
               style = _correctStyle;
