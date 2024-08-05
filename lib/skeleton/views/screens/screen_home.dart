@@ -21,8 +21,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   final _colors = {
     "lessons": TColors.blue,
-    "drills": TColors.orange,
-    "": TColors.purpule
+    "practice": TColors.orange,
+    "grammar": TColors.cyan,
+    "vocabulary": TColors.purpule,
   };
 
 // Consumer<AccountProvider>(builder: (_, state, child) {
@@ -168,7 +169,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           SizedBox(width: 16.d),
           DirText(group.title.simplify(), style: TStyles.largeInvert),
           SizedBox(width: 16.d),
-          Asset.load<SvgPicture>(group.mode),
+          LoaderWidget(AssetType.vector, group.mode, height: 24.d),
           // ValueListenableBuilder(
           //   valueListenable: scoreNotifier,
           //   builder: (context, value, child) =>
