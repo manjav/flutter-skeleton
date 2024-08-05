@@ -40,15 +40,8 @@ class DeviceInfo extends IService {
     ratio = width / 390; // Comes from figma design
     aspectRatio = width / height;
 
-    // Get advertise id
-    try {
-      adId = (await AdvertisingId.id(true))!;
-    } on PlatformException {
-      adId = StringExtensions.getRandomString(20);
-    }
-    if (adId.isEmpty) {
-      adId = StringExtensions.getRandomString(20);
-    }
+    // Find advertise id
+    await _findAdId();
 
     // Get app info
     var packageInfo = await PackageInfo.fromPlatform();
@@ -207,6 +200,19 @@ class DeviceInfo extends IService {
       'computerName': data.computerName,
       'systemMemoryInMegabytes': data.systemMemoryInMegabytes,
     };
+  }
+
+  static Future<void> _findAdId() async {
+    try {
+      adId = (await AdvertisingId.id(true))!;
+    } on PlatformException {
+      adId = Prefs.getString("deviceId",
+          defaultValue: StringExtensions.getRandomString(20));
+    }
+    if (id.isEmpty) {
+      adId = Prefs.getString("deviceId",
+          defaultValue: StringExtensions.getRandomString(20));
+    }
   }
 }
 
