@@ -216,12 +216,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     return switch (talk.type) {
       ContentType.repeat || ContentType.translate => listenerBuilder(talk),
       ContentType.head => DirText(
-          talk.nativeValue,
+          talk.nativeValue.simplify(),
           style: TStyles.big,
           textAlign: TextAlign.center,
         ),
       _ => DirText(
-          talk.nativeValue,
+          talk.nativeValue.simplify(),
           textAlign: TextAlign.center,
         ),
     };
