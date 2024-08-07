@@ -132,57 +132,44 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       child: ValueListenableBuilder(
         valueListenable: controller.slidePassed,
         builder: (context, value, child) {
-          return Visibility(
-            visible: value,
-            child: SizedBox(
-              width: 270.d,
-              child: Column(
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // progressSliderBuilder(),
+              Row(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // progressSliderBuilder(),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // _navigationButton(
-                      //   name: "footer_prev",
-                      //   isEnable: controller.slideIndex.value > 0 && value,
-                      //   onPress: () => controller.changeSlide(-1),
-                      // ),
-                      // SizedBox(width: 250.d),
-                      _navigationButton(
-                        name: "footer_next",
-                        isEnable: /* controller.slideIndex.value <
-                              controller.currentSerie.children.length && */
-                            true,
-                        onPress: () => controller.changeSlide(1),
-                      ),
-                    ],
+                  _hiddenButton(() => controller.changeSlide(-1)),
+                  Visibility(
+                    visible: value,
+                    child: Widgets.button(
+                      context,
+                      height: 92.d,
+                      padding: EdgeInsets.all(12.d),
+                      child: Asset.load<Image>("footer_next"),
+                      onPressed: () => controller.changeSlide(1),
+                    ),
                   ),
+                  _hiddenButton(() => controller.changeSlide(1)),
                 ],
               ),
-            ),
+            ],
           );
         },
       ),
     );
   }
 
-  Widget _navigationButton({
-    required name,
-    bool isEnable = true,
-    Function()? onPress,
-  }) {
-    return Widgets.button(
-      context,
-      height: 92.d,
-      padding: EdgeInsets.all(12.d),
-      child: Asset.load<Image>(name),
-      onPressed: () {
-        if (isEnable) {
-          onPress?.call();
-        }
-      },
+  Widget _hiddenButton(Function() onLongPress) {
+    return Expanded(
+      child: Widgets.button(
+        context,
+        height: 100.d,
+        padding: EdgeInsets.zero,
+        onLongPress: onLongPress,
+        child: const SizedBox(),
+      ),
     );
   }
 
