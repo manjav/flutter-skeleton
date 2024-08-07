@@ -207,8 +207,9 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
     final slide = controller.currentSerie.children[page] as ParentContent;
     if (controller.contentIndex.value <= -1) return;
-    if (slide.children.first.isQuiz) {
-      listen(slide.children.first as Talk, autoStart: false);
+    final quizes = slide.children.where((c) => (c as Talk).isQuiz).toList();
+    if (quizes.isNotEmpty) {
+      listen(quizes.first as Talk, autoStart: false);
     }
   }
 
