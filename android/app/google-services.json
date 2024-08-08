@@ -1,44 +1,45 @@
 {
   "project_info": {
-    "project_number": "701520098502",
-    "project_id": "new-fruitcraft",
-    "storage_bucket": "new-fruitcraft.appspot.com"
+    "project_number": "962267425396",
+    "project_id": "lifetalk-fc9b5",
+    "storage_bucket": "lifetalk-fc9b5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:701520098502:android:14865a821419c0fed713c7",
+        "mobilesdk_app_id": "1:962267425396:android:63261fbc9dcdb6646fff21",
         "android_client_info": {
-          "package_name": "com.lifetalk"
+          "package_name": "com.lifetalk.learn.language.speak.staging"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "701520098502-75e3v48ck9v49otcqnb1jgsngpje4a7p.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.lifetalk",
-            "certificate_hash": "ad9d5b7e08984473afe2a13253a708801754ea66"
-          }
-        },
-        {
-          "client_id": "701520098502-9fme7atmifivp1mh76oqdfnppc0td4e0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDMvWDa-5JBkbtrhuIez0zx67baV-4oEKA"
+          "current_key": "AIzaSyDsJslTLKknSgeTdrMeeWas7A1odRrITVo"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "701520098502-9fme7atmifivp1mh76oqdfnppc0td4e0.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962267425396:android:d80c5f27192816706fff21",
+        "android_client_info": {
+          "package_name": "com.lifetalk.learn.language.speaks"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsJslTLKknSgeTdrMeeWas7A1odRrITVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     }
