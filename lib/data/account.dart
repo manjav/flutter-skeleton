@@ -92,11 +92,11 @@ class AccountProvider extends ChangeNotifier {
     group.children = children;
   }
 
-  Future<void> writeStorage(
-    String collectionId,
-    String keyId,
-    Map<String, dynamic> values,
-  ) async {
+  Future<void> writeStorage({
+    required String collectionId,
+    required String keyId,
+    required Map<String, dynamic> values,
+  }) async {
     await serviceLocator<NetConnector>().rpc("account_storage_set", params: {
       "collectionId": collectionId,
       "keyId": keyId,
@@ -118,9 +118,10 @@ class AccountProvider extends ChangeNotifier {
   ) async {
     /// Send to Server
     writeStorage(
-      "scores_${account.user.langTag}_${metadata["targetLanguage"]}",
-      key,
-      values,
+      collectionId:
+          "scores_${account.user.langTag}_${metadata["targetLanguage"]}",
+      keyId: key,
+      values: values,
     );
 
     /// Local Update
