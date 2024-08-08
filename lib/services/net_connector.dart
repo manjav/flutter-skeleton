@@ -188,7 +188,7 @@ class NetConnector extends IService {
 
   Future<Map<String, Map<String, dynamic>>> readStorage(
     String collectionId, {
-    int limit = 300,
+    int limit = 100,
   }) async {
     final objects = await _nakamaClient!.listStorageObjects(
       limit: limit,
