@@ -28,9 +28,11 @@ class Loader with ILogger {
     var exists = await file!.exists();
     if (exists && !forceUpdate) {
       bytes = await file!.readAsBytes();
-      if (isHashMatch(bytes!, hash, path)) {
+      if (isHashMatch(bytes!, hash)) {
         // log("Complete loading $path");
         return file!;
+      } else {
+        log("$path MD5 is defferent. start loading ...");
       }
     }
 
@@ -48,8 +50,8 @@ class Loader with ILogger {
         Archive archive = ZipDecoder().decodeBytes(bytes!);
         bytes = archive.first.content as List<int>;
       }
-      if (!isHashMatch(bytes!, hash, path)) {
-        log("$path md5 is invalid!");
+      if (!isHashMatch(bytes!, hash)) {
+        log("$path MD5 check failure!");
         return null;
       }
       await file!.writeAsBytes(bytes!);
@@ -79,13 +81,9 @@ class Loader with ILogger {
 
   void abort() => httpClient.close(force: true);
 
-  bool isHashMatch(List<int> bytes, String? hash, String path) {
+  static bool isHashMatch(List<int> bytes, String? hash) {
     if (hash == null) return true;
     var fileHash = md5.convert(bytes);
-    if (hash == fileHash.toString()) {
-      return true;
-    }
-    log("$path MD5 $hash != $fileHash}");
-    return false;
+    return hash == fileHash.toString();
   }
 }

@@ -18,16 +18,26 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void initState() {
-    List list = Get.arguments["content"].children[0].children;
-    list.removeRange(0, list.length - 4);
+    // List list = Get.arguments["content"].children[0].children;
+    // list.removeRange(0, list.length - 4);
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
-    serviceLocator<Speaker>().loadAllSounds(controller.series, () {
+    serviceLocator<Speaker>().loadAllSounds(
+      series: controller.series,
+      onComplete: () {
       controller.changeSerie(1);
       setState(() {});
-    });
+      },
+      onError: () async {
+        await Get.toNamed(Routes.popupMessage,
+            arguments: {"title": "Error in loading assets!"});
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      },
+    );
     super.initState();
   }
 

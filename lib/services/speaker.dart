@@ -59,8 +59,12 @@ class Speaker extends IService {
   }
 
   final _sounds = <String, DeviceFileSource?>{};
-  Future<void> loadAllSounds(List<ParentContent> series, Function() onComplete,
-      {bool loadCaptions = true}) async {
+  Future<void> loadAllSounds({
+    required List<ParentContent> series,
+    required Function() onComplete,
+    required Function() onError,
+    bool loadCaptions = true,
+  }) async {
     _sounds.clear();
     for (var serie in series) {
       for (var slide in serie.children) {
@@ -72,11 +76,11 @@ class Speaker extends IService {
           }
           if (side != TranslationSide.none) {
             var text = talk.getText(side);
-            _loadFile(text, talk.type.narrator, onComplete);
+            _loadFile(text, talk.type.narrator, onComplete, onError);
           }
           if (talk.type == ContentType.translate) {
             var text = talk.targetValue;
-            _loadFile(text, Narrator.onyx, onComplete);
+            _loadFile(text, Narrator.onyx, onComplete, onError);
           }
         }
       }
@@ -84,7 +88,12 @@ class Speaker extends IService {
   }
 
   Future<void> _loadFile(
-      String text, Narrator narrator, Function() onComplete) async {
+    String text,
+    Narrator narrator,
+    Function() onComplete,
+    Function() onError, [
+    int tryCount = 0,
+  ]) async {
     if (_sounds.containsKey(text)) return;
     _sounds[text] = null;
     var request = await HttpClient().getUrl(Uri.parse("${narrator.url}$text"));
@@ -93,8 +102,20 @@ class Speaker extends IService {
       log('Failure status code 😱');
       return;
     }
+    var md5 = response.headers.value("Content-Md5");
     final bytes = await _readResponse(response);
-    final unit8 = bytes!.buffer.asUint8List(32, bytes.lengthInBytes - 32);
+    if (!Loader.isHashMatch(bytes!.toList(), md5)) {
+      await Future.delayed(const Duration(milliseconds: 50));
+      if (tryCount > 2) {
+        onError();
+      } else {
+        _loadFile(text, narrator, onComplete, onError, tryCount++);
+        log("Retry sound loading $tryCount");
+      }
+      return;
+    }
+
+    final unit8 = bytes.buffer.asUint8List(32, bytes.lengthInBytes - 32);
     Directory dir = await getApplicationDocumentsDirectory();
 
     var tmpFile = "${dir.path}/$text.mp3";
