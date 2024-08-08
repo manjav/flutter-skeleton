@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lifetalk/app_export.dart';
 import 'package:lifetalk/skeleton/mixins/feast_mixin.dart';
 import 'package:rive/rive.dart';
@@ -58,11 +59,13 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     _controller = super.onRiveInit(artboard, stateMachineName);
+    final formatter = NumberFormat("00");
     updateRiveText("message", "done_label".l());
     updateRiveText("scoreLabel", "score_level_good".l());
-    updateRiveText("scoreValue", score.compact());
+    updateRiveText("scoreValue", formatter.format(score));
     updateRiveText("sentencesLabel", "sentences_label".l());
-    updateRiveText("sentencesValue", widget.args["sentenceCount"]);
+    updateRiveText(
+        "sentencesValue", formatter.format(widget.args["sentenceCount"]));
     return _controller!;
   }
 
