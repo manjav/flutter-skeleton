@@ -20,7 +20,7 @@ dependencies:
   device_info_plus: ^10.1.1
   firebase_analytics: ^11.2.1
   firebase_core: ^3.3.0
-  # firebase_crashlytics: ^3.4.14
+  firebase_crashlytics: ^4.0.4
   # firebase_messaging: ^14.7.3
   # flutter_local_notifications: ^16.1.0
   flutter_smartlook: ^4.1.23
