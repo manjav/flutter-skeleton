@@ -18,8 +18,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void initState() {
-    var list = Get.arguments["content"].children;
-    controller.series = List.generate(list.length, (i) => list[i]);
+    controller.init(Get.arguments["content"]);
     controller.slideIndex.addListener(_onChangeSlide);
     serviceLocator<Speaker>().loadAllSounds(controller.series, () {
       controller.changeSerie(1);

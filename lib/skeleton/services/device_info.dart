@@ -203,15 +203,20 @@ class DeviceInfo extends IService {
   }
 
   static Future<void> _findAdId() async {
-    try {
-      adId = (await AdvertisingId.id(true))!;
-    } on PlatformException {
-      adId = Prefs.getString("deviceId",
-          defaultValue: StringExtensions.getRandomString(20));
+    String createId() {
+      if (Prefs.contains("deviceId")) {
+        return Prefs.getString("deviceId");
+      }
+      return Prefs.setString("deviceId", StringExtensions.getRandomString(20));
     }
-    if (id.isEmpty) {
-      adId = Prefs.getString("deviceId",
-          defaultValue: StringExtensions.getRandomString(20));
+
+    try {
+      adId = (await AdvertisingId.id(false))!;
+    } on PlatformException {
+      adId = createId();
+    }
+    if (adId.isEmpty) {
+      adId = createId();
     }
   }
 }

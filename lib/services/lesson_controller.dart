@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../app_export.dart';
 
 class LessonController {
+  ParentContent? root;
   List<ParentContent> series = [];
   Function(int, int, int)? onComplete;
   final ValueNotifier<int> serieIndex = ValueNotifier(-1);
@@ -20,6 +21,12 @@ class LessonController {
   Talk get currentContent => currentSlide.children[contentIndex.value] as Talk;
 
   int get uniqueIndex => slideIndex.value * 100 + contentIndex.value;
+
+  void init(ParentContent root) {
+    this.root = root;
+    series = List.generate(
+        root.children.length, (i) => root.children[i] as ParentContent);
+  }
 
   Future<void> changeSerie(int stepLength) async {
     if (serieIndex.value >= series.length - stepLength) {

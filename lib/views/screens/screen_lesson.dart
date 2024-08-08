@@ -18,9 +18,9 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void initState() {
-    var list = Get.arguments["content"].children;
-    controller.series = List.generate(list.length, (i) => list[i]);
-    // controller.series[0].children.removeRange(0, 1);
+    controller.init(Get.arguments["content"]);
+    // controller.series[0].children
+    //     .removeRange(0, controller.series[0].children.length - 1);
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
     serviceLocator<Speaker>().loadAllSounds(controller.series, () {
