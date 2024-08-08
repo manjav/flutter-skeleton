@@ -269,6 +269,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   Future<void> _onSerieComplete(
       int sentenceCount, int quizCount, int score) async {
+    await Get.toNamed(Routes.popupResult, arguments: {
+      "id": controller.root!.id,
+      "score": score,
+      "quizCount": quizCount,
+      "sentenceCount": sentenceCount
+    });
     if (mounted) {
       Navigator.pop(context);
     }

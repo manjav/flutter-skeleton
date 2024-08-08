@@ -15,17 +15,12 @@ class _PopupState extends AbstractPopupState<ResultPopup> {
 
   @override
   Widget contentFactory() {
-    var items = <Widget>[
-      Text(
-        "nice_job".l(),
-        style: TStyles.large.copyWith(color: TColors.yellow),
-      ),
-      GroupResult(args: widget.args),
-    ];
-
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: items,
+      children: [
+        SizedBox(
+            width: 330.d, height: 390.d, child: GroupResult(args: widget.args)),
+      ],
     );
   }
 }
@@ -40,15 +35,20 @@ class GroupResult extends StatefulWidget {
 
 class _GroupResultState extends State<GroupResult> with FeastMixin {
   StateMachineController? _controller;
-
+  int score = 0;
   @override
   void initState() {
     super.initState();
-    children = [/* animationBuilder("result") */];
+    children = [animationBuilder("result")];
     process(() async {
+      score = (widget.args["score"] / widget.args["quizCount"]).round();
       await serviceLocator<AccountProvider>().saveScore(
         widget.args["id"]!,
-        {"score": widget.args["score"]},
+        {
+          "score": score,
+          "quizCount": widget.args["quizCount"],
+          "sentenceCount": widget.args["sentenceCount"],
+        },
       );
       return true;
     });
@@ -58,7 +58,11 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     _controller = super.onRiveInit(artboard, stateMachineName);
-    updateRiveText("caption", "value");
+    updateRiveText("message", "done_label".l());
+    updateRiveText("scoreLabel", "score_level_good".l());
+    updateRiveText("scoreValue", score.compact());
+    updateRiveText("sentencesLabel", "sentences_label".l());
+    updateRiveText("sentencesValue", widget.args["sentenceCount"]);
     return _controller!;
   }
 
