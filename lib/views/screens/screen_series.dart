@@ -19,6 +19,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   @override
   void initState() {
     controller.init(Get.arguments["content"]);
+    controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
     serviceLocator<Speaker>().loadAllSounds(controller.series, () {
       controller.changeSerie(1);
@@ -264,6 +265,13 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         );
       },
     );
+  }
+
+  Future<void> _onSerieComplete(
+      int sentenceCount, int quizCount, int score) async {
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   @override

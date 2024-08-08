@@ -18,9 +18,10 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void initState() {
+    List list = Get.arguments["content"].children[0].children;
+    list.removeRange(0, list.length - 4);
     controller.init(Get.arguments["content"]);
-    // controller.series[0].children
-    //     .removeRange(0, controller.series[0].children.length - 1);
+    controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
     serviceLocator<Speaker>().loadAllSounds(controller.series, () {
@@ -185,7 +186,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
-    talk.scrollPosition = _chatScrollController.position.pixels;
+    // talk.scrollPosition = _chatScrollController.position.pixels;
     return ScaleTransition(
       alignment: switch (talk.type) {
         ContentType.user => Alignment.bottomRight,
@@ -271,6 +272,13 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       controller.changeContent(1);
     }
     controller.onQuizResult(score, text, talk);
+  }
+
+  Future<void> _onSerieComplete(
+      int sentenceCount, int quizCount, int score) async {
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   @override

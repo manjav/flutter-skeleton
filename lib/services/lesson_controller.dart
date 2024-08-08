@@ -6,14 +6,14 @@ import '../app_export.dart';
 
 class LessonController {
   ParentContent? root;
+  int sentenceCount = 0;
   List<ParentContent> series = [];
+  final Map<String, Talk> quizes = {};
   Function(int, int, int)? onComplete;
   final ValueNotifier<int> serieIndex = ValueNotifier(-1);
   final ValueNotifier<int> slideIndex = ValueNotifier(-1);
   final ValueNotifier<int> contentIndex = ValueNotifier(-1);
   final ValueNotifier<bool> slidePassed = ValueNotifier(true);
-
-  // int _fouls = 0, _streakCorrects = 0, _maxCorrects = 0, _numQuizes = 0;
 
   ParentContent get currentSerie => series[serieIndex.value];
   ParentContent get currentSlide =>
@@ -26,19 +26,27 @@ class LessonController {
     this.root = root;
     series = List.generate(
         root.children.length, (i) => root.children[i] as ParentContent);
+
+    quizes.clear();
+    for (ParentContent serie in series) {
+      for (var slide in serie.children) {
+        for (var talk in (slide as ParentContent).children) {
+          talk = talk as Talk;
+          talk.score = 0;
+          if (talk.isQuiz) quizes[talk.id] = talk;
+          sentenceCount++;
+        }
+      }
+    }
   }
 
   Future<void> changeSerie(int stepLength) async {
     if (serieIndex.value >= series.length - stepLength) {
-      // for (var step in series) {
-      //   if (step.isQuiz) _numQuizes++;
-      // }
-      // var len = (slides.length / 2).round();
-      // var corrects = len - _fouls.max(5);
-      // debugPrint(
-      //     "${corrects * 100 / len}% $corrects $_maxCorrects $len   ${3 - _fouls.max(2)}");
-      // await Future.delayed(const Duration(milliseconds: 500));
-      onComplete?.call(0, 0, 0);
+      int score = 0;
+      for (var entry in quizes.entries) {
+        score += entry.value.score.max(100);
+      }
+      onComplete?.call(sentenceCount, quizes.length, score);
       return;
     }
 
@@ -74,11 +82,17 @@ class LessonController {
     } else {
       slidePassed.value = true;
       serviceLocator<Sounds>().play("wrong");
-      serviceLocator<NetConnector>().rpc(
-        "account_log_set",
-        params: {"answer": answer, "key": "speaking", "expected": expected},
-      );
     }
+
+    serviceLocator<AccountProvider>().writeStorage(
+      collectionId: "log_${root!.id}",
+      keyId: talk.id,
+      values: {
+        "score": score,
+        "answer": answer,
+        "expected": listener.pattern,
+      },
+    );
   }
 
   void dispose() => onComplete = null;

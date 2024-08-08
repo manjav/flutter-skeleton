@@ -29,6 +29,7 @@ class ListenerQuiz extends Quiz {
   DateTime _lastLevelChanged = DateTime.now();
   bool _isRepeatPlayed = false;
   List<String> exceptions = [];
+  int _matchLevel = 0;
 
   @override
   initialize({List<Object>? args}) async {
@@ -81,9 +82,9 @@ class ListenerQuiz extends Quiz {
     } else if (status == "done") {
       if (recognizedWords.value.isEmpty) {
         state.value = QuizState.ready;
-        onResult?.call(state.value, result.recognizedWords);
+        onResult?.call(state.value, result.recognizedWords, _matchLevel);
       } else if (_isRepeatPlayed) {
-        onResult?.call(state.value, result.recognizedWords);
+        onResult?.call(state.value, result.recognizedWords, _matchLevel);
       }
     }
   }
@@ -97,7 +98,7 @@ class ListenerQuiz extends Quiz {
     List<String>? exceptions,
     bool autoStart = true,
     bool shouldPlayHint = true,
-    Function(QuizState state, String text)? onResult,
+    Function(QuizState state, String text, int mathLevel)? onResult,
   }) async {
     if (state.value.index <= QuizState.listening.index) {
       _speech.cancel();
@@ -183,14 +184,14 @@ class ListenerQuiz extends Quiz {
         recognizedWords.value = alternate.recognizedWords;
       }
 
-      var rate = ratio(pattern, insert);
+      _matchLevel = ratio(pattern, insert);
       // if (exception.isNotEmpty) {
       //   minMatchLevel =
       //       100 - (100 * exception.length / pattern!.length).round();
       // }
       if (state.value.index > QuizState.listening.index) return;
-      logs = "=> $insert ratio: $rate/$minMatchLevel";
-      if (rate > minMatchLevel) {
+      logs = "=> $insert ratio: $_matchLevel/$minMatchLevel";
+      if (_matchLevel > minMatchLevel) {
         state.value = QuizState.success;
         dispatchresult();
         return;
@@ -220,7 +221,7 @@ class ListenerQuiz extends Quiz {
     }
     _isRepeatPlayed = true;
     if (_speech.lastStatus == "done") {
-      onResult?.call(state.value, result.recognizedWords);
+      onResult?.call(state.value, result.recognizedWords, _matchLevel);
     }
   }
 }
