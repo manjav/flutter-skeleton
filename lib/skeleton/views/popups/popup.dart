@@ -33,86 +33,50 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
 
   @override
   Widget build(BuildContext context) {
-    var paddingTop = MediaQuery.of(context).viewPadding.top;
+    // var paddingTop = MediaQuery.of(context).viewPadding.top;
     return Scaffold(
-        backgroundColor: backgroundColor,
-        body: PopScope(
-          canPop: canPop,
-          child: Stack(children: [
+      backgroundColor: backgroundColor,
+      body: PopScope(
+        canPop: canPop,
+        child: Stack(
+          children: [
             Widgets.touchable(context,
                 onTap:
                     barrierDismissible ? () => Navigator.pop(context) : null),
-            Align(alignment: alignment, child: outerChromeFactory()),
-            Positioned(
-                top: paddingTop > 0 ? paddingTop : 24.d,
-                left: 32.d,
-                right: 32.d,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: appBarElements())),
-          ]),
-        ));
-  }
-
-  Color get backgroundColor => TColors.black80;
-  String titleBuilder() => widget.name.toLowerCase().l();
-  EdgeInsets get chromeMargin => EdgeInsets.fromLTRB(24.d, 100.d, 24.d, 0);
-  EdgeInsets get contentPadding => EdgeInsets.fromLTRB(48.d, 176.d, 48.d, 92.d);
-
-  Widget titleTextFactory() {
-    return Widgets.rect(
-        width: 562.d,
-        height: 130.d,
-        padding: EdgeInsets.only(bottom: 14.d),
-        decoration: Widgets.imageDecorator(
-            "popup_title", ImageCenterSliceData(562, 130)),
-        child: Center(child: SkinnedText(titleBuilder(), style: TStyles.large)));
-  }
-
-  Widget closeButtonFactory() {
-    return Widgets.button(context,
-        alignment: Alignment.center,
-        width: 160.d,
-        height: 160.d,
-        onPressed: () => Navigator.pop(context),
-        child: Asset.load<Image>('popup_close', height: 38.d));
-  }
-
-  List<Widget> appBarElements() => [];
-
-  Widget innerChromeFactory() => const SizedBox();
-
-  Widget outerChromeFactory() {
-    return Widgets.rect(
-      margin: chromeMargin,
-      padding: EdgeInsets.symmetric(horizontal: 24.d),
-      decoration: chromeSkinBuilder,
-      child:
-          Stack(alignment: Alignment.topCenter, fit: StackFit.loose, children: [
-        innerChromeFactory(),
-        titleTextFactory(),
-        Padding(padding: contentPadding, child: contentFactory()),
-        Positioned(top: 60.d, right: -12.d, child: closeButtonFactory()),
-      ]),
+            Align(
+              alignment: alignment,
+              child: Widgets.rect(
+                radius: 24.d,
+                color: TColors.white50,
+                padding: EdgeInsets.all(20.d),
+                // width: DeviceInfo.size.width * 0.8,
+                child: contentFactory(),
+              ),
+            ),
+            // Positioned(
+            //   top: paddingTop > 0 ? paddingTop : 24.d,
+            //   left: 32.d,
+            //   right: 32.d,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     crossAxisAlignment: CrossAxisAlignment.center,
+            //     children: appBarElements(),
+            //   ),
+            // ),
+          ],
+        ),
+      ),
     );
   }
 
-  BoxDecoration get chromeSkinBuilder =>
-      Widgets.imageDecorator("popup_chrome", ImageCenterSliceData(410, 460));
+  Color get backgroundColor => TColors.black80;
+  List<Widget> appBarElements() => [];
 
-  Widget contentFactory() => Widgets.rect(
-      height: 480.d, width: 880.d, color: TColors.green.withAlpha(133));
+  BoxDecoration get chromeSkinBuilder => BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(12.d)),
+      color: TColors.primary0);
 
-  Widget dualColorText(String whiteText, String coloredText,
-      {TextStyle? style}) {
-    style = style ?? TStyles.large;
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      SkinnedText(whiteText, style: style),
-      SizedBox(width: 18.d),
-      SkinnedText(coloredText, style: style.copyWith(color: TColors.orange))
-    ]);
-  }
+  Widget contentFactory() => const SizedBox();
 
   void toast(String message) => Overlays.insert(context, ToastOverlay(message));
 }

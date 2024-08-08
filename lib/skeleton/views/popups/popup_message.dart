@@ -12,11 +12,9 @@ class MessagePopup extends AbstractPopup {
 
 class _MessagePopupState extends AbstractPopupState<MessagePopup> {
   @override
-  titleBuilder() => widget.args["title"];
-
-  @override
   contentFactory() {
     var items = <Widget>[
+      Text(widget.args["title"], style: TStyles.large),
       SizedBox(height: 64.d),
       Text(widget.args["message"], style: TStyles.medium),
       SizedBox(height: 86.d),
