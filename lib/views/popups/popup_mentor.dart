@@ -22,7 +22,7 @@ class _TutorialState extends AbstractPopupState<MentorPopup> {
     super.initState();
   }
 
-  @override
-  Widget outerChromeFactory() =>
-      Mentor(message!, reaction ?? MentorReaction.angry);
+  // @override
+  // Widget outerChromeFactory() =>
+  //     Mentor(message!, reaction ?? MentorReaction.angry);
 }

@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp>
             _getPage(Routes.lesson, LessonScreen()),
             _getPage(Routes.series, SeriesScreen()),
             _getPage(Routes.onboarding, OnboardingScreen()),
-            _getPage(Routes.popupMentor, const MentorPopup(), false),
+            _getPage(Routes.popupResult, const ResultPopup()),
           ],
           initialRoute: Routes.home,
         ),
@@ -111,7 +111,7 @@ class _MyAppState extends State<MyApp>
     String routeName,
     page, [
     bool opaque = true,
-    Transition? transition,
+    Transition transition = Transition.noTransition,
   ]) =>
       GetPage(
         name: routeName,
