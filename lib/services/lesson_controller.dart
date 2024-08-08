@@ -71,7 +71,7 @@ class LessonController {
       serviceLocator<Sounds>().play("wrong");
       serviceLocator<NetConnector>().rpc(
         "account_log_set",
-        params: {"answer": answer, "type": "speaking", "expected": expected},
+        params: {"answer": answer, "key": "speaking", "expected": expected},
       );
     }
   }
