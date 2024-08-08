@@ -26,7 +26,7 @@ class AccountProvider extends ChangeNotifier {
     var params = {};
     if (displayName != null) params["displayName"] = displayName;
     if (avatarUrl != null) params["avatarUrl"] = avatarUrl;
-    if (nativeLanguage != null) params["nativeLanguage"] = nativeLanguage;
+    if (nativeLanguage != null) params["langTag"] = nativeLanguage;
     if (targetLanguage != null) {
       metadata["targetLanguage"] = targetLanguage;
       params["metadata"] = metadata;
