@@ -66,14 +66,12 @@ class LessonController {
     contentIndex.value += stepLength;
   }
 
-  void onQuizResult(bool isSuccess, String expected, String answer) {
-    if (isSuccess) {
+  void onQuizResult(int score, String answer, Talk talk) {
+    final listener = serviceLocator<ListenerQuiz>();
+    quizes[talk.id]!.score = score;
+    if (score > listener.minMatchLevel) {
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
-      // ++_streakCorrects;
-      // _maxCorrects = _streakCorrects.min(_maxCorrects);
     } else {
-      // ++_fouls;
-      // _streakCorrects = 0;
       slidePassed.value = true;
       serviceLocator<Sounds>().play("wrong");
       serviceLocator<NetConnector>().rpc(

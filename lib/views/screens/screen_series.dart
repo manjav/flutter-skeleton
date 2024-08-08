@@ -228,12 +228,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   @override
-  void onListeningResult(QuizState state, Talk talk, String text) {
-    if (state == QuizState.success) {
-      controller.onQuizResult(true, talk.targetValue, text);
-    } else if (state == QuizState.failure) {
-      controller.onQuizResult(false, talk.targetValue, text);
-    }
+  void onListeningResult(QuizState state, String text, int score, Talk talk) {
+    controller.onQuizResult(score, text, talk);
   }
 
   void openSerieSelector() {

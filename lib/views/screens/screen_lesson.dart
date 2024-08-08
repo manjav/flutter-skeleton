@@ -266,13 +266,11 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  void onListeningResult(QuizState state, Talk talk, String text) {
+  void onListeningResult(QuizState state, String text, int score, Talk talk) {
     if (state == QuizState.success) {
-      controller.onQuizResult(true, talk.targetValue, text);
       controller.changeContent(1);
-    } else if (state == QuizState.failure) {
-      controller.onQuizResult(false, talk.targetValue, text);
     }
+    controller.onQuizResult(score, text, talk);
   }
 
   @override
