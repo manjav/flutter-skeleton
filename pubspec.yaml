@@ -67,6 +67,7 @@ flutter:
     - assets/vectors/
     - assets/images/
     - assets/texts/
+    - assets/fonts/
     
   fonts:
     - family: primary_font
