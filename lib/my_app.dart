@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -8,9 +9,8 @@ class MyApp extends StatefulWidget {
   static late final DateTime startTime;
   const MyApp({super.key});
 
-  // static final firebaseAnalytics = FirebaseAnalytics.instance;
-  // static final _observer =
-  //     FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
+  static final _observer =
+      FirebaseAnalyticsObserver(analytics: FirebaseTracker.instance);
 
   @override
   createState() => _MyAppState();
@@ -81,6 +81,7 @@ class _MyAppState extends State<MyApp>
               create: (_) => serviceLocator<AccountProvider>()),
         ],
         child: GetMaterialApp(
+          navigatorObservers: [MyApp._observer],
           theme: Themes.darkData,
           supportedLocales: Localization.locales,
           locale:
