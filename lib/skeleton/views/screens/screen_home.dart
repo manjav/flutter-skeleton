@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
@@ -13,7 +12,7 @@ class HomeScreen extends AbstractScreen {
 }
 
 class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
-  Map<String, int>? _scores;
+  Map<String, Map<String, dynamic>>? _scores;
   SMIInput<double>? _categoryIndex;
   TabController? _tabController;
   List<ParentContent> _categories = [];
