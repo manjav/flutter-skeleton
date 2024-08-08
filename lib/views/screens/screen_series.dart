@@ -24,8 +24,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     serviceLocator<Speaker>().loadAllSounds(
       series: controller.series,
       onComplete: () {
-      controller.changeSerie(1);
-      setState(() {});
+        controller.changeSerie(1);
+        setState(() {});
       },
       onError: () async {
         await Get.toNamed(Routes.popupMessage,
@@ -188,7 +188,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                 Asset.load<SvgPicture>("arrow_right", height: 20.d),
               ],
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => controller.changeSerie(1),
           ),
           SizedBox(height: 30.d),
         ],

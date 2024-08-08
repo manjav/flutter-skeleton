@@ -27,8 +27,8 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     serviceLocator<Speaker>().loadAllSounds(
       series: controller.series,
       onComplete: () {
-      controller.changeSerie(1);
-      setState(() {});
+        controller.changeSerie(1);
+        setState(() {});
       },
       onError: () async {
         await Get.toNamed(Routes.popupMessage,

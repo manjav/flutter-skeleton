@@ -94,6 +94,7 @@ class _ListenerBoxState extends State<ListenerBox> {
                   pattern: widget.answer,
                   hintVoice: widget.voice,
                   repeatVoice: widget.repeatVoice,
+                  onResult: listener.onResult,
                 ),
               ),
             ),

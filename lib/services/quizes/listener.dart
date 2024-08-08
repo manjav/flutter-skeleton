@@ -114,6 +114,7 @@ class ListenerQuiz extends Quiz {
     recognizedWords.value = "";
     state.value = QuizState.ready;
     if (!autoStart) {
+      this.onResult = onResult;
       return;
     }
     log("Start listen ${this.pattern}");
@@ -163,7 +164,8 @@ class ListenerQuiz extends Quiz {
         pattern: pattern,
         hintVoice: hintVoice,
         repeatVoice: repeatVoice,
-        shouldPlayHint: false);
+        shouldPlayHint: false,
+        onResult: onResult);
   }
 
   @override
