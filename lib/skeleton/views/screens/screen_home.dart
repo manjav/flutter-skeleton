@@ -16,7 +16,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   int _categoryIndex = 0;
   final double _titleHeight = 40.d;
   final double _categoryHeight = 74.d;
-  final double _lessonHeight = 64.d;
+  final double _lessonHeight = 76.d;
   final double _roadWidth = 64.d;
   final TextStyle _unitStyle = TStyles.small.copyWith(
       color: TColors.primary40, fontWeight: FontWeight.w100, height: 0.9);
@@ -155,9 +155,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     ),
                   ),
                   Widgets.rect(
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: TColors.primary0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      color: TColors.primary0,
                       gradient: LinearGradient(
                           colors: [
                             TColors.primary0,
@@ -168,12 +168,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                           end: const FractionalOffset(0.8, 0.0),
                           stops: const [0.0, 0.75, 1.0],
                           tileMode: TileMode.clamp),
-                border: category.index == _categoryIndex
+                      border: category.index == _categoryIndex
                           ? Border.all(
                               color: TColors.primary20, width: thickness)
-                    : null,
-                borderRadius: BorderRadius.all(Radius.circular(16.d)),
-              ),
+                          : null,
+                      borderRadius: BorderRadius.all(Radius.circular(16.d)),
+                    ),
                   ),
                   DirText(category.title),
                 ],
@@ -236,12 +236,15 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             child: Widgets.button(
               context,
               radius: 12.d,
-              margin: EdgeInsets.symmetric(horizontal: 12.d, vertical: 4.d),
-              padding: EdgeInsets.all(14.d),
               color: _colors[group.mode],
+              margin: EdgeInsets.all(6.d),
+              padding: EdgeInsets.symmetric(horizontal: 14.d),
               child: Row(
+                textDirection: Localization.dir,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  LoaderWidget(AssetType.vector, group.mode, width: 20.d),
+                  SizedBox(width: 16.d),
                   Expanded(
                     child: DirText(
                       group.title.simplify(),
@@ -249,13 +252,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                       style: TStyles.largeInvert,
                     ),
                   ),
-                  SizedBox(width: 16.d),
-                  LoaderWidget(AssetType.vector, group.mode, width: 20.d),
-                  // ValueListenableBuilder(
-                  //   valueListenable: scoreNotifier,
-                  //   builder: (context, value, child) =>
-                  //       Text(["☆☆☆", "★☆☆", "★★☆", "★★★"][scoreNotifier.value]),
-                  // ),
                 ],
               ),
               onPressed: () async {
