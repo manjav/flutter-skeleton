@@ -53,11 +53,11 @@ class Speaker extends IService {
     }
 
     try {
-    final url = "${narrator.url}$text${reset ? "&nocache" : ""}";
-    await player.play(UrlSource(url), volume: 1);
+      final url = "${narrator.url}$text${reset ? "&nocache" : ""}";
+      await player.play(UrlSource(url), volume: 1);
       await Future.doWhile(() =>
           Future.delayed(const Duration(milliseconds: 100))
-        .then((_) => player.state != PlayerState.completed));
+              .then((_) => player.state != PlayerState.completed));
     } catch (e) {
       log(e.toString());
     }
@@ -129,6 +129,7 @@ class Speaker extends IService {
     for (var entry in _sounds.entries) {
       if (entry.value == null) return;
     }
+    await Future.delayed(const Duration(milliseconds: 100));
     onComplete();
   }
 
@@ -151,10 +152,10 @@ class Speaker extends IService {
       return;
     }
     try {
-    await player.play(_sounds[text]!);
+      await player.play(_sounds[text]!);
       await Future.doWhile(() =>
           Future.delayed(const Duration(milliseconds: 100))
-        .then((_) => player.state != PlayerState.completed));
+              .then((_) => player.state != PlayerState.completed));
     } catch (e) {
       log(e.toString());
     }
