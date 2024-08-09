@@ -277,7 +277,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                   Expanded(
                     child: DirText(
                       group.title.simplify(),
-                      // textAlign: TextAlign.center,
                       style: TStyles.largeInvert,
                     ),
                   ),
@@ -290,16 +289,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
                 var routName =
                     group.mode == "lessons" ? Routes.lesson : Routes.series;
-                var s =
                     await Get.toNamed(routName, arguments: {"content": group});
-                if (s == null || s <= scoreNotifier.value) return;
-                await serviceLocator<AccountProvider>().saveScore(id, s);
-                scoreNotifier.value = s;
+            setState(() {});
+            // if (s == null || s <= scoreNotifier.value) return;
+            // await serviceLocator<AccountProvider>().saveScore(id, s);
+            // scoreNotifier.value = s;
               },
             ),
           ),
-        ),
-      ],
     );
   }
 
