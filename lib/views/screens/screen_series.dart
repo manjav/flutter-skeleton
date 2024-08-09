@@ -20,12 +20,14 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   void initState() {
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
-    controller.slideIndex.addListener(_onChangeSlide);
+    controller.slideIndex.addListener(_onChangeSlide);  
     serviceLocator<Speaker>().loadAllSounds(
       series: controller.series,
       onComplete: () {
         controller.changeSerie(1);
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       },
       onError: () async {
         await Get.toNamed(Routes.popupMessage,
