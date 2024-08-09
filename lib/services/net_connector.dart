@@ -121,8 +121,10 @@ class NetConnector extends IService {
     final now = DateTime.now();
     if (_rpcTimes.containsKey(id) &&
         now.difference(_rpcTimes[id]!).inMilliseconds < 500) {
-      throw SkeletonException(
-          StatusCode.ALREADY_EXISTS.value, "Frequent RPC $id");
+      log("Frequent RPC $id");
+      if (T is List) return [] as T;
+      if (T is Map) return {} as T;
+      return null as T;
     }
     _rpcTimes[id] = now;
     params ??= {};
