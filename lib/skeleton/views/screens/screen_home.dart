@@ -16,7 +16,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   int _categoryIndex = 0;
   final double _titleHeight = 40.d;
   final double _categoryHeight = 74.d;
-  final double _lessonHeight = 76.d;
+  final double _lessonHeight = 70.d;
+  final double _headerHight = 186.d;
   final double _roadWidth = 64.d;
   final TextStyle _unitStyle = TStyles.small.copyWith(
       color: TColors.primary40, fontWeight: FontWeight.w100, height: 0.9);
@@ -189,32 +190,33 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Widget _categoryOpenBuilder(ParentContent category) {
     var length =
         category.index == _categoryIndex ? category.children.length : 0;
-    // if (category.index != _categoryIndex) return const SizedBox();
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      height: length * _lessonHeight,
-      // padding: EdgeInsets.all(4.d),
-      child: Column(
+      curve: Curves.easeOut,
+      child: length <= 0
+          ? const SizedBox()
+          : Column(
+              children: [
+                for (var i = -1; i < length; i++)
+                  Row(
         children: [
-          for (var i = 0; i < length; i++) _lessonItemBuilder(category, i)
+                      _lessonRoadRenderer(category, i),
+                      _lessonItemBuilder(category, i)
+                    ],
+                  ),
         ],
       ),
     );
   }
 
-  Widget _lessonItemBuilder(ParentContent category, int index) {
-    final group = category.children[index] as ParentContent;
-    final id = "${group.id}_$index";
-    final scoreNotifier = ValueNotifier(_scores![id] ?? 0);
-    return Row(
-      children: [
-        Stack(
+  Widget _lessonRoadRenderer(ParentContent category, int index) {
+    final paddingBottom = index >= category.children.length - 1 ? 16.d : 0;
+    return Stack(
           alignment: Alignment.center,
           children: [
             SizedBox(
               width: _roadWidth,
-              height: _lessonHeight,
+          height: (index < 0 ? _headerHight : _lessonHeight) + paddingBottom,
             ),
             Positioned(
               top: 0,
@@ -222,11 +224,38 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               width: 4.d,
               child: Widgets.rect(color: TColors.primary20),
             ),
-            Asset.load<SvgPicture>("checkpoint", width: 18.d),
-          ],
+        _groupIndicator(category, index),
+      ],
+    );
+  }
+
+  Widget _groupIndicator(ParentContent category, int index) {
+    if (index < 0) return const SizedBox();
+    final group = category.children[index] as ParentContent;
+    final passed = _scores!.containsKey(group.id);
+    return Asset.load<SvgPicture>(passed ? "point_passed" : "point_empty",
+        width: passed ? 25.d : 20.d);
+  }
+
+  Widget _lessonItemBuilder(ParentContent category, int index) {
+    if (index < 0) {
+      return Expanded(
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(16.d)),
+          child: LoaderWidget(
+            AssetType.image,
+            category.id,
+            height: _headerHight,
+            fit: BoxFit.fill,
         ),
-        Expanded(
+        ),
+      );
+    }
+    final group = category.children[index] as ParentContent;
+    return Expanded(
           child: Widgets.rect(
+        margin: EdgeInsets.only(
+            bottom: index >= category.children.length - 1 ? 16.d : 0),
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               color: TColors.primary20,
