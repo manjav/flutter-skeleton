@@ -52,13 +52,18 @@ class Speaker extends IService {
       return;
     }
 
+    try {
     final url = "${narrator.url}$text${reset ? "&nocache" : ""}";
     await player.play(UrlSource(url), volume: 1);
-    await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 100))
+      await Future.doWhile(() =>
+          Future.delayed(const Duration(milliseconds: 100))
         .then((_) => player.state != PlayerState.completed));
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
-  final _sounds = <String, DeviceFileSource?>{};
+  final _sounds = <String, BytesSource?>{};
   Future<void> loadAllSounds({
     required List<ParentContent> series,
     required Function() onComplete,
@@ -145,9 +150,13 @@ class Speaker extends IService {
       player.stop();
       return;
     }
-
+    try {
     await player.play(_sounds[text]!);
-    await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 100))
+      await Future.doWhile(() =>
+          Future.delayed(const Duration(milliseconds: 100))
         .then((_) => player.state != PlayerState.completed));
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }
