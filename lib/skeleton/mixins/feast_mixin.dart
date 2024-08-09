@@ -25,7 +25,6 @@ mixin FeastMixin<T extends StatefulWidget> on State<T> {
   Widget build(BuildContext context) {
     var items = <Widget>[];
     items.addAll(children);
-    items.add(_progressbarBuilder());
     return Widgets.button(context,
         padding: EdgeInsets.zero,
         alignment: Alignment.center,
@@ -143,28 +142,6 @@ mixin FeastMixin<T extends StatefulWidget> on State<T> {
       state = FeastState.disposed;
     }
   }
-
-  Widget _progressbarBuilder() => ValueListenableBuilder(
-      valueListenable: _progressbarNotifier,
-      builder: (context, value, child) {
-        if (value) {
-          return Container(
-            width: 128.d,
-            height: 128.d,
-            alignment: const Alignment(0, 0.65),
-            child: Asset.load<RiveAnimation>(
-              "progressbar",
-              fit: BoxFit.cover,
-              onRiveInit: (Artboard artboard) {
-                final controller = StateMachineController.fromArtboard(
-                    artboard, "State Machine 1");
-                artboard.addController(controller!);
-              },
-            ),
-          );
-        }
-        return const SizedBox();
-      });
 
   void onScreenTouched() {
     if (state.index <= FeastState.waiting.index) return;
