@@ -36,17 +36,27 @@ class GroupResult extends StatefulWidget {
 
 class _GroupResultState extends State<GroupResult> with FeastMixin {
   StateMachineController? _controller;
-  int score = 0;
+  int _score = 0;
+  int _scoreLevel = 60;
+  final _scoresLevel = [100, 95, 90, 85, 70];
   @override
   void initState() {
     super.initState();
     children = [animationBuilder("result")];
     process(() async {
-      score = (widget.args["score"] / widget.args["quizCount"]).round();
+      int findLevel(int score) {
+        for (var level in _scoresLevel) {
+          if (_score >= level) return level;
+        }
+        return 60;
+      }
+
+      _score = (widget.args["score"] / widget.args["quizCount"]).round();
+      _scoreLevel = findLevel(_score);
       await serviceLocator<AccountProvider>().saveScore(
         widget.args["id"]!,
         {
-          "score": score,
+          "score": _score,
           "quizCount": widget.args["quizCount"],
           "sentenceCount": widget.args["sentenceCount"],
         },
@@ -61,18 +71,12 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
     _controller = super.onRiveInit(artboard, stateMachineName);
     final formatter = NumberFormat("00");
     updateRiveText("message", "done_label".l());
-    updateRiveText("scoreLabel", "score_level_good".l());
-    updateRiveText("scoreValue", formatter.format(score));
+    updateRiveText("scoreLabel", "score_level_$_scoreLevel".l());
+    updateRiveText("scoreValue", formatter.format(_score));
     updateRiveText("sentencesLabel", "sentences_label".l());
     updateRiveText(
         "sentencesValue", formatter.format(widget.args["sentenceCount"]));
     return _controller!;
-  }
-
-  @override
-  void onRiveEvent(RiveEvent event) {
-    super.onRiveEvent(event);
-    if (state == FeastState.closed) {}
   }
 
   @override
