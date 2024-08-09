@@ -16,7 +16,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   int _categoryIndex = 0;
   final double _titleHeight = 40.d;
   final double _categoryHeight = 74.d;
-  final double _lessonHeight = 70.d;
+  final double _groupHeight = 70.d;
   final double _headerHight = 186.d;
   final double _roadWidth = 64.d;
   final TextStyle _unitStyle = TStyles.small.copyWith(
@@ -30,7 +30,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     "vocabulary": TColors.purpule,
   };
 
-  Map<String, Map<String, dynamic>>? _scores;
+  Map<String, Map<String, dynamic>> _scores = {};
   List<ParentContent> _categories = [];
   LoadingController controller = Get.put(LoadingController());
   @override
@@ -50,6 +50,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         }
         _categories = (await account.loadCategories());
         _scores = await account.loadScores();
+        _categoryIndex = _firstIncompleteGroup();
         setState(() {});
       }
     });
@@ -57,6 +58,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   List<Widget> appBarElementsLeft() => [];
+
+  // Find first incomplete group
+  int _firstIncompleteGroup() {
+    for (var category in _categories) {
+      for (var group in category.children) {
+        if (!_scores.containsKey(group.id)) {
+          return category.index;
+        }
+      }
+    }
+    return 0;
+  }
 
   @override
   Widget contentFactory(double paddingTop) {
@@ -88,8 +101,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                           color: TColors.red,
                         ),
                         padding: EdgeInsets.fromLTRB(58.d, 12.d, 66.d, 12.d),
-                        child: Text("نسخه آزمایشی",
-                            style: TStyles.mediumInvert)))),
+                        child: const Text("نسخه آزمایشی")))),
           ],
         ));
   }
@@ -211,8 +223,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                 for (var i = -1; i < length; i++)
                   Row(
                     children: [
-                      _lessonRoadRenderer(category, i),
-                      _lessonItemBuilder(category, i)
+                      _groupRoadRenderer(category, i),
+                      _groupItemBuilder(category, i)
                     ],
                   ),
               ],
@@ -220,14 +232,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  Widget _lessonRoadRenderer(ParentContent category, int index) {
+  Widget _groupRoadRenderer(ParentContent category, int index) {
     final paddingBottom = index >= category.children.length - 1 ? 16.d : 0;
     return Stack(
       alignment: Alignment.center,
       children: [
         SizedBox(
           width: _roadWidth,
-          height: (index < 0 ? _headerHight : _lessonHeight) + paddingBottom,
+          height: (index < 0 ? _headerHight : _groupHeight) + paddingBottom,
         ),
         Positioned(
           top: 0,
@@ -243,12 +255,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Widget _groupIndicator(ParentContent category, int index) {
     if (index < 0) return const SizedBox();
     final group = category.children[index] as ParentContent;
-    final passed = _scores!.containsKey(group.id);
+    final passed = _scores.containsKey(group.id);
     return Asset.load<SvgPicture>(passed ? "point_passed" : "point_empty",
         width: passed ? 25.d : 20.d);
   }
 
-  Widget _lessonItemBuilder(ParentContent category, int index) {
+  Widget _groupItemBuilder(ParentContent category, int index) {
     if (index < 0) {
       return Expanded(
         child: ClipRRect(
@@ -272,7 +284,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           color: TColors.primary20,
           borderRadius: _getRaduis(index, category.children.length),
         ),
-        height: _lessonHeight,
+        height: _groupHeight,
         child: Widgets.button(
           context,
           radius: 12.d,
