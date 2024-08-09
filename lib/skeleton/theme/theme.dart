@@ -12,7 +12,7 @@ class TColors {
   static const primary40 = Color(0xFF7A8FA9);
   static const primary30 = Color(0xFF92A6C0);
   static const primary20 = Color(0xFFADBFD6);
-  static const primary10 = Color(0xFFCFCFCF);
+  static const primary10 = Color(0xFFE1E1E1);
   static const primary0 = Color(0xFFFFF9EF);
   static const error = Color(0xFFFF5D54);
   static const green = Color(0xFF01C593);
@@ -87,16 +87,6 @@ class Themes {
       bodySmall: TStyles.small,
       bodyMedium: TStyles.medium,
       bodyLarge: TStyles.large,
-      //   primaryColor: TColors.primary,
-      //   actionTextStyle: _style(weight: FontWeight.bold, size: 20.d),
-      //   navLargeTitleTextStyle: _style(weight: FontWeight.bold, size: 22.d),
-      //   navTitleTextStyle: _style(size: 16.d, weight: FontWeight.bold),
-      //   navActionTextStyle: _style(weight: FontWeight.bold),
-      //   tabLabelTextStyle: _style(weight: FontWeight.bold, size: 15.d),
-      //   pickerTextStyle: _style(weight: FontWeight.bold, size: 15.d),
-      //   dateTimePickerTextStyle:
-      //       _style(size: 14.d, weight: FontWeight.bold, color: TColors.primary),
-      //   textStyle: TStyles.small,
     );
 
     return ThemeData(
