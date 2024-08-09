@@ -77,7 +77,7 @@ class DeviceInfo extends IService {
           _deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
           id = _deviceData['identifierForVendor'];
           model = _deviceData['name'];
-          osVersion = double.parse(_deviceData['systemVersion']);
+          osVersion = double.parse(_deviceData['systemVersion'] ?? "0");
           baseVersion = _deviceData['utsname.version:'];
         } else if (Platform.isLinux) {
           _deviceData = _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo);
