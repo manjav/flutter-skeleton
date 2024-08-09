@@ -68,17 +68,28 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         child: Stack(
           children: [
             ListView.builder(
-              padding: EdgeInsets.fromLTRB(0, 80.d, 14.d, 80.d),
+              padding: EdgeInsets.fromLTRB(0, 80.d, 14.d, 30.d),
               itemCount: _categories.length,
               itemBuilder: _categoryItemBuilder,
             ),
-            Align(
-                alignment: const Alignment(0, 0.95),
-                child: Widgets.rect(
-                    radius: 12.d,
-                    color: TColors.purpule,
-                    padding: EdgeInsets.all(12.d),
-                    child: const Text("      نسخه آزمایشی      "))),
+            Transform.rotate(
+                alignment: Alignment.topLeft,
+                angle: -0.5,
+                child: Align(
+                    alignment: const Alignment(-1.9, -0.92),
+                    child: Widgets.rect(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              // color: Colors.red,
+                              blurRadius: 8.d,
+                            )
+                          ],
+                          color: TColors.red,
+                        ),
+                        padding: EdgeInsets.fromLTRB(58.d, 12.d, 66.d, 12.d),
+                        child: Text("نسخه آزمایشی",
+                            style: TStyles.mediumInvert)))),
           ],
         ));
   }
@@ -199,31 +210,31 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               children: [
                 for (var i = -1; i < length; i++)
                   Row(
-        children: [
+                    children: [
                       _lessonRoadRenderer(category, i),
                       _lessonItemBuilder(category, i)
                     ],
                   ),
-        ],
-      ),
+              ],
+            ),
     );
   }
 
   Widget _lessonRoadRenderer(ParentContent category, int index) {
     final paddingBottom = index >= category.children.length - 1 ? 16.d : 0;
     return Stack(
-          alignment: Alignment.center,
-          children: [
-            SizedBox(
-              width: _roadWidth,
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: _roadWidth,
           height: (index < 0 ? _headerHight : _lessonHeight) + paddingBottom,
-            ),
-            Positioned(
-              top: 0,
-              bottom: 0,
-              width: 4.d,
-              child: Widgets.rect(color: TColors.primary20),
-            ),
+        ),
+        Positioned(
+          top: 0,
+          bottom: 0,
+          width: 4.d,
+          child: Widgets.rect(color: TColors.primary20),
+        ),
         _groupIndicator(category, index),
       ],
     );
@@ -247,56 +258,56 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             category.id,
             height: _headerHight,
             fit: BoxFit.fill,
-        ),
+          ),
         ),
       );
     }
     final group = category.children[index] as ParentContent;
     return Expanded(
-          child: Widgets.rect(
+      child: Widgets.rect(
         margin: EdgeInsets.only(
             bottom: index >= category.children.length - 1 ? 16.d : 0),
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              color: TColors.primary20,
-              borderRadius: _getRaduis(index, category.children.length),
-            ),
-            height: _lessonHeight,
-            child: Widgets.button(
-              context,
-              radius: 12.d,
-              color: _colors[group.mode],
-              margin: EdgeInsets.all(6.d),
-              padding: EdgeInsets.symmetric(horizontal: 14.d),
-              child: Row(
-                textDirection: Localization.dir,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  LoaderWidget(AssetType.vector, group.mode, width: 20.d),
-                  SizedBox(width: 16.d),
-                  Expanded(
-                    child: DirText(
-                      group.title.simplify(),
-                      style: TStyles.largeInvert,
-                    ),
-                  ),
-                ],
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: TColors.primary20,
+          borderRadius: _getRaduis(index, category.children.length),
+        ),
+        height: _lessonHeight,
+        child: Widgets.button(
+          context,
+          radius: 12.d,
+          color: _colors[group.mode],
+          margin: EdgeInsets.all(6.d),
+          padding: EdgeInsets.symmetric(horizontal: 14.d),
+          child: Row(
+            textDirection: Localization.dir,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LoaderWidget(AssetType.vector, group.mode, width: 20.d),
+              SizedBox(width: 16.d),
+              Expanded(
+                child: DirText(
+                  group.title.simplify(),
+                  style: TStyles.largeInvert,
+                ),
               ),
-              onPressed: () async {
-                if (group.children.isEmpty) {
-                  await serviceLocator<AccountProvider>().loadGroup(group);
-                }
+            ],
+          ),
+          onPressed: () async {
+            if (group.children.isEmpty) {
+              await serviceLocator<AccountProvider>().loadGroup(group);
+            }
 
-                var routName =
-                    group.mode == "lessons" ? Routes.lesson : Routes.series;
-                    await Get.toNamed(routName, arguments: {"content": group});
+            var routName =
+                group.mode == "lessons" ? Routes.lesson : Routes.series;
+            await Get.toNamed(routName, arguments: {"content": group});
             setState(() {});
             // if (s == null || s <= scoreNotifier.value) return;
             // await serviceLocator<AccountProvider>().saveScore(id, s);
             // scoreNotifier.value = s;
-              },
-            ),
-          ),
+          },
+        ),
+      ),
     );
   }
 
