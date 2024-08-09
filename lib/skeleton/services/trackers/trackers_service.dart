@@ -19,7 +19,7 @@ class Trackers extends IService {
   };
 
   final _sdks = <TrackerSDK, AbstractTracker>{
-    // TrackerSDK.firebase: FirebaseTracker(),
+    TrackerSDK.firebase: FirebaseTracker(),
     // TrackerSDK.gameAnalytics: GameAnalyticsTracker(),
     // TrackerSDK.kochava: KochavaaTracker(),
     // TrackerSDK.metrix: MetrixTracker(),

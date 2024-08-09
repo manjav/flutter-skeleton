@@ -18,15 +18,26 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void initState() {
-    var list = Get.arguments["content"].children;
-    controller.series = List.generate(list.length, (i) => list[i]);
-    // controller.series[0].children.removeRange(0, 1);
+    // List list = Get.arguments["content"].children[0].children;
+    // list.removeRange(0, list.length - 4);
+    controller.init(Get.arguments["content"]);
+    controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
-    serviceLocator<Speaker>().loadAllSounds(controller.series, () {
-      controller.changeSerie(1);
-      setState(() {});
-    });
+    serviceLocator<Speaker>().loadAllSounds(
+      series: controller.series,
+      onComplete: () {
+        controller.changeSerie(1);
+        setState(() {});
+      },
+      onError: () async {
+        await Get.toNamed(Routes.popupMessage,
+            arguments: {"title": "Error in loading assets!"});
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      },
+    );
     super.initState();
   }
 
@@ -55,9 +66,9 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     serviceLocator<Sounds>().stopAll();
     var talk = controller.currentContent;
     if (talk.type == ContentType.caption) {
-      subtitle.value = talk;
+      caption.value = talk;
     } else {
-      subtitle.value = null;
+      caption.value = null;
       _animatedListKey.currentState?.insertItem(_animatedItems.length);
       _animatedItems.add(controller.currentContent);
     }
@@ -90,22 +101,22 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       );
     }
     return Stack(
-        alignment: Alignment.center,
-        children: [
-          _subtitleBuilder(),
-          childBuilder(paddingTop),
-          _navigatorBuilder(),
-        ],
+      alignment: Alignment.center,
+      children: [
+        childBuilder(paddingTop),
+        _captionBuilder(),
+        _navigatorBuilder(),
+      ],
     );
   }
 
-  Widget _subtitleBuilder() {
+  Widget _captionBuilder() {
     return FractionallySizedBox(
       widthFactor: 0.9,
       child: Align(
         alignment: const Alignment(0, -0.7),
         child: ValueListenableBuilder(
-          valueListenable: subtitle,
+          valueListenable: caption,
           builder: (context, value, child) {
             if (value == null) return const SizedBox();
             return Widgets.button(
@@ -132,57 +143,44 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       child: ValueListenableBuilder(
         valueListenable: controller.slidePassed,
         builder: (context, value, child) {
-          return Visibility(
-            visible: value,
-            child: SizedBox(
-              width: 270.d,
-              child: Column(
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // progressSliderBuilder(),
+              Row(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // progressSliderBuilder(),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // _navigationButton(
-                      //   name: "footer_prev",
-                      //   isEnable: controller.slideIndex.value > 0 && value,
-                      //   onPress: () => controller.changeSlide(-1),
-                      // ),
-                      // SizedBox(width: 250.d),
-                      _navigationButton(
-                        name: "footer_next",
-                        isEnable: /* controller.slideIndex.value <
-                              controller.currentSerie.children.length && */
-                            true,
-                        onPress: () => controller.changeSlide(1),
-                      ),
-                    ],
+                  _hiddenButton(() => controller.changeSlide(-1)),
+                  Visibility(
+                    visible: value,
+                    child: Widgets.button(
+                      context,
+                      height: 92.d,
+                      padding: EdgeInsets.all(12.d),
+                      child: Asset.load<Image>("footer_next"),
+                      onPressed: () => controller.changeSlide(1),
+                    ),
                   ),
+                  _hiddenButton(() => controller.changeSlide(1)),
                 ],
               ),
-            ),
+            ],
           );
         },
       ),
     );
   }
 
-  Widget _navigationButton({
-    required name,
-    bool isEnable = true,
-    Function()? onPress,
-  }) {
-    return Widgets.button(
-      context,
-      height: 92.d,
-      padding: EdgeInsets.all(12.d),
-      child: Asset.load<Image>(name),
-      onPressed: () {
-        if (isEnable) {
-          onPress?.call();
-        }
-      },
+  Widget _hiddenButton(Function() onLongPress) {
+    return Expanded(
+      child: Widgets.button(
+        context,
+        height: 100.d,
+        padding: EdgeInsets.zero,
+        onLongPress: onLongPress,
+        child: const SizedBox(),
+      ),
     );
   }
 
@@ -192,13 +190,13 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       key: _animatedListKey,
       controller: _chatScrollController,
       padding: EdgeInsets.fromLTRB(
-          padding, paddingTop + padding * 18, padding, 180.d),
+          padding, paddingTop + padding * 20, padding, 180.d),
       itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a),
     );
   }
 
   Widget _animatedItemBuilder(Talk talk, Animation<double> animation) {
-    talk.scrollPosition = _chatScrollController.position.pixels;
+    // talk.scrollPosition = _chatScrollController.position.pixels;
     return ScaleTransition(
       alignment: switch (talk.type) {
         ContentType.user => Alignment.bottomRight,
@@ -274,17 +272,28 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   Future<void> listen(Talk talk, {bool autoStart = true}) async {
-    subtitle.value == null;
+    caption.value == null;
     await super.listen(talk);
   }
 
   @override
-  void onListeningResult(QuizState state, Talk talk, String text) {
+  void onListeningResult(QuizState state, String text, int score, Talk talk) {
     if (state == QuizState.success) {
-      controller.onQuizResult(true, talk.targetValue, text);
-        controller.changeContent(1);
-    } else if (state == QuizState.failure) {
-      controller.onQuizResult(false, talk.targetValue, text);
+      controller.changeContent(1);
+    }
+    controller.onQuizResult(score, text, talk);
+  }
+
+  Future<void> _onSerieComplete(
+      int sentenceCount, int quizCount, int score) async {
+    await Get.toNamed(Routes.popupResult, arguments: {
+      "id": controller.root!.id,
+      "score": score,
+      "quizCount": quizCount,
+      "sentenceCount": sentenceCount
+    });
+    if (mounted) {
+      Navigator.pop(context);
     }
   }
 

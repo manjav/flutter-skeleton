@@ -72,15 +72,11 @@ class ParentContent extends Content {
 }
 
 class Talk extends Content {
-  int serieIndex = 0;
-  int slideIndex = 0;
-  double scrollPosition = 0;
+  int score = 0;
   Set<String> get words => {...targetValue.split(" ")};
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
       : super.create(parent, map["id"], map) {
-    serieIndex = map["serie_index"] ?? 0;
-    slideIndex = map["slide_index"] ?? 0;
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
     targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
     if (map["type"].endsWith("_1")) {

@@ -9,5 +9,6 @@ class Routes {
   static const onboarding = "/onboarding";
 
   static const popupMessage = "/popupMessage";
+  static const popupResult = "/popupResult";
   static const popupMentor = "/popupMentor";
 }

@@ -18,13 +18,26 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void initState() {
-    var list = Get.arguments["content"].children;
-    controller.series = List.generate(list.length, (i) => list[i]);
-    controller.slideIndex.addListener(_onChangeSlide);
-    serviceLocator<Speaker>().loadAllSounds(controller.series, () {
-      controller.changeSerie(1);
-      setState(() {});
-    }, loadCaptions: false);
+    controller.init(Get.arguments["content"]);
+    controller.onComplete = _onSerieComplete;
+    controller.slideIndex.addListener(_onChangeSlide);  
+    serviceLocator<Speaker>().loadAllSounds(
+      series: controller.series,
+      onComplete: () {
+        controller.changeSerie(1);
+        if (mounted) {
+          setState(() {});
+        }
+      },
+      onError: () async {
+        await Get.toNamed(Routes.popupMessage,
+            arguments: {"title": "Error in loading assets!"});
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      },
+      loadCaptions: false,
+    );
     super.initState();
   }
 
@@ -177,7 +190,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                 Asset.load<SvgPicture>("arrow_right", height: 20.d),
               ],
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => controller.changeSerie(1),
           ),
           SizedBox(height: 30.d),
         ],
@@ -205,10 +218,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     if (page < 0 || page > controller.currentSerie.children.length) return;
     await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+    if (page >= controller.currentSerie.children.length) return;
     final slide = controller.currentSerie.children[page] as ParentContent;
     if (controller.contentIndex.value <= -1) return;
-    if (slide.children.first.isQuiz) {
-      listen(slide.children.first as Talk, autoStart: false);
+    final quizes = slide.children.where((c) => (c as Talk).isQuiz).toList();
+    if (quizes.isNotEmpty) {
+      listen(quizes.first as Talk, autoStart: false);
     }
   }
 
@@ -216,24 +231,20 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     return switch (talk.type) {
       ContentType.repeat || ContentType.translate => listenerBuilder(talk),
       ContentType.head => DirText(
-          talk.nativeValue,
+          talk.nativeValue.simplify(),
           style: TStyles.big,
           textAlign: TextAlign.center,
         ),
       _ => DirText(
-          talk.nativeValue,
+          talk.nativeValue.simplify(),
           textAlign: TextAlign.center,
         ),
     };
   }
 
   @override
-  void onListeningResult(QuizState state, Talk talk, String text) {
-    if (state == QuizState.success) {
-      controller.onQuizResult(true, talk.targetValue, text);
-    } else if (state == QuizState.failure) {
-      controller.onQuizResult(false, talk.targetValue, text);
-    }
+  void onListeningResult(QuizState state, String text, int score, Talk talk) {
+    controller.onQuizResult(score, text, talk);
   }
 
   void openSerieSelector() {
@@ -268,6 +279,19 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         );
       },
     );
+  }
+
+  Future<void> _onSerieComplete(
+      int sentenceCount, int quizCount, int score) async {
+    await Get.toNamed(Routes.popupResult, arguments: {
+      "id": controller.root!.id,
+      "score": score,
+      "quizCount": quizCount,
+      "sentenceCount": sentenceCount
+    });
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   @override

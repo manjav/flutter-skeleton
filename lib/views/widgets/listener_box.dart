@@ -94,6 +94,7 @@ class _ListenerBoxState extends State<ListenerBox> {
                   pattern: widget.answer,
                   hintVoice: widget.voice,
                   repeatVoice: widget.repeatVoice,
+                  onResult: listener.onResult,
                 ),
               ),
             ),
@@ -131,7 +132,7 @@ class _ListenerBoxState extends State<ListenerBox> {
         );
       },
       onLongPress: () =>
-          listner.onResult?.call(QuizState.success, listner.pattern),
+          listner.onResult?.call(QuizState.success, listner.pattern, 101),
     );
   }
 

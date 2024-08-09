@@ -4,11 +4,11 @@ import '../../app_export.dart';
 
 class Quiz extends IService {
   bool isEnable = false;
-  Function(QuizState, String)? onResult;
+  Function(QuizState, String, int)? onResult;
   final ValueNotifier<QuizState> state = ValueNotifier(QuizState.none);
 
   void start({
-    Function(QuizState, String)? onResult,
+    Function(QuizState, String, int)? onResult,
   }) {
     isEnable = true;
     state.value = QuizState.waiting;
