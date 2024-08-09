@@ -216,6 +216,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     if (page < 0 || page > controller.currentSerie.children.length) return;
     await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+    if (page >= controller.currentSerie.children.length) return;
     final slide = controller.currentSerie.children[page] as ParentContent;
     if (controller.contentIndex.value <= -1) return;
     final quizes = slide.children.where((c) => (c as Talk).isQuiz).toList();
