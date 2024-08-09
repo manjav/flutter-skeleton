@@ -115,13 +115,10 @@ class Speaker extends IService {
       return;
     }
 
-    final unit8 = bytes.buffer.asUint8List(32, bytes.lengthInBytes - 32);
-    Directory dir = await getApplicationDocumentsDirectory();
-
-    var tmpFile = "${dir.path}/$text.mp3";
-    // ignore: unused_local_variable
-    var writeFile = File(tmpFile).writeAsBytesSync(unit8);
-    _sounds[text] = DeviceFileSource(tmpFile);
+    _sounds[text] = BytesSource(
+      bytes.buffer.asUint8List(32, bytes.lengthInBytes - 32),
+      mimeType: "audio/mpeg",
+    );
 
     if (_sounds.isEmpty) return;
     for (var entry in _sounds.entries) {
