@@ -7,10 +7,10 @@ import '../app_export.dart';
 
 class AccountProvider extends ChangeNotifier {
   late Account account;
-  Map<String, int> scores = {};
   Map<String, Word> words = {};
   List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
+  Map<String, Map<String, dynamic>> scores = {};
 
   void initialize(dynamic account) {
     this.account = account;
@@ -26,7 +26,7 @@ class AccountProvider extends ChangeNotifier {
     var params = {};
     if (displayName != null) params["displayName"] = displayName;
     if (avatarUrl != null) params["avatarUrl"] = avatarUrl;
-    if (nativeLanguage != null) params["nativeLanguage"] = nativeLanguage;
+    if (nativeLanguage != null) params["langTag"] = nativeLanguage;
     if (targetLanguage != null) {
       metadata["targetLanguage"] = targetLanguage;
       params["metadata"] = metadata;
@@ -92,42 +92,47 @@ class AccountProvider extends ChangeNotifier {
     group.children = children;
   }
 
-  Future<Map> loadStats(String type) async {
-    var stats = await serviceLocator<NetConnector>()
-        .rpc("account_stats_get", params: {"type": type});
-    return stats;
+  Future<void> writeStorage({
+    required String collectionId,
+    required String keyId,
+    required Map<String, dynamic> values,
+  }) async {
+    await serviceLocator<NetConnector>().rpc("account_storage_set", params: {
+      "collectionId": collectionId,
+      "keyId": keyId,
+      "values": values,
+    });
   }
 
-  Future<void> saveStat(String type, String key, dynamic value) async {
-    await serviceLocator<NetConnector>().rpc("account_stat_set",
-        params: {"type": type, "key": key, "value": value});
-  }
-
-  Future<Map<String, int>> loadScores() async {
-    var scores = await loadStats("scores_${metadata["targetLanguage"]}");
-    this.scores = Map.castFrom<dynamic, dynamic, String, int>(scores);
-    notifyListeners();
-    return this.scores;
-  }
-
-  Future<Map<String, int>> saveScore(String key, int value) async {
-    saveStat("scores_${metadata["targetLanguage"]}", key, value);
-    scores[key] = value;
+  Future<Map<String, Map<String, dynamic>>> loadScores() async {
+    scores = await serviceLocator<NetConnector>().readStorage(
+      "scores_${account.user.langTag}_${metadata["targetLanguage"]}",
+    );
     notifyListeners();
     return scores;
   }
 
-  Future<Map<String, Word>> loadWords() async {
-    var data = await loadStats("words_${metadata["targetLanguage"]}");
-    words = Word.allFromMap(data);
-    notifyListeners();
-    return words;
-  }
+  Future<Map<String, Map<String, dynamic>>> saveScore(
+    String key,
+    Map<String, dynamic> values,
+  ) async {
+    /// Send to Server
+    writeStorage(
+      collectionId:
+          "scores_${account.user.langTag}_${metadata["targetLanguage"]}",
+      keyId: key,
+      values: values,
+    );
 
-  Future<Map<String, Word>> saveWord(Word word) async {
-    saveStat("words_${metadata["targetLanguage"]}", word.id, word);
-    words[word.id] = word;
+    /// Local Update
+    if (!scores.containsKey(key)) {
+      scores[key] = {};
+    }
+    for (var entry in values.entries) {
+      scores[key]![entry.key] = entry.value;
+    }
     notifyListeners();
-    return words;
+
+    return scores;
   }
 }

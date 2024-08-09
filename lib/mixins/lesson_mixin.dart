@@ -6,7 +6,7 @@ import '../app_export.dart';
 mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   final GlobalKey footerKey = GlobalKey();
   final LessonController controller = LessonController();
-  final ValueNotifier<Talk?> subtitle = ValueNotifier(null);
+  final ValueNotifier<Talk?> caption = ValueNotifier(null);
   double padding = 8.d;
 
   @override

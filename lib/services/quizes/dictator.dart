@@ -64,7 +64,7 @@ class DictatorQuiz extends Quiz {
   Future<void> checkAnswers() async {
     if (answers.value.length == _pattern.length) {
       state.value = _chechAnswers() ? QuizState.success : QuizState.failure;
-      onResult?.call(state.value, "");
+      onResult?.call(state.value, "", 0);
     }
   }
 

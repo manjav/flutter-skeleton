@@ -23,6 +23,7 @@ class TColors {
   static const clay = Color(0xFFD29774);
   static const cyan = Color(0xFF3FC1B9);
   static const gray = Color(0xFFA4A4A4);
+  static const yellow = Color(0xFFFFB72C);
   static const orange = Color(0xFFFF7F48);
   static const purpule = Color(0xFFDA48FF);
   static const teal = Color(0xFF59AFC2);

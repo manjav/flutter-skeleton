@@ -22,8 +22,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       color: TColors.primary40, fontWeight: FontWeight.w100, height: 0.9);
   final TextStyle _numberStyle = TStyles.big.copyWith(
       color: TColors.primary40, fontWeight: FontWeight.w600, height: 0.9);
+  final _colors = {
+    "lessons": TColors.blue,
+    "practice": TColors.orange,
+    "grammar": TColors.cyan,
+    "vocabulary": TColors.purpule,
+  };
 
-  Map<String, int>? _scores;
+  Map<String, Map<String, dynamic>>? _scores;
   List<ParentContent> _categories = [];
   LoadingController controller = Get.put(LoadingController());
   @override
@@ -57,13 +63,23 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       return const SizedBox();
     }
     return PopScope(
-      canPop: false,
-      child: ListView.builder(
-        padding: EdgeInsets.fromLTRB(0, 80.d, 14.d, 20.d),
-        itemCount: _categories.length,
-        itemBuilder: _categoryItemBuilder,
-      ),
-    );
+        canPop: false,
+        child: Stack(
+          children: [
+            ListView.builder(
+              padding: EdgeInsets.fromLTRB(0, 80.d, 14.d, 80.d),
+              itemCount: _categories.length,
+              itemBuilder: _categoryItemBuilder,
+            ),
+            Align(
+                alignment: const Alignment(0, 0.95),
+                child: Widgets.rect(
+                    radius: 12.d,
+                    color: TColors.purpule,
+                    padding: EdgeInsets.all(12.d),
+                    child: const Text("      نسخه آزمایشی      "))),
+          ],
+        ));
   }
 
   Widget _categoryItemBuilder(BuildContext context, int index) {
@@ -197,18 +213,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               radius: 12.d,
               margin: EdgeInsets.symmetric(horizontal: 12.d, vertical: 4.d),
               padding: EdgeInsets.all(14.d),
-              color: TColors.primary0,
+              color: _colors[group.mode],
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     child: DirText(
                       group.title.simplify(),
-                      textAlign: TextAlign.center,
-                      style: TStyles.large,
+                      // textAlign: TextAlign.center,
+                      style: TStyles.largeInvert,
                     ),
                   ),
-                  Asset.load<SvgPicture>(group.mode, width: 20.d),
+                  SizedBox(width: 16.d),
+                  LoaderWidget(AssetType.vector, group.mode, width: 20.d),
                   // ValueListenableBuilder(
                   //   valueListenable: scoreNotifier,
                   //   builder: (context, value, child) =>

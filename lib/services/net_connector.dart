@@ -74,10 +74,10 @@ class NetConnector extends IService {
         serverKey: "defaultkey",
         ssl: false);
 
-    var timezone = DateTime.now().timeZoneOffset.inSeconds;
-    var location = await FlutterTimezone.getLocalTimezone();
-    var store = "GooglePlay";
-    var data = {
+    final timezone = DateTime.now().timeZoneOffset.inSeconds;
+    final location = await FlutterTimezone.getLocalTimezone();
+    const store = "GooglePlay";
+    final data = {
       "store": store,
       "location": location,
       "timezone": "$timezone",
@@ -121,8 +121,10 @@ class NetConnector extends IService {
     final now = DateTime.now();
     if (_rpcTimes.containsKey(id) &&
         now.difference(_rpcTimes[id]!).inMilliseconds < 500) {
-      throw SkeletonException(
-          StatusCode.ALREADY_EXISTS.value, "Frequent RPC $id");
+      log("Frequent RPC $id");
+      if (T is List) return [] as T;
+      if (T is Map) return {} as T;
+      return null as T;
     }
     _rpcTimes[id] = now;
     params ??= {};
@@ -184,6 +186,22 @@ class NetConnector extends IService {
     return error.contains("No host specified in URI") ||
         error.contains("Connection refused") ||
         error.contains("Failed host lookup");
+  }
+
+  Future<Map<String, Map<String, dynamic>>> readStorage(
+    String collectionId, {
+    int limit = 100,
+  }) async {
+    final objects = await _nakamaClient!.listStorageObjects(
+      limit: limit,
+      session: _session!,
+      collection: collectionId,
+    );
+    var data = <String, Map<String, dynamic>>{};
+    for (var object in objects.objects) {
+      data[object.key] = jsonDecode(object.value);
+    }
+    return data;
   }
 
   /* 
