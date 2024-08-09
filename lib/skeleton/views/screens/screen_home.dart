@@ -102,6 +102,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget _categoryTitleBuilder(ParentContent category) {
+    final thickness = category.index == _categoryIndex ? 1.8.d : 0.0;
     return SizedBox(
       height: _categoryHeight,
       child: Row(
@@ -135,22 +136,46 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             child: Widgets.button(
               context,
               margin: EdgeInsets.all(2.d),
-              padding: EdgeInsets.all(20.d),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                    top: thickness,
+                    bottom: thickness,
+                    width: 128.d,
+                    right: Localization.isRTL ? thickness : null,
+                    left: !Localization.isRTL ? thickness : null,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(16.d)),
+                      child: LoaderWidget(
+                        AssetType.image,
+                        category.id,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  Widgets.rect(
               decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 color: TColors.primary0,
+                      gradient: LinearGradient(
+                          colors: [
+                            TColors.primary0,
+                            TColors.primary0,
+                            TColors.primary0.withOpacity(0.6),
+                          ],
+                          begin: const FractionalOffset(0.0, 0.0),
+                          end: const FractionalOffset(0.8, 0.0),
+                          stops: const [0.0, 0.75, 1.0],
+                          tileMode: TileMode.clamp),
                 border: category.index == _categoryIndex
-                    ? Border.all(color: TColors.primary20, width: 1.5.d)
+                          ? Border.all(
+                              color: TColors.primary20, width: thickness)
                     : null,
                 borderRadius: BorderRadius.all(Radius.circular(16.d)),
               ),
-              child: Row(
-                textDirection: Localization.dir,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Asset.load<Image>("tick", width: 32.d),
+                  ),
                   DirText(category.title),
-                  SizedBox(width: 32.d),
                 ],
               ),
               onPressed: () => setState(() => _categoryIndex = category.index),
@@ -169,7 +194,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       height: length * _lessonHeight,
-      // padding: EdgeInsets.fromLTRB(0, 4.d, 8.d, 4.d),
+      // padding: EdgeInsets.all(4.d),
       child: Column(
         children: [
           for (var i = 0; i < length; i++) _lessonItemBuilder(category, i)
