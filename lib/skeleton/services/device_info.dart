@@ -18,7 +18,7 @@ class DeviceInfo extends IService {
   static String id = "";
   static String adId = "";
   static String model = "";
-  static double osVersion = 0;
+  static String osVersion = "";
   static String baseVersion = "";
   static String packageName = "";
   static String buildNumber = "";
@@ -68,16 +68,13 @@ class DeviceInfo extends IService {
               _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
           id = _deviceData["fingerprint"];
           model = _deviceData["model"];
-          var releaseVersion = _deviceData["version.release"].toString();
-          var parts = releaseVersion.split(".");
-          osVersion =
-              double.parse(parts[0] + (parts.length > 1 ? ".${parts[0]}" : ""));
+          osVersion = _deviceData["version.release"] ?? "";
           baseVersion = _deviceData["version.sdkInt"].toString();
         } else if (Platform.isIOS) {
           _deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
           id = _deviceData["identifierForVendor"];
           model = _deviceData["name"];
-          osVersion = double.parse(_deviceData["systemVersion"] ?? "0");
+          osVersion = _deviceData["systemVersion"] ?? "";
           baseVersion = _deviceData["utsname.version:"];
         } else if (Platform.isLinux) {
           _deviceData = _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo);
