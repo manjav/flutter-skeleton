@@ -20,7 +20,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   void initState() {
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
-    controller.slideIndex.addListener(_onChangeSlide);  
     serviceLocator<Speaker>().loadAllSounds(
       series: controller.series,
       onComplete: () {
@@ -54,16 +53,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       );
     }
     return super.contentFactory(paddingTop);
-  }
-
-  Future<void> _onChangeSlide() async {
-    if (controller.slideIndex.value <= -1) return;
-    await Future.delayed(const Duration(milliseconds: 500));
-    for (var content in controller.currentSlide.children) {
-      if (content.isQuiz) {
-        listen(content as Talk);
-      }
-    }
   }
 
   @override
@@ -179,8 +168,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
           Text("slide_finish".l([]), style: TStyles.huge),
           SizedBox(height: 12.d),
           SkinnedButton(
-            color: TColors.blue,
             height: 60.d,
+            color: TColors.blue,
             width: DeviceInfo.size.width * 0.7,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -214,11 +203,18 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   Future<void> _scrollTo(int page) async {
-    if (_slidesScrollController!.positions.isEmpty) return;
+    if (_slidesScrollController!.positions.isEmpty) {
+      _executePage(page);
+      return;
+    }
     if (page < 0 || page > controller.currentSerie.children.length) return;
     await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
     if (page >= controller.currentSerie.children.length) return;
+    _executePage(page);
+  }
+
+  void _executePage(int page) {
     final slide = controller.currentSerie.children[page] as ParentContent;
     if (controller.contentIndex.value <= -1) return;
     final quizes = slide.children.where((c) => (c as Talk).isQuiz).toList();
@@ -297,7 +293,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   @override
   void dispose() {
     serviceLocator<Sounds>().stopAll();
-    controller.slideIndex.removeListener(_onChangeSlide);
     super.dispose();
   }
 }
