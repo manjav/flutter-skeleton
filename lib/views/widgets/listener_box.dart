@@ -125,6 +125,9 @@ class _ListenerBoxState extends State<ListenerBox> {
         },
       ),
       onTap: () {
+        if (listner.state.value != QuizState.ready) {
+          return;
+        }
         listner.toggle(
           pattern: widget.answer,
           hintVoice: widget.voice,
