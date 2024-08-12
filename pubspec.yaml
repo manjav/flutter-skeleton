@@ -7,7 +7,7 @@ publish_to: 'none'
 version: 1.1.31+100131
 
 environment:
-  sdk: '>=3.1.2 <4.0.0'
+  sdk: ">=3.2.3 <4.0.0"
 
 dependencies:
   flutter:
@@ -21,7 +21,7 @@ dependencies:
   firebase_analytics: ^11.2.1
   firebase_core: ^3.3.0
   firebase_crashlytics: ^4.0.4
-  # firebase_messaging: ^14.7.3
+  # firebase_messaging: ^15.0.4
   # flutter_local_notifications: ^16.1.0
   flutter_smartlook: ^4.1.23
   flutter_svg: ^2.0.9
@@ -33,7 +33,7 @@ dependencies:
   get_it: ^7.6.7
   # google_mobile_ads: ^3.1.0
   http: ^1.2.2
-  in_app_purchase: ^3.1.8
+  in_app_purchase: ^3.2.0
   intl: ^0.19.0
   # kochava_tracker: ^2.4.0
   # metrix_plugin: ^1.5.0
