@@ -13,8 +13,9 @@ class SeriesScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<SeriesScreen>
     with LessonMixin, ListeningMixin {
-  final _slideHeight = DeviceInfo.size.height * 0.8;
   PageController? _slidesScrollController;
+  final _slideHeight = DeviceInfo.size.height * 0.8;
+  final ValueNotifier<int> _enableUntil = ValueNotifier(0);
 
   @override
   void initState() {
@@ -97,6 +98,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
           valueListenable: controller.slideIndex,
           builder: (context, value, child) {
             _scrollTo(0);
+            _enableUntil.value = 0;
             return PageView.builder(
                 padEnds: false,
                 scrollDirection: Axis.vertical,
@@ -120,28 +122,32 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       items.add(_contentItem(slide.children[c] as Talk));
       items.add(SizedBox(height: 12.d));
     }
-    return Widgets.touchable(
-      context,
-      child: Widgets.rect(
-        radius: 24.d,
-        height: _slideHeight,
-        color: TColors.primary0,
-        width: DeviceInfo.size.width,
-        margin: EdgeInsets.symmetric(vertical: 35.d),
-        padding: EdgeInsets.symmetric(horizontal: 20.d),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, children: items),
-      ),
-      onTap: () => _scrollTo(index),
-      onVerticalDragEnd: (DragEndDetails details) {
-        final velocity = (details.primaryVelocity ?? 0);
-        final absoluteVelocity = velocity.abs();
-        if (absoluteVelocity > 500) {
-          final page = ((_slidesScrollController!.page ?? 0) +
-                  (velocity / absoluteVelocity) * -1)
-              .round();
-          _scrollTo(page);
-        }
+    return ValueListenableBuilder<int>(
+      valueListenable: _enableUntil,
+      builder: (context, value, child) {
+        return Widgets.touchable(
+          context,
+          child: Widgets.rect(
+            radius: 24.d,
+            height: _slideHeight,
+            color: index <= value ? TColors.primary0 : TColors.primary10,
+            margin: EdgeInsets.symmetric(vertical: 35.d),
+            padding: EdgeInsets.symmetric(horizontal: 20.d),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center, children: items),
+          ),
+          onTap: () => _scrollTo(index),
+          onVerticalDragEnd: (DragEndDetails details) {
+            final velocity = (details.primaryVelocity ?? 0);
+            final absoluteVelocity = velocity.abs();
+            if (absoluteVelocity > 500) {
+              final page = ((_slidesScrollController!.page ?? 0) +
+                      (velocity / absoluteVelocity) * -1)
+                  .round();
+              _scrollTo(page);
+            }
+          },
+        );
       },
     );
   }
@@ -208,6 +214,10 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       return;
     }
     if (page < 0 || page > controller.currentSerie.children.length) return;
+    if (page > _enableUntil.value) {
+      log("log");
+      return;
+    }
     await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
     if (page >= controller.currentSerie.children.length) return;
@@ -218,7 +228,9 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     final slide = controller.currentSerie.children[page] as ParentContent;
     if (controller.contentIndex.value <= -1) return;
     final quizes = slide.children.where((c) => (c as Talk).isQuiz).toList();
-    if (quizes.isNotEmpty) {
+    if (quizes.isEmpty) {
+      _enableUntil.value = page + 1;
+    } else {
       listen(quizes.first as Talk, autoStart: false);
     }
   }
@@ -241,6 +253,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   @override
   void onListeningResult(QuizState state, String text, int score, Talk talk) {
     controller.onQuizResult(score, text, talk);
+    _enableUntil.value = _slidesScrollController!.page!.toInt() + 1;
   }
 
   void openSerieSelector() {
