@@ -107,7 +107,7 @@ class _ListenerBoxState extends State<ListenerBox> {
     );
   }
 
-  Widget _micButtonBuilder(BuildContext context, ListenerQuiz listner) {
+  Widget _micButtonBuilder(BuildContext context, ListenerQuiz listener) {
     var size = 120.d;
     return Widgets.touchable(
       context,
@@ -125,17 +125,18 @@ class _ListenerBoxState extends State<ListenerBox> {
         },
       ),
       onTap: () {
-        if (listner.state.value != QuizState.ready) {
+        if (listener.state.value != QuizState.ready) {
           return;
         }
-        listner.toggle(
+        listener.listen(
           pattern: widget.answer,
           hintVoice: widget.voice,
           repeatVoice: widget.repeatVoice,
+          onResult: listener.onResult,
         );
       },
       onLongPress: () =>
-          listner.onResult?.call(QuizState.success, listner.pattern, 101),
+          listener.onResult?.call(QuizState.success, listener.pattern, 101),
     );
   }
 
