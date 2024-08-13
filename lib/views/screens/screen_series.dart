@@ -95,10 +95,10 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
             bottomLeft: bottomRadius,
             bottomRight: bottomRadius),
         child: ValueListenableBuilder(
-          valueListenable: controller.slideIndex,
+          valueListenable: controller.serieIndex,
           builder: (context, value, child) {
-            _scrollTo(0);
             _enableUntil.value = 0;
+            _scrollTo(0);
             return PageView.builder(
                 padEnds: false,
                 scrollDirection: Axis.vertical,
@@ -233,6 +233,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     } else {
       listen(quizes.first as Talk, autoStart: false);
     }
+    controller.changeSlide(page - controller.slideIndex.value);
   }
 
   Widget _contentItem(Talk talk) {
