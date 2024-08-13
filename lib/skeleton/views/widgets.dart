@@ -28,9 +28,7 @@ class Widgets {
           : null,
       onTapDown: _isActive(id)
           ? (details) {
-              if (sfx == null) {
-                serviceLocator<Sounds>().play("mouse_down");
-              }
+              serviceLocator<Sounds>().play(sfx ?? "mouse_down");
               onTapDown?.call(details);
             }
           : null,
