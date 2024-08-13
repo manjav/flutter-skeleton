@@ -199,7 +199,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(16.d)),
                     ),
                   ),
-                  DirText(category.title),
+                  Positioned(
+                    right: Localization.isRTL ? 56.d : 12.d,
+                    left: !Localization.isRTL ? 56.d : 12.d,
+                    child: DirText(category.title),
+                  ),
                 ],
               ),
               onPressed: () => setState(() => _categoryIndex = category.index),
@@ -257,7 +261,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     final group = category.children[index] as ParentContent;
     final passed = _scores.containsKey(group.id);
     return Asset.load<SvgPicture>(passed ? "point_passed" : "point_empty",
-        width: passed ? 25.d : 20.d);
+        width: passed ? 34.d : 20.d);
   }
 
   Widget _groupItemBuilder(ParentContent category, int index) {
@@ -275,13 +279,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       );
     }
     final group = category.children[index] as ParentContent;
+    final text = group.title.simplify();
     return Expanded(
       child: Widgets.rect(
         margin: EdgeInsets.only(
             bottom: index >= category.children.length - 1 ? 16.d : 0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          color: TColors.primary20,
+          color: TColors.primary0,
           borderRadius: _getRaduis(index, category.children.length),
         ),
         height: _groupHeight,
@@ -292,16 +297,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           margin: EdgeInsets.all(6.d),
           padding: EdgeInsets.symmetric(horizontal: 14.d),
           child: Row(
-            textDirection: Localization.dir,
+            textDirection: text.getDirection(),
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              LoaderWidget(AssetType.vector, group.mode, width: 20.d),
+              LoaderWidget(AssetType.vector, group.mode, width: 30.d),
               SizedBox(width: 16.d),
               Expanded(
-                child: DirText(
-                  group.title.simplify(),
-                  style: TStyles.largeInvert,
-                ),
+                child: DirText(text, style: TStyles.largeInvert),
               ),
             ],
           ),
