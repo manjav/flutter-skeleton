@@ -60,9 +60,11 @@ class LessonController {
       changeSerie(1);
       return;
     }
-    slideIndex.value += stepLength;
-    contentIndex.value = -1;
-    changeContent(1);
+    if (stepLength != 0) {
+      slideIndex.value += stepLength;
+      contentIndex.value = -1;
+      changeContent(1);
+    }
     slidePassed.value = false;
   }
 
