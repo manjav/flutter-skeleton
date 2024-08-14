@@ -129,7 +129,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center, children: items),
           ),
-          onTap: () => _scrollTo(index),
+          onTap: () {
+            if (index != controller.slideIndex.value) {
+              _scrollTo(index);
+            }
+          },
           onVerticalDragEnd: (DragEndDetails details) {
             final velocity = (details.primaryVelocity ?? 0);
             final absoluteVelocity = velocity.abs();
@@ -146,57 +150,40 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   List<Widget> _nextSerieButton() {
-    if (controller.currentSerie == controller.series.last) {
-      return [
-        Widgets.rect(
-          radius: 12.d,
-          color: TColors.orange,
-          padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
-          transform: Transform.rotate(angle: -0.08).transform,
-          child: Text(
-            "serie_from_to".l([
-              (controller.serieIndex.value + 1).convert(),
-              controller.series.length.convert()
-            ]),
-            style: TStyles.largeInvert,
-          ),
-        ),
-        SizedBox(height: 12.d),
-        Text("slide_finish".l([]), style: TStyles.huge),
-        SizedBox(height: 12.d),
-        SkinnedButton(
-          height: 60.d,
-          color: TColors.blue,
-          width: DeviceInfo.size.width * 0.7,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("next_serie".l(), style: TStyles.largeInvert),
-              SizedBox(width: 16.d),
-              Asset.load<SvgPicture>("arrow_right", height: 20.d),
-            ],
-          ),
-          onPressed: () => controller.changeSerie(1),
-        ),
-        SizedBox(height: 30.d),
-      ];
-    }
+    final isLastSerie = controller.currentSerie == controller.series.last;
     return [
+      Widgets.rect(
+        radius: 12.d,
+        color: TColors.orange,
+        padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
+        transform: Transform.rotate(angle: -0.08).transform,
+        child: Text(
+          "serie_from_to".l([
+            (controller.serieIndex.value + 1).convert(),
+            controller.series.length.convert()
+          ]),
+          style: TStyles.largeInvert,
+        ),
+      ),
+      SizedBox(height: isLastSerie ? 12.d : 0),
+      isLastSerie
+          ? Text("slide_finish".l([]), style: TStyles.huge)
+          : const SizedBox(),
+      SizedBox(height: 12.d),
       SkinnedButton(
         height: 60.d,
         color: TColors.blue,
         width: DeviceInfo.size.width * 0.7,
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          textDirection: Localization.dir,
           children: [
-            Asset.load<SvgPicture>("wand"),
-            SizedBox(width: 12.d),
-            DirText("next_slide".l(), style: TStyles.mediumInvert),
+            Text("next_serie".l(), style: TStyles.largeInvert),
+            SizedBox(width: 16.d),
+            Asset.load<SvgPicture>("arrow_right", height: 20.d),
           ],
         ),
         onPressed: () => controller.changeSerie(1),
-      )
+      ),
     ];
   }
 
@@ -205,7 +192,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       _executePage(page);
       return;
     }
-    if (page == controller.slideIndex.value) return;
     if (page < 0 || page > controller.currentSerie.children.length) return;
     if (page > _enableUntil.value) {
       log("log");
