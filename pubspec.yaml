@@ -4,7 +4,7 @@ description: A new Flutter project.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.1.32+100132
+version: 1.1.33+100133
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
