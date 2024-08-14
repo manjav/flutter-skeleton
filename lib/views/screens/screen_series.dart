@@ -205,6 +205,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       _executePage(page);
       return;
     }
+    if (page == controller.slideIndex.value) return;
     if (page < 0 || page > controller.currentSerie.children.length) return;
     if (page > _enableUntil.value) {
       log("log");
