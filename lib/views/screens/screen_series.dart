@@ -19,8 +19,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void initState() {
-    List list = Get.arguments["content"].children.last.children;
-    list.removeRange(3, list.length);
+    // List list = Get.arguments["content"].children.last.children;
+    // list.removeRange(3, list.length);
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
     serviceLocator<Speaker>().loadAllSounds(
@@ -88,8 +88,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                   alignment: Alignment.center,
                   children: [CircularProgressIndicator(color: TColors.cyan)]);
             }
-            // _enableUntil.value = 0;
-            // _scrollTo(0);
+            _enableUntil.value = 0;
+            _scrollTo(0);
             return PageView.builder(
                 padEnds: false,
                 scrollDirection: Axis.vertical,
