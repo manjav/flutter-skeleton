@@ -19,6 +19,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void initState() {
+    List list = Get.arguments["content"].children.last.children;
+    list.removeRange(3, list.length);
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
     serviceLocator<Speaker>().loadAllSounds(
@@ -86,8 +88,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                   alignment: Alignment.center,
                   children: [CircularProgressIndicator(color: TColors.cyan)]);
             }
-            _enableUntil.value = 0;
-            _scrollTo(0);
+            // _enableUntil.value = 0;
+            // _scrollTo(0);
             return PageView.builder(
                 padEnds: false,
                 scrollDirection: Axis.vertical,
@@ -102,23 +104,25 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   Widget _slideItemBiulder(BuildContext context, int index) {
-    if (index >= controller.currentSerie.children.length) {
-      return _nextSerieButton();
-    }
-    final slide = controller.currentSerie.children[index] as ParentContent;
-    var items = <Widget>[];
-    for (var c = 0; c < slide.children.length; c++) {
-      items.add(_contentItem(slide.children[c] as Talk));
-      items.add(SizedBox(height: 12.d));
-    }
     return ValueListenableBuilder<int>(
       valueListenable: _enableUntil,
       builder: (context, value, child) {
+        var items = <Widget>[];
+        final isSlide = index < controller.currentSerie.children.length;
+        if (!isSlide) {
+          items = _nextSerieButton();
+        } else {
+          final slide =
+              controller.currentSerie.children[index] as ParentContent;
+          for (var c = 0; c < slide.children.length; c++) {
+            items.add(_contentItem(slide.children[c] as Talk));
+            items.add(SizedBox(height: 12.d));
+          }
+        }
         return Widgets.touchable(
           context,
           child: Widgets.rect(
             radius: 24.d,
-            height: _slideHeight,
             color: index <= value ? TColors.primary0 : TColors.primary10,
             margin: EdgeInsets.symmetric(vertical: 35.d),
             padding: EdgeInsets.symmetric(horizontal: 20.d),
@@ -141,60 +145,59 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     );
   }
 
-  Widget _nextSerieButton() {
+  List<Widget> _nextSerieButton() {
     if (controller.currentSerie == controller.series.last) {
-      return Column(
-        children: [
-          SizedBox(height: 30.d),
-          Widgets.rect(
-            radius: 12.d,
-            color: TColors.orange,
-            padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
-            transform: Transform.rotate(angle: -0.08).transform,
-            child: Text(
-              "serie_from_to".l([
-                (controller.serieIndex.value + 1).convert(),
-                controller.series.length.convert()
-              ]),
-              style: TStyles.largeInvert,
-            ),
+      return [
+        Widgets.rect(
+          radius: 12.d,
+          color: TColors.orange,
+          padding: EdgeInsets.symmetric(vertical: 10.d, horizontal: 30.d),
+          transform: Transform.rotate(angle: -0.08).transform,
+          child: Text(
+            "serie_from_to".l([
+              (controller.serieIndex.value + 1).convert(),
+              controller.series.length.convert()
+            ]),
+            style: TStyles.largeInvert,
           ),
-          SizedBox(height: 12.d),
-          Text("slide_finish".l([]), style: TStyles.huge),
-          SizedBox(height: 12.d),
-          SkinnedButton(
-            height: 60.d,
-            color: TColors.blue,
-            width: DeviceInfo.size.width * 0.7,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("next_serie".l(), style: TStyles.largeInvert),
-                SizedBox(width: 16.d),
-                Asset.load<SvgPicture>("arrow_right", height: 20.d),
-              ],
-            ),
-            onPressed: () => controller.changeSerie(1),
+        ),
+        SizedBox(height: 12.d),
+        Text("slide_finish".l([]), style: TStyles.huge),
+        SizedBox(height: 12.d),
+        SkinnedButton(
+          height: 60.d,
+          color: TColors.blue,
+          width: DeviceInfo.size.width * 0.7,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("next_serie".l(), style: TStyles.largeInvert),
+              SizedBox(width: 16.d),
+              Asset.load<SvgPicture>("arrow_right", height: 20.d),
+            ],
           ),
-          SizedBox(height: 30.d),
-        ],
-      );
+          onPressed: () => controller.changeSerie(1),
+        ),
+        SizedBox(height: 30.d),
+      ];
     }
-    return Widgets.button(
-      context,
-      height: 100.d,
-      alignment: const Alignment(0, -0.5),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Asset.load<SvgPicture>("wand"),
-          SizedBox(width: 12.d),
-          Text("next_slide".l(),
-              style: TStyles.medium.copyWith(color: TColors.primary40)),
-        ],
-      ),
-      onPressed: () => controller.changeSerie(1),
-    );
+    return [
+      SkinnedButton(
+        height: 60.d,
+        color: TColors.blue,
+        width: DeviceInfo.size.width * 0.7,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          textDirection: Localization.dir,
+          children: [
+            Asset.load<SvgPicture>("wand"),
+            SizedBox(width: 12.d),
+            DirText("next_slide".l(), style: TStyles.mediumInvert),
+          ],
+        ),
+        onPressed: () => controller.changeSerie(1),
+      )
+    ];
   }
 
   Future<void> _scrollTo(int page) async {
