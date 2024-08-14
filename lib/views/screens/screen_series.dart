@@ -25,16 +25,15 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       series: controller.series,
       onComplete: () {
         controller.changeSerie(1);
-        if (mounted) {
-          setState(() {});
-        }
       },
       onError: () async {
-        await Get.toNamed(Routes.popupMessage,
-            arguments: {"title": "Error in loading assets!"});
         if (mounted) {
           Navigator.pop(context);
         }
+        await Get.toNamed(Routes.popupMessage, arguments: {
+          "title": "Error in loading assets!",
+          "message": "Plases try again."
+        });
       },
       loadCaptions: false,
     );
