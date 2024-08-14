@@ -148,7 +148,6 @@ class Speaker extends IService {
     var player = serviceLocator<Sounds>().getPlayer(text);
     if (player.state == PlayerState.playing) {
       player.stop();
-      return;
     }
 
     try {

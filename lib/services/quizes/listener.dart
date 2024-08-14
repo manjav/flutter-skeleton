@@ -217,6 +217,7 @@ class ListenerQuiz extends Quiz {
     _isRepeatPlayed = false;
     stop();
     if (repeatVoice.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 300));
       await serviceLocator<Speaker>().playLocal(repeatVoice);
     } else {
       await Future.delayed(const Duration(seconds: 1));
