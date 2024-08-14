@@ -195,25 +195,25 @@ class ListenerQuiz extends Quiz {
       logs = "=> $insert ratio: $_matchLevel/$minMatchLevel";
       if (_matchLevel > minMatchLevel) {
         state.value = QuizState.success;
-        dispatchresult();
+        dispatchResult();
         return;
       }
     }
 
     if (result.recognizedWords.length > pattern.length * 2) {
       state.value = QuizState.failure;
-      dispatchresult();
+      dispatchResult();
       return;
     }
 
     if (result.finalResult) {
       state.value =
           recognizedWords.value.isEmpty ? QuizState.ready : QuizState.failure;
-      dispatchresult();
+      dispatchResult();
     }
   }
 
-  void dispatchresult() async {
+  void dispatchResult() async {
     _isRepeatPlayed = false;
     stop();
     if (repeatVoice.isNotEmpty) {

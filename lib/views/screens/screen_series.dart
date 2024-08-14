@@ -42,21 +42,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   @override
-  Widget contentFactory(double paddingTop) {
-    if (controller.serieIndex.value < 0) {
-      return const Stack(
-        alignment: Alignment.center,
-        children: [
-          CircularProgressIndicator(
-            color: TColors.cyan,
-          ),
-        ],
-      );
-    }
-    return super.contentFactory(paddingTop);
-  }
-
-  @override
   Widget leftSideAppBar() {
     return ValueListenableBuilder(
       valueListenable: controller.contentIndex,
@@ -97,6 +82,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         child: ValueListenableBuilder(
           valueListenable: controller.serieIndex,
           builder: (context, value, child) {
+            if (controller.serieIndex.value < 0) {
+              return const Stack(
+                  alignment: Alignment.center,
+                  children: [CircularProgressIndicator(color: TColors.cyan)]);
+            }
             _enableUntil.value = 0;
             _scrollTo(0);
             return PageView.builder(

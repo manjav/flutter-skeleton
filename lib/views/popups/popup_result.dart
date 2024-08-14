@@ -39,6 +39,7 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
   int _score = 0;
   int _scoreLevel = 60;
   final _scoresLevel = [100, 95, 90, 85, 70];
+
   @override
   void initState() {
     super.initState();

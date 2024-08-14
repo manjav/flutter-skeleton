@@ -92,12 +92,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     alignment: const Alignment(-1.9, -0.92),
                     child: Widgets.rect(
                         decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              // color: Colors.red,
-                              blurRadius: 8.d,
-                            )
-                          ],
+                          boxShadow: [BoxShadow(blurRadius: 8.d)],
                           color: TColors.red,
                         ),
                         padding: EdgeInsets.fromLTRB(58.d, 12.d, 66.d, 12.d),
