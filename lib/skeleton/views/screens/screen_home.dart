@@ -95,7 +95,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                           boxShadow: [BoxShadow(blurRadius: 8.d)],
                           color: TColors.red,
                         ),
-                        padding: EdgeInsets.fromLTRB(58.d, 12.d, 66.d, 12.d),
+                        padding: EdgeInsets.fromLTRB(70.d, 12.d, 66.d, 12.d),
                         child: const Text("نسخه آزمایشی")))),
           ],
         ));
@@ -131,8 +131,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             alignment: Alignment.center,
             children: [
               Positioned(
-                top: 0,
-                bottom: 0,
+                top: category.index == 0 ? _categoryHeight * 0.5 : 0,
+                bottom:
+                    category == _categories.last ? _categoryHeight * 0.5 : 0,
                 width: 4.d,
                 child: Widgets.rect(color: TColors.primary20),
               ),
