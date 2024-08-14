@@ -155,7 +155,7 @@ class Speaker extends IService {
       await player.play(_sounds[text]!);
       await Future.doWhile(
           () => Future.delayed(const Duration(milliseconds: 100)).then((_) {
-                tries++;
+                // tries++;
                 return player.state != PlayerState.completed && tries < 80;
               }));
     } catch (e) {
