@@ -24,8 +24,25 @@ class SmartlookTracker extends AbstractTracker {
   void ad(Placement placement, AdState state) {}
 
   @override
-  void purchase(String currency, double amount, String itemId, String itemType,
-      String receipt, String signature) {}
+  void purchase(
+    String currency,
+    double amount,
+    String itemId,
+    String itemType,
+    String receipt,
+    String signature,
+  ) {
+    Smartlook.instance.trackEvent(
+      "resource",
+      properties: getProperties({
+        "signature": signature,
+        "currency": currency,
+        "amount": amount,
+        "itemType": itemType,
+        "itemId": itemId
+      }),
+    );
+  }
 
   @override
   void design(

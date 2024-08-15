@@ -17,14 +17,21 @@ class FirebaseTracker extends AbstractTracker {
   }
 
   @override
-  void purchase(String currency, double amount, String itemId, String itemType,
-      String receipt, String signature) async {
+  void purchase(
+    String currency,
+    double amount,
+    String itemId,
+    String itemType,
+    String receipt,
+    String signature,
+  ) async {
     if (!Platform.isAndroid) {
-      /*await instance.logPurchase(
-          currency: currency,
-          value: amount,
-          transactionId: signature,
-          coupon: receipt);*/
+      await instance.logPurchase(
+        currency: currency,
+        value: amount,
+        transactionId: signature,
+        coupon: receipt,
+      );
     }
   }
 

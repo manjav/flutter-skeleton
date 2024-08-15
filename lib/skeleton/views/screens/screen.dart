@@ -24,12 +24,13 @@ class AbstractScreen extends StatefulWidget {
 class AbstractScreenState<T extends AbstractScreen> extends State<T>
     with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin {
   List<Widget> stepChildren = <Widget>[];
-
+  Map<String, dynamic> trackerParams = {};
   @override
   void initState() {
     // var sfx = widget.sfx ?? "message";
     // if (sfx.isNotEmpty) widget.services.get<Sounds>().play(sfx);
-    // Analytics.setScreen(widget.mode.name);
+    serviceLocator<Trackers>()
+        .setScreen(widget.route, parameters: trackerParams);
     WidgetsBinding.instance.addPostFrameCallback(onRender);
     super.initState();
   }
