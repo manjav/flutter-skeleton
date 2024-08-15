@@ -28,15 +28,15 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       series: controller.series,
       onComplete: () {
         controller.changeSerie(1);
+        setState(() {});
       },
+      onProgress: (p) => assetsProgress.value = p,
       onError: () async {
+        await Get.toNamed(Routes.popupMessage,
+            arguments: {"title": "Error in loading assets!"});
         if (mounted) {
           Navigator.pop(context);
         }
-        await Get.toNamed(Routes.popupMessage, arguments: {
-          "title": "Error in loading assets!",
-          "message": "Plases try again."
-        });
       },
       loadCaptions: false,
     );
@@ -85,9 +85,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
           valueListenable: controller.serieIndex,
           builder: (context, value, child) {
             if (controller.serieIndex.value < 0) {
-              return const Stack(
-                  alignment: Alignment.center,
-                  children: [CircularProgressIndicator(color: TColors.cyan)]);
+              return loadingProgressbarBuilder();
             }
             _enableUntil.value = 0;
             _scrollTo(0);

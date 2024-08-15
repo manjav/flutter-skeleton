@@ -7,6 +7,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   final GlobalKey footerKey = GlobalKey();
   final LessonController controller = LessonController();
   final ValueNotifier<Talk?> caption = ValueNotifier(null);
+  final ValueNotifier<double> assetsProgress = ValueNotifier(0);
   double padding = 8.d;
 
   @override
@@ -63,6 +64,24 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Widget leftSideAppBar() => const SizedBox();
+
+  Widget loadingProgressbarBuilder() {
+    return Stack(alignment: Alignment.center, children: [
+      ValueListenableBuilder(
+        valueListenable: assetsProgress,
+        builder: (context, value, child) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(color: TColors.cyan, value: value),
+              SizedBox(height: 10.d),
+              DirText("waiting_l".l()),
+            ],
+          );
+        },
+      )
+    ]);
+  }
 
   Widget progressSliderBuilder() {
     final seriesCount = controller.series.length;

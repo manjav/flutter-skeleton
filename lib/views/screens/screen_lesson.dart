@@ -31,6 +31,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         controller.changeSerie(1);
         setState(() {});
       },
+      onProgress: (p) => assetsProgress.value = p,
       onError: () async {
         await Get.toNamed(Routes.popupMessage,
             arguments: {"title": "Error in loading assets!"});
@@ -92,14 +93,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     }
 
     if (controller.serieIndex.value < 0) {
-      return const Stack(
-        alignment: Alignment.center,
-        children: [
-          CircularProgressIndicator(
-            color: TColors.cyan,
-          ),
-        ],
-      );
+      return loadingProgressbarBuilder();
     }
     return Stack(
       alignment: Alignment.center,

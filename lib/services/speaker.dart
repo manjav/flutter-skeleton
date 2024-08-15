@@ -65,8 +65,9 @@ class Speaker extends IService {
   final _sounds = <String, BytesSource?>{};
   Future<void> loadAllSounds({
     required List<ParentContent> series,
-    required Function() onComplete,
     required Function() onError,
+    required Function() onComplete,
+    required Function(double) onProgress,
     bool loadCaptions = true,
   }) async {
     _sounds.clear();
@@ -80,11 +81,12 @@ class Speaker extends IService {
           }
           if (side != TranslationSide.none) {
             var text = talk.getText(side);
-            _loadFile(text, talk.type.narrator, onComplete, onError);
+            _loadFile(
+                text, talk.type.narrator, onComplete, onProgress, onError);
           }
           if (talk.type == ContentType.translate) {
             var text = talk.targetValue;
-            _loadFile(text, Narrator.onyx, onComplete, onError);
+            _loadFile(text, Narrator.onyx, onComplete, onProgress, onError);
           }
         }
       }
@@ -95,6 +97,7 @@ class Speaker extends IService {
     String text,
     Narrator narrator,
     Function() onComplete,
+    Function(double) onProgress,
     Function() onError, [
     int tryCount = 0,
   ]) async {
@@ -113,7 +116,7 @@ class Speaker extends IService {
       if (tryCount > 2) {
         onError();
       } else {
-        _loadFile(text, narrator, onComplete, onError, tryCount++);
+        _loadFile(text, narrator, onComplete, onProgress, onError, tryCount++);
         log("Retry sound loading $tryCount");
       }
       return;
@@ -125,9 +128,14 @@ class Speaker extends IService {
     );
 
     if (_sounds.isEmpty) return;
+    var progress = 0.0;
     for (var entry in _sounds.entries) {
-      if (entry.value == null) return;
+      if (entry.value != null) progress++;
     }
+    progress = progress / _sounds.length;
+    onProgress(progress);
+
+    if (progress < 1) return;
     await Future.delayed(const Duration(milliseconds: 100));
     onComplete();
   }
