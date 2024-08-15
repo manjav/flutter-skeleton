@@ -3,7 +3,7 @@ import '../../export.dart';
 abstract class AbstractTracker {
   TrackerSDK sdk = TrackerSDK.none;
   Function(dynamic)? logCallback;
-  initialize({List? args, Function(dynamic)? logCallback}) {
+  void initialize({List? args, Function(dynamic)? logCallback}) {
     this.logCallback = logCallback;
   }
 
@@ -17,12 +17,9 @@ abstract class AbstractTracker {
     if (response.statusCode != 200) log('Failure status code 😱');
   } */
 
-  setProperties(Map<String, String> properties);
-  // Smartlook.instance.user.setIdentifier(account.user.id);
-  // Smartlook.instance.user.setName(account.user.displayName);
-  // AppMetrica.setUserProfileID(account.user.id);
+  void setProperties(Map<String, String> properties);
 
-  purchase(
+  void purchase(
     String currency,
     double amount,
     String itemId,
@@ -30,17 +27,40 @@ abstract class AbstractTracker {
     String receipt,
     String signature,
   );
-  // AppMetrica.reportEventWithMap("purchase", data);
-  // _appsflyerSdk.validateAndLogInAppAndroidPurchase("shop_base64".l(),
 
-  ad(Placement placement, AdState state);
+  void ad(Placement placement, AdState state);
 
-  resource(ResourceFlowType type, String currency, int amount, String itemType,
-      String itemId);
+  void design(
+    String name, {
+    Map<String, dynamic>? parameters,
+  });
 
-  design(String name, {Map<String, dynamic>? parameters});
+  void resource(
+    ResourceFlowType type,
+    String currency,
+    int amount,
+    String itemType,
+    String itemId,
+  );
 
-  setScreen(String screenName);
+  void setScreen(
+    String screenName, {
+    Map<String, dynamic>? parameters,
+  });
 
-  log(dynamic input) => logCallback?.call(input);
+  void startProgress(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {}
+
+  void endProgress(
+    String name,
+    int score, {
+    Map<String, dynamic>? parameters,
+  }) {}
+
+  Map<String, Object>? convertMap([Map<String, dynamic>? map]) =>
+      map != null ? Map.castFrom<String, dynamic, String, Object>(map) : null;
+
+  void log(dynamic input) => logCallback?.call(input);
 }

@@ -8,9 +8,8 @@ class MyApp extends StatefulWidget {
   static late final DateTime startTime;
   const MyApp({super.key});
 
-  // static final firebaseAnalytics = FirebaseAnalytics.instance;
   // static final _observer =
-  //     FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
+  //     FirebaseAnalyticsObserver(analytics: FirebaseTracker.instance);
 
   @override
   createState() => _MyAppState();
@@ -74,7 +73,7 @@ class _MyAppState extends State<MyApp>
     return KeyedSubtree(
       key: key,
       child: GetMaterialApp(
-        // navigatorObservers: [MyApp._observer],
+        // navigatorObservers: [MyApp._observer, SmartlookObserver()],
         localizationsDelegates: const [
           // AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

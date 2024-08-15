@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../export.dart';
@@ -11,8 +12,6 @@ enum ResourceFlowType { none, sink, source }
 class Trackers extends IService {
   final _funnelConfigs = {
     "open": [1],
-    "mute_sfx": [1],
-    "mute_music": [1],
     "levelup": [2, 4, 5, 10, 15, 20],
     "total_gameplay": [5, 10, 15, 30, 60],
   };
@@ -32,21 +31,21 @@ class Trackers extends IService {
 
   @override
   initialize({List<Object>? args}) async {
+    if (kDebugMode) return;
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
       sdk.initialize(logCallback: log);
-      var deviceId = await sdk.getDeviceId();
-      if (deviceId != null) DeviceInfo.adId = deviceId;
       var variant = await sdk.getVariantId(_testName);
       if (variant != 0) this.variant = variant;
     }
   }
 
-  void sendUserData(
-    String id,
-    String name,
-  ) {
-    // Set user data
+  // Set user data
+  void sendUserData({
+    required String id,
+    required String name,
+  }) {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.setProperties({
         "buildType": _buildType.name,
@@ -80,51 +79,68 @@ class Trackers extends IService {
   }
 
   Future<void> ad(Placement placement, AdState state) async {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.ad(placement, state);
     }
   }
 
-  Future<void> resource(ResourceFlowType type, String currency, int amount,
-      String itemType, String itemId) async {
-    for (var sdk in _sdks.values) {
-      sdk.resource(type, currency, amount, itemType, itemId);
-    }
-  }
-
-  Future<void> design(String name, {Map<String, dynamic>? parameters}) async {
+  Future<void> design(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) async {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.design(name, parameters: parameters);
     }
   }
 
-  Future<void> setScreen(String screenName) async {
+  Future<void> resource(
+    ResourceFlowType type,
+    String currency,
+    int amount,
+    String itemType,
+    String itemId,
+  ) async {
+    if (kDebugMode) return;
     for (var sdk in _sdks.values) {
-      sdk.setScreen(screenName);
+      sdk.resource(type, currency, amount, itemType, itemId);
     }
   }
 
-  // void startProgress(String name, int round, String boost) {
-  //   GameAnalytics.addProgressionEvent({
-  //     "progressionStatus": GAProgressionStatus.Start,
-  //     "progression01": name,
-  //     "progression02": "round $round",
-  //     "boost": boost
-  //   });
-  // }
+  Future<void> setScreen(
+    String screenName, {
+    Map<String, dynamic>? parameters,
+  }) async {
+    if (kDebugMode) return;
+    for (var sdk in _sdks.values) {
+      sdk.setScreen(screenName, parameters: parameters);
+    }
+  }
 
-  // void endProgress(String name, int round, int score, int revives) {
-  //   var map = {
-  //     "progressionStatus": GAProgressionStatus.Complete,
-  //     "progression01": name,
-  //     "progression02": "round $round",
-  //     "score": score,
-  //     "revives": revives
-  //   };
-  //   GameAnalytics.addProgressionEvent(map);
-  // }
+  void startProgress(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {
+    if (kDebugMode) return;
+    for (var sdk in _sdks.values) {
+      sdk.startProgress(name, parameters: parameters);
+    }
+  }
 
-  funnel(String type, [String? name]) {
+  void endProgress(
+    String name,
+    int score, {
+    Map<String, dynamic>? parameters,
+  }) {
+    if (kDebugMode) return;
+    for (var sdk in _sdks.values) {
+      sdk.endProgress(name, score, parameters: parameters);
+    }
+  }
+
+  void funnel(String type, [String? name]) {
+    if (kDebugMode) return;
     name = name == null ? type : "${type}_$name";
     var step = Prefs.increase(name, 1);
 
@@ -141,7 +157,7 @@ class Trackers extends IService {
     _funnel(name, step);
   }
 
-  _funnel(String name, [int step = -1]) {
+  void _funnel(String name, [int step = -1]) {
     var args = step > 0 ? {"step": '$step'} : null;
     design(name, parameters: args);
   }

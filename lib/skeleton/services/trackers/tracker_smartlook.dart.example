@@ -2,40 +2,118 @@ import 'dart:io';
 
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 
-import '../../skeleton.dart';
-
+import '../../../app_export.dart';
 
 class SmartlookTracker extends AbstractTracker {
   @override
-  initialize({List? args, Function(dynamic)? logCallback}) async {
+  void initialize({List? args, Function(dynamic)? logCallback}) async {
     super.initialize(args: args, logCallback: logCallback);
     sdk = TrackerSDK.smartlook;
+    await Smartlook.instance.start();
     await Smartlook.instance.preferences.setProjectKey(
         "tracker_${sdk.name}_${Platform.operatingSystem}_key".l());
-    await Smartlook.instance.preferences.setFrameRate(2);
-    await Smartlook.instance.start();
   }
 
   @override
-  setProperties(Map<String, String> properties) {
+  void setProperties(Map<String, String> properties) {
     Smartlook.instance.user.setIdentifier(properties["userId"]!);
     Smartlook.instance.user.setName(properties["userName"]!);
   }
 
   @override
-  ad(Placement placement, AdState state) {}
+  void ad(Placement placement, AdState state) {}
 
   @override
-  design(String name, {Map<String, dynamic>? parameters}) {}
+  void purchase(
+    String currency,
+    double amount,
+    String itemId,
+    String itemType,
+    String receipt,
+    String signature,
+  ) {
+    Smartlook.instance.trackEvent(
+      "resource",
+      properties: getProperties({
+        "signature": signature,
+        "currency": currency,
+        "amount": amount,
+        "itemType": itemType,
+        "itemId": itemId
+      }),
+    );
+  }
 
   @override
-  purchase(String currency, double amount, String itemId, String itemType,
-      String receipt, String signature) {}
+  void design(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {
+    Smartlook.instance.trackEvent(
+      "design$name",
+      properties: getProperties(parameters),
+    );
+  }
 
   @override
-  resource(ResourceFlowType type, String currency, int amount, String itemType,
-      String itemId) {}
+  void resource(
+    ResourceFlowType type,
+    String currency,
+    int amount,
+    String itemType,
+    String itemId,
+  ) {
+    Smartlook.instance.trackEvent(
+      "resource",
+      properties: getProperties({
+        "flowType": type.index,
+        "currency": currency, //"Gems",
+        "amount": amount,
+        "itemType": itemType, //"IAP",
+        "itemId": itemId //"Coins400"
+      }),
+    );
+  }
 
   @override
-  setScreen(String screenName) {}
+  void startProgress(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {
+    Smartlook.instance.trackEvent(
+      "progress_start_$name",
+      properties: getProperties(parameters),
+    );
+  }
+
+  @override
+  void endProgress(
+    String name,
+    int score, {
+    Map<String, dynamic>? parameters,
+  }) {
+    parameters ??= {};
+    parameters["score"] = score;
+    Smartlook.instance.trackEvent(
+      "progress_start_$name",
+      properties: getProperties(parameters),
+    );
+  }
+
+  @override
+  void setScreen(String screenName, {Map<String, dynamic>? parameters}) {
+    Smartlook.instance.trackEvent(
+      "screen_$screenName",
+      properties: getProperties(parameters),
+    );
+  }
+
+  Properties? getProperties([Map<String, dynamic>? parameters]) {
+    if (parameters == null) return null;
+    final Properties properties = Properties();
+    for (var entry in parameters.entries) {
+      properties.putString(entry.key, value: "${entry.value}");
+    }
+    return properties;
+  }
 }
