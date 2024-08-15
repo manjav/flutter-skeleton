@@ -31,7 +31,25 @@ class SmartlookTracker extends AbstractTracker {
       String receipt, String signature) {}
 
   @override
-  void resource(ResourceFlowType type, String currency, int amount,
+  void resource(
+    ResourceFlowType type,
+    String currency,
+    int amount,
+    String itemType,
+    String itemId,
+  ) {
+    Smartlook.instance.trackEvent(
+      "resource",
+      properties: getProperties({
+        "flowType": type.index,
+        "currency": currency, //"Gems",
+        "amount": amount,
+        "itemType": itemType, //"IAP",
+        "itemId": itemId //"Coins400"
+      }),
+    );
+  }
+
   @override
   void startProgress(
     String name, {

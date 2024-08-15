@@ -33,8 +33,13 @@ abstract class AbstractTracker {
 
   void ad(Placement placement, AdState state);
 
-  void resource(ResourceFlowType type, String currency, int amount,
-      String itemType, String itemId);
+  void resource(
+    ResourceFlowType type,
+    String currency,
+    int amount,
+    String itemType,
+    String itemId,
+  );
 
   void design(String name, {Map<String, dynamic>? parameters});
 

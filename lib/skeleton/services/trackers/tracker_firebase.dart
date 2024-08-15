@@ -51,13 +51,13 @@ class FirebaseTracker extends AbstractTracker {
   @override
   void resource(ResourceFlowType type, String currency, int amount,
       String itemType, String itemId) {
-    /*instance
-        .logEvent(name: "resource_change", parameters: <String, dynamic>{
+    instance.logEvent(name: "resource_change", parameters: <String, Object>{
       "flowType": type.index,
       "currency": currency, //"Gems",
       "amount": amount,
       "itemType": itemType, //"IAP",
       "itemId": itemId //"Coins400"
+    });
   }
 
   @override

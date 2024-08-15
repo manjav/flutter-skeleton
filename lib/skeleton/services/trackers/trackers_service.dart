@@ -87,18 +87,25 @@ class Trackers extends IService {
     }
   }
 
-  Future<void> resource(ResourceFlowType type, String currency, int amount,
-      String itemType, String itemId) async {
-    if (kDebugMode) return;
-    for (var sdk in _sdks.values) {
-      sdk.resource(type, currency, amount, itemType, itemId);
-    }
-  }
 
   Future<void> design(String name, {Map<String, dynamic>? parameters}) async {
     if (kDebugMode) return;
     for (var sdk in _sdks.values) {
       sdk.design(name, parameters: parameters);
+    }
+  }
+
+
+  Future<void> resource(
+    ResourceFlowType type,
+    String currency,
+    int amount,
+    String itemType,
+    String itemId,
+  ) async {
+    if (kDebugMode) return;
+    for (var sdk in _sdks.values) {
+      sdk.resource(type, currency, amount, itemType, itemId);
     }
   }
 
