@@ -102,10 +102,13 @@ class Trackers extends IService {
     }
   }
 
-  Future<void> setScreen(String screenName) async {
+  Future<void> setScreen(
+    String screenName, {
+    Map<String, dynamic>? parameters,
+  }) async {
     if (kDebugMode) return;
     for (var sdk in _sdks.values) {
-      sdk.setScreen(screenName);
+      sdk.setScreen(screenName, parameters: parameters);
     }
   }
 

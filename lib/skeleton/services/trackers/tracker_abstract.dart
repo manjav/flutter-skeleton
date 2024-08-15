@@ -38,6 +38,10 @@ abstract class AbstractTracker {
 
   void design(String name, {Map<String, dynamic>? parameters});
 
+  void setScreen(
+    String screenName, {
+    Map<String, dynamic>? parameters,
+  });
 
   void startProgress(
     String name, {

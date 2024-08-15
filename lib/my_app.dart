@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -81,7 +82,7 @@ class _MyAppState extends State<MyApp>
               create: (_) => serviceLocator<AccountProvider>()),
         ],
         child: GetMaterialApp(
-          navigatorObservers: [MyApp._observer],
+          navigatorObservers: [MyApp._observer, SmartlookObserver()],
           theme: Themes.darkData,
           supportedLocales: Localization.locales,
           locale:

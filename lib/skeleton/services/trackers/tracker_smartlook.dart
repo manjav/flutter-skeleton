@@ -58,6 +58,13 @@ class SmartlookTracker extends AbstractTracker {
   }
 
   @override
+  void setScreen(String screenName, {Map<String, dynamic>? parameters}) {
+    Smartlook.instance.trackEvent(
+      "screen_$screenName",
+      properties: getProperties(parameters),
+    );
+  }
+
   Properties? getProperties([Map<String, dynamic>? parameters]) {
     if (parameters == null) return null;
     final Properties properties = Properties();

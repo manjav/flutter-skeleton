@@ -86,7 +86,13 @@ class FirebaseTracker extends AbstractTracker {
   }
 
   @override
-  void setScreen(String screenName) async {
-    // await instance.setCurrentScreen(screenName: screenName);
+  void setScreen(
+    String screenName, {
+    Map<String, dynamic>? parameters,
+  }) async {
+    await instance.logScreenView(
+      screenName: screenName,
+      parameters: convertMap(parameters),
+    );
   }
 }

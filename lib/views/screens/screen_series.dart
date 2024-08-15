@@ -19,6 +19,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void initState() {
+    trackerParams = {"id": Get.arguments["content"]!.id};
     // List list = Get.arguments["content"].children.last.children;
     // list.removeRange(3, list.length);
     controller.init(Get.arguments["content"]);

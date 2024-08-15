@@ -20,6 +20,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   void initState() {
     // List list = Get.arguments["content"].children[0].children;
     // list.removeRange(0, list.length - 4);
+    trackerParams = {"id": Get.arguments["content"]!.id};
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
