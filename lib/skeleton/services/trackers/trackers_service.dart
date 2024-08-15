@@ -109,25 +109,26 @@ class Trackers extends IService {
     }
   }
 
-  // void startProgress(String name, int round, String boost) {
-  //   GameAnalytics.addProgressionEvent({
-  //     "progressionStatus": GAProgressionStatus.Start,
-  //     "progression01": name,
-  //     "progression02": "round $round",
-  //     "boost": boost
-  //   });
-  // }
+  void startProgress(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {
+    if (kDebugMode) return;
+    for (var sdk in _sdks.values) {
+      sdk.startProgress(name, parameters: parameters);
+    }
+  }
 
-  // void endProgress(String name, int round, int score, int revives) {
-  //   var map = {
-  //     "progressionStatus": GAProgressionStatus.Complete,
-  //     "progression01": name,
-  //     "progression02": "round $round",
-  //     "score": score,
-  //     "revives": revives
-  //   };
-  //   GameAnalytics.addProgressionEvent(map);
-  // }
+  void endProgress(
+    String name,
+    int score, {
+    Map<String, dynamic>? parameters,
+  }) {
+    if (kDebugMode) return;
+    for (var sdk in _sdks.values) {
+      sdk.endProgress(name, score, parameters: parameters);
+    }
+  }
 
   void funnel(String type, [String? name]) {
     if (kDebugMode) return;

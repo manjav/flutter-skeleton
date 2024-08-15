@@ -32,8 +32,38 @@ class SmartlookTracker extends AbstractTracker {
 
   @override
   void resource(ResourceFlowType type, String currency, int amount,
-      String itemType, String itemId) {}
+  @override
+  void startProgress(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {
+    Smartlook.instance.trackEvent(
+      "progress_start_$name",
+      properties: getProperties(parameters),
+    );
+  }
 
   @override
-  void setScreen(String screenName) {}
+  void endProgress(
+    String name,
+    int score, {
+    Map<String, dynamic>? parameters,
+  }) {
+    parameters ??= {};
+    parameters["score"] = score;
+    Smartlook.instance.trackEvent(
+      "progress_start_$name",
+      properties: getProperties(parameters),
+    );
+  }
+
+  @override
+  Properties? getProperties([Map<String, dynamic>? parameters]) {
+    if (parameters == null) return null;
+    final Properties properties = Properties();
+    for (var entry in parameters.entries) {
+      properties.putString(entry.key, value: "${entry.value}");
+    }
+    return properties;
+  }
 }

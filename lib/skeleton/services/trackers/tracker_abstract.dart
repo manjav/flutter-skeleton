@@ -38,7 +38,20 @@ abstract class AbstractTracker {
 
   void design(String name, {Map<String, dynamic>? parameters});
 
-  void setScreen(String screenName);
+
+  void startProgress(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {}
+
+  void endProgress(
+    String name,
+    int score, {
+    Map<String, dynamic>? parameters,
+  }) {}
+
+  Map<String, Object>? convertMap([Map<String, dynamic>? map]) =>
+      map != null ? Map.castFrom<String, dynamic, String, Object>(map) : null;
 
   void log(dynamic input) => logCallback?.call(input);
 }

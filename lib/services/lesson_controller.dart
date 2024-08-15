@@ -23,6 +23,7 @@ class LessonController {
   int get uniqueIndex => slideIndex.value * 100 + contentIndex.value;
 
   void init(ParentContent root) {
+    serviceLocator<Trackers>().startProgress(root.id);
     this.root = root;
     series = List.generate(
         root.children.length, (i) => root.children[i] as ParentContent);
@@ -46,6 +47,12 @@ class LessonController {
       for (var entry in quizes.entries) {
         score += entry.value.score.max(100);
       }
+
+      serviceLocator<Trackers>().endProgress(root!.id, score, parameters: {
+        "quizCount": quizes.length,
+        "sentenceCount": sentenceCount,
+      });
+
       onComplete?.call(sentenceCount, quizes.length, score);
       return;
     }

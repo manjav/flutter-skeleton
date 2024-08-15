@@ -58,7 +58,31 @@ class FirebaseTracker extends AbstractTracker {
       "amount": amount,
       "itemType": itemType, //"IAP",
       "itemId": itemId //"Coins400"
-    });*/
+  }
+
+  @override
+  void startProgress(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {
+    instance.logEvent(
+      name: "progress_start_$name",
+      parameters: convertMap(parameters),
+    );
+  }
+
+  @override
+  void endProgress(
+    String name,
+    int score, {
+    Map<String, dynamic>? parameters,
+  }) {
+    parameters ??= {};
+    parameters["score"] = score;
+    instance.logEvent(
+      name: "progress_start_$name",
+      parameters: convertMap(parameters),
+    );
   }
 
   @override
