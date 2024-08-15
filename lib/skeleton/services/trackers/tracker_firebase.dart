@@ -40,17 +40,21 @@ class FirebaseTracker extends AbstractTracker {
   }
 
   @override
-  void design(String name, {Map<String, dynamic>? parameters}) {
-    instance.logEvent(
-        name: name,
-        parameters: parameters != null
-            ? Map.castFrom<String, dynamic, String, Object>(parameters)
-            : null);
+  void design(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {
+    instance.logEvent(name: name, parameters: convertMap(parameters));
   }
 
   @override
-  void resource(ResourceFlowType type, String currency, int amount,
-      String itemType, String itemId) {
+  void resource(
+    ResourceFlowType type,
+    String currency,
+    int amount,
+    String itemType,
+    String itemId,
+  ) {
     instance.logEvent(name: "resource_change", parameters: <String, Object>{
       "flowType": type.index,
       "currency": currency, //"Gems",

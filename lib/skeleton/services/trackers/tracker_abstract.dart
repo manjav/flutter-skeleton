@@ -27,11 +27,13 @@ abstract class AbstractTracker {
     String receipt,
     String signature,
   );
-  // AppMetrica.setUserProfileID(account.user.id);
-  // AppMetrica.reportEventWithMap("purchase", data);
-  // _appsflyerSdk.validateAndLogInAppAndroidPurchase("shop_base64".l(),
 
   void ad(Placement placement, AdState state);
+
+  void design(
+    String name, {
+    Map<String, dynamic>? parameters,
+  });
 
   void resource(
     ResourceFlowType type,
@@ -40,8 +42,6 @@ abstract class AbstractTracker {
     String itemType,
     String itemId,
   );
-
-  void design(String name, {Map<String, dynamic>? parameters});
 
   void setScreen(
     String screenName, {

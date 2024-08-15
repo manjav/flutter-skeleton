@@ -24,11 +24,19 @@ class SmartlookTracker extends AbstractTracker {
   void ad(Placement placement, AdState state) {}
 
   @override
-  void design(String name, {Map<String, dynamic>? parameters}) {}
-
-  @override
   void purchase(String currency, double amount, String itemId, String itemType,
       String receipt, String signature) {}
+
+  @override
+  void design(
+    String name, {
+    Map<String, dynamic>? parameters,
+  }) {
+    Smartlook.instance.trackEvent(
+      "design$name",
+      properties: getProperties(parameters),
+    );
+  }
 
   @override
   void resource(
