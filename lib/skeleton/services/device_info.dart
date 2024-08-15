@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:advertising_id/advertising_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +18,14 @@ class DeviceInfo extends IService {
   static String id = "";
   static String adId = "";
   static String model = "";
-  static double osVersion = 0;
+  static String osVersion = "";
   static String baseVersion = "";
-  static Map<String, dynamic> _deviceData = {};
   static String packageName = "";
   static String buildNumber = "";
   static String version = "";
   static String appName = "";
   static bool isPreInitialized = false;
+  static Map<String, dynamic> _deviceData = {};
 
   static Future<bool> preInitialize(BuildContext context,
       [bool forced = false]) async {
@@ -32,12 +33,15 @@ class DeviceInfo extends IService {
 
     // Get screen info
     var q = MediaQuery.of(context);
-    DeviceInfo.size = q.size;
-    DeviceInfo.devicePixelRatio = q.devicePixelRatio;
+    size = q.size;
+    devicePixelRatio = q.devicePixelRatio;
     var width = math.min(size.width, size.height);
     var height = math.max(size.width, size.height);
     ratio = width / 1080;
     aspectRatio = width / height;
+
+    // Find advertise id
+    // await _findAdId();
 
     // Get app info
     var packageInfo = await PackageInfo.fromPlatform();
@@ -64,16 +68,13 @@ class DeviceInfo extends IService {
               _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
           id = _deviceData["fingerprint"];
           model = _deviceData["model"];
-          var releaseVersion = _deviceData["version.release"].toString();
-          var parts = releaseVersion.split(".");
-          osVersion =
-              double.parse(parts[0] + (parts.length > 1 ? ".${parts[0]}" : ""));
+          osVersion = _deviceData["version.release"] ?? "";
           baseVersion = _deviceData["version.sdkInt"].toString();
         } else if (Platform.isIOS) {
           _deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
           id = _deviceData["identifierForVendor"];
           model = _deviceData["name"];
-          osVersion = double.parse(_deviceData["systemVersion"] ?? "0");
+          osVersion = _deviceData["systemVersion"] ?? "";
           baseVersion = _deviceData["utsname.version:"];
         } else if (Platform.isLinux) {
           _deviceData = _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo);
@@ -196,6 +197,24 @@ class DeviceInfo extends IService {
       "computerName": data.computerName,
       "systemMemoryInMegabytes": data.systemMemoryInMegabytes,
     };
+  }
+
+  static Future<void> _findAdId() async {
+    String createId() {
+      if (Prefs.contains("deviceId")) {
+        return Prefs.getString("deviceId");
+      }
+      return Prefs.setString("deviceId", StringExtensions.getRandomString(20));
+    }
+
+    try {
+      adId = (await AdvertisingId.id(false))!;
+    } on PlatformException {
+      adId = createId();
+    }
+    if (adId.isEmpty) {
+      adId = createId();
+    }
   }
 }
 
