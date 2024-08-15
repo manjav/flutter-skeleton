@@ -12,8 +12,6 @@ enum ResourceFlowType { none, sink, source }
 class Trackers extends IService {
   final _funnelConfigs = {
     "open": [1],
-    "mute_sfx": [1],
-    "mute_music": [1],
     "levelup": [2, 4, 5, 10, 15, 20],
     "total_gameplay": [5, 10, 15, 30, 60],
   };

@@ -99,6 +99,22 @@ class GameAnalyticsTracker extends AbstractTracker {
     });
   }
 
+  // GameAnalytics.addProgressionEvent({
+  //   "progressionStatus": GAProgressionStatus.Start,
+  //   "progression01": name,
+  //   "progression02": "round $round",
+  //   "boost": boost
+  // });
+  
+  // var map = {
+  //   "progressionStatus": GAProgressionStatus.Complete,
+  //   "progression01": name,
+  //   "progression02": "round $round",
+  //   "score": score,
+  //   "revives": revives
+  // };
+  // GameAnalytics.addProgressionEvent(map);
+
   @override
   setScreen(String screenName) {
     GameAnalytics.addDesignEvent({"eventId": "screen:$screenName"});
