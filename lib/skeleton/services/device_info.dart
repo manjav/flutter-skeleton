@@ -41,7 +41,7 @@ class DeviceInfo extends IService {
     aspectRatio = width / height;
 
     // Find advertise id
-    // await _findAdId();
+    await _findAdId();
 
     // Get app info
     var packageInfo = await PackageInfo.fromPlatform();
