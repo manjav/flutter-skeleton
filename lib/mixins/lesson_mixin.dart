@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rive/rive.dart';
 
 import '../app_export.dart';
 
@@ -7,7 +8,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   final GlobalKey footerKey = GlobalKey();
   final LessonController controller = LessonController();
   final ValueNotifier<Talk?> caption = ValueNotifier(null);
-  final ValueNotifier<double> assetsProgress = ValueNotifier(0);
+  SMIInput<double>? progressInput;
   double padding = 8.d;
 
   @override
@@ -66,21 +67,30 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Widget leftSideAppBar() => const SizedBox();
 
   Widget loadingProgressbarBuilder() {
-    return Stack(alignment: Alignment.center, children: [
-      ValueListenableBuilder(
-        valueListenable: assetsProgress,
-        builder: (context, value, child) {
-          return Column(
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(color: TColors.cyan, value: value),
-              SizedBox(height: 10.d),
+            SizedBox(
+              width: 280.d,
+              height: 100.d,
+              child: Asset.load<RiveAnimation>(
+                "progressbar_group",
+              onRiveInit: (artboard) {
+                final controller = StateMachineController.fromArtboard(
+                    artboard, "State Machine 1");
+                progressInput = controller?.findInput<double>("unit");
+                artboard.addController(controller!);
+              },
+            ),
+            ),
               DirText("waiting_l".l()),
+          ],
+        ),
             ],
           );
-        },
-      )
-    ]);
   }
 
   Widget progressSliderBuilder() {
