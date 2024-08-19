@@ -4,26 +4,21 @@ import 'package:lifetalk/app_export.dart';
 import 'package:lifetalk/skeleton/mixins/feast_mixin.dart';
 import 'package:rive/rive.dart';
 
-class ResultPopup extends AbstractPopup {
-  const ResultPopup({super.key}) : super(Routes.popupResult);
+class ResultScreen extends AbstractScreen {
+  ResultScreen({super.key}) : super(Routes.popupResult);
 
   @override
-  State<ResultPopup> createState() => _PopupState();
+  State<ResultScreen> createState() => _PopupState();
 }
 
-class _PopupState extends AbstractPopupState<ResultPopup> {
+class _PopupState extends AbstractScreenState<ResultScreen> {
   String? message;
 
   @override
-  Widget contentFactory() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-            width: 330.d, height: 390.d, child: GroupResult(args: widget.args)),
-      ],
-    );
-  }
+  List<Widget> appBarElementsLeft() => [];
+
+  @override
+  Widget contentFactory(double paddingTop) => GroupResult(args: widget.args);
 }
 
 class GroupResult extends StatefulWidget {

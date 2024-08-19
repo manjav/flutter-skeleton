@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp>
             _getPage(Routes.lesson, LessonScreen()),
             _getPage(Routes.series, SeriesScreen()),
             _getPage(Routes.onboarding, OnboardingScreen()),
-            _getPage(Routes.popupResult, const ResultPopup()),
+            _getPage(Routes.popupResult, ResultScreen()),
             _getPage(Routes.popupMessage, const MessagePopup()),
           ],
           initialRoute: Routes.home,
