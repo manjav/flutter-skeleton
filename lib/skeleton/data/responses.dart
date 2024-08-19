@@ -31,6 +31,9 @@ extension StatusCodeintEx on int {
 
 class SkeletonException implements Exception {
   final String message;
-  final int statusCode;
-  SkeletonException(this.statusCode, this.message);
+  final StatusCode statusCode;
+  SkeletonException(this.statusCode, [this.message = ""]);
+
+  @override
+  String toString() => "$statusCode: $message";
 }

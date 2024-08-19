@@ -43,7 +43,7 @@ class NetConnector extends IService {
     } catch (e) {
       var error = "$e";
       if (_isDisconnected(error)) {
-        throw SkeletonException(StatusCode.UNAVAILABLE.value, error);
+        throw SkeletonException(StatusCode.UNAVAILABLE, error);
       }
     }
     if (response!.statusCode == 200) {
@@ -51,11 +51,11 @@ class NetConnector extends IService {
       var updates = configs["updates"];
       if (updates["force"]["version"] > version) {
         throw SkeletonException(
-            StatusCode.UPDATE_FORCE.value, updates["force"]["message"]);
+            StatusCode.UPDATE_FORCE, updates["force"]["message"]);
       } else if (!Pref.skipUpdate.getBool() &&
           updates["notice"]["version"] > version) {
         throw SkeletonException(
-            StatusCode.UPDATE_NOTICE.value, updates["notice"]["message"]);
+            StatusCode.UPDATE_NOTICE, updates["notice"]["message"]);
       }
       Pref.skipUpdate.setBool(false);
       LoaderWidget.baseURL = configs["assetsServer"]!;
@@ -63,7 +63,7 @@ class NetConnector extends IService {
       log("Config loaded.");
     } else {
       throw SkeletonException(
-          StatusCode.UNKNOWN_ERROR.value, "Failed to load config file");
+          StatusCode.UNKNOWN_ERROR, "Failed to load config file");
     }
   }
 
@@ -93,7 +93,7 @@ class NetConnector extends IService {
           .authenticateDevice(deviceId: DeviceInfo.adId, vars: data);
       return session;
     } catch (e) {
-      throw SkeletonException(-1, e.toString());
+      throw SkeletonException(StatusCode.UNKNOWN_ERROR, e.toString());
     }
   }
 
@@ -134,24 +134,30 @@ class NetConnector extends IService {
     try {
       var data = await _nakamaClient!
           .rpc(session: _session!, id: id, payload: jsonEncode(params));
-      var res = json.decode(data!);
-      var status = (res["status"] as int);
-      if (status == 0) {
-        return res["data"];
+      var result = json.decode(data!);
+      var status = (result["status"] as int).toStatus();
+      if (status == StatusCode.SUCCESS) {
+        return result["data"];
       } else {
-        throw Exception(res["message"]);
+        throw SkeletonException(status, result["message"]);
       }
     } catch (e) {
-      var error = "$e".split("codeName: ")[1].split(",")[0];
-      if (error == "UNAUTHENTICATED" ||
-          error == "UNAVAILABLE" ||
-          error == "NOT_FOUND" ||
-          error == "INTERNAL") {
-        error = "error_${error.toLowerCase()}";
+      if (e is SkeletonException) {
+        rethrow;
+      }
+      var error = "";
+      if (e.toString().contains("codeName")) {
+        error = "$e".split("codeName: ")[1].split(",")[0];
+        if (error == "UNAUTHENTICATED" ||
+            error == "UNAVAILABLE" ||
+            error == "NOT_FOUND" ||
+            error == "INTERNAL") {
+          error = "error_${error.toLowerCase()}";
+        }
       } else {
         error = "RPC: $id Error: $e";
       }
-      throw SkeletonException(StatusCode.UNAVAILABLE.value, error);
+      throw SkeletonException(StatusCode.UNAVAILABLE, error);
     }
   }
 
@@ -166,20 +172,19 @@ class NetConnector extends IService {
     } catch (e) {
       var error = "$e";
       if (_isDisconnected(error)) {
-        throw SkeletonException(StatusCode.UNAVAILABLE.value, error);
+        throw SkeletonException(StatusCode.UNAVAILABLE, error);
       }
     }
     final status = response!.statusCode;
     if (status != 200) {
-      throw SkeletonException(status.toStatus().value,
+      throw SkeletonException(status.toStatus(),
           response.body.isNotEmpty ? response.body : "error_$status".l());
     }
 
     log(response.body);
     var responseData = jsonDecode(response.body);
     if (!responseData["status"]) {
-      // var statusCode = (responseData["data"]["code"] as int).toStatus();
-      throw SkeletonException(-1, responseData["data"]);
+      throw SkeletonException(StatusCode.UNKNOWN_ERROR, responseData["data"]);
     }
     return responseData["data"];
   }
