@@ -67,7 +67,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   int _firstIncompleteGroup() {
     for (var category in _categories) {
       if (!isCategoryComplete(category)) {
-          return category.index;
+        return category.index;
       }
     }
     return 0;
@@ -317,13 +317,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             ],
           ),
           onPressed: () async {
-            if (group.children.isEmpty) {
-              await serviceLocator<AccountProvider>().loadGroup(group);
+            try {
+              if (group.children.isEmpty) {
+                await serviceLocator<AccountProvider>().loadGroup(group);
+              }
+              var routName =
+                  group.mode == "lessons" ? Routes.lesson : Routes.series;
+              await Get.toNamed(routName, arguments: {"content": group});
+            } on SkeletonException catch (e) {
+              await Get.toNamed(Routes.popupMessage, arguments: {
+                "title": "${e.statusCode}",
+                "message": e.message
+              });
             }
-
-            var routName =
-                group.mode == "lessons" ? Routes.lesson : Routes.series;
-            await Get.toNamed(routName, arguments: {"content": group});
             setState(() {});
             // if (s == null || s <= scoreNotifier.value) return;
             // await serviceLocator<AccountProvider>().saveScore(id, s);
