@@ -133,7 +133,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   Widget _navigatorBuilder() {
     return Align(
-      alignment: const Alignment(0, 0.8),
+      alignment: const Alignment(0, 0.9),
       child: ValueListenableBuilder(
         valueListenable: controller.slidePassed,
         builder: (context, value, child) {
@@ -181,10 +181,10 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   @override
   Widget childBuilder(double paddingTop) {
     return AnimatedList(
+      shrinkWrap: true,
       key: _animatedListKey,
       controller: _chatScrollController,
-      padding: EdgeInsets.fromLTRB(
-          padding, paddingTop + padding * 20, padding, 180.d),
+      padding: EdgeInsets.fromLTRB(padding, paddingTop, padding, 100.d),
       itemBuilder: (c, i, a) => _animatedItemBuilder(_animatedItems[i], a),
     );
   }
@@ -213,22 +213,15 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     return Widgets.rect(
       decoration: BoxDecoration(
         borderRadius: border,
-        border: Border.all(
-          width: 2.d,
-          color: TColors.primary20,
-        ),
         shape: BoxShape.rectangle,
+        border: Border.all(width: 2.d, color: TColors.primary20),
       ),
       padding: EdgeInsets.all(1.d),
       alignment: Alignment.center,
       margin: EdgeInsets.all(24.d),
       child: ClipRRect(
         borderRadius: border,
-        child: LoaderWidget(
-          AssetType.image,
-          talk.targetValue,
-          height: 180.d,
-        ),
+        child: LoaderWidget(AssetType.image, talk.targetValue),
       ),
     );
   }
