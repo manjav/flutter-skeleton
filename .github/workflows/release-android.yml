@@ -1,0 +1,39 @@
+name: Build and release new version
+on:
+  push:
+    tags:
+    - 'r[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  release:
+    name: build_release
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Check Version
+        uses: ./.github/actions/check_verion
+        
+      - uses: ./.github/actions/build
+        with:
+          android-store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
+          android-store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
+          android-key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
+          android-key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
+          build-aab: false
+          build-ipa: false
+
+      - name: Get the tag and remove the first character
+        id: get_tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          TAG_WITHOUT_FIRST_CHAR=${TAG:1}
+          echo "TAG_WITHOUT_FIRST_CHAR=$TAG_WITHOUT_FIRST_CHAR" >> $GITHUB_ENV
+
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./build/app/outputs/apk/release/*.apk"
+          tag: ${{ env.TAG_WITHOUT_FIRST_CHAR }}

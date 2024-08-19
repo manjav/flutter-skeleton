@@ -2,7 +2,7 @@ name: Build and release new version
 on:
   push:
     tags:
-    - 'r[0-9]+.[0-9]+.[0-9]+*'
+    - 'i[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
   release:
@@ -18,18 +18,22 @@ jobs:
         
       - uses: ./.github/actions/build
         with:
-          android-store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
-          android-store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
-          android-key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
-          android-key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
           ios-certificate-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
           ios-certificate-password: ${{ secrets.IOS_CERTIFICATE_PASS }}
           ios-provisioning-profile-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
           ios-keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
+          build-apk: false
           build-aab: false
+
+      - name: Get the tag and remove the first character
+        id: get_tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          TAG_WITHOUT_FIRST_CHAR=${TAG:1}
+          echo "TAG_WITHOUT_FIRST_CHAR=$TAG_WITHOUT_FIRST_CHAR" >> $GITHUB_ENV
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./build/app/outputs/apk/release/*.apk,./build/ios/ipa/flutter_build.ipa"
-          tag: ${{ github.ref_name }}
+          artifacts: "./build/ios/ipa/flutter_build.ipa"
+          tag: ${{ env.TAG_WITHOUT_FIRST_CHAR }}
