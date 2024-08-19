@@ -14,9 +14,9 @@ class _MessagePopupState extends AbstractPopupState<MessagePopup> {
   @override
   contentFactory() {
     var items = <Widget>[
-      Text(widget.args["title"], style: TStyles.large),
+      Text(widget.args["title"] ?? "", style: TStyles.large),
       SizedBox(height: 64.d),
-      Text(widget.args["message"], style: TStyles.medium),
+      Text(widget.args["message"] ?? "", style: TStyles.medium),
       SizedBox(height: 86.d),
     ];
     if (widget.args.containsKey("isConfirm")) {
