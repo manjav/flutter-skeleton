@@ -21,8 +21,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   final double _roadWidth = 64.d;
   final TextStyle _unitStyle = TStyles.small.copyWith(
       color: TColors.primary40, fontWeight: FontWeight.w100, height: 0.9);
+  final TextStyle _unitStylePassed = TStyles.small
+      .copyWith(color: TColors.green, fontWeight: FontWeight.w100, height: 0.9);
   final TextStyle _numberStyle = TStyles.big.copyWith(
       color: TColors.primary40, fontWeight: FontWeight.w600, height: 0.9);
+  final TextStyle _numberStylePassed = TStyles.big
+      .copyWith(color: TColors.green, fontWeight: FontWeight.w600, height: 0.9);
   final _colors = {
     "lessons": TColors.blue,
     "practice": TColors.orange,
@@ -62,13 +66,20 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   // Find first incomplete group
   int _firstIncompleteGroup() {
     for (var category in _categories) {
-      for (var group in category.children) {
-        if (!_scores.containsKey(group.id)) {
+      if (!isCategoryComplete(category)) {
           return category.index;
-        }
       }
     }
     return 0;
+  }
+
+  bool isCategoryComplete(ParentContent category) {
+    for (var group in category.children) {
+      if (!_scores.containsKey(group.id)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @override
@@ -122,6 +133,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   Widget _categoryTitleBuilder(ParentContent category) {
     final thickness = category.index == _categoryIndex ? 1.8.d : 0.0;
+    final isPassed = isCategoryComplete(category);
     return SizedBox(
       height: _categoryHeight,
       child: Row(
@@ -144,9 +156,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("UNIT", style: _unitStyle),
+                    Text("UNIT",
+                        style: isPassed ? _unitStylePassed : _unitStyle),
                     Text(NumberFormat("00").format(category.index + 1),
-                        style: _numberStyle)
+                        style: isPassed ? _numberStylePassed : _numberStyle)
                   ],
                 ),
               ),
