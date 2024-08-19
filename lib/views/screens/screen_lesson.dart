@@ -144,22 +144,15 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               progressSliderBuilder(DeviceInfo.size.width * 0.8),
-              Row(
-                mainAxisSize: MainAxisSize.min,
+              Opacity(
+                opacity: value ? 1 : 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                  _hiddenButton(() => controller.changeSlide(-1)),
-                  Visibility(
-                    visible: value,
-                    child: Widgets.button(
-                      context,
-                      height: 92.d,
-                      padding: EdgeInsets.all(12.d),
-                      child: Asset.load<Image>("footer_next"),
-                      onPressed: () => controller.changeSlide(1),
-                    ),
-                  ),
-                  _hiddenButton(() => controller.changeSlide(1)),
+                    _navigationButton(value, -1),
+                    _navigationButton(value, 1),
                   ],
+                ),
               ),
             ],
           );
@@ -168,15 +161,18 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     );
   }
 
-  Widget _hiddenButton(Function() onLongPress) {
-    return Expanded(
-      child: Widgets.button(
+  Widget _navigationButton(bool isEnable, int step) {
+    return Widgets.button(
       context,
-        height: 100.d,
-        padding: EdgeInsets.zero,
-        onLongPress: onLongPress,
-        child: const SizedBox(),
-      ),
+      height: 92.d,
+      padding: EdgeInsets.all(12.d),
+      child: Asset.load<Image>("footer_${step > 0 ? "next" : "prev"}"),
+      onPressed: () {
+        if (isEnable) {
+          controller.changeSlide(step);
+        }
+      },
+      onLongPress: () => controller.changeSlide(step),
     );
   }
 
