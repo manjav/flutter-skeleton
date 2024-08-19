@@ -27,8 +27,10 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     serviceLocator<Speaker>().loadAllSounds(
       series: controller.series,
       onComplete: () {
-        controller.changeSerie(1);
-        setState(() {});
+        if (mounted) {
+          controller.changeSerie(1);
+          setState(() {});
+        }
       },
       onProgress: (p) => progressInput?.value = p * 100,
       onError: (message) async {
@@ -44,16 +46,16 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   Widget leftSideAppBar() {
-        return Widgets.touchable(
-          context,
-          child: Column(
-            children: [
-              shortcutBuilder(),
-              SizedBox(height: 4.d),
+    return Widgets.touchable(
+      context,
+      child: Column(
+        children: [
+          shortcutBuilder(),
+          SizedBox(height: 4.d),
           progressSliderBuilder(DeviceInfo.size.width * 0.7),
-            ],
-          ),
-          onTap: openSerieSelector,
+        ],
+      ),
+      onTap: openSerieSelector,
     );
   }
 

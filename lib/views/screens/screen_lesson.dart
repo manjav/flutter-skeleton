@@ -28,8 +28,10 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     serviceLocator<Speaker>().loadAllSounds(
       series: controller.series,
       onComplete: () {
-        controller.changeSerie(1);
-        setState(() {});
+        if (mounted) {
+          controller.changeSerie(1);
+          setState(() {});
+        }
       },
       onProgress: (p) => progressInput?.value = p * 100,
       onError: (message) async {
@@ -144,7 +146,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
               progressSliderBuilder(DeviceInfo.size.width * 0.8),
               Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                  children: [
                   _hiddenButton(() => controller.changeSlide(-1)),
                   Visibility(
                     visible: value,
@@ -157,7 +159,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
                     ),
                   ),
                   _hiddenButton(() => controller.changeSlide(1)),
-                ],
+                  ],
               ),
             ],
           );
@@ -169,7 +171,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   Widget _hiddenButton(Function() onLongPress) {
     return Expanded(
       child: Widgets.button(
-        context,
+      context,
         height: 100.d,
         padding: EdgeInsets.zero,
         onLongPress: onLongPress,
