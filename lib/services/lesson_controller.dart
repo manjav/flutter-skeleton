@@ -68,7 +68,8 @@ class LessonController {
       return;
     }
     if (stepLength != 0) {
-      slideIndex.value += stepLength;
+      slideIndex.value =
+          (slideIndex.value + stepLength).max(currentSerie.children.length);
       contentIndex.value = -1;
       changeContent(1);
     }
