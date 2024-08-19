@@ -100,6 +100,10 @@ class ListenerQuiz extends Quiz {
     bool shouldPlayHint = true,
     Function(QuizState state, String text, int mathLevel)? onResult,
   }) async {
+    if (state.value.index < QuizState.ready.index) {
+      log("Listener not initialized yet!");
+      return;
+    }
     if (state.value.index <= QuizState.listening.index) {
       _speech.cancel();
     }
@@ -218,7 +222,7 @@ class ListenerQuiz extends Quiz {
     stop();
     if (repeatVoice.isNotEmpty) {
       await Future.delayed(const Duration(seconds: 1));
-      await serviceLocator<Speaker>().playLocal(repeatVoice, skipOnError:true);
+      await serviceLocator<Speaker>().playLocal(repeatVoice, skipOnError: true);
     } else {
       await Future.delayed(const Duration(seconds: 1));
     }
