@@ -30,10 +30,9 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         controller.changeSerie(1);
         setState(() {});
       },
-      onProgress: (p) => assetsProgress.value = p,
-      onError: () async {
-        await Get.toNamed(Routes.popupMessage,
-            arguments: {"title": "Error in loading assets!"});
+      onProgress: (p) => progressInput?.value = p * 100,
+      onError: (message) async {
+        await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
         if (mounted) {
           Navigator.pop(context);
         }

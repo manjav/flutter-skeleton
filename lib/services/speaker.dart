@@ -65,7 +65,7 @@ class Speaker extends IService {
   final _sounds = <String, BytesSource?>{};
   Future<void> loadAllSounds({
     required List<ParentContent> series,
-    required Function() onError,
+    required Function(String) onError,
     required Function() onComplete,
     required Function(double) onProgress,
     bool loadCaptions = true,
@@ -98,34 +98,41 @@ class Speaker extends IService {
     Narrator narrator,
     Function() onComplete,
     Function(double) onProgress,
-    Function() onError, [
+    Function(String) onError, [
     int tryCount = 0,
   ]) async {
     if (_sounds.containsKey(text)) return;
     _sounds[text] = null;
-    var request = await HttpClient().getUrl(Uri.parse("${narrator.url}$text"));
-    var response = await request.close();
-    if (response.statusCode != 200) {
-      log('Failure status code 😱');
-      return;
-    }
-    var md5 = response.headers.value("Content-Md5");
-    final bytes = await _readResponse(response);
-    if (!Loader.isHashMatch(bytes!.toList(), md5)) {
-      await Future.delayed(const Duration(milliseconds: 50));
-      if (tryCount > 2) {
-        onError();
-      } else {
+    try {
+      var request =
+          await HttpClient().getUrl(Uri.parse("${narrator.url}$text"));
+      var response = await request.close();
+      if (response.statusCode != 200) {
+        log('Failure status code 😱');
         _loadFile(text, narrator, onComplete, onProgress, onError, tryCount++);
-        log("Retry sound loading $tryCount");
+        return;
       }
-      return;
-    }
+      var md5 = response.headers.value("Content-Md5");
+      final bytes = await _readResponse(response);
+      if (!Loader.isHashMatch(bytes!.toList(), md5)) {
+        await Future.delayed(const Duration(milliseconds: 50));
+        if (tryCount > 2) {
+          onError("Lesson asset '$text' not found!");
+        } else {
+          _loadFile(
+              text, narrator, onComplete, onProgress, onError, tryCount++);
+          log("Retry sound loading $tryCount");
+        }
+        return;
+      }
 
-    _sounds[text] = BytesSource(
-      bytes.buffer.asUint8List(32, bytes.lengthInBytes - 32),
-      mimeType: "audio/mpeg",
-    );
+      _sounds[text] = BytesSource(
+        bytes.buffer.asUint8List(32, bytes.lengthInBytes - 32),
+        mimeType: "audio/mpeg",
+      );
+    } catch (e) {
+      onError(e.toString());
+    }
 
     if (_sounds.isEmpty) return;
     var progress = 0.0;
