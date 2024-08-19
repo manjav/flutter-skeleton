@@ -45,21 +45,16 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   Widget leftSideAppBar() {
-    return ValueListenableBuilder(
-      valueListenable: controller.contentIndex,
-      builder: (context, value, child) {
         return Widgets.touchable(
           context,
           child: Column(
             children: [
               shortcutBuilder(),
               SizedBox(height: 4.d),
-              progressSliderBuilder()
+          progressSliderBuilder(DeviceInfo.size.width * 0.7),
             ],
           ),
           onTap: openSerieSelector,
-        );
-      },
     );
   }
 

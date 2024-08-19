@@ -56,7 +56,11 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         ? Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              DirText(controller.currentSerie.title),
+              ValueListenableBuilder(
+                valueListenable: controller.slideIndex,
+                builder: (context, value, child) =>
+                    DirText(controller.currentSerie.title),
+              ),
               SizedBox(width: 8.d),
               Asset.load<SvgPicture>("chevron"),
             ],
@@ -71,58 +75,64 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       alignment: Alignment.center,
       children: [
         Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          mainAxisSize: MainAxisSize.min,
+          children: [
             SizedBox(
               width: 280.d,
               height: 100.d,
               child: Asset.load<RiveAnimation>(
                 "progressbar_group",
-              onRiveInit: (artboard) {
-                final controller = StateMachineController.fromArtboard(
-                    artboard, "State Machine 1");
-                progressInput = controller?.findInput<double>("unit");
-                artboard.addController(controller!);
-              },
+                onRiveInit: (artboard) {
+                  final controller = StateMachineController.fromArtboard(
+                      artboard, "State Machine 1");
+                  progressInput = controller?.findInput<double>("unit");
+                  artboard.addController(controller!);
+                },
+              ),
             ),
-            ),
-              DirText("waiting_l".l()),
+            DirText("waiting_l".l()),
           ],
         ),
-            ],
-          );
+      ],
+    );
   }
 
-  Widget progressSliderBuilder() {
+  Widget progressSliderBuilder(double width) {
     final seriesCount = controller.series.length;
-    final serieIndex = controller.serieIndex.value;
-    final height = 5.d;
-    final margin = EdgeInsets.symmetric(horizontal: height);
-    final width = (DeviceInfo.size.width - height * 10) / seriesCount - height;
+    final height = 8.d;
+    final margin = EdgeInsets.symmetric(horizontal: height * 0.5);
+    final itemWidth = (width - height * seriesCount) / seriesCount;
     return SizedBox(
+      width: width,
       height: height,
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: width / height, crossAxisCount: seriesCount),
-        itemCount: seriesCount,
-        padding: EdgeInsets.zero,
-        itemBuilder: (context, index) {
-          if (index != serieIndex) {
-            return Widgets.rect(
-              radius: 4.d,
-              margin: margin,
-              color: index <= serieIndex ? TColors.green : TColors.white50,
-            );
-          }
-          return Padding(
-            padding: margin,
-            child: Widgets.slider(0, controller.slideIndex.value.toDouble() + 1,
-                controller.currentSerie.children.length.toDouble(),
-                padding: 0,
-                width: width,
-                height: height,
-                backgroundColor: TColors.white50,
-                progressColor: TColors.green),
+      child: ValueListenableBuilder(
+        valueListenable: controller.slideIndex,
+        builder: (context, value, child) {
+          final serieIndex = controller.serieIndex.value;
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: seriesCount,
+            padding: EdgeInsets.zero,
+            itemBuilder: (context, index) {
+              if (index != serieIndex) {
+                return Widgets.rect(
+                  width: itemWidth,
+                  radius: 4.d,
+                  margin: margin,
+                  color: index <= serieIndex ? TColors.green : TColors.white50,
+                );
+              }
+              return Padding(
+                padding: margin,
+                child: Widgets.slider(0, value + 1,
+                    controller.currentSerie.children.length.toDouble(),
+                    padding: 0,
+                    width: itemWidth,
+                    height: height,
+                    backgroundColor: TColors.white50,
+                    progressColor: TColors.green),
+              );
+            },
           );
         },
       ),

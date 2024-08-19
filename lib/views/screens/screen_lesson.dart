@@ -142,7 +142,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // progressSliderBuilder(),
+              progressSliderBuilder(DeviceInfo.size.width * 0.8),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
