@@ -12,6 +12,7 @@ import '../../app_export.dart';
 class NetConnector extends IService {
   Session? _session;
   NakamaGrpcClient? _nakamaClient;
+  Type typeOf<T>() => T;
   final Map<String, DateTime> _rpcTimes = {};
   static Map<String, dynamic> configs = {};
 
@@ -120,10 +121,11 @@ class NetConnector extends IService {
     /// Frequent RPC avoidance
     final now = DateTime.now();
     if (_rpcTimes.containsKey(id) &&
-        now.difference(_rpcTimes[id]!).inMilliseconds < 500) {
+        now.difference(_rpcTimes[id]!).inMilliseconds < 1500) {
       log("Frequent RPC $id");
-      if (T is List) return [] as T;
-      if (T is Map) return {} as T;
+      Type type = typeOf<T>();
+      if (type.toString() == "List<dynamic>") return [] as T;
+      if (type.toString() == "Map<dynamic, dynamic>") return {} as T;
       return null as T;
     }
     _rpcTimes[id] = now;
