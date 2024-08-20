@@ -20,8 +20,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   @override
   void initState() {
     trackerParams = {"id": Get.arguments["content"]!.id};
-    List list = Get.arguments["content"].children.last.children;
-    list.removeRange(2, list.length);
+    // List list = Get.arguments["content"].children.last.children;
+    // list.removeRange(2, list.length);
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
     serviceLocator<Speaker>().loadAllSounds(

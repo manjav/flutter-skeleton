@@ -19,7 +19,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   @override
   void initState() {
     // List list = Get.arguments["content"].children[0].children;
-    // list.removeRange(0, list.length - 4);
+    // list.removeRange(0, list.length - 8);
     trackerParams = {"id": Get.arguments["content"]!.id};
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
@@ -227,7 +227,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   Widget _contentItem(Talk talk) {
     var tip = switch (talk.type) {
       ContentType.user => BalloonTipPosition.rightBottom,
-      ContentType.bot => BalloonTipPosition.leftTop,
+      ContentType.bot => BalloonTipPosition.leftBottom,
       _ => BalloonTipPosition.none,
     };
     if (talk.isQuiz) {
@@ -282,7 +282,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       if (!Prefs.contains("surveys_lessons")) {
         await Get.toNamed(Routes.web,
             arguments: {"url": NetConnector.configs["surveys"]["lessons"]});
-            Prefs.setBool("surveys_lessons", true);
+        Prefs.setBool("surveys_lessons", true);
       }
     }
   }

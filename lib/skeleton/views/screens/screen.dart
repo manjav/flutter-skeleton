@@ -80,7 +80,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   }
 
   List<Widget> appBarElementsLeft() {
-    var speaker = serviceLocator<Speaker>();
     return [
       Widgets.button(context,
           height: 56.d,
@@ -88,17 +87,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
           child: Asset.load<Image>(
               "footer_${Localization.isRTL ? "prev" : "next"}"),
           onPressed: () => Navigator.pop(context)),
-      Widgets.button(
-        context,
-        height: 56.d,
-        padding: EdgeInsets.all(16.d),
-        child: Text(speaker.defaultNarrator.name),
-        onPressed: () {
-          speaker.defaultNarrator = Narrator.values[
-              (speaker.defaultNarrator.index + 1) % Narrator.values.length];
-          setState(() {});
-        },
-      ),
     ];
   }
 

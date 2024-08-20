@@ -58,7 +58,7 @@ class RadioBox extends StatelessWidget {
                   children: [
                     DirText(
                       text.simplify(),
-                      style: textStyle ?? TStyles.huge,
+                      style: textStyle ?? TStyles.big,
                       textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: translation == null ? 0 : 6.d),
@@ -67,8 +67,8 @@ class RadioBox extends StatelessWidget {
                     translation == null
                         ? const SizedBox()
                         : DirText(translation!.simplify(),
-                            style:
-                                TStyles.big.copyWith(color: TColors.primary40)),
+                            style: TStyles.medium
+                                .copyWith(color: TColors.primary40)),
                   ],
                 )),
             Positioned(
