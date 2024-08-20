@@ -149,20 +149,13 @@ class Widgets {
             centerSlice: sliceData?.centerSlice));
   }
 
-  static divider(
-      {double? width,
-      double? height,
-      double margin = 0,
-      Axis direction = Axis.horizontal,
-      BoxDecoration? decoration}) {
-    var v = direction == Axis.vertical;
+  static divider({double? width, double? height, BoxDecoration? decoration}) {
     return rect(
-        width: width ?? 16.d,
-        height: height ?? 16.d,
-        margin: EdgeInsets.all(margin),
-        decoration: decoration ??
-            imageDecorator("ui_divider_${v ? 'v' : 'h'}",
-                ImageCenterSliceData(v ? 16 : 38, v ? 38 : 16)));
+        radius: 2.d,
+        width: width ?? 1.d,
+        height: height ?? 1.d,
+        color: TColors.primary10,
+        decoration: decoration);
   }
 
   static slider(double min, double value, double max,

@@ -43,7 +43,7 @@ class BalloonDecoration extends Decoration {
       strokeColor ?? TColors.primary20,
       tipSize ?? 10.d,
       strokeWidth ?? 2.d,
-      cornerRadius ?? 10.d,
+      cornerRadius ?? 30.d,
       tipPosition ?? BalloonTipPosition.bottom,
     );
   }
@@ -97,7 +97,7 @@ class _BollonPainter extends BoxPainter {
       BalloonTipPosition.rightBottom => Offset(r.right - l, r.bottom - cr),
       BalloonTipPosition.leftTop => Offset(r.left + l, r.top + cr + tipSize),
       BalloonTipPosition.left => Offset(r.left + l, r.center.dy + tipSize),
-      BalloonTipPosition.leftBottom => Offset(r.left + l, r.bottom - cr),
+      BalloonTipPosition.leftBottom => Offset(r.left, r.bottom),
       BalloonTipPosition.bottomLeft => Offset(r.left + cr, r.bottom - l),
       BalloonTipPosition.bottomRight =>
         Offset(r.right - cr - tipSize, r.bottom - l),
@@ -112,16 +112,17 @@ class _BollonPainter extends BoxPainter {
           ..lineTo(tip.dx + tipSize, tip.dy - tipSize * 0.1)
           ..quadraticBezierTo(tip.dx + tipSize * 1.2, tip.dy - tipSize * 0.3,
               tip.dx + tipSize, tip.dy - tipSize * 0.6)
-          ..lineTo(tip.dx, tip.dy - tipSize * 1.4),
+          ..lineTo(tip.dx, tip.dy - tipSize * 2),
       BalloonTipPosition.leftTop ||
       BalloonTipPosition.left ||
       BalloonTipPosition.leftBottom =>
         Path()
-          ..moveTo(tip.dx, tip.dy)
-          ..lineTo(tip.dx - tipSize, tip.dy - tipSize * 0.9)
-          ..quadraticBezierTo(tip.dx - tipSize * 1.2, tip.dy - tipSize,
-              tip.dx - tipSize, tip.dy - tipSize * 1.3)
-          ..lineTo(tip.dx, tip.dy - tipSize * 1.4),
+          ..moveTo(tip.dx + cr, tip.dy)
+          ..lineTo(tip.dx - tipSize, tip.dy)
+          ..quadraticBezierTo(tip.dx - tipSize * 1.5, tip.dy - tipSize * 0.5,
+              tip.dx - tipSize, tip.dy - tipSize)
+          ..quadraticBezierTo(
+              tip.dx, tip.dy - tipSize * 1.8, tip.dx, tip.dy - tipSize * 3.6),
       _ => Path()
         ..moveTo(tip.dx, tip.dy)
         ..lineTo(tip.dx + tipSize * 0.9, tip.dy + tipSize)
@@ -131,10 +132,10 @@ class _BollonPainter extends BoxPainter {
     };
 
     canvas.drawRRect(r, _mainPaint);
-    canvas.drawRRect(r, _strokePaint);
+    // canvas.drawRRect(r, _strokePaint);
     if (tipPosition != BalloonTipPosition.none) {
       canvas.drawPath(path, _mainPaint);
-      canvas.drawPath(path, _strokePaint);
+      // canvas.drawPath(path, _strokePaint);
     }
   }
 }

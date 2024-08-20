@@ -25,10 +25,10 @@ class RadioBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var margin = 14.d;
+    var margin = 6.d;
     var alignment = MainAxisAlignment.center;
     if (ballonPosition != BalloonTipPosition.none) {
-      alignment = ballonPosition == BalloonTipPosition.leftTop
+      alignment = ballonPosition == BalloonTipPosition.leftBottom
           ? MainAxisAlignment.start
           : MainAxisAlignment.end;
     }
@@ -37,6 +37,7 @@ class RadioBox extends StatelessWidget {
       mainAxisAlignment: alignment,
       children: [
         Stack(
+          clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
             Widgets.rect(
@@ -45,36 +46,37 @@ class RadioBox extends StatelessWidget {
                         (ballonPosition == BalloonTipPosition.none
                             ? 0.75
                             : 0.85)),
-                margin:
-                    EdgeInsets.fromLTRB(margin, margin * 2 - 2.d, margin, 0),
+                margin: EdgeInsets.fromLTRB(margin * 5, margin, margin, margin),
                 padding: EdgeInsets.fromLTRB(
-                    margin * 2, margin * 2, margin * 2, margin),
+                    margin * 3, margin * 5, margin * 3, margin),
                 decoration: BalloonDecoration(
                     tipPosition: ballonPosition,
                     mainColor: color,
                     strokeColor: strokeColor),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     DirText(
                       text.simplify(),
-                      style: textStyle ?? TStyles.medium,
+                      style: textStyle ?? TStyles.huge,
                       textAlign: TextAlign.justify,
                     ),
-                    SizedBox(height: translation == null ? 0 : 4.d),
+                    SizedBox(height: translation == null ? 0 : 6.d),
+                    Widgets.divider(),
+                    SizedBox(height: translation == null ? 0 : 12.d),
                     translation == null
                         ? const SizedBox()
                         : DirText(translation!.simplify(),
-                            style: TStyles.small
-                                .copyWith(color: TColors.primary40)),
+                            style:
+                                TStyles.big.copyWith(color: TColors.primary40)),
                   ],
                 )),
             Positioned(
-              top: margin - 2.d,
-              // right: translation != null ? null : 30.d,
+              top: -margin * 4,
               child: SpeakerBox(
                 narrator: narrator!,
                 value: text,
-                width: margin * 2,
+                width: margin * 9,
               ),
             ),
             /* translation != null
@@ -130,8 +132,14 @@ class SpeakerBox extends StatelessWidget {
       context,
       width: size,
       height: size,
-      radius: size,
-      color: TColors.primary10,
+      decoration: BoxDecoration(
+        color: TColors.primary0,
+        boxShadow: [
+          BoxShadow(
+              blurRadius: 1.d, offset: Offset(0, 1.d), color: TColors.primary10)
+        ],
+        borderRadius: BorderRadius.all(Radius.circular(size)),
+      ),
       alignment: Alignment.center,
       padding: EdgeInsets.zero,
       child: StreamBuilder(

@@ -11,11 +11,11 @@ class TColors {
   static const primary50 = Color(0xFF617791);
   static const primary40 = Color(0xFF7A8FA9);
   static const primary30 = Color(0xFF92A6C0);
-  static const primary20 = Color(0xFFADBFD6);
+  static const primary20 = Color(0xFFB6D0D3);
   static const primary10 = Color(0xFFE1E1E1);
   static const primary0 = Color(0xFFFFF9EF);
   static const error = Color(0xFFFF5D54);
-  static const green = Color(0xFF01C593);
+  static const green = Color(0xFF00C391);
   static const black = Color(0xFF000000);
   static const black80 = Color(0xAA000000);
   static const blue = Color(0xFF4848FF);
