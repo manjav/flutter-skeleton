@@ -47,7 +47,7 @@ class NetConnector extends IService {
       }
     }
     if (response!.statusCode == 200) {
-      configs = json.decode(utf8.decode(response.bodyBytes));
+      configs = json.decode(response.body);
       var updates = configs["updates"];
       if (updates["force"]["version"] > version) {
         throw SkeletonException(

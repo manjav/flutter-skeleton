@@ -20,8 +20,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   @override
   void initState() {
     trackerParams = {"id": Get.arguments["content"]!.id};
-    // List list = Get.arguments["content"].children.last.children;
-    // list.removeRange(3, list.length);
+    List list = Get.arguments["content"].children.last.children;
+    list.removeRange(2, list.length);
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
     serviceLocator<Speaker>().loadAllSounds(
@@ -275,6 +275,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     });
     if (mounted) {
       Navigator.pop(context);
+      if (!Prefs.contains("surveys_series")) {
+        await Get.toNamed(Routes.web,
+            arguments: {"url": NetConnector.configs["surveys"]["series"]});
+        Prefs.setBool("surveys_series", true);
+      }
     }
   }
 

@@ -88,6 +88,7 @@ class _MyAppState extends State<MyApp>
           locale:
               Localization.locales.firstWhere((l) => l.languageCode == "en"),
           getPages: [
+            _getPage(Routes.web, WebScreen()),
             _getPage(Routes.home, HomeScreen()),
             // _getPage(Routes.word, LessonWordScreen()),
             // _getPage(Routes.match, LessonMatchScreen()),

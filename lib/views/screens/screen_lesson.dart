@@ -279,6 +279,11 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     });
     if (mounted) {
       Navigator.pop(context);
+      if (!Prefs.contains("surveys_lessons")) {
+        await Get.toNamed(Routes.web,
+            arguments: {"url": NetConnector.configs["surveys"]["lessons"]});
+            Prefs.setBool("surveys_lessons", true);
+      }
     }
   }
 

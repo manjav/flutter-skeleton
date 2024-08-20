@@ -48,6 +48,7 @@ dependencies:
   # unity_ads_plugin: ^0.3.10
   url_launcher: ^6.1.14
   wakelock_plus: ^1.2.7
+  webview_flutter: ^4.8.0
 
 dev_dependencies:
   flutter_test:
