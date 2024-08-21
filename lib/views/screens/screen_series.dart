@@ -275,11 +275,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     });
     if (mounted) {
       Navigator.pop(context);
-      if (!Prefs.contains("surveys_series")) {
-        await Get.toNamed(Routes.web,
-            arguments: {"url": NetConnector.configs["surveys"]["series"]});
-        Prefs.setBool("surveys_series", true);
-      }
+      showFeedback();
     }
   }
 
