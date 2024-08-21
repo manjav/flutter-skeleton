@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart' as rive;
+
 import '../../export.dart';
 
 class LoaderWidget extends StatefulWidget {
@@ -112,8 +114,8 @@ class _LoaderWidgetState extends State<LoaderWidget> {
         }), fit: widget.fit);
       case AssetType.image:
         if (loader.metadata == null) return null;
-        final image =
-            Image.memory(loader.metadata as Uint8List, gaplessPlayback: true);
+        final image = material.Image.memory(loader.metadata as Uint8List,
+            gaplessPlayback: true);
         return image;
       case AssetType.vector:
         return SvgPicture.memory(loader.metadata as Uint8List);

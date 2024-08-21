@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
@@ -21,7 +22,7 @@ class Asset {
     return switch (type) {
       AssetType.animation =>
         RiveAnimation.asset(address, fit: fit, onInit: onRiveInit) as T,
-      AssetType.image => Image.asset(
+      AssetType.image => material.Image.asset(
           address,
           fit: fit,
           width: width,
@@ -39,7 +40,7 @@ class Asset {
   static AssetType _getType(dynamic type) {
     return switch (type) {
       const (RiveAnimation) => AssetType.animation,
-      const (Image) => AssetType.image,
+      const (material.Image) => AssetType.image,
       const (DeviceFileSource) => AssetType.sound,
       const (SvgPicture) => AssetType.vector,
       _ => AssetType.text
