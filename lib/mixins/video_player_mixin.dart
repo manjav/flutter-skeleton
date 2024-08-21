@@ -7,6 +7,7 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'));
 
   Future<void> playVideo(Talk talk) async {
+    if (talk.type != ContentType.video) return;
     _controller = VideoPlayerController.networkUrl(
         Uri.parse("${LoaderWidget.baseURL}/videos/${talk.targetValue}.mp4"));
     await _controller.initialize();

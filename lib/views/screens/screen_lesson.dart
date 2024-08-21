@@ -77,10 +77,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     }
 
     await playSound(talk, lastIndex: lastIndex);
-    if (talk.type == ContentType.video) {
-      controller.slidePassed.value = true;
     await playVideo(talk);
-    }
     if (controller.uniqueIndex != lastIndex) return;
     if (!talk.isStation) controller.changeContent(1);
 

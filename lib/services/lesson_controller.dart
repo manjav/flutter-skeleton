@@ -73,7 +73,6 @@ class LessonController {
       contentIndex.value = -1;
       changeContent(1);
     }
-    slidePassed.value = false;
   }
 
   Future<void> changeContent(int stepLength) async {
@@ -82,6 +81,7 @@ class LessonController {
       return;
     }
     contentIndex.value += stepLength;
+    slidePassed.value = !currentContent.isQuiz;
   }
 
   void onQuizResult(int score, String answer, Talk talk) {
