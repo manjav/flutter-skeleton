@@ -1,13 +1,13 @@
-name: Build and upload new version
+name: Build and upload for Android
 on:
   push:
     tags:
     - 'v[0-9]+.[0-9]+.[0-9]+*'
 jobs:
   build:
-    name: build_upload
+    name: build_upload_android
     permissions: write-all
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
 
       - uses: actions/checkout@v3
@@ -15,16 +15,12 @@ jobs:
       - name: Check Version
         uses: ./.github/actions/check_verion
         
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/build_android
         with:
           android-store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
           android-store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
           android-key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
           android-key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
-          ios-certificate-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
-          ios-certificate-password: ${{ secrets.IOS_CERTIFICATE_PASS }}
-          ios-provisioning-profile-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
-          ios-keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
           build-apk: false
 
       - uses: r0adkll/upload-google-play@v1
@@ -34,11 +30,3 @@ jobs:
           releaseFiles: ./build/app/outputs/bundle/release/app-release.aab
           track: internal
           status: draft
-
-      - name: Upload iOS app to TestFlight
-        uses: apple-actions/upload-testflight-build@v1
-        with: 
-          app-path: build/ios/ipa/lifetalk.ipa
-          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}

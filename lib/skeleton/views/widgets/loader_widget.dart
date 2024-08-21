@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as meterial;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/assets/file_asset.dart' as rive;
+
 import '../../export.dart';
 
 class LoaderWidget extends StatefulWidget {
