@@ -2,7 +2,7 @@ name: Build and upload for Android
 on:
   push:
     tags:
-    - 'c[0-9]+.[0-9]+.[0-9]+*'
+    - 'v[0-9]+.[0-9]+.[0-9]+*'
 jobs:
   build:
     name: build_upload_android
@@ -23,10 +23,10 @@ jobs:
           android-key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
           build-apk: false
 
-      # - uses: r0adkll/upload-google-play@v1
-      #   with:
-      #     serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
-      #     packageName: com.lifetalk.learn.language.speaks
-      #     releaseFiles: ./build/app/outputs/bundle/release/app-release.aab
-      #     track: internal
-      #     status: draft
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
+          packageName: com.lifetalk.learn.language.speaks
+          releaseFiles: ./build/app/outputs/bundle/release/app-release.aab
+          track: internal
+          status: draft
