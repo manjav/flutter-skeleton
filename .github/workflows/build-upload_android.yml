@@ -1,0 +1,32 @@
+name: Build and upload for Android
+on:
+  push:
+    tags:
+    - 'c[0-9]+.[0-9]+.[0-9]+*'
+jobs:
+  build:
+    name: build_upload_android
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Check Version
+        uses: ./.github/actions/check_verion
+        
+      - uses: ./.github/actions/build_android
+        with:
+          android-store-base64: ${{ secrets.ANDROID_SIGN_BASE64 }}
+          android-store-pass: ${{ secrets.ANDROID_SIGN_STORE_PASS }}
+          android-key-alias: ${{ secrets.ANDROID_SIGN_ALIAS }}
+          android-key-pass: ${{ secrets.ANDROID_SIGN_KEY_PASS }}
+          build-apk: false
+
+      # - uses: r0adkll/upload-google-play@v1
+      #   with:
+      #     serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
+      #     packageName: com.lifetalk.learn.language.speaks
+      #     releaseFiles: ./build/app/outputs/bundle/release/app-release.aab
+      #     track: internal
+      #     status: draft

@@ -1,5 +1,5 @@
 name: build
-description: Build Android and iOS
+description: Build Android
 inputs:
   android-store-base64:
     description: "keyAlias with which to sign the app"
@@ -13,26 +13,11 @@ inputs:
   android-key-pass:
     description: "The password for the store used to sign the app"
     required: true
-  ios-certificate-base64:
-    description: "iOS Certificate Base64"
-    required: false
-  ios-certificate-password:
-    description: "iOS Certificate Password"
-    required: false
-  ios-provisioning-profile-base64:
-    description: "iOS Provisioning Base64"
-    required: false
-  ios-keychain-password:
-    description: "iOS Keychain Password"
-    required: false
   build-apk:
     description: "Build APKs for internal releases"
     default: true
   build-aab:
     description: "Build AAB for Playstore"
-    default: true
-  build-ipa:
-    description: "Build iOS for TestFlight"
     default: true
   working-directory:
     description: The root directory of the flutter app within this repository
@@ -103,14 +88,3 @@ runs:
       run: flutter build appbundle --dart-define release=google-play
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-
-    - name: Build ipa
-      if: inputs.build-ipa == 'true'
-      uses: cedvdb/action-flutter-build-ios@v1
-      with:
-        # always use --export-options-plist=ios/GithubActionsExportOptions.plist
-        build-cmd: flutter build ipa --release --export-options-plist=ios/GithubActionsExportOptions.plist
-        certificate-base64: ${{ inputs.ios-certificate-base64 }}
-        certificate-password: ${{ inputs.ios-certificate-password }}
-        provisioning-profile-base64: ${{ inputs.ios-provisioning-profile-base64 }}
-        keychain-password: ${{ inputs.ios-keychain-password }}
