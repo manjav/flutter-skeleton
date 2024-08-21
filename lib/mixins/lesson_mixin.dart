@@ -156,7 +156,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     int lastIndex = -1,
     bool force = false,
   }) async {
-    if (talk.type.textSide != TranslationSide.none && !talk.isQuiz) {
+    if (talk.type.textSide != TranslationSide.none && !talk.isStation) {
       // await serviceLocator<Speaker>()
       //     .play(soundId, narrator: talk.type.narrator, force: force);
       await serviceLocator<Speaker>()

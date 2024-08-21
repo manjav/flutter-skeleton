@@ -16,6 +16,7 @@ class Content {
       type == ContentType.answer ||
       type == ContentType.repeat ||
       type == ContentType.translate;
+  bool get isStation => isQuiz || type == ContentType.video;
 
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];
@@ -106,7 +107,8 @@ enum ContentType {
   translate,
   user,
   bot,
-  image;
+  image,
+  video;
 
   ContentType getChild() {
     return switch (this) {

@@ -11,7 +11,7 @@ class LessonScreen extends AbstractScreen {
 }
 
 class _ScreenState extends AbstractScreenState<LessonScreen>
-    with LessonMixin, ListeningMixin {
+    with LessonMixin, ListeningMixin, VideoPlayerMixin {
   final List<Talk> _animatedItems = [];
   final _animatedListKey = GlobalKey<AnimatedListState>();
   final ScrollController _chatScrollController = ScrollController();
@@ -77,8 +77,12 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     }
 
     await playSound(talk, lastIndex: lastIndex);
+    if (talk.type == ContentType.video) {
+      controller.slidePassed.value = true;
+    await playVideo(talk);
+    }
     if (controller.uniqueIndex != lastIndex) return;
-    if (!talk.isQuiz) controller.changeContent(1);
+    if (!talk.isStation) controller.changeContent(1);
 
     // var duration = const Duration(milliseconds: 500);
     // await _chatScrollController.animateTo(
@@ -201,6 +205,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
+        ContentType.video => videoBuilder(talk),
         _ => _contentItem(talk),
       },
     );
