@@ -145,7 +145,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   Future<void> showFeedback() async {
     final id = "survey_${controller.root!.id}";
     if (Prefs.contains(id)) return;
-    if (!NetConnector.configs["surveys"].contains(id)) return;
+    if (!NetConnector.configs["surveys"].containsKey(id)) return;
     await Get.toNamed(Routes.web,
         arguments: {"url": NetConnector.configs["surveys"][id]});
     Prefs.setBool(id, true);
