@@ -202,7 +202,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
-        ContentType.video => videoBuilder(talk),
+        ContentType.video => videoBuilder(controller, talk),
         _ => _contentItem(talk),
       },
     );
