@@ -134,6 +134,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Widget _categoryTitleBuilder(ParentContent category) {
     final thickness = category.index == _categoryIndex ? 1.8.d : 0.0;
     final isPassed = isCategoryComplete(category);
+    final percent = 1 - _categoryHeight / DeviceInfo.size.width;
     return SizedBox(
       height: _categoryHeight,
       child: Row(
@@ -197,8 +198,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                             TColors.primary0,
                             TColors.primary0.withOpacity(0.6),
                           ],
-                          begin: const FractionalOffset(0.0, 0.0),
-                          end: const FractionalOffset(0.8, 0.0),
+                          begin: FractionalOffset(percent * 0.65, 0.0),
+                          end: FractionalOffset(percent, 0.0),
                           stops: const [0.0, 0.75, 1.0],
                           tileMode: TileMode.clamp),
                       border: category.index == _categoryIndex
