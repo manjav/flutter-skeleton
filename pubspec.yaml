@@ -4,7 +4,7 @@ description: A new Flutter project.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.1.37+100137
+version: 1.1.38+100138
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
@@ -42,7 +42,7 @@ dependencies:
   package_info_plus: ^8.0.1
   path_provider: ^2.1.4
   provider: ^6.1.1
-  rive: ^0.13.10
+  rive: ^0.13.9
   shared_preferences: ^2.3.1
   speech_to_text: ^6.6.2
   # unity_ads_plugin: ^0.3.10
