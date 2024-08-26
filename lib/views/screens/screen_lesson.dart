@@ -89,25 +89,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  Widget contentFactory(double paddingTop) {
-    if (controller.series.isEmpty) {
-      return const SizedBox();
-    }
-
-    if (controller.serieIndex.value < 0) {
-      return loadingProgressbarBuilder();
-    }
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        childBuilder(paddingTop),
-        _captionBuilder(),
-        _navigatorBuilder(),
-      ],
-    );
-  }
-
-  Widget _captionBuilder() {
+  Widget headerBuilder(double paddingTop) {
     return FractionallySizedBox(
       widthFactor: 0.9,
       child: Align(
@@ -134,7 +116,8 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     );
   }
 
-  Widget _navigatorBuilder() {
+  @override
+  Widget footerBuilder() {
     return Align(
       alignment: const Alignment(0, 0.9),
       child: ValueListenableBuilder(
@@ -178,7 +161,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  Widget childBuilder(double paddingTop) {
+  Widget contentBuilder(double paddingTop) {
     return AnimatedList(
       shrinkWrap: true,
       key: _animatedListKey,

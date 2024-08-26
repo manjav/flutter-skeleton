@@ -20,56 +20,21 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     if (controller.series.isEmpty) {
       return const SizedBox();
     }
+    }
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        childBuilder(paddingTop),
-      ],
-    );
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            contentBuilder(paddingTop),
+            headerBuilder(paddingTop),
+            footerBuilder(),
+          ],
+        );
   }
 
-  Widget navigatorBuilder(double paddingTop) {
-    return Positioned(
-      top: paddingTop,
-      left: 8.d,
-      right: 12.d,
-      child: Row(
-        children: [
-          Widgets.button(
-            context,
-            width: 32.d,
-            height: 32.d,
-            padding: EdgeInsets.all(8.d),
-            child: Asset.load<SvgPicture>("close",
-                svgColorFilter:
-                    const ColorFilter.mode(TColors.primary50, BlendMode.srcIn)),
-            onPressed: () => Navigator.pop(context),
-          ),
-          Expanded(child: leftSideAppBar()),
-        ],
-      ),
-    );
-  }
-
-  Widget shortcutBuilder() {
-    return controller.series.length > 1 && controller.serieIndex.value > -1
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ValueListenableBuilder(
-                valueListenable: controller.slideIndex,
-                builder: (context, value, child) =>
-                    DirText(controller.currentSerie.title),
-              ),
-              SizedBox(width: 8.d),
-              Asset.load<SvgPicture>("chevron"),
-            ],
-          )
-        : const SizedBox();
-  }
-
-  Widget leftSideAppBar() => const SizedBox();
+  Widget headerBuilder(double paddingTop) => const SizedBox();
+  Widget contentBuilder(double paddingTop) => const SizedBox();
+  Widget footerBuilder() => const SizedBox();
 
   Widget loadingProgressbarBuilder() {
     return Stack(
@@ -139,8 +104,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       ),
     );
   }
-
-  Widget childBuilder(double paddingTop) => const SizedBox();
 
   Future<void> showFeedback() async {
     final id = "survey_${controller.root!.id}";

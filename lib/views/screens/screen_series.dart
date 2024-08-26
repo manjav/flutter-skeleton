@@ -45,8 +45,11 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   @override
-  Widget leftSideAppBar() {
-    return Widgets.touchable(
+  Widget headerBuilder(double paddingTop) {
+    return Positioned(
+      top: paddingTop,
+      left: 70.d,
+      child: Widgets.touchable(
       context,
       child: Column(
         children: [
@@ -56,11 +59,29 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         ],
       ),
       onTap: openSerieSelector,
+      ),
     );
   }
 
+  Widget shortcutBuilder() {
+    return controller.series.length > 1 && controller.serieIndex.value > -1
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ValueListenableBuilder(
+                valueListenable: controller.slideIndex,
+                builder: (context, value, child) =>
+                    DirText(controller.currentSerie.title),
+              ),
+              SizedBox(width: 8.d),
+              Asset.load<SvgPicture>("chevron"),
+            ],
+          )
+        : const SizedBox();
+  }
+
   @override
-  Widget childBuilder(double paddingTop) {
+  Widget contentBuilder(double paddingTop) {
     _slidesScrollController ??= PageController(
         viewportFraction:
             _slideHeight / (DeviceInfo.size.height - paddingTop - padding));
@@ -80,9 +101,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         child: ValueListenableBuilder(
           valueListenable: controller.serieIndex,
           builder: (context, value, child) {
-            if (controller.serieIndex.value < 0) {
-              return loadingProgressbarBuilder();
-            }
             _enableUntil.value = 0;
             _scrollTo(0);
             return PageView.builder(
@@ -91,14 +109,14 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                 controller: _slidesScrollController,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.currentSerie.children.length + 1,
-                itemBuilder: _slideItemBiulder);
+                itemBuilder: _slideItemBuilder);
           },
         ),
       ),
     );
   }
 
-  Widget _slideItemBiulder(BuildContext context, int index) {
+  Widget _slideItemBuilder(BuildContext context, int index) {
     return ValueListenableBuilder<int>(
       valueListenable: _enableUntil,
       builder: (context, value, child) {
