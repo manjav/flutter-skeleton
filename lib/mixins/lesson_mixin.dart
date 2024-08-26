@@ -39,7 +39,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       builder: (context, value, child) {
         if (value < 0) {
           return _assetsProgressbarBuilder();
-    }
+        }
 
         return Stack(
           alignment: Alignment.center,
@@ -50,7 +50,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
           ],
         );
       },
-        );
+    );
   }
 
   Widget headerBuilder(double paddingTop) => const SizedBox();
@@ -143,8 +143,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     if (talk.type.textSide != TranslationSide.none && !talk.isStation) {
       // await serviceLocator<Speaker>()
       //     .play(soundId, narrator: talk.type.narrator, force: force);
-      await serviceLocator<Speaker>()
-          .playLocal(talk.getText(talk.type.textSide));
+      final text = talk.getText(talk.type.textSide);
+      await serviceLocator<Speaker>().playLocal(text);
     }
   }
 
