@@ -116,31 +116,36 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
             items.add(SizedBox(height: 12.d));
           }
         }
-        return Widgets.touchable(
-          context,
-          child: Widgets.rect(
-            radius: 24.d,
-            color: index <= value ? TColors.primary0 : TColors.primary10,
-            margin: EdgeInsets.symmetric(vertical: 35.d),
-            padding: EdgeInsets.symmetric(horizontal: 20.d),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center, children: items),
+        final opacity = index <= value ? 1.0 : 0.0;
+        return AnimatedOpacity(
+          opacity: opacity,
+          duration: Duration(milliseconds: opacity > 0 ? 100 : 0),
+          child: Widgets.touchable(
+            context,
+            child: Widgets.rect(
+              radius: 24.d,
+              color: index <= value ? TColors.primary0 : TColors.primary10,
+              margin: EdgeInsets.symmetric(vertical: 35.d),
+              padding: EdgeInsets.symmetric(horizontal: 20.d),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center, children: items),
+            ),
+            onTap: () {
+              if (index != controller.slideIndex.value) {
+                _scrollTo(index);
+              }
+            },
+            onVerticalDragEnd: (DragEndDetails details) {
+              final velocity = (details.primaryVelocity ?? 0);
+              final absoluteVelocity = velocity.abs();
+              if (absoluteVelocity > 500) {
+                final page = ((_slidesScrollController!.page ?? 0) +
+                        (velocity / absoluteVelocity) * -1)
+                    .round();
+                _scrollTo(page);
+              }
+            },
           ),
-          onTap: () {
-            if (index != controller.slideIndex.value) {
-              _scrollTo(index);
-            }
-          },
-          onVerticalDragEnd: (DragEndDetails details) {
-            final velocity = (details.primaryVelocity ?? 0);
-            final absoluteVelocity = velocity.abs();
-            if (absoluteVelocity > 500) {
-              final page = ((_slidesScrollController!.page ?? 0) +
-                      (velocity / absoluteVelocity) * -1)
-                  .round();
-              _scrollTo(page);
-            }
-          },
         );
       },
     );
