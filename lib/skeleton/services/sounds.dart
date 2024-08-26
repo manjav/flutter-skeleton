@@ -1,45 +1,80 @@
+import 'dart:typed_data';
+
 import 'package:audioplayers/audioplayers.dart';
 
 import '../export.dart';
 
-class Sounds extends IService {
-/*
- * Load, cache and play sounds
- */
-  // var _index = 0;
-  final Map<String, AudioPlayer> _players = {};
-  final _sounds = <String, DeviceFileSource>{};
+enum AudioLoadMode { assets, network }
 
-  Future<AudioPlayer?> play(String name,
-      {String? channel, bool loop = false}) async {
+class Sounds extends IService {
+  final _sounds = <String, Source>{};
+  final Map<String, AudioPlayer> _players = {};
+
+  /// Plays the audio with the given [name].
+  ///
+  /// The [name] is the name of the sound to play.
+  ///
+  /// The [loadMode] specifies how to load the sound. It can be either [AudioLoadMode.assets]
+  /// or [AudioLoadMode.network].
+  ///
+  /// The [channel] is the channel to play the sound on. If it is `null`, the sound will be
+  /// played on the default channel.
+  ///
+  /// The [loop] parameter specifies whether to loop the sound. It defaults to `false`.
+  ///
+  /// Throws an exception if the sound cannot be played.
+  Future<void> play(
+    String name, {
+    String? channel,
+    String? extension,
+    bool loop = false,
+    AudioLoadMode loadMode = AudioLoadMode.network,
+  }) async {
     AudioPlayer player;
-    if (name.isEmpty) return null;
+    if (name.isEmpty) return;
     if (channel == null) {
-      if (!Pref.sfx.getBool()) return null;
+      if (!Pref.sfx.getBool()) return;
       player = getPlayer(name);
     } else {
-      if (channel == "music" && !Pref.music.getBool()) return null;
+      if (channel == "music" && !Pref.music.getBool()) return;
       player = getPlayer(channel);
     }
 
-    if (loop) player.setReleaseMode(ReleaseMode.loop);
+    if (loop) {
+      player.setReleaseMode(ReleaseMode.loop);
+    }
 
     if (_sounds.containsKey(name)) {
       try {
-        player.play(_sounds[name]!);
+        if (player.state != PlayerState.playing) {
+          player.play(_sounds[name]!);
+        }
       } catch (e) {
+        player.state = PlayerState.stopped;
         log('$e');
       }
-      return player;
+      return;
     }
 
-    var extension = AssetType.sound.extension;
-    var md5 = LoaderWidget.hashMap['$name.$extension'];
-    var file = await Loader().load(
-        '$name.$extension', '${LoaderWidget.baseURL}/sounds/$name.$extension',
-        hash: md5);
-    player.play(_sounds[name] = DeviceFileSource(file!.path));
-    return player;
+    extension ??= AssetType.sound.extension;
+    if (loadMode == AudioLoadMode.network) {
+      var md5 = LoaderWidget.hashMap['$name.$extension'];
+      var loader = Loader();
+      await loader.load(
+          '$name.$extension', '${LoaderWidget.baseURL}/sounds/$name.$extension',
+          hash: md5);
+
+      var bytes = Uint8List.fromList(loader.bytes!);
+      final source = BytesSource(
+        bytes.buffer.asUint8List(32, bytes.lengthInBytes - 32),
+        mimeType: "audio/mpeg",
+      );
+      player.play(_sounds[name] = source);
+      // player.play(_sounds[name] = DeviceFileSource(file!.path));
+      // player.play(UrlSource('${LoaderWidget.baseURL}/sounds/$name.$extension'));
+    } else {
+      player.play(_sounds[name] = AssetSource("sounds/$name.$extension"));
+    }
   }
 
   ///we have bug here because in mouse down and mouse up we get same audio player
@@ -64,9 +99,5 @@ class Sounds extends IService {
     for (var e in entries) {
       e.value.stop();
     }
-  }
-
-  void playMusic() {
-    // play('main_theme', channel: "music", loop: true);
   }
 }

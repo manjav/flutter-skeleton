@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp>
         state == AppLifecycleState.inactive) {
       // serviceLocator<Sounds>().stopAll();
     } else if (state == AppLifecycleState.resumed) {
-      serviceLocator<Sounds>().playMusic();
+      // serviceLocator<Sounds>().playMusic();
     }
   }
 
@@ -90,6 +90,7 @@ class _MyAppState extends State<MyApp>
           getPages: [
             _getPage(Routes.web, WebScreen()),
             _getPage(Routes.home, HomeScreen()),
+            _getPage(Routes.chat, ChatScreen()),
             // _getPage(Routes.word, LessonWordScreen()),
             // _getPage(Routes.match, LessonMatchScreen()),
             // _getPage(Routes.dictation, LessonDictationScreen()),
