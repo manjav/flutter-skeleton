@@ -45,13 +45,14 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     if (talk.isQuiz) {
       listen(talk);
     }
+    serviceLocator<Sounds>().stopAll();
+    stopVideo();
     await _addChat(controller.uniqueIndex);
   }
 
   Future<void> _addChat(int lastIndex) async {
     await Future.delayed(const Duration(milliseconds: 200));
     if (controller.uniqueIndex != lastIndex) return;
-    serviceLocator<Sounds>().stopAll();
     var talk = controller.currentContent;
     if (talk.type == ContentType.caption) {
       caption.value = talk;
@@ -170,7 +171,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
-        ContentType.video => videoBuilder(controller, talk),
+        ContentType.video => videoBuilder(controller),
         _ => _contentItem(talk),
       },
     );
