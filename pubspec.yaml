@@ -13,20 +13,20 @@ dependencies:
   flutter:
     sdk: flutter
   # adivery: ^4.6.1
-  advertising_id: ^2.6.0
+  advertising_id: ^2.7.0
   archive: ^3.4.8
   audioplayers: ^6.0.0
-  crypto: ^3.0.2
-  device_info_plus: ^10.1.1
+  crypto: ^3.0.5
+  device_info_plus: ^10.1.2
   firebase_analytics: ^11.2.1
   firebase_core: ^3.3.0
   firebase_crashlytics: ^4.0.4
   # firebase_messaging: ^15.0.4
   # flutter_local_notifications: ^16.1.0
-  flutter_smartlook: ^4.1.23
+  flutter_smartlook: ^4.1.24
   flutter_svg: ^2.0.9
-  flutter_timezone: ^2.1.0
-  fuzzywuzzy: ^1.1.6
+  flutter_timezone: ^3.0.0
+  fuzzywuzzy: ^1.2.0
   # gameanalytics_sdk: ^1.2.7
   # games_services: ^4.0.0
   get: ^4.6.6
@@ -39,17 +39,17 @@ dependencies:
   # metrix_plugin: ^1.5.0
   nakama: ^1.0.5
   # onesignal_flutter: ^5.0.3 
-  package_info_plus: ^8.0.1
+  package_info_plus: ^8.0.2
   path_provider: ^2.1.4
   provider: ^6.1.1
   rive: ^0.13.9
-  shared_preferences: ^2.3.1
+  shared_preferences: ^2.3.2
   speech_to_text: ^6.6.2
   # unity_ads_plugin: ^0.3.10
   url_launcher: ^6.1.14
   video_player: ^2.9.1
   wakelock_plus: ^1.2.7
-  webview_flutter: ^4.8.0
+  webview_flutter: ^4.9.0
 
 dev_dependencies:
   flutter_test:
