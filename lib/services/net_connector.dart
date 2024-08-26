@@ -71,7 +71,7 @@ class NetConnector extends IService {
   Future<Session> connect() async {
     _nakamaClient = NakamaGrpcClient(
         host: /* "192.168.1.133",// */ configs["host"],
-        port: 3359, //configs["port"],
+        port: /* 3359, // */ configs["port"],
         serverKey: "defaultkey",
         ssl: false);
 
