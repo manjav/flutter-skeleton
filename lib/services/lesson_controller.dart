@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import '../app_export.dart';
 class LessonController {
   ParentContent? root;
   int sentenceCount = 0;
+  Timer? _slidePassTimer;
   List<ParentContent> series = [];
   final Map<String, Talk> quizes = {};
   Function(int, int, int)? onComplete;
@@ -81,7 +83,15 @@ class LessonController {
       return;
     }
     contentIndex.value += stepLength;
-    slidePassed.value = !currentContent.isQuiz;
+
+    slidePassed.value = false;
+    _slidePassTimer?.cancel();
+    _slidePassTimer = Timer(
+      const Duration(seconds: 1),
+      () {
+        slidePassed.value = !currentContent.isQuiz;
+      },
+    );
   }
 
   void onQuizResult(int score, String answer, Talk talk) {
