@@ -25,22 +25,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
-    serviceLocator<Speaker>().loadAllSounds(
-      series: controller.series,
-      onComplete: () {
-        if (mounted) {
-          controller.changeSerie(1);
-          setState(() {});
-        }
-      },
-      onProgress: (p) => progressInput?.value = p * 100,
-      onError: (message) async {
-        await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
-        if (mounted) {
-          Navigator.pop(context);
-        }
-      },
-    );
+    loadAssets();
     super.initState();
   }
 

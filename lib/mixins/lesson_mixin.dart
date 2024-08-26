@@ -12,14 +12,33 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   SMIInput<double>? progressInput;
   double padding = 8.d;
 
-  @override
-  Widget appBarFactory(double paddingTop) => navigatorBuilder(paddingTop);
+  void loadAssets({bool loadCaptions = true}) {
+    serviceLocator<LessonAssets>().load(
+      series: controller.series,
+      onComplete: () {
+        controller.changeSerie(1);
+      },
+      onProgress: (p) => progressInput?.value = p * 100,
+      onError: (message) async {
+        await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      },
+    );
+  }
 
   @override
   Widget contentFactory(double paddingTop) {
     if (controller.series.isEmpty) {
       return const SizedBox();
     }
+
+    return ValueListenableBuilder(
+      valueListenable: controller.serieIndex,
+      builder: (context, value, child) {
+        if (value < 0) {
+          return _assetsProgressbarBuilder();
     }
 
         return Stack(
@@ -30,13 +49,15 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             footerBuilder(),
           ],
         );
+      },
+        );
   }
 
   Widget headerBuilder(double paddingTop) => const SizedBox();
   Widget contentBuilder(double paddingTop) => const SizedBox();
   Widget footerBuilder() => const SizedBox();
 
-  Widget loadingProgressbarBuilder() {
+  Widget _assetsProgressbarBuilder() {
     return Stack(
       alignment: Alignment.center,
       children: [

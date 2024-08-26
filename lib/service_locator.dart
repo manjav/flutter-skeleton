@@ -11,6 +11,7 @@ void initServices() {
   serviceLocator.registerLazySingleton<Localization>(() => Localization());
   serviceLocator.registerLazySingleton<DictatorQuiz>(() => DictatorQuiz());
   serviceLocator.registerLazySingleton<ListenerQuiz>(() => ListenerQuiz());
+  serviceLocator.registerLazySingleton<LessonAssets>(() => LessonAssets());
   serviceLocator.registerLazySingleton<Speaker>(() => Speaker());
   serviceLocator.registerLazySingleton<Sounds>(() => Sounds());
   serviceLocator.registerLazySingleton<NetConnector>(() => NetConnector());

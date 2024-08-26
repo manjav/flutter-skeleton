@@ -84,6 +84,10 @@ class Loader with ILogger {
   static bool isHashMatch(List<int> bytes, String? hash) {
     if (hash == null) return true;
     var fileHash = md5.convert(bytes);
-    return hash == fileHash.toString();
+    if (hash != fileHash.toString()) {
+      ILogger.slog("Loader", "$fileHash is'nt equal $hash");
+      return false;
+    }
+    return true;
   }
 }

@@ -1,3 +1,4 @@
+export 'lesson_assets.dart';
 export 'lesson_controller.dart';
 export 'net_connector.dart';
 export 'quizes/export.dart';

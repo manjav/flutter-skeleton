@@ -24,23 +24,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     // list.removeRange(2, list.length);
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
-    serviceLocator<Speaker>().loadAllSounds(
-      series: controller.series,
-      onComplete: () {
-        if (mounted) {
-          controller.changeSerie(1);
-          setState(() {});
-        }
-      },
-      onProgress: (p) => progressInput?.value = p * 100,
-      onError: (message) async {
-        await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
-        if (mounted) {
-          Navigator.pop(context);
-        }
-      },
-      loadCaptions: false,
-    );
+    loadAssets(loadCaptions: false);
     super.initState();
   }
 
@@ -50,15 +34,15 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       top: paddingTop,
       left: 70.d,
       child: Widgets.touchable(
-      context,
-      child: Column(
-        children: [
-          shortcutBuilder(),
-          SizedBox(height: 4.d),
-          progressSliderBuilder(DeviceInfo.size.width * 0.7),
-        ],
-      ),
-      onTap: openSerieSelector,
+        context,
+        child: Column(
+          children: [
+            shortcutBuilder(),
+            SizedBox(height: 4.d),
+            progressSliderBuilder(DeviceInfo.size.width * 0.7),
+          ],
+        ),
+        onTap: openSerieSelector,
       ),
     );
   }
