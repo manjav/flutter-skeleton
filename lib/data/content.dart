@@ -127,8 +127,8 @@ enum ContentType {
 
   TranslationSide get textSide {
     return switch (this) {
-      ContentType.image => TranslationSide.none,
-      ContentType.caption || ContentType.translate => TranslationSide.native,
+      ContentType.image || ContentType.translate => TranslationSide.none,
+      ContentType.caption => TranslationSide.native,
       _ => TranslationSide.target,
     };
   }
