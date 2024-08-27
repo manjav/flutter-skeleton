@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
@@ -75,9 +77,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                 child: Column(
                   children: [
                     Text(
-                      "${'error_${_serviceState.exception!.statusCode}'.l([
-                            _serviceState.exception!.message
-                          ])}\n${isUpdateError ? "" : "Try Again".l()}",
+                      "${_serviceState.exception!.message}\n${isUpdateError ? "" : "Try Again".l()}",
                       textAlign: TextAlign.center,
                       style: TStyles.mediumInvert,
                       softWrap: true,
@@ -115,7 +115,7 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
   }
 
   void _update(bool isForceUpdate) {
-    launchUrl(Uri.parse("app_url".l()));
+    launchUrl(Uri.parse("app_url_${Platform.operatingSystem}".l()));
     SystemNavigator.pop();
   }
 
