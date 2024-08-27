@@ -94,8 +94,9 @@ class LessonController {
     );
   }
 
-  void onQuizResult(int score, String answer, Talk talk) {
+  void onQuizResult(QuizState state, String answer, int score, Talk talk) {
     final listener = serviceLocator<ListenerQuiz>();
+    talk.lastRecord = QuizRecord(state: state, answer: answer);
     quizes[talk.id]!.score = score;
     if (score > listener.minMatchLevel) {
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");

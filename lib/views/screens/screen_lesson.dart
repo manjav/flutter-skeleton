@@ -237,7 +237,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     if (state == QuizState.success) {
       controller.changeContent(1);
     }
-    controller.onQuizResult(score, text, talk);
+    controller.onQuizResult(state, text, score, talk);
   }
 
   Future<void> _onSerieComplete(

@@ -13,7 +13,7 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
-  Future<void> listen(Talk talk, {bool autoStart = true}) async {
+  Future<void> listen(Talk talk) async {
     final account = serviceLocator<AccountProvider>();
 
     // Change fuzzy acceptance level based on answer length
@@ -29,8 +29,8 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
     serviceLocator<ListenerQuiz>().listen(
       pattern: pattern,
-      autoStart: autoStart,
       minMatchLevel: minMatchLevel,
+      lastRecord: talk.lastRecord,
       locale: account.metadata["targetLanguage"],
       hintVoice: talk.getText(talk.type.textSide),
       repeatVoice: talk.type == ContentType.repeat ? "" : talk.targetValue,

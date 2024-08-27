@@ -16,7 +16,6 @@ class ListenerQuiz extends Quiz {
   String pattern = "";
   String hintVoice = "";
   String repeatVoice = "";
-  String logs = "none";
   int minMatchLevel = 95;
   Narrator narrator = Narrator.shimmer;
   final SpeechToText _speech = SpeechToText();
@@ -91,9 +90,8 @@ class ListenerQuiz extends Quiz {
     required String repeatVoice,
     String? locale,
     int minMatchLevel = 95,
+    QuizRecord? lastRecord,
     List<String>? exceptions,
-    bool autoStart = true,
-    bool shouldPlayHint = true,
     Function(QuizState state, String text, int mathLevel)? onResult,
   }) async {
     if (state.value.index < QuizState.ready.index) {
@@ -113,14 +111,18 @@ class ListenerQuiz extends Quiz {
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
     state.value = QuizState.ready;
-    if (!autoStart) {
-      this.onResult = onResult;
+    if (lastRecord != null) {
+      onResult?.call(
+        state.value = lastRecord.state,
+        recognizedWords.value = lastRecord.answer,
+        _matchLevel,
+      );
       return;
     }
     log("Start listen ${this.pattern}");
 
     await Future.delayed(const Duration(milliseconds: 500));
-    if (shouldPlayHint) {
+    if (hintVoice.isNotEmpty) {
       await serviceLocator<Speaker>().playLocal(hintVoice);
     }
     super.start(onResult: onResult);
@@ -164,7 +166,6 @@ class ListenerQuiz extends Quiz {
         pattern: pattern,
         hintVoice: hintVoice,
         repeatVoice: repeatVoice,
-        shouldPlayHint: false,
         onResult: onResult);
   }
 

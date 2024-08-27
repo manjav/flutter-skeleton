@@ -211,7 +211,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     if (quizes.isEmpty) {
       _enableUntil.value = page + 1;
     } else {
-      listen(quizes.first as Talk, autoStart: false);
+      listen(quizes.first as Talk);
     }
     controller.changeSlide(page - controller.slideIndex.value);
   }
@@ -233,7 +233,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void onListeningResult(QuizState state, String text, int score, Talk talk) {
-    controller.onQuizResult(score, text, talk);
+    controller.onQuizResult(state, text, score, talk);
     _enableUntil.value = _slidesScrollController!.page!.toInt() + 1;
   }
 

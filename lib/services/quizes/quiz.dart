@@ -29,3 +29,9 @@ enum QuizState {
   failure,
   error;
 }
+
+class QuizRecord {
+  final QuizState state;
+  final String answer;
+  QuizRecord({required this.state, required this.answer});
+}

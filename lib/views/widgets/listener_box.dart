@@ -34,7 +34,6 @@ class _ListenerBoxState extends State<ListenerBox> {
   final List<ValueNotifier<Choice>> _patterns = [];
   final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
   final ValueNotifier<String> _recognizedWords = ValueNotifier("");
-  final ValueNotifier<bool> _debugMode = ValueNotifier(false);
   final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
   final _defaultStyle = TStyles.huge.copyWith(height: 1);
   final _hiddenStyle =

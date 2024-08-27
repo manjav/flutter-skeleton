@@ -50,7 +50,7 @@ class Content {
     return switch (side) {
       TranslationSide.native => nativeValue,
       TranslationSide.target => targetValue,
-      _ => '',
+      _ => "",
     };
   }
 }
@@ -74,6 +74,7 @@ class ParentContent extends Content {
 
 class Talk extends Content {
   int score = 0;
+  QuizRecord? lastRecord;
   Set<String> get words => {...targetValue.split(" ")};
   Talk.create(Content parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
