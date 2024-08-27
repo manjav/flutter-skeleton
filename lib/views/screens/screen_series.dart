@@ -32,7 +32,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   Widget headerBuilder(double paddingTop) {
     return Positioned(
       top: paddingTop,
-      left: 70.d,
       child: Widgets.touchable(
         context,
         child: Column(
