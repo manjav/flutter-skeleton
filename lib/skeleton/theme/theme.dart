@@ -70,7 +70,7 @@ class Themes {
     TStyles.medium = _style(size: 16.d, weight: FontWeight.w400);
     TStyles.large = _style(size: 19.d, weight: FontWeight.w600);
     TStyles.big = _style(size: 22.d, weight: FontWeight.w700);
-    TStyles.huge = _style(size: 32.d, weight: FontWeight.w800);
+    TStyles.huge = _style(size: 38.d, weight: FontWeight.w800);
     TStyles.tinyInvert =
         _style(size: 10.d, weight: FontWeight.w100, color: TColors.primary0);
     TStyles.smallInvert =
