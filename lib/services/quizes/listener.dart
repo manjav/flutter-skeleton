@@ -51,7 +51,6 @@ class ListenerQuiz extends Quiz {
   void _resultListener(SpeechRecognitionResult result) {
     this.result = result;
     _proccessResult();
-    log('Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
   }
 
   void _soundLevelListener(double level) {
@@ -80,11 +79,8 @@ class ListenerQuiz extends Quiz {
     if (status == "listening") {
       state.value = QuizState.listening;
     } else if (status == "done") {
-      if (recognizedWords.value.isEmpty) {
-        state.value = QuizState.ready;
-        onResult?.call(state.value, result.recognizedWords, _matchLevel);
-      } else if (_isRepeatPlayed) {
-        onResult?.call(state.value, result.recognizedWords, _matchLevel);
+      if (_isRepeatPlayed || recognizedWords.value.isEmpty) {
+        onResult?.call(QuizState.failure, recognizedWords.value, _matchLevel);
       }
     }
   }
@@ -227,7 +223,7 @@ class ListenerQuiz extends Quiz {
     }
     _isRepeatPlayed = true;
     if (_speech.lastStatus == "done") {
-      onResult?.call(state.value, result.recognizedWords, _matchLevel);
+      onResult?.call(state.value, recognizedWords.value, _matchLevel);
     }
   }
 }
