@@ -96,18 +96,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               itemCount: _categories.length,
               itemBuilder: _categoryItemBuilder,
             ),
-            Transform.rotate(
-                alignment: Alignment.topLeft,
-                angle: -0.5,
-                child: Align(
-                    alignment: const Alignment(-1.9, -0.92),
-                    child: Widgets.rect(
-                        decoration: BoxDecoration(
-                          boxShadow: [BoxShadow(blurRadius: 8.d)],
-                          color: TColors.red,
-                        ),
-                        padding: EdgeInsets.fromLTRB(70.d, 12.d, 66.d, 12.d),
-                        child: const Text("نسخه آزمایشی")))),
           ],
         ));
   }
