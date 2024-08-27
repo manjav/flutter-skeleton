@@ -186,23 +186,22 @@ class ListenerQuiz extends Quiz {
       var insert = alternate.recognizedWords.patternize();
       if (insert.contains(pattern)) {
         insert = recognizedWords.value = pattern;
-      } else {
-        recognizedWords.value = alternate.recognizedWords;
       }
-
       _matchLevel = ratio(pattern, insert);
       // if (exception.isNotEmpty) {
       //   minMatchLevel =
       //       100 - (100 * exception.length / pattern!.length).round();
       // }
       if (state.value.index > QuizState.listening.index) return;
-      logs = "=> $insert ratio: $_matchLevel/$minMatchLevel";
+      // logs = "=> $insert , ratio: $_matchLevel/$minMatchLevel";
       if (_matchLevel > minMatchLevel) {
+        recognizedWords.value = insert;
         state.value = QuizState.success;
         dispatchResult();
         return;
       }
     }
+    recognizedWords.value = result.recognizedWords.patternize();
 
     if (result.recognizedWords.length > pattern.length * 2) {
       state.value = QuizState.failure;
