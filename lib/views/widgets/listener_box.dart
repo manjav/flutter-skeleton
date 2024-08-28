@@ -50,9 +50,8 @@ class _ListenerBoxState extends State<ListenerBox> {
   void initState() {
     _pattern = widget.answer.patternize();
     final listener = serviceLocator<ListenerQuiz>();
-    listener.state.addListener(_stateListener);
-    listener.audioLevel.addListener(_soundLevelListener);
-    listener.recognizedWords.addListener(_resultListener);
+    _removeListeners(listener);
+    _addListeners(listener);
     serviceLocator<Sounds>()
         .getPlayer(widget.repeatVoice)
         .onPlayerStateChanged
@@ -222,12 +221,21 @@ class _ListenerBoxState extends State<ListenerBox> {
     _recognizedWords.value = listener.recognizedWords.value;
   }
 
-  @override
-  void dispose() {
-    final listener = serviceLocator<ListenerQuiz>();
+  void _addListeners(ListenerQuiz listener) {
+    listener.state.addListener(_stateListener);
+    listener.audioLevel.addListener(_soundLevelListener);
+    listener.recognizedWords.addListener(_resultListener);
+  }
+
+  void _removeListeners(ListenerQuiz listener) {
     listener.state.removeListener(_stateListener);
     listener.audioLevel.removeListener(_soundLevelListener);
     listener.recognizedWords.removeListener(_resultListener);
+  }
+
+  @override
+  void dispose() {
+    _removeListeners(serviceLocator<ListenerQuiz>());
     super.dispose();
   }
 }
