@@ -112,6 +112,7 @@ class ListenerQuiz extends Quiz {
     recognizedWords.value = "";
     state.value = QuizState.ready;
     if (lastRecord != null) {
+      await Future.delayed(const Duration(milliseconds: 10));
       onResult?.call(
         state.value = lastRecord.state,
         recognizedWords.value = lastRecord.answer,
@@ -128,10 +129,8 @@ class ListenerQuiz extends Quiz {
     super.start(onResult: onResult);
 
     final options = SpeechListenOptions(
-        onDevice: false,
         listenMode: ListenMode.deviceDefault,
         cancelOnError: true,
-        partialResults: true,
         autoPunctuation: true,
         enableHapticFeedback: true);
     // Note that `listenFor` is the maximum, not the minimum, on some

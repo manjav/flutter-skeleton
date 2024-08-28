@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -210,7 +212,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
           alignment: Alignment.center,
           width: DeviceInfo.size.width,
           margin: EdgeInsets.symmetric(vertical: 5.d),
-          padding: EdgeInsets.symmetric(horizontal: 20.d),
+          padding: EdgeInsets.all(20.d),
           child: listenerBuilder(talk));
     }
     return RadioBox(

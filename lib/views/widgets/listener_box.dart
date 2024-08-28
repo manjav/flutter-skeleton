@@ -91,7 +91,7 @@ class _ListenerBoxState extends State<ListenerBox> {
   }
 
   Widget _micAnimationBuilder(BuildContext context, ListenerQuiz listener) {
-    var size = DeviceInfo.size.width * 0.9;
+    var size = DeviceInfo.size.width * 0.85;
     return LoaderWidget(
       AssetType.animation,
       "mic_panel",

@@ -207,7 +207,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   void _executePage(int page) {
     final slide = controller.currentSerie.children[page] as ParentContent;
     if (controller.contentIndex.value <= -1) return;
-    final quizes = slide.children.where((c) => (c as Talk).isQuiz).toList();
+    final quizes = slide.children.where((c) => (c as Talk).isQuiz);
     if (quizes.isEmpty) {
       _enableUntil.value = page + 1;
     } else {
