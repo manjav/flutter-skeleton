@@ -75,6 +75,12 @@ class LessonController {
       contentIndex.value = -1;
       changeContent(1);
     }
+    slidePassed.value = false;
+    _slidePassTimer?.cancel();
+    if (currentSlide.children.where((c) => (c as Talk).isQuiz).isEmpty) {
+      _slidePassTimer =
+          Timer(const Duration(seconds: 1), () => slidePassed.value = true);
+    }
   }
 
   Future<void> changeContent(int stepLength) async {
@@ -83,15 +89,6 @@ class LessonController {
       return;
     }
     contentIndex.value += stepLength;
-
-    slidePassed.value = false;
-    _slidePassTimer?.cancel();
-    _slidePassTimer = Timer(
-      const Duration(seconds: 1),
-      () {
-        slidePassed.value = !currentContent.isQuiz;
-      },
-    );
   }
 
   void onQuizResult(QuizState state, String answer, int score, Talk talk) {
@@ -101,9 +98,9 @@ class LessonController {
     if (score > listener.minMatchLevel) {
       serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
     } else {
-      slidePassed.value = true;
       serviceLocator<Sounds>().play("wrong");
     }
+    slidePassed.value = true;
 
     serviceLocator<AccountProvider>().writeStorage(
       collectionId: "log_${root!.id}",
