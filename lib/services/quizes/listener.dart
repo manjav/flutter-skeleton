@@ -79,7 +79,10 @@ class ListenerQuiz extends Quiz {
       state.value = QuizState.listening;
     } else if (status == "done") {
       if (_isRepeatPlayed || recognizedWords.value.isEmpty) {
-        onResult?.call(QuizState.failure, recognizedWords.value, _matchLevel);
+        onResult?.call(
+            state.value == QuizState.success ? state.value : QuizState.failure,
+            recognizedWords.value,
+            _matchLevel);
       }
     }
   }
