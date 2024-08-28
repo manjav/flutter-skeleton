@@ -61,7 +61,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
-  List<Widget> appBarElementsLeft() => [];
+  List<Widget> appBarElementsLeft() => [
+        SkinnedButton(
+          label: "i",
+          color: TColors.primary40,
+          margin: EdgeInsets.all(8.d),
+          padding: EdgeInsets.symmetric(horizontal: 12.d),
+          onPressed: () => Get.toNamed(Routes.popupMessage, arguments: {
+            "title": "about_us_title".l(),
+            "message": "about_us_message".l()
+          }),
+        )
+      ];
 
   // Find first incomplete group
   int _firstIncompleteGroup() {

@@ -46,6 +46,8 @@ class AbstractPopupState<T extends AbstractPopup> extends State<T>
             Align(
               alignment: alignment,
               child: Widgets.rect(
+                constraints: BoxConstraints.loose(
+                    Size(DeviceInfo.size.width * 0.8, DeviceInfo.size.height)),
                 radius: 24.d,
                 color: TColors.primary0,
                 padding: EdgeInsets.all(20.d),
