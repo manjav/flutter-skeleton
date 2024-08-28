@@ -13,7 +13,7 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
-  Future<void> listen(Talk talk) async {
+  void listen(Talk talk) {
     final account = serviceLocator<AccountProvider>();
 
     // Change fuzzy acceptance level based on answer length

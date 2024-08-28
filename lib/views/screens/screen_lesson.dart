@@ -42,16 +42,17 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   Future<void> _onChangeLine() async {
     if (controller.contentIndex.value <= -1) return;
     var talk = controller.currentContent;
-    if (talk.isQuiz) {
-      listen(talk);
-    }
     serviceLocator<Sounds>().stopAll();
     stopVideo();
     await _addChat(controller.uniqueIndex);
+    if (talk.isQuiz) {
+      await Future.delayed(const Duration(milliseconds: 310));
+      listen(talk);
+    }
   }
 
   Future<void> _addChat(int lastIndex) async {
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 100));
     if (controller.uniqueIndex != lastIndex) return;
     var talk = controller.currentContent;
     if (talk.type == ContentType.caption) {
@@ -227,9 +228,9 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  Future<void> listen(Talk talk, {bool autoStart = true}) async {
+  void listen(Talk talk) {
     caption.value == null;
-    await super.listen(talk);
+    super.listen(talk);
   }
 
   @override
