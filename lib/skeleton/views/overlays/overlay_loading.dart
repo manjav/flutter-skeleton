@@ -92,7 +92,6 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
                                   label: "Go !",
                                   buttonId: -1,
                                   onPressed: () {
-                                    Pref.skipUpdate.setBool(true);
                                     _reload();
                                   })
                               : const SizedBox(),

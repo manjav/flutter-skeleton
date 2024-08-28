@@ -48,16 +48,45 @@ class NetConnector extends IService {
     }
     if (response!.statusCode == 200) {
       configs = json.decode(response.body);
-      var updates = configs["updates"];
-      if (updates["force"]["version"] > version) {
-        throw SkeletonException(
-            StatusCode.UPDATE_FORCE, updates["force"]["message"]);
-      } else if (!Pref.skipUpdate.getBool() &&
-          updates["notice"]["version"] > version) {
-        throw SkeletonException(
-            StatusCode.UPDATE_NOTICE, updates["notice"]["message"]);
+
+      // Initial versions
+      final versionsMap = configs["versions"] ?? {};
+      final Map<int, VersionConfigs> versions = {};
+      int latestVersion = 0;
+      for (var entry in versionsMap.entries) {
+        final key = int.parse(entry.key);
+        if (latestVersion < key) {
+          latestVersion = key;
+        }
+        versions[key] = VersionConfigs(
+          key,
+          entry.value["port"],
+          entry.value["host"],
+          entry.value["changelog"],
+          VersionPriority.values[entry.value["priority"]],
+        );
+        // Update connection according to version
+        if (version == key) {
+          configs["port"] = versions[key]!.port;
+          configs["host"] = versions[key]!.host;
+        }
       }
-      Pref.skipUpdate.setBool(false);
+
+      // Update warns
+      final latestConfig = versions[latestVersion]!;
+      if (latestConfig.version > version) {
+        if (latestConfig.priority == VersionPriority.force) {
+          throw SkeletonException(
+              StatusCode.UPDATE_FORCE, latestConfig.changelog);
+        } else if (Pref.updatePassed.getInt(defaultValue: 0) !=
+                latestConfig.version &&
+            latestConfig.priority == VersionPriority.notice) {
+          Pref.updatePassed.setInt(latestConfig.version);
+          throw SkeletonException(
+              StatusCode.UPDATE_NOTICE, latestConfig.changelog);
+        }
+      }
+
       LoaderWidget.baseURL = configs["assetsServer"]!;
       LoaderWidget.hashMap = Map.castFrom(configs["files"]);
       log("Config loaded.");
@@ -241,3 +270,20 @@ class NetConnector extends IService {
   }
    */
 }
+
+class VersionConfigs {
+  final int port;
+  final int version;
+  final String host;
+  final String changelog;
+  final VersionPriority priority;
+  VersionConfigs(
+    this.version,
+    this.port,
+    this.host,
+    this.changelog,
+    this.priority,
+  );
+}
+
+enum VersionPriority { alpha, beta, normal, notice, force }

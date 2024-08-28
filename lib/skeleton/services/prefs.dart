@@ -55,7 +55,7 @@ enum Pref {
   music,
   tutorStep,
   visitCount,
-  skipUpdate,
+  updatePassed,
 }
 
 extension PrefExtension on Pref {
