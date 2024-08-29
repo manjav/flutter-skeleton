@@ -59,7 +59,6 @@ class RadioBox extends StatelessWidget {
                     DirText(
                       text.simplify(),
                       style: textStyle ?? TStyles.big,
-                      textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: translation == null ? 0 : 6.d),
                     Widgets.divider(),
