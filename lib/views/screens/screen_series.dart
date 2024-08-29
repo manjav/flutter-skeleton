@@ -255,6 +255,14 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                 context,
                 height: itemHeight,
                 alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: TColors.primary40,
+                      width: 0.5.d,
+                    ),
+                  ),
+                ),
                 padding: EdgeInsets.symmetric(horizontal: itemHeight),
                 child: DirText(controller.series[index].title),
                 onPressed: () {
