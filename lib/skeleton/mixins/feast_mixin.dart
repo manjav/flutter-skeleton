@@ -14,8 +14,8 @@ mixin FeastMixin<T extends StatefulWidget> on State<T> {
   dynamic result;
   Artboard? _artboard;
   List<Widget> children = [];
-  String waitingSFX = "waiting", startSFX = "levelup";
   SMITrigger? startInput, skipInput, closeInput;
+  String waitingSFX = "waiting", startSFX = "levelup";
   FeastState state = FeastState.none;
   final ValueNotifier<bool> _progressbarNotifier = ValueNotifier(true);
 

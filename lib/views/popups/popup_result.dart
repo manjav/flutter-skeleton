@@ -33,6 +33,7 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
   StateMachineController? _controller;
   int _score = 0;
   int _scoreLevel = 60;
+  SMIInput<double>? _scoreInput;
   final _scoresLevel = [100, 95, 90, 85, 70];
 
   @override
@@ -65,6 +66,9 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
   StateMachineController onRiveInit(
       Artboard artboard, String stateMachineName) {
     _controller = super.onRiveInit(artboard, stateMachineName);
+    _scoreInput = _controller!.findInput<double>("icon");
+    _scoreInput?.value = _score > 90 ? 1 : (_score < 70 ? 2 : 0);
+
     final formatter = NumberFormat("00");
     updateRiveText("message", "done_label".l());
     updateRiveText("scoreLabel", "score_level_$_scoreLevel".l());
