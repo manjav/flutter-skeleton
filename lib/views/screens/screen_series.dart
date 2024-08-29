@@ -259,7 +259,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                   border: Border(
                     bottom: BorderSide(
                       color: TColors.primary40,
-                      width: 0.5.d,
+                      width: 0.1.d,
                     ),
                   ),
                 ),

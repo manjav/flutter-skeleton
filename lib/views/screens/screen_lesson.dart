@@ -230,12 +230,6 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  void listen(Talk talk) {
-    caption.value == null;
-    super.listen(talk);
-  }
-
-  @override
   void onListeningResult(QuizState state, String text, int score, Talk talk) {
     final lastRecord = talk.lastRecord;
     controller.onQuizResult(state, text, score, talk);
