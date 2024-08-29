@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:rive/rive.dart';
 
@@ -105,7 +106,19 @@ class _ListenerBoxState extends State<ListenerBox> {
         controller!.addEventListener((s) => _onMicAnimationEvent(s, listener));
         artboard.addController(controller);
       },
+      riveAssetLoader: _onRiveAssetLoad,
     );
+  }
+
+  Future<bool> _onRiveAssetLoad(asset, Uint8List? bytes) async {
+    if (asset is FontAsset) {
+      var bytes =
+          await rootBundle.load('assets/fonts/dnd_vazir_round_bold.ttf');
+      var font = await FontAsset.parseBytes(bytes.buffer.asUint8List());
+      asset.font = font;
+      return true;
+    }
+    return false; // load the default embedded asset
   }
 
   void _onMicAnimationEvent(RiveEvent event, ListenerQuiz listener) {

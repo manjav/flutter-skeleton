@@ -56,16 +56,9 @@ mixin FeastMixin<T extends StatefulWidget> on State<T> {
   }
 
   Future<bool> onRiveAssetLoad(
-      FileAsset asset, Uint8List? embeddedBytes) async {
-    // if (asset is ImageAsset) {
-    //   if (asset.name == "cardIcon") {
-    //     loadCardIcon(asset, "");
-    //     return true;
-    //   } else if (asset.name == "cardFrame") {
-    //     // loadCardFrame(asset, null);
-    //     return true;
-    //   }
-    // }
+    FileAsset asset,
+    Uint8List? embeddedBytes,
+  ) async {
     if (asset is FontAsset) {
       loadFont(asset);
       return true;
