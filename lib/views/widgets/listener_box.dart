@@ -73,8 +73,7 @@ class _ListenerBoxState extends State<ListenerBox> {
       alignment: Alignment.center,
       children: [
         _micAnimationBuilder(context, listener),
-        IgnorePointer(
-          child: Column(
+        Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _answeringBuilder(context, listener.minMatchLevel),
@@ -86,7 +85,6 @@ class _ListenerBoxState extends State<ListenerBox> {
               SizedBox(height: 20.d),
             ],
           ),
-        )
       ],
     );
   }
