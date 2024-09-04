@@ -149,12 +149,17 @@ class Widgets {
             centerSlice: sliceData?.centerSlice));
   }
 
-  static divider({double? width, double? height, BoxDecoration? decoration}) {
+  static divider({
+    Color? color,
+    double? width,
+    double? height,
+    BoxDecoration? decoration,
+  }) {
     return rect(
         radius: 2.d,
         width: width ?? 1.d,
         height: height ?? 1.d,
-        color: TColors.primary10,
+        color: color ?? TColors.primary10,
         decoration: decoration);
   }
 
