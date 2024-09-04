@@ -28,10 +28,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   final TextStyle _numberStylePassed = TStyles.big
       .copyWith(color: TColors.green, fontWeight: FontWeight.w600, height: 0.9);
   final _colors = {
-    "lessons": TColors.blue,
+    "lesson": TColors.blue,
     "practice": TColors.orange,
     "grammar": TColors.cyan,
     "vocabulary": TColors.purpule,
+    "chat": TColors.primary60
   };
 
   Map<String, Map<String, dynamic>> _scores = {};
@@ -321,8 +322,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               if (group.children.isEmpty) {
                 await serviceLocator<AccountProvider>().loadGroup(group);
               }
-              var routName =
-                  group.mode == "lessons" ? Routes.lesson : Routes.series;
+              var routName = switch (group.mode) {
+                "lesson" => Routes.lesson,
+                "chat" => Routes.chat,
+                _ => Routes.series,
+              };
               await Get.toNamed(routName, arguments: {"content": group});
             } on SkeletonException catch (e) {
               await Get.toNamed(Routes.popupMessage, arguments: {
