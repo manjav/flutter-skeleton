@@ -76,7 +76,7 @@ class Themes {
     TStyles.tinyInvert =
         _style(size: 12.d, weight: FontWeight.w100, color: TColors.primary0);
     TStyles.smallInvert =
-        _style(size: 14.d, weight: FontWeight.w300, color: TColors.primary0);
+        _style(size: 14.d, weight: FontWeight.w200, color: TColors.primary0);
     TStyles.mediumInvert =
         _style(size: 16.d, weight: FontWeight.w400, color: TColors.primary0);
     TStyles.largeInvert =

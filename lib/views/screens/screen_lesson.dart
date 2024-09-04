@@ -21,7 +21,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   @override
   void initState() {
     // List list = Get.arguments["content"].children[0].children;
-    // list.removeRange(0, list.length - 8);
+    // list.removeRange(0, list.length - 3);
     trackerParams = {"id": Get.arguments["content"]!.id};
     controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
@@ -207,7 +207,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     if (talk.isQuiz) {
       return Widgets.rect(
           radius: 24.d,
-          height: 400.d,
+          height: DeviceInfo.size.width,
           color: TColors.primary0,
           alignment: Alignment.center,
           width: DeviceInfo.size.width,
