@@ -89,6 +89,17 @@ class Talk extends Content {
       type = ContentType.getEnum(map["type"]);
     }
   }
+
+  TranslationSide get textSide {
+    if (type == ContentType.caption) {
+      return TranslationSide.native;
+    }
+    if (type == ContentType.repeat) return TranslationSide.target;
+    return TranslationSide.none;
+  }
+
+  Narrator get narrator =>
+      textSide == TranslationSide.native ? Narrator.ali : Narrator.onyx;
 }
 
 enum TranslationSide { none, native, target }
@@ -125,17 +136,6 @@ enum ContentType {
     }
     return ContentType.none;
   }
-
-  TranslationSide get textSide {
-    return switch (this) {
-      ContentType.image || ContentType.translate => TranslationSide.none,
-      ContentType.caption => TranslationSide.native,
-      _ => TranslationSide.target,
-    };
-  }
-
-  Narrator get narrator =>
-      textSide == TranslationSide.native ? Narrator.ali : Narrator.onyx;
 }
 
 enum PresentMode {

@@ -17,7 +17,7 @@ class _DictationBoxState extends State<DictationBox> {
     return ValueListenableBuilder<List<String>>(
       valueListenable: dictator.answers,
       builder: (context, value, child) {
-        final content = dictator.currentStage!;
+        final content = dictator.currentStage! as Talk;
         return Padding(
           padding: EdgeInsets.all(8.d),
           child: Column(
@@ -30,7 +30,7 @@ class _DictationBoxState extends State<DictationBox> {
                   SpeakerBox(
                     width: 30.d,
                     value: content.targetValue,
-                    narrator: content.type.narrator,
+                    narrator: content.narrator,
                   ),
                 ],
               ),

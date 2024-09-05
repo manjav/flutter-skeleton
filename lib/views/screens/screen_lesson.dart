@@ -218,7 +218,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     return RadioBox(
       talk.targetValue, // main,
       ballonPosition: tip,
-      narrator: talk.type.narrator,
+      narrator: talk.narrator,
       translation: talk.nativeValue, // translate,
       textStyle: talk.isChat
           ? null
