@@ -121,6 +121,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
           duration: Duration(milliseconds: opacity > 0 ? 100 : 0),
           child: Widgets.touchable(
             context,
+            sfx: "",
             child: Widgets.rect(
               radius: 24.d,
               color: index <= value ? TColors.primary0 : TColors.primary10,
