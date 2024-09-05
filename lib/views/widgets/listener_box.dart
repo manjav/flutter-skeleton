@@ -134,7 +134,9 @@ class _ListenerBoxState extends State<ListenerBox> {
         ),
       );
     } else if (event.name == "play") {
-      serviceLocator<Speaker>().playLocal(widget.repeatVoice);
+      var sound =
+          widget.repeatVoice.isNotEmpty ? widget.repeatVoice : widget.voice;
+      serviceLocator<Speaker>().playLocal(sound);
     } else if (event.name == "pause") {
       serviceLocator<Sounds>().stopAll();
     }
