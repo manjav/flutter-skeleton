@@ -11,7 +11,7 @@ import '../../app_export.dart';
 enum Difficulty { simple, hint, hidden }
 
 // ignore: must_be_immutable
-class ListenerBox extends StatefulWidget {
+class MicPanel extends StatefulWidget {
   final String hint;
   final String voice;
   final String answer;
@@ -19,7 +19,7 @@ class ListenerBox extends StatefulWidget {
   final Narrator narrator;
   final Difficulty difficulty;
 
-  const ListenerBox({
+  const MicPanel({
     super.key,
     required this.hint,
     required this.voice,
@@ -30,10 +30,10 @@ class ListenerBox extends StatefulWidget {
   });
 
   @override
-  State<ListenerBox> createState() => _ListenerBoxState();
+  State<MicPanel> createState() => _MicPanelState();
 }
 
-class _ListenerBoxState extends State<ListenerBox> {
+class _MicPanelState extends State<MicPanel> {
   final List<ValueNotifier<Choice>> _patterns = [];
   final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
   final ValueNotifier<String> _recognizedWords = ValueNotifier("");
