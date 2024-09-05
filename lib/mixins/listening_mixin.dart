@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../app_export.dart';
 
 mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  Widget listenerBuilder(Talk talk) {
-    return ListenerBox(
+  Widget microphoneBuilder(Talk talk) {
+    return MicPanel(
       hint: talk.nativeValue,
       answer: talk.targetValue,
       narrator: talk.type.narrator,
