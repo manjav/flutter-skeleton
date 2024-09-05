@@ -20,7 +20,7 @@ class LessonAssets with ILogger {
       for (var slide in serie.children) {
         for (var talk in (slide as ParentContent).children) {
           talk = talk as Talk;
-          final side = talk.type.textSide;
+          final side = talk.textSide;
           if (!loadCaptions && talk.type == ContentType.caption) {
             continue; // Load captions only for lessons
           }
@@ -30,7 +30,7 @@ class LessonAssets with ILogger {
           if (side != TranslationSide.none) {
             var text = talk.getText(side);
             _loadFile(
-                text, talk.type.narrator, onComplete, onProgress, onError);
+                text, talk.narrator, onComplete, onProgress, onError);
           }
           if (talk.type == ContentType.translate) {
             var text = talk.targetValue;
