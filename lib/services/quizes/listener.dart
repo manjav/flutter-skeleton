@@ -80,9 +80,11 @@ class ListenerQuiz extends Quiz {
     } else if (status == "done") {
       if (_isRepeatPlayed || recognizedWords.value.isEmpty) {
         onResult?.call(
-            state.value == QuizState.success ? state.value : QuizState.failure,
-            recognizedWords.value,
-            _matchLevel);
+          state.value == QuizState.success ? state.value : QuizState.failure,
+          recognizedWords.value,
+          _matchLevel,
+          false,
+        );
       }
     }
   }
@@ -95,7 +97,7 @@ class ListenerQuiz extends Quiz {
     int minMatchLevel = 95,
     QuizRecord? lastRecord,
     List<String>? exceptions,
-    Function(QuizState state, String text, int mathLevel)? onResult,
+    Function(QuizState, String, int, bool)? onResult,
   }) async {
     if (state.value.index < QuizState.ready.index) {
       log("Listener not initialized yet!");
@@ -120,6 +122,7 @@ class ListenerQuiz extends Quiz {
         state.value = lastRecord.state,
         recognizedWords.value = lastRecord.answer,
         _matchLevel,
+        true,
       );
       return;
     }
@@ -226,7 +229,7 @@ class ListenerQuiz extends Quiz {
     }
     _isRepeatPlayed = true;
     if (_speech.lastStatus == "done") {
-      onResult?.call(state.value, recognizedWords.value, _matchLevel);
+      onResult?.call(state.value, recognizedWords.value, _matchLevel, false);
     }
   }
 }

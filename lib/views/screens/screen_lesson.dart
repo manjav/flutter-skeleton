@@ -230,10 +230,10 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  void onListeningResult(QuizState state, String text, int score, Talk talk) {
-    final lastRecord = talk.lastRecord;
+  void onListeningResult(
+      QuizState state, String text, int score, Talk talk, bool repeated) {
     controller.onQuizResult(state, text, score, talk);
-    if (state == QuizState.success && lastRecord == null) {
+    if (state == QuizState.success && !repeated) {
       controller.changeContent(1);
     }
   }

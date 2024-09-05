@@ -35,10 +35,11 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       hintVoice: talk.getText(talk.type.textSide),
       repeatVoice: talk.type == ContentType.repeat ? "" : talk.targetValue,
       exceptions: [account.account.user.displayName!.patternize()],
-      onResult: (state, text, score) =>
-          onListeningResult(state, text, score, talk),
+      onResult: (state, text, score, repeated) =>
+          onListeningResult(state, text, score, talk, repeated),
     );
   }
 
-  void onListeningResult(QuizState state, String text, int score, Talk talk);
+  void onListeningResult(
+      QuizState state, String text, int score, Talk talk, bool repeated);
 }

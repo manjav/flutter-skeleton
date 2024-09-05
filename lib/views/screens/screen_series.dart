@@ -232,7 +232,8 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   @override
-  void onListeningResult(QuizState state, String text, int score, Talk talk) {
+  void onListeningResult(
+      QuizState state, String text, int score, Talk talk, bool repeated) {
     controller.onQuizResult(state, text, score, talk);
     _enableUntil.value = _slidesScrollController!.page!.toInt() + 1;
   }
