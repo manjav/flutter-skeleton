@@ -12,10 +12,9 @@ import '../../app_export.dart';
 
 class ListenerQuiz extends Quiz {
   static const int levelInterval = 100;
+  Talk? talk;
   String? locale;
-  String pattern = "";
-  String hintVoice = "";
-  String repeatVoice = "";
+  String _pattern = "";
   int minMatchLevel = 95;
   Narrator narrator = Narrator.shimmer;
   final SpeechToText _speech = SpeechToText();
@@ -90,12 +89,9 @@ class ListenerQuiz extends Quiz {
   }
 
   void listen({
-    required String pattern,
-    required String hintVoice,
-    required String repeatVoice,
+    required Talk talk,
     String? locale,
     int minMatchLevel = 95,
-    QuizRecord? lastRecord,
     List<String>? exceptions,
     Function(QuizState, String, int, bool)? onResult,
   }) async {
@@ -108,29 +104,30 @@ class ListenerQuiz extends Quiz {
     }
 
     state.value = QuizState.none;
-    this.hintVoice = hintVoice;
-    this.repeatVoice = repeatVoice;
-    this.pattern = pattern.patternize();
+    this.talk = talk;
+    _pattern = talk.targetValue.patternize();
     if (locale != null) this.locale = locale;
     if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
     state.value = QuizState.ready;
-    if (lastRecord != null) {
+
+    if (talk.lastRecord != null) {
       await Future.delayed(const Duration(milliseconds: 10));
       onResult?.call(
-        state.value = lastRecord.state,
-        recognizedWords.value = lastRecord.answer,
+        state.value = talk.lastRecord!.state,
+        recognizedWords.value = talk.lastRecord!.answer,
         _matchLevel,
         true,
       );
       return;
     }
-    log("Start listen ${this.pattern}");
+    log("Start listen $_pattern");
 
     await Future.delayed(const Duration(milliseconds: 500));
-    if (hintVoice.isNotEmpty) {
-      await serviceLocator<Speaker>().playLocal(hintVoice);
+    var initalVoice = talk.getText(talk.textSide);
+    if (initalVoice.isNotEmpty) {
+      await serviceLocator<Speaker>().playLocal(initalVoice);
     }
     super.start(onResult: onResult);
 
@@ -144,7 +141,7 @@ class ListenerQuiz extends Quiz {
     // Similarly `pauseFor` is a maximum not a minimum and may be ignored
     // on some devices.
 
-    var duration = (this.pattern.length * 220).min(2000);
+    var duration = (_pattern.length * 220).min(2000);
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
@@ -167,11 +164,7 @@ class ListenerQuiz extends Quiz {
       state.value = QuizState.ready;
       return;
     }
-    listen(
-        pattern: pattern,
-        hintVoice: hintVoice,
-        repeatVoice: repeatVoice,
-        onResult: onResult);
+    listen(talk: talk!, onResult: onResult);
   }
 
   @override
@@ -186,10 +179,10 @@ class ListenerQuiz extends Quiz {
     for (var alternate in result.alternates) {
       // print("${alternate.recognizedWords} ${alternate.confidence}");
       var insert = alternate.recognizedWords.patternize();
-      if (insert.contains(pattern)) {
-        insert = recognizedWords.value = pattern;
+      if (insert.contains(_pattern)) {
+        insert = recognizedWords.value = _pattern;
       }
-      _matchLevel = ratio(pattern, insert);
+      _matchLevel = ratio(_pattern, insert);
       // if (exception.isNotEmpty) {
       //   minMatchLevel =
       //       100 - (100 * exception.length / pattern!.length).round();
@@ -205,7 +198,7 @@ class ListenerQuiz extends Quiz {
     }
     recognizedWords.value = result.recognizedWords.patternize();
 
-    if (result.recognizedWords.length > pattern.length * 2) {
+    if (result.recognizedWords.length > _pattern.length * 2) {
       state.value = QuizState.failure;
       dispatchResult();
       return;
@@ -221,9 +214,10 @@ class ListenerQuiz extends Quiz {
   void dispatchResult() async {
     _isRepeatPlayed = false;
     stop();
-    if (repeatVoice.isNotEmpty) {
+    if (talk!.type != ContentType.repeat) {
       await Future.delayed(const Duration(seconds: 1));
-      await serviceLocator<Speaker>().playLocal(repeatVoice, skipOnError: true);
+      await serviceLocator<Speaker>()
+          .playLocal(talk!.targetValue, skipOnError: true);
     } else {
       await Future.delayed(const Duration(seconds: 1));
     }
