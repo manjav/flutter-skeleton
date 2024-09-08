@@ -59,10 +59,15 @@ class _MicPanelState extends State<MicPanel> {
         Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+            widget.talk.type == ContentType.translate
+                ? _nativeTextBuilder()
+                : const SizedBox(),
+            SizedBox(height: 10.d),
               _answeringBuilder(context, listener.minMatchLevel),
               SizedBox(height: 10.d),
-              DirText(widget.hint,
-                  style: TStyles.medium.copyWith(color: TColors.primary40)),
+            widget.talk.type == ContentType.translate
+                ? const SizedBox()
+                : _nativeTextBuilder(),
               SizedBox(height: 50.d),
               _wrongResultBuilder(listener),
               SizedBox(height: 20.d),
@@ -71,6 +76,9 @@ class _MicPanelState extends State<MicPanel> {
       ],
     );
   }
+
+  Widget _nativeTextBuilder() => DirText(widget.talk.nativeValue,
+      style: TStyles.medium.copyWith(color: TColors.primary40));
 
   Widget _micAnimationBuilder(BuildContext context, ListenerQuiz listener) {
     var size = DeviceInfo.size.width * 0.85;
