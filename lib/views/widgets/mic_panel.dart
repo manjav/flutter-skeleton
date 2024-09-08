@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
@@ -19,14 +18,9 @@ class MicPanel extends StatefulWidget {
 }
 
 class _MicPanelState extends State<MicPanel> {
-  final List<ValueNotifier<Choice>> _patterns = [];
+  final List<ValueNotifier<Choice>> _answerWords = [];
   final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
   final ValueNotifier<String> _recognizedWords = ValueNotifier("");
-  final _correctStyle = TStyles.huge.copyWith(height: 1, color: TColors.green);
-  final _defaultStyle =
-      TStyles.huge.copyWith(height: 1, color: TColors.primary30);
-  final _hiddenStyle =
-      TStyles.huge.copyWith(height: 1, color: TColors.transparent);
   SMIInput<bool>? _toggleInput;
   SMIInput<double>? _stateInput;
   SMIInput<double>? _soundLevelInput;
@@ -49,8 +43,8 @@ class _MicPanelState extends State<MicPanel> {
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
     final words = widget.talk.targetValue.replace().split(" ");
-    _patterns.clear();
-    _patterns.addAll(
+    _answerWords.clear();
+    _answerWords.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
     return Stack(
       alignment: Alignment.center,
@@ -64,8 +58,12 @@ class _MicPanelState extends State<MicPanel> {
                 : const SizedBox(),
             SizedBox(
                 height: widget.talk.type == ContentType.translate ? 30.d : 0),
-            _answeringBuilder(context, listener.minMatchLevel),
-            SizedBox(height: 30.d),
+            HiddenWords(
+              _answerWords,
+              _recognizedWords,
+              minMatchLevel: listener.minMatchLevel,
+            ),
+            SizedBox(height: 10.d),
             widget.talk.type == ContentType.translate
                 ? const SizedBox()
                 : _nativeTextBuilder(TStyles.medium),
@@ -135,55 +133,6 @@ class _MicPanelState extends State<MicPanel> {
     }
   }
 
-  Widget _answeringBuilder(BuildContext context, int minMatchLevel) {
-    return ValueListenableBuilder(
-      valueListenable: _recognizedWords,
-      builder: (context, value, child) {
-        var items = <Widget>[];
-        var words = value.split(" ");
-        for (var i = 0; i < _patterns.length; i++) {
-          var isCorrect = false;
-          var isHidden = _patterns[i].value.text.contains("{") ||
-              _patterns[i].value.text.contains("}");
-          var style = _defaultStyle;
-          if (i < words.length) {
-            var rate = ratio(words[i], _patterns[i].value.text.patternize());
-            isCorrect = rate > minMatchLevel;
-            if (isCorrect) {
-              style = _correctStyle;
-            }
-          }
-          items.add(
-            ValueListenableBuilder(
-              valueListenable: _patterns[i],
-              builder: (context, value, child) {
-                // print("Hide:$isHidden Correct:$isCorrect =>${_state.value}");
-                return Widgets.button(
-                  context,
-                  radius: 6.d,
-                  color: isHidden ? TColors.primary10 : TColors.transparent,
-                  margin: EdgeInsets.all(2.d),
-                  padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
-                  child: Text(
-                      _patterns[i]
-                          .value
-                          .text
-                          .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
-                      style: isHidden && !_patterns[i].value.used && !isCorrect
-                          ? _hiddenStyle
-                          : style),
-                  onPressed: () =>
-                      _patterns[i].value = Choice(value.text)..used = true,
-                );
-              },
-            ),
-          );
-        }
-        return Wrap(children: items);
-      },
-    );
-  }
-
   Widget _wrongResultBuilder(ListenerQuiz stt) {
     return ValueListenableBuilder(
       valueListenable: _state,
@@ -205,11 +154,11 @@ class _MicPanelState extends State<MicPanel> {
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
     if (_state.value == QuizState.ready) {
-      for (var pattern in _patterns) {
+      for (var pattern in _answerWords) {
         pattern.value = Choice(pattern.value.text)..used = false;
       }
     } else if (_state.value.index >= QuizState.success.index) {
-      for (var pattern in _patterns) {
+      for (var pattern in _answerWords) {
         pattern.value = Choice(pattern.value.text)..used = true;
       }
     }
