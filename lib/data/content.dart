@@ -86,6 +86,8 @@ class Talk extends Content {
       type = ContentType.user;
     } else if (map["type"].endsWith("_2")) {
       type = ContentType.bot;
+    } else if (map["type"].startsWith("avatar_")) {
+      type = ContentType.avatar;
     } else {
       if (map["type"] == "translate_n") {
         map["type"] = "translate";
@@ -127,6 +129,7 @@ enum ContentType {
   bot,
   image,
   video,
+  avatar,
   uncover;
 
   ContentType getChild() {
