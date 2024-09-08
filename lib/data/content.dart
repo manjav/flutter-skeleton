@@ -136,6 +136,12 @@ enum ContentType {
     };
   }
 
+  double get micIndex => switch (this) {
+        ContentType.translate => 1,
+        ContentType.answer => 2,
+        _ => 0,
+      };
+
   static ContentType getEnum(String type) {
     for (var value in ContentType.values) {
       if (value.name == type) return value;
