@@ -168,6 +168,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
+        ContentType.uncover => _uncoverBuilder(talk),
         ContentType.video => videoBuilder(controller),
         _ => _contentItem(talk),
       },
@@ -189,6 +190,19 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         borderRadius: border,
         child: LoaderWidget(AssetType.image, talk.targetValue),
       ),
+    );
+  }
+
+  Widget _uncoverBuilder(Talk talk) {
+    final words = talk.targetValue.replace().split(" ");
+    final answerWords =
+        List.generate(words.length, (i) => ValueNotifier(Choice(words[i])));
+    return Widgets.rect(
+      radius: 24.d,
+      color: TColors.primary0,
+      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(vertical: 80.d),
+      child: HiddenWords(answerWords, ValueNotifier<String>("")),
     );
   }
 
