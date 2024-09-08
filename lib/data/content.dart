@@ -73,6 +73,7 @@ class ParentContent extends Content {
 }
 
 class Talk extends Content {
+  int version = 0;
   int score = 0;
   QuizRecord? lastRecord;
   Set<String> get words => {...targetValue.split(" ")};
@@ -86,12 +87,17 @@ class Talk extends Content {
     } else if (map["type"].endsWith("_2")) {
       type = ContentType.bot;
     } else {
+      if (map["type"] == "translate_n") {
+        map["type"] = "translate";
+        version = 1;
+      }
       type = ContentType.getEnum(map["type"]);
     }
   }
 
   TranslationSide get textSide {
-    if (type == ContentType.caption) {
+    if (type == ContentType.caption ||
+        (type == ContentType.translate && version > 0)) {
       return TranslationSide.native;
     }
     if (type == ContentType.repeat) return TranslationSide.target;
@@ -114,9 +120,9 @@ enum ContentType {
   head,
   text,
   caption,
-  answer,
   repeat,
   translate,
+  answer,
   user,
   bot,
   image,
