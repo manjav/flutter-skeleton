@@ -121,7 +121,8 @@ enum ContentType {
   user,
   bot,
   image,
-  video;
+  video,
+  uncover;
 
   ContentType getChild() {
     return switch (this) {
