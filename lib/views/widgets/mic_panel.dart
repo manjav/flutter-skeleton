@@ -10,7 +10,6 @@ import '../../app_export.dart';
 
 enum Difficulty { simple, hint, hidden }
 
-// ignore: must_be_immutable
 class MicPanel extends StatefulWidget {
   final Talk talk;
   const MicPanel({super.key, required this.talk});
