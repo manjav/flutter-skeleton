@@ -69,12 +69,6 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     await playVideo(talk);
     if (controller.uniqueIndex != lastIndex) return;
     if (!talk.isStation) controller.changeContent(1);
-
-    // var duration = const Duration(milliseconds: 500);
-    // await _chatScrollController.animateTo(
-    //     _chatScrollController.position.maxScrollExtent,
-    //     duration: duration,
-    //     curve: Curves.easeOutQuart);
   }
 
   @override
