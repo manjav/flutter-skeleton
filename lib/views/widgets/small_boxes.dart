@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:lifetalk/app_export.dart';
 
 class RadioBox extends StatelessWidget {
@@ -174,6 +175,74 @@ class ImageBox extends StatelessWidget {
         width: width,
         height: height,
       ),
+    );
+  }
+}
+
+class HiddenWords extends StatelessWidget {
+  final List<ValueNotifier<Choice>> answerWords;
+  final int minMatchLevel;
+  final ValueNotifier<String> liveAnswer;
+  HiddenWords(
+    this.answerWords,
+    this.liveAnswer, {
+    this.minMatchLevel = 90,
+    super.key,
+  });
+
+  final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
+  final _defaultStyle = TStyles.huge.copyWith(height: 1);
+  final _hiddenStyle =
+      TStyles.huge.copyWith(height: 1, color: TColors.transparent);
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: liveAnswer,
+      builder: (context, value, child) {
+        var items = <Widget>[];
+        var words = value.split(" ");
+        for (var i = 0; i < answerWords.length; i++) {
+          var isCorrect = false;
+          var isHidden = answerWords[i].value.text.contains("{") ||
+              answerWords[i].value.text.contains("}");
+          var style = _defaultStyle;
+          if (i < words.length) {
+            var rate = ratio(words[i], answerWords[i].value.text.patternize());
+            isCorrect = rate > minMatchLevel;
+            if (isCorrect) {
+              style = _correctStyle;
+            }
+          }
+          items.add(
+            ValueListenableBuilder(
+              valueListenable: answerWords[i],
+              builder: (context, value, child) {
+                // print("Hide:$isHidden Correct:$isCorrect =>${_state.value}");
+                return Widgets.button(
+                  context,
+                  radius: 6.d,
+                  color: isHidden ? TColors.primary10 : TColors.transparent,
+                  margin: EdgeInsets.all(2.d),
+                  padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
+                  child: Text(
+                      answerWords[i]
+                          .value
+                          .text
+                          .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
+                      style:
+                          isHidden && !answerWords[i].value.used && !isCorrect
+                              ? _hiddenStyle
+                              : style),
+                  onPressed: () =>
+                      answerWords[i].value = Choice(value.text)..used = true,
+                );
+              },
+            ),
+          );
+        }
+        return Wrap(children: items);
+      },
     );
   }
 }
