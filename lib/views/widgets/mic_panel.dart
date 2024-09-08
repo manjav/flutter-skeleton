@@ -12,22 +12,8 @@ enum Difficulty { simple, hint, hidden }
 
 // ignore: must_be_immutable
 class MicPanel extends StatefulWidget {
-  final String hint;
-  final String voice;
-  final String answer;
-  final String repeatVoice;
-  final Narrator narrator;
-  final Difficulty difficulty;
-
-  const MicPanel({
-    super.key,
-    required this.hint,
-    required this.voice,
-    required this.answer,
-    required this.narrator,
-    required this.repeatVoice,
-    this.difficulty = Difficulty.simple,
-  });
+  final Talk talk;
+  const MicPanel({super.key, required this.talk});
 
   @override
   State<MicPanel> createState() => _MicPanelState();
@@ -45,16 +31,13 @@ class _MicPanelState extends State<MicPanel> {
   SMIInput<double>? _stateInput;
   SMIInput<double>? _soundLevelInput;
 
-  String _pattern = "";
-
   @override
   void initState() {
-    _pattern = widget.answer.patternize();
     final listener = serviceLocator<ListenerQuiz>();
     _removeListeners(listener);
     _addListeners(listener);
     serviceLocator<Sounds>()
-        .getPlayer(widget.repeatVoice)
+        .getPlayer(widget.talk.targetValue)
         .onPlayerStateChanged
         .listen((state) {
       _toggleInput?.value = state == PlayerState.playing;
@@ -65,7 +48,7 @@ class _MicPanelState extends State<MicPanel> {
   @override
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
-    final words = widget.answer.replace().split(" ");
+    final words = widget.talk.targetValue.replace().split(" ");
     _patterns.clear();
     _patterns.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
@@ -124,19 +107,16 @@ class _MicPanelState extends State<MicPanel> {
       if (listener.state.value == QuizState.waiting) {
         return;
       }
+      widget.talk.lastRecord = null;
       Timer(
         const Duration(milliseconds: 100),
         () => listener.listen(
-          pattern: widget.answer,
-          hintVoice: widget.voice,
-          repeatVoice: widget.repeatVoice,
+          talk: widget.talk,
           onResult: listener.onResult,
         ),
       );
     } else if (event.name == "play") {
-      var sound =
-          widget.repeatVoice.isNotEmpty ? widget.repeatVoice : widget.voice;
-      serviceLocator<Speaker>().playLocal(sound);
+      serviceLocator<Speaker>().playLocal(widget.talk.targetValue);
     } else if (event.name == "pause") {
       serviceLocator<Sounds>().stopAll();
     }
@@ -208,7 +188,7 @@ class _MicPanelState extends State<MicPanel> {
 
   void _stateListener() {
     final listener = serviceLocator<ListenerQuiz>();
-    if (listener.pattern != _pattern) return;
+    if (listener.talk != widget.talk) return;
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
     if (_state.value == QuizState.ready) {
@@ -224,13 +204,13 @@ class _MicPanelState extends State<MicPanel> {
 
   void _soundLevelListener() {
     final listener = serviceLocator<ListenerQuiz>();
-    if (listener.pattern != _pattern) return;
+    if (listener.talk != widget.talk) return;
     _soundLevelInput?.value = listener.audioLevel.value * 100;
   }
 
   void _resultListener() {
     final listener = serviceLocator<ListenerQuiz>();
-    if (listener.pattern != _pattern) return;
+    if (listener.talk != widget.talk) return;
     _recognizedWords.value = listener.recognizedWords.value;
   }
 

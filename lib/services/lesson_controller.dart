@@ -108,7 +108,7 @@ class LessonController {
       values: {
         "score": score,
         "answer": answer,
-        "expected": listener.pattern,
+        "expected": talk.targetValue,
       },
     );
   }
