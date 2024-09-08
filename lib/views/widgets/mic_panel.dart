@@ -57,22 +57,22 @@ class _MicPanelState extends State<MicPanel> {
       children: [
         _micAnimationBuilder(context, listener),
         Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          mainAxisSize: MainAxisSize.min,
+          children: [
             widget.talk.type == ContentType.translate
                 ? _nativeTextBuilder()
                 : const SizedBox(),
             SizedBox(height: 10.d),
-              _answeringBuilder(context, listener.minMatchLevel),
-              SizedBox(height: 10.d),
+            _answeringBuilder(context, listener.minMatchLevel),
+            SizedBox(height: 10.d),
             widget.talk.type == ContentType.translate
                 ? const SizedBox()
                 : _nativeTextBuilder(),
-              SizedBox(height: 50.d),
-              _wrongResultBuilder(listener),
-              SizedBox(height: 20.d),
-            ],
-          ),
+            SizedBox(height: 50.d),
+            _wrongResultBuilder(listener),
+            SizedBox(height: 20.d),
+          ],
+        ),
       ],
     );
   }
@@ -92,6 +92,10 @@ class _MicPanelState extends State<MicPanel> {
         _toggleInput = controller?.findInput<bool>("play");
         _stateInput = controller?.findInput<double>("state");
         _soundLevelInput = controller?.findInput<double>("soundLevel");
+        controller?.findInput<double>("type")?.value =
+            widget.talk.type.micIndex;
+        artboard.component<TextValueRun>("messageText")?.text =
+            "${widget.talk.type.name}_l".l();
         controller!.addEventListener((s) => _onMicAnimationEvent(s, listener));
         artboard.addController(controller);
       },
