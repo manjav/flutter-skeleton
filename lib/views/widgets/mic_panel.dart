@@ -22,8 +22,9 @@ class _MicPanelState extends State<MicPanel> {
   final List<ValueNotifier<Choice>> _patterns = [];
   final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
   final ValueNotifier<String> _recognizedWords = ValueNotifier("");
-  final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
-  final _defaultStyle = TStyles.huge.copyWith(height: 1);
+  final _correctStyle = TStyles.huge.copyWith(height: 1, color: TColors.green);
+  final _defaultStyle =
+      TStyles.huge.copyWith(height: 1, color: TColors.primary30);
   final _hiddenStyle =
       TStyles.huge.copyWith(height: 1, color: TColors.transparent);
   SMIInput<bool>? _toggleInput;
@@ -59,15 +60,16 @@ class _MicPanelState extends State<MicPanel> {
           mainAxisSize: MainAxisSize.min,
           children: [
             widget.talk.type == ContentType.translate
-                ? _nativeTextBuilder()
+                ? _nativeTextBuilder(TStyles.large)
                 : const SizedBox(),
-            SizedBox(height: 10.d),
+            SizedBox(
+                height: widget.talk.type == ContentType.translate ? 30.d : 0),
             _answeringBuilder(context, listener.minMatchLevel),
-            SizedBox(height: 10.d),
+            SizedBox(height: 30.d),
             widget.talk.type == ContentType.translate
                 ? const SizedBox()
-                : _nativeTextBuilder(),
-            SizedBox(height: 50.d),
+                : _nativeTextBuilder(TStyles.medium),
+            SizedBox(height: 30.d),
             _wrongResultBuilder(listener),
             SizedBox(height: 20.d),
           ],
@@ -76,8 +78,8 @@ class _MicPanelState extends State<MicPanel> {
     );
   }
 
-  Widget _nativeTextBuilder() => DirText(widget.talk.nativeValue,
-      style: TStyles.medium.copyWith(color: TColors.primary40));
+  Widget _nativeTextBuilder(TextStyle style) =>
+      DirText(widget.talk.nativeValue, style: style);
 
   Widget _micAnimationBuilder(BuildContext context, ListenerQuiz listener) {
     var size = DeviceInfo.size.width * 0.85;
