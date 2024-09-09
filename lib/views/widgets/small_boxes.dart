@@ -191,7 +191,8 @@ class HiddenWords extends StatelessWidget {
   });
 
   final _correctStyle = TStyles.huge.copyWith(color: TColors.green, height: 1);
-  final _defaultStyle = TStyles.huge.copyWith(height: 1);
+  final _defaultStyle =
+      TStyles.huge.copyWith(height: 1, color: TColors.primary30);
   final _hiddenStyle =
       TStyles.huge.copyWith(height: 1, color: TColors.transparent);
 

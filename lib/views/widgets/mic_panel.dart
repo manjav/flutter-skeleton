@@ -54,19 +54,20 @@ class _MicPanelState extends State<MicPanel> {
           mainAxisSize: MainAxisSize.min,
           children: [
             widget.talk.type == ContentType.translate
-                ? _nativeTextBuilder()
+                ? _nativeTextBuilder(TStyles.large)
                 : const SizedBox(),
-            SizedBox(height: 10.d),
+            SizedBox(
+                height: widget.talk.type == ContentType.translate ? 30.d : 0),
             HiddenWords(
               _answerWords,
               _recognizedWords,
               minMatchLevel: listener.minMatchLevel,
             ),
-            SizedBox(height: 10.d),
+            SizedBox(height: 30.d),
             widget.talk.type == ContentType.translate
                 ? const SizedBox()
-                : _nativeTextBuilder(),
-            SizedBox(height: 50.d),
+                : _nativeTextBuilder(TStyles.medium),
+            SizedBox(height: 30.d),
             _wrongResultBuilder(listener),
             SizedBox(height: 20.d),
           ],
@@ -75,8 +76,8 @@ class _MicPanelState extends State<MicPanel> {
     );
   }
 
-  Widget _nativeTextBuilder() => DirText(widget.talk.nativeValue,
-      style: TStyles.medium.copyWith(color: TColors.primary40));
+  Widget _nativeTextBuilder(TextStyle style) =>
+      DirText(widget.talk.nativeValue, style: style);
 
   Widget _micAnimationBuilder(BuildContext context, ListenerQuiz listener) {
     var size = DeviceInfo.size.width * 0.85;
