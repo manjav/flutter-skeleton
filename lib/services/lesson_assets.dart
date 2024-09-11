@@ -28,12 +28,11 @@ class LessonAssets with ILogger {
             _loadVideo(talk, onComplete, onProgress, onError);
           }
           if (side != TranslationSide.none) {
-            var text = talk.getText(side);
-            _loadFile(
-                text, talk.narrator, onComplete, onProgress, onError);
+            var text = talk.getText(side).simplify();
+            _loadFile(text, talk.narrator, onComplete, onProgress, onError);
           }
           if (talk.type == ContentType.translate) {
-            var text = talk.targetValue;
+            var text = talk.targetValue.simplify();
             _loadFile(text, Narrator.onyx, onComplete, onProgress, onError);
           }
         }

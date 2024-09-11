@@ -104,21 +104,16 @@ extension StringExtensions on String {
     return [substring(0, length), ...substring(length).splitByLength(length)];
   }
 
-  String patternize([bool withSpace = false]) {
-    var text = replaceAll(RegExp(r'[!?.;:“”"{}]'), '').toLowerCase();
-    return text.replace(withSpace);
+  String patternize() {
+    return replaceAll(RegExp(r"[!?.;:,’“”'{}]"), '').toLowerCase();
   }
 
-  String replace([bool withSpace = false]) {
-    var text = replaceAll(RegExp(r'’'), "'").replaceAll(RegExp(r'，'), ",");
-    if (withSpace) {
-      text = text.replaceAll(RegExp(' '), '');
-    }
-    return text;
-  }
-
-  String simplify() =>
-      replaceAll(RegExp(r'[ًٍَُِّ{}]'), '').replaceAll('|', '\n');
+  String simplify() => replaceAll(RegExp(r'[{}]'), '')
+      .replaceAll('|', '\n')
+      .replaceAll('”', '"')
+      .replaceAll('“', '"')
+      .replaceAll('’', "'")
+      .replaceAll('，', ",");
 }
 
 extension DateExtension on DateTime {
