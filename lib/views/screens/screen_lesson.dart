@@ -207,12 +207,8 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     );
   }
 
-  Widget _avatarBuilder(Talk talk) => Widgets.rect(
-        color: TColors.orange,
-        margin: EdgeInsets.symmetric(horizontal: 120.d, vertical: 20.d),
-        height: 160.d,
-        radius: 50.d,
-      );
+  Widget _avatarBuilder(Talk talk) =>
+      Avatar(expression: AvatarExpression.values[talk.version], size: 150.d);
 
   Widget _contentItem(Talk talk) {
     var tip = switch (talk.type) {

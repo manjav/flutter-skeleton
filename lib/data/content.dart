@@ -88,6 +88,8 @@ class Talk extends Content {
       type = ContentType.bot;
     } else if (map["type"].startsWith("avatar_")) {
       type = ContentType.avatar;
+      version = AvatarExpression.values
+          .indexWhere((e) => e.name == map["type"].substring(7));
     } else {
       if (map["type"] == "translate_n") {
         map["type"] = "translate";
