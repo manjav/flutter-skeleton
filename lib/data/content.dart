@@ -57,6 +57,7 @@ class Content {
 
 class ParentContent extends Content {
   List<Content> children = [];
+  int passLevel = 0;
   String title = "", description = "", iconUrl = "", mode = "";
   ParentContent.create(
     Content? parent,
