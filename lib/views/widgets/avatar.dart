@@ -23,8 +23,7 @@ class Avatar extends StatelessWidget {
         final controller =
             StateMachineController.fromArtboard(artboard, "State Machine 1");
         print("avatar_${expression.name}");
-        controller!.findInput<bool>("avatar_${expression.name}")?.value = true;
-
+        controller!.getTriggerInput("avatar_${expression.name}")?.change(true);
         artboard.addController(controller);
       },
       width: size,
