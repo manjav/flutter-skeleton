@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -176,10 +175,12 @@ class ListenerQuiz extends Quiz {
 
   Future<void> _proccessResult() async {
     for (var alternate in result.alternates) {
-      // print("${alternate.recognizedWords} ${alternate.confidence}");
       var insert = alternate.recognizedWords.patternize();
       if (insert.contains(_pattern)) {
-        insert = recognizedWords.value = _pattern;
+        recognizedWords.value = _pattern;
+        state.value = QuizState.success;
+        dispatchResult();
+        return;
       }
       _matchLevel = ratio(_pattern, insert);
       // if (exception.isNotEmpty) {
