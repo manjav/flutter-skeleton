@@ -108,7 +108,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           children: [
             ListView.builder(
               padding: EdgeInsets.fromLTRB(0, 80.d, 14.d, 30.d),
-              itemCount: _categories.length,
+              itemCount: _categories.length + 1,
               itemBuilder: _categoryItemBuilder,
             ),
           ],
@@ -116,6 +116,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget _categoryItemBuilder(BuildContext context, int index) {
+    if (index >= _categories.length) {
+      return Widgets.button(
+        context,
+        margin: EdgeInsets.fromLTRB(_roadWidth, 20.d, 0, 0),
+        height: 70.d,
+        color: TColors.primary20,
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text("Next Section", style: TStyles.largeInvert),
+          SizedBox(width: 10.d),
+          Asset.load<SvgPicture>("group_lock")
+        ]),
+      );
+    }
     final category = _categories[index];
     return Column(
       children: [
