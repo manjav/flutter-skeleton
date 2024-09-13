@@ -22,8 +22,9 @@ class Avatar extends StatelessWidget {
       onRiveInit: (artboard) {
         final controller =
             StateMachineController.fromArtboard(artboard, "State Machine 1");
-        print("avatar_${expression.name}");
-        controller!.getTriggerInput("avatar_${expression.name}")?.change(true);
+        controller!
+            .getNumberInput("state")
+            ?.change(expression.index.toDouble());
         artboard.addController(controller);
       },
       width: size,
