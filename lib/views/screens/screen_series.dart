@@ -118,17 +118,22 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         final opacity = index <= value ? 1.0 : 0.0;
         return AnimatedOpacity(
           opacity: opacity,
-          duration: Duration(milliseconds: opacity > 0 ? 100 : 0),
+          duration: Duration(milliseconds: opacity > 0 ? 300 : 0),
           child: Widgets.touchable(
             context,
             sfx: "",
             child: Widgets.rect(
               radius: 24.d,
-              color: index <= value ? TColors.primary0 : TColors.primary10,
+              padding: EdgeInsets.all(20.d),
+              alignment: Alignment.topCenter,
               margin: EdgeInsets.symmetric(vertical: 35.d),
-              padding: EdgeInsets.symmetric(horizontal: 20.d),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, children: items),
+              color: index <= value ? TColors.primary0 : TColors.primary10,
+              child: isSlide && index > value - 1
+                  ? DirText("next_slide".l(),
+                      style: TStyles.medium.copyWith(color: TColors.primary30))
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: items),
             ),
             onTap: () {
               if (index != controller.slideIndex.value) {
