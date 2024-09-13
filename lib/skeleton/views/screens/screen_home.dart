@@ -78,18 +78,22 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   // Find first incomplete group
   int _firstIncompleteGroup() {
     for (var category in _categories) {
-      if (!isCategoryComplete(category)) {
+      if (!isCategoryComplete(category, true)) {
         return category.index;
       }
     }
     return 0;
   }
 
-  bool isCategoryComplete(ParentContent category) {
+  bool isCategoryComplete(ParentContent category, [bool changePass = false]) {
     for (var group in category.children) {
-      if (!_scores.containsKey(group.id)) {
+      if (!_scores.containsKey((group as ParentContent).id)) {
+        if (changePass) {
+          group.passLevel = 1;
+        }
         return false;
       }
+      group.passLevel = 2;
     }
     return true;
   }
@@ -105,7 +109,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           children: [
             ListView.builder(
               padding: EdgeInsets.fromLTRB(0, 80.d, 14.d, 30.d),
-              itemCount: _categories.length,
+              itemCount: _categories.length + 1,
               itemBuilder: _categoryItemBuilder,
             ),
           ],
@@ -113,6 +117,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget _categoryItemBuilder(BuildContext context, int index) {
+    if (index >= _categories.length) {
+      return Widgets.button(
+        context,
+        margin: EdgeInsets.fromLTRB(_roadWidth, 20.d, 0, 0),
+        height: 70.d,
+        color: TColors.primary20,
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text("Next Section", style: TStyles.largeInvert),
+          SizedBox(width: 10.d),
+          Asset.load<SvgPicture>("group_lock")
+        ]),
+      );
+    }
     final category = _categories[index];
     return Column(
       children: [
@@ -290,6 +307,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     }
     final group = category.children[index] as ParentContent;
     final text = group.title.simplify();
+    final locked = group.passLevel <= 0;
     return Expanded(
       child: Widgets.rect(
         margin: EdgeInsets.only(
@@ -303,7 +321,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         child: Widgets.button(
           context,
           radius: 12.d,
-          color: _colors[group.mode],
+          color: locked ? TColors.primary20 : _colors[group.mode],
           margin: EdgeInsets.all(6.d),
           padding: EdgeInsets.symmetric(horizontal: 14.d),
           child: Row(
@@ -315,9 +333,13 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               Expanded(
                 child: DirText(text, style: TStyles.largeInvert),
               ),
+              locked ? Asset.load<SvgPicture>("group_lock") : const SizedBox()
             ],
           ),
           onPressed: () async {
+            if (locked) {
+              return;
+            }
             try {
               if (group.children.isEmpty) {
                 await serviceLocator<AccountProvider>().loadGroup(group);
@@ -334,6 +356,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                 "message": e.message
               });
             }
+            _categoryIndex = _firstIncompleteGroup();
             setState(() {});
             // if (s == null || s <= scoreNotifier.value) return;
             // await serviceLocator<AccountProvider>().saveScore(id, s);

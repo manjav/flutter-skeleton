@@ -183,7 +183,7 @@ class ListenerQuiz extends Quiz {
         return;
       }
       _matchLevel = ratio(_pattern, insert);
-      print("'$insert' '$_pattern' $_matchLevel");
+      debugPrint("'$insert' '$_pattern' $_matchLevel");
       // if (exception.isNotEmpty) {
       //   minMatchLevel =
       //       100 - (100 * exception.length / pattern!.length).round();

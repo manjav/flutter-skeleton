@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 
 import '../app_export.dart';
 
@@ -65,7 +66,7 @@ class Speaker extends IService {
     bool skipOnError = false,
   }) async {
     name = name.simplify();
-    print("play => $name");
+    debugPrint("play => $name");
     serviceLocator<ListenerQuiz>().stop();
     var player = serviceLocator<Sounds>().getPlayer(name);
     if (player.state == PlayerState.playing) {
