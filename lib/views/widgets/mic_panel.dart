@@ -137,15 +137,13 @@ class _MicPanelState extends State<MicPanel> {
     return ValueListenableBuilder(
       valueListenable: _state,
       builder: (context, value, child) {
-        return
-            // value == QuizState.failure ?
-            DirText(
-          _recognizedWords.value,
-          style: TStyles.medium.copyWith(color: TColors.error, height: 1),
-          textAlign: TextAlign.center,
-        )
-            // : SizedBox(height: 12.d)
-            ;
+        return value == QuizState.failure
+            ? DirText(
+                _recognizedWords.value,
+                textAlign: TextAlign.center,
+                style: TStyles.medium.copyWith(color: TColors.error, height: 1),
+              )
+            : SizedBox(height: 12.d);
       },
     );
   }
