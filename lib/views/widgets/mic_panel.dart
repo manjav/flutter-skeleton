@@ -42,7 +42,7 @@ class _MicPanelState extends State<MicPanel> {
   @override
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
-    final words = widget.talk.targetValue.simplify().split(" ");
+    final words = widget.talk.targetValue.split(" ");
     _answerWords.clear();
     _answerWords.addAll(
         List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
