@@ -125,7 +125,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         height: 70.d,
         color: TColors.primary20,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("Next Section", style: TStyles.largeInvert),
+          Text("next_section".l(), style: TStyles.largeInvert),
           SizedBox(width: 10.d),
           Asset.load<SvgPicture>("group_lock")
         ]),
@@ -145,7 +145,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     if (category.index != 0) return const SizedBox();
     return SizedBox(
         height: _titleHeight,
-        child: Text("⭠⭑ Section 1 ⭢  ",
+        child: Text("section_num".l(["1".convert()]),
             style: TStyles.large.copyWith(color: TColors.primary40)));
   }
 
