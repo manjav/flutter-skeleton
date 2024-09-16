@@ -169,6 +169,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
         ContentType.uncover => _uncoverBuilder(talk),
+        ContentType.avatar => _avatarBuilder(talk),
         ContentType.video => videoBuilder(controller),
         _ => _contentItem(talk),
       },
@@ -205,6 +206,10 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       child: HiddenWords(answerWords, ValueNotifier<String>("")),
     );
   }
+
+  Widget _avatarBuilder(Talk talk) => Avatar(
+      expression: AvatarExpression.values[talk.version < 0 ? 0 : talk.version],
+      size: 150.d);
 
   Widget _contentItem(Talk talk) {
     var tip = switch (talk.type) {
