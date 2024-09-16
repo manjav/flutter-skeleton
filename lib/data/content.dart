@@ -96,9 +96,6 @@ class Talk extends Content {
         map["type"] = "translate";
         version = 1;
       }
-      if (map["type"] == "uncover") {
-        print("dssads");
-      }
       type = ContentType.getEnum(map["type"]);
     }
   }

@@ -168,8 +168,8 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
-        ContentType.uncover => _uncoverBuilder(talk),
         ContentType.avatar => _avatarBuilder(talk),
+        ContentType.uncover => _uncoverBuilder(talk),
         ContentType.video => videoBuilder(controller),
         _ => _contentItem(talk),
       },
