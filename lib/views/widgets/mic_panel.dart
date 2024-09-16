@@ -63,7 +63,7 @@ class _MicPanelState extends State<MicPanel> {
               _recognizedWords,
               minMatchLevel: listener.minMatchLevel,
             ),
-            SizedBox(height: 10.d),
+            SizedBox(height: 30.d),
             widget.talk.type == ContentType.translate
                 ? const SizedBox()
                 : _nativeTextBuilder(TStyles.medium),
