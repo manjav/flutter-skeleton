@@ -319,51 +319,25 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           borderRadius: _getRaduis(index, category.children.length),
         ),
         height: _groupHeight,
-        child: Widgets.button(
-          context,
-          radius: 12.d,
-          color: locked ? TColors.primary20 : _colors[group.mode],
-          margin: EdgeInsets.all(6.d),
-          padding: EdgeInsets.symmetric(horizontal: 14.d),
-          child: Row(
-            textDirection: text.getDirection(),
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              LoaderWidget(AssetType.vector, group.mode, width: 30.d),
-              SizedBox(width: 16.d),
-              Expanded(
-                child: DirText(text, style: TStyles.largeInvert),
-              ),
-              locked ? Asset.load<SvgPicture>("group_lock") : const SizedBox()
-            ],
-          ),
-          onPressed: () async {
-            if (locked) {
-              return;
-            }
-            try {
-              if (group.children.isEmpty) {
-                await serviceLocator<AccountProvider>().loadGroup(group);
-              }
-              var routName = switch (group.mode) {
-                "lesson" || "lessons" => Routes.lesson,
-                "chat" => Routes.chat,
-                _ => Routes.series,
-              };
-              await Get.toNamed(routName, arguments: {"content": group});
-            } on SkeletonException catch (e) {
-              await Get.toNamed(Routes.popupMessage, arguments: {
-                "title": "${e.statusCode}",
-                "message": e.message
-              });
-            }
-            _categoryIndex = _firstIncompleteGroup();
-            setState(() {});
-            // if (s == null || s <= scoreNotifier.value) return;
-            // await serviceLocator<AccountProvider>().saveScore(id, s);
-            // scoreNotifier.value = s;
-          },
-        ),
+        child: Widgets.button(context,
+            radius: 12.d,
+            color: locked ? TColors.primary20 : _colors[group.mode],
+            margin: EdgeInsets.all(6.d),
+            padding: EdgeInsets.symmetric(horizontal: 14.d),
+            child: Row(
+              textDirection: text.getDirection(),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LoaderWidget(AssetType.vector, group.mode, width: 30.d),
+                SizedBox(width: 16.d),
+                Expanded(
+                  child: DirText(text, style: TStyles.largeInvert),
+                ),
+                locked ? Asset.load<SvgPicture>("group_lock") : const SizedBox()
+              ],
+            ),
+            onPressed: () async => _loadLesson(group, locked),
+            onLongPress: () => _loadLesson(group, false)),
       ),
     );
   }
@@ -379,5 +353,30 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     } else {
       return null;
     }
+  }
+
+  Future<void> _loadLesson(ParentContent group, bool locked) async {
+    if (locked) {
+      return;
+    }
+    try {
+      if (group.children.isEmpty) {
+        await serviceLocator<AccountProvider>().loadGroup(group);
+      }
+      var routName = switch (group.mode) {
+        "lesson" || "lessons" => Routes.lesson,
+        "chat" => Routes.chat,
+        _ => Routes.series,
+      };
+      await Get.toNamed(routName, arguments: {"content": group});
+    } on SkeletonException catch (e) {
+      await Get.toNamed(Routes.popupMessage,
+          arguments: {"title": "${e.statusCode}", "message": e.message});
+    }
+    _categoryIndex = _firstIncompleteGroup();
+    setState(() {});
+    // if (s == null || s <= scoreNotifier.value) return;
+    // await serviceLocator<AccountProvider>().saveScore(id, s);
+    // scoreNotifier.value = s;
   }
 }
