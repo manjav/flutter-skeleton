@@ -25,23 +25,32 @@ class LessonAssets with ILogger {
             continue; // Load captions only for lessons
           }
           if (talk.type == ContentType.video) {
-            _loadVideo(talk, onComplete, onProgress, onError);
+            _loadFile(AssetType.video, talk.targetValue, onComplete, onProgress,
+                onError);
+          } else if (talk.type == ContentType.image) {
+            _loadFile(AssetType.image, talk.targetValue, onComplete, onProgress,
+                onError);
           }
+
+          if (talk.isQuiz) {
+            _loadFile(AssetType.animation, "mic_panel", onComplete, onProgress,
+                onError);
+          }
+
           if (side != TranslationSide.none) {
             var text = talk.getText(side);
-            _loadFile(
-                text, talk.narrator, onComplete, onProgress, onError);
+            _loadVoice(text, talk.narrator, onComplete, onProgress, onError);
           }
           if (talk.type == ContentType.translate) {
             var text = talk.targetValue;
-            _loadFile(text, Narrator.onyx, onComplete, onProgress, onError);
+            _loadVoice(text, Narrator.onyx, onComplete, onProgress, onError);
           }
         }
       }
     }
   }
 
-  Future<void> _loadFile(
+  Future<void> _loadVoice(
     String text,
     Narrator narrator,
     Function() onComplete,
@@ -57,7 +66,7 @@ class LessonAssets with ILogger {
       var response = await request.close();
       if (response.statusCode != 200) {
         log('Failure status code 😱');
-        _loadFile(text, narrator, onComplete, onProgress, onError, tryCount++);
+        _loadVoice(text, narrator, onComplete, onProgress, onError, tryCount++);
         return;
       }
       var md5 = response.headers.value("Content-Md5");
@@ -67,7 +76,7 @@ class LessonAssets with ILogger {
         if (tryCount > 2) {
           onError("Lesson asset '$text' not found!");
         } else {
-          _loadFile(
+          _loadVoice(
               text, narrator, onComplete, onProgress, onError, tryCount++);
           log("Retry sound loading $tryCount");
         }
@@ -95,16 +104,17 @@ class LessonAssets with ILogger {
     return completer.future;
   }
 
-  Future<void> _loadVideo(Talk talk, Function() onComplete,
-      Function(double p1) onProgress, Function(String p1) onError) async {
-    final path = "${talk.targetValue}.mp4";
+  Future<void> _loadFile(
+      AssetType assetType,
+      String name,
+      Function() onComplete,
+      Function(double p1) onProgress,
+      Function(String p1) onError) async {
+    final path = "$name.${assetType.type}";
     if (_assets.containsKey(path)) return;
     _assets[path] = null;
-
-    final loader = Loader();
-    final file = await loader.load(path, "${LoaderWidget.baseURL}/videos/$path",
-        hash: LoaderWidget.hashMap[path]);
-    _assets[path] = file;
+    final loader = await LoaderWidget.load(assetType, name);
+    _assets[path] = loader.metadata;
 
     _checkCompletion(onProgress, onComplete);
   }
