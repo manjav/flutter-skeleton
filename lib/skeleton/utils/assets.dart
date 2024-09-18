@@ -73,6 +73,7 @@ enum AssetType {
   sound,
   text,
   vector,
+  video,
 }
 
 extension AssetTypeExtension on AssetType {
@@ -84,6 +85,7 @@ extension AssetTypeExtension on AssetType {
       AssetType.sound => "sounds",
       AssetType.text => "text",
       AssetType.vector => "vectors",
+      AssetType.video => "videos",
     };
     if (subFolder != null) folder += '/$subFolder';
     return folder;
@@ -96,7 +98,8 @@ extension AssetTypeExtension on AssetType {
       AssetType.image => "webp",
       AssetType.sound => "mp3",
       AssetType.text => "json",
-      AssetType.vector => "svg"
+      AssetType.vector => "svg",
+      AssetType.video => "mp4"
     };
   }
 
