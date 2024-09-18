@@ -124,7 +124,8 @@ class NetConnector extends IService {
           .authenticateDevice(deviceId: DeviceInfo.adId, vars: data);
       return session;
     } catch (e) {
-      throw SkeletonException(StatusCode.UNKNOWN_ERROR, e.toString());
+      log(e.toString());
+      throw SkeletonException(StatusCode.UNKNOWN_ERROR, "Lost Connection!");
     }
   }
 
