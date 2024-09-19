@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDsJslTLKknSgeTdrMeeWas7A1odRrITVo',
-    appId: '1:962267425396:android:d80c5f27192816706fff21',
+    appId: '1:962267425396:android:039ca3287304cedf6fff21',
     messagingSenderId: '962267425396',
     projectId: 'lifetalk-fc9b5',
     storageBucket: 'lifetalk-fc9b5.appspot.com',
@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDVxaEvoGieZbHK6hfdp6oavoxuueAFSbs',
-    appId: '1:962267425396:ios:dc09bd13f8456c946fff21',
+    appId: '1:962267425396:ios:81f140c3a761feb26fff21',
     messagingSenderId: '962267425396',
     projectId: 'lifetalk-fc9b5',
     storageBucket: 'lifetalk-fc9b5.appspot.com',
