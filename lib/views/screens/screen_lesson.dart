@@ -168,8 +168,8 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
-        ContentType.uncover => _uncoverBuilder(talk),
         ContentType.avatar => _avatarBuilder(talk),
+        ContentType.uncover => _uncoverBuilder(talk),
         ContentType.video => videoBuilder(controller),
         _ => _contentItem(talk),
       },
@@ -178,6 +178,8 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   Widget _imageBuilder(Talk talk) {
     final border = BorderRadius.all(Radius.circular(12.d));
+    final bytes =
+        serviceLocator<LessonAssets>().get("${talk.targetValue}.webp");
     return Widgets.rect(
       decoration: BoxDecoration(
         borderRadius: border,
@@ -189,7 +191,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       margin: EdgeInsets.all(24.d),
       child: ClipRRect(
         borderRadius: border,
-        child: LoaderWidget(AssetType.image, talk.targetValue),
+        child: Image.memory(bytes, gaplessPlayback: true),
       ),
     );
   }

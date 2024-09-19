@@ -60,15 +60,17 @@ class NetConnector extends IService {
         }
         versions[key] = VersionConfigs(
           key,
-          entry.value["port"],
-          entry.value["host"],
-          entry.value["changelog"],
-          VersionPriority.values[entry.value["priority"]],
+          entry.value["port"] ?? configs["port"],
+          entry.value["host"] ?? configs["host"],
+          entry.value["assetsUrl"] ?? configs["assetsUrl"],
+          entry.value["changelog"] ?? "",
+          VersionPriority.values[entry.value["priority"] ?? 2],
         );
         // Update connection according to version
         if (version == key) {
           configs["port"] = versions[key]!.port;
           configs["host"] = versions[key]!.host;
+          configs["assetsUrl"] = versions[key]!.assetsUrl;
         }
       }
 
@@ -87,7 +89,7 @@ class NetConnector extends IService {
         }
       }
 
-      LoaderWidget.baseURL = configs["assetsServer"]!;
+      LoaderWidget.baseURL = configs["assetsUrl"]!;
       LoaderWidget.hashMap = Map.castFrom(configs["files"]);
       log("Config loaded.");
     } else {
@@ -122,7 +124,8 @@ class NetConnector extends IService {
           .authenticateDevice(deviceId: DeviceInfo.adId, vars: data);
       return session;
     } catch (e) {
-      throw SkeletonException(StatusCode.UNKNOWN_ERROR, e.toString());
+      log(e.toString());
+      throw SkeletonException(StatusCode.UNKNOWN_ERROR, "Lost Connection!");
     }
   }
 
@@ -275,12 +278,14 @@ class VersionConfigs {
   final int port;
   final int version;
   final String host;
+  final String assetsUrl;
   final String changelog;
   final VersionPriority priority;
   VersionConfigs(
     this.version,
     this.port,
     this.host,
+    this.assetsUrl,
     this.changelog,
     this.priority,
   );

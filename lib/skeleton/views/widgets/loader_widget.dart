@@ -40,11 +40,14 @@ class LoaderWidget extends StatefulWidget {
   createState() => _LoaderWidgetState();
   static final Map<String, Loader> cachedLoaders = {};
 
-  static Future<Loader> load(AssetType type, String name,
-      {String? baseUrl,
-      String? subFolder,
-      Future<bool> Function(rive.FileAsset asset, Uint8List? embeddedBytes)?
-          riveAssetLoader}) async {
+  static Future<Loader> load(
+    AssetType type,
+    String name, {
+    String? baseUrl,
+    String? subFolder,
+    Future<bool> Function(rive.FileAsset asset, Uint8List? embeddedBytes)?
+        riveAssetLoader,
+  }) async {
     var key = "${type.name}_$name";
     var loader = cachedLoaders[key] ?? Loader();
     var url =
@@ -58,8 +61,10 @@ class LoaderWidget extends StatefulWidget {
       if (loader.bytes != null) {
         loader.metadata = Uint8List.fromList(loader.bytes!);
       }
-    }
-    if (type == AssetType.animation || type == AssetType.animationZipped) {
+    } else if (type == AssetType.video) {
+      loader.metadata = loader.file;
+    } else if (type == AssetType.animation ||
+        type == AssetType.animationZipped) {
       loader.metadata = await RiveFile.file(loader.file!.path,
           assetLoader: riveAssetLoader != null
               ? CallbackAssetLoader(riveAssetLoader)
