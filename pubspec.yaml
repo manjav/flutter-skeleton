@@ -44,7 +44,7 @@ dependencies:
   provider: ^6.1.1
   rive: ^0.13.9
   shared_preferences: ^2.3.2
-  speech_to_text: ^6.6.2
+  speech_to_text: ^7.0.0
   # unity_ads_plugin: ^0.3.10
   url_launcher: ^6.1.14
   video_player: ^2.9.1
