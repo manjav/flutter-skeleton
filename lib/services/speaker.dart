@@ -66,7 +66,7 @@ class Speaker extends IService {
     bool skipOnError = false,
   }) async {
     name = name.simplify();
-    debugPrint("play => $name");
+    log("play => $name");
     serviceLocator<ListenerQuiz>().stop();
     var player = serviceLocator<Sounds>().getPlayer(name);
     if (player.state == PlayerState.playing) {

@@ -4,14 +4,14 @@
             "android": {
                 "default": {
                     "projectId": "lifetalk-fc9b5",
-                    "appId": "1:962267425396:android:d80c5f27192816706fff21",
+                    "appId": "1:962267425396:android:039ca3287304cedf6fff21",
                     "fileOutput": "android/app/google-services.json"
                 }
             },
             "ios": {
                 "default": {
                     "projectId": "lifetalk-fc9b5",
-                    "appId": "1:962267425396:ios:dc09bd13f8456c946fff21",
+                    "appId": "1:962267425396:ios:81f140c3a761feb26fff21",
                     "uploadDebugSymbols": true,
                     "fileOutput": "ios/Runner/GoogleService-Info.plist"
                 }
@@ -20,8 +20,8 @@
                 "lib/firebase_options.dart": {
                     "projectId": "lifetalk-fc9b5",
                     "configurations": {
-                        "android": "1:962267425396:android:d80c5f27192816706fff21",
-                        "ios": "1:962267425396:ios:dc09bd13f8456c946fff21"
+                        "android": "1:962267425396:android:039ca3287304cedf6fff21",
+                        "ios": "1:962267425396:ios:81f140c3a761feb26fff21"
                     }
                 }
             }

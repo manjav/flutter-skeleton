@@ -23,7 +23,8 @@ class ListenerQuiz extends Quiz {
   final double _minSoundLevel = Platform.isIOS ? -70 : -10;
   final double _maxSoundLevel = Platform.isIOS ? -20 : 10;
   DateTime _lastLevelChanged = DateTime.now();
-  bool _isRepeatPlayed = false;
+  bool _hasSoundPlayed = false;
+  bool _hasResultSent = false;
   List<String> exceptions = [];
   int _matchLevel = 0;
 
@@ -75,13 +76,11 @@ class ListenerQuiz extends Quiz {
     if (status == "listening") {
       state.value = QuizState.listening;
     } else if (status == "done") {
-      if (_isRepeatPlayed || recognizedWords.value.isEmpty) {
-        onResult?.call(
-          state.value == QuizState.success ? state.value : QuizState.failure,
-          recognizedWords.value,
-          _matchLevel,
-          false,
-        );
+      if (state.value == QuizState.listening && recognizedWords.value.isEmpty) {
+        state.value = QuizState.failure;
+      }
+      if (_hasSoundPlayed) {
+        _sendResult("status", false);
       }
     }
   }
@@ -109,18 +108,15 @@ class ListenerQuiz extends Quiz {
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
     state.value = QuizState.ready;
+    _hasSoundPlayed = false;
+    _hasResultSent = false;
 
     if (talk.lastRecord != null) {
       await Future.delayed(const Duration(milliseconds: 10));
-      onResult?.call(
-        state.value = talk.lastRecord!.state,
-        recognizedWords.value = talk.lastRecord!.answer,
-        _matchLevel,
-        true,
-      );
+      _sendResult("lastRecord", true);
       return;
     }
-    log("Start listen $_pattern");
+    print("listen $_pattern");
 
     await Future.delayed(const Duration(milliseconds: 500));
     var initalVoice = talk.getText(talk.textSide);
@@ -174,57 +170,60 @@ class ListenerQuiz extends Quiz {
   }
 
   Future<void> _proccessResult() async {
+    if (state.value.index > QuizState.listening.index) return;
     for (var alternate in result.alternates) {
       var insert = alternate.recognizedWords.patternize();
       if (insert.contains(_pattern)) {
         recognizedWords.value = _pattern;
-        state.value = QuizState.success;
-        dispatchResult();
+        _finalize(QuizState.success);
         return;
       }
       _matchLevel = ratio(_pattern, insert);
-      debugPrint("'$insert' '$_pattern' $_matchLevel");
-      // if (exception.isNotEmpty) {
-      //   minMatchLevel =
-      //       100 - (100 * exception.length / pattern!.length).round();
-      // }
+      // log("'$insert' '$_pattern' $_matchLevel");
       if (state.value.index > QuizState.listening.index) return;
       // logs = "=> $insert , ratio: $_matchLevel/$minMatchLevel";
       if (_matchLevel > minMatchLevel) {
         recognizedWords.value = insert;
-        state.value = QuizState.success;
-        dispatchResult();
+        _finalize(QuizState.success);
         return;
       }
     }
     recognizedWords.value = result.recognizedWords.patternize();
-
     if (result.recognizedWords.length > _pattern.length * 2) {
-      state.value = QuizState.failure;
-      dispatchResult();
+      _finalize(QuizState.failure);
       return;
     }
 
     if (result.finalResult) {
-      state.value =
-          recognizedWords.value.isEmpty ? QuizState.ready : QuizState.failure;
-      dispatchResult();
+      _finalize(QuizState.failure);
     }
   }
 
-  void dispatchResult() async {
-    _isRepeatPlayed = false;
+  void _finalize(QuizState state) async {
+    this.state.value = state;
     stop();
-    if (talk!.type != ContentType.repeat) {
-      await Future.delayed(const Duration(seconds: 1));
+    if (recognizedWords.value.isNotEmpty && talk!.type != ContentType.repeat) {
+      // await Future.delayed(const Duration(seconds: 1));
       await serviceLocator<Speaker>()
           .playLocal(talk!.targetValue, skipOnError: true);
     } else {
-      await Future.delayed(const Duration(seconds: 1));
+      // await Future.delayed(const Duration(seconds: 1));
     }
-    _isRepeatPlayed = true;
+    _hasSoundPlayed = true;
     if (_speech.lastStatus == "done") {
-      onResult?.call(state.value, recognizedWords.value, _matchLevel, false);
+      _sendResult("finalize", false);
     }
+  }
+
+  void _sendResult(String flag, bool isReserved) {
+    if (_hasResultSent) return;
+    // log("_dispatchResult $flag => ${recognizedWords.value} ${state.value}");
+    onResult?.call(
+      state.value,
+      recognizedWords.value,
+      _matchLevel,
+      isReserved,
+    );
+    _hasResultSent = true;
   }
 }

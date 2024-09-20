@@ -29,6 +29,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       .copyWith(color: TColors.green, fontWeight: FontWeight.w600, height: 0.9);
   final _colors = {
     "lesson": TColors.blue,
+    "lessons": TColors.blue,
     "practice": TColors.orange,
     "grammar": TColors.cyan,
     "vocabulary": TColors.purpule,
@@ -124,7 +125,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         height: 70.d,
         color: TColors.primary20,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("Next Section", style: TStyles.largeInvert),
+          Text("next_section".l(), style: TStyles.largeInvert),
           SizedBox(width: 10.d),
           Asset.load<SvgPicture>("group_lock")
         ]),
@@ -144,7 +145,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     if (category.index != 0) return const SizedBox();
     return SizedBox(
         height: _titleHeight,
-        child: Text("⭠⭑ Section 1 ⭢  ",
+        child: Text("section_num".l(["1".convert()]),
             style: TStyles.large.copyWith(color: TColors.primary40)));
   }
 
@@ -336,32 +337,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               locked ? Asset.load<SvgPicture>("group_lock") : const SizedBox()
             ],
           ),
-          onPressed: () async {
-            if (locked) {
-              return;
-            }
-            try {
-              if (group.children.isEmpty) {
-                await serviceLocator<AccountProvider>().loadGroup(group);
-              }
-              var routName = switch (group.mode) {
-                "lesson" => Routes.lesson,
-                "chat" => Routes.chat,
-                _ => Routes.series,
-              };
-              await Get.toNamed(routName, arguments: {"content": group});
-            } on SkeletonException catch (e) {
-              await Get.toNamed(Routes.popupMessage, arguments: {
-                "title": "${e.statusCode}",
-                "message": e.message
-              });
-            }
-            _categoryIndex = _firstIncompleteGroup();
-            setState(() {});
-            // if (s == null || s <= scoreNotifier.value) return;
-            // await serviceLocator<AccountProvider>().saveScore(id, s);
-            // scoreNotifier.value = s;
-          },
+          onPressed: () async => _loadLesson(group, locked),
+          onLongPress: () => _loadLesson(group, false),
         ),
       ),
     );
@@ -378,5 +355,30 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     } else {
       return null;
     }
+  }
+
+  Future<void> _loadLesson(ParentContent group, bool locked) async {
+    if (locked) {
+      return;
+    }
+    try {
+      if (group.children.isEmpty) {
+        await serviceLocator<AccountProvider>().loadGroup(group);
+      }
+      var routName = switch (group.mode) {
+        "lesson" || "lessons" => Routes.lesson,
+        "chat" => Routes.chat,
+        _ => Routes.series,
+      };
+      await Get.toNamed(routName, arguments: {"content": group});
+    } on SkeletonException catch (e) {
+      await Get.toNamed(Routes.popupMessage,
+          arguments: {"title": "${e.statusCode}", "message": e.message});
+    }
+    _categoryIndex = _firstIncompleteGroup();
+    setState(() {});
+    // if (s == null || s <= scoreNotifier.value) return;
+    // await serviceLocator<AccountProvider>().saveScore(id, s);
+    // scoreNotifier.value = s;
   }
 }
