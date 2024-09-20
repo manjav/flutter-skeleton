@@ -5,15 +5,22 @@ import '../../app_export.dart';
 
 enum AvatarExpression { idle, happy, greetings, point }
 
-class Avatar extends StatelessWidget {
+class Avatar extends StatefulWidget {
   final double size;
   final AvatarExpression expression;
+
   const Avatar({
     required this.expression,
     required this.size,
     super.key,
   });
 
+  @override
+  State<Avatar> createState() => _AvatarState();
+}
+
+class _AvatarState extends State<Avatar> {
+  SMITrigger? _trigger;
   @override
   Widget build(BuildContext context) {
     return LoaderWidget(
@@ -22,13 +29,19 @@ class Avatar extends StatelessWidget {
       onRiveInit: (artboard) {
         final controller =
             StateMachineController.fromArtboard(artboard, "State Machine 1");
-        controller!
-            .getNumberInput("state")
-            ?.change(expression.index.toDouble());
+        _trigger =
+            controller!.getTriggerInput("avatar_${widget.expression.name}");
+        controller.addEventListener(_onRiveEvent);
         artboard.addController(controller);
       },
-      width: size,
-      height: size,
+      width: widget.size,
+      height: widget.size,
     );
+  }
+
+  void _onRiveEvent(RiveEvent event) {
+    if (event.name == "ready") {
+      _trigger?.fire();
+    }
   }
 }
