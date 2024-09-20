@@ -112,11 +112,11 @@ class ListenerQuiz extends Quiz {
     _hasResultSent = false;
 
     if (talk.lastRecord != null) {
-      await Future.delayed(const Duration(milliseconds: 10));
+      state.value = talk.lastRecord!.state;
       _sendResult("lastRecord", true);
       return;
     }
-    print("listen $_pattern");
+    // log("listen $_pattern");
 
     await Future.delayed(const Duration(milliseconds: 500));
     var initalVoice = talk.getText(talk.textSide);
