@@ -211,9 +211,13 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     );
   }
 
-  Widget _avatarBuilder(Talk talk) => Avatar(
-      expression: AvatarExpression.values[talk.version < 0 ? 0 : talk.version],
-      size: 150.d);
+  Widget _avatarBuilder(Talk talk) {
+    final expression =
+        AvatarExpression.values[talk.version < 0 ? 0 : talk.version];
+    return Avatar(
+        expression: expression,
+        size: expression == AvatarExpression.point ? 150.d : 250.d);
+  }
 
   Widget _contentItem(Talk talk) {
     var tip = switch (talk.type) {

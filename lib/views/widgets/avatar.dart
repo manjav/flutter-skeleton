@@ -34,7 +34,7 @@ class _AvatarState extends State<Avatar> {
         controller.addEventListener(_onRiveEvent);
         artboard.addController(controller);
       },
-      width: widget.size,
+      width: widget.size * 1.5,
       height: widget.size,
     );
   }
