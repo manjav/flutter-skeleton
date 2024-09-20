@@ -188,7 +188,9 @@ class ListenerQuiz extends Quiz {
         return;
       }
     }
-    recognizedWords.value = result.recognizedWords.patternize();
+    if (result.recognizedWords.isNotEmpty) {
+      recognizedWords.value = result.recognizedWords;
+    }
     if (result.recognizedWords.length > _pattern.length * 2) {
       _finalize(QuizState.failure);
       return;
@@ -203,11 +205,10 @@ class ListenerQuiz extends Quiz {
     this.state.value = state;
     stop();
     if (recognizedWords.value.isNotEmpty && talk!.type != ContentType.repeat) {
-      // await Future.delayed(const Duration(seconds: 1));
       await serviceLocator<Speaker>()
           .playLocal(talk!.targetValue, skipOnError: true);
     } else {
-      // await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
     _hasSoundPlayed = true;
     if (_speech.lastStatus == "done") {
