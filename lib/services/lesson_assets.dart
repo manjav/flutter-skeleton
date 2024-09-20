@@ -38,11 +38,11 @@ class LessonAssets with ILogger {
           }
 
           if (side != TranslationSide.none) {
-            var text = talk.getText(side) /* .simplify() */;
+            var text = talk.getText(side).simplify();
             _loadVoice(text, talk.narrator, onComplete, onProgress, onError);
           }
           if (talk.type == ContentType.translate) {
-            var text = talk.targetValue /* .simplify() */;
+            var text = talk.targetValue.simplify();
             _loadVoice(text, Narrator.onyx, onComplete, onProgress, onError);
           }
         }
