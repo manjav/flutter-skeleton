@@ -21,14 +21,14 @@ enum Narrator {
     };
   }
 
-  String get url {
-    return switch (this) {
-      ali => "https://s1.matnyaar.ir/gpt/tts-ms.php?voice=$value&input=",
-      farid =>
-        "https://s1.matnyaar.ir/gpt/tts-ms.php?voice=fa-IR-FaridNeural&input=",
-      _ => "https://s1.matnyaar.ir/gpt/tts.php?voice=$value&input=",
-    };
-  }
+//   String get url {
+//     return switch (this) {
+//       ali => "https://s1.matnyaar.ir/gpt/tts-ms.php?voice=$value&input=",
+//       farid =>
+//         "https://s1.matnyaar.ir/gpt/tts-ms.php?voice=fa-IR-FaridNeural&input=",
+//       _ => "https://s1.matnyaar.ir/gpt/tts.php?voice=$value&input=",
+//     };
+//   }
 }
 // locale=fa-IR&
 
@@ -52,7 +52,7 @@ class Speaker extends IService {
     }
 
     try {
-      final url = "${narrator.url}$text${reset ? "&nocache" : ""}";
+      const url = "";//"${narrator.url}$text${reset ? "&nocache" : ""}";
       await player.play(UrlSource(url), volume: 1);
       await _waitingForComplete(player, skipOnError);
     } catch (e) {

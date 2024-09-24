@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:crypto/crypto.dart';
 
 import '../app_export.dart';
 
@@ -61,18 +63,14 @@ class LessonAssets with ILogger {
     if (_assets.containsKey(text)) return;
     _assets[text] = null;
     try {
-      var request =
-          await HttpClient().getUrl(Uri.parse("${narrator.url}$text"));
-      var response = await request.close();
-      if (response.statusCode != 200) {
-        log('Failure status code 😱');
-        _loadVoice(text, narrator, onComplete, onProgress, onError, tryCount++);
-        return;
-      }
-      var md5 = response.headers.value("Content-Md5");
-      final bytes = await _readResponse(response);
-      if (!Loader.isHashMatch(bytes!.toList(), md5)) {
-        await Future.delayed(const Duration(milliseconds: 50));
+      final path = "${narrator.name}__$text";
+      final hashName = "${md5.convert(utf8.encode(path)).toString()}.mp5";
+      final url =
+          "${LoaderWidget.baseURL}/cache.php?voice=${narrator.name}&input=$text";
+      final loader = Loader();
+      try {
+        await loader.load(hashName, url, hash: LoaderWidget.hashMap[hashName]);
+      } catch (e) {
         if (tryCount > 2) {
           onError("Lesson asset '$text' not found!");
         } else {
@@ -80,11 +78,10 @@ class LessonAssets with ILogger {
               text, narrator, onComplete, onProgress, onError, tryCount++);
           log("Retry sound loading $tryCount");
         }
-        return;
       }
 
       _assets[text] = BytesSource(
-        bytes.buffer.asUint8List(),
+        Uint8List.fromList(loader.bytes!),
         mimeType: "audio/mpeg",
       );
     } catch (e) {
