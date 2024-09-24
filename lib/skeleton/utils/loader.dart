@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
+import 'package:lifetalk/skeleton/data/responses.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../mixins/logger.dart';
@@ -16,10 +17,13 @@ class Loader with ILogger {
   String path = "";
   dynamic metadata;
 
-  Future<File?> load(String path, String url,
-      {Function(double)? onProgress,
-      String? hash,
-      bool forceUpdate = false}) async {
+  Future<File?> load(
+    String path,
+    String url, {
+    String? hash,
+    bool forceUpdate = false,
+    Function(double)? onProgress,
+  }) async {
     this.path = path;
 
     _appDir = _appDir ?? (await getApplicationSupportDirectory()).path;
@@ -40,8 +44,9 @@ class Loader with ILogger {
       var request = await httpClient.getUrl(Uri.parse(url));
       var response = await request.close();
       if (response.statusCode != 200) {
-        log('Failure status code 😱');
-        return null;
+        // log('Failure😱 => code $path ${response.statusCode} ');
+        throw SkeletonException(response.statusCode.toStatus(),
+            'Failure😱 => code $path ${response.statusCode} ');
       }
       bytes = <int>[];
       await _readResponse(response, onProgress);
