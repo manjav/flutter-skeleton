@@ -135,7 +135,7 @@ class ListenerQuiz extends Quiz {
     // Similarly `pauseFor` is a maximum not a minimum and may be ignored
     // on some devices.
 
-    var duration = (_pattern.length * 220).min(2000);
+    var duration = (_pattern.length * 230).min(3000);
     _speech.listen(
       listenOptions: options,
       localeId: this.locale,
