@@ -24,6 +24,7 @@ class NetConnector extends IService {
 
     _session = await connect();
     var account = await getAccount();
+    log(jsonEncode(account.user));
 
     // // Check internal version, public users avoidance
     // var test = _config["updates"]["test"];
