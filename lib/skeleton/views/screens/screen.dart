@@ -95,4 +95,13 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   Widget contentFactory(double paddingTop) => const SizedBox();
 
   void toast(String message) => Overlays.insert(context, ToastOverlay(message));
+
+  alert(String title, [String? message]) async {
+    if (!context.mounted) return;
+    final args = {"title": title};
+    if (message != null) {
+      args["message"] = message;
+    }
+    return await Get.toNamed(Routes.popupMessage, arguments: args);
+  }
 }

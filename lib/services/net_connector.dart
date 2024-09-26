@@ -141,7 +141,7 @@ class NetConnector extends IService {
     } on SkeletonException catch (e) {
       if (context.mounted) {
         await Get.toNamed(Routes.popupMessage, arguments: {
-          "title": "Error",
+          "title": e.message,
           "message": "error_${e.statusCode}".l()
         });
       }

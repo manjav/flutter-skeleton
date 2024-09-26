@@ -240,8 +240,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   @override
   void onListeningResult(
       QuizState state, String text, int score, Talk talk, bool repeated) {
-    controller.onQuizResult(state, text, score, talk);
-    _enableUntil.value = _slidesScrollController!.page!.toInt() + 1;
+    try {
+      controller.onQuizResult(state, text, score, talk);
+      _enableUntil.value = _slidesScrollController!.page!.toInt() + 1;
+    } on SkeletonException catch (e) {
+      alert(e.message, "error_${e.statusCode}".l());
+    }
   }
 
   void openSerieSelector() {

@@ -42,24 +42,29 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
-    services.addListener(() async {
-      if (services.state.status == ServiceStatus.initialize) {
-        var account = serviceLocator<AccountProvider>();
-        if (!account.metadata.containsKey("targetLanguage")) {
-          Localization.languageCode = "fa";
-          await serviceLocator<AccountProvider>().update(
-              nativeLanguage: Localization.languageCode,
-              targetLanguage: "en",
-              displayName: "guest_${DeviceInfo.model}");
-          // await Future.delayed(const Duration(seconds: 1));
-          // await Get.toNamed(Routes.onboarding);
-        }
-        _categories = (await account.loadCategories());
-        _scores = await account.loadScores();
-        _categoryIndex = _firstIncompleteGroup();
-        setState(() {});
+    services.addListener(_initializeLessons);
+  }
+
+  void _initializeLessons() async {
+    if (services.state.status != ServiceStatus.initialize) return;
+    try {
+      var account = serviceLocator<AccountProvider>();
+      if (!account.metadata.containsKey("targetLanguage")) {
+        Localization.languageCode = "fa";
+        await serviceLocator<AccountProvider>().update(
+            nativeLanguage: Localization.languageCode,
+            targetLanguage: "en",
+            displayName: "guest_${DeviceInfo.model}");
+        // await Future.delayed(const Duration(seconds: 1));
+        // await Get.toNamed(Routes.onboarding);
       }
-    });
+      _categories = (await account.loadCategories());
+      _scores = await account.loadScores();
+      _categoryIndex = _firstIncompleteGroup();
+      setState(() {});
+    } on SkeletonException catch (e) {
+      alert(e.message, "error_${e.statusCode}".l());
+    }
   }
 
   @override
@@ -372,8 +377,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       };
       await Get.toNamed(routName, arguments: {"content": group});
     } on SkeletonException catch (e) {
-      await Get.toNamed(Routes.popupMessage,
-          arguments: {"title": "${e.statusCode}", "message": e.message});
+      alert(e.message, "error_${e.statusCode}".l());
     }
     _categoryIndex = _firstIncompleteGroup();
     setState(() {});
