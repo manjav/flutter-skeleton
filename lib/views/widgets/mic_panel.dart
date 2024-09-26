@@ -62,7 +62,7 @@ class _MicPanelState extends State<MicPanel> {
             HiddenWords(
               _answerWords,
               _recognizedWords,
-              minMatchLevel: listener.minMatchLevel,
+              // minMatchLevel: listener.minMatchLevel,
             ),
             SizedBox(height: 30.d),
             widget.talk.type == ContentType.translate

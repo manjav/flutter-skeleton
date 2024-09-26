@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:lifetalk/app_export.dart';
 
 class RadioBox extends StatelessWidget {
@@ -181,12 +180,12 @@ class ImageBox extends StatelessWidget {
 
 class HiddenWords extends StatelessWidget with ILogger {
   final List<ValueNotifier<Choice>> answerWords;
-  final int minMatchLevel;
+  // final int minMatchLevel;
   final ValueNotifier<String> liveAnswer;
   HiddenWords(
     this.answerWords,
     this.liveAnswer, {
-    this.minMatchLevel = 90,
+    // this.minMatchLevel = 90,
     super.key,
   });
 
@@ -211,9 +210,10 @@ class HiddenWords extends StatelessWidget with ILogger {
           var style = _defaultStyle;
           if (i < words.length && answer.pattern != null) {
             final word = words[i];
-            var rate = ratio(word, answer.pattern);
-            isCorrect = rate > minMatchLevel;
+            // var rate = ratio(word, answer.pattern);
+            // isCorrect = rate > minMatchLevel;
             // log("word:$word pattern: ${answer.pattern} Correct:$isCorrect");
+            isCorrect = word == answer.pattern;
             if (isCorrect) {
               style = _correctStyle;
             }
@@ -234,8 +234,8 @@ class HiddenWords extends StatelessWidget with ILogger {
                           .text
                           .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
                       style: isHidden && !value.used && !isCorrect
-                              ? _hiddenStyle
-                              : style),
+                          ? _hiddenStyle
+                          : style),
                   onPressed: () => answerWords[i].value =
                       Choice(value.text, pattern: value.pattern)..used = true,
                 );
