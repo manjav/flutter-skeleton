@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -88,17 +87,6 @@ class LessonAssets with ILogger {
       onError(e.toString());
     }
     _checkCompletion(onProgress, onComplete);
-  }
-
-  Future<Uint8List?> _readResponse(HttpClientResponse response) {
-    final bytes = <int>[];
-    final completer = Completer<Uint8List?>();
-    response.asBroadcastStream().listen(
-        (List<int> newBytes) => bytes.addAll(newBytes),
-        onDone: () => completer.complete(Uint8List.fromList(bytes)),
-        onError: (d) => log("loading failed. $d"),
-        cancelOnError: true);
-    return completer.future;
   }
 
   Future<void> _loadFile(
