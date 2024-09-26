@@ -6,6 +6,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:nakama/nakama.dart';
+import 'package:grpc/grpc.dart' as grpc;
 
 import '../../app_export.dart';
 
@@ -173,23 +174,11 @@ class NetConnector extends IService {
       } else {
         throw SkeletonException(status, result["message"]);
       }
+    } on grpc.GrpcError catch (e) {
+      throw SkeletonException(
+          e.code.toStatus(), e.message ?? "", e.rawResponse);
     } catch (e) {
-      if (e is SkeletonException) {
-        rethrow;
-      }
-      var error = "";
-      if (e.toString().contains("codeName")) {
-        error = "$e".split("codeName: ")[1].split(",")[0];
-        if (error == "UNAUTHENTICATED" ||
-            error == "UNAVAILABLE" ||
-            error == "NOT_FOUND" ||
-            error == "INTERNAL") {
-          error = "error_${error.toLowerCase()}";
-        }
-      } else {
-        error = "RPC: $id Error: $e";
-      }
-      throw SkeletonException(StatusCode.UNAVAILABLE, error);
+      throw SkeletonException(StatusCode.UNKNOWN_ERROR, e.toString());
     }
   }
 
