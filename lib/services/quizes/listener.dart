@@ -189,7 +189,7 @@ class ListenerQuiz extends Quiz {
       }
     }
     if (result.recognizedWords.isNotEmpty) {
-      recognizedWords.value = result.recognizedWords;
+      recognizedWords.value = result.recognizedWords.patternize();
     }
     if (result.recognizedWords.length > _pattern.length * 2) {
       _finalize(QuizState.failure);

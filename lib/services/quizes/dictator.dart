@@ -84,7 +84,8 @@ class DictatorQuiz extends Quiz {
 class Choice {
   bool used = false;
   final String text;
-  Choice(this.text);
+  final String? pattern;
+  Choice(this.text, {this.pattern});
 }
 
 class Answers extends ValueNotifier<List<String>> {

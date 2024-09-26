@@ -179,7 +179,7 @@ class ImageBox extends StatelessWidget {
   }
 }
 
-class HiddenWords extends StatelessWidget {
+class HiddenWords extends StatelessWidget with ILogger {
   final List<ValueNotifier<Choice>> answerWords;
   final int minMatchLevel;
   final ValueNotifier<String> liveAnswer;
@@ -204,13 +204,16 @@ class HiddenWords extends StatelessWidget {
         var items = <Widget>[];
         var words = value.split(" ");
         for (var i = 0; i < answerWords.length; i++) {
+          final answer = answerWords[i].value;
+          final isHidden =
+              answer.text.contains("{") || answer.text.contains("}");
           var isCorrect = false;
-          var isHidden = answerWords[i].value.text.contains("{") ||
-              answerWords[i].value.text.contains("}");
           var style = _defaultStyle;
-          if (i < words.length) {
-            var rate = ratio(words[i], answerWords[i].value.text.patternize());
+          if (i < words.length && answer.pattern != null) {
+            final word = words[i];
+            var rate = ratio(word, answer.pattern);
             isCorrect = rate > minMatchLevel;
+            // log("word:$word pattern: ${answer.pattern} Correct:$isCorrect");
             if (isCorrect) {
               style = _correctStyle;
             }
@@ -219,7 +222,6 @@ class HiddenWords extends StatelessWidget {
             ValueListenableBuilder(
               valueListenable: answerWords[i],
               builder: (context, value, child) {
-                // print("Hide:$isHidden Correct:$isCorrect =>${_state.value}");
                 return Widgets.button(
                   context,
                   radius: 6.d,
@@ -231,12 +233,11 @@ class HiddenWords extends StatelessWidget {
                           .value
                           .text
                           .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
-                      style:
-                          isHidden && !answerWords[i].value.used && !isCorrect
+                      style: isHidden && !value.used && !isCorrect
                               ? _hiddenStyle
                               : style),
-                  onPressed: () =>
-                      answerWords[i].value = Choice(value.text)..used = true,
+                  onPressed: () => answerWords[i].value =
+                      Choice(value.text, pattern: value.pattern)..used = true,
                 );
               },
             ),

@@ -43,9 +43,10 @@ class _MicPanelState extends State<MicPanel> {
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
     final words = widget.talk.targetValue.split(" ");
+    final patterns = widget.talk.targetValue.patternize().split(" ");
     _answerWords.clear();
-    _answerWords.addAll(
-        List.generate(words.length, (i) => ValueNotifier(Choice(words[i]))));
+    _answerWords.addAll(List.generate(words.length,
+        (i) => ValueNotifier(Choice(words[i], pattern: patterns[i]))));
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -153,15 +154,17 @@ class _MicPanelState extends State<MicPanel> {
     if (listener.talk != widget.talk) return;
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
-    if (_state.value == QuizState.ready) {
+/*     if (_state.value == QuizState.ready) {
       for (var pattern in _answerWords) {
-        pattern.value = Choice(pattern.value.text)..used = false;
+        pattern.value = Choice(
+          pattern.value.text,
+        )..used = false;
       }
     } else if (_state.value.index >= QuizState.success.index) {
       for (var pattern in _answerWords) {
         pattern.value = Choice(pattern.value.text)..used = true;
       }
-    }
+    } */
   }
 
   void _soundLevelListener() {
