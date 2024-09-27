@@ -208,7 +208,7 @@ class ListenerQuiz extends Quiz {
       await serviceLocator<Speaker>()
           .playLocal(talk!.targetValue, skipOnError: true);
     } else {
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 400));
     }
     _hasSoundPlayed = true;
     if (_speech.lastStatus == "done") {
