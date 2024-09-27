@@ -84,8 +84,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
       Widgets.button(context,
           height: 56.d,
           padding: EdgeInsets.all(16.d),
-          child: Asset.load<Image>(
-              "footer_${Localization.isRTL ? "prev" : "next"}"),
+          child: Asset.load<Image>("footer_prev"),
           onPressed: () => Navigator.pop(context)),
     ];
   }

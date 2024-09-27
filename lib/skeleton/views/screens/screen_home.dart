@@ -50,10 +50,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     try {
       var account = serviceLocator<AccountProvider>();
       if (!account.metadata.containsKey("targetLanguage")) {
-        Localization.languageCode = "fa";
         await serviceLocator<AccountProvider>().update(
             nativeLanguage: Localization.languageCode,
-            targetLanguage: "en",
+            targetLanguage: Localization.targetLanguage,
             displayName: "guest_${DeviceInfo.model}");
         // await Future.delayed(const Duration(seconds: 1));
         // await Get.toNamed(Routes.onboarding);
