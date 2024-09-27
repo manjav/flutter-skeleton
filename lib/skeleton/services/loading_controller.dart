@@ -10,7 +10,6 @@ class LoadingController extends GetxController {
     Overlays.insert(Get.overlayContext!, const LoadingOverlay());
 
     serviceLocator<DeviceInfo>().initialize();
-    await serviceLocator<Localization>().initialize();
     await serviceLocator<Trackers>().initialize();
 
     serviceLocator<Sounds>().initialize();
@@ -22,12 +21,7 @@ class LoadingController extends GetxController {
 
       var account = serviceLocator<AccountProvider>();
       account.initialize(data);
-
-      // Load localization
-      if (account.account.user.langTag != null) {
-        await serviceLocator<Localization>()
-            .initialize(args: [account.account.user.langTag!]);
-      }
+      await serviceLocator<Localization>().initialize();
 
       services.changeState(ServiceStatus.initialize);
 

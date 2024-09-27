@@ -7,9 +7,10 @@ import 'package:intl/intl.dart' as intl;
 import '../../app_export.dart';
 
 class Localization extends IService {
-  static var locales = const [Locale("en"), Locale("fa")];
+  static var locales = const [Locale("en"), Locale("es"), Locale("fa")];
   static Map<String, dynamic>? _sentences;
   static String languageCode = "en";
+  static String targetLanguage = "es";
   static TextDirection dir = TextDirection.ltr;
   static bool isRTLMode(String code) => code == "fa" || code == "ar";
   static bool isRTL = false;
@@ -26,15 +27,12 @@ class Localization extends IService {
     var keys = await rootBundle.loadString("assets/texts/keys.json");
     await _getData(json.decode(keys));
 
-    if (args != null) {
-      languageCode = args[0] as String;
-      isRTL = isRTLMode(languageCode);
-      dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
-      var localizations = await serviceLocator<NetConnector>()
-          .rpc("content_locales_get", params: {"nativeLanguage": languageCode});
+    isRTL = isRTLMode(languageCode);
+    dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
+    var localizations = await serviceLocator<NetConnector>()
+        .rpc("content_locales_get", params: {"nativeLanguage": languageCode});
 
-      await _getData(localizations);
-    }
+    await _getData(localizations);
     super.initialize();
   }
 
