@@ -66,6 +66,8 @@ class NetConnector extends IService {
           entry.value["host"] ?? configs["host"],
           entry.value["assetsUrl"] ?? configs["assetsUrl"],
           entry.value["changelog"] ?? "",
+          entry.value["nativeLanguage"] ?? configs["nativeLanguage"],
+          entry.value["targetLanguage"] ?? configs["targetLanguage"],
           VersionPriority.values[entry.value["priority"] ?? 2],
         );
         // Update connection according to version
@@ -73,6 +75,8 @@ class NetConnector extends IService {
           configs["port"] = versions[key]!.port;
           configs["host"] = versions[key]!.host;
           configs["assetsUrl"] = versions[key]!.assetsUrl;
+          configs["nativeLanguage"] = versions[key]!.nativeLanguage;
+          configs["targetLanguage"] = versions[key]!.targetLanguage;
         }
       }
 
@@ -93,6 +97,8 @@ class NetConnector extends IService {
 
       LoaderWidget.baseURL = configs["assetsUrl"]!;
       LoaderWidget.hashMap = Map.castFrom(configs["files"]);
+      Localization.languageCode = configs["nativeLanguage"];
+      Localization.targetLanguage = configs["targetLanguage"];
       log("Config loaded.");
     } else {
       throw SkeletonException(
@@ -270,13 +276,18 @@ class VersionConfigs {
   final String host;
   final String assetsUrl;
   final String changelog;
+  final String nativeLanguage;
+  final String targetLanguage;
   final VersionPriority priority;
+
   VersionConfigs(
     this.version,
     this.port,
     this.host,
     this.assetsUrl,
     this.changelog,
+    this.nativeLanguage,
+    this.targetLanguage,
     this.priority,
   );
 }
