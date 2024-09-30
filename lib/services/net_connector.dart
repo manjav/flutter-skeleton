@@ -24,6 +24,7 @@ class NetConnector extends IService {
 
     _session = await connect();
     var account = await getAccount();
+    Pref.username.setString(account.user.id);
     log(jsonEncode(account.user));
 
     // // Check internal version, public users avoidance

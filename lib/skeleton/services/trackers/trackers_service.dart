@@ -31,7 +31,7 @@ class Trackers extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    if (kDebugMode) return;
+    if (kDebugMode && Pref.username.getString().startsWith("test_")) return;
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
       sdk.initialize(logCallback: log);
