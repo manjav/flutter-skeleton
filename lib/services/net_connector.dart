@@ -41,8 +41,8 @@ class NetConnector extends IService {
   Future<void> _loadConfigs(int version) async {
     http.Response? response;
     try {
-      response = await http.get(
-          Uri.parse("https://8ball.turnedondigital.com/lifetalk/configs.json"));
+      response = await http
+          .get(Uri.parse("https://lifetalk.turnedondigital.com/configs.json"));
     } catch (e) {
       var error = "$e";
       if (_isDisconnected(error)) {
