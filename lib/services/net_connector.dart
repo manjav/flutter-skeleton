@@ -143,6 +143,10 @@ class NetConnector extends IService {
     return await _nakamaClient!.getAccount(_session!);
   }
 
+  Future<void> sessionRefresh() async {
+    _session = await _nakamaClient!.sessionRefresh(session: _session!);
+  }
+
   Future<T> tryRpc<T>(BuildContext context, String id, {Map? params}) async {
     dynamic result;
     try {
@@ -162,15 +166,15 @@ class NetConnector extends IService {
   Future<T> rpc<T>(String id, {Map? params}) async {
     /// Frequent RPC avoidance
     final now = DateTime.now();
-    if (_rpcTimes.containsKey(id) &&
-        now.difference(_rpcTimes[id]!).inMilliseconds < 1500) {
+    final diff = now.difference(_rpcTimes[id] ?? DateTime(1)).inMilliseconds;
+    // print("1 $diff $id ${_session!.expiresAt}");
+    if (diff > 0 && diff < 1500) {
       log("Frequent RPC $id");
       Type type = typeOf<T>();
       if (type.toString() == "List<dynamic>") return [] as T;
       if (type.toString() == "Map<dynamic, dynamic>") return {} as T;
       return null as T;
     }
-    _rpcTimes[id] = now;
     params ??= {};
 
     try {
@@ -179,13 +183,24 @@ class NetConnector extends IService {
       var result = json.decode(data!);
       var status = (result["status"] as int).toStatus();
       if (status == StatusCode.SUCCESS) {
+        _rpcTimes[id] = now;
         return result["data"];
       } else {
         throw SkeletonException(status, result["message"]);
       }
     } on grpc.GrpcError catch (e) {
-      throw SkeletonException(
-          e.code.toStatus(), e.message ?? "", e.rawResponse);
+      final code = e.code.toStatus();
+      var diff = now.difference(_rpcTimes[id] ?? DateTime(1)).inMilliseconds;
+      if (code == StatusCode.UNAUTHENTICATED && diff > 0) {
+        // print("2 $diff $id ${_session!.expiresAt}");
+        _rpcTimes[id] = DateTime.fromMillisecondsSinceEpoch(
+            now.millisecondsSinceEpoch + 10000);
+        await sessionRefresh();
+        await Future.delayed(Duration(seconds: 1));
+        return await rpc(id, params: params);
+      } else {
+        throw SkeletonException(code, e.message ?? "", e.rawResponse);
+      }
     } catch (e) {
       throw SkeletonException(StatusCode.UNKNOWN_ERROR, e.toString());
     }
