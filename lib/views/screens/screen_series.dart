@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -15,7 +17,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     with LessonMixin, ListeningMixin {
   PageController? _slidesScrollController;
   final _slideHeight = DeviceInfo.size.height * 0.8;
-  final ValueNotifier<int> _enableUntil = ValueNotifier(0);
 
   @override
   void initState() {
@@ -84,8 +85,9 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         child: ValueListenableBuilder(
           valueListenable: controller.serieIndex,
           builder: (context, value, child) {
-            _enableUntil.value = 0;
-            _scrollTo(0);
+            if (_slidesScrollController!.positions.isNotEmpty) {
+              _slidesScrollController?.jumpToPage(0);
+            }
             return PageView.builder(
                 padEnds: false,
                 scrollDirection: Axis.vertical,
@@ -101,58 +103,71 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   Widget _slideItemBuilder(BuildContext context, int index) {
     return ValueListenableBuilder<int>(
-      valueListenable: _enableUntil,
+      valueListenable: controller.slideIndex,
       builder: (context, value, child) {
-        var items = <Widget>[];
-        final isSlide = index < controller.currentSerie.children.length;
-        if (!isSlide) {
-          items = _nextSerieButton();
-        } else {
-          final slide =
-              controller.currentSerie.children[index] as ParentContent;
-          for (var c = 0; c < slide.children.length; c++) {
-            items.add(_contentItem(slide.children[c] as Talk));
-            items.add(SizedBox(height: 12.d));
-          }
-        }
-        final opacity = index <= value ? 1.0 : 0.0;
-        return AnimatedOpacity(
-          opacity: opacity,
-          duration: Duration(milliseconds: opacity > 0 ? 300 : 0),
-          child: Widgets.touchable(
-            context,
-            sfx: "",
-            child: Widgets.rect(
-              radius: 24.d,
-              padding: EdgeInsets.all(20.d),
+        return Widgets.touchable(
+          context,
+          sfx: "",
+          child: Widgets.rect(
+            radius: 24.d,
+            padding: EdgeInsets.all(20.d),
+            margin: EdgeInsets.symmetric(vertical: 35.d),
+            color: controller.slidePassed.value ||
+                    index <= controller.slideIndex.value
+                ? TColors.primary0
+                : TColors.primary10,
+            child: Stack(
               alignment: Alignment.topCenter,
-              margin: EdgeInsets.symmetric(vertical: 35.d),
-              color: index <= value ? TColors.primary0 : TColors.primary10,
-              child: isSlide && index > value - 1
-                  ? DirText("next_slide".l(),
-                      style: TStyles.medium.copyWith(color: TColors.primary30))
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: items),
+              children: [
+                _nextLabelBuilder(index),
+                _cardContentBuilder(index),
+              ],
             ),
-            onTap: () {
-              if (index != controller.slideIndex.value) {
-                _scrollTo(index);
-              }
-            },
-            onVerticalDragEnd: (DragEndDetails details) {
-              final velocity = (details.primaryVelocity ?? 0);
-              final absoluteVelocity = velocity.abs();
-              if (absoluteVelocity > 500) {
-                final page = ((_slidesScrollController!.page ?? 0) +
-                        (velocity / absoluteVelocity) * -1)
-                    .round();
-                _scrollTo(page);
-              }
-            },
           ),
+          onTap: () => _scrollTo(index),
+          onVerticalDragEnd: (DragEndDetails details) {
+            final velocity = (details.primaryVelocity ?? 0);
+            final absoluteVelocity = velocity.abs();
+            if (absoluteVelocity > 500) {
+              final page = ((_slidesScrollController!.page ?? 0) +
+                      (velocity / absoluteVelocity) * -1)
+                  .round();
+              _scrollTo(page);
+            }
+          },
         );
       },
+    );
+  }
+
+  Widget _nextLabelBuilder(int index) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: controller.slidePassed,
+      builder: (context, value, child) {
+        final isNextSlideButton = index <= controller.slideIndex.value;
+        if (!controller.slidePassed.value || isNextSlideButton) {
+          return SizedBox();
+        }
+        return DirText("next_slide".l(), style: TStyles.large);
+      },
+    );
+  }
+
+  Widget _cardContentBuilder(int index) {
+    var items = <Widget>[];
+    final isSlide = index < controller.currentSerie.children.length;
+    if (!isSlide) {
+      items = _nextSerieButton();
+    } else {
+      final slide = controller.currentSerie.children[index] as ParentContent;
+      for (var c = 0; c < slide.children.length; c++) {
+        items.add(_contentItem(slide.children[c] as Talk));
+        items.add(SizedBox(height: 12.d));
+      }
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: items,
     );
   }
 
@@ -200,23 +215,23 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       return;
     }
     if (page < 0 || page > controller.currentSerie.children.length) return;
-    if (page > _enableUntil.value) {
-      log("log");
+    if (!controller.slidePassed.value || page == controller.slideIndex.value) {
       return;
     }
     await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
-    if (page >= controller.currentSerie.children.length) return;
-    _executePage(page);
+    if (page < controller.currentSerie.children.length) {
+      _executePage(page);
+    } else {
+      controller.slidePassed.value = false;
+    }
   }
 
   void _executePage(int page) {
     final slide = controller.currentSerie.children[page] as ParentContent;
     if (controller.contentIndex.value <= -1) return;
     final quizes = slide.children.where((c) => (c as Talk).isQuiz);
-    if (quizes.isEmpty) {
-      _enableUntil.value = page + 1;
-    } else {
+    if (quizes.isNotEmpty) {
       listen(quizes.first as Talk);
     }
     controller.changeSlide(page - controller.slideIndex.value);
@@ -242,7 +257,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       QuizState state, String text, int score, Talk talk, bool repeated) {
     try {
       controller.onQuizResult(state, text, score, talk);
-      _enableUntil.value = _slidesScrollController!.page!.toInt() + 1;
     } on SkeletonException catch (e) {
       alert(e.message, "error_${e.statusCode}".l());
     }
@@ -277,9 +291,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
                 padding: EdgeInsets.symmetric(horizontal: itemHeight),
                 child: DirText(controller.series[index].title),
                 onPressed: () {
-                  controller.serieIndex.value = index;
-                  controller.slideIndex.value = -1;
-                  controller.changeSlide(1);
+                  controller.changeSerie(index - controller.serieIndex.value);
                   Navigator.pop(context);
                 },
               );
