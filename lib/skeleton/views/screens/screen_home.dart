@@ -27,14 +27,25 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       color: TColors.primary40, fontWeight: FontWeight.w600, height: 0.9);
   final TextStyle _numberStylePassed = TStyles.big
       .copyWith(color: TColors.green, fontWeight: FontWeight.w600, height: 0.9);
-  final _colors = {
-    "lesson": TColors.blue,
-    "lessons": TColors.blue,
-    "practice": TColors.orange,
-    "grammar": TColors.cyan,
-    "vocabulary": TColors.purpule,
-    "chat": TColors.primary60
-  };
+
+  Color _getColors(String mode) {
+    return switch (mode.substring(0, 4)) {
+      "less" => TColors.blue,
+      "prac" => TColors.orange,
+      "gram" => TColors.cyan,
+      "voca" => TColors.purpule,
+      "chat" => TColors.primary60,
+      _ => TColors.gray,
+    };
+  }
+
+  String _getRoute(String mode) {
+    return switch (mode.substring(0, 4)) {
+      "less" => Routes.lesson,
+      "chat" => Routes.chat,
+      _ => Routes.series,
+    };
+  }
 
   Map<String, Map<String, dynamic>> _scores = {};
   List<ParentContent> _categories = [];
@@ -341,7 +352,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         child: Widgets.button(
           context,
           radius: 12.d,
-          color: locked ? TColors.primary20 : _colors[group.mode],
+          color: locked ? TColors.primary20 : _getColors(group.mode),
           margin: EdgeInsets.all(6.d),
           padding: EdgeInsets.symmetric(horizontal: 14.d),
           child: Row(
@@ -384,12 +395,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       if (group.children.isEmpty) {
         await serviceLocator<AccountProvider>().loadGroup(group);
       }
-      var routName = switch (group.mode) {
-        "lesson" || "lessons" => Routes.lesson,
-        "chat" => Routes.chat,
-        _ => Routes.series,
-      };
-      await Get.toNamed(routName, arguments: {"content": group});
+      await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
     } on SkeletonException catch (e) {
       alert(e.message, "error_${e.statusCode}".l());
     }
