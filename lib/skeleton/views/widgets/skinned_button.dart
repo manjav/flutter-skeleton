@@ -21,6 +21,7 @@ class SkinnedButton extends StatelessWidget {
   final EdgeInsets? padding;
   final Function()? onPressed;
   final Function()? onDisablePressed;
+  final Function()? onLongPress;
   final BoxConstraints? constraints;
   SkinnedButton({
     this.buttonId = 30,
@@ -41,6 +42,7 @@ class SkinnedButton extends StatelessWidget {
     this.padding,
     this.onPressed,
     this.onDisablePressed,
+    this.onLongPress,
     this.constraints,
     super.key,
   });
@@ -60,6 +62,7 @@ class SkinnedButton extends StatelessWidget {
       },
       onTapDown: (details) => _isPressed.value = true,
       onTapCancel: () => _isPressed.value = false,
+      onLongPress: () => onLongPress?.call(),
       child: ValueListenableBuilder(
         valueListenable: _isPressed,
         builder: (context, value, childs) {

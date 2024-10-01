@@ -11,6 +11,7 @@ class AccountProvider extends ChangeNotifier {
   List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
   Map<String, Map<String, dynamic>> scores = {};
+  bool get isTester => (account.user.username ?? "").startsWith("test_");
 
   void initialize(dynamic account) {
     this.account = account;
@@ -19,11 +20,13 @@ class AccountProvider extends ChangeNotifier {
 
   Future<void> update({
     String? avatarUrl,
+    String? username,
     String? displayName,
     String? nativeLanguage,
     String? targetLanguage,
   }) async {
     var params = {};
+    if (username != null) params["username"] = username;
     if (displayName != null) params["displayName"] = displayName;
     if (avatarUrl != null) params["avatarUrl"] = avatarUrl;
     if (nativeLanguage != null) params["langTag"] = nativeLanguage;

@@ -67,18 +67,33 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
-  List<Widget> appBarElementsLeft() => [
-        SkinnedButton(
-          label: "i",
-          color: TColors.primary40,
-          margin: EdgeInsets.all(8.d),
-          padding: EdgeInsets.symmetric(horizontal: 12.d),
-          onPressed: () => Get.toNamed(Routes.popupMessage, arguments: {
-            "title": "about_us_title".l(),
-            "message": "about_us_message".l()
-          }),
-        )
-      ];
+  List<Widget> appBarElementsLeft() {
+    final account = serviceLocator<AccountProvider>();
+    if (account.metadata.isEmpty) return [];
+    return [
+      SkinnedButton(
+        label: "i",
+        color: account.isTester ? TColors.orange : TColors.primary40,
+        margin: EdgeInsets.all(8.d),
+        padding: EdgeInsets.symmetric(horizontal: 12.d),
+        onPressed: () => Get.toNamed(Routes.popupMessage, arguments: {
+          "title": "about_us_title".l(),
+          "message": "about_us_message".l()
+        }),
+        onLongPress: () async {
+          if (!account.isTester) {
+            await account.update(
+              username:
+                  "test_${DeviceInfo.model}_${(account.account.user.location ?? "/").split("/")[1]}",
+            );
+            if (mounted) {
+              MyApp.restartApp(context);
+            }
+          }
+        },
+      )
+    ];
+  }
 
   // Find first incomplete group
   int _firstIncompleteGroup() {
