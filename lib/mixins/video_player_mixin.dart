@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -27,9 +28,12 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
           return Widgets.rect(color: TColors.primary0);
         }
         var isEnable = value.duration.compareTo(value.position) <= 0;
-        // print(
-        //     "+++++++++++++++++ ${value.duration.compareTo(value.position)}");
-
+        if (isEnable) {
+          Timer(
+            Duration(milliseconds: 100),
+            () => lessonController.changeContent(1),
+          );
+        }
         return AspectRatio(
           aspectRatio: _controller.value.aspectRatio,
           child: ClipRRect(
