@@ -123,7 +123,8 @@ class NetConnector extends IService {
       "location": location,
       "timezone": "$timezone",
       "latestVersion": DeviceInfo.buildNumber,
-      "displayName": "Player_${StringExtensions.getRandomString(4)}",
+      "displayName":
+          "u_${DeviceInfo.model}_${location.split("/")[1]}_${StringExtensions.getRandomString(2)}",
       "device":
           '{"model":"${DeviceInfo.model}", "osVersion":"${DeviceInfo.osVersion}", "baseVersion":"${DeviceInfo.baseVersion}"}'
     };
