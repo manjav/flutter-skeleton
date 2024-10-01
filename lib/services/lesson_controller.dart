@@ -70,16 +70,22 @@ class LessonController {
       return;
     }
     if (stepLength != 0) {
-      slideIndex.value =
+      var index =
           (slideIndex.value + stepLength).max(currentSerie.children.length);
+      slideIndex.value = index;
       contentIndex.value = -1;
       changeContent(1);
     }
-    slidePassed.value = false;
-    _slidePassTimer?.cancel();
-    if (currentSlide.children.where((c) => (c as Talk).isQuiz).isEmpty) {
-      _slidePassTimer =
-          Timer(const Duration(seconds: 1), () => slidePassed.value = true);
+
+    // Disable next slide and enable after 1 second
+    final quizes = currentSlide.children.where((c) => (c as Talk).isQuiz);
+    if (quizes.isEmpty || (quizes.first as Talk).lastRecord == null) {
+      slidePassed.value = false;
+      _slidePassTimer?.cancel();
+      if (quizes.isEmpty) {
+        _slidePassTimer =
+            Timer(const Duration(seconds: 1), () => slidePassed.value = true);
+      }
     }
   }
 
