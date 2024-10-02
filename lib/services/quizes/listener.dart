@@ -183,7 +183,7 @@ class ListenerQuiz extends Quiz {
       if (state.value.index > QuizState.listening.index) return;
       // logs = "=> $insert , ratio: $_matchLevel/$minMatchLevel";
       if (_matchLevel > minMatchLevel) {
-        recognizedWords.value = insert;
+        recognizedWords.value = _pattern;
         _finalize(QuizState.success);
         return;
       }
