@@ -93,10 +93,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         }),
         onLongPress: () async {
           if (!account.isTester) {
-            await account.update(
-              username:
-                  "test_${DeviceInfo.model}_${(account.account.user.location ?? "/").split("/")[1]}",
-            );
+            final username =
+                "test_${DeviceInfo.model}_${(account.account.user.location ?? "/").split("/")[1]}";
+            await account.update(username: username);
+            Pref.username.setString(username);
             if (mounted) {
               MyApp.restartApp(context);
             }
