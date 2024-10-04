@@ -26,12 +26,14 @@ class Trackers extends IService {
   int variant = 1;
   final _testName = "_";
   final _buildType = BuildType.installed;
+  bool get ghostMode =>
+      kDebugMode || Pref.username.getString().startsWith("test_");
 
   Trackers();
 
   @override
   initialize({List<Object>? args}) async {
-    if (kDebugMode || Pref.username.getString().startsWith("test_")) return;
+    if (ghostMode) return;
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
       sdk.initialize(logCallback: log);
@@ -45,7 +47,7 @@ class Trackers extends IService {
     required String id,
     required String name,
   }) {
-    if (kDebugMode) return;
+    if (ghostMode) return;
     for (var sdk in _sdks.values) {
       sdk.setProperties({
         "buildType": _buildType.name,
@@ -79,7 +81,7 @@ class Trackers extends IService {
   }
 
   Future<void> ad(Placement placement, AdState state) async {
-    if (kDebugMode) return;
+    if (ghostMode) return;
     for (var sdk in _sdks.values) {
       sdk.ad(placement, state);
     }
@@ -89,7 +91,7 @@ class Trackers extends IService {
     String name, {
     Map<String, dynamic>? parameters,
   }) async {
-    if (kDebugMode) return;
+    if (ghostMode) return;
     for (var sdk in _sdks.values) {
       sdk.design(name, parameters: parameters);
     }
@@ -102,7 +104,7 @@ class Trackers extends IService {
     String itemType,
     String itemId,
   ) async {
-    if (kDebugMode) return;
+    if (ghostMode) return;
     for (var sdk in _sdks.values) {
       sdk.resource(type, currency, amount, itemType, itemId);
     }
@@ -112,7 +114,7 @@ class Trackers extends IService {
     String screenName, {
     Map<String, dynamic>? parameters,
   }) async {
-    if (kDebugMode) return;
+    if (ghostMode) return;
     for (var sdk in _sdks.values) {
       sdk.setScreen(screenName, parameters: parameters);
     }
@@ -122,7 +124,7 @@ class Trackers extends IService {
     String name, {
     Map<String, dynamic>? parameters,
   }) {
-    if (kDebugMode) return;
+    if (ghostMode) return;
     for (var sdk in _sdks.values) {
       sdk.startProgress(name, parameters: parameters);
     }
@@ -133,14 +135,14 @@ class Trackers extends IService {
     int score, {
     Map<String, dynamic>? parameters,
   }) {
-    if (kDebugMode) return;
+    if (ghostMode) return;
     for (var sdk in _sdks.values) {
       sdk.endProgress(name, score, parameters: parameters);
     }
   }
 
   void funnel(String type, [String? name]) {
-    if (kDebugMode) return;
+    if (ghostMode) return;
     name = name == null ? type : "${type}_$name";
     var step = Prefs.increase(name, 1);
 
