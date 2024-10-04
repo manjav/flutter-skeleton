@@ -42,7 +42,7 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
               alignment: Alignment.center,
               children: [
                 VideoPlayer(_controller),
-                isEnable
+                /* isEnable
                     ? Positioned.fill(
                         child: Widgets.rect(
                           color: TColors.black40,
@@ -72,7 +72,8 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                           ),
                         ),
                       )
-                    : const SizedBox()
+                    :  */
+                const SizedBox()
               ],
             ),
           ),
