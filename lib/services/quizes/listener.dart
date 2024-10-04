@@ -135,6 +135,7 @@ class ListenerQuiz extends Quiz {
     // Similarly `pauseFor` is a maximum not a minimum and may be ignored
     // on some devices.
 
+    if (_speech.lastStatus.isEmpty) return;
     var duration = (_pattern.length * 230).min(3000);
     _speech.listen(
       listenOptions: options,
