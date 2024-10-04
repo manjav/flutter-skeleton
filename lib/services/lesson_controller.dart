@@ -70,8 +70,8 @@ class LessonController {
       return;
     }
     if (stepLength != 0) {
-      var index =
-          (slideIndex.value + stepLength).max(currentSerie.children.length);
+      var index = (slideIndex.value + stepLength)
+          .clamp(0, currentSerie.children.length - 1);
       slideIndex.value = index;
       contentIndex.value = -1;
       changeContent(1);

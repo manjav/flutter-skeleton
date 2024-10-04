@@ -63,7 +63,7 @@ class Sounds extends IService {
       await loader.load(
           '$name.$extension', '${LoaderWidget.baseURL}/sounds/$name.$extension',
           hash: md5);
-
+      if (loader.bytes == null) return;
       var bytes = Uint8List.fromList(loader.bytes!);
       final source = BytesSource(
         bytes.buffer.asUint8List(32, bytes.lengthInBytes - 32),
