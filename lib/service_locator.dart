@@ -9,8 +9,6 @@ void initServices() {
 
   serviceLocator.registerLazySingleton<DeviceInfo>(() => DeviceInfo());
   serviceLocator.registerLazySingleton<Localization>(() => Localization());
-  serviceLocator.registerLazySingleton<DictatorQuiz>(() => DictatorQuiz());
-  serviceLocator.registerLazySingleton<ListenerQuiz>(() => ListenerQuiz());
   serviceLocator.registerLazySingleton<LessonAssets>(() => LessonAssets());
   serviceLocator.registerLazySingleton<Speaker>(() => Speaker());
   serviceLocator.registerLazySingleton<Sounds>(() => Sounds());
@@ -18,4 +16,6 @@ void initServices() {
   serviceLocator.registerLazySingleton<Trackers>(() => Trackers());
   serviceLocator
       .registerLazySingleton<AccountProvider>(() => AccountProvider());
+  serviceLocator.registerLazySingleton<DictatorQuiz>(() => DictatorQuiz());
+  serviceLocator.registerLazySingleton<ListenerQuiz>(() => ListenerQuiz());
 }

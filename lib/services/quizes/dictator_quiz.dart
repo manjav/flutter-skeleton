@@ -8,12 +8,13 @@ class DictatorQuiz extends Quiz {
   List<String> _pattern = [];
   Answers answers = Answers([]);
 
-  Content? currentStage;
-
   @override
-  initialize({List<Object>? args}) async {
-    currentStage = args![0] as Content;
-    var text = currentStage!.targetValue.patternize();
+  void start(
+      {required Talk talk,
+      Function(QuizState p1, String p2, int p3, bool p4)? onResult}) {
+    super.start(talk: talk, onResult: onResult);
+
+    var text = talk.targetValue.patternize();
     var pattern = text.split(" ");
     _pattern = [];
     if (pattern.length > 10) {
@@ -49,7 +50,7 @@ class DictatorQuiz extends Quiz {
     for (var c in choices) {
       c.used = false;
     }
-    start();
+    start(talk: talk!);
   }
 
   bool _chechAnswers() {
@@ -64,7 +65,9 @@ class DictatorQuiz extends Quiz {
   Future<void> checkAnswers() async {
     if (answers.value.length == _pattern.length) {
       state.value = _chechAnswers() ? QuizState.success : QuizState.failure;
+      await Future.delayed(Duration(milliseconds: 400));
       onResult?.call(state.value, "", 0, false);
+      reset();
     }
   }
 

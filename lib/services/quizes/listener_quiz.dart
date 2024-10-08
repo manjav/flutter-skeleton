@@ -10,7 +10,6 @@ import '../../app_export.dart';
 
 class ListenerQuiz extends Quiz {
   static const int levelInterval = 100;
-  Talk? talk;
   String? locale;
   String _pattern = "";
   int minMatchLevel = 95;
@@ -101,7 +100,6 @@ class ListenerQuiz extends Quiz {
     }
 
     state.value = QuizState.none;
-    this.talk = talk;
     _pattern = talk.targetValue.patternize();
     if (locale != null) this.locale = locale;
     if (exceptions != null) this.exceptions = exceptions;
@@ -123,7 +121,7 @@ class ListenerQuiz extends Quiz {
     if (initalVoice.isNotEmpty) {
       await serviceLocator<Speaker>().playLocal(initalVoice);
     }
-    super.start(onResult: onResult);
+    super.start(talk: talk, onResult: onResult);
 
     final options = SpeechListenOptions(
         listenMode: ListenMode.deviceDefault,

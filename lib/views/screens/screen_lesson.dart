@@ -48,8 +48,16 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     stopVideo();
     await _addChat(controller.uniqueIndex);
     if (talk.isQuiz) {
-      await Future.delayed(const Duration(milliseconds: 310));
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (talk.type == ContentType.dictation) {
+        serviceLocator<DictatorQuiz>().start(
+          talk: talk,
+          onResult: (state, text, score, repeated) =>
+              onListeningResult(state, text, score, talk, repeated),
+        );
+      } else {
       listen(talk);
+      }
     }
     if (!talk.isStation) {
       controller.changeContent(1);
@@ -173,6 +181,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         ContentType.avatar => _avatarBuilder(talk),
         ContentType.uncover => _uncoverBuilder(talk),
         ContentType.video => videoBuilder(controller),
+        ContentType.dictation => DictationBox(),
         _ => _contentItem(talk),
       },
     );
