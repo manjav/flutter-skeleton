@@ -68,7 +68,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
               onListeningResult(state, text, score, talk, repeated),
         );
       } else {
-      listen(talk);
+        listen(talk);
       }
     }
     if (!talk.isStation) {
@@ -193,6 +193,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         ContentType.avatar => _avatarBuilder(talk),
         ContentType.uncover => _uncoverBuilder(talk),
         ContentType.video => videoBuilder(controller),
+        ContentType.youtube => youtubePlayer(controller),
         ContentType.dictation => DictationBox(),
         ContentType.match => MatchBox(),
         ContentType.choice => ChoiceBox(),

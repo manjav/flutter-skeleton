@@ -138,6 +138,7 @@ enum ContentType {
   bot,
   image,
   video,
+  youtube,
   avatar,
   uncover;
 

@@ -51,6 +51,7 @@ dependencies:
   video_player: ^2.9.1
   wakelock_plus: ^1.2.7
   webview_flutter: ^4.9.0
+  youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
   flutter_test:

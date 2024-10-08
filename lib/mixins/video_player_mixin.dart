@@ -1,21 +1,22 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lifetalk/app_export.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  VideoPlayerController _controller = VideoPlayerController.networkUrl(Uri.parse(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'));
+  final VideoPlayerController _controller = VideoPlayerController.networkUrl(
+      Uri.parse(
+          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'));
 
   Future<void> playVideo(Talk talk) async {
     if (talk.type != ContentType.video) return;
-    final file =
-        serviceLocator<LessonAssets>().get("${talk.targetValue}.mp4") as File;
-    _controller = VideoPlayerController.file(file);
-    await _controller.initialize();
-    _controller.play();
+    // final file =
+    //     serviceLocator<LessonAssets>().get("${talk.targetValue}.mp4") as File;
+    // _controller = VideoPlayerController.file(file);
+    // await _controller.initialize();
+    // _controller.play();
   }
 
   Future<void> stopVideo() => _controller.pause();
@@ -79,6 +80,47 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
           ),
         );
       },
+    );
+  }
+
+  Widget youtubePlayer(LessonController controller) {
+    final YoutubePlayerController youtubeController = YoutubePlayerController(
+      initialVideoId: 'v4zTAkLKgm4',
+      flags: YoutubePlayerFlags(
+        autoPlay: true,
+        startAt: 10,
+        endAt: 15,
+        enableCaption: false,
+        hideControls: true,
+        hideThumbnail: true,
+      ),
+    );
+    youtubeController.addListener(
+      () {
+        print(" BEHZAD ${youtubeController.value.position}");
+      },
+    );
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(20.d)),
+      child: YoutubePlayer(
+        controller: youtubeController,
+        controlsTimeOut: Duration(milliseconds: 1),
+        topActions: [Widgets.rect(color: TColors.pink, width: 11, height: 33)],
+        onEnded: (metaData) {
+          print("SSSSS $metaData");
+          controller.changeContent(1);
+        },
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.amber,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.amber,
+          handleColor: Colors.amberAccent,
+        ),
+        onReady: () {
+          // youtubeController.
+          // _controller.addListener(listener);
+        },
+      ),
     );
   }
 
