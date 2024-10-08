@@ -18,5 +18,6 @@ void initServices() {
       .registerLazySingleton<AccountProvider>(() => AccountProvider());
   serviceLocator.registerLazySingleton<DictatorQuiz>(() => DictatorQuiz());
   serviceLocator.registerLazySingleton<ListenerQuiz>(() => ListenerQuiz());
+  serviceLocator.registerLazySingleton<ChoiceQuiz>(() => ChoiceQuiz());
   serviceLocator.registerLazySingleton<MatchQuiz>(() => MatchQuiz());
 }
