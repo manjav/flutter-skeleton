@@ -17,6 +17,7 @@ class Content {
       type == ContentType.repeat ||
       type == ContentType.translate ||
       type == ContentType.dictation ||
+      type == ContentType.match ||
   bool get isStation => isQuiz || type == ContentType.video;
 
   static List<ParentContent> createAll(Map map) {

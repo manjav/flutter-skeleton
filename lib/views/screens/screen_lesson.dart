@@ -55,6 +55,12 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
           onResult: (state, text, score, repeated) =>
               onListeningResult(state, text, score, talk, repeated),
         );
+      } else if (talk.type == ContentType.match) {
+        serviceLocator<MatchQuiz>().start(
+          talk: talk,
+          onResult: (state, text, score, repeated) =>
+              onListeningResult(state, text, score, talk, repeated),
+        );
       } else {
       listen(talk);
       }
