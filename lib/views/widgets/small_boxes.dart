@@ -147,8 +147,7 @@ class SpeakerBox extends StatelessWidget {
             snapshot.data == PlayerState.playing ? "stop" : "play",
             width: size * 0.35),
       ),
-      onPressed: () =>
-          serviceLocator<Speaker>().play(value, narrator: narrator),
+      onPressed: () => serviceLocator<Speaker>().playLocal(value),
       onLongPress: () => serviceLocator<Speaker>()
           .play(value, narrator: narrator, reset: true),
     );

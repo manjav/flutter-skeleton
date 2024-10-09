@@ -109,7 +109,9 @@ class Talk extends Content {
         (type == ContentType.translate && version > 0)) {
       return TranslationSide.native;
     }
-    if (type == ContentType.repeat) return TranslationSide.target;
+    if (type == ContentType.repeat || type == ContentType.head) {
+      return TranslationSide.target;
+    }
     return TranslationSide.none;
   }
 
