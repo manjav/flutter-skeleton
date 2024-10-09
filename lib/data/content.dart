@@ -135,7 +135,7 @@ enum ContentType {
   translate,
   answer,
   dictation,
-  choice,
+  choices,
   match,
   user,
   bot,
@@ -176,7 +176,7 @@ enum PresentMode {
   bool get hasNative => this == PresentMode.native || this == PresentMode.both;
   bool get hasTarget => this == PresentMode.target || this == PresentMode.both;
 }
-
+/* 
 class Word extends Content {
   int count = 0;
   DateTime? firstReview;
@@ -205,7 +205,7 @@ class Word extends Content {
       "last": lastReview!.daysSinceEpoch,
       "next": nextReview!.daysSinceEpoch,
     };
-  }
+  } 
 
   static Map<String, Word> allFromMap(Map data) {
     var map = <String, Word>{};
@@ -215,3 +215,4 @@ class Word extends Content {
     return map;
   }
 }
+*/

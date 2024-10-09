@@ -61,7 +61,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
           onResult: (state, text, score, repeated) =>
               onListeningResult(state, text, score, talk, repeated),
         );
-      } else if (talk.type == ContentType.choice) {
+      } else if (talk.type == ContentType.choices) {
         serviceLocator<ChoiceQuiz>().start(
           talk: talk,
           onResult: (state, text, score, repeated) =>
@@ -196,7 +196,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         ContentType.youtube => youtubePlayer(controller, talk.targetValue),
         ContentType.dictation => DictationBox(),
         ContentType.match => MatchBox(),
-        ContentType.choice => ChoiceBox(),
+        ContentType.choices => ChoiceBox(),
         _ => _contentItem(talk),
       },
     );

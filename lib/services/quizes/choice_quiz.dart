@@ -18,7 +18,7 @@ class ChoiceQuiz extends Quiz {
 
     super.start(talk: talk, onResult: onResult);
     choices.clear();
-    final sections = talk.nativeValue.split("∆");
+    final sections = talk.targetValue.split("∆");
     final index = int.parse(sections.last);
     choices.addAll(sections.first.split("|"));
     answer = choices[index];
@@ -27,13 +27,13 @@ class ChoiceQuiz extends Quiz {
   }
 
   void select(int index) {
-    if (state.value != QuizState.ready) {
+    if (state.value == QuizState.success) {
       return;
     }
     var isCorrect = choices[index] == answer;
     state.value = isCorrect ? QuizState.success : QuizState.failure;
     selectedIndex.value = index;
-    sendResult();
+    if (isCorrect) sendResult();
   }
 
   Future<void> sendResult() async {

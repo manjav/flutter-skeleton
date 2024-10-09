@@ -4,7 +4,7 @@ import 'package:lifetalk/app_export.dart';
 enum ButtonMode { text, image, voice }
 
 class ChoiceBox extends StatelessWidget {
-  ChoiceBox({super.key});
+  const ChoiceBox({super.key});
 
   @override
   Widget build(BuildContext context) {

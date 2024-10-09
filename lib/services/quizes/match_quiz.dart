@@ -36,9 +36,9 @@ class MatchQuiz extends Quiz {
     super.start(talk: talk, onResult: onResult);
     this.lefts.clear();
     this.rights.clear();
-
-    final lefts = talk.nativeValue.split("|");
-    final rights = talk.targetValue.split("|");
+    final sections = talk.targetValue.split("∆");
+    final lefts = sections.first.split("|");
+    final rights = sections.last.split("|");
     final length = lefts.length.min(rights.length);
     for (var i = 0; i < length; i++) {
       final left = i < lefts.length ? MatchSide(lefts[i]) : null;
