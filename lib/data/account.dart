@@ -7,7 +7,7 @@ import '../app_export.dart';
 
 class AccountProvider extends ChangeNotifier {
   late Account account;
-  Map<String, Word> words = {};
+  // Map<String, Word> words = {};
   List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
   Map<String, Map<String, dynamic>> scores = {};
