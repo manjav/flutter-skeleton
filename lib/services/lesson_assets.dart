@@ -49,6 +49,10 @@ class LessonAssets with ILogger {
         }
       }
     }
+    if (_assets.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      onComplete();
+    }
   }
 
   Future<void> _loadVoice(
