@@ -193,7 +193,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         ContentType.avatar => _avatarBuilder(talk),
         ContentType.uncover => _uncoverBuilder(talk),
         ContentType.video => videoBuilder(controller),
-        ContentType.youtube => youtubePlayer(controller),
+        ContentType.youtube => youtubePlayer(controller, talk.targetValue),
         ContentType.dictation => DictationBox(),
         ContentType.match => MatchBox(),
         ContentType.choice => ChoiceBox(),

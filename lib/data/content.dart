@@ -18,8 +18,9 @@ class Content {
       type == ContentType.translate ||
       type == ContentType.dictation ||
       type == ContentType.match ||
-      type == ContentType.choice;
-  bool get isStation => isQuiz || type == ContentType.video;
+      type == ContentType.choices;
+  bool get isStation =>
+      isQuiz || type == ContentType.video || type == ContentType.youtube;
 
   static List<ParentContent> createAll(Map map) {
     List<ParentContent> categories = [];
