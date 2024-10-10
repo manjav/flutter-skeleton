@@ -29,10 +29,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   @override
   Widget contentFactory(double paddingTop) {
-    if (controller.series.isEmpty) {
-      return const SizedBox();
-    }
-
     return ValueListenableBuilder(
       valueListenable: controller.serieIndex,
       builder: (context, value, child) {
