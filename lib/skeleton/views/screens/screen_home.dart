@@ -392,7 +392,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       return;
     }
 
-      await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
+    await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
     _categoryIndex = _firstIncompleteGroup();
     setState(() {});
     // if (s == null || s <= scoreNotifier.value) return;

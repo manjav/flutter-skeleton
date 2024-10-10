@@ -20,13 +20,14 @@ class Localization extends IService {
   get columnAlign => isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start;
   get rowAlign => isRTL ? MainAxisAlignment.end : MainAxisAlignment.start;
 
-  @override
-  initialize({List<Object>? args}) async {
+  Future<void> preInitialize() async {
     _sentences = {};
-
     var keys = await rootBundle.loadString("assets/texts/keys.json");
     await _getData(json.decode(keys));
+  }
 
+  @override
+  initialize({List<Object>? args}) async {
     isRTL = isRTLMode(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     var localizations = await serviceLocator<NetConnector>()

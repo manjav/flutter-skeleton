@@ -64,6 +64,7 @@ class _MyAppState extends State<MyApp>
       Themes.preInitialize();
       setState(() {});
     }
+    await serviceLocator<Localization>().preInitialize();
   }
 
   @override
