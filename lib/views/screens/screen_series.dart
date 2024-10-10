@@ -16,6 +16,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     with LessonMixin, ListeningMixin {
   PageController? _slidesScrollController;
   final _slideHeight = DeviceInfo.size.height * 0.8;
+  bool _scrolling = false;
 
   @override
   void initState() {
@@ -139,7 +140,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
       valueListenable: controller.slidePassed,
       builder: (context, value, child) {
         final isNextSlideButton = index <= controller.slideIndex.value;
-        if (!controller.slidePassed.value || isNextSlideButton) {
+        if (_scrolling || !controller.slidePassed.value || isNextSlideButton) {
           return SizedBox();
         }
         return DirText("next_slide".l(), style: TStyles.large);
@@ -212,8 +213,12 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     if (!controller.slidePassed.value || page == controller.slideIndex.value) {
       return;
     }
+
+    _scrolling = true;
     await _slidesScrollController!.animateToPage(page,
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+    _scrolling = false;
+
     if (page < controller.currentSerie.children.length) {
       _executePage(page);
     } else {
