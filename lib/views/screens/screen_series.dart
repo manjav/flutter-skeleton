@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
@@ -20,7 +19,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void initState() {
-    controller.onComplete = _onSerieComplete;
     initializeController(loadCaptions: false);
     super.initState();
   }
@@ -296,20 +294,6 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
         );
       },
     );
-  }
-
-  Future<void> _onSerieComplete(
-      int sentenceCount, int quizCount, int score) async {
-    await Get.toNamed(Routes.popupResult, arguments: {
-      "id": controller.root!.id,
-      "score": score,
-      "quizCount": quizCount,
-      "sentenceCount": sentenceCount
-    });
-    if (mounted) {
-      Navigator.pop(context);
-      showFeedback();
-    }
   }
 
   @override

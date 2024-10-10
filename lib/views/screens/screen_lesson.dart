@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
@@ -20,7 +19,6 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void initState() {
-    controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
     initializeController();
@@ -279,19 +277,6 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     }
   }
 
-  Future<void> _onSerieComplete(
-      int sentenceCount, int quizCount, int score) async {
-    await Get.toNamed(Routes.popupResult, arguments: {
-      "id": controller.root!.id,
-      "score": score,
-      "quizCount": quizCount,
-      "sentenceCount": sentenceCount
-    });
-    if (mounted) {
-      Navigator.pop(context);
-      showFeedback();
-    }
-  }
 
   @override
   void dispose() {

@@ -16,12 +16,13 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     // list.removeRange(0, list.length - 3);
     trackerParams = {"id": Get.arguments["content"]!.id};
 
+    controller.onComplete = _onSerieComplete;
     controller.onAssetLoadingProgress = (value) => progressInput?.value = value;
     controller.onError = (message) async {
-        await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
-        if (mounted) {
-          Navigator.pop(context);
-        }
+      await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
+      if (mounted) {
+        Navigator.pop(context);
+      }
     };
     controller.init(Get.arguments["content"], loadCaptions: loadCaptions);
   }
@@ -122,6 +123,20 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         },
       ),
     );
+  }
+
+  Future<void> _onSerieComplete(
+      int sentenceCount, int quizCount, int score) async {
+    await Get.toNamed(Routes.popupResult, arguments: {
+      "id": controller.root!.id,
+      "score": score,
+      "quizCount": quizCount,
+      "sentenceCount": sentenceCount
+    });
+    if (mounted) {
+      Navigator.pop(context);
+      showFeedback();
+    }
   }
 
   Future<void> showFeedback() async {
