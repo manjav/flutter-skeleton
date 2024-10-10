@@ -11,20 +11,19 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   SMIInput<double>? progressInput;
   double padding = 8.d;
 
-  void loadAssets({bool loadCaptions = true}) {
-    serviceLocator<LessonAssets>().load(
-      series: controller.series,
-      onComplete: () {
-        controller.changeSerie(1);
-      },
-      onProgress: (p) => progressInput?.value = p * 100,
-      onError: (message) async {
+  void initializeController({bool loadCaptions = true}) async {
+    // List list = Get.arguments["content"].children[0].children;
+    // list.removeRange(0, list.length - 3);
+    trackerParams = {"id": Get.arguments["content"]!.id};
+
+    controller.onAssetLoadingProgress = (value) => progressInput?.value = value;
+    controller.onError = (message) async {
         await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
         if (mounted) {
           Navigator.pop(context);
         }
-      },
-    );
+    };
+    controller.init(Get.arguments["content"], loadCaptions: loadCaptions);
   }
 
   @override

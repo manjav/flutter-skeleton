@@ -391,14 +391,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     if (locked) {
       return;
     }
-    try {
-      if (group.children.isEmpty) {
-        await serviceLocator<AccountProvider>().loadGroup(group);
-      }
+
       await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
-    } on SkeletonException catch (e) {
-      alert(e.message, "error_${e.statusCode}".l());
-    }
     _categoryIndex = _firstIncompleteGroup();
     setState(() {});
     // if (s == null || s <= scoreNotifier.value) return;

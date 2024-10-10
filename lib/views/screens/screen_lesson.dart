@@ -20,14 +20,10 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void initState() {
-    // List list = Get.arguments["content"].children[0].children;
-    // list.removeRange(0, list.length - 3);
-    trackerParams = {"id": Get.arguments["content"]!.id};
-    controller.init(Get.arguments["content"]);
     controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
-    loadAssets();
+    initializeController();
     super.initState();
   }
 

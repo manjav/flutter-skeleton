@@ -16,6 +16,8 @@ class LessonController {
   final ValueNotifier<int> slideIndex = ValueNotifier(-1);
   final ValueNotifier<int> contentIndex = ValueNotifier(-1);
   final ValueNotifier<bool> slidePassed = ValueNotifier(true);
+  Function(double)? onAssetLoadingProgress;
+  Function(String)? onError;
 
   ParentContent get currentSerie => series[serieIndex.value];
   ParentContent get currentSlide =>
@@ -24,11 +26,15 @@ class LessonController {
 
   int get uniqueIndex => slideIndex.value * 100 + contentIndex.value;
 
-  void init(ParentContent root) {
+  Future<void> init(ParentContent root, {bool loadCaptions = true}) async {
     serviceLocator<Trackers>().startProgress(root.id);
-    this.root = root;
-    series = List.generate(
-        root.children.length, (i) => root.children[i] as ParentContent);
+
+    try {
+      await _loadGroup(root);
+    } on SkeletonException catch (e) {
+      onError?.call(e.message);
+      return;
+    }
 
     quizes.clear();
     for (ParentContent serie in series) {
@@ -41,6 +47,27 @@ class LessonController {
         }
       }
     }
+
+    _loadAssets(loadCaptions);
+  }
+
+  Future<void> _loadGroup(ParentContent root) async {
+    this.root = root;
+    // Load group contents
+    if (root.children.isEmpty) {
+      await serviceLocator<AccountProvider>().loadGroup(root);
+    }
+    series = List.generate(
+        root.children.length, (i) => root.children[i] as ParentContent);
+  }
+
+  void _loadAssets(bool loadCaptions) {
+    serviceLocator<LessonAssets>().load(
+      series: series,
+      onComplete: () => changeSerie(1),
+      onProgress: (p) => onAssetLoadingProgress?.call(p * 100),
+      onError: onError!,
+    );
   }
 
   Future<void> changeSerie(int stepLength) async {
