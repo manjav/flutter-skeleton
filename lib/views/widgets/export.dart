@@ -5,3 +5,4 @@ export 'match_box.dart';
 export 'mentor.dart';
 export 'mic_panel.dart';
 export 'small_boxes.dart';
+export 'wordbank_box.dart';
