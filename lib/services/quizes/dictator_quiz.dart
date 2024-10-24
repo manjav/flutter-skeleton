@@ -4,35 +4,70 @@ import '../../app_export.dart';
 
 class DictatorQuiz extends Quiz {
   bool charByChar = false;
+  List<Choice> words = [];
   List<Choice> choices = [];
-  List<String> _pattern = [];
-  Answers answers = Answers([]);
+  List<String> _patterns = [];
+  List<String> _extraChoices = [];
 
   @override
   void start(
       {required Talk talk,
       Function(QuizState p1, String p2, int p3, bool p4)? onResult}) {
     super.start(talk: talk, onResult: onResult);
-
-    var text = talk.targetValue.patternize();
-    var pattern = text.split(" ");
-    _pattern = [];
-    if (pattern.length > 10) {
-      _pattern = _joinArray(pattern, pattern.length > 16 ? 3 : 2);
-    } else {
-      _pattern = pattern;
+    // talk.targetValue = "Hello Sir, What {do} you {do} {today} ?∆Zert";
+    final sections = talk.targetValue.split("∆");
+    var text = sections.first;
+    final myWords = text.split(" ");
+    _extraChoices = [];
+    if (sections.length > 1) {
+      _extraChoices = sections.last.split("|");
     }
-    charByChar = _pattern.length < 2;
+
+    _patterns = [];
+    if (words.length > 10) {
+      _patterns = _joinArray(myWords, words.length > 16 ? 3 : 2);
+    } else {
+      _patterns = myWords;
+    }
+    charByChar = _patterns.length < 2;
     if (charByChar) {
-      _pattern = switch (text.length) {
+      _patterns = switch (text.length) {
         < 3 => text.split(""),
         _ => text.splitByLength(3),
       };
     }
 
-    choices = List.generate(_pattern.length, (i) => Choice(_pattern[i]));
+    words.clear();
+    choices.clear();
+
+    List<Choice> text2Choice(List<String> texts) {
+      return List.generate(
+        texts.length,
+        (i) => Choice(texts[i].replaceAll(RegExp(r'[{}]'), '')),
+      );
+    }
+
+    if (talk.targetValue.contains("}")) {
+      for (var i = 0; i < _patterns.length; i++) {
+        var text = _patterns[i];
+        final blankMode = Choice.blankMode(text);
+        text = text.replaceAll(RegExp(r'[ًٍَُِّ{}]'), '');
+        _patterns[i] = text;
+        final word = Choice(
+          blankMode ? "" : text,
+          state: blankMode ? ChoiceState.available : ChoiceState.fixed,
+        );
+        words.add(word);
+        if (blankMode) {
+          choices.add(Choice(text));
+        }
+      }
+    } else {
+      choices = text2Choice(_patterns);
+      words = text2Choice(_patterns);
+    }
+    choices.addAll(text2Choice(_extraChoices));
     choices.shuffle();
-    answers.value = [];
     state.value = QuizState.ready;
   }
 
@@ -45,62 +80,68 @@ class DictatorQuiz extends Quiz {
     return result;
   }
 
-  void reset() {
-    answers.value = [];
-    for (var c in choices) {
-      c.used = false;
+  Future<void> selectChoice(Choice choice) async {
+    final blank = words.firstWhere((w) => w.state == ChoiceState.available,
+        orElse: () => Choice("no_space"));
+    if (blank.text == "no_space") {
+      return;
     }
-    start(talk: talk!);
+    // final last
+    if (choice.state == ChoiceState.selected) return;
+    choice.setState(ChoiceState.selected);
+    blank.text = choice.text;
+    blank.setState(ChoiceState.selected);
+
+    final blanks = words.where((w) => w.state == ChoiceState.available);
+    if (blanks.isEmpty) {
+      state.value = _chechAnswers() ? QuizState.success : QuizState.failure;
+      await Future.delayed(Duration(milliseconds: 400));
+      onResult?.call(state.value, "", 0, false);
+      start(talk: talk!, onResult: onResult);
+    }
   }
 
   bool _chechAnswers() {
-    for (var i = 0; i < answers.value.length; i++) {
-      if (answers.value[i] != _pattern[i]) {
+    for (var i = 0; i < words.length; i++) {
+      if (words[i].text != _patterns[i]) {
         return false;
       }
     }
     return true;
   }
 
-  Future<void> checkAnswers() async {
-    if (answers.value.length == _pattern.length) {
-      state.value = _chechAnswers() ? QuizState.success : QuizState.failure;
-      await Future.delayed(Duration(milliseconds: 400));
-      onResult?.call(state.value, "", 0, false);
-      reset();
-    }
+  void popChoice() {
+    var last = words.lastWhere((c) => c.state == ChoiceState.selected);
+    last.setState(ChoiceState.available);
+    words.last.setState(ChoiceState.available);
+    choices
+        .lastWhere((c) => c.text == last.text)
+        .setState(ChoiceState.available);
   }
 
-  void selectChoice(Choice choice) {
-    if (choice.used) return;
-    answers.add(choice.text);
-    choice.used = true;
-    serviceLocator<DictatorQuiz>().checkAnswers();
-  }
-
-  void deselectChoice() {
-    choices.lastWhere((c) => c.text == answers.value.last).used = false;
-    answers.removeLast();
+  void clearChoice(Choice word) {
+    word.setState(ChoiceState.available);
+    choices
+        .lastWhere((c) => c.text == word.text)
+        .setState(ChoiceState.available);
   }
 }
+
+enum ChoiceState { fixed, available, selected }
 
 class Choice {
-  bool used = false;
-  final String text;
-  final String? pattern;
-  Choice(this.text, {this.pattern});
-}
+  String text = "";
+  ChoiceState get state => _state.value;
+  ValueNotifier<ChoiceState> get stateNotifier => _state;
+  final _state = ValueNotifier(ChoiceState.available);
 
-class Answers extends ValueNotifier<List<String>> {
-  Answers(super.value);
-
-  void add(String answer) {
-    value.add(answer);
-    notifyListeners();
+  void setState(ChoiceState value) => _state.value = value;
+  Choice(
+    this.text, {
+    ChoiceState state = ChoiceState.available,
+  }) {
+    setState(state);
   }
 
-  void removeLast() {
-    value.removeLast();
-    notifyListeners();
-  }
+  static blankMode(text) => text.contains("{") || text.contains("}");
 }
