@@ -219,7 +219,7 @@ class HiddenWords extends StatelessWidget with ILogger {
           }
           items.add(
             ValueListenableBuilder(
-              valueListenable: answerWords[i],
+              valueListenable: answerWords[i].stateNotifier,
               builder: (context, value, child) {
                 return Widgets.button(
                   context,
@@ -235,8 +235,8 @@ class HiddenWords extends StatelessWidget with ILogger {
                       style: isHidden && !value.used && !isCorrect
                           ? _hiddenStyle
                           : style),
-                  onPressed: () => answerWords[i].value =
-                      Choice(value.text, pattern: value.pattern)..used = true,
+                  onPressed: () =>
+                      answerWords[i].setState(ChoiceState.selected),
                 );
               },
             ),

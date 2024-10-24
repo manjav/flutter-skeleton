@@ -15,9 +15,7 @@ class DictationBox extends StatelessWidget {
         if (value.index < QuizState.ready.index) {
           return SizedBox();
         }
-        return ValueListenableBuilder(
-          valueListenable: dictator.answers,
-          builder: (context, value, child) => Padding(
+        return Padding(
             padding: EdgeInsets.all(8.d),
             child: Column(
               children: [
@@ -42,7 +40,6 @@ class DictationBox extends StatelessWidget {
                 _wrapper(dictator.choices.length,
                     (i) => _choiceItemBuilder(context, i)),
               ],
-            ),
           ),
         );
       },
@@ -65,13 +62,22 @@ class DictationBox extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: _wrapper(
-                  dictator.answers.value.length,
-                  (i) => Text(
-                      "${dictator.answers.value[i]}${dictator.charByChar ? "" : "  "}")),
+                dictator.words.length,
+                (i) {
+                  return ValueListenableBuilder(
+                    valueListenable: dictator.words[i].stateNotifier,
+                    builder: (context, value, child) {
+                      return Text(
+                        "${dictator.words[i].text}${dictator.charByChar ? "" : " "}",
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
           SizedBox(width: 8.d),
-          dictator.answers.value.isEmpty
+          dictator.words.isEmpty
               ? const SizedBox()
               : Widgets.button(
                   context,
@@ -94,7 +100,7 @@ class DictationBox extends StatelessWidget {
                       _ => Asset.load<SvgPicture>("clear", width: 24.d),
                     },
                   ),
-                  onPressed: dictator.deselectChoice,
+                  onPressed: dictator.popChoice,
                 ),
         ],
       ),
@@ -115,7 +121,9 @@ class DictationBox extends StatelessWidget {
   Widget _choiceItemBuilder(BuildContext context, int index) {
     final dictator = serviceLocator<DictatorQuiz>();
     var choice = dictator.choices[index];
-    return Widgets.button(
+    return ValueListenableBuilder(
+      valueListenable: choice.stateNotifier,
+      builder: (context, value, child) => Widgets.button(
       context,
       margin: EdgeInsets.all(3.d),
       padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
@@ -124,6 +132,7 @@ class DictationBox extends StatelessWidget {
           dictator.state.value != QuizState.ready || choice.used ? -1 : 30,
       child: Opacity(opacity: choice.used ? 0 : 1, child: Text(choice.text)),
       onPressed: () => dictator.selectChoice(choice),
+      ),
     );
   }
 }

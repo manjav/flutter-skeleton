@@ -218,8 +218,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   Widget _uncoverBuilder(Talk talk) {
     final words = talk.targetValue.split(" ");
-    final answerWords =
-        List.generate(words.length, (i) => ValueNotifier(Choice(words[i])));
+    final answerWords = List.generate(words.length, (i) => Choice(words[i]));
     return Widgets.rect(
       radius: 24.d,
       color: TColors.primary0,

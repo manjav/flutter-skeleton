@@ -43,10 +43,8 @@ class _MicPanelState extends State<MicPanel> {
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
     final words = widget.talk.targetValue.split(" ");
-    final patterns = widget.talk.targetValue.patternize().split(" ");
     _answerWords.clear();
-    _answerWords.addAll(List.generate(words.length,
-        (i) => ValueNotifier(Choice(words[i], pattern: patterns[i]))));
+    _answerWords.addAll(List.generate(words.length, (i) => Choice(words[i])));
     return Stack(
       alignment: Alignment.center,
       children: [
