@@ -5,9 +5,9 @@ import 'package:rive/rive.dart';
 import '../app_export.dart';
 
 mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  final GlobalKey footerKey = GlobalKey();
-  final LessonController controller = LessonController();
   final ValueNotifier<Talk?> caption = ValueNotifier(null);
+  final LessonController controller = LessonController();
+  final GlobalKey footerKey = GlobalKey();
   SMIInput<double>? progressInput;
   double padding = 8.d;
 

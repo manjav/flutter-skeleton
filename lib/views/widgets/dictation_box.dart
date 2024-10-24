@@ -16,30 +16,30 @@ class DictationBox extends StatelessWidget {
           return SizedBox();
         }
         return Padding(
-            padding: EdgeInsets.all(8.d),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  textDirection: Localization.dir,
-                  children: [
-                    DirText("listening_hint".l()),
-                    SpeakerBox(
-                      width: 30.d,
-                      value: dictator.talk!.targetValue,
-                      narrator: dictator.talk!.narrator,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12.d),
-                DirText(dictator.talk!.nativeValue,
-                    style: TStyles.small.copyWith(color: TColors.primary40)),
-                SizedBox(height: 8.d),
-                _answerBox(context, dictator),
-                SizedBox(height: 8.d),
-                _wrapper(dictator.choices.length,
-                    (i) => _choiceItemBuilder(context, i)),
-              ],
+          padding: EdgeInsets.all(8.d),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                textDirection: Localization.dir,
+                children: [
+                  DirText("listening_hint".l()),
+                  SpeakerBox(
+                    width: 30.d,
+                    value: dictator.talk!.targetValue,
+                    narrator: dictator.talk!.narrator,
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.d),
+              DirText(dictator.talk!.nativeValue,
+                  style: TStyles.small.copyWith(color: TColors.primary40)),
+              SizedBox(height: 8.d),
+              _answerBox(context, dictator),
+              SizedBox(height: 8.d),
+              _wrapper(dictator.choices.length,
+                  (i) => _choiceItemBuilder(context, i)),
+            ],
           ),
         );
       },
@@ -52,8 +52,8 @@ class DictationBox extends StatelessWidget {
       color: TColors.primary20,
       padding: EdgeInsets.fromLTRB(16.d, 6.d, 6.d, 6.d),
       constraints: BoxConstraints.expand(
-          height:
-              (1.3.d * dictator.talk!.targetValue.length).clamp(64.d, 200.d)),
+        height: (1.3.d * dictator.talk!.targetValue.length).clamp(64.d, 200.d),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -110,10 +110,7 @@ class DictationBox extends StatelessWidget {
     );
   }
 
-  Widget _wrapper(
-    int itemCount,
-    Widget Function(int) itemBuilder,
-  ) {
+  Widget _wrapper(int itemCount, Widget Function(int) itemBuilder) {
     return Wrap(
       children: [
         for (var i = 0; i < itemCount; i++) itemBuilder(i),
@@ -127,9 +124,9 @@ class DictationBox extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: choice.stateNotifier,
       builder: (context, value, child) => Widgets.button(
-      context,
-      margin: EdgeInsets.all(3.d),
-      padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
+        context,
+        margin: EdgeInsets.all(3.d),
+        padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
         color: value == ChoiceState.selected
             ? TColors.primary20
             : TColors.primary30,
@@ -140,7 +137,7 @@ class DictationBox extends StatelessWidget {
         child: Opacity(
             opacity: value == ChoiceState.selected ? 0 : 1,
             child: Text(choice.text)),
-      onPressed: () => dictator.selectChoice(choice),
+        onPressed: () => dictator.selectChoice(choice),
       ),
     );
   }

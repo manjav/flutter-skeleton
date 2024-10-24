@@ -276,7 +276,6 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     }
   }
 
-
   @override
   void dispose() {
     serviceLocator<Sounds>().stopAll();

@@ -152,17 +152,6 @@ class _MicPanelState extends State<MicPanel> {
     if (listener.talk != widget.talk) return;
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
-/*     if (_state.value == QuizState.ready) {
-      for (var pattern in _answerWords) {
-        pattern.value = Choice(
-          pattern.value.text,
-        )..used = false;
-      }
-    } else if (_state.value.index >= QuizState.success.index) {
-      for (var pattern in _answerWords) {
-        pattern.value = Choice(pattern.value.text)..used = true;
-      }
-    } */
   }
 
   void _soundLevelListener() {

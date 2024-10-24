@@ -178,13 +178,11 @@ class ImageBox extends StatelessWidget {
 }
 
 class HiddenWords extends StatelessWidget with ILogger {
-  final List<ValueNotifier<Choice>> answerWords;
-  // final int minMatchLevel;
+  final List<Choice> answerWords;
   final ValueNotifier<String> liveAnswer;
   HiddenWords(
     this.answerWords,
     this.liveAnswer, {
-    // this.minMatchLevel = 90,
     super.key,
   });
 
@@ -209,10 +207,8 @@ class HiddenWords extends StatelessWidget with ILogger {
           var style = _defaultStyle;
           if (i < words.length && answer.text.isEmpty) {
             final word = words[i];
-            // var rate = ratio(word, answer.pattern);
-            // isCorrect = rate > minMatchLevel;
+            isCorrect = word == answer.text;
             // log("word:$word pattern: ${answer.pattern} Correct:$isCorrect");
-            isCorrect = word == answer.pattern;
             if (isCorrect) {
               style = _correctStyle;
             }
