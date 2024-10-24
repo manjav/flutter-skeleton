@@ -202,9 +202,9 @@ class HiddenWords extends StatelessWidget with ILogger {
         var items = <Widget>[];
         var words = value.split(" ");
         for (var i = 0; i < answerWords.length; i++) {
-          final answer = answerWords[i].value;
-          final isHidden =
-              answer.text.contains("{") || answer.text.contains("}");
+          final answer = answerWords[i];
+          final blankMode = Choice.blankMode(answer.text);
+
           var isCorrect = false;
           var style = _defaultStyle;
           if (i < words.length && answer.pattern != null) {
@@ -224,15 +224,14 @@ class HiddenWords extends StatelessWidget with ILogger {
                 return Widgets.button(
                   context,
                   radius: 6.d,
-                  color: isHidden ? TColors.primary10 : TColors.transparent,
+                  color: blankMode ? TColors.primary10 : TColors.transparent,
                   margin: EdgeInsets.all(2.d),
                   padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
                   child: Text(
-                      answerWords[i]
-                          .value
-                          .text
-                          .replaceAll(RegExp(r'[ًٍَُِّ{}]'), ''),
-                      style: isHidden && !value.used && !isCorrect
+                      answerWords[i].text.replaceAll(RegExp(r'[{}]'), ''),
+                      style: blankMode &&
+                              value != ChoiceState.selected &&
+                              !isCorrect
                           ? _hiddenStyle
                           : style),
                   onPressed: () =>

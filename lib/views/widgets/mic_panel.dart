@@ -18,7 +18,7 @@ class MicPanel extends StatefulWidget {
 }
 
 class _MicPanelState extends State<MicPanel> {
-  final List<ValueNotifier<Choice>> _answerWords = [];
+  final List<Choice> _answerWords = [];
   final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
   final ValueNotifier<String> _recognizedWords = ValueNotifier("");
   SMIInput<bool>? _toggleInput;
