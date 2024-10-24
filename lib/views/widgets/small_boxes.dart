@@ -207,7 +207,7 @@ class HiddenWords extends StatelessWidget with ILogger {
 
           var isCorrect = false;
           var style = _defaultStyle;
-          if (i < words.length && answer.pattern != null) {
+          if (i < words.length && answer.text.isEmpty) {
             final word = words[i];
             // var rate = ratio(word, answer.pattern);
             // isCorrect = rate > minMatchLevel;

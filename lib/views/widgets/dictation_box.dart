@@ -67,6 +67,9 @@ class DictationBox extends StatelessWidget {
                   return ValueListenableBuilder(
                     valueListenable: dictator.words[i].stateNotifier,
                     builder: (context, value, child) {
+                      if (value != ChoiceState.selected) {
+                        return SizedBox();
+                      }
                       return Text(
                         "${dictator.words[i].text}${dictator.charByChar ? "" : " "}",
                       );
@@ -127,10 +130,16 @@ class DictationBox extends StatelessWidget {
       context,
       margin: EdgeInsets.all(3.d),
       padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
-      color: choice.used ? TColors.primary20 : TColors.primary10,
-      buttonId:
-          dictator.state.value != QuizState.ready || choice.used ? -1 : 30,
-      child: Opacity(opacity: choice.used ? 0 : 1, child: Text(choice.text)),
+        color: value == ChoiceState.selected
+            ? TColors.primary20
+            : TColors.primary30,
+        buttonId: dictator.state.value != QuizState.ready ||
+                value == ChoiceState.selected
+            ? -1
+            : 30,
+        child: Opacity(
+            opacity: value == ChoiceState.selected ? 0 : 1,
+            child: Text(choice.text)),
       onPressed: () => dictator.selectChoice(choice),
       ),
     );
