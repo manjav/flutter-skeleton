@@ -35,7 +35,8 @@ class LessonController {
       onError?.call(e.message);
       return;
     }
-
+    // List list = (root.children[0] as ParentContent).children;
+    // list.removeRange(0, 1);
     quizes.clear();
     for (ParentContent serie in series) {
       for (var slide in serie.children) {

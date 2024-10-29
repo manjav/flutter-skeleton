@@ -12,8 +12,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   double padding = 8.d;
 
   void initializeController({bool loadCaptions = true}) async {
-    // List list = Get.arguments["content"].children[0].children;
-    // list.removeRange(0, list.length - 3);
     trackerParams = {"id": Get.arguments["content"]!.id};
 
     controller.onComplete = _onSerieComplete;
