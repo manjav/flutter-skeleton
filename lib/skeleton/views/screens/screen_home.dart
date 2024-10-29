@@ -42,7 +42,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   String _getRoute(String mode) {
     return switch (mode.substring(0, 4)) {
       "less" => Routes.lesson,
-      "chat" => Routes.chat,
+      "imit" => Routes.imitation,
       _ => Routes.series,
     };
   }
