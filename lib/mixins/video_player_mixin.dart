@@ -7,23 +7,24 @@ import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  VideoPlayerController _controller = VideoPlayerController.networkUrl(Uri.parse(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'));
+  VideoPlayerController? videoController;
+  YoutubePlayerController? youtubeController;
 
-  Future<void> playVideo(Talk talk) async {
-    if (talk.type != ContentType.video) return;
+  Future<VideoPlayerController?> playVideo(Talk talk) async {
+    if (talk.type != ContentType.video) return null;
     final file =
         serviceLocator<LessonAssets>().get("${talk.targetValue}.mp4") as File;
-    _controller = VideoPlayerController.file(file);
-    await _controller.initialize();
-    _controller.play();
+    videoController = VideoPlayerController.file(file);
+    await videoController?.initialize();
+    videoController?.play();
+    return videoController;
   }
 
-  Future<void> stopVideo() => _controller.pause();
+  Future<void> stopVideo() => videoController!.pause();
 
   Widget videoBuilder(LessonController lessonController) {
     return ValueListenableBuilder<VideoPlayerValue>(
-      valueListenable: _controller,
+      valueListenable: videoController!,
       builder: (context, value, child) {
         if (!value.isInitialized) {
           return Widgets.rect(color: TColors.primary0);
@@ -36,13 +37,13 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
           );
         }
         return AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
+          aspectRatio: videoController!.value.aspectRatio,
           child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(20.d)),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                VideoPlayer(_controller),
+                VideoPlayer(videoController!),
                 /* isEnable
                     ? Positioned.fill(
                         child: Widgets.rect(
@@ -83,9 +84,9 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
-  Widget youtubePlayer(LessonController controller, String url) {
+  VideoPlayerController? playYoutube(String url) {
     final uri = Uri.parse(url);
-    final YoutubePlayerController youtubeController = YoutubePlayerController(
+    youtubeController = YoutubePlayerController(
       initialVideoId: uri.pathSegments.last,
       flags: YoutubePlayerFlags(
         autoPlay: true,
@@ -98,16 +99,17 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         hideThumbnail: true,
       ),
     );
-    // youtubeController.addListener(
-    //   () => log(" YOUTUBE ${youtubeController.value.position}"),
-    // );
+
+    return videoController;
+  }
+
+  Widget youtubePlayer({double? borderRadius}) {
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(20.d)),
+      borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 0)),
       child: YoutubePlayer(
-        controller: youtubeController,
+        controller: youtubeController!,
         controlsTimeOut: Duration(milliseconds: 1),
         topActions: [Widgets.rect(color: TColors.pink, width: 11, height: 33)],
-        onEnded: (metaData) => controller.changeContent(1),
         showVideoProgressIndicator: true,
         progressIndicatorColor: Colors.amber,
         progressColors: const ProgressBarColors(
@@ -120,7 +122,8 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    videoController?.dispose();
+    youtubeController?.dispose();
     super.dispose();
   }
 }
