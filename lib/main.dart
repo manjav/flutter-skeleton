@@ -25,7 +25,9 @@ void main() async {
 }
 
 void _catchErrors(bool fatalError) {
-  if (kDebugMode) return;
+  if (kDebugMode) {
+    return;
+  }
   // Non-async exceptions
   FlutterError.onError = (errorDetails) {
     if (fatalError) {
@@ -34,12 +36,22 @@ void _catchErrors(bool fatalError) {
       FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
     }
   };
+
   // Async exceptions
   PlatformDispatcher.instance.onError = (error, stack) {
+    final info = serviceLocator<ServicesProvider>().state.status.index >=
+            ServiceStatus.initialize.index
+        ? [serviceLocator<AccountProvider>().account]
+        : <Object>[];
     if (fatalError) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stack,
+        fatal: true,
+        information: info,
+      );
     } else {
-      FirebaseCrashlytics.instance.recordError(error, stack);
+      FirebaseCrashlytics.instance.recordError(error, stack, information: info);
     }
     return true;
   };
