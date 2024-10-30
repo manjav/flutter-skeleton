@@ -143,7 +143,8 @@ enum ContentType {
   video,
   youtube,
   avatar,
-  uncover;
+  uncover,
+  station;
 
   ContentType getChild() {
     return switch (this) {

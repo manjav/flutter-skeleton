@@ -76,11 +76,42 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               : TColors.primary0,
           border: Border.all(color: TColors.primary20, width: 2.d),
           borderRadius: BorderRadius.all(Radius.circular(20.d))),
-        _captionSlideBuilder()
+      child: switch (first.type) {
+        ContentType.station => _stationSlideBuilder(first),
+        _ => _captionSlideBuilder()
       },
     );
   }
 
+  Widget _stationSlideBuilder(Talk content) {
+    final label = "station_${content.targetValue}";
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        LoaderWidget(
+          AssetType.vector,
+          label,
+          height: 170.d,
+        ),
+        Text(label.l(),
+            style: TStyles.large.copyWith(color: TColors.primary30)),
+        SizedBox(height: 60.d),
+        Widgets.button(
+          context,
+          padding: EdgeInsets.symmetric(vertical: 14.d, horizontal: 50.d),
+          color: TColors.primary90,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("${label}_btn".l(), style: TStyles.bigInvert),
+              SizedBox(width: 6.d),
+              Asset.load<SvgPicture>("arrow_right"),
+            ],
+          ),
+          onPressed: _nextSlide,
+        ),
+      ],
+    );
   }
 
   Widget _captionSlideBuilder() {
