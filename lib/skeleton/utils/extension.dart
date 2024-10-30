@@ -105,7 +105,7 @@ extension StringExtensions on String {
   }
 
   String patternize() =>
-      replaceAll(RegExp(r"[!¡?¿.;:,’“”'{}]"), '').toLowerCase();
+      replaceAll(RegExp(r"[!¡?¿.;:,，’“”'{}]"), '').toLowerCase();
 
   String simplify() => replaceAll(RegExp(r'[{}]'), '')
       .replaceAll('|', '\n')
