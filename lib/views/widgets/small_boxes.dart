@@ -142,7 +142,9 @@ class SpeakerBox extends StatelessWidget {
       alignment: Alignment.center,
       padding: EdgeInsets.zero,
       child: StreamBuilder(
-        stream: serviceLocator<Sounds>().getPlayer(value).onPlayerStateChanged,
+        stream: serviceLocator<MediaService>()
+            .getAudioPlayer(value)
+            .onPlayerStateChanged,
         builder: (context, snapshot) => Asset.load<SvgPicture>(
             snapshot.data == PlayerState.playing ? "stop" : "play",
             width: size * 0.35),

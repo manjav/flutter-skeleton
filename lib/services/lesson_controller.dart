@@ -130,9 +130,10 @@ class LessonController {
     talk.lastRecord = QuizRecord(state: state, answer: answer);
     quizes[talk.id]!.score = score;
     if (score > listener.minMatchLevel) {
-      serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
+      serviceLocator<MediaService>()
+          .playSound("correct_${Random().nextInt(3)}");
     } else {
-      serviceLocator<Sounds>().play("wrong");
+      serviceLocator<MediaService>().playSound("wrong");
     }
     slidePassed.value = true;
 

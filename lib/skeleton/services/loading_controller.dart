@@ -12,8 +12,6 @@ class LoadingController extends GetxController {
     serviceLocator<DeviceInfo>().initialize();
     await serviceLocator<Trackers>().initialize();
 
-    serviceLocator<Sounds>().initialize();
-    serviceLocator<Speaker>().initialize();
     serviceLocator<ListenerQuiz>().initialize();
 
     try {

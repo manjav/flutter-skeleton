@@ -303,7 +303,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void dispose() {
-    serviceLocator<Sounds>().stopAll();
+    serviceLocator<MediaService>().stopAll();
     super.dispose();
   }
 }

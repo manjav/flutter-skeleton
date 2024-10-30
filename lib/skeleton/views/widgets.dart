@@ -22,19 +22,19 @@ class Widgets {
       },
       onTapUp: _isActive(id)
           ? (details) {
-              serviceLocator<Sounds>().play(sfx ?? "mouse_up");
+              serviceLocator<MediaService>().playSound(sfx ?? "mouse_up");
               onTapUp?.call(details);
             }
           : null,
       onTapDown: _isActive(id)
           ? (details) {
-              serviceLocator<Sounds>().play(sfx ?? "mouse_down");
+              serviceLocator<MediaService>().playSound(sfx ?? "mouse_down");
               onTapDown?.call(details);
             }
           : null,
       onTapCancel: () {
         if (_isActive(id)) {
-          serviceLocator<Sounds>().play(sfx ?? "mouse_up");
+          serviceLocator<MediaService>().playSound(sfx ?? "mouse_up");
           onTapCancel?.call();
         }
       },

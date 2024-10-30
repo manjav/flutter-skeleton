@@ -38,7 +38,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   Future<void> _onChangeLine() async {
     if (controller.contentIndex.value <= -1) return;
     var talk = controller.currentContent;
-    serviceLocator<Sounds>().stopAll();
+    serviceLocator<MediaService>().stopAll();
     stopVideo();
     await _addChat(controller.uniqueIndex);
     if (talk.isQuiz) {
@@ -189,6 +189,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         ContentType.video => videoBuilder(controller),
         // ContentType.youtube => youtubePlayer(controller, talk.targetValue),
         ContentType.dictation => DictationBox(),
+        ContentType.wordBank => WordBankBox(),
         ContentType.match => MatchBox(),
         ContentType.choices => ChoiceBox(),
         _ => _contentItem(talk),
@@ -278,7 +279,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void dispose() {
-    serviceLocator<Sounds>().stopAll();
+    serviceLocator<MediaService>().stopAll();
     controller.slideIndex.removeListener(_onChangeSlide);
     controller.contentIndex.removeListener(_onChangeLine);
     super.dispose();
