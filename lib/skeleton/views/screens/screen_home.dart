@@ -35,6 +35,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       "gram" => TColors.cyan,
       "voca" => TColors.purpule,
       "chat" => TColors.primary60,
+      "imit" => TColors.teal,
       _ => TColors.gray,
     };
   }
