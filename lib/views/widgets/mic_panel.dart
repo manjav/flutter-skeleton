@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
@@ -30,19 +29,13 @@ class _MicPanelState extends State<MicPanel> {
     final listener = serviceLocator<ListenerQuiz>();
     _removeListeners(listener);
     _addListeners(listener);
-    serviceLocator<Sounds>()
-        .getPlayer(widget.talk.targetValue)
-        .onPlayerStateChanged
-        .listen((state) {
-      _toggleInput?.value = state == PlayerState.playing;
-    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
-    final words = widget.talk.targetValue.split(" ");
+    final words = widget.talk.targetValue.simplify().split(" ");
     _answerWords.clear();
     _answerWords.addAll(List.generate(words.length, (i) => Choice(words[i])));
     return Stack(
@@ -122,13 +115,15 @@ class _MicPanelState extends State<MicPanel> {
         const Duration(milliseconds: 100),
         () => listener.listen(
           talk: widget.talk,
+          initialMedia: listener.initialMedia,
+          finalMedia: listener.finalMedia,
           onResult: listener.onResult,
         ),
       );
     } else if (event.name == "play") {
-      serviceLocator<Speaker>().playLocal(widget.talk.targetValue);
-    } else if (event.name == "pause") {
-      serviceLocator<Sounds>().stopAll();
+      serviceLocator<MediaService>().play(listener.initialMedia);
+      // } else if (event.name == "pause") {
+      //   serviceLocator<Sounds>().stopAll();
     }
   }
 
@@ -154,6 +149,12 @@ class _MicPanelState extends State<MicPanel> {
     _stateInput?.value = listener.state.value.index.toDouble();
   }
 
+  void _mediaStateListener(MediaState event) {
+    final listener = serviceLocator<ListenerQuiz>();
+    if (listener.talk != widget.talk) return;
+    _toggleInput?.value = event == MediaState.playing;
+  }
+
   void _soundLevelListener() {
     final listener = serviceLocator<ListenerQuiz>();
     if (listener.talk != widget.talk) return;
@@ -170,6 +171,7 @@ class _MicPanelState extends State<MicPanel> {
     listener.state.addListener(_stateListener);
     listener.audioLevel.addListener(_soundLevelListener);
     listener.recognizedWords.addListener(_resultListener);
+    listener.initialMedia?.onStateChanged.listen(_mediaStateListener);
   }
 
   void _removeListeners(ListenerQuiz listener) {

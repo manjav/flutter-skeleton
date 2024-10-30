@@ -149,9 +149,7 @@ class SpeakerBox extends StatelessWidget {
             snapshot.data == PlayerState.playing ? "stop" : "play",
             width: size * 0.35),
       ),
-      onPressed: () => serviceLocator<Speaker>().playLocal(value),
-      onLongPress: () => serviceLocator<Speaker>()
-          .play(value, narrator: narrator, reset: true),
+      onPressed: () => serviceLocator<MediaService>().playVoice(value),
     );
   }
 }
@@ -207,17 +205,17 @@ class HiddenWords extends StatelessWidget with ILogger {
 
           var isCorrect = false;
           var style = _defaultStyle;
-          if (i < words.length && answer.text.isEmpty) {
+          if (i < words.length && answer.text.isNotEmpty) {
             final word = words[i];
-            isCorrect = word == answer.text;
-            // log("word:$word pattern: ${answer.pattern} Correct:$isCorrect");
+            isCorrect = word == answer.text.patternize();
+            log("word:$word pattern: ${answer.text} Correct:$isCorrect");
             if (isCorrect) {
               style = _correctStyle;
             }
           }
           items.add(
             ValueListenableBuilder(
-              valueListenable: answerWords[i].stateNotifier,
+              valueListenable: answer.stateNotifier,
               builder: (context, value, child) {
                 return Widgets.button(
                   context,
@@ -225,8 +223,7 @@ class HiddenWords extends StatelessWidget with ILogger {
                   color: blankMode ? TColors.primary10 : TColors.transparent,
                   margin: EdgeInsets.all(2.d),
                   padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
-                  child: Text(
-                      answerWords[i].text.replaceAll(RegExp(r'[{}]'), ''),
+                  child: Text(answer.text.replaceAll(RegExp(r'[{}]'), ''),
                       style: blankMode &&
                               value != ChoiceState.selected &&
                               !isCorrect

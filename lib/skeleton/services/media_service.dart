@@ -17,6 +17,8 @@ class MediaService extends IService {
     }
     if (intry.type == MediaType.sound) {
       await playSound(intry.id);
+    } else if (intry.type == MediaType.voice) {
+      await playVoice(intry.id);
   }
 
   /// Plays the audio with the given [name].
@@ -103,6 +105,34 @@ class MediaService extends IService {
 
   void stop(String channel) {
     _audioPlayers[channel]!.stop();
+  }
+
+  Future<void> playVoice(String name) async {
+    name = name.simplify();
+    log("play => $name");
+    var player = serviceLocator<MediaService>().getAudioPlayer(name);
+    if (player.state == audio.PlayerState.playing) {
+      player.stop();
+    }
+
+    try {
+      await player.play(serviceLocator<LessonAssets>().get(name));
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> _waitingForComplete(AudioPlayer player, bool skipOnError) async {
+    int tries = 0;
+    await Future.doWhile(
+      () => Future.delayed(const Duration(milliseconds: 100)).then(
+        (_) {
+          if (skipOnError) tries++;
+          return player.state != audio.PlayerState.completed && tries < 80;
+        },
+      ),
+    );
+  }
 
   void stopAll() {
     var entries = _audioPlayers.entries;

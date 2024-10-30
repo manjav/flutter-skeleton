@@ -149,7 +149,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }) async {
     if (talk.textSide != TranslationSide.none && !talk.isStation) {
       final text = talk.getText(talk.textSide);
-      await serviceLocator<Speaker>().playLocal(text);
+      await serviceLocator<MediaService>().playVoice(text);
     }
   }
 
