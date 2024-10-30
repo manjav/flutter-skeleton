@@ -31,7 +31,25 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _onSlideChange() {
+    final slide = controller.currentSlide;
     _playYoutube(controller.currentSlide);
+    slide.majorityType = _getSlideType(slide);
+    if (slide.majorityType == ContentType.repeat) {
+      listen(slide.children[1] as Talk, initialMedia: _videoData.value);
+    } else if (slide.majorityType == ContentType.wordBank) {
+      serviceLocator<DictatorQuiz>().start(talk: slide.children.first as Talk);
+    } else if (slide.majorityType == ContentType.caption) {}
+  }
+
+  ContentType _getSlideType(ParentContent slide) {
+    final first = slide.children.first;
+    if (first.type == ContentType.station ||
+        first.type == ContentType.wordBank) {
+      return first.type;
+    } else if (slide.children[1].type == ContentType.repeat) {
+      return ContentType.repeat;
+    }
+    return ContentType.caption;
   }
 
   void _nextSlide() => _pageController.nextPage(

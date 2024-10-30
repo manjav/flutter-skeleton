@@ -63,6 +63,7 @@ class ParentContent extends Content {
   List<Content> children = [];
   int passLevel = 0;
   String title = "", description = "", iconUrl = "", mode = "";
+  ContentType majorityType = ContentType.none;
   ParentContent.create(
     Content? parent,
     ContentType type,
