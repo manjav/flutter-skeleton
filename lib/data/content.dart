@@ -145,7 +145,8 @@ enum ContentType {
   youtube,
   avatar,
   uncover,
-  station;
+  station,
+  wordBank;
 
   ContentType getChild() {
     return switch (this) {

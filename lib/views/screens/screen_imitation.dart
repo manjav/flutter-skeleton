@@ -99,8 +99,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   Widget _getContent(ParentContent slide) {
     return switch (slide.majorityType) {
-      child: switch (first.type) {
-        ContentType.station => _stationSlideBuilder(first),
+      ContentType.wordBank => WordBankBox(),
       ContentType.repeat => MicPanel(talk: slide.children[1] as Talk),
       ContentType.station => _stationSlideBuilder(slide.children.first as Talk),
       _ => _captionSlideBuilder()

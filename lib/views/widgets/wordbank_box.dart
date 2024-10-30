@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
 
-class ComplementBox extends StatelessWidget {
-  const ComplementBox({super.key});
+class WordBankBox extends StatelessWidget {
+  const WordBankBox({super.key});
 
   @override
   Widget build(BuildContext context) {
