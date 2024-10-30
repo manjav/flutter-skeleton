@@ -84,16 +84,13 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
-  VideoPlayerController? playYoutube(String url) {
-    final uri = Uri.parse(url);
+  VideoPlayerController? playYoutube(VideoIntry data) {
     youtubeController = YoutubePlayerController(
-      initialVideoId: uri.pathSegments.last,
+      initialVideoId: data.id,
       flags: YoutubePlayerFlags(
         autoPlay: true,
-        startAt: int.parse(uri.queryParameters["start"] ?? "0"),
-        endAt: uri.queryParameters.containsKey("end")
-            ? int.parse(uri.queryParameters["end"]!)
-            : null,
+        startAt: data.start,
+        endAt: data.end,
         enableCaption: false,
         hideControls: true,
         hideThumbnail: true,
@@ -113,8 +110,8 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         showVideoProgressIndicator: true,
         progressIndicatorColor: Colors.amber,
         progressColors: const ProgressBarColors(
-          playedColor: Colors.amber,
           handleColor: Colors.amberAccent,
+          playedColor: Colors.amber,
         ),
       ),
     );
@@ -125,5 +122,21 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     videoController?.dispose();
     youtubeController?.dispose();
     super.dispose();
+  }
+}
+
+class VideoIntry {
+  int? end;
+  int start = 0;
+  String id = "";
+  dynamic data;
+  VideoIntry(this.id, this.start, this.end);
+  VideoIntry.parse(String url) {
+    final uri = Uri.parse(url);
+    id = uri.pathSegments.last;
+    start = int.parse(uri.queryParameters["start"] ?? "0");
+    end = uri.queryParameters.containsKey("end")
+        ? int.parse(uri.queryParameters["end"]!)
+        : null;
   }
 }
