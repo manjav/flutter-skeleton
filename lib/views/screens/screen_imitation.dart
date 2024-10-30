@@ -90,6 +90,18 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         return Column(
           children: [
             _captionBuilder(value),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _captionButton("reset", TColors.transparent, onPress: () {
+                  final v = _videoData.value!;
+                  youtubeController?.load(v.id, startAt: v.start, endAt: v.end);
+                }),
+                _captionButton(
+                    "cc", value ? TColors.primary90 : TColors.transparent,
+                    onPress: () => _captionMode.value = !_captionMode.value),
+              ],
+            )
           ],
         );
       },
@@ -113,6 +125,22 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           }
         },
       ),
+    );
+  }
+
+  Widget _captionButton(String icon, Color color, {Function()? onPress}) {
+    return Widgets.button(
+      context,
+      width: 56.d,
+      height: 40.d,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.all(Radius.circular(30.d)),
+        border: Border.all(color: TColors.primary20, width: 2.d),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 11.d, horizontal: 16.d),
+      child: Asset.load<SvgPicture>(icon),
+      onPressed: onPress,
     );
   }
 
