@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../app_export.dart';
 
@@ -15,10 +14,10 @@ class ImitationScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<ImitationScreen>
     with LessonMixin, ListeningMixin, VideoPlayerMixin {
-  final ValueNotifier<VideoIntry?> _videoData = ValueNotifier(null);
-  final List<VideoIntry> _captions = [];
-  final ValueNotifier<bool> _captionMode = ValueNotifier(false);
+  final List<MediaIntry> _captions = [];
   final PageController _pageController = PageController();
+  final ValueNotifier<bool> _captionMode = ValueNotifier(false);
+  final ValueNotifier<MediaIntry?> _videoData = ValueNotifier(null);
 
   @override
   void initState() {
@@ -94,11 +93,18 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               : TColors.primary0,
           border: Border.all(color: TColors.primary20, width: 2.d),
           borderRadius: BorderRadius.all(Radius.circular(20.d))),
+      child: _getContent(slide),
+    );
+  }
+
+  Widget _getContent(ParentContent slide) {
+    return switch (slide.majorityType) {
       child: switch (first.type) {
         ContentType.station => _stationSlideBuilder(first),
-        _ => _captionSlideBuilder()
-      },
-    );
+      ContentType.repeat => MicPanel(talk: slide.children[1] as Talk),
+      ContentType.station => _stationSlideBuilder(slide.children.first as Talk),
+      _ => _captionSlideBuilder()
+    };
   }
 
   Widget _stationSlideBuilder(Talk content) {
@@ -143,8 +149,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _captionButton("reset", TColors.transparent, onPress: () {
-                  final v = _videoData.value!;
-                  youtubeController?.load(v.id, startAt: v.start, endAt: v.end);
+                  serviceLocator<MediaService>().playYoutube(_videoData.value!);
                 }),
                 _captionButton(
                     "cc", value ? TColors.primary90 : TColors.transparent,
@@ -193,7 +198,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     );
   }
 
-  Future<void> _playYoutube(ParentContent slide) async {
+  void _playYoutube(ParentContent slide) {
     final youtubeContents = controller.currentSlide.children
         .where((c) => c.type == ContentType.youtube);
     _captions.clear();
@@ -201,39 +206,40 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       _videoData.value = null;
       return;
     }
-    _videoData.value = VideoIntry.parse(youtubeContents.first.targetValue);
+    _videoData.value =
+        MediaIntry.parse(MediaType.youtube, youtubeContents.first.targetValue);
 
     final list =
         slide.children.where((c) => c.type == ContentType.caption).toList();
     for (var caption in list) {
       var seconds = _getMilliSeconds(caption.nativeValue);
-      _captions.add(VideoIntry(
+      _captions.add(MediaIntry(
+        MediaType.youtube,
         "",
-        _captions.lastOrNull != null ? _captions.last.end ?? 0 : 0,
-        seconds,
+        start: _captions.lastOrNull != null ? _captions.last.end ?? 0 : 0,
+        end: seconds,
       )..data = caption);
     }
-    if (youtubeController == null) {
-      playYoutube(_videoData.value!);
-      youtubeController!.addListener(() {
-        _setCurrentCaption();
-        if (youtubeController!.value.playerState == PlayerState.ended) {
-          _nextSlide();
-        }
-      });
-    } else {
-      youtubeController?.load(_videoData.value!.id,
-          startAt: _videoData.value!.start, endAt: _videoData.value?.end);
-    }
-  }
-
-  void _setCurrentCaption() {
-    final milliseconds = youtubeController!.value.position.inMilliseconds;
-    for (var caption in _captions) {
-      if (caption.start <= milliseconds && (caption.end ?? 0) > milliseconds) {
-        this.caption.value = caption.data;
-        return;
-      }
+    if (_captions.isNotEmpty) {
+      serviceLocator<MediaService>().play(_videoData.value!);
+      Future.delayed(Duration(milliseconds: 100)).then(
+        (s) async {
+          final youtube = serviceLocator<MediaService>().youtubeController!;
+          youtube.addListener(
+            () {
+              final milliseconds = youtube.value.position.inMilliseconds;
+              for (var caption in _captions) {
+                if (caption.start <= milliseconds &&
+                    (caption.end ?? 0) > milliseconds) {
+                  this.caption.value = caption.data;
+                  return;
+                }
+              }
+            },
+          );
+          // _nextSlide();
+        },
+      );
     }
   }
 
@@ -249,4 +255,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     return duration.inMilliseconds;
   }
 
+  @override
+  void onListeningResult(
+      QuizState state, String text, int score, Talk talk, bool repeated) {}
 }

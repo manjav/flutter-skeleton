@@ -7,7 +7,11 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     return MicPanel(talk: talk);
   }
 
-  void listen(Talk talk) {
+  void listen(
+    Talk talk, {
+    MediaIntry? initialMedia,
+    MediaIntry? finalMedia,
+  }) {
     final account = serviceLocator<AccountProvider>();
 
     // Change fuzzy acceptance level based on answer length
@@ -21,8 +25,18 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       minMatchLevel = 92;
     }
 
+    final initalVoice = talk.getText(talk.textSide);
+    initialMedia ??= (initalVoice.isNotEmpty
+        ? MediaIntry(MediaType.voice, initalVoice)
+        : null);
+    finalMedia ??= talk.type != ContentType.repeat
+        ? MediaIntry(MediaType.voice, talk.targetValue)
+        : null;
+
     serviceLocator<ListenerQuiz>().listen(
       talk: talk,
+      finalMedia: finalMedia,
+      initialMedia: initialMedia,
       minMatchLevel: minMatchLevel,
       locale: account.metadata["targetLanguage"],
       onResult: (state, text, score, repeated) =>

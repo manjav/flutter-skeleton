@@ -8,7 +8,6 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   VideoPlayerController? videoController;
-  YoutubePlayerController? youtubeController;
 
   Future<VideoPlayerController?> playVideo(Talk talk) async {
     if (talk.type != ContentType.video) return null;
@@ -84,27 +83,11 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
-  VideoPlayerController? playYoutube(VideoIntry data) {
-    youtubeController = YoutubePlayerController(
-      initialVideoId: data.id,
-      flags: YoutubePlayerFlags(
-        autoPlay: true,
-        startAt: data.start,
-        endAt: data.end,
-        enableCaption: false,
-        hideControls: true,
-        hideThumbnail: true,
-      ),
-    );
-
-    return videoController;
-  }
-
   Widget youtubePlayer({double? borderRadius}) {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 0)),
       child: YoutubePlayer(
-        controller: youtubeController!,
+        controller: serviceLocator<MediaService>().youtubeController!,
         controlsTimeOut: Duration(milliseconds: 1),
         topActions: [Widgets.rect(color: TColors.pink, width: 11, height: 33)],
         showVideoProgressIndicator: true,
@@ -120,23 +103,7 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   @override
   void dispose() {
     videoController?.dispose();
-    youtubeController?.dispose();
+    // youtubeController?.dispose();
     super.dispose();
-  }
-}
-
-class VideoIntry {
-  int? end;
-  int start = 0;
-  String id = "";
-  dynamic data;
-  VideoIntry(this.id, this.start, this.end);
-  VideoIntry.parse(String url) {
-    final uri = Uri.parse(url);
-    id = uri.pathSegments.last;
-    start = int.parse(uri.queryParameters["start"] ?? "0");
-    end = uri.queryParameters.containsKey("end")
-        ? int.parse(uri.queryParameters["end"]!)
-        : null;
   }
 }

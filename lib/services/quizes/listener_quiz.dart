@@ -13,7 +13,6 @@ class ListenerQuiz extends Quiz {
   String? locale;
   String _pattern = "";
   int minMatchLevel = 95;
-  Narrator narrator = Narrator.shimmer;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
   SpeechRecognitionResult result = SpeechRecognitionResult([], true);
@@ -22,10 +21,11 @@ class ListenerQuiz extends Quiz {
   final double _minSoundLevel = Platform.isIOS ? -70 : -10;
   final double _maxSoundLevel = Platform.isIOS ? -20 : 10;
   DateTime _lastLevelChanged = DateTime.now();
-  bool _hasSoundPlayed = false;
+  bool _hasMediaPlayed = false;
   bool _hasResultSent = false;
   List<String> exceptions = [];
   int _matchLevel = 0;
+  MediaIntry? initialMedia, finalMedia;
 
   @override
   initialize({List<Object>? args}) async {
@@ -78,7 +78,7 @@ class ListenerQuiz extends Quiz {
       if (state.value == QuizState.listening && recognizedWords.value.isEmpty) {
         state.value = QuizState.failure;
       }
-      if (_hasSoundPlayed) {
+      if (_hasMediaPlayed) {
         _sendResult("status", false);
       }
     }
@@ -86,6 +86,8 @@ class ListenerQuiz extends Quiz {
 
   void listen({
     required Talk talk,
+    MediaIntry? initialMedia,
+    MediaIntry? finalMedia,
     String? locale,
     int minMatchLevel = 95,
     List<String>? exceptions,
@@ -105,9 +107,11 @@ class ListenerQuiz extends Quiz {
     if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
-    state.value = QuizState.ready;
-    _hasSoundPlayed = false;
+    this.initialMedia = initialMedia;
+    this.finalMedia = finalMedia;
+    _hasMediaPlayed = false;
     _hasResultSent = false;
+    state.value = QuizState.ready;
 
     if (talk.lastRecord != null) {
       state.value = talk.lastRecord!.state;
@@ -117,10 +121,7 @@ class ListenerQuiz extends Quiz {
     // log("listen $_pattern");
 
     await Future.delayed(const Duration(milliseconds: 500));
-    var initalVoice = talk.getText(talk.textSide);
-    if (initalVoice.isNotEmpty) {
-      await serviceLocator<Speaker>().playLocal(initalVoice);
-    }
+    await serviceLocator<MediaService>().play(initialMedia);
     super.start(talk: talk, onResult: onResult);
 
     final options = SpeechListenOptions(
@@ -203,13 +204,13 @@ class ListenerQuiz extends Quiz {
   void _finalize(QuizState state) async {
     this.state.value = state;
     stop();
-    if (recognizedWords.value.isNotEmpty && talk!.type != ContentType.repeat) {
-      await serviceLocator<Speaker>()
-          .playLocal(talk!.targetValue, skipOnError: true);
+
+    if (recognizedWords.value.isNotEmpty && finalMedia != null) {
+      await serviceLocator<MediaService>().play(finalMedia);
     } else {
       await Future.delayed(const Duration(milliseconds: 400));
     }
-    _hasSoundPlayed = true;
+    _hasMediaPlayed = true;
     if (_speech.lastStatus == "done") {
       _sendResult("finalize", false);
     }

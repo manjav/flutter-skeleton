@@ -4,12 +4,15 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart' as audio;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:lifetalk/app_export.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 enum AudioLoadMode { assets, network }
 
 class MediaService extends IService {
   final _sounds = <String, Source>{};
   final Map<String, AudioPlayer> _audioPlayers = {};
+  YoutubePlayerController? youtubeController;
 
   Future<void> play(MediaIntry? intry) async {
     if (intry == null) {
@@ -19,6 +22,9 @@ class MediaService extends IService {
       await playSound(intry.id);
     } else if (intry.type == MediaType.voice) {
       await playVoice(intry.id);
+    } else if (intry.type == MediaType.youtube) {
+      await playYoutube(intry);
+    }
   }
 
   /// Plays the audio with the given [name].
@@ -134,6 +140,40 @@ class MediaService extends IService {
     );
   }
 
+  Future<void> playYoutube(MediaIntry intry) async {
+    if (youtubeController == null) {
+      youtubeController = YoutubePlayerController(
+        initialVideoId: intry.id,
+        flags: YoutubePlayerFlags(
+          startAt: intry.start,
+          endAt: intry.end,
+          autoPlay: false,
+          enableCaption: false,
+          hideControls: true,
+          hideThumbnail: true,
+        ),
+      );
+      youtubeController!.addListener(
+        () => intry.parseState(youtubeController!.value.playerState.name),
+      );
+    } else {
+      youtubeController?.load(
+        intry.id,
+        startAt: intry.start,
+        endAt: intry.end,
+      );
+    }
+    youtubeController!.play();
+    await Future.doWhile(
+      () => Future.delayed(const Duration(milliseconds: 100)).then(
+        (_) {
+          return youtubeController!.value.playerState !=
+              youtube.PlayerState.ended;
+        },
+      ),
+    );
+  }
+
   void stopAll() {
     var entries = _audioPlayers.entries;
     for (var e in entries) {
@@ -212,4 +252,4 @@ class MediaIntry {
     _state = MediaState.values
         .firstWhere((s) => s.name == name, orElse: () => MediaState.unknown);
   }
-  }
+}
