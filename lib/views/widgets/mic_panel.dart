@@ -115,7 +115,7 @@ class _MicPanelState extends State<MicPanel> {
         const Duration(milliseconds: 100),
         () => listener.listen(
           talk: widget.talk,
-          initialMedia: listener.initialMedia,
+          initialMedia: null,
           finalMedia: listener.finalMedia,
           onResult: listener.onResult,
         ),
