@@ -15,6 +15,7 @@ class ImitationScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<ImitationScreen>
     with LessonMixin, ListeningMixin, VideoPlayerMixin {
   final List<MediaIntry> _captions = [];
+  final ValueNotifier<int> _slideUpdater = ValueNotifier(-1);
   final PageController _pageController = PageController();
   final ValueNotifier<bool> _captionMode = ValueNotifier(false);
   final ValueNotifier<MediaIntry?> _videoData = ValueNotifier(null);
@@ -37,7 +38,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       listen(slide.children[1] as Talk, initialMedia: _videoData.value);
     } else if (slide.majorityType == ContentType.wordBank) {
       serviceLocator<DictatorQuiz>().start(talk: slide.children.first as Talk);
-    } else if (slide.majorityType == ContentType.caption) {}
+    }
+    _slideUpdater.value = controller.slideIndex.value;
   }
 
   ContentType _getSlideType(ParentContent slide) {
@@ -98,12 +100,19 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   Widget _getContent(ParentContent slide) {
-    return switch (slide.majorityType) {
-      ContentType.wordBank => WordBankBox(),
-      ContentType.repeat => MicPanel(talk: slide.children[1] as Talk),
-      ContentType.station => _stationSlideBuilder(slide.children.first as Talk),
-      _ => _captionSlideBuilder()
-    };
+    return ListenableBuilder(
+      listenable: _slideUpdater,
+      builder: (context, child) {
+        return switch (slide.majorityType) {
+          ContentType.wordBank => WordBankBox(),
+          ContentType.repeat => MicPanel(talk: slide.children[1] as Talk),
+          ContentType.station =>
+            _stationSlideBuilder(slide.children.first as Talk),
+          ContentType.caption => _captionSlideBuilder(),
+          _ => SizedBox(),
+        };
+      },
+    );
   }
 
   Widget _stationSlideBuilder(Talk content) {
