@@ -38,7 +38,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     if (slide.majority!.type == ContentType.repeat) {
       listen(talk, initialMedia: _videoData.value);
     } else if (slide.majority!.type == ContentType.wordBank) {
-      serviceLocator<DictatorQuiz>().start(talk: talk);
+      serviceLocator<DictatorQuiz>().start(
+        talk: talk,
+        onResult: (state, text, score, repeated) {
+          modal(_resultBuilder(state), isDismissible: false);
+          onQiuzResult(state, text, score, talk, repeated);
+        },
+      );
     }
     _slideUpdater.value = controller.slideIndex.value;
   }
@@ -277,6 +283,45 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   @override
-  void onListeningResult(
+  void onQiuzResult(
       QuizState state, String text, int score, Talk talk, bool repeated) {}
+
+  Widget _resultBuilder(QuizState quizState) {
+    final success = quizState == QuizState.success;
+    final label = success ? "correct" : "incorrect";
+    final color = success ? TColors.green : TColors.red;
+    return Widgets.rect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(40.d),
+        topRight: Radius.circular(40.d),
+      ),
+      padding: EdgeInsets.fromLTRB(40.d, 25.d, 40.d, 60.d),
+      color: Color.lerp(TColors.white, color, 0.15),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Asset.load<SvgPicture>(label, width: 24.d),
+              SizedBox(width: 10.d),
+              Text("${label}_l".l(), style: TStyles.big.copyWith(color: color)),
+            ],
+          ),
+          SizedBox(height: 20.d),
+          Widgets.button(
+            context,
+            alignment: Alignment.center,
+            child: Text("next_l".l(), style: TStyles.bigInvert),
+            padding: EdgeInsets.all(20.d),
+            color: color,
+            onPressed: () {
+              Navigator.pop(context);
+              _nextSlide();
+            },
+          )
+        ],
+      ),
+    );
+  }
 }
