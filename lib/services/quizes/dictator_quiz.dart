@@ -94,20 +94,26 @@ class DictatorQuiz extends Quiz {
 
     final blanks = words.where((w) => w.state == ChoiceState.available);
     if (blanks.isEmpty) {
-      state.value = _chechAnswers() ? QuizState.success : QuizState.failure;
+      state.value = _chechAnswers();
       await Future.delayed(Duration(milliseconds: 400));
       onResult?.call(state.value, "", 0, false);
-      start(talk: talk!, onResult: onResult);
+      // start(talk: talk!, onResult: onResult);
     }
   }
 
-  bool _chechAnswers() {
+  QuizState _chechAnswers() {
+    var state = QuizState.success;
     for (var i = 0; i < words.length; i++) {
-      if (words[i].text != _patterns[i]) {
-        return false;
+      if (words[i].state != ChoiceState.fixed) {
+        words[i].setState(words[i].text == _patterns[i]
+            ? ChoiceState.success
+            : ChoiceState.failure);
+      }
+      if (words[i].state == ChoiceState.failure) {
+        state = QuizState.failure;
       }
     }
-    return true;
+    return state;
   }
 
   void popChoice() {
@@ -122,12 +128,13 @@ class DictatorQuiz extends Quiz {
   void clearChoice(Choice word) {
     word.setState(ChoiceState.available);
     choices
-        .lastWhere((c) => c.text == word.text)
+        .lastWhere(
+            (c) => c.text == word.text && c.state != ChoiceState.available)
         .setState(ChoiceState.available);
   }
 }
 
-enum ChoiceState { fixed, available, selected }
+enum ChoiceState { fixed, available, selected, success, failure }
 
 class Choice {
   String text = "";

@@ -51,6 +51,7 @@ class WordBankBox extends StatelessWidget {
             child: Text(word.text, style: TStyles.big),
           );
         }
+        final filled = value.index >= ChoiceState.selected.index;
         return Widgets.button(
           context,
           height: 30.d,
@@ -58,13 +59,11 @@ class WordBankBox extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(5.d)),
               boxShadow: [
                 BoxShadow(
-                    color: value == ChoiceState.selected
-                        ? TColors.transparent
-                        : TColors.primary30),
+                    color: filled ? TColors.transparent : TColors.primary30),
                 BoxShadow(
                   offset: Offset(0, 0.4.d),
-                  color: value == ChoiceState.selected
-                      ? TColors.primary90
+                  color: filled
+                      ? _getRectColor(dictator.state.value, value)
                       : TColors.primary10,
                   spreadRadius: -0.6.d,
                 ),
@@ -81,9 +80,8 @@ class WordBankBox extends StatelessWidget {
                   value == ChoiceState.selected
               ? -1
               : 30,
-          child: value == ChoiceState.selected
-              ? Text(word.text, style: TStyles.largeInvert)
-              : SizedBox(),
+          child:
+              filled ? Text(word.text, style: TStyles.largeInvert) : SizedBox(),
           onPressed: () => dictator.clearChoice(word),
         );
       },
@@ -116,5 +114,15 @@ class WordBankBox extends StatelessWidget {
         onPressed: () => dictator.selectChoice(choice),
       ),
     );
+  }
+
+  Color _getRectColor(QuizState state, ChoiceState choiceState) {
+    if (state == QuizState.success) {
+      return TColors.green;
+    }
+    if (state == QuizState.failure && choiceState == ChoiceState.failure) {
+      return TColors.red;
+    }
+    return TColors.primary90;
   }
 }
