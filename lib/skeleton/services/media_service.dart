@@ -147,7 +147,7 @@ class MediaService extends IService {
         flags: YoutubePlayerFlags(
           startAt: intry.start,
           endAt: intry.end,
-          autoPlay: false,
+          // autoPlay: false,
           enableCaption: false,
           hideControls: true,
           hideThumbnail: true,
@@ -162,8 +162,8 @@ class MediaService extends IService {
         startAt: intry.start,
         endAt: intry.end,
       );
+      // youtubeController!.play();
     }
-    youtubeController!.play();
     await Future.doWhile(
       () => Future.delayed(const Duration(milliseconds: 100)).then(
         (_) {
