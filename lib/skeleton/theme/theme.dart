@@ -59,7 +59,7 @@ extension Autosize on TextStyle {
 TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   return TextStyle(
     fontSize: size,
-    color: color ?? TColors.primary70,
+    color: color ?? TColors.primary90,
     fontWeight: weight ?? FontWeight.bold,
     fontFamily: "primary_font",
   );

@@ -186,11 +186,11 @@ class HiddenWords extends StatelessWidget with ILogger {
     super.key,
   });
 
-  final _correctStyle = TStyles.huge.copyWith(height: 1, color: TColors.green);
+  final _correctStyle = TStyles.big.copyWith(height: 1, color: TColors.green);
   final _defaultStyle =
-      TStyles.huge.copyWith(height: 1, color: TColors.primary30);
+      TStyles.big.copyWith(height: 1, color: TColors.primary30);
   final _hiddenStyle =
-      TStyles.huge.copyWith(height: 1, color: TColors.transparent);
+      TStyles.big.copyWith(height: 1, color: TColors.transparent);
 
   @override
   Widget build(BuildContext context) {

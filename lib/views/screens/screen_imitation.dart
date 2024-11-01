@@ -80,13 +80,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           builder: (context, child) {
             return SizedBox(
               height: _videoData.value == null ? 600.d : 450.d,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: controller.currentSerie.children.length,
-            itemBuilder: (context, index) => _slideRenderer(
-              controller.currentSerie.children[index] as ParentContent,
-            ),
-          ),
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: controller.currentSerie.children.length,
+                itemBuilder: (context, index) => _slideRenderer(
+                  controller.currentSerie.children[index] as ParentContent,
+                ),
+              ),
             );
           },
         ),
@@ -102,9 +102,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: slide.majority?.type == ContentType.station
-              ? TColors.transparent
-              : TColors.primary0,
-          border: Border.all(color: TColors.primary20, width: 2.d),
+            ? TColors.transparent
+            : TColors.primary0,
+        border: Border.all(color: TColors.primary20, width: 2.d),
         borderRadius: BorderRadius.all(Radius.circular(20.d)),
       ),
       child: _getContent(slide),
@@ -119,9 +119,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       ContentType.wordBank => WordBankBox(slide.majority as Talk),
       ContentType.repeat => MicPanel(talk: slide.majority as Talk),
       ContentType.station => _stationSlideBuilder(slide.majority as Talk),
-          ContentType.caption => _captionSlideBuilder(),
-          _ => SizedBox(),
-        };
+      ContentType.caption => _captionSlideBuilder(),
+      _ => SizedBox(),
+    };
   }
 
   Widget _stationSlideBuilder(Talk content) {
@@ -216,11 +216,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _playYoutube(ParentContent slide) {
+    _videoData.value = null;
     final youtubeContents = controller.currentSlide.children
         .where((c) => c.type == ContentType.youtube);
     _captions.clear();
     if (youtubeContents.isEmpty) {
-      _videoData.value = null;
       return;
     }
     _videoData.value =

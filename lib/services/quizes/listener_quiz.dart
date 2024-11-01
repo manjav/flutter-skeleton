@@ -146,21 +146,6 @@ class ListenerQuiz extends Quiz {
     );
   }
 
-  Future<void> toggle({
-    required String pattern,
-    required String hintVoice,
-    required String repeatVoice,
-  }) async {
-    recognizedWords.value = "";
-    if (state.value == QuizState.listening ||
-        state.value == QuizState.waiting) {
-      _speech.cancel();
-      state.value = QuizState.ready;
-      return;
-    }
-    listen(talk: talk!, onResult: onResult);
-  }
-
   @override
   Future<void> stop() async {
     if (!isEnable) return;
