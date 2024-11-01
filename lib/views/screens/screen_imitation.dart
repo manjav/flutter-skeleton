@@ -79,7 +79,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           listenable: _slideUpdater,
           builder: (context, child) {
             return SizedBox(
-              height: _videoData.value == null ? 600.d : 450.d,
+              height: _videoData.value == null &&
+                      controller.currentSlide.majority!.type !=
+                          ContentType.station
+                  ? 600.d
+                  : 450.d,
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: controller.currentSerie.children.length,
@@ -139,7 +143,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         SizedBox(height: 60.d),
         Widgets.button(
           context,
-          padding: EdgeInsets.symmetric(vertical: 14.d, horizontal: 50.d),
+          padding: EdgeInsets.symmetric(vertical: 14.d, horizontal: 40.d),
           color: TColors.primary90,
           child: Row(
             mainAxisSize: MainAxisSize.min,
