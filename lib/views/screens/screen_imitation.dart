@@ -290,13 +290,33 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     final success = quizState == QuizState.success;
     final label = success ? "correct" : "incorrect";
     final color = success ? TColors.green : TColors.red;
+    final hints = <TextSpan>[];
+    final resulStyle = TStyles.big.copyWith(color: color);
+    Widget hintWidget;
+    if (success) {
+      hintWidget = SizedBox();
+    } else {
+      for (var word in words) {
+        hints.add(TextSpan(
+            text: "${word.text} ",
+            style:
+                word.state == ChoiceState.failure ? resulStyle : TStyles.big));
+      }
+      hintWidget = RichText(
+        softWrap: true,
+        text: TextSpan(
+          children: hints,
+        ),
+      );
+    }
+
     return Widgets.rect(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(40.d),
         topRight: Radius.circular(40.d),
       ),
       padding: EdgeInsets.fromLTRB(40.d, 25.d, 40.d, 60.d),
-      color: Color.lerp(TColors.white, color, 0.15),
+      color: Color.lerp(TColors.primary0, color, 0.15),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -305,10 +325,12 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             children: [
               Asset.load<SvgPicture>(label, width: 24.d),
               SizedBox(width: 10.d),
-              Text("${label}_l".l(), style: TStyles.big.copyWith(color: color)),
+              Text("${label}_l".l(), style: resulStyle),
             ],
           ),
-          SizedBox(height: 20.d),
+          SizedBox(height: 12.d),
+          hintWidget,
+          SizedBox(height: 12.d),
           Widgets.button(
             context,
             alignment: Alignment.center,
