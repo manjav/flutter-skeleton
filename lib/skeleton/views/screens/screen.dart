@@ -103,4 +103,16 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     }
     return await Get.toNamed(Routes.popupMessage, arguments: args);
   }
+
+  // ignore: avoid_shadowing_type_parameters
+  Future<T?> modal<T>(Widget child, {bool isDismissible = true}) async {
+    var data = await showModalBottomSheet<T>(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: isDismissible,
+        constraints: const BoxConstraints.tightFor(),
+        backgroundColor: TColors.transparent,
+        builder: (BuildContext context) => child);
+    return data;
+  }
 }
