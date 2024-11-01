@@ -17,10 +17,11 @@ class WordBankBox extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.all(8.d),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _wrapper(dictator.words.length,
                   (i) => _wordBuilder(context, dictator, i)),
-              SizedBox(height: 8.d),
+              SizedBox(height: 30.d),
               _wrapper(dictator.choices.length,
                   (i) => _choiceBuilder(context, dictator, i)),
             ],
@@ -32,7 +33,8 @@ class WordBankBox extends StatelessWidget {
 
   Widget _wrapper(int itemCount, Widget Function(int) itemBuilder) {
     return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.end,
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [for (var i = 0; i < itemCount; i++) itemBuilder(i)],
     );
   }
@@ -46,25 +48,42 @@ class WordBankBox extends StatelessWidget {
         if (value == ChoiceState.fixed) {
           return Padding(
             padding: EdgeInsets.all(paddingValue),
-            child: Text(word.text),
+            child: Text(word.text, style: TStyles.big),
           );
         }
         return Widgets.button(
           context,
           height: 30.d,
-          radius: 8.d,
-          color: TColors.primary0,
-          width: value == ChoiceState.available ? 44.d : null,
-          margin: EdgeInsets.symmetric(horizontal: 2.d),
-          padding: EdgeInsets.symmetric(
-            horizontal: paddingValue * 2,
-            vertical: paddingValue,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5.d)),
+              boxShadow: [
+                BoxShadow(
+                    color: value == ChoiceState.selected
+                        ? TColors.transparent
+                        : TColors.primary30),
+                BoxShadow(
+                  offset: Offset(0, 0.4.d),
+                  color: value == ChoiceState.selected
+                      ? TColors.primary90
+                      : TColors.primary10,
+                  spreadRadius: -0.6.d,
+                ),
+              ]),
+          width: value == ChoiceState.available ? 50.d : null,
+          margin: EdgeInsets.symmetric(horizontal: 5.d),
+          padding: EdgeInsets.fromLTRB(
+            paddingValue * 3,
+            paddingValue * 0.5,
+            paddingValue * 3,
+            paddingValue,
           ),
           buttonId: dictator.state.value != QuizState.ready ||
                   value == ChoiceState.selected
               ? -1
               : 30,
-          child: value == ChoiceState.selected ? Text(word.text) : SizedBox(),
+          child: value == ChoiceState.selected
+              ? Text(word.text, style: TStyles.largeInvert)
+              : SizedBox(),
           onPressed: () => dictator.clearChoice(word),
         );
       },
@@ -79,17 +98,21 @@ class WordBankBox extends StatelessWidget {
       builder: (context, value, child) => Widgets.button(
         context,
         margin: EdgeInsets.all(3.d),
-        padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
-        color: value == ChoiceState.selected
-            ? TColors.primary20
-            : TColors.primary30,
+        padding: EdgeInsets.symmetric(horizontal: 16.d, vertical: 10.d),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(16.d)),
+          border: Border.all(color: TColors.primary30),
+          color: value == ChoiceState.selected
+              ? TColors.primary10
+              : TColors.primary0,
+        ),
         buttonId: dictator.state.value != QuizState.ready ||
                 value == ChoiceState.selected
             ? -1
             : 30,
         child: Opacity(
             opacity: value == ChoiceState.selected ? 0 : 1,
-            child: Text(choice.text)),
+            child: Text(choice.text, style: TStyles.large)),
         onPressed: () => dictator.selectChoice(choice),
       ),
     );
