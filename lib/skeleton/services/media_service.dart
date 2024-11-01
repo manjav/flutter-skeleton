@@ -123,6 +123,7 @@ class MediaService extends IService {
 
     try {
       await player.play(serviceLocator<LessonAssets>().get(name));
+      await _waitingForComplete(player, true);
     } catch (e) {
       log(e.toString());
     }
