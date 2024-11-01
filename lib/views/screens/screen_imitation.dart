@@ -75,8 +75,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             return value == null ? SizedBox() : youtubePlayer();
           },
         ),
-        SizedBox(
-          height: 450.d,
+        ListenableBuilder(
+          listenable: _slideUpdater,
+          builder: (context, child) {
+            return SizedBox(
+              height: _videoData.value == null ? 600.d : 450.d,
           child: PageView.builder(
             controller: _pageController,
             itemCount: controller.currentSerie.children.length,
@@ -84,6 +87,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               controller.currentSerie.children[index] as ParentContent,
             ),
           ),
+            );
+          },
         ),
         SizedBox(height: 100.d),
       ],
