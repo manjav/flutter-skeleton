@@ -33,24 +33,31 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void _onSlideChange() {
     final slide = controller.currentSlide;
     _playYoutube(controller.currentSlide);
-    slide.majorityType = _getSlideType(slide);
-    if (slide.majorityType == ContentType.repeat) {
-      listen(slide.children[1] as Talk, initialMedia: _videoData.value);
-    } else if (slide.majorityType == ContentType.wordBank) {
-      serviceLocator<DictatorQuiz>().start(talk: slide.children.first as Talk);
+    slide.majority = _getSlideType(slide);
+    final talk = slide.majority as Talk;
+    if (slide.majority!.type == ContentType.repeat) {
+      listen(talk, initialMedia: _videoData.value);
+    } else if (slide.majority!.type == ContentType.wordBank) {
+      serviceLocator<DictatorQuiz>().start(talk: talk);
     }
     _slideUpdater.value = controller.slideIndex.value;
   }
 
-  ContentType _getSlideType(ParentContent slide) {
+  Content? _getSlideType(ParentContent slide) {
     final first = slide.children.first;
     if (first.type == ContentType.station ||
         first.type == ContentType.wordBank) {
-      return first.type;
-    } else if (slide.children[1].type == ContentType.repeat) {
-      return ContentType.repeat;
+      return first;
     }
-    return ContentType.caption;
+    final repeats = slide.children.where((t) => t.type == ContentType.repeat);
+    if (repeats.isNotEmpty) {
+      return repeats.first;
+    }
+    final captions = slide.children.where((t) => t.type == ContentType.caption);
+    if (captions.isNotEmpty) {
+      return captions.first;
+    }
+    return null;
   }
 
   void _nextSlide() => _pageController.nextPage(
@@ -84,35 +91,32 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   Widget _slideRenderer(ParentContent slide) {
-    final first = slide.children.first as Talk;
     return Container(
       margin: EdgeInsets.all(30.d),
       padding: EdgeInsets.all(30.d),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          color: first.type == ContentType.station
+        color: slide.majority?.type == ContentType.station
               ? TColors.transparent
               : TColors.primary0,
           border: Border.all(color: TColors.primary20, width: 2.d),
-          borderRadius: BorderRadius.all(Radius.circular(20.d))),
+        borderRadius: BorderRadius.all(Radius.circular(20.d)),
+      ),
       child: _getContent(slide),
     );
   }
 
   Widget _getContent(ParentContent slide) {
-    return ListenableBuilder(
-      listenable: _slideUpdater,
-      builder: (context, child) {
-        return switch (slide.majorityType) {
-          ContentType.wordBank => WordBankBox(),
-          ContentType.repeat => MicPanel(talk: slide.children[1] as Talk),
-          ContentType.station =>
-            _stationSlideBuilder(slide.children.first as Talk),
+    if (slide.majority == null) {
+      return SizedBox();
+    }
+    return switch (slide.majority!.type) {
+      ContentType.wordBank => WordBankBox(slide.majority as Talk),
+      ContentType.repeat => MicPanel(talk: slide.majority as Talk),
+      ContentType.station => _stationSlideBuilder(slide.majority as Talk),
           ContentType.caption => _captionSlideBuilder(),
           _ => SizedBox(),
         };
-      },
-    );
   }
 
   Widget _stationSlideBuilder(Talk content) {
