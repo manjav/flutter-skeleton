@@ -2,14 +2,41 @@ import 'package:flutter/material.dart';
 
 import '../../app_export.dart';
 
-class WordBankBox extends StatelessWidget {
-  const WordBankBox({super.key});
+class WordBankBox extends StatefulWidget {
+  final Talk talk;
+
+  const WordBankBox(this.talk, {super.key});
+
+  @override
+  State<WordBankBox> createState() => _WordBankBoxState();
+}
+
+class _WordBankBoxState extends State<WordBankBox> {
+  List<Choice> _words = [];
+  List<Choice> _choices = [];
+  final ValueNotifier<QuizState> _state = ValueNotifier(QuizState.none);
+
+  @override
+  void initState() {
+    final dictator = serviceLocator<DictatorQuiz>();
+    _removeListeners(dictator);
+    dictator.state.addListener(_onDictatorStateChange);
+    super.initState();
+  }
+
+  void _onDictatorStateChange() {
+    final dictator = serviceLocator<DictatorQuiz>();
+    if (widget.talk == dictator.talk) {
+      _words = List.from(dictator.words);
+      _choices = List.from(dictator.choices);
+      _state.value = dictator.state.value;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final dictator = serviceLocator<DictatorQuiz>();
     return ValueListenableBuilder(
-      valueListenable: dictator.state,
+      valueListenable: _state,
       builder: (context, value, child) {
         if (value.index < QuizState.ready.index) {
           return SizedBox();
@@ -19,11 +46,14 @@ class WordBankBox extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _wrapper(dictator.words.length,
-                  (i) => _wordBuilder(context, dictator, i)),
-              SizedBox(height: 30.d),
-              _wrapper(dictator.choices.length,
-                  (i) => _choiceBuilder(context, dictator, i)),
+              DirText(
+                widget.talk.nativeValue,
+                style: TStyles.small.copyWith(color: TColors.primary70),
+              ),
+              SizedBox(height: 20.d),
+              _wrapper(_words.length, (i) => _wordBuilder(context, i)),
+              SizedBox(height: 20.d),
+              _wrapper(_choices.length, (i) => _choiceBuilder(context, i)),
             ],
           ),
         );
@@ -39,8 +69,8 @@ class WordBankBox extends StatelessWidget {
     );
   }
 
-  Widget _wordBuilder(BuildContext context, DictatorQuiz dictator, int index) {
-    var word = dictator.words[index];
+  Widget _wordBuilder(BuildContext context, int index) {
+    var word = _words[index];
     final paddingValue = 3.d;
     return ValueListenableBuilder(
       valueListenable: word.stateNotifier,
@@ -63,7 +93,7 @@ class WordBankBox extends StatelessWidget {
                 BoxShadow(
                   offset: Offset(0, 0.4.d),
                   color: filled
-                      ? _getRectColor(dictator.state.value, value)
+                      ? _getRectColor(_state.value, value)
                       : TColors.primary10,
                   spreadRadius: -0.6.d,
                 ),
@@ -76,27 +106,26 @@ class WordBankBox extends StatelessWidget {
             paddingValue * 3,
             paddingValue,
           ),
-          buttonId: dictator.state.value != QuizState.ready ||
-                  value == ChoiceState.selected
-              ? -1
-              : 30,
+          buttonId:
+              _state.value != QuizState.ready || value == ChoiceState.selected
+                  ? -1
+                  : 30,
           child:
               filled ? Text(word.text, style: TStyles.largeInvert) : SizedBox(),
-          onPressed: () => dictator.clearChoice(word),
+          onPressed: () => serviceLocator<DictatorQuiz>().clearChoice(word),
         );
       },
     );
   }
 
-  Widget _choiceBuilder(
-      BuildContext context, DictatorQuiz dictator, int index) {
-    var choice = dictator.choices[index];
+  Widget _choiceBuilder(BuildContext context, int index) {
+    var choice = _choices[index];
     return ValueListenableBuilder(
       valueListenable: choice.stateNotifier,
       builder: (context, value, child) => Widgets.button(
         context,
         margin: EdgeInsets.all(3.d),
-        padding: EdgeInsets.symmetric(horizontal: 16.d, vertical: 10.d),
+        padding: EdgeInsets.symmetric(horizontal: 16.d, vertical: 8.d),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(16.d)),
           border: Border.all(color: TColors.primary30),
@@ -104,14 +133,14 @@ class WordBankBox extends StatelessWidget {
               ? TColors.primary10
               : TColors.primary0,
         ),
-        buttonId: dictator.state.value != QuizState.ready ||
-                value == ChoiceState.selected
-            ? -1
-            : 30,
+        buttonId:
+            _state.value != QuizState.ready || value == ChoiceState.selected
+                ? -1
+                : 30,
         child: Opacity(
             opacity: value == ChoiceState.selected ? 0 : 1,
             child: Text(choice.text, style: TStyles.large)),
-        onPressed: () => dictator.selectChoice(choice),
+        onPressed: () => serviceLocator<DictatorQuiz>().selectChoice(choice),
       ),
     );
   }
@@ -124,5 +153,15 @@ class WordBankBox extends StatelessWidget {
       return TColors.red;
     }
     return TColors.primary90;
+  }
+
+  @override
+  void dispose() {
+    _removeListeners(serviceLocator<DictatorQuiz>());
+    super.dispose();
+  }
+
+  void _removeListeners(DictatorQuiz dictator) {
+    dictator.state.removeListener(_onDictatorStateChange);
   }
 }
