@@ -21,6 +21,7 @@ class _WordBankBoxState extends State<WordBankBox> {
     final dictator = serviceLocator<DictatorQuiz>();
     _removeListeners(dictator);
     dictator.state.addListener(_onDictatorStateChange);
+    _onDictatorStateChange();
     super.initState();
   }
 
