@@ -31,7 +31,7 @@ class MatchQuiz extends Quiz {
   @override
   void start({
     required Talk talk,
-    Function(QuizState s, String t, int score, bool p4)? onResult,
+    Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
     super.start(talk: talk, onResult: onResult);
     this.lefts.clear();
@@ -82,6 +82,6 @@ class MatchQuiz extends Quiz {
 
     lefts.clear();
     rights.clear();
-    onResult?.call(state.value, "", 0, false);
+    onResult?.call(state.value, "", 0, false, null);
   }
 }

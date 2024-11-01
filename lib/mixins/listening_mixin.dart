@@ -39,11 +39,23 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       initialMedia: initialMedia,
       minMatchLevel: minMatchLevel,
       locale: account.metadata["targetLanguage"],
-      onResult: (state, text, score, repeated) =>
-          onQiuzResult(state, text, score, talk, repeated),
+      onResult: (state, text, score, repeated, data) => onQiuzResult(
+        state,
+        text,
+        score,
+        talk,
+        repeated,
+        data,
+      ),
     );
   }
 
   void onQiuzResult(
-      QuizState state, String text, int score, Talk talk, bool repeated);
+    QuizState state,
+    String text,
+    int score,
+    Talk talk,
+    bool repeated,
+    dynamic data,
+  );
 }

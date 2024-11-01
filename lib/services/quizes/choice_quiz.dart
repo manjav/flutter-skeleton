@@ -11,7 +11,7 @@ class ChoiceQuiz extends Quiz {
   @override
   void start({
     required Talk talk,
-    Function(QuizState s, String t, int score, bool r)? onResult,
+    Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
     answer = "";
     selectedIndex.value = -1;
@@ -38,7 +38,8 @@ class ChoiceQuiz extends Quiz {
 
   Future<void> sendResult() async {
     await Future.delayed(Duration(milliseconds: 500));
-    onResult?.call(state.value, choices[selectedIndex.value], 0, false);
+    onResult?.call(
+        state.value, choices[selectedIndex.value], 0, false, choices);
     choices.clear();
   }
 }

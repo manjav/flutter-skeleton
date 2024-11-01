@@ -40,9 +40,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     } else if (slide.majority!.type == ContentType.wordBank) {
       serviceLocator<DictatorQuiz>().start(
         talk: talk,
-        onResult: (state, text, score, repeated) {
-          modal(_resultBuilder(state), isDismissible: false);
-          onQiuzResult(state, text, score, talk, repeated);
+        onResult: (state, text, score, repeated, words) {
+          modal(_resultBuilder(state, words), isDismissible: false);
+          onQiuzResult(state, text, score, talk, repeated, words);
         },
       );
     }
@@ -283,10 +283,10 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   @override
-  void onQiuzResult(
-      QuizState state, String text, int score, Talk talk, bool repeated) {}
+  void onQiuzResult(QuizState state, String text, int score, Talk talk,
+      bool repeated, dynamic data) {}
 
-  Widget _resultBuilder(QuizState quizState) {
+  Widget _resultBuilder(QuizState quizState, List<Choice> words) {
     final success = quizState == QuizState.success;
     final label = success ? "correct" : "incorrect";
     final color = success ? TColors.green : TColors.red;

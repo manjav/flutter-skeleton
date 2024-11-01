@@ -46,20 +46,20 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       if (talk.type == ContentType.dictation) {
         serviceLocator<DictatorQuiz>().start(
           talk: talk,
-          onResult: (state, text, score, repeated) =>
-              onQiuzResult(state, text, score, talk, repeated),
+          onResult: (state, text, score, repeated, data) =>
+              onQiuzResult(state, text, score, talk, repeated, data),
         );
       } else if (talk.type == ContentType.match) {
         serviceLocator<MatchQuiz>().start(
           talk: talk,
-          onResult: (state, text, score, repeated) =>
-              onQiuzResult(state, text, score, talk, repeated),
+          onResult: (state, text, score, repeated, data) =>
+              onQiuzResult(state, text, score, talk, repeated, data),
         );
       } else if (talk.type == ContentType.choices) {
         serviceLocator<ChoiceQuiz>().start(
           talk: talk,
-          onResult: (state, text, score, repeated) =>
-              onQiuzResult(state, text, score, talk, repeated),
+          onResult: (state, text, score, repeated, data) =>
+              onQiuzResult(state, text, score, talk, repeated, data),
         );
       } else {
         listen(talk);
@@ -270,7 +270,13 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void onQiuzResult(
-      QuizState state, String text, int score, Talk talk, bool repeated) {
+    QuizState state,
+    String text,
+    int score,
+    Talk talk,
+    bool repeated,
+    dynamic data,
+  ) {
     controller.onQuizResult(state, text, score, talk);
     if (state == QuizState.success && !repeated) {
       controller.changeContent(1);

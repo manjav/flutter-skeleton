@@ -97,8 +97,8 @@ class LessonAssets with ILogger {
       AssetType assetType,
       String name,
       Function() onComplete,
-      Function(double p1) onProgress,
-      Function(String p1) onError) async {
+      Function(double p) onProgress,
+      Function(String e) onError) async {
     final path = "$name.${assetType.type}";
     if (_assets.containsKey(path)) return;
     _assets[path] = null;

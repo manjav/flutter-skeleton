@@ -91,7 +91,7 @@ class ListenerQuiz extends Quiz {
     String? locale,
     int minMatchLevel = 95,
     List<String>? exceptions,
-    Function(QuizState, String, int, bool)? onResult,
+    Function(QuizState, String, int, bool, dynamic)? onResult,
   }) async {
     if (state.value.index < QuizState.ready.index) {
       log("Listener not initialized yet!");
@@ -209,6 +209,7 @@ class ListenerQuiz extends Quiz {
       recognizedWords.value,
       _matchLevel,
       isReserved,
+      null,
     );
     _hasResultSent = true;
   }

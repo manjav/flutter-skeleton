@@ -10,11 +10,11 @@ class DictatorQuiz extends Quiz {
   List<String> _extraChoices = [];
 
   @override
-  void start(
-      {required Talk talk,
-      Function(QuizState p1, String p2, int p3, bool p4)? onResult}) {
+  void start({
+    required Talk talk,
+    Function(QuizState, String, int, bool, dynamic)? onResult,
+  }) {
     super.start(talk: talk, onResult: onResult);
-    // talk.targetValue = "Hello Sir, What {do} you {do} {today} ?∆Zert";
     final sections = talk.targetValue.split("∆");
     var text = sections.first;
     final myWords = text.split(" ");
@@ -96,7 +96,7 @@ class DictatorQuiz extends Quiz {
     if (blanks.isEmpty) {
       state.value = _chechAnswers();
       await Future.delayed(Duration(milliseconds: 400));
-      onResult?.call(state.value, "", 0, false);
+      onResult?.call(state.value, "", 0, false, words);
       // start(talk: talk!, onResult: onResult);
     }
   }

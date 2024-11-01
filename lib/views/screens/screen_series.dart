@@ -253,7 +253,13 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   @override
   void onQiuzResult(
-      QuizState state, String text, int score, Talk talk, bool repeated) {
+    QuizState state,
+    String text,
+    int score,
+    Talk talk,
+    bool repeated,
+    dynamic data,
+  ) {
     try {
       controller.onQuizResult(state, text, score, talk);
     } on SkeletonException catch (e) {
