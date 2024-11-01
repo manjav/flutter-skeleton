@@ -252,7 +252,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
   }
 
   @override
-  void onListeningResult(
+  void onQiuzResult(
       QuizState state, String text, int score, Talk talk, bool repeated) {
     try {
       controller.onQuizResult(state, text, score, talk);

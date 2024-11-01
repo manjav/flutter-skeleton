@@ -47,19 +47,19 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
         serviceLocator<DictatorQuiz>().start(
           talk: talk,
           onResult: (state, text, score, repeated) =>
-              onListeningResult(state, text, score, talk, repeated),
+              onQiuzResult(state, text, score, talk, repeated),
         );
       } else if (talk.type == ContentType.match) {
         serviceLocator<MatchQuiz>().start(
           talk: talk,
           onResult: (state, text, score, repeated) =>
-              onListeningResult(state, text, score, talk, repeated),
+              onQiuzResult(state, text, score, talk, repeated),
         );
       } else if (talk.type == ContentType.choices) {
         serviceLocator<ChoiceQuiz>().start(
           talk: talk,
           onResult: (state, text, score, repeated) =>
-              onListeningResult(state, text, score, talk, repeated),
+              onQiuzResult(state, text, score, talk, repeated),
         );
       } else {
         listen(talk);
@@ -269,7 +269,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  void onListeningResult(
+  void onQiuzResult(
       QuizState state, String text, int score, Talk talk, bool repeated) {
     controller.onQuizResult(state, text, score, talk);
     if (state == QuizState.success && !repeated) {
