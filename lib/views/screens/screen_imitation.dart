@@ -222,6 +222,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   Widget _captionButton(String icon, Color color, {Function()? onPress}) {
     return Widgets.button(
       context,
+      sfx: "",
       width: 56.d,
       height: 40.d,
       decoration: BoxDecoration(
