@@ -136,6 +136,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   Widget _stationSlideBuilder(Talk content) {
     final label = "station_${content.targetValue}";
+    final color = switch (content.targetValue) {
+      "watch" => TColors.orange,
+      "repeat" => TColors.blue,
+      _ => TColors.purpule,
+    };
+    final icon = content.targetValue == "watch" ? "play" : "arrow_right";
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -150,13 +157,16 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         Widgets.button(
           context,
           padding: EdgeInsets.symmetric(vertical: 14.d, horizontal: 40.d),
-          color: TColors.primary90,
+          color: color,
           child: Row(
+            textDirection: content.targetValue == "watch"
+                ? TextDirection.rtl
+                : TextDirection.ltr,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text("${label}_btn".l(), style: TStyles.bigInvert),
-              SizedBox(width: 6.d),
-              Asset.load<SvgPicture>("arrow_right"),
+              SizedBox(width: 10.d),
+              Asset.load<SvgPicture>(icon, width: 20.d),
             ],
           ),
           onPressed: _nextSlide,
