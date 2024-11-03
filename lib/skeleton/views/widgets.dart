@@ -98,6 +98,7 @@ class Widgets {
     Function(TapUpDetails)? onTapUp,
     Function()? onTapCancel,
     Function()? onLongPress,
+    String? sfx,
     int buttonId = 30,
     Color? color,
     Alignment? alignment,
@@ -122,6 +123,7 @@ class Widgets {
         onTapUp: onTapUp,
         onTapCancel: onTapCancel,
         onLongPress: onLongPress,
+        sfx: sfx,
         child: rect(
           width: width,
           height: height,
