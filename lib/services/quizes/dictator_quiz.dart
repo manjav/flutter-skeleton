@@ -9,6 +9,9 @@ class DictatorQuiz extends Quiz {
   List<String> _patterns = [];
   List<String> _extraChoices = [];
 
+  Iterable<Choice> get blanks =>
+      words.where((w) => w.state == ChoiceState.available);
+
   @override
   void start({
     required Talk talk,
@@ -91,17 +94,23 @@ class DictatorQuiz extends Quiz {
     choice.setState(ChoiceState.selected);
     blank.text = choice.text;
     blank.setState(ChoiceState.selected);
-
-    final blanks = words.where((w) => w.state == ChoiceState.available);
-    if (blanks.isEmpty) {
-      state.value = _chechAnswers();
-      await Future.delayed(Duration(milliseconds: 400));
-      onResult?.call(state.value, "", 0, false, words);
-      // start(talk: talk!, onResult: onResult);
-    }
+    state.value = blanks.isEmpty ? QuizState.waiting : QuizState.ready;
   }
 
-  QuizState _chechAnswers() {
+  void undoChoice(Choice word) {
+    word.setState(ChoiceState.available);
+    choices
+        .lastWhere(
+            (c) => c.text == word.text && c.state != ChoiceState.available)
+        .setState(ChoiceState.available);
+    state.value = blanks.isEmpty ? QuizState.waiting : QuizState.ready;
+  }
+
+  void chechAnswers() {
+    if (blanks.isNotEmpty) {
+      return;
+    }
+      // start(talk: talk!, onResult: onResult);
     var state = QuizState.success;
     for (var i = 0; i < words.length; i++) {
       if (words[i].state != ChoiceState.fixed) {
@@ -113,7 +122,8 @@ class DictatorQuiz extends Quiz {
         state = QuizState.failure;
       }
     }
-    return state;
+    this.state.value = state;
+    onResult?.call(state, "", 0, false, words);
   }
 
   void popChoice() {
@@ -122,14 +132,6 @@ class DictatorQuiz extends Quiz {
     words.last.setState(ChoiceState.available);
     choices
         .lastWhere((c) => c.text == last.text)
-        .setState(ChoiceState.available);
-  }
-
-  void clearChoice(Choice word) {
-    word.setState(ChoiceState.available);
-    choices
-        .lastWhere(
-            (c) => c.text == word.text && c.state != ChoiceState.available)
         .setState(ChoiceState.available);
   }
 }

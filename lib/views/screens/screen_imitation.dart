@@ -94,7 +94,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               height: _videoData.value == null &&
                       controller.currentSlide.majority!.type !=
                           ContentType.station
-                  ? 600.d
+                  ? 650.d
                   : 450.d,
               child: PageView.builder(
                 padEnds: false,

@@ -51,10 +51,17 @@ class _WordBankBoxState extends State<WordBankBox> {
                 widget.talk.nativeValue,
                 style: TStyles.small.copyWith(color: TColors.primary70),
               ),
-              SizedBox(height: 20.d),
               _wrapper(_words.length, (i) => _wordBuilder(context, i)),
-              SizedBox(height: 20.d),
+              SizedBox(height: 5.d),
               _wrapper(_choices.length, (i) => _choiceBuilder(context, i)),
+              SizedBox(height: 5.d),
+              SkinnedButton(
+                color: value == QuizState.waiting
+                    ? TColors.blue
+                    : TColors.primary30,
+                label: "ok_l".l(),
+                onPressed: serviceLocator<DictatorQuiz>().chechAnswers,
+              ),
             ],
           ),
         );
@@ -113,7 +120,7 @@ class _WordBankBoxState extends State<WordBankBox> {
                   : 30,
           child:
               filled ? Text(word.text, style: TStyles.largeInvert) : SizedBox(),
-          onPressed: () => serviceLocator<DictatorQuiz>().clearChoice(word),
+          onPressed: () => serviceLocator<DictatorQuiz>().undoChoice(word),
         );
       },
     );
