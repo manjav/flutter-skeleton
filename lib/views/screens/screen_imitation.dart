@@ -32,6 +32,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   void _onSlideChange() {
     final slide = controller.currentSlide;
+    serviceLocator<MediaService>().stopAll();
     _playYoutube(controller.currentSlide);
     slide.majority = _getSlideType(slide);
     final talk = slide.majority as Talk;
