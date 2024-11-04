@@ -73,23 +73,27 @@ class LessonController {
 
   Future<void> changeSerie(int stepLength) async {
     if (serieIndex.value >= series.length - stepLength) {
-      int score = 0;
-      for (var entry in quizes.entries) {
-        score += entry.value.score.max(100);
-      }
-
-      serviceLocator<Trackers>().endProgress(root!.id, score, parameters: {
-        "quizCount": quizes.length,
-        "sentenceCount": sentenceCount,
-      });
-
-      onComplete?.call(sentenceCount, quizes.length, score);
+      callCompletedMethod();
       return;
     }
 
     serieIndex.value += stepLength;
     slideIndex.value = -1;
     changeSlide(1);
+  }
+
+  void callCompletedMethod() {
+    int score = 0;
+    for (var entry in quizes.entries) {
+      score += entry.value.score.max(100);
+    }
+
+    serviceLocator<Trackers>().endProgress(root!.id, score, parameters: {
+      "quizCount": quizes.length,
+      "sentenceCount": sentenceCount,
+    });
+
+    onComplete?.call(sentenceCount, quizes.length, score);
   }
 
   Future<void> changeSlide(int stepLength) async {

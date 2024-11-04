@@ -70,6 +70,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void _gotoSlide(bool isNext) {
     final duration = Duration(milliseconds: 300);
     if (isNext) {
+      if (controller.slideIndex.value >=
+          controller.currentSerie.children.length - 1) {
+        controller.callCompletedMethod();
+        return;
+      }
       _pageController.nextPage(duration: duration, curve: Curves.easeInOut);
     } else {
       _pageController.previousPage(duration: duration, curve: Curves.easeInOut);
