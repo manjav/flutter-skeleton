@@ -8,7 +8,7 @@ class Quiz extends IService {
   Talk? talk;
   final ValueNotifier<QuizState> state = ValueNotifier(QuizState.none);
 
-  void start({
+  void prepare({
     required Talk talk,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {

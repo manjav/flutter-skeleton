@@ -84,12 +84,14 @@ class ListenerQuiz extends Quiz {
     }
   }
 
-  void listen({
-    required Talk talk,
-    MediaIntry? initialMedia,
-    MediaIntry? finalMedia,
+  @override
+  void prepare({
     String? locale,
+    required Talk talk,
     int minMatchLevel = 95,
+    bool autoStart = false,
+    MediaIntry? finalMedia,
+    MediaIntry? initialMedia,
     List<String>? exceptions,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) async {
@@ -122,8 +124,14 @@ class ListenerQuiz extends Quiz {
 
     await Future.delayed(const Duration(milliseconds: 500));
     await serviceLocator<MediaService>().play(initialMedia);
-    super.start(talk: talk, onResult: onResult);
 
+    super.prepare(talk: talk, onResult: onResult);
+    if (autoStart) {
+      start();
+    }
+  }
+
+  void start() {
     final options = SpeechListenOptions(
         listenMode: ListenMode.deviceDefault,
         cancelOnError: true,
@@ -135,10 +143,10 @@ class ListenerQuiz extends Quiz {
     // on some devices.
 
     // if (_speech.lastStatus.isEmpty) return;
-    var duration = (_pattern.length * 230).min(3000);
+    var duration = (_pattern.length * 230).min(3000).max(10000);
     _speech.listen(
       listenOptions: options,
-      localeId: this.locale,
+      localeId: locale,
       listenFor: const Duration(seconds: 30),
       pauseFor: Duration(milliseconds: duration),
       onSoundLevelChange: _soundLevelListener,

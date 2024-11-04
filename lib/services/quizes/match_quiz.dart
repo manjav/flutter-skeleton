@@ -29,11 +29,11 @@ class MatchQuiz extends Quiz {
   final List<MatchSide> rights = [];
 
   @override
-  void start({
+  void prepare({
     required Talk talk,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
-    super.start(talk: talk, onResult: onResult);
+    super.prepare(talk: talk, onResult: onResult);
     this.lefts.clear();
     this.rights.clear();
     final sections = talk.targetValue.split("∆");

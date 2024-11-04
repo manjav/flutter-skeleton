@@ -38,7 +38,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     if (slide.majority!.type == ContentType.repeat) {
       listen(talk, initialMedia: _videoData.value);
     } else if (slide.majority!.type == ContentType.wordBank) {
-      serviceLocator<DictatorQuiz>().start(
+      serviceLocator<DictatorQuiz>().prepare(
         talk: talk,
         onResult: (state, text, score, repeated, words) {
           modal(_resultBuilder(state, words), isDismissible: false);

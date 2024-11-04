@@ -9,14 +9,14 @@ class ChoiceQuiz extends Quiz {
   final ValueNotifier<int> selectedIndex = ValueNotifier(-1);
 
   @override
-  void start({
+  void prepare({
     required Talk talk,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
     answer = "";
     selectedIndex.value = -1;
 
-    super.start(talk: talk, onResult: onResult);
+    super.prepare(talk: talk, onResult: onResult);
     choices.clear();
     final sections = talk.targetValue.split("∆");
     final index = int.parse(sections.last);

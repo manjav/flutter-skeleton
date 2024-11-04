@@ -44,19 +44,19 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     if (talk.isQuiz) {
       await Future.delayed(const Duration(milliseconds: 100));
       if (talk.type == ContentType.dictation) {
-        serviceLocator<DictatorQuiz>().start(
+        serviceLocator<DictatorQuiz>().prepare(
           talk: talk,
           onResult: (state, text, score, repeated, data) =>
               onQiuzResult(state, text, score, talk, repeated, data),
         );
       } else if (talk.type == ContentType.match) {
-        serviceLocator<MatchQuiz>().start(
+        serviceLocator<MatchQuiz>().prepare(
           talk: talk,
           onResult: (state, text, score, repeated, data) =>
               onQiuzResult(state, text, score, talk, repeated, data),
         );
       } else if (talk.type == ContentType.choices) {
-        serviceLocator<ChoiceQuiz>().start(
+        serviceLocator<ChoiceQuiz>().prepare(
           talk: talk,
           onResult: (state, text, score, repeated, data) =>
               onQiuzResult(state, text, score, talk, repeated, data),

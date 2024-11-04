@@ -33,7 +33,7 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         ? MediaIntry(MediaType.voice, talk.targetValue)
         : null;
 
-    serviceLocator<ListenerQuiz>().listen(
+    serviceLocator<ListenerQuiz>().prepare(
       talk: talk,
       finalMedia: finalMedia,
       initialMedia: initialMedia,

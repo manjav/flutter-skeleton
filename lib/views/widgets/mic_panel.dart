@@ -111,15 +111,7 @@ class _MicPanelState extends State<MicPanel> {
         return;
       }
       widget.talk.lastRecord = null;
-      Timer(
-        const Duration(milliseconds: 100),
-        () => listener.listen(
-          talk: widget.talk,
-          initialMedia: null,
-          finalMedia: listener.finalMedia,
-          onResult: listener.onResult,
-        ),
-      );
+      listener.start();
     } else if (event.name == "play") {
       serviceLocator<MediaService>().play(listener.initialMedia);
       // } else if (event.name == "pause") {
@@ -147,6 +139,7 @@ class _MicPanelState extends State<MicPanel> {
     if (listener.talk != widget.talk) return;
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
+    print("object   ${_state.value}");
   }
 
   void _mediaStateListener(MediaState event) {

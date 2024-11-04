@@ -13,11 +13,11 @@ class DictatorQuiz extends Quiz {
       words.where((w) => w.state == ChoiceState.available);
 
   @override
-  void start({
+  void prepare({
     required Talk talk,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
-    super.start(talk: talk, onResult: onResult);
+    super.prepare(talk: talk, onResult: onResult);
     final sections = talk.targetValue.split("∆");
     var text = sections.first;
     final myWords = text.split(" ");
@@ -110,7 +110,7 @@ class DictatorQuiz extends Quiz {
     if (blanks.isNotEmpty) {
       return;
     }
-      // start(talk: talk!, onResult: onResult);
+    // start(talk: talk!, onResult: onResult);
     var state = QuizState.success;
     for (var i = 0; i < words.length; i++) {
       if (words[i].state != ChoiceState.fixed) {
