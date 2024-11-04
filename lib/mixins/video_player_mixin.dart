@@ -103,7 +103,6 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   @override
   void dispose() {
     videoController?.dispose();
-    // youtubeController?.dispose();
     super.dispose();
   }
 }
