@@ -62,9 +62,9 @@ class _MyAppState extends State<MyApp>
     var result = await DeviceInfo.preInitialize(context, forced);
     if (result) {
       Themes.preInitialize();
+      await serviceLocator<Localization>().preInitialize();
       setState(() {});
     }
-    await serviceLocator<Localization>().preInitialize();
   }
 
   @override
@@ -91,10 +91,6 @@ class _MyAppState extends State<MyApp>
           getPages: [
             _getPage(Routes.web, WebScreen()),
             _getPage(Routes.home, HomeScreen()),
-            // _getPage(Routes.chat, ChatScreen()),
-            // _getPage(Routes.word, LessonWordScreen()),
-            // _getPage(Routes.match, LessonMatchScreen()),
-            // _getPage(Routes.dictation, LessonDictationScreen()),
             _getPage(Routes.lesson, LessonScreen()),
             _getPage(Routes.series, SeriesScreen()),
             _getPage(Routes.imitation, ImitationScreen()),
