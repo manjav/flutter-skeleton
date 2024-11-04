@@ -123,7 +123,7 @@ class DictatorQuiz extends Quiz {
       }
     }
     this.state.value = state;
-    onResult?.call(state, "", 0, false, words);
+    onResult?.call(state, "", 0, false, [words, _patterns]);
   }
 
   void popChoice() {

@@ -41,9 +41,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     } else if (slide.majority!.type == ContentType.wordBank) {
       serviceLocator<DictatorQuiz>().prepare(
         talk: talk,
-        onResult: (state, text, score, repeated, words) {
-          modal(_resultBuilder(state, words), isDismissible: false);
-          onQiuzResult(state, text, score, talk, repeated, words);
+        onResult: (state, text, score, repeated, data) {
+          modal(_resultBuilder(state, data[0], data[1]), isDismissible: false);
+          onQiuzResult(state, text, score, talk, repeated, data);
         },
       );
     }
@@ -316,7 +316,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void onQiuzResult(QuizState state, String text, int score, Talk talk,
       bool repeated, dynamic data) {}
 
-  Widget _resultBuilder(QuizState quizState, List<Choice> words) {
+  Widget _resultBuilder(
+    QuizState quizState,
+    List<Choice> words,
+    List<String> patterns,
+  ) {
     final success = quizState == QuizState.success;
     final label = success ? "correct" : "incorrect";
     final color = success ? TColors.green : TColors.red;
@@ -326,18 +330,18 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     if (success) {
       hintWidget = SizedBox();
     } else {
-      for (var word in words) {
-        hints.add(TextSpan(
-            text: "${word.text} ",
-            style:
-                word.state == ChoiceState.failure ? resulStyle : TStyles.big));
+      for (var i = 0; i < patterns.length; i++) {
+        hints.add(
+          TextSpan(
+            text: "${patterns[i]} ",
+            style: words[i].state == ChoiceState.failure
+                ? resulStyle
+                : TStyles.big,
+          ),
+        );
       }
-      hintWidget = RichText(
-        softWrap: true,
-        text: TextSpan(
-          children: hints,
-        ),
-      );
+
+      hintWidget = RichText(text: TextSpan(children: hints));
     }
 
     return Widgets.rect(
