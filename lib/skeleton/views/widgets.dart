@@ -13,6 +13,7 @@ class Widgets {
     Function()? onTapCancel,
     Function(dynamic details)? onTapDown,
     Function(TapUpDetails details)? onTapUp,
+    Function(DragEndDetails)? onHorizontalDragEnd,
     Function(DragEndDetails)? onVerticalDragEnd,
     Widget? child,
   }) {
@@ -44,6 +45,11 @@ class Widgets {
       onVerticalDragEnd: onVerticalDragEnd != null
           ? (details) {
               if (_isActive(id)) onVerticalDragEnd(details);
+            }
+          : null,
+      onHorizontalDragEnd: onHorizontalDragEnd != null
+          ? (details) {
+              if (_isActive(id)) onHorizontalDragEnd(details);
             }
           : null,
       child: child,

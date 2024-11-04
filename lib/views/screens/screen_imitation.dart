@@ -66,15 +66,21 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     return null;
   }
 
-  void _nextSlide() => _pageController.nextPage(
-      duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+  void _gotoSlide(bool isNext) {
+    final duration = Duration(milliseconds: 300);
+    if (isNext) {
+      _pageController.nextPage(duration: duration, curve: Curves.easeInOut);
+    } else {
+      _pageController.previousPage(duration: duration, curve: Curves.easeInOut);
+    }
+  }
 
   @override
   Widget contentBuilder(double paddingTop) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(height: 100.d),
+        SizedBox(height: 90.d),
         ValueListenableBuilder(
           valueListenable: _videoData,
           builder: (context, value, child) {
@@ -91,7 +97,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
                   ? 600.d
                   : 450.d,
               child: PageView.builder(
+                padEnds: false,
                 controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.currentSerie.children.length,
                 itemBuilder: (context, index) => _slideRenderer(
                   controller.currentSerie.children[index] as ParentContent,
@@ -100,25 +108,33 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             );
           },
         ),
-        SizedBox(height: 100.d),
+        SizedBox(height: 30.d),
       ],
     );
   }
 
   Widget _slideRenderer(ParentContent slide) {
-    return Container(
-      margin: EdgeInsets.all(30.d),
-      padding: EdgeInsets.all(30.d),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: slide.majority?.type == ContentType.station
-            ? TColors.transparent
-            : TColors.primary0,
-        border: Border.all(color: TColors.primary20, width: 2.d),
-        borderRadius: BorderRadius.all(Radius.circular(20.d)),
-      ),
-      child: _getContent(slide),
-    );
+    return Widgets.touchable(context,
+        sfx: "",
+        child: Container(
+          margin: EdgeInsets.all(30.d),
+          padding: EdgeInsets.all(30.d),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: slide.majority?.type == ContentType.station
+                ? TColors.transparent
+                : TColors.primary0,
+            border: Border.all(color: TColors.primary20, width: 2.d),
+            borderRadius: BorderRadius.all(Radius.circular(20.d)),
+          ),
+          child: _getContent(slide),
+        ), onHorizontalDragEnd: (DragEndDetails details) {
+      final velocity = (details.primaryVelocity ?? 0);
+      final absoluteVelocity = velocity.abs();
+      if (absoluteVelocity > 500) {
+        _gotoSlide(velocity < 0);
+      }
+    });
   }
 
   Widget _getContent(ParentContent slide) {
@@ -169,7 +185,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               Asset.load<SvgPicture>(icon, width: 20.d),
             ],
           ),
-          onPressed: _nextSlide,
+          onPressed: () => _gotoSlide(true),
         ),
       ],
     );
@@ -275,7 +291,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               }
             },
           );
-          // _nextSlide();
         },
       );
     }
@@ -350,7 +365,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             color: color,
             onPressed: () {
               Navigator.pop(context);
-              _nextSlide();
+              _gotoSlide(true);
             },
           )
         ],
