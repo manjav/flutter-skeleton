@@ -300,7 +300,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     }
   }
 
-  int _getMilliSeconds(String time) {
+  double _getMilliSeconds(String time) {
     final times = time.split("，");
     final digits = times.first.split(":");
     final duration = Duration(
@@ -309,7 +309,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       seconds: int.parse(digits[2]),
       milliseconds: int.parse(times[1]),
     );
-    return duration.inMilliseconds;
+    return duration.inMilliseconds.toDouble();
   }
 
   @override

@@ -142,12 +142,12 @@ class MediaService extends IService {
   }
 
   Future<void> playYoutube(MediaIntry intry) async {
+    final end = intry.end ??
+        (youtubeController!.metadata.duration.inMilliseconds / 1000.0);
     if (youtubeController == null) {
       youtubeController = YoutubePlayerController(
         initialVideoId: intry.id,
         flags: YoutubePlayerFlags(
-          startAt: intry.start,
-          endAt: intry.end,
           // autoPlay: false,
           enableCaption: false,
           hideControls: true,
@@ -158,24 +158,34 @@ class MediaService extends IService {
         () => intry.parseState(youtubeController!.value.playerState.name),
       );
     } else {
-      youtubeController?.load(
-        intry.id,
-        startAt: intry.start,
-        endAt: intry.end,
-      );
+      if (youtubeController!.metadata.videoId != intry.id) {
+        youtubeController?.load(intry.id);
+      }
+      youtubeController!.seekTo(Duration(
+          seconds: intry.start.floor(),
+          milliseconds: ((intry.start % 1) * 1000).toInt()));
       // youtubeController!.play();
     }
+
     await Future.doWhile(
       () => Future.delayed(const Duration(milliseconds: 100)).then(
         (_) {
-          return youtubeController!.value.playerState !=
-              youtube.PlayerState.ended;
+          final pos = youtubeController!.value.position.inMilliseconds / 1000.0;
+          log("====> s ${intry.start} p $pos e $end s ${youtubeController!.value.playerState.name}");
+          if (pos < (intry.start + 0.2) ||
+              youtubeController!.value.playerState ==
+                  youtube.PlayerState.playing) {
+            return pos < end;
+          }
+          return false;
         },
       ),
     );
+    youtubeController!.pause();
   }
 
   void stopAll() {
+    youtubeController?.pause();
     var entries = _audioPlayers.entries;
     for (var e in entries) {
       e.value.stop();
@@ -213,8 +223,8 @@ enum MediaState {
 }
 
 class MediaIntry {
-  int? end;
-  int start = 0;
+  double? end;
+  double start = 0;
   String id = "";
   dynamic data;
   MediaType type;
@@ -222,9 +232,9 @@ class MediaIntry {
   MediaIntry.parse(this.type, String url) {
     final uri = Uri.parse(url);
     id = uri.pathSegments.last;
-    start = int.parse(uri.queryParameters["start"] ?? "0");
+    start = double.parse(uri.queryParameters["start"] ?? "0");
     end = uri.queryParameters.containsKey("end")
-        ? int.parse(uri.queryParameters["end"]!)
+        ? double.parse(uri.queryParameters["end"]!)
         : null;
   }
 
