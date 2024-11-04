@@ -170,9 +170,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         Text(label.l(),
             style: TStyles.large.copyWith(color: TColors.primary30)),
         SizedBox(height: 60.d),
-        Widgets.button(
-          context,
-          padding: EdgeInsets.symmetric(vertical: 14.d, horizontal: 40.d),
+        SkinnedButton(
           color: color,
           child: Row(
             textDirection: content.targetValue == "watch"

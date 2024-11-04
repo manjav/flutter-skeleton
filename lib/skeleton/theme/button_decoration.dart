@@ -27,7 +27,7 @@ class BattonDecoration extends Decoration {
       mainColor ?? TColors.orange,
       outlineSize ?? 2.d,
       strokeSize ?? 3.d,
-      cornerRadius ?? 10.d,
+      cornerRadius ?? 16.d,
       isPressed ?? false,
       isEnable ?? true,
     );
@@ -71,9 +71,9 @@ class _ButtonPainter extends BoxPainter {
     var b = pressed ? strokeSize : 0;
     var o = _hasOutline ? outlineSize : 0;
 
-    var br = RRect.fromLTRBXY(offset.dx, offset.dy + b, offset.dx + size.width,
-        offset.dy + size.height, cr, cr);
-    canvas.drawRRect(br, _strokePaint);
+    // var br = RRect.fromLTRBXY(offset.dx, offset.dy + b, offset.dx + size.width,
+    //     offset.dy + size.height, cr, cr);
+    // canvas.drawRRect(br, _strokePaint);
 
     var fr = RRect.fromLTRBXY(
         offset.dx + o,
@@ -82,7 +82,7 @@ class _ButtonPainter extends BoxPainter {
         offset.dy +
             size.height -
             o -
-            (pressed ? 0 : strokeSize) -
+            (pressed ? 0 : /* strokeSize */ 0) -
             (_hasOutline ? 0 : outlineSize),
         cr * (_hasOutline ? 0.9 : 1.0),
         cr * (_hasOutline ? 0.9 : 1.0));

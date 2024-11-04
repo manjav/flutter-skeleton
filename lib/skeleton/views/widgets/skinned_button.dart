@@ -74,10 +74,10 @@ class SkinnedButton extends StatelessWidget {
             margin: margin ?? EdgeInsets.zero,
             padding: padding ??
                 EdgeInsets.fromLTRB(
-                    paddingLeft ?? 16.d,
-                    (paddingTop ?? 8.d) + (_isPressed.value ? strokeSize : 0),
-                    (paddingRight ?? 16.d),
-                    (paddingBottom ?? 8.d) -
+                    paddingLeft ?? 20.d,
+                    (paddingTop ?? 16.d) + (_isPressed.value ? strokeSize : 0),
+                    (paddingRight ?? 20.d),
+                    (paddingBottom ?? 16.d) -
                         (_isPressed.value ? strokeSize : 0)),
             decoration: BattonDecoration(
                 mainColor: color,
@@ -96,7 +96,7 @@ class SkinnedButton extends StatelessWidget {
                             width: (label != null && icon != null) ? 16.d : 0),
                         label == null
                             ? const SizedBox()
-                            : Text(label!, style: TStyles.largeInvert),
+                            : Text(label!, style: TStyles.bigInvert),
                       ])
                     : child!),
           );
