@@ -75,7 +75,7 @@ class _MicPanelState extends State<MicPanel> {
     var size = DeviceInfo.size.width * 0.85;
     return LoaderWidget(
       AssetType.animation,
-      "mic_panel",
+      "mic_panel_button",
       height: size,
       onRiveInit: (artboard) {
         final controller =
@@ -88,6 +88,7 @@ class _MicPanelState extends State<MicPanel> {
         artboard.component<TextValueRun>("messageText")?.text =
             "${widget.talk.type.name}_l".l();
         controller!.addEventListener((s) => _onMicAnimationEvent(s, listener));
+        _stateInput?.value = listener.state.value.index.toDouble();
         artboard.addController(controller);
       },
       riveAssetLoader: _onRiveAssetLoad,
@@ -107,9 +108,6 @@ class _MicPanelState extends State<MicPanel> {
 
   void _onMicAnimationEvent(RiveEvent event, ListenerQuiz listener) {
     if (event.name == "restart") {
-      if (listener.state.value == QuizState.waiting) {
-        return;
-      }
       widget.talk.lastRecord = null;
       listener.start();
     } else if (event.name == "play") {
