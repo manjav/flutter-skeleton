@@ -143,7 +143,7 @@ class ListenerQuiz extends Quiz {
     // on some devices.
 
     // if (_speech.lastStatus.isEmpty) return;
-    var duration = (_pattern.length * 230).min(3000).max(10000);
+    var duration = (_pattern.length * 220).min(3000).max(10000);
     _speech.listen(
       listenOptions: options,
       localeId: locale,

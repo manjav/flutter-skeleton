@@ -104,8 +104,9 @@ extension StringExtensions on String {
     return [substring(0, length), ...substring(length).splitByLength(length)];
   }
 
-  String patternize() =>
-      replaceAll(RegExp(r"[!¡?¿.;:,，’“”'{}]"), '').toLowerCase();
+  String patternize() => replaceAll(RegExp(r"[!¡?¿.;:,，\’“”'{}]"), '')
+      .replaceAll('"', '')
+      .toLowerCase();
 
   String simplify() => replaceAll(RegExp(r'[{}]'), '')
       .replaceAll('|', '\n')
