@@ -78,8 +78,8 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Widget progressSliderBuilder(double width) {
+    final height = 10.d;
     final seriesCount = controller.series.length;
-    final height = 8.d;
     final margin = EdgeInsets.symmetric(horizontal: height * 0.5);
     final itemWidth = (width - height * seriesCount) / seriesCount;
     return SizedBox(
@@ -96,21 +96,25 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             itemBuilder: (context, index) {
               if (index != serieIndex) {
                 return Widgets.rect(
-                  width: itemWidth,
                   radius: 4.d,
                   margin: margin,
-                  color: index <= serieIndex ? TColors.green : TColors.white50,
+                  width: itemWidth,
+                  color:
+                      index <= serieIndex ? TColors.green : TColors.primary20,
                 );
               }
               return Padding(
                 padding: margin,
-                child: Widgets.slider(0, value + 1,
-                    controller.currentSerie.children.length.toDouble(),
-                    padding: 0,
-                    width: itemWidth,
-                    height: height,
-                    backgroundColor: TColors.white50,
-                    progressColor: TColors.green),
+                child: Widgets.slider(
+                  0,
+                  value + 1,
+                  controller.currentSerie.children.length.toDouble(),
+                  padding: 0,
+                  height: height,
+                  width: itemWidth,
+                  progressColor: TColors.green,
+                  backgroundColor: TColors.primary20,
+                ),
               );
             },
           );

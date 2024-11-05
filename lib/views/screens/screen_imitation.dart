@@ -82,6 +82,22 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   @override
+  List<Widget> appBarElementsLeft() {
+    return [
+      Widgets.button(
+        context,
+        width: 52.d,
+        height: 52.d,
+        padding: EdgeInsets.all(16.d),
+        child: Asset.load<SvgPicture>("close"),
+        onPressed: () => Navigator.pop(context),
+      ),
+      SizedBox(width: 8.d),
+      progressSliderBuilder(DeviceInfo.size.width * 0.72),
+    ];
+  }
+
+  @override
   Widget contentBuilder(double paddingTop) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
