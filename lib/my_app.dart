@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp>
               Localization.locales.firstWhere((l) => l.languageCode == "en"),
           getPages: [
             _getPage(Routes.web, WebScreen()),
-            _getPage(Routes.home, HomeScreen()),
+            _getPage(Routes.home, DiscoveryScreen()),
             _getPage(Routes.lesson, LessonScreen()),
             _getPage(Routes.series, SeriesScreen()),
             _getPage(Routes.imitation, ImitationScreen()),

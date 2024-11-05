@@ -62,7 +62,7 @@ class Content {
 class ParentContent extends Content {
   List<Content> children = [];
   int passLevel = 0;
-  String title = "", description = "", iconUrl = "", mode = "";
+  String title = "", subtitle = "", iconUrl = "", mode = "";
   Content? majority;
   ParentContent.create(
     Content? parent,
@@ -72,7 +72,7 @@ class ParentContent extends Content {
   ) : super.create(parent, id, map) {
     this.type = type;
     title = map["title"] ?? "";
-    description = map["description"] ?? "";
+    subtitle = map["subtitle"] ?? "";
     iconUrl = map["iconUrl"] ?? "";
     mode = map["mode"] ?? "";
   }
