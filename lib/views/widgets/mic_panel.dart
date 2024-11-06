@@ -55,13 +55,14 @@ class _MicPanelState extends State<MicPanel> {
               _recognizedWords,
               // minMatchLevel: listener.minMatchLevel,
             ),
-            SizedBox(height: 30.d),
+            SizedBox(height: 20.d),
             widget.talk.type == ContentType.translate
                 ? const SizedBox()
-                : _nativeTextBuilder(TStyles.medium),
-            SizedBox(height: 30.d),
-            _wrongResultBuilder(listener),
+                : _nativeTextBuilder(
+                    TStyles.small.copyWith(color: TColors.primary30)),
             SizedBox(height: 20.d),
+            _wrongResultBuilder(listener),
+            SizedBox(height: 50.d),
           ],
         ),
       ],
