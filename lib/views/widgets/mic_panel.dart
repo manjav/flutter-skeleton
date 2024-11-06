@@ -110,7 +110,7 @@ class _MicPanelState extends State<MicPanel> {
   void _onMicAnimationEvent(RiveEvent event, ListenerQuiz listener) {
     if (event.name == "restart") {
       widget.talk.lastRecord = null;
-      listener.start();
+      Timer(const Duration(milliseconds: 100), () => listener.start());
     } else if (event.name == "play") {
       serviceLocator<MediaService>().play(listener.initialMedia);
       // } else if (event.name == "pause") {

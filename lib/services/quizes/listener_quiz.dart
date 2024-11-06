@@ -141,7 +141,7 @@ class ListenerQuiz extends Quiz {
     // systems recognition will be stopped before this value is reached.
     // Similarly `pauseFor` is a maximum not a minimum and may be ignored
     // on some devices.
-
+    recognizedWords.value = "";
     // if (_speech.lastStatus.isEmpty) return;
     var duration = (_pattern.length * 220).min(3000).max(10000);
     _speech.listen(
