@@ -32,11 +32,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void _onSlideChange() {
     final slide = controller.currentSlide;
     serviceLocator<MediaService>().stopAll();
-    _playYoutube(controller.currentSlide);
+    if (_videoData.value != null) {
+      _getCaptions();
+    }
     slide.majority = _getSlideType(slide);
     final talk = slide.majority as Talk;
-    if (slide.majority!.type == ContentType.repeat) {
-      listen(talk, initialMedia: _videoData.value);
+    if (talk.type == ContentType.repeat) {
+      listen(talk, initialMedia: talk.data);
     } else if (slide.majority!.type == ContentType.wordBank) {
       serviceLocator<DictatorQuiz>().prepare(
         talk: talk,
@@ -262,19 +264,22 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     );
   }
 
-  void _playYoutube(ParentContent slide) {
+  void _initYoutube() {
     _videoData.value = null;
-    final youtubeContents = controller.currentSlide.children
-        .where((c) => c.type == ContentType.youtube);
-    if (youtubeContents.isEmpty) {
+    if (controller.currentSerie.iconUrl.isEmpty) {
       return;
     }
     _videoData.value =
-        MediaIntry.parse(MediaType.youtube, youtubeContents.first.targetValue);
+        MediaIntry.parse(MediaType.youtube, controller.currentSerie.iconUrl);
+    serviceLocator<MediaService>().initYoutube(_videoData.value!);
+  }
 
-    final captions =
-        slide.children.where((c) => c.type == ContentType.caption).toList();
-    if (captions.isNotEmpty) {
+  void _getCaptions() {
+    final captions = controller.currentSlide.children
+        .where((c) => c.type == ContentType.caption);
+    if (captions.isEmpty) {
+      return;
+    }
       serviceLocator<MediaService>().play(_videoData.value!);
       Future.delayed(Duration(milliseconds: 100)).then(
         (s) async {
@@ -293,7 +298,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           );
         },
       );
-    }
   }
 
   @override

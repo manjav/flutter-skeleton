@@ -96,14 +96,28 @@ class Talk extends Content {
       type = ContentType.avatar;
       data = AvatarExpression.values
           .indexWhere((e) => e.name == map["type"].substring(7));
-    } else if (map["type"].startsWith("caption")) {
-      type = ContentType.caption;
     } else {
-      if (map["type"] == "translate_n") {
-        map["type"] = "translate";
+      var trimmed = map["type"];
+      var index = trimmed.indexOf(' ');
+      trimmed = trimmed.substring(0, index == -1 ? null : index);
+      type = ContentType.getEnum(trimmed);
+
+      var args = map["type"].split(' ');
+      if (args.length > 1) {
+        if (args.last == "n") {
         data = 1;
       }
-      type = ContentType.getEnum(map["type"]);
+        if (args.last.contains('~')) {
+          // Time parsing
+          List<String> times = args.last.split('~');
+          data = MediaIntry(
+            MediaType.youtube,
+            "",
+            start: double.parse(times.first),
+            end: double.parse(times.last),
+          );
+        }
+      }
     }
   }
 
