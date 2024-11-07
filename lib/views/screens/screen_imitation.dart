@@ -365,6 +365,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       ),
     );
   }
+
+  @override
+  void dispose() {
+    serviceLocator<MediaService>().youtubeController?.dispose();
+    serviceLocator<MediaService>().youtubeController = null;
+    super.dispose();
+  }
 }
 
 class RapidScrollPhysics extends ScrollPhysics {
