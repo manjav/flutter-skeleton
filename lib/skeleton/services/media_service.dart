@@ -150,12 +150,10 @@ class MediaService extends IService {
     );
   }
 
-  Future<void> playYoutube(
+  void initYoutube(
     MediaIntry intry, {
     double playbackRate = 1.0,
-  }) async {
-    final end = intry.end ??
-        (youtubeController!.metadata.duration.inMilliseconds / 1000.0);
+  }) {
     if (youtubeController == null) {
       youtubeController = YoutubePlayerController(
         initialVideoId: intry.id,
@@ -170,16 +168,25 @@ class MediaService extends IService {
         () => intry.parseState(youtubeController!.value.playerState.name),
       );
     } else {
-      if (youtubeController!.metadata.videoId != intry.id) {
-        youtubeController?.load(intry.id);
+      if (intry.id.isNotEmpty &&
+          youtubeController!.metadata.videoId != intry.id) {
+        youtubeController!.load(intry.id);
       }
-      youtubeController!.seekTo(Duration(
-          seconds: intry.start.floor(),
-          milliseconds: ((intry.start % 1) * 1000).toInt()));
-      // youtubeController!.play();
-      youtubeController!.setPlaybackRate(playbackRate);
     }
+    youtubeController!.setPlaybackRate(playbackRate);
+    youtubeController!.seekTo(Duration(
+        seconds: intry.start.floor(),
+        milliseconds: ((intry.start % 1) * 1000).toInt()));
+    // youtubeController.play();
+  }
 
+  Future<void> playYoutube(
+    MediaIntry intry, {
+    double playbackRate = 1.0,
+  }) async {
+    final end = intry.end ??
+        (youtubeController!.metadata.duration.inMilliseconds / 1000.0);
+    initYoutube(intry, playbackRate: playbackRate);
     await Future.doWhile(
       () => Future.delayed(const Duration(milliseconds: 100)).then(
         (_) async {
