@@ -104,29 +104,29 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       valueListenable: controller.serieIndex,
       builder: (context, value, child) {
         _initYoutube();
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        SizedBox(height: 90.d),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(height: 90.d),
             _videoData.value == null ? SizedBox() : youtubePlayer(),
-        ListenableBuilder(
-          listenable: _slideUpdater,
-          builder: (context, child) {
-            return SizedBox(
+            ListenableBuilder(
+              listenable: _slideUpdater,
+              builder: (context, child) {
+                return SizedBox(
                   height: _videoData.value != null ? 450.d : 650.d,
-              child: PageView.builder(
-                controller: _pageController,
-                physics: RapidScrollPhysics(),
-                itemCount: controller.currentSerie.children.length,
-                itemBuilder: (context, index) => _slideRenderer(
-                  controller.currentSerie.children[index] as ParentContent,
-                ),
-              ),
-            );
-          },
-        ),
-        SizedBox(height: 30.d),
-      ],
+                  child: PageView.builder(
+                    controller: _pageController,
+                    physics: RapidScrollPhysics(),
+                    itemCount: controller.currentSerie.children.length,
+                    itemBuilder: (context, index) => _slideRenderer(
+                      controller.currentSerie.children[index] as ParentContent,
+                    ),
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: 30.d),
+          ],
         );
       },
     );
@@ -134,17 +134,17 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   Widget _slideRenderer(ParentContent slide) {
     return Widgets.rect(
-          margin: EdgeInsets.all(30.d),
-          padding: EdgeInsets.all(30.d),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: slide.majority?.type == ContentType.station
-                ? TColors.transparent
-                : TColors.primary0,
-            border: Border.all(color: TColors.primary20, width: 2.d),
-            borderRadius: BorderRadius.all(Radius.circular(20.d)),
-          ),
-          child: _getContent(slide),
+      margin: EdgeInsets.all(30.d),
+      padding: EdgeInsets.all(30.d),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: slide.majority?.type == ContentType.station
+            ? TColors.transparent
+            : TColors.primary0,
+        border: Border.all(color: TColors.primary20, width: 2.d),
+        borderRadius: BorderRadius.all(Radius.circular(20.d)),
+      ),
+      child: _getContent(slide),
     );
   }
 
@@ -194,7 +194,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               Asset.load<SvgPicture>(icon, width: 20.d),
             ],
           ),
-          onPressed: () => _gotoSlide(true),
+          onPressed: () async {
+            await controller.changeSlide(1);
+            _pageController.jumpTo(0);
+            _onSlideChange();
+          },
         ),
       ],
     );
@@ -277,24 +281,24 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     if (captions.isEmpty) {
       return;
     }
-      serviceLocator<MediaService>().play(_videoData.value!);
-      Future.delayed(Duration(milliseconds: 100)).then(
-        (s) async {
-          final youtube = serviceLocator<MediaService>().youtubeController!;
-          youtube.addListener(
-            () {
-              final seconds = youtube.value.position.inMilliseconds / 1000.0;
-              for (var talk in captions) {
-                MediaIntry caption = (talk as Talk).data;
-                if (caption.start <= seconds && (caption.end ?? 0) > seconds) {
-                  this.caption.value = talk;
-                  return;
-                }
+    serviceLocator<MediaService>().play(_videoData.value!);
+    Future.delayed(Duration(milliseconds: 100)).then(
+      (s) async {
+        final youtube = serviceLocator<MediaService>().youtubeController!;
+        youtube.addListener(
+          () {
+            final seconds = youtube.value.position.inMilliseconds / 1000.0;
+            for (var talk in captions) {
+              MediaIntry caption = (talk as Talk).data;
+              if (caption.start <= seconds && (caption.end ?? 0) > seconds) {
+                this.caption.value = talk;
+                return;
               }
-            },
-          );
-        },
-      );
+            }
+          },
+        );
+      },
+    );
   }
 
   @override
