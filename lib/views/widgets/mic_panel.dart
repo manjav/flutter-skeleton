@@ -79,6 +79,8 @@ class _MicPanelState extends State<MicPanel> {
       "mic_panel_button",
       height: size,
       onRiveInit: (artboard) {
+        var voiceMode = listener.initialMedia == null ||
+            listener.initialMedia!.type == MediaType.voice;
         final controller =
             StateMachineController.fromArtboard(artboard, "State Machine 1");
         _toggleInput = controller?.findInput<bool>("play");
@@ -86,6 +88,7 @@ class _MicPanelState extends State<MicPanel> {
         _soundLevelInput = controller?.findInput<double>("soundLevel");
         controller?.findInput<double>("type")?.value =
             widget.talk.type.micIndex;
+        controller?.findInput<bool>("speaker")?.value = voiceMode;
         artboard.component<TextValueRun>("messageText")?.text =
             "${widget.talk.type.name}_l".l();
         controller!.addEventListener((s) => _onMicAnimationEvent(s, listener));
@@ -143,7 +146,6 @@ class _MicPanelState extends State<MicPanel> {
     if (listener.talk != widget.talk) return;
     _state.value = listener.state.value;
     _stateInput?.value = listener.state.value.index.toDouble();
-    print("object   ${_state.value}");
   }
 
   void _mediaStateListener(MediaState event) {
