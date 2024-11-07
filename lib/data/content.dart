@@ -105,8 +105,8 @@ class Talk extends Content {
       var args = map["type"].split(' ');
       if (args.length > 1) {
         if (args.last == "n") {
-        data = 1;
-      }
+          data = 1;
+        }
         if (args.last.contains('~')) {
           // Time parsing
           List<String> times = args.last.split('~');

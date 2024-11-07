@@ -100,25 +100,20 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   @override
   Widget contentBuilder(double paddingTop) {
+    return ValueListenableBuilder(
+      valueListenable: controller.serieIndex,
+      builder: (context, value, child) {
+        _initYoutube();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         SizedBox(height: 90.d),
-        ValueListenableBuilder(
-          valueListenable: _videoData,
-          builder: (context, value, child) {
-            return value == null ? SizedBox() : youtubePlayer();
-          },
-        ),
+            _videoData.value == null ? SizedBox() : youtubePlayer(),
         ListenableBuilder(
           listenable: _slideUpdater,
           builder: (context, child) {
             return SizedBox(
-              height: _videoData.value == null &&
-                      controller.currentSlide.majority!.type !=
-                          ContentType.station
-                  ? 650.d
-                  : 450.d,
+                  height: _videoData.value != null ? 450.d : 650.d,
               child: PageView.builder(
                 controller: _pageController,
                 physics: RapidScrollPhysics(),
@@ -132,6 +127,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         ),
         SizedBox(height: 30.d),
       ],
+        );
+      },
     );
   }
 
