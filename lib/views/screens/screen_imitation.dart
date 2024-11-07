@@ -67,7 +67,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _gotoSlide(bool isNext) {
-    final duration = Duration(milliseconds: 300);
+    final duration = Duration(milliseconds: 100);
     if (isNext) {
       if (controller.slideIndex.value >=
           controller.currentSerie.children.length - 1) {
@@ -118,9 +118,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
                   ? 650.d
                   : 450.d,
               child: PageView.builder(
-                padEnds: false,
                 controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
+                physics: RapidScrollPhysics(),
                 itemCount: controller.currentSerie.children.length,
                 itemBuilder: (context, index) => _slideRenderer(
                   controller.currentSerie.children[index] as ParentContent,
@@ -135,9 +134,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   Widget _slideRenderer(ParentContent slide) {
-    return Widgets.touchable(context,
-        sfx: "",
-        child: Container(
+    return Widgets.rect(
           margin: EdgeInsets.all(30.d),
           padding: EdgeInsets.all(30.d),
           alignment: Alignment.center,
@@ -149,13 +146,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             borderRadius: BorderRadius.all(Radius.circular(20.d)),
           ),
           child: _getContent(slide),
-        ), onHorizontalDragEnd: (DragEndDetails details) {
-      final velocity = (details.primaryVelocity ?? 0);
-      final absoluteVelocity = velocity.abs();
-      if (absoluteVelocity > 500) {
-        _gotoSlide(velocity < 0);
-      }
-    });
+    );
   }
 
   Widget _getContent(ParentContent slide) {
@@ -373,4 +364,17 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       ),
     );
   }
+}
+
+class RapidScrollPhysics extends ScrollPhysics {
+  const RapidScrollPhysics({super.parent});
+
+  @override
+  RapidScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return RapidScrollPhysics(parent: buildParent(ancestor)!);
+  }
+
+  @override
+  SpringDescription get spring =>
+      const SpringDescription(mass: 50, stiffness: 100, damping: 0.8);
 }
