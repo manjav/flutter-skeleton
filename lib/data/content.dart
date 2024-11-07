@@ -79,7 +79,7 @@ class ParentContent extends Content {
 }
 
 class Talk extends Content {
-  int version = 0;
+  dynamic data;
   int score = 0;
   QuizRecord? lastRecord;
   Set<String> get words => {...targetValue.split(" ")};
@@ -94,12 +94,12 @@ class Talk extends Content {
       type = ContentType.bot;
     } else if (map["type"].startsWith("avatar_")) {
       type = ContentType.avatar;
-      version = AvatarExpression.values
+      data = AvatarExpression.values
           .indexWhere((e) => e.name == map["type"].substring(7));
     } else {
       if (map["type"] == "translate_n") {
         map["type"] = "translate";
-        version = 1;
+        data = 1;
       }
       type = ContentType.getEnum(map["type"]);
     }

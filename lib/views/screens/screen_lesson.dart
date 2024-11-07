@@ -230,8 +230,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   Widget _avatarBuilder(Talk talk) {
-    final expression =
-        AvatarExpression.values[talk.version < 0 ? 0 : talk.version];
+    final expression = AvatarExpression.values[talk.data < 0 ? 0 : talk.data];
     return Avatar(
         expression: expression,
         size: expression == AvatarExpression.point ? 150.d : 250.d);
