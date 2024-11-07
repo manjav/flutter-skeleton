@@ -3,7 +3,7 @@ import 'package:lifetalk/app_export.dart';
 class Content {
   int index = 0;
   final String id;
-  final Content? parent;
+  final ParentContent? parent;
   ContentType type = ContentType.none;
   TranslationSide side = TranslationSide.none;
   String nativeValue = "", targetValue = "";
@@ -65,7 +65,7 @@ class ParentContent extends Content {
   String title = "", subtitle = "", iconUrl = "", mode = "";
   Content? majority;
   ParentContent.create(
-    Content? parent,
+    ParentContent? parent,
     ContentType type,
     String id,
     Map map,
@@ -83,7 +83,7 @@ class Talk extends Content {
   int score = 0;
   QuizRecord? lastRecord;
   Set<String> get words => {...targetValue.split(" ")};
-  Talk.create(Content parent, int index, Map map, String nativeLanguage,
+  Talk.create(ParentContent parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
       : super.create(parent, map["id"], map) {
     nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);

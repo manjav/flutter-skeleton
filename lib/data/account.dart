@@ -64,8 +64,7 @@ class AccountProvider extends ChangeNotifier {
     if (type == ContentType.talk) {
       for (var i = 0; i < list.length; i++) {
         if (list[i]["type"] == "title") {
-          (group.parent! as ParentContent).title =
-              list[i][account.user.langTag!];
+          group.parent!.title = list[i][account.user.langTag!];
         } else {
           Talk talk = Talk.create(group, i, list[i], account.user.langTag!,
               metadata["targetLanguage"], account.user.displayName!);
