@@ -14,16 +14,19 @@ class MediaService extends IService {
   final Map<String, AudioPlayer> _audioPlayers = {};
   YoutubePlayerController? youtubeController;
 
-  Future<void> play(MediaIntry? intry) async {
+  Future<void> play(
+    MediaIntry? intry, {
+    double playbackRate = 1.0,
+  }) async {
     if (intry == null) {
       return;
     }
     if (intry.type == MediaType.sound) {
-      await playSound(intry.id);
+      await playSound(intry.id, playbackRate: playbackRate);
     } else if (intry.type == MediaType.voice) {
-      await playVoice(intry.id);
+      await playVoice(intry.id, playbackRate: playbackRate);
     } else if (intry.type == MediaType.youtube) {
-      await playYoutube(intry);
+      await playYoutube(intry, playbackRate: playbackRate);
     }
   }
 
@@ -47,6 +50,7 @@ class MediaService extends IService {
     bool loop = false,
     bool skipOnError = false,
     AudioLoadMode loadMode = AudioLoadMode.network,
+    double playbackRate = 1.0,
   }) async {
     AudioPlayer player;
     if (name.isEmpty) return;
@@ -93,6 +97,7 @@ class MediaService extends IService {
     } else {
       player.play(_sounds[name] = AssetSource("sounds/$name.$extension"));
     }
+    player.setPlaybackRate(playbackRate);
     await _waitingForComplete(player, skipOnError);
   }
 
@@ -113,7 +118,10 @@ class MediaService extends IService {
     _audioPlayers[channel]!.stop();
   }
 
-  Future<void> playVoice(String name) async {
+  Future<void> playVoice(
+    String name, {
+    double playbackRate = 1.0,
+  }) async {
     name = name.simplify();
     log("play => $name");
     var player = serviceLocator<MediaService>().getAudioPlayer(name);
@@ -123,6 +131,7 @@ class MediaService extends IService {
 
     try {
       await player.play(serviceLocator<LessonAssets>().get(name));
+      player.setPlaybackRate(playbackRate);
       await _waitingForComplete(player, true);
     } catch (e) {
       log(e.toString());
@@ -141,7 +150,10 @@ class MediaService extends IService {
     );
   }
 
-  Future<void> playYoutube(MediaIntry intry) async {
+  Future<void> playYoutube(
+    MediaIntry intry, {
+    double playbackRate = 1.0,
+  }) async {
     final end = intry.end ??
         (youtubeController!.metadata.duration.inMilliseconds / 1000.0);
     if (youtubeController == null) {
@@ -165,6 +177,7 @@ class MediaService extends IService {
           seconds: intry.start.floor(),
           milliseconds: ((intry.start % 1) * 1000).toInt()));
       // youtubeController!.play();
+      youtubeController!.setPlaybackRate(playbackRate);
     }
 
     await Future.doWhile(
@@ -232,7 +245,7 @@ class MediaIntry {
   double? end;
   double start = 0;
   String id = "";
-  dynamic data;
+  // dynamic data;
   MediaType type;
   MediaIntry(this.type, this.id, {this.start = 0, this.end});
   MediaIntry.parse(this.type, String url) {

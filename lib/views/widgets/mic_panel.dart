@@ -112,9 +112,14 @@ class _MicPanelState extends State<MicPanel> {
       widget.talk.lastRecord = null;
       Timer(const Duration(milliseconds: 100), () => listener.start());
     } else if (event.name == "play") {
-      serviceLocator<MediaService>().play(listener.initialMedia);
-      // } else if (event.name == "pause") {
-      //   serviceLocator<Sounds>().stopAll();
+      serviceLocator<MediaService>().play(
+        listener.initialMedia,
+      );
+    } else if (event.name == "slow") {
+      serviceLocator<MediaService>().play(
+        listener.initialMedia,
+        playbackRate: 0.75,
+      );
     }
   }
 
