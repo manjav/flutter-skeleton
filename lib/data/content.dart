@@ -96,6 +96,8 @@ class Talk extends Content {
       type = ContentType.avatar;
       data = AvatarExpression.values
           .indexWhere((e) => e.name == map["type"].substring(7));
+    } else if (map["type"].startsWith("caption")) {
+      type = ContentType.caption;
     } else {
       if (map["type"] == "translate_n") {
         map["type"] = "translate";
@@ -107,7 +109,7 @@ class Talk extends Content {
 
   TranslationSide get textSide {
     if (type == ContentType.caption ||
-        (type == ContentType.translate && version > 0)) {
+        (type == ContentType.translate && data > 0)) {
       return TranslationSide.native;
     }
     if (type == ContentType.repeat || type == ContentType.head) {

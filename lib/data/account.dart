@@ -67,8 +67,26 @@ class AccountProvider extends ChangeNotifier {
           (group.parent! as ParentContent).title =
               list[i][account.user.langTag!];
         } else {
-          children.add(Talk.create(group, i, list[i], account.user.langTag!,
-              metadata["targetLanguage"], account.user.displayName!));
+          Talk talk = Talk.create(group, i, list[i], account.user.langTag!,
+              metadata["targetLanguage"], account.user.displayName!);
+
+          // Caption parsing
+          if (talk.type == ContentType.caption) {
+            List parts = list[i]["type"].split(" ");
+            if (parts.length > 1) {
+              talk.data = MediaIntry(
+                MediaType.video,
+                talk.id,
+                start: children.isNotEmpty &&
+                        children.last.type == ContentType.caption
+                    ? (((children.last as Talk).data as MediaIntry).end ?? 0)
+                    : 0,
+                end: double.parse(parts.last),
+              );
+            }
+          }
+
+          children.add(talk);
         }
       }
     } else {

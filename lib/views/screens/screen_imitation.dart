@@ -14,7 +14,6 @@ class ImitationScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<ImitationScreen>
     with LessonMixin, ListeningMixin, VideoPlayerMixin {
-  final List<MediaIntry> _captions = [];
   final ValueNotifier<int> _slideUpdater = ValueNotifier(-1);
   final PageController _pageController = PageController();
   final ValueNotifier<bool> _captionMode = ValueNotifier(false);
@@ -276,36 +275,26 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     _videoData.value = null;
     final youtubeContents = controller.currentSlide.children
         .where((c) => c.type == ContentType.youtube);
-    _captions.clear();
     if (youtubeContents.isEmpty) {
       return;
     }
     _videoData.value =
         MediaIntry.parse(MediaType.youtube, youtubeContents.first.targetValue);
 
-    final list =
+    final captions =
         slide.children.where((c) => c.type == ContentType.caption).toList();
-    for (var caption in list) {
-      var seconds = _getMilliSeconds(caption.nativeValue);
-      _captions.add(MediaIntry(
-        MediaType.youtube,
-        "",
-        start: _captions.lastOrNull != null ? _captions.last.end ?? 0 : 0,
-        end: seconds,
-      )..data = caption);
-    }
-    if (_captions.isNotEmpty) {
+    if (captions.isNotEmpty) {
       serviceLocator<MediaService>().play(_videoData.value!);
       Future.delayed(Duration(milliseconds: 100)).then(
         (s) async {
           final youtube = serviceLocator<MediaService>().youtubeController!;
           youtube.addListener(
             () {
-              final milliseconds = youtube.value.position.inMilliseconds;
-              for (var caption in _captions) {
-                if (caption.start <= milliseconds &&
-                    (caption.end ?? 0) > milliseconds) {
-                  this.caption.value = caption.data;
+              final seconds = youtube.value.position.inMilliseconds / 1000.0;
+              for (var talk in captions) {
+                MediaIntry caption = (talk as Talk).data;
+                if (caption.start <= seconds && (caption.end ?? 0) > seconds) {
+                  this.caption.value = talk;
                   return;
                 }
               }
@@ -314,18 +303,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         },
       );
     }
-  }
-
-  double _getMilliSeconds(String time) {
-    final times = time.split("，");
-    final digits = times.first.split(":");
-    final duration = Duration(
-      hours: int.parse(digits[0]),
-      minutes: int.parse(digits[1]),
-      seconds: int.parse(digits[2]),
-      milliseconds: int.parse(times[1]),
-    );
-    return duration.inMilliseconds.toDouble();
   }
 
   @override
