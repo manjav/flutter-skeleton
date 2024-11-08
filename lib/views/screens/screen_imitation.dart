@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../app_export.dart';
 
@@ -283,6 +284,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void _initYoutube() {
     _videoData.value = null;
     if (controller.currentSerie.iconUrl.isEmpty) {
+      serviceLocator<MediaService>().youtubeController?.dispose();
+      serviceLocator<MediaService>().youtubeController = null;
       return;
     }
     _videoData.value =
@@ -305,19 +308,19 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _findProperCaption() {
-        final youtube = serviceLocator<MediaService>().youtubeController!;
-            final seconds = youtube.value.position.inMilliseconds / 1000.0;
+    final youtube = serviceLocator<MediaService>().youtubeController!;
+    final seconds = youtube.value.position.inMilliseconds / 1000.0;
     if (youtube.value.playerState == PlayerState.paused) {
       _gotoSlide(true);
       return;
     }
     for (var talk in _captions) {
-              MediaIntry caption = (talk as Talk).data;
-              if (caption.start <= seconds && (caption.end ?? 0) > seconds) {
-                this.caption.value = talk;
-                return;
-              }
-            }
+      MediaIntry caption = (talk as Talk).data;
+      if (caption.start <= seconds && (caption.end ?? 0) > seconds) {
+        this.caption.value = talk;
+        return;
+      }
+    }
   }
 
   @override
