@@ -125,13 +125,22 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
                   height: _videoData.value != null || isFirstStation
                       ? 450.d
                       : 650.d,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    physics: RapidScrollPhysics(),
-                    itemCount: controller.currentSerie.children.length,
-                    itemBuilder: (context, index) => _slideRenderer(
-                      controller.currentSerie.children[index] as ParentContent,
-                    ),
+                  child: ValueListenableBuilder(
+                    valueListenable: serviceLocator<ListenerQuiz>().state,
+                    builder: (context, value, child) {
+                      // print(value);
+                      return PageView.builder(
+                        controller: _pageController,
+                        physics: value == QuizState.listening
+                            ? NeverScrollableScrollPhysics()
+                            : RapidScrollPhysics(),
+                        itemCount: controller.currentSerie.children.length,
+                        itemBuilder: (context, index) => _slideRenderer(
+                          controller.currentSerie.children[index]
+                              as ParentContent,
+                        ),
+                      );
+                    },
                   ),
                 );
               },
@@ -189,11 +198,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        LoaderWidget(
-          AssetType.vector,
-          label,
-          height: 170.d,
-        ),
+        LoaderWidget(AssetType.vector, label, height: 170.d),
         Text(label.l(),
             style: TStyles.large.copyWith(color: TColors.primary30)),
         SizedBox(height: 60.d),
