@@ -106,17 +106,24 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     return ValueListenableBuilder(
       valueListenable: controller.serieIndex,
       builder: (context, value, child) {
+        final isFirstStation = _isFirstStation();
         _initYoutube();
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(height: 90.d),
-            _videoData.value == null ? SizedBox() : youtubePlayer(),
+            _videoData.value == null
+                ? SizedBox(
+                    height: isFirstStation ? 220.d : 0,
+                  )
+                : youtubePlayer(),
             ListenableBuilder(
               listenable: _slideUpdater,
               builder: (context, child) {
                 return SizedBox(
-                  height: _videoData.value != null ? 450.d : 650.d,
+                  height: _videoData.value != null || isFirstStation
+                      ? 450.d
+                      : 650.d,
                   child: PageView.builder(
                     controller: _pageController,
                     physics: RapidScrollPhysics(),
@@ -133,6 +140,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         );
       },
     );
+  }
+
+  bool _isFirstStation() {
+    return controller.currentSerie.children.length == 1 &&
+        controller.currentSlide.majority!.type == ContentType.station;
   }
 
   Widget _slideRenderer(ParentContent slide) {
