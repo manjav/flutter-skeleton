@@ -190,6 +190,7 @@ class MediaService extends IService {
     await Future.doWhile(
       () => Future.delayed(const Duration(milliseconds: 100)).then(
         (_) async {
+          if (youtubeController == null) return false;
           final pos = youtubeController!.value.position.inMilliseconds / 1000.0;
           // log("====> s ${intry.start} p $pos e $end s ${youtubeController!.value.playerState.name}");
           if (pos < intry.start) {
@@ -207,7 +208,7 @@ class MediaService extends IService {
         },
       ),
     );
-    youtubeController!.pause();
+    youtubeController?.pause();
   }
 
   void stopAll() {
