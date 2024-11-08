@@ -105,14 +105,33 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   }
 
   // ignore: avoid_shadowing_type_parameters
-  Future<T?> modal<T>(Widget child, {bool isDismissible = true}) async {
+  Future<T?> modal<T>(
+    List<Widget> children, {
+    Color? barrierColor,
+    Color? backgroundColor,
+    bool isDismissible = true,
+  }) async {
     var data = await showModalBottomSheet<T>(
-        context: context,
-        isScrollControlled: true,
-        isDismissible: isDismissible,
-        constraints: const BoxConstraints.tightFor(),
-        backgroundColor: TColors.transparent,
-        builder: (BuildContext context) => child);
+      context: context,
+      isDismissible: isDismissible,
+      barrierColor: barrierColor,
+      isScrollControlled: isDismissible,
+      constraints: const BoxConstraints.tightFor(),
+      backgroundColor: TColors.transparent,
+      builder: (BuildContext context) => Widgets.rect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(40.d),
+          topRight: Radius.circular(40.d),
+        ),
+        padding: EdgeInsets.fromLTRB(40.d, 25.d, 40.d, 40.d),
+        color: backgroundColor,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children,
+        ),
+      ),
+    );
     return data;
   }
 }
