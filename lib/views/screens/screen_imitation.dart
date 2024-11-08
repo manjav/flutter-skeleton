@@ -46,10 +46,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     } else if (slide.majority!.type == ContentType.wordBank) {
       serviceLocator<DictatorQuiz>().prepare(
         talk: talk,
-        onResult: (state, text, score, repeated, data) {
-          modal(_resultBuilder(state, data[0], data[1]), isDismissible: false);
-          onQiuzResult(state, text, score, talk, repeated, data);
-        },
+        onResult: (state, text, score, repeated, data) =>
+            onQiuzResult(state, text, score, talk, repeated, data),
       );
     }
     _slideUpdater.value = controller.slideIndex.value;
@@ -330,7 +328,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   @override
   void onQiuzResult(QuizState state, String text, int score, Talk talk,
-      bool repeated, dynamic data) {}
+      bool repeated, dynamic data) {
+    if (talk.type == ContentType.wordBank) {
+      _showWordBankResult(state, data[0], data[1]);
+    } else if (talk.data == null) {
+      _showListenerResult();
+    }
+  }
 
   void _showWordBankResult(
     QuizState quizState,
@@ -361,28 +365,40 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
     modal(
       [
-          Row(
-            children: [
-              Asset.load<SvgPicture>(label, width: 24.d),
-              SizedBox(width: 10.d),
-              Text("${label}_l".l(), style: resulStyle),
-            ],
-          ),
-          SizedBox(height: 12.d),
-          hintWidget,
-          SizedBox(height: 12.d),
+        Row(
+          children: [
+            Asset.load<SvgPicture>(label, width: 24.d),
+            SizedBox(width: 10.d),
+            Text("${label}_l".l(), style: resulStyle),
+          ],
+        ),
+        SizedBox(height: 12.d),
+        hintWidget,
+        SizedBox(height: 12.d),
         SkinnedButton(
           label: "next_l".l(),
-            color: color,
-            onPressed: () {
-              Navigator.pop(context);
-              _gotoSlide(true);
-            },
-          )
-        ],
+          color: color,
+          onPressed: () {
+            Navigator.pop(context);
+            _gotoSlide(true);
+          },
+        )
+      ],
       isDismissible: false,
       backgroundColor: Color.lerp(TColors.primary0, color, 0.15),
     );
+  }
+
+  void _showListenerResult() {
+    modal([
+      SkinnedButton(
+        label: "next_l".l(),
+        onPressed: () {
+          Navigator.pop(context);
+          _gotoSlide(true);
+        },
+      ),
+    ], barrierColor: TColors.transparent);
   }
 
   @override
