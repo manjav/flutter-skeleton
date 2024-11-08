@@ -295,7 +295,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void _findProperCaption() {
         final youtube = serviceLocator<MediaService>().youtubeController!;
             final seconds = youtube.value.position.inMilliseconds / 1000.0;
-            for (var talk in captions) {
+    if (youtube.value.playerState == PlayerState.paused) {
+      _gotoSlide(true);
+      return;
+    }
+    for (var talk in _captions) {
               MediaIntry caption = (talk as Talk).data;
               if (caption.start <= seconds && (caption.end ?? 0) > seconds) {
                 this.caption.value = talk;
