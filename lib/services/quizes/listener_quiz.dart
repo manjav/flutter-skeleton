@@ -123,7 +123,7 @@ class ListenerQuiz extends Quiz {
     // log("listen $_pattern");
 
     await Future.delayed(const Duration(milliseconds: 500));
-    if(initialMedia!.type == MediaType.youtube) {
+    if (initialMedia!.type == MediaType.youtube) {
       await serviceLocator<MediaService>().play(initialMedia);
     }
 
@@ -145,7 +145,7 @@ class ListenerQuiz extends Quiz {
     // on some devices.
     recognizedWords.value = "";
     // if (_speech.lastStatus.isEmpty) return;
-    var duration = (_pattern.length * 200).min(3000).max(10000);
+    var duration = (_pattern.length * 170).min(3000).max(10000);
     _speech.listen(
       listenOptions: options,
       localeId: locale,
@@ -166,25 +166,28 @@ class ListenerQuiz extends Quiz {
 
   Future<void> _proccessResult() async {
     if (state.value.index > QuizState.listening.index) return;
-    for (var alternate in result.alternates) {
-      var insert = alternate.recognizedWords.patternize();
-      if (insert.contains(_pattern)) {
+    final alternates = List<String>.generate(result.alternates.length,
+        (i) => result.alternates[i].recognizedWords.patternize());
+    for (var alternate in alternates) {
+      if (alternate.contains(_pattern)) {
         recognizedWords.value = _pattern;
+        log("match '$alternate' '$_pattern'");
         _finalize(QuizState.success);
         return;
       }
-      _matchLevel = ratio(_pattern, insert);
-      // log("'$insert' '$_pattern' $_matchLevel");
+    }
+    for (var alternate in alternates) {
+      _matchLevel = ratio(_pattern, alternate);
       if (state.value.index > QuizState.listening.index) return;
-      // logs = "=> $insert , ratio: $_matchLevel/$minMatchLevel";
       if (_matchLevel > minMatchLevel) {
+        log("fuzzy '$alternate' '$_pattern' $_matchLevel $minMatchLevel");
         recognizedWords.value = _pattern;
         _finalize(QuizState.success);
         return;
       }
     }
     if (result.recognizedWords.isNotEmpty) {
-      recognizedWords.value = result.recognizedWords.patternize();
+      recognizedWords.value = result.recognizedWords;
     }
     if (result.recognizedWords.length > _pattern.length * 2) {
       _finalize(QuizState.failure);
@@ -199,7 +202,6 @@ class ListenerQuiz extends Quiz {
   void _finalize(QuizState state) async {
     this.state.value = state;
     stop();
-
     if (recognizedWords.value.isNotEmpty && finalMedia != null) {
       await serviceLocator<MediaService>().play(finalMedia);
     } else {

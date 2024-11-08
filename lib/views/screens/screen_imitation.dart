@@ -112,9 +112,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           children: [
             SizedBox(height: 90.d),
             _videoData.value == null
-                ? SizedBox(
-                    height: isFirstStation ? 220.d : 0,
-                  )
+                ? SizedBox(height: isFirstStation ? 220.d : 0)
                 : youtubePlayer(),
             ListenableBuilder(
               listenable: _slideUpdater,
