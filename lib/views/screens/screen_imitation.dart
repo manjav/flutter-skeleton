@@ -30,8 +30,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _onSlideChange() {
+    final media = serviceLocator<MediaService>();
+    media.youtubeController?.removeListener(_findProperCaption);
+    media.stopAll();
+
+    if (controller.slideIndex.value < 0) return;
+
     final slide = controller.currentSlide;
-    serviceLocator<MediaService>().stopAll();
     if (_videoData.value != null) {
       _getCaptions();
     }
@@ -273,20 +278,23 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     _videoData.value =
         MediaIntry.parse(MediaType.youtube, controller.currentSerie.iconUrl);
     serviceLocator<MediaService>().initYoutube(_videoData.value!);
+    _getCaptions();
   }
 
-  void _getCaptions() {
+  Future<void> _getCaptions() async {
+    final youtube = serviceLocator<MediaService>().youtubeController!;
     final captions = controller.currentSlide.children
         .where((c) => c.type == ContentType.caption);
     if (captions.isEmpty) {
       return;
     }
     serviceLocator<MediaService>().play(_videoData.value!);
-    Future.delayed(Duration(milliseconds: 100)).then(
-      (s) async {
+    await Future.delayed(Duration(milliseconds: 100));
+    youtube.addListener(_findProperCaption);
+  }
+
+  void _findProperCaption() {
         final youtube = serviceLocator<MediaService>().youtubeController!;
-        youtube.addListener(
-          () {
             final seconds = youtube.value.position.inMilliseconds / 1000.0;
             for (var talk in captions) {
               MediaIntry caption = (talk as Talk).data;
@@ -295,10 +303,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
                 return;
               }
             }
-          },
-        );
-      },
-    );
   }
 
   @override
