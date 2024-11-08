@@ -176,7 +176,7 @@ class MediaService extends IService {
     youtubeController!.setPlaybackRate(playbackRate);
     youtubeController!.seekTo(Duration(
         seconds: intry.start.floor(),
-        milliseconds: ((intry.start % 1) * 1000).toInt()));
+        milliseconds: ((intry.start % 1) * 1000).round()));
     // youtubeController.play();
   }
 
@@ -197,7 +197,7 @@ class MediaService extends IService {
             await Future.delayed(Duration(milliseconds: 10));
             youtubeController!.seekTo(Duration(
                 seconds: intry.start.floor(),
-                milliseconds: ((intry.start % 1) * 1000).toInt()));
+                milliseconds: ((intry.start % 1) * 1000).round()));
           }
           if (pos < (intry.start + 0.2) ||
               youtubeController!.value.playerState ==

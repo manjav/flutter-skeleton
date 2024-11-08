@@ -124,7 +124,7 @@ class ListenerQuiz extends Quiz {
 
     await Future.delayed(const Duration(milliseconds: 500));
     if(initialMedia!.type == MediaType.youtube) {
-    await serviceLocator<MediaService>().play(initialMedia);
+      await serviceLocator<MediaService>().play(initialMedia);
     }
 
     super.prepare(talk: talk, onResult: onResult);
