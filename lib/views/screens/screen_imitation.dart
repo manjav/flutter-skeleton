@@ -14,6 +14,7 @@ class ImitationScreen extends AbstractScreen {
 
 class _ScreenState extends AbstractScreenState<ImitationScreen>
     with LessonMixin, ListeningMixin, VideoPlayerMixin {
+  List<Content> _captions = [];
   final ValueNotifier<int> _slideUpdater = ValueNotifier(-1);
   final PageController _pageController = PageController();
   final ValueNotifier<bool> _captionMode = ValueNotifier(false);
@@ -37,9 +38,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     if (controller.slideIndex.value < 0) return;
 
     final slide = controller.currentSlide;
-    if (_videoData.value != null) {
-      _getCaptions();
-    }
     slide.majority = _getSlideType(slide);
     final talk = slide.majority as Talk;
     if (talk.type == ContentType.repeat) {
@@ -288,6 +286,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     if (captions.isEmpty) {
       return;
     }
+    _captions = captions.toList();
     serviceLocator<MediaService>().play(_videoData.value!);
     await Future.delayed(Duration(milliseconds: 100));
     youtube.addListener(_findProperCaption);
