@@ -179,7 +179,7 @@ class ListenerQuiz extends Quiz {
     }
     for (var alternate in alternates) {
       _matchLevel = ratio(_pattern, alternate);
-      if (state.value.index > QuizState.listening.index) return;
+      if (state.value.index > QuizState.running.index) return;
       if (_matchLevel > minMatchLevel) {
         log("fuzzy '$alternate' '$_pattern' $_matchLevel $minMatchLevel");
         recognizedWords.value = _pattern;

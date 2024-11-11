@@ -111,11 +111,12 @@ class _MicPanelState extends State<MicPanel> {
   }
 
   void _onMicAnimationEvent(RiveEvent event, ListenerQuiz listener) {
+    if (event.name == "toggle") {
       if (_state.value == QuizState.running) {
         listener.stop();
       } else {
       widget.talk.lastRecord = null;
-        Timer(const Duration(milliseconds: 300), () => listener.start());
+        Timer(const Duration(milliseconds: 500), () => listener.start());
       }
     } else if (event.name == "play") {
       serviceLocator<MediaService>().play(
