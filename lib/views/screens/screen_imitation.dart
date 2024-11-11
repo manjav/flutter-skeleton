@@ -127,7 +127,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
                       // print(value);
                       return PageView.builder(
                         controller: _pageController,
-                        physics: value == QuizState.listening
+                        physics: value == QuizState.running
                             ? NeverScrollableScrollPhysics()
                             : RapidScrollPhysics(),
                         itemCount: controller.currentSerie.children.length,

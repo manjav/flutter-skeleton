@@ -73,9 +73,9 @@ class ListenerQuiz extends Quiz {
   void _statusListener(String status) {
     log('Received listener status: => $status, listening: ${_speech.isListening}');
     if (status == "listening") {
-      state.value = QuizState.listening;
+      state.value = QuizState.running;
     } else if (status == "done") {
-      if (state.value == QuizState.listening && recognizedWords.value.isEmpty) {
+      if (state.value == QuizState.running && recognizedWords.value.isEmpty) {
         state.value = QuizState.failure;
       }
       if (_hasMediaPlayed) {
@@ -99,7 +99,7 @@ class ListenerQuiz extends Quiz {
       log("Listener not initialized yet!");
       return;
     }
-    if (state.value.index <= QuizState.listening.index) {
+    if (state.value.index <= QuizState.running.index) {
       _speech.cancel();
     }
 
@@ -165,7 +165,7 @@ class ListenerQuiz extends Quiz {
   }
 
   Future<void> _proccessResult() async {
-    if (state.value.index > QuizState.listening.index) return;
+    if (state.value.index > QuizState.running.index) return;
     final alternates = List<String>.generate(result.alternates.length,
         (i) => result.alternates[i].recognizedWords.patternize());
     for (var alternate in alternates) {

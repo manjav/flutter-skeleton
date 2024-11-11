@@ -14,7 +14,7 @@ class Quiz extends IService {
   }) {
     isEnable = true;
     this.talk = talk;
-    state.value = QuizState.waiting;
+    state.value = QuizState.ready;
     if (onResult != null) this.onResult = onResult;
   }
 
@@ -27,7 +27,7 @@ enum QuizState {
   none,
   ready,
   waiting,
-  listening,
+  running,
   success,
   failure,
   error;
