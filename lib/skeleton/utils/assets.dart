@@ -77,7 +77,7 @@ enum AssetType {
 }
 
 extension AssetTypeExtension on AssetType {
-  String folder([String? subFolder]) {
+  String folder([String subFolder = ""]) {
     var folder = switch (this) {
       AssetType.animation || AssetType.animationZipped => "animations",
       AssetType.font => "fonts",
@@ -87,7 +87,9 @@ extension AssetTypeExtension on AssetType {
       AssetType.vector => "vectors",
       AssetType.video => "videos",
     };
-    if (subFolder != null) folder += '/$subFolder';
+    if (subFolder.isNotEmpty) {
+      folder += '/$subFolder';
+    }
     return folder;
   }
 

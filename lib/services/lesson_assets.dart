@@ -34,7 +34,7 @@ class LessonAssets with ILogger {
           }
 
           if (talk.isQuiz) {
-            _loadFile(AssetType.animation, "mic_panel", onComplete, onProgress,
+            _loadFile(AssetType.animation, "mic_panel_button", onComplete, onProgress,
                 onError);
           }
 
@@ -67,7 +67,7 @@ class LessonAssets with ILogger {
     _assets[text] = null;
     try {
       final path = "${narrator.name}__$text";
-      final hashName = "${md5.convert(utf8.encode(path)).toString()}.mp5";
+      final hashName = "${md5.convert(utf8.encode(path)).toString()}.mp3";
       final url =
           "${LoaderWidget.baseURL}/cache.php?voice=${narrator.name}&input=$text";
       final loader = Loader();
