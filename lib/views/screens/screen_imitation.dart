@@ -332,6 +332,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     } else if (talk.data == null) {
       _showListenerResult();
     }
+    controller.onQuizResult(state, text, score, talk);
   }
 
   void _showWordBankResult(
