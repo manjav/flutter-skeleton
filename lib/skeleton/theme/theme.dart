@@ -59,7 +59,7 @@ extension Autosize on TextStyle {
 TextStyle _style({Color? color, double? size, FontWeight? weight}) {
   return TextStyle(
     fontSize: size,
-    color: color ?? TColors.primary70,
+    color: color ?? TColors.primary90,
     fontWeight: weight ?? FontWeight.bold,
     fontFamily: "primary_font",
   );
@@ -72,16 +72,16 @@ class Themes {
     TStyles.medium = _style(size: 16.d, weight: FontWeight.w400);
     TStyles.large = _style(size: 20.d, weight: FontWeight.w600);
     TStyles.big = _style(size: 24.d, weight: FontWeight.w700);
-    TStyles.huge = _style(size: 38.d, weight: FontWeight.w900);
+    TStyles.huge = _style(size: 38.d, weight: FontWeight.w800);
     TStyles.tinyInvert =
         _style(size: 12.d, weight: FontWeight.w100, color: TColors.primary0);
     TStyles.smallInvert =
-        _style(size: 14.d, weight: FontWeight.w300, color: TColors.primary0);
+        _style(size: 14.d, weight: FontWeight.w200, color: TColors.primary0);
     TStyles.mediumInvert =
         _style(size: 16.d, weight: FontWeight.w400, color: TColors.primary0);
     TStyles.largeInvert =
         _style(size: 20.d, weight: FontWeight.w600, color: TColors.primary0);
-    TStyles.largeInvert =
+    TStyles.bigInvert =
         _style(size: 24.d, weight: FontWeight.w700, color: TColors.primary0);
   }
 

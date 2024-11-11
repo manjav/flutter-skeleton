@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
+import 'package:lifetalk/skeleton/data/responses.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../mixins/logger.dart';
@@ -16,19 +17,21 @@ class Loader with ILogger {
   String path = "";
   dynamic metadata;
 
-  Future<File?> load(String path, String url,
-      {Function(double)? onProgress,
-      String? hash,
-      bool forceUpdate = false}) async {
+  Future<File?> load(
+    String path,
+    String url, {
+    String? hash,
+    bool forceUpdate = false,
+    Function(double)? onProgress,
+  }) async {
     this.path = path;
-
     _appDir = _appDir ?? (await getApplicationSupportDirectory()).path;
     file = File('$_appDir/$path');
     var ext = url.split('.').last;
     var exists = await file!.exists();
     if (exists && !forceUpdate) {
       bytes = await file!.readAsBytes();
-      if (isHashMatch(bytes!, hash)) {
+      if (isHashMatch(bytes!, hash, path)) {
         // log("Complete loading $path");
         return file!;
       } else {
@@ -40,8 +43,9 @@ class Loader with ILogger {
       var request = await httpClient.getUrl(Uri.parse(url));
       var response = await request.close();
       if (response.statusCode != 200) {
-        log('Failure status code 😱');
-        return null;
+        // log('Failure😱 => code $path ${response.statusCode} ');
+        throw SkeletonException(response.statusCode.toStatus(),
+            'Failure😱 => code $path ${response.statusCode} ');
       }
       bytes = <int>[];
       await _readResponse(response, onProgress);
@@ -50,12 +54,12 @@ class Loader with ILogger {
         Archive archive = ZipDecoder().decodeBytes(bytes!);
         bytes = archive.first.content as List<int>;
       }
-      if (!isHashMatch(bytes!, hash)) {
+      if (!isHashMatch(bytes!, hash, path)) {
         log("$path MD5 check failure!");
         return null;
       }
       await file!.writeAsBytes(bytes!);
-      // log("Complete downloading $url");
+      log("Complete downloading $url");
       if (!exists || !forceUpdate) {
         return file!;
       }
@@ -81,7 +85,7 @@ class Loader with ILogger {
 
   void abort() => httpClient.close(force: true);
 
-  static bool isHashMatch(List<int> bytes, String? hash) {
+  static bool isHashMatch(List<int> bytes, String? hash, String path) {
     if (hash == null) return true;
     var fileHash = md5.convert(bytes);
     if (hash != fileHash.toString()) {

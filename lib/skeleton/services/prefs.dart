@@ -10,11 +10,10 @@ class Prefs extends IService {
   @override
   initialize({List<Object>? args}) async {
     _instance = await SharedPreferences.getInstance();
-    if (Pref.visitCount.getInt() <= 0) {
+    if (Pref.username.getString().isEmpty) {
       Pref.music.setBool(true);
       Pref.sfx.setBool(true);
     }
-    Pref.visitCount.increase(1);
     tutorStep = Pref.tutorStep.getInt();
     super.initialize();
   }
@@ -54,8 +53,8 @@ enum Pref {
   sfx,
   music,
   tutorStep,
-  visitCount,
   updatePassed,
+  username,
 }
 
 extension PrefExtension on Pref {

@@ -42,10 +42,14 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
       _pageController.animateToPage(2,
           duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
     } else {
-      await serviceLocator<AccountProvider>().update(
-          nativeLanguage: OnboardingScreen.nativeLanguage,
-          targetLanguage: OnboardingScreen.targetLanguage,
-          displayName: value);
+      try {
+        await serviceLocator<AccountProvider>().update(
+            nativeLanguage: OnboardingScreen.nativeLanguage,
+            targetLanguage: OnboardingScreen.targetLanguage,
+            displayName: value);
+      } on SkeletonException catch (e) {
+        alert(e.message, "error_${e.statusCode}".l());
+      }
       if (mounted) {
         Navigator.pop(context);
       }

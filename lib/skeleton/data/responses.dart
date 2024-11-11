@@ -4,7 +4,9 @@ enum StatusCode {
   ALREADY_EXISTS(-3),
   NOT_ENOUGH_RESOURCE(-1),
   SUCCESS(0),
+  UNAUTHENTICATED(16),
   INVALID_RESTORE_KEY(154),
+  UNAUTHORIZED(401),
   FORBIDDEN(403),
   NOT_FOUND(404),
   UNAVAILABLE(503),
@@ -20,7 +22,7 @@ enum StatusCode {
   bool get isFailure => this != StatusCode.SUCCESS;
 }
 
-extension StatusCodeintEx on int {
+extension StatusCodeIintExtension on int {
   StatusCode toStatus() {
     for (var r in StatusCode.values) {
       if (this == r.value) return r;
@@ -32,7 +34,8 @@ extension StatusCodeintEx on int {
 class SkeletonException implements Exception {
   final String message;
   final StatusCode statusCode;
-  SkeletonException(this.statusCode, [this.message = ""]);
+  final dynamic data;
+  SkeletonException(this.statusCode, [this.message = "", this.data]);
 
   @override
   String toString() => "$statusCode: $message";

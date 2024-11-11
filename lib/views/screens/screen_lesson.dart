@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
@@ -20,14 +19,9 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   @override
   void initState() {
-    // List list = Get.arguments["content"].children[0].children;
-    // list.removeRange(0, list.length - 8);
-    trackerParams = {"id": Get.arguments["content"]!.id};
-    controller.init(Get.arguments["content"]);
-    controller.onComplete = _onSerieComplete;
     controller.slideIndex.addListener(_onChangeSlide);
     controller.contentIndex.addListener(_onChangeLine);
-    loadAssets();
+    initializeController();
     super.initState();
   }
 
@@ -44,12 +38,35 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   Future<void> _onChangeLine() async {
     if (controller.contentIndex.value <= -1) return;
     var talk = controller.currentContent;
-    serviceLocator<Sounds>().stopAll();
+    serviceLocator<MediaService>().stopAll();
     stopVideo();
     await _addChat(controller.uniqueIndex);
     if (talk.isQuiz) {
-      await Future.delayed(const Duration(milliseconds: 310));
-      listen(talk);
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (talk.type == ContentType.dictation) {
+        serviceLocator<DictatorQuiz>().prepare(
+          talk: talk,
+          onResult: (state, text, score, repeated, data) =>
+              onQiuzResult(state, text, score, talk, repeated, data),
+        );
+      } else if (talk.type == ContentType.match) {
+        serviceLocator<MatchQuiz>().prepare(
+          talk: talk,
+          onResult: (state, text, score, repeated, data) =>
+              onQiuzResult(state, text, score, talk, repeated, data),
+        );
+      } else if (talk.type == ContentType.choices) {
+        serviceLocator<ChoiceQuiz>().prepare(
+          talk: talk,
+          onResult: (state, text, score, repeated, data) =>
+              onQiuzResult(state, text, score, talk, repeated, data),
+        );
+      } else {
+        listen(talk);
+      }
+    }
+    if (!talk.isStation) {
+      controller.changeContent(1);
     }
   }
 
@@ -68,13 +85,6 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     await playSound(talk, lastIndex: lastIndex);
     await playVideo(talk);
     if (controller.uniqueIndex != lastIndex) return;
-    if (!talk.isStation) controller.changeContent(1);
-
-    // var duration = const Duration(milliseconds: 500);
-    // await _chatScrollController.animateTo(
-    //     _chatScrollController.position.maxScrollExtent,
-    //     duration: duration,
-    //     curve: Curves.easeOutQuart);
   }
 
   @override
@@ -174,7 +184,14 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       ),
       child: switch (talk.type) {
         ContentType.image => _imageBuilder(talk),
+        ContentType.avatar => _avatarBuilder(talk),
+        ContentType.uncover => _uncoverBuilder(talk),
         ContentType.video => videoBuilder(controller),
+        // ContentType.youtube => youtubePlayer(controller, talk.targetValue),
+        ContentType.dictation => DictationBox(),
+        ContentType.wordBank => WordBankBox(talk),
+        ContentType.match => MatchBox(),
+        ContentType.choices => ChoiceBox(),
         _ => _contentItem(talk),
       },
     );
@@ -182,6 +199,8 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
 
   Widget _imageBuilder(Talk talk) {
     final border = BorderRadius.all(Radius.circular(12.d));
+    final bytes =
+        serviceLocator<LessonAssets>().get("${talk.targetValue}.webp");
     return Widgets.rect(
       decoration: BoxDecoration(
         borderRadius: border,
@@ -193,9 +212,28 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
       margin: EdgeInsets.all(24.d),
       child: ClipRRect(
         borderRadius: border,
-        child: LoaderWidget(AssetType.image, talk.targetValue),
+        child: Image.memory(bytes, gaplessPlayback: true),
       ),
     );
+  }
+
+  Widget _uncoverBuilder(Talk talk) {
+    final words = talk.targetValue.split(" ");
+    final answerWords = List.generate(words.length, (i) => Choice(words[i]));
+    return Widgets.rect(
+      radius: 24.d,
+      color: TColors.primary0,
+      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(vertical: 80.d),
+      child: HiddenWords(answerWords, ValueNotifier<String>("")),
+    );
+  }
+
+  Widget _avatarBuilder(Talk talk) {
+    final expression = AvatarExpression.values[talk.data < 0 ? 0 : talk.data];
+    return Avatar(
+        expression: expression,
+        size: expression == AvatarExpression.point ? 150.d : 250.d);
   }
 
   Widget _contentItem(Talk talk) {
@@ -207,18 +245,18 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
     if (talk.isQuiz) {
       return Widgets.rect(
           radius: 24.d,
-          height: 400.d,
+          height: DeviceInfo.size.width,
           color: TColors.primary0,
           alignment: Alignment.center,
           width: DeviceInfo.size.width,
           margin: EdgeInsets.symmetric(vertical: 5.d),
           padding: EdgeInsets.all(20.d),
-          child: listenerBuilder(talk));
+          child: microphoneBuilder(talk));
     }
     return RadioBox(
       talk.targetValue, // main,
       ballonPosition: tip,
-      narrator: talk.type.narrator,
+      narrator: talk.narrator,
       translation: talk.nativeValue, // translate,
       textStyle: talk.isChat
           ? null
@@ -230,31 +268,23 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
   }
 
   @override
-  void onListeningResult(QuizState state, String text, int score, Talk talk) {
-    final lastRecord = talk.lastRecord;
+  void onQiuzResult(
+    QuizState state,
+    String text,
+    int score,
+    Talk talk,
+    bool repeated,
+    dynamic data,
+  ) {
     controller.onQuizResult(state, text, score, talk);
-    if (state == QuizState.success && lastRecord == null) {
+    if (state == QuizState.success && !repeated) {
       controller.changeContent(1);
-    }
-  }
-
-  Future<void> _onSerieComplete(
-      int sentenceCount, int quizCount, int score) async {
-    await Get.toNamed(Routes.popupResult, arguments: {
-      "id": controller.root!.id,
-      "score": score,
-      "quizCount": quizCount,
-      "sentenceCount": sentenceCount
-    });
-    if (mounted) {
-      Navigator.pop(context);
-      showFeedback();
     }
   }
 
   @override
   void dispose() {
-    serviceLocator<Sounds>().stopAll();
+    serviceLocator<MediaService>().stopAll();
     controller.slideIndex.removeListener(_onChangeSlide);
     controller.contentIndex.removeListener(_onChangeLine);
     super.dispose();

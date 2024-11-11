@@ -1,44 +1,49 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lifetalk/app_export.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  VideoPlayerController _controller = VideoPlayerController.networkUrl(Uri.parse(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'));
+  VideoPlayerController? videoController;
 
-  Future<void> playVideo(Talk talk) async {
-    if (talk.type != ContentType.video) return;
+  Future<VideoPlayerController?> playVideo(Talk talk) async {
+    if (talk.type != ContentType.video) return null;
     final file =
         serviceLocator<LessonAssets>().get("${talk.targetValue}.mp4") as File;
-    _controller = VideoPlayerController.file(file);
-    await _controller.initialize();
-    _controller.play();
+    videoController = VideoPlayerController.file(file);
+    await videoController?.initialize();
+    videoController?.play();
+    return videoController;
   }
 
-  Future<void> stopVideo() => _controller.pause();
+  Future<void> stopVideo() => videoController!.pause();
 
   Widget videoBuilder(LessonController lessonController) {
     return ValueListenableBuilder<VideoPlayerValue>(
-      valueListenable: _controller,
+      valueListenable: videoController!,
       builder: (context, value, child) {
         if (!value.isInitialized) {
           return Widgets.rect(color: TColors.primary0);
         }
         var isEnable = value.duration.compareTo(value.position) <= 0;
-        // print(
-        //     "+++++++++++++++++ ${value.duration.compareTo(value.position)}");
-
+        if (isEnable) {
+          Timer(
+            Duration(milliseconds: 100),
+            () => lessonController.changeContent(1),
+          );
+        }
         return AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
+          aspectRatio: videoController!.value.aspectRatio,
           child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(20.d)),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                VideoPlayer(_controller),
-                isEnable
+                VideoPlayer(videoController!),
+                /* isEnable
                     ? Positioned.fill(
                         child: Widgets.rect(
                           color: TColors.black40,
@@ -68,7 +73,8 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
                           ),
                         ),
                       )
-                    : const SizedBox()
+                    :  */
+                const SizedBox()
               ],
             ),
           ),
@@ -77,9 +83,26 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
+  Widget youtubePlayer({double? borderRadius}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 0)),
+      child: YoutubePlayer(
+        controller: serviceLocator<MediaService>().youtubeController!,
+        controlsTimeOut: Duration(milliseconds: 1),
+        topActions: [Widgets.rect(color: TColors.pink, width: 11, height: 33)],
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.amber,
+        progressColors: const ProgressBarColors(
+          handleColor: Colors.amberAccent,
+          playedColor: Colors.amber,
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
-    _controller.dispose();
+    videoController?.dispose();
     super.dispose();
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:nakama/nakama.dart';
+import 'package:grpc/grpc.dart' as grpc;
 
 import '../../app_export.dart';
 
@@ -23,6 +24,8 @@ class NetConnector extends IService {
 
     _session = await connect();
     var account = await getAccount();
+    Pref.username.setString(account.user.id);
+    log(jsonEncode(account.user));
 
     // // Check internal version, public users avoidance
     // var test = _config["updates"]["test"];
@@ -38,8 +41,8 @@ class NetConnector extends IService {
   Future<void> _loadConfigs(int version) async {
     http.Response? response;
     try {
-      response = await http.get(
-          Uri.parse("https://8ball.turnedondigital.com/lifetalk/configs.json"));
+      response = await http
+          .get(Uri.parse("https://8ball.turnedondigital.com/lifetalk/configs.json"));
     } catch (e) {
       var error = "$e";
       if (_isDisconnected(error)) {
@@ -60,15 +63,21 @@ class NetConnector extends IService {
         }
         versions[key] = VersionConfigs(
           key,
-          entry.value["port"],
-          entry.value["host"],
-          entry.value["changelog"],
-          VersionPriority.values[entry.value["priority"]],
+          entry.value["port"] ?? configs["port"],
+          entry.value["host"] ?? configs["host"],
+          entry.value["assetsUrl"] ?? configs["assetsUrl"],
+          entry.value["changelog"] ?? "",
+          entry.value["nativeLanguage"] ?? configs["nativeLanguage"],
+          entry.value["targetLanguage"] ?? configs["targetLanguage"],
+          VersionPriority.values[entry.value["priority"] ?? 2],
         );
         // Update connection according to version
         if (version == key) {
           configs["port"] = versions[key]!.port;
           configs["host"] = versions[key]!.host;
+          configs["assetsUrl"] = versions[key]!.assetsUrl;
+          configs["nativeLanguage"] = versions[key]!.nativeLanguage;
+          configs["targetLanguage"] = versions[key]!.targetLanguage;
         }
       }
 
@@ -87,8 +96,10 @@ class NetConnector extends IService {
         }
       }
 
-      LoaderWidget.baseURL = configs["assetsServer"]!;
+      LoaderWidget.baseURL = configs["assetsUrl"]!;
       LoaderWidget.hashMap = Map.castFrom(configs["files"]);
+      Localization.languageCode = configs["nativeLanguage"];
+      Localization.targetLanguage = configs["targetLanguage"];
       log("Config loaded.");
     } else {
       throw SkeletonException(
@@ -112,7 +123,8 @@ class NetConnector extends IService {
       "location": location,
       "timezone": "$timezone",
       "latestVersion": DeviceInfo.buildNumber,
-      "displayName": "Player_${StringExtensions.getRandomString(4)}",
+      "displayName":
+          "u_${DeviceInfo.model}_${location.split("/")[1]}_${StringExtensions.getRandomString(2)}",
       "device":
           '{"model":"${DeviceInfo.model}", "osVersion":"${DeviceInfo.osVersion}", "baseVersion":"${DeviceInfo.baseVersion}"}'
     };
@@ -122,12 +134,17 @@ class NetConnector extends IService {
           .authenticateDevice(deviceId: DeviceInfo.adId, vars: data);
       return session;
     } catch (e) {
-      throw SkeletonException(StatusCode.UNKNOWN_ERROR, e.toString());
+      log(e.toString());
+      throw SkeletonException(StatusCode.UNKNOWN_ERROR, "Lost Connection!");
     }
   }
 
   Future<Account> getAccount() async {
     return await _nakamaClient!.getAccount(_session!);
+  }
+
+  Future<void> sessionRefresh() async {
+    _session = await connect();
   }
 
   Future<T> tryRpc<T>(BuildContext context, String id, {Map? params}) async {
@@ -137,7 +154,7 @@ class NetConnector extends IService {
     } on SkeletonException catch (e) {
       if (context.mounted) {
         await Get.toNamed(Routes.popupMessage, arguments: {
-          "title": "Error",
+          "title": e.message,
           "message": "error_${e.statusCode}".l()
         });
       }
@@ -149,15 +166,15 @@ class NetConnector extends IService {
   Future<T> rpc<T>(String id, {Map? params}) async {
     /// Frequent RPC avoidance
     final now = DateTime.now();
-    if (_rpcTimes.containsKey(id) &&
-        now.difference(_rpcTimes[id]!).inMilliseconds < 1500) {
+    final diff = now.difference(_rpcTimes[id] ?? DateTime(1)).inMilliseconds;
+    // print("1 $diff $id ${_session!.expiresAt}");
+    if (diff > 0 && diff < 1500) {
       log("Frequent RPC $id");
       Type type = typeOf<T>();
       if (type.toString() == "List<dynamic>") return [] as T;
       if (type.toString() == "Map<dynamic, dynamic>") return {} as T;
       return null as T;
     }
-    _rpcTimes[id] = now;
     params ??= {};
 
     try {
@@ -166,27 +183,26 @@ class NetConnector extends IService {
       var result = json.decode(data!);
       var status = (result["status"] as int).toStatus();
       if (status == StatusCode.SUCCESS) {
+        _rpcTimes[id] = now;
         return result["data"];
       } else {
         throw SkeletonException(status, result["message"]);
       }
-    } catch (e) {
-      if (e is SkeletonException) {
-        rethrow;
-      }
-      var error = "";
-      if (e.toString().contains("codeName")) {
-        error = "$e".split("codeName: ")[1].split(",")[0];
-        if (error == "UNAUTHENTICATED" ||
-            error == "UNAVAILABLE" ||
-            error == "NOT_FOUND" ||
-            error == "INTERNAL") {
-          error = "error_${error.toLowerCase()}";
-        }
+    } on grpc.GrpcError catch (e) {
+      final code = e.code.toStatus();
+      var diff = now.difference(_rpcTimes[id] ?? DateTime(1)).inMilliseconds;
+      if (code == StatusCode.UNAUTHENTICATED && diff > 0) {
+        // print("2 $diff $id ${_session!.expiresAt}");
+        _rpcTimes[id] = DateTime.fromMillisecondsSinceEpoch(
+            now.millisecondsSinceEpoch + 10000);
+        await sessionRefresh();
+        await Future.delayed(Duration(seconds: 1));
+        return await rpc(id, params: params);
       } else {
-        error = "RPC: $id Error: $e";
+        throw SkeletonException(code, e.message ?? "", e.rawResponse);
       }
-      throw SkeletonException(StatusCode.UNAVAILABLE, error);
+    } catch (e) {
+      throw SkeletonException(StatusCode.UNKNOWN_ERROR, e.toString());
     }
   }
 
@@ -275,13 +291,20 @@ class VersionConfigs {
   final int port;
   final int version;
   final String host;
+  final String assetsUrl;
   final String changelog;
+  final String nativeLanguage;
+  final String targetLanguage;
   final VersionPriority priority;
+
   VersionConfigs(
     this.version,
     this.port,
     this.host,
+    this.assetsUrl,
     this.changelog,
+    this.nativeLanguage,
+    this.targetLanguage,
     this.priority,
   );
 }

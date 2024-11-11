@@ -4,14 +4,17 @@ import '../../app_export.dart';
 
 class Quiz extends IService {
   bool isEnable = false;
-  Function(QuizState, String, int)? onResult;
+  Function(QuizState, String, int, bool, dynamic)? onResult;
+  Talk? talk;
   final ValueNotifier<QuizState> state = ValueNotifier(QuizState.none);
 
-  void start({
-    Function(QuizState, String, int)? onResult,
+  void prepare({
+    required Talk talk,
+    Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
     isEnable = true;
-    state.value = QuizState.waiting;
+    this.talk = talk;
+    state.value = QuizState.ready;
     if (onResult != null) this.onResult = onResult;
   }
 
@@ -24,7 +27,7 @@ enum QuizState {
   none,
   ready,
   waiting,
-  listening,
+  running,
   success,
   failure,
   error;

@@ -13,6 +13,7 @@ class Widgets {
     Function()? onTapCancel,
     Function(dynamic details)? onTapDown,
     Function(TapUpDetails details)? onTapUp,
+    Function(DragEndDetails)? onHorizontalDragEnd,
     Function(DragEndDetails)? onVerticalDragEnd,
     Widget? child,
   }) {
@@ -22,19 +23,19 @@ class Widgets {
       },
       onTapUp: _isActive(id)
           ? (details) {
-              serviceLocator<Sounds>().play(sfx ?? "mouse_up");
+              serviceLocator<MediaService>().playSound(sfx ?? "mouse_up");
               onTapUp?.call(details);
             }
           : null,
       onTapDown: _isActive(id)
           ? (details) {
-              serviceLocator<Sounds>().play(sfx ?? "mouse_down");
+              serviceLocator<MediaService>().playSound(sfx ?? "mouse_down");
               onTapDown?.call(details);
             }
           : null,
       onTapCancel: () {
         if (_isActive(id)) {
-          serviceLocator<Sounds>().play(sfx ?? "mouse_up");
+          serviceLocator<MediaService>().playSound(sfx ?? "mouse_up");
           onTapCancel?.call();
         }
       },
@@ -44,6 +45,11 @@ class Widgets {
       onVerticalDragEnd: onVerticalDragEnd != null
           ? (details) {
               if (_isActive(id)) onVerticalDragEnd(details);
+            }
+          : null,
+      onHorizontalDragEnd: onHorizontalDragEnd != null
+          ? (details) {
+              if (_isActive(id)) onHorizontalDragEnd(details);
             }
           : null,
       child: child,
@@ -98,6 +104,7 @@ class Widgets {
     Function(TapUpDetails)? onTapUp,
     Function()? onTapCancel,
     Function()? onLongPress,
+    String? sfx,
     int buttonId = 30,
     Color? color,
     Alignment? alignment,
@@ -122,6 +129,7 @@ class Widgets {
         onTapUp: onTapUp,
         onTapCancel: onTapCancel,
         onLongPress: onLongPress,
+        sfx: sfx,
         child: rect(
           width: width,
           height: height,
@@ -133,7 +141,7 @@ class Widgets {
           margin: margin,
           decoration: decoration,
           foregroundDecoration: foregroundDecoration,
-          radius: radius ?? 16.d,
+          radius: radius ?? 14.d,
           borderRadius: borderRadius,
           color: color ?? TColors.transparent,
           child: child,
@@ -149,12 +157,17 @@ class Widgets {
             centerSlice: sliceData?.centerSlice));
   }
 
-  static divider({double? width, double? height, BoxDecoration? decoration}) {
+  static divider({
+    Color? color,
+    double? width,
+    double? height,
+    BoxDecoration? decoration,
+  }) {
     return rect(
         radius: 2.d,
         width: width ?? 1.d,
         height: height ?? 1.d,
-        color: TColors.primary10,
+        color: color ?? TColors.primary10,
         decoration: decoration);
   }
 

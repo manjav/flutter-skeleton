@@ -16,6 +16,8 @@ class LessonController {
   final ValueNotifier<int> slideIndex = ValueNotifier(-1);
   final ValueNotifier<int> contentIndex = ValueNotifier(-1);
   final ValueNotifier<bool> slidePassed = ValueNotifier(true);
+  Function(double)? onAssetLoadingProgress;
+  Function(String)? onError;
 
   ParentContent get currentSerie => series[serieIndex.value];
   ParentContent get currentSlide =>
@@ -24,12 +26,17 @@ class LessonController {
 
   int get uniqueIndex => slideIndex.value * 100 + contentIndex.value;
 
-  void init(ParentContent root) {
+  Future<void> init(ParentContent root, {bool loadCaptions = true}) async {
     serviceLocator<Trackers>().startProgress(root.id);
-    this.root = root;
-    series = List.generate(
-        root.children.length, (i) => root.children[i] as ParentContent);
 
+    try {
+      await _loadGroup(root);
+    } on SkeletonException catch (e) {
+      onError?.call(e.message);
+      return;
+    }
+    // List list = (root.children[0] as ParentContent).children;
+    // list.removeRange(0, 1);
     quizes.clear();
     for (ParentContent serie in series) {
       for (var slide in serie.children) {
@@ -41,21 +48,32 @@ class LessonController {
         }
       }
     }
+
+    _loadAssets(loadCaptions);
+  }
+
+  Future<void> _loadGroup(ParentContent root) async {
+    this.root = root;
+    // Load group contents
+    if (root.children.isEmpty) {
+      await serviceLocator<AccountProvider>().loadGroup(root);
+    }
+    series = List.generate(
+        root.children.length, (i) => root.children[i] as ParentContent);
+  }
+
+  void _loadAssets(bool loadCaptions) {
+    serviceLocator<LessonAssets>().load(
+      series: series,
+      onComplete: () => changeSerie(1),
+      onProgress: (p) => onAssetLoadingProgress?.call(p * 100),
+      onError: onError!,
+    );
   }
 
   Future<void> changeSerie(int stepLength) async {
     if (serieIndex.value >= series.length - stepLength) {
-      int score = 0;
-      for (var entry in quizes.entries) {
-        score += entry.value.score.max(100);
-      }
-
-      serviceLocator<Trackers>().endProgress(root!.id, score, parameters: {
-        "quizCount": quizes.length,
-        "sentenceCount": sentenceCount,
-      });
-
-      onComplete?.call(sentenceCount, quizes.length, score);
+      callCompletedMethod();
       return;
     }
 
@@ -64,22 +82,42 @@ class LessonController {
     changeSlide(1);
   }
 
+  void callCompletedMethod() {
+    int score = 0;
+    for (var entry in quizes.entries) {
+      score += entry.value.score.max(100);
+    }
+
+    serviceLocator<Trackers>().endProgress(root!.id, score, parameters: {
+      "quizCount": quizes.length,
+      "sentenceCount": sentenceCount,
+    });
+
+    onComplete?.call(sentenceCount, quizes.length, score);
+  }
+
   Future<void> changeSlide(int stepLength) async {
     if (slideIndex.value >= currentSerie.children.length - stepLength) {
       changeSerie(1);
       return;
     }
     if (stepLength != 0) {
-      slideIndex.value =
-          (slideIndex.value + stepLength).max(currentSerie.children.length);
+      var index = (slideIndex.value + stepLength)
+          .clamp(0, currentSerie.children.length - 1);
+      slideIndex.value = index;
       contentIndex.value = -1;
       changeContent(1);
     }
-    slidePassed.value = false;
-    _slidePassTimer?.cancel();
-    if (currentSlide.children.where((c) => (c as Talk).isQuiz).isEmpty) {
-      _slidePassTimer =
-          Timer(const Duration(seconds: 1), () => slidePassed.value = true);
+
+    // Disable next slide and enable after 1 second
+    final quizes = currentSlide.children.where((c) => (c as Talk).isQuiz);
+    if (quizes.isEmpty || (quizes.first as Talk).lastRecord == null) {
+      slidePassed.value = false;
+      _slidePassTimer?.cancel();
+      if (quizes.isEmpty) {
+        _slidePassTimer =
+            Timer(const Duration(seconds: 1), () => slidePassed.value = true);
+      }
     }
   }
 
@@ -96,9 +134,10 @@ class LessonController {
     talk.lastRecord = QuizRecord(state: state, answer: answer);
     quizes[talk.id]!.score = score;
     if (score > listener.minMatchLevel) {
-      serviceLocator<Sounds>().play("correct_${Random().nextInt(3)}");
+      serviceLocator<MediaService>()
+          .playSound("correct_${Random().nextInt(3)}");
     } else {
-      serviceLocator<Sounds>().play("wrong");
+      serviceLocator<MediaService>().playSound("wrong");
     }
     slidePassed.value = true;
 
@@ -108,7 +147,7 @@ class LessonController {
       values: {
         "score": score,
         "answer": answer,
-        "expected": listener.pattern,
+        "expected": talk.targetValue,
       },
     );
   }

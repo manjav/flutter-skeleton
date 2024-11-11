@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lifetalk/app_export.dart';
 import 'package:lifetalk/skeleton/mixins/feast_mixin.dart';
@@ -50,14 +51,24 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
 
       _score = (widget.args["score"] / widget.args["quizCount"]).round();
       _scoreLevel = findLevel(_score);
-      await serviceLocator<AccountProvider>().saveScore(
-        widget.args["id"]!,
-        {
-          "score": _score,
-          "quizCount": widget.args["quizCount"],
-          "sentenceCount": widget.args["sentenceCount"],
-        },
-      );
+      try {
+        await serviceLocator<AccountProvider>().saveScore(
+          widget.args["id"]!,
+          {
+            "score": _score,
+            "quizCount": widget.args["quizCount"],
+            "sentenceCount": widget.args["sentenceCount"],
+          },
+        );
+      } on SkeletonException catch (e) {
+        if (context.mounted) {
+          Get.toNamed(Routes.popupMessage, arguments: {
+            "title": e.message,
+            "message": "error_${e.statusCode}".l()
+          });
+        }
+      }
+
       return true;
     });
   }

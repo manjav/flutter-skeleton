@@ -5,34 +5,28 @@ import 'package:rive/rive.dart';
 import '../app_export.dart';
 
 mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  final GlobalKey footerKey = GlobalKey();
-  final LessonController controller = LessonController();
   final ValueNotifier<Talk?> caption = ValueNotifier(null);
+  final LessonController controller = LessonController();
+  final GlobalKey footerKey = GlobalKey();
   SMIInput<double>? progressInput;
   double padding = 8.d;
 
-  void loadAssets({bool loadCaptions = true}) {
-    serviceLocator<LessonAssets>().load(
-      series: controller.series,
-      onComplete: () {
-        controller.changeSerie(1);
-      },
-      onProgress: (p) => progressInput?.value = p * 100,
-      onError: (message) async {
-        await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
-        if (mounted) {
-          Navigator.pop(context);
-        }
-      },
-    );
+  void initializeController({bool loadCaptions = true}) async {
+    trackerParams = {"id": Get.arguments["content"]!.id};
+
+    controller.onComplete = _onSerieComplete;
+    controller.onAssetLoadingProgress = (value) => progressInput?.value = value;
+    controller.onError = (message) async {
+      await Get.toNamed(Routes.popupMessage, arguments: {"title": message});
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    };
+    controller.init(Get.arguments["content"], loadCaptions: loadCaptions);
   }
 
   @override
   Widget contentFactory(double paddingTop) {
-    if (controller.series.isEmpty) {
-      return const SizedBox();
-    }
-
     return ValueListenableBuilder(
       valueListenable: controller.serieIndex,
       builder: (context, value, child) {
@@ -84,10 +78,14 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Widget progressSliderBuilder(double width) {
+    final height = 9.d;
     final seriesCount = controller.series.length;
-    final height = 8.d;
+    var slidesCount = 0;
+    for (ParentContent serie in controller.series) {
+      slidesCount += serie.children.length;
+    }
+
     final margin = EdgeInsets.symmetric(horizontal: height * 0.5);
-    final itemWidth = (width - height * seriesCount) / seriesCount;
     return SizedBox(
       width: width,
       height: height,
@@ -100,29 +98,50 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
             itemCount: seriesCount,
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
+              final itemWidth = (width - height * seriesCount) *
+                  controller.series[index].children.length /
+                  slidesCount;
               if (index != serieIndex) {
                 return Widgets.rect(
-                  width: itemWidth,
                   radius: 4.d,
                   margin: margin,
-                  color: index <= serieIndex ? TColors.green : TColors.white50,
+                  width: itemWidth,
+                  color:
+                      index <= serieIndex ? TColors.green : TColors.primary20,
                 );
               }
               return Padding(
                 padding: margin,
-                child: Widgets.slider(0, value + 1,
-                    controller.currentSerie.children.length.toDouble(),
-                    padding: 0,
-                    width: itemWidth,
-                    height: height,
-                    backgroundColor: TColors.white50,
-                    progressColor: TColors.green),
+                child: Widgets.slider(
+                  0,
+                  value + 1,
+                  controller.currentSerie.children.length.toDouble(),
+                  padding: 0,
+                  height: height,
+                  width: itemWidth,
+                  progressColor: TColors.green,
+                  backgroundColor: TColors.primary20,
+                ),
               );
             },
           );
         },
       ),
     );
+  }
+
+  Future<void> _onSerieComplete(
+      int sentenceCount, int quizCount, int score) async {
+    await Get.toNamed(Routes.popupResult, arguments: {
+      "id": controller.root!.id,
+      "score": score,
+      "quizCount": quizCount,
+      "sentenceCount": sentenceCount
+    });
+    if (mounted) {
+      Navigator.pop(context);
+      showFeedback();
+    }
   }
 
   Future<void> showFeedback() async {
@@ -139,11 +158,9 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     int lastIndex = -1,
     bool force = false,
   }) async {
-    if (talk.type.textSide != TranslationSide.none && !talk.isStation) {
-      // await serviceLocator<Speaker>()
-      //     .play(soundId, narrator: talk.type.narrator, force: force);
-      final text = talk.getText(talk.type.textSide);
-      await serviceLocator<Speaker>().playLocal(text);
+    if (talk.textSide != TranslationSide.none && !talk.isStation) {
+      final text = talk.getText(talk.textSide);
+      await serviceLocator<MediaService>().playVoice(text);
     }
   }
 

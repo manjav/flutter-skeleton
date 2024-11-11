@@ -142,15 +142,14 @@ class SpeakerBox extends StatelessWidget {
       alignment: Alignment.center,
       padding: EdgeInsets.zero,
       child: StreamBuilder(
-        stream: serviceLocator<Sounds>().getPlayer(value).onPlayerStateChanged,
+        stream: serviceLocator<MediaService>()
+            .getAudioPlayer(value)
+            .onPlayerStateChanged,
         builder: (context, snapshot) => Asset.load<SvgPicture>(
             snapshot.data == PlayerState.playing ? "stop" : "play",
             width: size * 0.35),
       ),
-      onPressed: () =>
-          serviceLocator<Speaker>().play(value, narrator: narrator),
-      onLongPress: () => serviceLocator<Speaker>()
-          .play(value, narrator: narrator, reset: true),
+      onPressed: () => serviceLocator<MediaService>().playVoice(value),
     );
   }
 }
@@ -174,6 +173,81 @@ class ImageBox extends StatelessWidget {
         width: width,
         height: height,
       ),
+    );
+  }
+}
+
+class HiddenWords extends StatelessWidget with ILogger {
+  final List<Choice> answerWords;
+  final ValueNotifier<String> liveAnswer;
+  HiddenWords(
+    this.answerWords,
+    this.liveAnswer, {
+    super.key,
+  });
+
+  final _defaultStyle = TStyles.big.copyWith(
+    height: 0.8,
+    color: TColors.primary50,
+    letterSpacing: -0.5,
+  );
+  final _correctStyle = TStyles.big.copyWith(
+    height: 0.8,
+    color: TColors.green,
+    letterSpacing: -0.5,
+  );
+  final _hiddenStyle = TStyles.big.copyWith(
+    height: 0.8,
+    color: TColors.transparent,
+    letterSpacing: -0.5,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: liveAnswer,
+      builder: (context, value, child) {
+        var items = <Widget>[];
+        var words = value.split(" ");
+        for (var i = 0; i < answerWords.length; i++) {
+          final answer = answerWords[i];
+          final blankMode = Choice.blankMode(answer.text);
+
+          var isCorrect = false;
+          var style = _defaultStyle;
+          if (i < words.length && answer.text.isNotEmpty) {
+            final word = words[i];
+            isCorrect = word == answer.text.patternize();
+            // log("word:$word pattern: ${answer.text} Correct:$isCorrect");
+            if (isCorrect) {
+              style = _correctStyle;
+            }
+          }
+          items.add(
+            ValueListenableBuilder(
+              valueListenable: answer.stateNotifier,
+              builder: (context, value, child) {
+                return Widgets.button(
+                  context,
+                  radius: 6.d,
+                  color: blankMode ? TColors.primary10 : TColors.transparent,
+                  margin: EdgeInsets.all(2.d),
+                  padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
+                  child: Text(answer.text.replaceAll(RegExp(r'[{}]'), ''),
+                      style: blankMode &&
+                              value != ChoiceState.selected &&
+                              !isCorrect
+                          ? _hiddenStyle
+                          : style),
+                  onPressed: () =>
+                      answerWords[i].setState(ChoiceState.selected),
+                );
+              },
+            ),
+          );
+        }
+        return Wrap(children: items);
+      },
     );
   }
 }

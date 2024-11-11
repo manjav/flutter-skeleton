@@ -18,7 +18,6 @@ enum BalloonTipPosition {
   rightBottom,
 }
 
-// ignore: must_be_immutable
 class BalloonDecoration extends Decoration {
   final Color? mainColor;
   final Color? strokeColor;

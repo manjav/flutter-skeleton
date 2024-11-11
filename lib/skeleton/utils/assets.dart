@@ -73,10 +73,11 @@ enum AssetType {
   sound,
   text,
   vector,
+  video,
 }
 
 extension AssetTypeExtension on AssetType {
-  String folder([String? subFolder]) {
+  String folder([String subFolder = ""]) {
     var folder = switch (this) {
       AssetType.animation || AssetType.animationZipped => "animations",
       AssetType.font => "fonts",
@@ -84,8 +85,11 @@ extension AssetTypeExtension on AssetType {
       AssetType.sound => "sounds",
       AssetType.text => "text",
       AssetType.vector => "vectors",
+      AssetType.video => "videos",
     };
-    if (subFolder != null) folder += '/$subFolder';
+    if (subFolder.isNotEmpty) {
+      folder += '/$subFolder';
+    }
     return folder;
   }
 
@@ -96,7 +100,8 @@ extension AssetTypeExtension on AssetType {
       AssetType.image => "webp",
       AssetType.sound => "mp3",
       AssetType.text => "json",
-      AssetType.vector => "svg"
+      AssetType.vector => "svg",
+      AssetType.video => "mp4"
     };
   }
 

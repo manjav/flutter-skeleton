@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -13,11 +11,8 @@ import '../../app_export.dart';
 class ListenerQuiz extends Quiz {
   static const int levelInterval = 100;
   String? locale;
-  String pattern = "";
-  String hintVoice = "";
-  String repeatVoice = "";
+  String _pattern = "";
   int minMatchLevel = 95;
-  Narrator narrator = Narrator.shimmer;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
   SpeechRecognitionResult result = SpeechRecognitionResult([], true);
@@ -26,9 +21,11 @@ class ListenerQuiz extends Quiz {
   final double _minSoundLevel = Platform.isIOS ? -70 : -10;
   final double _maxSoundLevel = Platform.isIOS ? -20 : 10;
   DateTime _lastLevelChanged = DateTime.now();
-  bool _isRepeatPlayed = false;
+  bool _hasMediaPlayed = false;
+  bool _hasResultSent = false;
   List<String> exceptions = [];
   int _matchLevel = 0;
+  MediaIntry? initialMedia, finalMedia;
 
   @override
   initialize({List<Object>? args}) async {
@@ -76,61 +73,68 @@ class ListenerQuiz extends Quiz {
   void _statusListener(String status) {
     log('Received listener status: => $status, listening: ${_speech.isListening}');
     if (status == "listening") {
-      state.value = QuizState.listening;
+      state.value = QuizState.running;
     } else if (status == "done") {
-      if (_isRepeatPlayed || recognizedWords.value.isEmpty) {
-        onResult?.call(
-            state.value == QuizState.success ? state.value : QuizState.failure,
-            recognizedWords.value,
-            _matchLevel);
+      if (state.value == QuizState.running && recognizedWords.value.isEmpty) {
+        state.value = QuizState.failure;
+      }
+      if (_hasMediaPlayed) {
+        _sendResult("status", false);
       }
     }
   }
 
-  void listen({
-    required String pattern,
-    required String hintVoice,
-    required String repeatVoice,
+  @override
+  void prepare({
     String? locale,
+    required Talk talk,
     int minMatchLevel = 95,
-    QuizRecord? lastRecord,
+    bool autoStart = false,
+    MediaIntry? finalMedia,
+    MediaIntry? initialMedia,
     List<String>? exceptions,
-    Function(QuizState state, String text, int mathLevel)? onResult,
+    Function(QuizState, String, int, bool, dynamic)? onResult,
   }) async {
+    this.talk = talk;
     if (state.value.index < QuizState.ready.index) {
       log("Listener not initialized yet!");
       return;
     }
-    if (state.value.index <= QuizState.listening.index) {
+    if (state.value.index <= QuizState.running.index) {
       _speech.cancel();
     }
 
     state.value = QuizState.none;
-    this.hintVoice = hintVoice;
-    this.repeatVoice = repeatVoice;
-    this.pattern = pattern.patternize();
+    _pattern = talk.targetValue.patternize();
     if (locale != null) this.locale = locale;
     if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
-    state.value = QuizState.ready;
-    if (lastRecord != null) {
-      await Future.delayed(const Duration(milliseconds: 10));
-      onResult?.call(
-        state.value = lastRecord.state,
-        recognizedWords.value = lastRecord.answer,
-        _matchLevel,
-      );
+    this.initialMedia = initialMedia;
+    this.finalMedia = finalMedia;
+    _hasMediaPlayed = false;
+    _hasResultSent = false;
+
+    if (talk.lastRecord != null) {
+      state.value = talk.lastRecord!.state;
+      _sendResult("lastRecord", true);
       return;
     }
-    log("Start listen ${this.pattern}");
+    // log("listen $_pattern");
 
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (hintVoice.isNotEmpty) {
-      await serviceLocator<Speaker>().playLocal(hintVoice);
+    if (initialMedia!.type == MediaType.youtube) {
+      await serviceLocator<MediaService>().play(initialMedia);
+    } else {
+      await Future.delayed(const Duration(milliseconds: 500));
     }
-    super.start(onResult: onResult);
+    super.prepare(talk: talk, onResult: onResult);
+    if (autoStart) {
+      start();
+    }
+  }
 
+  void start() {
+    state.value = QuizState.waiting;
     final options = SpeechListenOptions(
         listenMode: ListenMode.deviceDefault,
         cancelOnError: true,
@@ -140,35 +144,17 @@ class ListenerQuiz extends Quiz {
     // systems recognition will be stopped before this value is reached.
     // Similarly `pauseFor` is a maximum not a minimum and may be ignored
     // on some devices.
-
-    var duration = (this.pattern.length * 220).min(2000);
+    recognizedWords.value = "";
+    // if (_speech.lastStatus.isEmpty) return;
+    var duration = (_pattern.length * 170).min(3000).max(10000);
     _speech.listen(
       listenOptions: options,
-      localeId: this.locale,
+      localeId: locale,
       listenFor: const Duration(seconds: 30),
       pauseFor: Duration(milliseconds: duration),
       onSoundLevelChange: _soundLevelListener,
       onResult: _resultListener,
     );
-  }
-
-  Future<void> toggle({
-    required String pattern,
-    required String hintVoice,
-    required String repeatVoice,
-  }) async {
-    recognizedWords.value = "";
-    if (state.value == QuizState.listening ||
-        state.value == QuizState.waiting) {
-      _speech.cancel();
-      state.value = QuizState.ready;
-      return;
-    }
-    listen(
-        pattern: pattern,
-        hintVoice: hintVoice,
-        repeatVoice: repeatVoice,
-        onResult: onResult);
   }
 
   @override
@@ -180,53 +166,64 @@ class ListenerQuiz extends Quiz {
   }
 
   Future<void> _proccessResult() async {
-    for (var alternate in result.alternates) {
-      // print("${alternate.recognizedWords} ${alternate.confidence}");
-      var insert = alternate.recognizedWords.patternize();
-      if (insert.contains(pattern)) {
-        insert = recognizedWords.value = pattern;
-      }
-      _matchLevel = ratio(pattern, insert);
-      // if (exception.isNotEmpty) {
-      //   minMatchLevel =
-      //       100 - (100 * exception.length / pattern!.length).round();
-      // }
-      if (state.value.index > QuizState.listening.index) return;
-      // logs = "=> $insert , ratio: $_matchLevel/$minMatchLevel";
-      if (_matchLevel > minMatchLevel) {
-        recognizedWords.value = insert;
-        state.value = QuizState.success;
-        dispatchResult();
+    if (state.value.index > QuizState.running.index) return;
+    final alternates = List<String>.generate(result.alternates.length,
+        (i) => result.alternates[i].recognizedWords.patternize());
+    for (var alternate in alternates) {
+      if (alternate.contains(_pattern)) {
+        recognizedWords.value = _pattern;
+        log("match '$alternate' '$_pattern'");
+        _finalize(QuizState.success);
         return;
       }
     }
-    recognizedWords.value = result.recognizedWords.patternize();
-
-    if (result.recognizedWords.length > pattern.length * 2) {
-      state.value = QuizState.failure;
-      dispatchResult();
+    for (var alternate in alternates) {
+      _matchLevel = ratio(_pattern, alternate);
+      if (state.value.index > QuizState.running.index) return;
+      if (_matchLevel > minMatchLevel) {
+        log("fuzzy '$alternate' '$_pattern' $_matchLevel $minMatchLevel");
+        recognizedWords.value = _pattern;
+        _finalize(QuizState.success);
+        return;
+      }
+    }
+    if (result.recognizedWords.isNotEmpty) {
+      recognizedWords.value = result.recognizedWords;
+    }
+    if (result.recognizedWords.length > _pattern.length * 2) {
+      _finalize(QuizState.failure);
       return;
     }
 
     if (result.finalResult) {
-      state.value =
-          recognizedWords.value.isEmpty ? QuizState.ready : QuizState.failure;
-      dispatchResult();
+      _finalize(QuizState.failure);
     }
   }
 
-  void dispatchResult() async {
-    _isRepeatPlayed = false;
+  void _finalize(QuizState state) async {
+    this.state.value = state;
     stop();
-    if (repeatVoice.isNotEmpty) {
-      await Future.delayed(const Duration(seconds: 1));
-      await serviceLocator<Speaker>().playLocal(repeatVoice, skipOnError: true);
+    if (recognizedWords.value.isNotEmpty && finalMedia != null) {
+      await serviceLocator<MediaService>().play(finalMedia);
     } else {
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 400));
     }
-    _isRepeatPlayed = true;
+    _hasMediaPlayed = true;
     if (_speech.lastStatus == "done") {
-      onResult?.call(state.value, recognizedWords.value, _matchLevel);
+      _sendResult("finalize", false);
     }
+  }
+
+  void _sendResult(String flag, bool isReserved) {
+    if (_hasResultSent) return;
+    // log("_dispatchResult $flag => ${recognizedWords.value} ${state.value}");
+    onResult?.call(
+      state.value,
+      recognizedWords.value,
+      _matchLevel,
+      isReserved,
+      null,
+    );
+    _hasResultSent = true;
   }
 }

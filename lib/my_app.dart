@@ -62,6 +62,7 @@ class _MyAppState extends State<MyApp>
     var result = await DeviceInfo.preInitialize(context, forced);
     if (result) {
       Themes.preInitialize();
+      await serviceLocator<Localization>().preInitialize();
       setState(() {});
     }
   }
@@ -89,13 +90,10 @@ class _MyAppState extends State<MyApp>
               Localization.locales.firstWhere((l) => l.languageCode == "en"),
           getPages: [
             _getPage(Routes.web, WebScreen()),
-            _getPage(Routes.home, HomeScreen()),
-            // _getPage(Routes.chat, ChatScreen()),
-            // _getPage(Routes.word, LessonWordScreen()),
-            // _getPage(Routes.match, LessonMatchScreen()),
-            // _getPage(Routes.dictation, LessonDictationScreen()),
+            _getPage(Routes.home, DiscoveryScreen()),
             _getPage(Routes.lesson, LessonScreen()),
             _getPage(Routes.series, SeriesScreen()),
+            _getPage(Routes.imitation, ImitationScreen()),
             _getPage(Routes.onboarding, OnboardingScreen()),
             _getPage(Routes.popupResult, ResultScreen()),
             _getPage(Routes.popupMessage, const MessagePopup()),

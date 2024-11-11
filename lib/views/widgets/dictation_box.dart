@@ -3,21 +3,18 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../app_export.dart';
 
-class DictationBox extends StatefulWidget {
+class DictationBox extends StatelessWidget {
   const DictationBox({super.key});
 
   @override
-  State<DictationBox> createState() => _DictationBoxState();
-}
-
-class _DictationBoxState extends State<DictationBox> {
-  @override
   Widget build(BuildContext context) {
     final dictator = serviceLocator<DictatorQuiz>();
-    return ValueListenableBuilder<List<String>>(
-      valueListenable: dictator.answers,
+    return ValueListenableBuilder(
+      valueListenable: dictator.state,
       builder: (context, value, child) {
-        final content = dictator.currentStage!;
+        if (value.index < QuizState.ready.index) {
+          return SizedBox();
+        }
         return Padding(
           padding: EdgeInsets.all(8.d),
           child: Column(
@@ -29,18 +26,19 @@ class _DictationBoxState extends State<DictationBox> {
                   DirText("listening_hint".l()),
                   SpeakerBox(
                     width: 30.d,
-                    value: content.targetValue,
-                    narrator: content.type.narrator,
+                    value: dictator.talk!.targetValue,
+                    narrator: dictator.talk!.narrator,
                   ),
                 ],
               ),
               SizedBox(height: 12.d),
-              DirText(content.nativeValue,
+              DirText(dictator.talk!.nativeValue,
                   style: TStyles.small.copyWith(color: TColors.primary40)),
               SizedBox(height: 8.d),
-              _answerBox(dictator),
+              _answerBox(context, dictator),
               SizedBox(height: 8.d),
-              _wrapper(dictator.choices.length, _choiceItemBuilder),
+              _wrapper(dictator.choices.length,
+                  (i) => _choiceItemBuilder(context, i)),
             ],
           ),
         );
@@ -48,14 +46,14 @@ class _DictationBoxState extends State<DictationBox> {
     );
   }
 
-  Widget _answerBox(DictatorQuiz dictator) {
+  Widget _answerBox(BuildContext context, DictatorQuiz dictator) {
     return Widgets.rect(
       radius: 20.d,
-      color: TColors.primary10,
+      color: TColors.primary20,
       padding: EdgeInsets.fromLTRB(16.d, 6.d, 6.d, 6.d),
       constraints: BoxConstraints.expand(
-          height: (1.3.d * dictator.currentStage!.targetValue.length)
-              .clamp(64.d, 200.d)),
+        height: (1.3.d * dictator.talk!.targetValue.length).clamp(64.d, 200.d),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,13 +62,25 @@ class _DictationBoxState extends State<DictationBox> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: _wrapper(
-                  dictator.answers.value.length,
-                  (i) => Text(
-                      "${dictator.answers.value[i]}${dictator.charByChar ? "" : "  "}")),
+                dictator.words.length,
+                (i) {
+                  return ValueListenableBuilder(
+                    valueListenable: dictator.words[i].stateNotifier,
+                    builder: (context, value, child) {
+                      if (value != ChoiceState.selected) {
+                        return SizedBox();
+                      }
+                      return Text(
+                        "${dictator.words[i].text}${dictator.charByChar ? "" : " "}",
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
           SizedBox(width: 8.d),
-          dictator.answers.value.isEmpty
+          dictator.words.isEmpty
               ? const SizedBox()
               : Widgets.button(
                   context,
@@ -93,17 +103,14 @@ class _DictationBoxState extends State<DictationBox> {
                       _ => Asset.load<SvgPicture>("clear", width: 24.d),
                     },
                   ),
-                  onPressed: dictator.deselectChoice,
+                  onPressed: dictator.popChoice,
                 ),
         ],
       ),
     );
   }
 
-  Widget _wrapper(
-    int itemCount,
-    Widget Function(int) itemBuilder,
-  ) {
+  Widget _wrapper(int itemCount, Widget Function(int) itemBuilder) {
     return Wrap(
       children: [
         for (var i = 0; i < itemCount; i++) itemBuilder(i),
@@ -111,18 +118,27 @@ class _DictationBoxState extends State<DictationBox> {
     );
   }
 
-  Widget _choiceItemBuilder(int index) {
+  Widget _choiceItemBuilder(BuildContext context, int index) {
     final dictator = serviceLocator<DictatorQuiz>();
     var choice = dictator.choices[index];
-    return Widgets.button(
-      context,
-      margin: EdgeInsets.all(3.d),
-      padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
-      color: choice.used ? TColors.primary20 : TColors.primary10,
-      buttonId:
-          dictator.state.value != QuizState.ready || choice.used ? -1 : 30,
-      child: Opacity(opacity: choice.used ? 0 : 1, child: Text(choice.text)),
-      onPressed: () => dictator.selectChoice(choice),
+    return ValueListenableBuilder(
+      valueListenable: choice.stateNotifier,
+      builder: (context, value, child) => Widgets.button(
+        context,
+        margin: EdgeInsets.all(3.d),
+        padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 8.d),
+        color: value == ChoiceState.selected
+            ? TColors.primary20
+            : TColors.primary30,
+        buttonId: dictator.state.value != QuizState.ready ||
+                value == ChoiceState.selected
+            ? -1
+            : 30,
+        child: Opacity(
+            opacity: value == ChoiceState.selected ? 0 : 1,
+            child: Text(choice.text)),
+        onPressed: () => dictator.selectChoice(choice),
+      ),
     );
   }
 }

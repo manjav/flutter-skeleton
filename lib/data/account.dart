@@ -7,10 +7,11 @@ import '../app_export.dart';
 
 class AccountProvider extends ChangeNotifier {
   late Account account;
-  Map<String, Word> words = {};
+  // Map<String, Word> words = {};
   List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
   Map<String, Map<String, dynamic>> scores = {};
+  bool get isTester => (account.user.username ?? "").startsWith("test_");
 
   void initialize(dynamic account) {
     this.account = account;
@@ -19,11 +20,13 @@ class AccountProvider extends ChangeNotifier {
 
   Future<void> update({
     String? avatarUrl,
+    String? username,
     String? displayName,
     String? nativeLanguage,
     String? targetLanguage,
   }) async {
     var params = {};
+    if (username != null) params["username"] = username;
     if (displayName != null) params["displayName"] = displayName;
     if (avatarUrl != null) params["avatarUrl"] = avatarUrl;
     if (nativeLanguage != null) params["langTag"] = nativeLanguage;
@@ -61,11 +64,14 @@ class AccountProvider extends ChangeNotifier {
     if (type == ContentType.talk) {
       for (var i = 0; i < list.length; i++) {
         if (list[i]["type"] == "title") {
-          (group.parent! as ParentContent).title =
-              list[i][account.user.langTag!];
+          group.parent!.title = list[i][account.user.langTag!];
         } else {
-          children.add(Talk.create(group, i, list[i], account.user.langTag!,
-              metadata["targetLanguage"], account.user.displayName!));
+          if (list[i]["type"] == "youtube") {
+            group.parent!.iconUrl = list[i][Localization.targetLanguage];
+          } else {
+            children.add(Talk.create(group, i, list[i], account.user.langTag!,
+                metadata["targetLanguage"], account.user.displayName!));
+          }
         }
       }
     } else {

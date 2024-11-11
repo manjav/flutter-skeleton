@@ -27,12 +27,26 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       color: TColors.primary40, fontWeight: FontWeight.w600, height: 0.9);
   final TextStyle _numberStylePassed = TStyles.big
       .copyWith(color: TColors.green, fontWeight: FontWeight.w600, height: 0.9);
-  final _colors = {
-    "lessons": TColors.blue,
-    "practice": TColors.orange,
-    "grammar": TColors.cyan,
-    "vocabulary": TColors.purpule,
-  };
+
+  Color _getColors(String mode) {
+    return switch (mode.substring(0, 4)) {
+      "less" => TColors.blue,
+      "prac" => TColors.orange,
+      "gram" => TColors.cyan,
+      "voca" => TColors.purpule,
+      "chat" => TColors.primary60,
+      "imit" => TColors.teal,
+      _ => TColors.gray,
+    };
+  }
+
+  String _getRoute(String mode) {
+    return switch (mode.substring(0, 4)) {
+      "less" => Routes.lesson,
+      "imit" => Routes.imitation,
+      _ => Routes.series,
+    };
+  }
 
   Map<String, Map<String, dynamic>> _scores = {};
   List<ParentContent> _categories = [];
@@ -40,55 +54,78 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
-    services.addListener(() async {
-      if (services.state.status == ServiceStatus.initialize) {
-        var account = serviceLocator<AccountProvider>();
-        if (!account.metadata.containsKey("targetLanguage")) {
-          Localization.languageCode = "fa";
-          await serviceLocator<AccountProvider>().update(
-              nativeLanguage: Localization.languageCode,
-              targetLanguage: "en",
-              displayName: "guest_${DeviceInfo.model}");
-          // await Future.delayed(const Duration(seconds: 1));
-          // await Get.toNamed(Routes.onboarding);
-        }
-        _categories = (await account.loadCategories());
-        _scores = await account.loadScores();
-        _categoryIndex = _firstIncompleteGroup();
-        setState(() {});
+    services.addListener(_initializeLessons);
+  }
+
+  void _initializeLessons() async {
+    if (services.state.status != ServiceStatus.initialize) return;
+    try {
+      var account = serviceLocator<AccountProvider>();
+      if (!account.metadata.containsKey("targetLanguage")) {
+        await serviceLocator<AccountProvider>().update(
+            nativeLanguage: Localization.languageCode,
+            targetLanguage: Localization.targetLanguage,
+            displayName: "guest_${DeviceInfo.model}");
+        // await Future.delayed(const Duration(seconds: 1));
+        // await Get.toNamed(Routes.onboarding);
       }
-    });
+      _categories = (await account.loadCategories());
+      _scores = await account.loadScores();
+      _categoryIndex = _firstIncompleteGroup();
+      setState(() {});
+    } on SkeletonException catch (e) {
+      alert(e.message, "error_${e.statusCode}".l());
+    }
   }
 
   @override
-  List<Widget> appBarElementsLeft() => [
-        SkinnedButton(
-          label: "i",
-          color: TColors.primary40,
-          margin: EdgeInsets.all(8.d),
-          padding: EdgeInsets.symmetric(horizontal: 12.d),
-          onPressed: () => Get.toNamed(Routes.popupMessage, arguments: {
-            "title": "about_us_title".l(),
-            "message": "about_us_message".l()
-          }),
-        )
-      ];
+  List<Widget> appBarElementsLeft() {
+    final account = serviceLocator<AccountProvider>();
+    if (account.metadata.isEmpty) return [];
+    return [
+      SkinnedButton(
+        label: "i",
+        color: account.isTester ? TColors.orange : TColors.primary40,
+        margin: EdgeInsets.all(8.d),
+        padding: EdgeInsets.symmetric(horizontal: 12.d),
+        onPressed: () => Get.toNamed(Routes.popupMessage, arguments: {
+          "title": "about_us_title".l(),
+          "message": "about_us_message".l()
+        }),
+        onLongPress: () async {
+          if (!account.isTester) {
+            final username =
+                "test_${DeviceInfo.model}_${(account.account.user.location ?? "/").split("/")[1]}";
+            await account.update(username: username);
+            Pref.username.setString(username);
+            if (mounted) {
+              MyApp.restartApp(context);
+            }
+          }
+        },
+      )
+    ];
+  }
 
   // Find first incomplete group
   int _firstIncompleteGroup() {
     for (var category in _categories) {
-      if (!isCategoryComplete(category)) {
+      if (!isCategoryComplete(category, true)) {
         return category.index;
       }
     }
     return 0;
   }
 
-  bool isCategoryComplete(ParentContent category) {
+  bool isCategoryComplete(ParentContent category, [bool changePass = false]) {
     for (var group in category.children) {
-      if (!_scores.containsKey(group.id)) {
+      if (!_scores.containsKey((group as ParentContent).id)) {
+        if (changePass) {
+          group.passLevel = 1;
+        }
         return false;
       }
+      group.passLevel = 2;
     }
     return true;
   }
@@ -104,7 +141,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           children: [
             ListView.builder(
               padding: EdgeInsets.fromLTRB(0, 80.d, 14.d, 30.d),
-              itemCount: _categories.length,
+              itemCount: _categories.length + 1,
               itemBuilder: _categoryItemBuilder,
             ),
           ],
@@ -112,6 +149,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget _categoryItemBuilder(BuildContext context, int index) {
+    if (index >= _categories.length) {
+      return Widgets.button(
+        context,
+        margin: EdgeInsets.fromLTRB(_roadWidth, 20.d, 0, 0),
+        height: 70.d,
+        color: TColors.primary20,
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text("next_section".l(), style: TStyles.largeInvert),
+          SizedBox(width: 10.d),
+          Asset.load<SvgPicture>("group_lock")
+        ]),
+      );
+    }
     final category = _categories[index];
     return Column(
       children: [
@@ -126,7 +176,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     if (category.index != 0) return const SizedBox();
     return SizedBox(
         height: _titleHeight,
-        child: Text("⭠⭑ Section 1 ⭢  ",
+        child: Text("section_num".l(["1".convert()]),
             style: TStyles.large.copyWith(color: TColors.primary40)));
   }
 
@@ -289,6 +339,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     }
     final group = category.children[index] as ParentContent;
     final text = group.title.simplify();
+    final locked = group.passLevel <= 0;
     return Expanded(
       child: Widgets.rect(
         margin: EdgeInsets.only(
@@ -302,7 +353,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         child: Widgets.button(
           context,
           radius: 12.d,
-          color: _colors[group.mode],
+          color: locked ? TColors.primary20 : _getColors(group.mode),
           margin: EdgeInsets.all(6.d),
           padding: EdgeInsets.symmetric(horizontal: 14.d),
           child: Row(
@@ -314,27 +365,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               Expanded(
                 child: DirText(text, style: TStyles.largeInvert),
               ),
+              locked ? Asset.load<SvgPicture>("group_lock") : const SizedBox()
             ],
           ),
-          onPressed: () async {
-            try {
-              if (group.children.isEmpty) {
-                await serviceLocator<AccountProvider>().loadGroup(group);
-              }
-              var routName =
-                  group.mode == "lessons" ? Routes.lesson : Routes.series;
-              await Get.toNamed(routName, arguments: {"content": group});
-            } on SkeletonException catch (e) {
-              await Get.toNamed(Routes.popupMessage, arguments: {
-                "title": "${e.statusCode}",
-                "message": e.message
-              });
-            }
-            setState(() {});
-            // if (s == null || s <= scoreNotifier.value) return;
-            // await serviceLocator<AccountProvider>().saveScore(id, s);
-            // scoreNotifier.value = s;
-          },
+          onPressed: () async => _loadLesson(group, locked),
+          onLongPress: () => _loadLesson(group, false),
         ),
       ),
     );
@@ -351,5 +386,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     } else {
       return null;
     }
+  }
+
+  Future<void> _loadLesson(ParentContent group, bool locked) async {
+    if (locked) {
+      return;
+    }
+
+    await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
+    _categoryIndex = _firstIncompleteGroup();
+    setState(() {});
+    // if (s == null || s <= scoreNotifier.value) return;
+    // await serviceLocator<AccountProvider>().saveScore(id, s);
+    // scoreNotifier.value = s;
   }
 }

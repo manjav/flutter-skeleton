@@ -21,14 +21,14 @@ enum Narrator {
     };
   }
 
-  String get url {
-    return switch (this) {
-      ali => "https://s1.matnyaar.ir/gpt/tts-ms.php?voice=$value&input=",
-      farid =>
-        "https://s1.matnyaar.ir/gpt/tts-ms.php?voice=fa-IR-FaridNeural&input=",
-      _ => "https://s1.matnyaar.ir/gpt/tts.php?voice=$value&input=",
-    };
-  }
+//   String get url {
+//     return switch (this) {
+//       ali => "https://s1.matnyaar.ir/gpt/tts-ms.php?voice=$value&input=",
+//       farid =>
+//         "https://s1.matnyaar.ir/gpt/tts-ms.php?voice=fa-IR-FaridNeural&input=",
+//       _ => "https://s1.matnyaar.ir/gpt/tts.php?voice=$value&input=",
+//     };
+//   }
 }
 // locale=fa-IR&
 
@@ -43,7 +43,7 @@ class Speaker extends IService {
     bool skipOnError = false,
   }) async {
     serviceLocator<ListenerQuiz>().stop();
-    var player = serviceLocator<Sounds>().getPlayer(text);
+    var player = serviceLocator<MediaService>().getAudioPlayer(text);
     if (force) {
       player.stop();
     } else if (player.state == PlayerState.playing) {
@@ -52,26 +52,8 @@ class Speaker extends IService {
     }
 
     try {
-      final url = "${narrator.url}$text${reset ? "&nocache" : ""}";
+      const url = ""; //"${narrator.url}$text${reset ? "&nocache" : ""}";
       await player.play(UrlSource(url), volume: 1);
-      await _waitingForComplete(player, skipOnError);
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  Future<void> playLocal(
-    String name, {
-    bool skipOnError = false,
-  }) async {
-    serviceLocator<ListenerQuiz>().stop();
-    var player = serviceLocator<Sounds>().getPlayer(name);
-    if (player.state == PlayerState.playing) {
-      player.stop();
-    }
-
-    try {
-      await player.play(serviceLocator<LessonAssets>().get(name));
       await _waitingForComplete(player, skipOnError);
     } catch (e) {
       log(e.toString());

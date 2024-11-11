@@ -3,17 +3,15 @@ import 'package:flutter/material.dart';
 import '../app_export.dart';
 
 mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  Widget listenerBuilder(Talk talk) {
-    return ListenerBox(
-      hint: talk.nativeValue,
-      answer: talk.targetValue,
-      narrator: talk.type.narrator,
-      voice: talk.getText(talk.type.textSide),
-      repeatVoice: talk.type == ContentType.repeat ? "" : talk.targetValue,
-    );
+  Widget microphoneBuilder(Talk talk) {
+    return MicPanel(talk: talk);
   }
 
-  void listen(Talk talk) {
+  void listen(
+    Talk talk, {
+    MediaIntry? initialMedia,
+    MediaIntry? finalMedia,
+  }) {
     final account = serviceLocator<AccountProvider>();
 
     // Change fuzzy acceptance level based on answer length
@@ -27,18 +25,37 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       minMatchLevel = 92;
     }
 
-    serviceLocator<ListenerQuiz>().listen(
-      pattern: pattern,
+    final initalVoice = talk.getText(talk.textSide);
+    initialMedia ??= (initalVoice.isNotEmpty
+        ? MediaIntry(MediaType.voice, initalVoice)
+        : null);
+    finalMedia ??= talk.type != ContentType.repeat
+        ? MediaIntry(MediaType.voice, talk.targetValue)
+        : null;
+
+    serviceLocator<ListenerQuiz>().prepare(
+      talk: talk,
+      finalMedia: finalMedia,
+      initialMedia: initialMedia,
       minMatchLevel: minMatchLevel,
-      lastRecord: talk.lastRecord,
       locale: account.metadata["targetLanguage"],
-      hintVoice: talk.getText(talk.type.textSide),
-      repeatVoice: talk.type == ContentType.repeat ? "" : talk.targetValue,
-      exceptions: [account.account.user.displayName!.patternize()],
-      onResult: (state, text, score) =>
-          onListeningResult(state, text, score, talk),
+      onResult: (state, text, score, repeated, data) => onQiuzResult(
+        state,
+        text,
+        score,
+        talk,
+        repeated,
+        data,
+      ),
     );
   }
 
-  void onListeningResult(QuizState state, String text, int score, Talk talk);
+  void onQiuzResult(
+    QuizState state,
+    String text,
+    int score,
+    Talk talk,
+    bool repeated,
+    dynamic data,
+  );
 }

@@ -1,3 +1,5 @@
-export 'dictator.dart';
-export 'listener.dart';
+export 'choice_quiz.dart';
+export 'dictator_quiz.dart';
+export 'listener_quiz.dart';
+export 'match_quiz.dart';
 export 'quiz.dart';
