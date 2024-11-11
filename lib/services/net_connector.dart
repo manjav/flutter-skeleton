@@ -144,7 +144,7 @@ class NetConnector extends IService {
   }
 
   Future<void> sessionRefresh() async {
-    _session = await _nakamaClient!.sessionRefresh(session: _session!);
+    _session = await connect();
   }
 
   Future<T> tryRpc<T>(BuildContext context, String id, {Map? params}) async {
