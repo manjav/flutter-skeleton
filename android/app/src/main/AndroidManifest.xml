@@ -10,7 +10,9 @@
     <application
         android:label="Life Talk"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
+        
         <activity
             android:name="sources.MainActivity"
             android:exported="true"
