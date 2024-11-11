@@ -95,6 +95,7 @@ class ListenerQuiz extends Quiz {
     List<String>? exceptions,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) async {
+    this.talk = talk;
     if (state.value.index < QuizState.ready.index) {
       log("Listener not initialized yet!");
       return;
@@ -113,7 +114,6 @@ class ListenerQuiz extends Quiz {
     this.finalMedia = finalMedia;
     _hasMediaPlayed = false;
     _hasResultSent = false;
-    state.value = QuizState.ready;
 
     if (talk.lastRecord != null) {
       state.value = talk.lastRecord!.state;
@@ -122,11 +122,11 @@ class ListenerQuiz extends Quiz {
     }
     // log("listen $_pattern");
 
-    await Future.delayed(const Duration(milliseconds: 500));
     if (initialMedia!.type == MediaType.youtube) {
       await serviceLocator<MediaService>().play(initialMedia);
+    } else {
+      await Future.delayed(const Duration(milliseconds: 500));
     }
-
     super.prepare(talk: talk, onResult: onResult);
     if (autoStart) {
       start();
@@ -134,6 +134,7 @@ class ListenerQuiz extends Quiz {
   }
 
   void start() {
+    state.value = QuizState.waiting;
     final options = SpeechListenOptions(
         listenMode: ListenMode.deviceDefault,
         cancelOnError: true,
