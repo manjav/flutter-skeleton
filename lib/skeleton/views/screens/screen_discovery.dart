@@ -78,33 +78,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
-  List<Widget> appBarElementsLeft() {
-    final account = serviceLocator<AccountProvider>();
-    if (account.metadata.isEmpty) return [];
-    return [
-      SkinnedButton(
-        label: "i",
-        color: account.isTester ? TColors.orange : TColors.primary40,
-        margin: EdgeInsets.all(8.d),
-        padding: EdgeInsets.symmetric(horizontal: 12.d),
-        onPressed: () => Get.toNamed(Routes.popupMessage, arguments: {
-          "title": "about_us_title".l(),
-          "message": "about_us_message".l()
-        }),
-        onLongPress: () async {
-          if (!account.isTester) {
-            final username =
-                "test_${DeviceInfo.model}_${(account.account.user.location ?? "/").split("/")[1]}";
-            await account.update(username: username);
-            Pref.username.setString(username);
-            if (mounted) {
-              MyApp.restartApp(context);
-            }
-          }
-        },
-      )
-    ];
-  }
+  List<Widget> appBarElementsLeft() => [];
 
   // Find first incomplete group
   // int _firstIncompleteGroup() {
@@ -134,17 +108,50 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     if (services.state.status.index < ServiceStatus.initialize.index) {
       return const SizedBox();
     }
+    var account = serviceLocator<AccountProvider>();
     return PopScope(
       canPop: false,
       child: Widgets.rect(
         color: TColors.primary0,
         child: Stack(
+          alignment: Alignment(0, -0.85),
           children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Asset.load<SvgPicture>("logo"),
+                SizedBox(width: 10.d),
+                Text("Life Talk"),
+              ],
+            ),
             ListView.builder(
               padding: EdgeInsets.fromLTRB(10.d, 100.d, 10.d, 30.d),
               itemCount: _categories.length + 1,
               itemBuilder: _categoryItemBuilder,
             ),
+            Widgets.button(
+              context,
+              child: account.isTester
+                  ? Text("Test Mode")
+                  : SizedBox(width: 100.d, height: 32.d),
+              padding: EdgeInsets.all(8.d),
+              color: account.isTester ? TColors.orange : TColors.transparent,
+              onPressed: () => Get.toNamed(Routes.popupMessage, arguments: {
+                "title": "about_us_title".l(),
+                "message": "about_us_message".l()
+              }),
+              onLongPress: () async {
+                if (!account.isTester) {
+                  final username =
+                      "test_${DeviceInfo.model}_${(account.account.user.location ?? "/").split("/")[1]}";
+                  await account.update(username: username);
+                  Pref.username.setString(username);
+                  if (mounted) {
+                    MyApp.restartApp(context);
+                  }
+                }
+              },
+            )
           ],
         ),
       ),
