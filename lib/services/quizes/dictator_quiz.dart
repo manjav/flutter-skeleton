@@ -18,6 +18,9 @@ class DictatorQuiz extends Quiz {
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
     super.prepare(talk: talk, onResult: onResult);
+    if (state.value == QuizState.ready) {
+      state.value = QuizState.none;
+    }
     final sections = talk.targetValue.split("∆");
     var text = sections.first;
     final myWords = text.split(" ");
