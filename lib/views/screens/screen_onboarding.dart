@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rive/rive.dart';
 
 import '../../app_export.dart';
 
@@ -13,9 +15,11 @@ class OnboardingScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   @override
   List<Widget> appBarElementsLeft() => [];
+  final _slideMode = ValueNotifier(true);
   final _selectedLanguages = ValueNotifier(MapEntry("en", ""));
   final List<MapEntry> _targetLanguages = [MapEntry("en", "English")];
   List<MapEntry> _nativeLanguages = [];
+  SMIInput<double>? _pageInput;
 
   @override
   void initState() {
@@ -42,7 +46,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   }
 
   Widget _languageSelection() {
-    if (_nativeLanguages.isEmpty) {
+    if (_nativeLanguages.isEmpty || _pageInput == null) {
       return SizedBox();
     }
     return Column(
@@ -105,7 +109,41 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   }
 
   Widget _slideShowAnimation() {
-    return SizedBox();
+    if (_pageInput != null && _pageInput!.value > 5) {
+      return SizedBox();
+    }
+    return Widgets.touchable(
+      context,
+      child: LoaderWidget(
+        AssetType.animation,
+        "features",
+        fit: BoxFit.cover,
+        riveAssetLoader: _onRiveAssetLoad,
+        onRiveInit: (Artboard artboard) {
+          final controller =
+              StateMachineController.fromArtboard(artboard, "State Machine 1");
+          _pageInput = controller?.findInput<double>("state");
+          artboard.addController(controller!);
+        },
+      ),
+      onTap: () {
+        _pageInput?.value++;
+        if (_pageInput!.value > 5) {
+          setState(() {});
+        }
+      },
+    );
+  }
+
+  Future<bool> _onRiveAssetLoad(asset, Uint8List? bytes) async {
+    if (asset is FontAsset) {
+      var bytes =
+          await rootBundle.load('assets/fonts/dnd_vazir_round_bold.ttf');
+      var font = await FontAsset.parseBytes(bytes.buffer.asUint8List());
+      asset.font = font;
+      return true;
+    }
+    return false;
   }
 }
 
