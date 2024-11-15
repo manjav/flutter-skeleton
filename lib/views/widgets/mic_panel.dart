@@ -35,7 +35,7 @@ class _MicPanelState extends State<MicPanel> {
   @override
   Widget build(BuildContext context) {
     final listener = serviceLocator<ListenerQuiz>();
-    final words = widget.talk.targetValue.simplify().split(" ");
+    final words = widget.talk.targetValue.split(" ");
     _answerWords.clear();
     _answerWords.addAll(List.generate(words.length, (i) => Choice(words[i])));
     return Stack(
@@ -115,7 +115,7 @@ class _MicPanelState extends State<MicPanel> {
       if (_state.value == QuizState.running) {
         listener.stop();
       } else {
-      widget.talk.lastRecord = null;
+        widget.talk.lastRecord = null;
         Timer(const Duration(milliseconds: 500), () => listener.start());
       }
     } else if (event.name == "play") {

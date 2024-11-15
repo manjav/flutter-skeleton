@@ -208,32 +208,32 @@ class HiddenWords extends StatelessWidget with ILogger {
       valueListenable: liveAnswer,
       builder: (context, value, child) {
         var items = <Widget>[];
-        var words = value.split(" ");
+        var patterns = value.patternize().split(" ");
         for (var i = 0; i < answerWords.length; i++) {
-          final answer = answerWords[i];
-          final blankMode = Choice.blankMode(answer.text);
+          final blankMode = Choice.blankMode(answerWords[i].text);
+          final answer = answerWords[i].text.patternize();
 
           var isCorrect = false;
           var style = _defaultStyle;
-          if (i < words.length && answer.text.isNotEmpty) {
-            final word = words[i];
-            isCorrect = word == answer.text.patternize();
-            // log("word:$word pattern: ${answer.text} Correct:$isCorrect");
+          if (i < patterns.length && answer.isNotEmpty) {
+            final pattern = patterns[i];
+            isCorrect = pattern == answer;
+            log("$pattern $answer => $isCorrect");
             if (isCorrect) {
               style = _correctStyle;
             }
           }
           items.add(
             ValueListenableBuilder(
-              valueListenable: answer.stateNotifier,
+              valueListenable: answerWords[i].stateNotifier,
               builder: (context, value, child) {
                 return Widgets.button(
                   context,
                   radius: 6.d,
                   color: blankMode ? TColors.primary10 : TColors.transparent,
                   margin: EdgeInsets.all(2.d),
-                  padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 1.d),
-                  child: Text(answer.text.replaceAll(RegExp(r'[{}]'), ''),
+                  padding: EdgeInsets.fromLTRB(4.d, 6.d, 4.d, 4.d),
+                  child: Text(answerWords[i].text.simplify(),
                       style: blankMode &&
                               value != ChoiceState.selected &&
                               !isCorrect
