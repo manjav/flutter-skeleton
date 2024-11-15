@@ -253,7 +253,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           if (captionMode) {
             if (value == null) return SizedBox();
             return Text(
-              value.targetValue,
+              value.targetValue.simplify(),
               // textAlign: TextAlign.center,
               style: TStyles.big,
             );

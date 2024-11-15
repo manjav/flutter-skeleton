@@ -34,21 +34,16 @@ class LessonAssets with ILogger {
           }
 
           if (talk.isQuiz) {
-            _loadFile(
-              AssetType.animation,
-              "mic_panel_button",
-              onComplete,
-              onProgress,
-              onError,
-            );
+            _loadFile(AssetType.animation, "mic_panel_button", onComplete, onProgress,
+                onError);
           }
 
           if (side != TranslationSide.none) {
-            var text = talk.getText(side);
+            var text = talk.getText(side).simplify();
             _loadVoice(text, talk.narrator, onComplete, onProgress, onError);
           }
           if (talk.type == ContentType.translate) {
-            var text = talk.targetValue;
+            var text = talk.targetValue.simplify();
             _loadVoice(text, Narrator.onyx, onComplete, onProgress, onError);
           }
         }

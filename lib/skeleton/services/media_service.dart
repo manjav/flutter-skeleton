@@ -122,6 +122,7 @@ class MediaService extends IService {
     String name, {
     double playbackRate = 1.0,
   }) async {
+    name = name.simplify();
     log("play => $name");
     var player = serviceLocator<MediaService>().getAudioPlayer(name);
     if (player.state == audio.PlayerState.playing) {

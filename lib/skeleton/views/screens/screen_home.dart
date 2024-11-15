@@ -338,7 +338,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       );
     }
     final group = category.children[index] as ParentContent;
-    final text = group.title;
+    final text = group.title.simplify();
     final locked = group.passLevel <= 0;
     return Expanded(
       child: Widgets.rect(
