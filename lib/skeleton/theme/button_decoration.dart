@@ -25,7 +25,7 @@ class BattonDecoration extends Decoration {
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
     return _ButtonPainter(
       mainColor ?? TColors.orange,
-      outlineSize ?? 2.d,
+      outlineSize ?? 0, //2.d,
       strokeSize ?? 3.d,
       cornerRadius ?? 16.d,
       isPressed ?? false,
@@ -55,7 +55,7 @@ class _ButtonPainter extends BoxPainter {
     this.isPressed,
     this.isEnable,
   ) : super() {
-    _mainPaint.color = mainColor;
+    _mainPaint.color = isEnable ? mainColor : mainColor.withAlpha(105);
     _hasOutline = mainColor == TColors.white;
     _strokePaint.color = Color.lerp(mainColor, TColors.black, 0.3)!;
   }
