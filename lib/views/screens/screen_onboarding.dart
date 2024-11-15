@@ -115,7 +115,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
       child: LoaderWidget(
         AssetType.animation,
         "features",
-        fit: BoxFit.cover,
+        fit: BoxFit.fitWidth,
         riveAssetLoader: _onRiveAssetLoad,
         onRiveInit: (Artboard artboard) {
           final controller =
