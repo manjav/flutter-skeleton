@@ -30,8 +30,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   Future<void> _getLanguages() async {
     Map result =
         await serviceLocator<NetConnector>().rpc("content_languages_get");
-    _nativeLanguages =
-        result.entries /* .where((e) => e.key != "en") */ .toList();
+    _nativeLanguages = result.entries.where((e) => e.key != "en").toList();
     setState(() {});
   }
 
