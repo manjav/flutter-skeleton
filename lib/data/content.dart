@@ -17,6 +17,7 @@ class Content {
       type == ContentType.repeat ||
       type == ContentType.translate ||
       type == ContentType.dictation ||
+      type == ContentType.wordBank ||
       type == ContentType.match ||
       type == ContentType.choices;
   bool get isStation =>
