@@ -138,7 +138,6 @@ class ListenerQuiz extends Quiz {
     final options = SpeechListenOptions(
         listenMode: ListenMode.deviceDefault,
         cancelOnError: true,
-        autoPunctuation: true,
         enableHapticFeedback: true);
     // Note that `listenFor` is the maximum, not the minimum, on some
     // systems recognition will be stopped before this value is reached.
@@ -170,9 +169,9 @@ class ListenerQuiz extends Quiz {
     final alternates = List<String>.generate(result.alternates.length,
         (i) => result.alternates[i].recognizedWords.patternize());
     for (var alternate in alternates) {
+      // log("match '$alternate' '$_pattern'");
       if (alternate.contains(_pattern)) {
         recognizedWords.value = _pattern;
-        log("match '$alternate' '$_pattern'");
         _finalize(QuizState.success);
         return;
       }
@@ -180,8 +179,8 @@ class ListenerQuiz extends Quiz {
     for (var alternate in alternates) {
       _matchLevel = ratio(_pattern, alternate);
       if (state.value.index > QuizState.running.index) return;
+      // log("fuzzy '$alternate' '$_pattern' $_matchLevel $minMatchLevel");
       if (_matchLevel > minMatchLevel) {
-        log("fuzzy '$alternate' '$_pattern' $_matchLevel $minMatchLevel");
         recognizedWords.value = _pattern;
         _finalize(QuizState.success);
         return;

@@ -133,7 +133,7 @@ class _WordBankBoxState extends State<WordBankBox> {
       builder: (context, value, child) => Widgets.button(
         context,
         margin: EdgeInsets.all(3.d),
-        padding: EdgeInsets.symmetric(horizontal: 16.d, vertical: 8.d),
+        padding: EdgeInsets.symmetric(horizontal: 16.d, vertical: 5.d),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(16.d)),
           border: Border.all(color: TColors.primary30),

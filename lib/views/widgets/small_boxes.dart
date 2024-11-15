@@ -218,7 +218,7 @@ class HiddenWords extends StatelessWidget with ILogger {
           if (i < patterns.length && answer.isNotEmpty) {
             final pattern = patterns[i];
             isCorrect = pattern == answer;
-            log("$pattern $answer => $isCorrect");
+            // log("$pattern $answer => $isCorrect");
             if (isCorrect) {
               style = _correctStyle;
             }
