@@ -57,7 +57,7 @@ class RadioBox extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     DirText(
-                      text.simplify(),
+                      text,
                       style: textStyle ?? TStyles.big,
                     ),
                     SizedBox(height: translation == null ? 0 : 6.d),
@@ -65,9 +65,11 @@ class RadioBox extends StatelessWidget {
                     SizedBox(height: translation == null ? 0 : 12.d),
                     translation == null
                         ? const SizedBox()
-                        : DirText(translation!.simplify(),
+                        : DirText(
+                            translation!,
                             style: TStyles.medium
-                                .copyWith(color: TColors.primary40)),
+                                .copyWith(color: TColors.primary40),
+                          ),
                   ],
                 )),
             Positioned(

@@ -71,8 +71,8 @@ class ParentContent extends Content {
     Map map,
   ) : super.create(parent, id, map) {
     this.type = type;
-    title = map["title"] ?? "";
-    subtitle = map["subtitle"] ?? "";
+    title = ((map["title"] ?? "") as String).simplify();
+    subtitle = ((map["subtitle"] ?? "") as String).simplify();
     iconUrl = map["iconUrl"] ?? "";
     mode = map["mode"] ?? "";
   }
@@ -86,8 +86,8 @@ class Talk extends Content {
   Talk.create(ParentContent parent, int index, Map map, String nativeLanguage,
       String targetLanguage, String name)
       : super.create(parent, map["id"], map) {
-    nativeValue = map[nativeLanguage].replaceFirst(RegExp(r'%n'), name);
-    targetValue = map[targetLanguage].replaceFirst(RegExp(r'%n'), name);
+    nativeValue = (map[nativeLanguage] as String).simplify();
+    targetValue = (map[targetLanguage] as String).simplify();
     if (map["type"].endsWith("_1")) {
       type = ContentType.user;
     } else if (map["type"].endsWith("_2")) {
