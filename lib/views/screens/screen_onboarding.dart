@@ -15,7 +15,6 @@ class OnboardingScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   @override
   List<Widget> appBarElementsLeft() => [];
-  final _slideMode = ValueNotifier(true);
   final _selectedLanguages = ValueNotifier(MapEntry("en", ""));
   final List<MapEntry> _targetLanguages = [MapEntry("en", "English")];
   List<MapEntry> _nativeLanguages = [];
@@ -169,15 +168,12 @@ class LanguageSelector extends StatefulWidget {
 }
 
 class _LanguageSelectorState extends State<LanguageSelector> {
-  final TextEditingController _textInputController = TextEditingController();
-  List<MapEntry> _data = [];
   int _selectedIndex = -1;
   final _itemHeight = 64.d;
   final _itemMargin = 5.d;
 
   @override
   void initState() {
-    _onSearchBoxChange("");
     _selectedIndex = widget.selectedIndex;
     super.initState();
   }
@@ -190,25 +186,12 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(widget.title),
-          SizedBox(height: _itemMargin),
-          _data.length > widget.maxtItems
-              ? Widgets.skinnedInput(
-                  controller: _textInputController,
-                  hintText: "Search",
-                  suffixIcon: Icon(Icons.search),
-                  // inputFormatters: <TextInputFormatter>[
-                  //   FilteringTextInputFormatter.allow(Localization.getLimits(
-                  //       OnboardingScreen.targetLanguage)),
-                  // ],
-                  onChange: _onSearchBoxChange,
-                )
-              : SizedBox(),
           SizedBox(
             height: (_itemHeight + _itemMargin * 2) *
-                _data.length.max(widget.maxtItems),
+                widget.data.length.max(widget.maxtItems),
             child: ListView.builder(
                 padding: EdgeInsets.all(0),
-                itemCount: _data.length,
+                itemCount: widget.data.length,
                 itemBuilder: (context, index) => _languageItemBuilder(index)),
           ),
           SizedBox(height: 10.d),
@@ -227,10 +210,10 @@ class _LanguageSelectorState extends State<LanguageSelector> {
       color: selected ? TColors.teal : TColors.primary10,
       child: Row(
         children: [
-          Asset.load<SvgPicture>("flags/${_data[index].key}"),
+          Asset.load<SvgPicture>("flags/${widget.data[index].key}"),
           Expanded(
             child: Text(
-              _data[index].value,
+              widget.data[index].value,
               textAlign: TextAlign.center,
               style: selected ? TStyles.mediumInvert : TStyles.medium,
             ),
@@ -238,18 +221,9 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         ],
       ),
       onPressed: () {
-        widget.onChange?.call(index, _data[index].key);
+        widget.onChange?.call(index, widget.data[index].key);
         setState(() => _selectedIndex = index);
       },
     );
-  }
-
-  void _onSearchBoxChange(String text) {
-    _data = widget.data
-        .where((f) => (f.value as String).contains(_textInputController.text))
-        .toList();
-    if (text.isNotEmpty) {
-      setState(() {});
-    }
   }
 }
