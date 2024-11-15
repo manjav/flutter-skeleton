@@ -85,17 +85,17 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
                 Asset.load<SvgPicture>("arrow_right"),
               ]),
               onPressed: () async {
-      try {
-        await serviceLocator<AccountProvider>().update(
+                try {
+                  await serviceLocator<AccountProvider>().update(
                     targetLanguage: _selectedLanguages.value.key,
                     nativeLanguage: _selectedLanguages.value.value,
                   );
-      } on SkeletonException catch (e) {
-        alert(e.message, "error_${e.statusCode}".l());
-      }
-      if (mounted) {
-        Navigator.pop(context);
-      }
+                } on SkeletonException catch (e) {
+                  alert(e.message, "error_${e.statusCode}".l());
+                }
+                if (mounted) {
+                  Navigator.pop(context);
+                }
               },
             );
           },
@@ -109,105 +109,110 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   }
 }
 
-class LanguagePage extends StatefulWidget {
-  final int index;
-  final List<MapEntry> languages;
+class LanguageSelector extends StatefulWidget {
+  final String title;
+  final bool enabled;
+  final int maxtItems;
+  final int selectedIndex;
+  final List<MapEntry> data;
   final Function(int, String)? onChange;
-  const LanguagePage(this.index, this.languages, {this.onChange, super.key});
+
+  const LanguageSelector(
+    this.title,
+    this.data, {
+    this.onChange,
+    this.enabled = true,
+    this.maxtItems = 4,
+    this.selectedIndex = -1,
+    super.key,
+  });
 
   @override
-  State<LanguagePage> createState() => _LanguagePageState();
+  State<LanguageSelector> createState() => _LanguageSelectorState();
 }
 
-class _LanguagePageState extends State<LanguagePage> {
+class _LanguageSelectorState extends State<LanguageSelector> {
   final TextEditingController _textInputController = TextEditingController();
-  List<MapEntry> _flags = [];
+  List<MapEntry> _data = [];
+  int _selectedIndex = -1;
+  final _itemHeight = 64.d;
+  final _itemMargin = 5.d;
 
   @override
   void initState() {
     _onSearchBoxChange("");
+    _selectedIndex = widget.selectedIndex;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Widgets.rect(
-      padding: EdgeInsets.fromLTRB(56.d, 56.d, 56.d, 0),
+      padding: EdgeInsets.fromLTRB(30.d, 30.d, 30.d, 10.d),
       child: Column(
-        crossAxisAlignment: widget.index > 1
-            ? CrossAxisAlignment.center
-            : CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: EdgeInsets.all(8.d),
-            child: DirText(
-              [
-                "My native language is ...",
-                "target_language_message".l(),
-                "select_name_message".l()
-              ][widget.index],
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(height: 32.d),
-          Widgets.skinnedInput(
-            controller: _textInputController,
-            hintText: [
-              "Search",
-              "search_l".l(),
-              "select_name_prompt".l()
-            ][widget.index],
-            suffixIcon: Icon(widget.index > 1 ? Icons.person : Icons.search),
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(
-                  Localization.getLimits(OnboardingScreen.targetLanguage)),
-            ],
-            onChange: _onSearchBoxChange,
-          ),
-          widget.index < 2
-              ? Expanded(
-                  child: ListView.builder(
-                      padding: EdgeInsets.all(16.d),
-                      itemCount: _flags.length,
-                      itemBuilder: (context, index) =>
-                          _languageItemBuilder(index)),
+          Text(widget.title),
+          SizedBox(height: _itemMargin),
+          _data.length > widget.maxtItems
+              ? Widgets.skinnedInput(
+                  controller: _textInputController,
+                  hintText: "Search",
+                  suffixIcon: Icon(Icons.search),
+                  // inputFormatters: <TextInputFormatter>[
+                  //   FilteringTextInputFormatter.allow(Localization.getLimits(
+                  //       OnboardingScreen.targetLanguage)),
+                  // ],
+                  onChange: _onSearchBoxChange,
                 )
-              : SkinnedButton(
-                  icon: "tick",
-                  width: 80.d,
-                  height: 60.d,
-                  cornerRadius: 44.d,
-                  padding: EdgeInsets.all(20.d),
-                  margin: EdgeInsets.only(top: 40.d),
-                  isEnable: _textInputController.text.length > 2,
-                  onPressed: () => _submit(_textInputController.text),
-                ),
+              : SizedBox(),
+          SizedBox(
+            height: (_itemHeight + _itemMargin * 2) *
+                _data.length.max(widget.maxtItems),
+            child: ListView.builder(
+                padding: EdgeInsets.all(0),
+                itemCount: _data.length,
+                itemBuilder: (context, index) => _languageItemBuilder(index)),
+          ),
+          SizedBox(height: 10.d),
         ],
       ),
     );
   }
 
   Widget _languageItemBuilder(int index) {
+    final selected = _selectedIndex == index;
     return Widgets.button(
       context,
-      height: 64.d,
+      height: _itemHeight,
+      padding: EdgeInsets.all(10.d),
+      margin: EdgeInsets.all(_itemMargin),
+      color: selected ? TColors.teal : TColors.primary10,
       child: Row(
         children: [
-          Asset.load<SvgPicture>("flags/${_flags[index].key}"),
-          SizedBox(width: 48.d),
-          Text(_flags[index].value)
+          Asset.load<SvgPicture>("flags/${_data[index].key}"),
+          Expanded(
+            child: Text(
+              _data[index].value,
+              textAlign: TextAlign.center,
+              style: selected ? TStyles.mediumInvert : TStyles.medium,
+            ),
+          )
         ],
       ),
-      onPressed: () => _submit(_flags[index].key),
+      onPressed: () {
+        widget.onChange?.call(index, _data[index].key);
+        setState(() => _selectedIndex = index);
+      },
     );
   }
 
   void _onSearchBoxChange(String text) {
-    _flags = widget.languages
+    _data = widget.data
         .where((f) => (f.value as String).contains(_textInputController.text))
         .toList();
-    setState(() {});
+    if (text.isNotEmpty) {
+      setState(() {});
+    }
   }
-
-  void _submit(String value) => widget.onChange?.call(widget.index, value);
 }
