@@ -1,59 +1,111 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../app_export.dart';
 
 class OnboardingScreen extends AbstractScreen {
   OnboardingScreen({super.key}) : super(Routes.onboarding);
-  static String nativeLanguage = "", targetLanguage = "";
 
   @override
   createState() => _ScreenState();
 }
 
 class _ScreenState extends AbstractScreenState<OnboardingScreen> {
-  final PageController _pageController = PageController();
   @override
   List<Widget> appBarElementsLeft() => [];
+  final _selectedLanguages = ValueNotifier(MapEntry("en", ""));
+  final List<MapEntry> _targetLanguages = [MapEntry("en", "English")];
+  List<MapEntry> _nativeLanguages = [];
+
+  @override
+  void initState() {
+    _getLanguages();
+    super.initState();
+  }
+
+  Future<void> _getLanguages() async {
+    Map result =
+        await serviceLocator<NetConnector>().rpc("content_languages_get");
+    _nativeLanguages =
+        result.entries /* .where((e) => e.key != "en") */ .toList();
+    setState(() {});
+  }
 
   @override
   Widget contentFactory(double paddingTop) {
-    List<MapEntry> languages =
-        NetConnector.configs["supportedLanguages"].entries.toList();
-    return PageView.builder(
-      itemCount: 3,
-      controller: _pageController,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) =>
-          LanguagePage(index, languages, onChange: _onFlagSelect),
+    return Stack(
+      children: [
+        _languageSelection(),
+        _slideShowAnimation(),
+      ],
     );
   }
 
-  Future<void> _onFlagSelect(int index, String value) async {
-    if (index == 0) {
-      OnboardingScreen.nativeLanguage = value;
-      await serviceLocator<Localization>()
-          .initialize(args: [OnboardingScreen.nativeLanguage]);
-      _pageController.animateToPage(1,
-          duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
-    } else if (index == 1) {
-      OnboardingScreen.targetLanguage = value;
-      _pageController.animateToPage(2,
-          duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
-    } else {
+  Widget _languageSelection() {
+    if (_nativeLanguages.isEmpty) {
+      return SizedBox();
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(height: 100.d),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Asset.load<SvgPicture>("logo"),
+            SizedBox(width: 10.d),
+            Text("Life Talk"),
+          ],
+        ),
+        SizedBox(height: 50.d),
+        LanguageSelector(
+          "I want to learn:",
+          _targetLanguages,
+          selectedIndex: 0,
+          onChange: (index, code) => _selectedLanguages.value =
+              MapEntry(code, _selectedLanguages.value.value),
+        ),
+        LanguageSelector(
+          "My native language is:",
+          _nativeLanguages,
+          onChange: (index, code) => _selectedLanguages.value =
+              MapEntry(_selectedLanguages.value.key, code),
+        ),
+        Expanded(child: SizedBox()),
+        ValueListenableBuilder(
+          valueListenable: _selectedLanguages,
+          builder: (_, value, child) {
+            return SkinnedButton(
+              color: TColors.blue,
+              height: 70.d,
+              isEnable: value.value.isNotEmpty,
+              margin: EdgeInsets.all(60.d),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Text("Lets Learn   ", style: TStyles.bigInvert),
+                Asset.load<SvgPicture>("arrow_right"),
+              ]),
+              onPressed: () async {
       try {
         await serviceLocator<AccountProvider>().update(
-            nativeLanguage: OnboardingScreen.nativeLanguage,
-            targetLanguage: OnboardingScreen.targetLanguage,
-            displayName: value);
+                    targetLanguage: _selectedLanguages.value.key,
+                    nativeLanguage: _selectedLanguages.value.value,
+                  );
       } on SkeletonException catch (e) {
         alert(e.message, "error_${e.statusCode}".l());
       }
       if (mounted) {
         Navigator.pop(context);
       }
-    }
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _slideShowAnimation() {
+    return SizedBox();
   }
 }
 
