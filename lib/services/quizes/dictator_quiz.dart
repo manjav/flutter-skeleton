@@ -113,18 +113,29 @@ class DictatorQuiz extends Quiz {
     }
 
     var state = QuizState.success;
+    var score = 0;
+    var numQuizes = 0;
     for (var i = 0; i < words.length; i++) {
-      if (words[i].state != ChoiceState.fixed) {
+      if (words[i].state == ChoiceState.selected) {
         words[i].setState(words[i].text == _patterns[i]
             ? ChoiceState.success
             : ChoiceState.failure);
-      }
-      if (words[i].state == ChoiceState.failure) {
-        state = QuizState.failure;
+        if (words[i].state == ChoiceState.failure) {
+          state = QuizState.failure;
+        } else {
+          score++;
+        }
+        numQuizes++;
       }
     }
     this.state.value = state;
-    onResult?.call(state, "", 0, false, [words, _patterns]);
+    onResult?.call(
+      state,
+      "",
+      (score / numQuizes * 100).round(),
+      false,
+      [words, _patterns],
+    );
   }
 
   void popChoice() {
