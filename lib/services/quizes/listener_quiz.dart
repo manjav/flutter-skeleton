@@ -105,6 +105,14 @@ class ListenerQuiz extends Quiz {
     }
 
     super.prepare(talk: talk, onResult: onResult);
+    recognizedWords.value = "";
+    if (talk.lastRecord != null) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      state.value = talk.lastRecord!.state;
+      recognizedWords.value = talk.lastRecord!.answer;
+      _sendResult("lastRecord", true);
+      return;
+    }
     _pattern = talk.targetValue.patternize();
     if (locale != null) this.locale = locale;
     if (exceptions != null) this.exceptions = exceptions;
@@ -114,12 +122,6 @@ class ListenerQuiz extends Quiz {
     this.finalMedia = finalMedia;
     _hasMediaPlayed = false;
     _hasResultSent = false;
-
-    if (talk.lastRecord != null) {
-      state.value = talk.lastRecord!.state;
-      _sendResult("lastRecord", true);
-      return;
-    }
     // log("listen $_pattern");
 
     if (initialMedia!.type == MediaType.youtube) {
@@ -145,7 +147,6 @@ class ListenerQuiz extends Quiz {
     // systems recognition will be stopped before this value is reached.
     // Similarly `pauseFor` is a maximum not a minimum and may be ignored
     // on some devices.
-    recognizedWords.value = "";
     // if (_speech.lastStatus.isEmpty) return;
     var duration = (_pattern.length * 170).min(3000).max(10000);
     _speech.listen(
