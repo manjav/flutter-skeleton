@@ -23,12 +23,27 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   @override
   void initState() {
+    final media = serviceLocator<MediaService>();
     _pageController.addListener(
-      () => controller.slideIndex.value = (_pageController.page ?? 0).round(),
+      () {
+        if (media.youtubeController != null &&
+            media.youtubeController!.value.playerState == PlayerState.playing) {
+          media.youtubeController!.pause();
+          media.autoStart = false;
+          // print("false ");
+        }
+        controller.slideIndex.value = (_pageController.page ?? 0).round();
+      },
     );
+    controller.serieIndex.addListener(_onSerieChange);
     controller.slideIndex.addListener(_onSlideChange);
     initializeController();
     super.initState();
+  }
+
+  void _onSerieChange() {
+    serviceLocator<MediaService>().autoStart = true;
+    _initYoutube();
   }
 
   void _onSlideChange() {
@@ -106,7 +121,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       valueListenable: controller.serieIndex,
       builder: (context, value, child) {
         final isFirstStation = _isFirstStation();
-        _initYoutube();
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -284,8 +298,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   void _initYoutube() {
     final media = serviceLocator<MediaService>();
-    media.autoStart = true;
     _videoData.value = null;
+
     if (controller.currentSerie.iconUrl.isEmpty) {
       media.youtubeController?.dispose();
       media.youtubeController = null;
@@ -406,6 +420,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void dispose() {
     serviceLocator<MediaService>().youtubeController?.dispose();
     serviceLocator<MediaService>().youtubeController = null;
+    controller.serieIndex.removeListener(_onSerieChange);
+    controller.slideIndex.removeListener(_onSlideChange);
     super.dispose();
   }
 }

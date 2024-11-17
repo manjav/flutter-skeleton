@@ -13,6 +13,7 @@ class MediaService extends IService {
   final _sounds = <String, Source>{};
   final Map<String, AudioPlayer> _audioPlayers = {};
   YoutubePlayerController? youtubeController;
+  bool autoStart = true;
 
   Future<void> play(
     MediaIntry? intry, {
@@ -158,10 +159,10 @@ class MediaService extends IService {
       youtubeController = YoutubePlayerController(
         initialVideoId: intry.id,
         flags: YoutubePlayerFlags(
-          // autoPlay: false,
+          autoPlay: false,
           enableCaption: false,
           hideControls: true,
-          hideThumbnail: true,
+          // hideThumbnail: true,
         ),
       );
       youtubeController!.addListener(
@@ -177,16 +178,18 @@ class MediaService extends IService {
     youtubeController!.seekTo(Duration(
         seconds: intry.start.floor(),
         milliseconds: ((intry.start % 1) * 1000).round()));
-    // youtubeController.play();
   }
 
   Future<void> playYoutube(
     MediaIntry intry, {
     double playbackRate = 1.0,
   }) async {
+    if (!autoStart) return;
+    await Future.delayed(const Duration(milliseconds: 200));
     final end = intry.end ??
         (youtubeController!.metadata.duration.inMilliseconds / 1000.0);
     initYoutube(intry, playbackRate: playbackRate);
+    youtubeController!.play();
     await Future.doWhile(
       () => Future.delayed(const Duration(milliseconds: 100)).then(
         (_) async {
@@ -198,6 +201,9 @@ class MediaService extends IService {
             youtubeController!.seekTo(Duration(
                 seconds: intry.start.floor(),
                 milliseconds: ((intry.start % 1) * 1000).round()));
+          } else if (youtubeController!.value.playerState !=
+              youtube.PlayerState.playing) {
+            youtubeController!.play();
           }
           if (pos < (intry.start + 0.2) ||
               youtubeController!.value.playerState ==

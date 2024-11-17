@@ -112,6 +112,7 @@ class _MicPanelState extends State<MicPanel> {
 
   void _onMicAnimationEvent(RiveEvent event, ListenerQuiz listener) {
     final media = serviceLocator<MediaService>();
+    media.autoStart = true;
     if (event.name == "toggle") {
       if (_state.value == QuizState.running) {
         listener.stop();
@@ -120,10 +121,8 @@ class _MicPanelState extends State<MicPanel> {
         Timer(const Duration(milliseconds: 500), () => listener.start());
       }
     } else if (event.name == "play") {
-      media.autoStart = true;
       media.play(listener.initialMedia);
     } else if (event.name == "slow") {
-      media.autoStart = true;
       media.play(listener.initialMedia, playbackRate: 0.75);
     }
   }
