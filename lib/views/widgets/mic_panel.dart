@@ -92,7 +92,7 @@ class _MicPanelState extends State<MicPanel> {
         artboard.component<TextValueRun>("messageText")?.text =
             "${widget.talk.type.name}_l".l();
         controller!.addEventListener((s) => _onMicAnimationEvent(s, listener));
-        _stateInput?.value = listener.state.value.index.toDouble();
+        _stateInput?.value = listener.state.value.index.toDouble() - 1;
         artboard.addController(controller);
       },
       riveAssetLoader: _onRiveAssetLoad,
@@ -149,7 +149,9 @@ class _MicPanelState extends State<MicPanel> {
     final listener = serviceLocator<ListenerQuiz>();
     if (listener.talk != widget.talk) return;
     _state.value = listener.state.value;
-    _stateInput?.value = listener.state.value.index.toDouble();
+    // log(
+    //     "id => ${listener.talk!.id} ${widget.talk.id} ${listener.state.value}");
+    _stateInput?.value = listener.state.value.index.toDouble() - 1;
   }
 
   void _mediaStateListener(MediaState event) {

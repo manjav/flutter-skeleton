@@ -96,7 +96,7 @@ class ListenerQuiz extends Quiz {
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) async {
     this.talk = talk;
-    if (state.value.index < QuizState.ready.index) {
+    if (state.value.index < QuizState.initialize.index) {
       log("Listener not initialized yet!");
       return;
     }
@@ -104,7 +104,7 @@ class ListenerQuiz extends Quiz {
       _speech.cancel();
     }
 
-    state.value = QuizState.none;
+    super.prepare(talk: talk, onResult: onResult);
     _pattern = talk.targetValue.patternize();
     if (locale != null) this.locale = locale;
     if (exceptions != null) this.exceptions = exceptions;
@@ -127,7 +127,9 @@ class ListenerQuiz extends Quiz {
     } else {
       await Future.delayed(const Duration(milliseconds: 500));
     }
-    super.prepare(talk: talk, onResult: onResult);
+
+    state.value = QuizState.ready;
+
     if (autoStart) {
       start();
     }
