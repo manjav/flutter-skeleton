@@ -283,29 +283,31 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _initYoutube() {
+    final media = serviceLocator<MediaService>();
+    media.autoStart = true;
     _videoData.value = null;
     if (controller.currentSerie.iconUrl.isEmpty) {
-      serviceLocator<MediaService>().youtubeController?.dispose();
-      serviceLocator<MediaService>().youtubeController = null;
+      media.youtubeController?.dispose();
+      media.youtubeController = null;
       return;
     }
     _videoData.value =
         MediaIntry.parse(MediaType.youtube, controller.currentSerie.iconUrl);
-    serviceLocator<MediaService>().initYoutube(_videoData.value!);
+    media.initYoutube(_videoData.value!);
     _getCaptions();
   }
 
   Future<void> _getCaptions() async {
-    final youtube = serviceLocator<MediaService>().youtubeController!;
+    final media = serviceLocator<MediaService>();
     final captions = controller.currentSlide.children
         .where((c) => c.type == ContentType.caption);
     if (captions.isEmpty) {
       return;
     }
     _captions = captions.toList();
-    serviceLocator<MediaService>().play(_videoData.value!);
+    media.play(_videoData.value!);
     await Future.delayed(Duration(milliseconds: 100));
-    youtube.addListener(_findProperCaption);
+    media.youtubeController!.addListener(_findProperCaption);
   }
 
   void _findProperCaption() {

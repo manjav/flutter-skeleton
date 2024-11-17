@@ -232,7 +232,7 @@ class HiddenWords extends StatelessWidget with ILogger {
                   radius: 6.d,
                   color: blankMode ? TColors.primary10 : TColors.transparent,
                   margin: EdgeInsets.all(2.d),
-                  padding: EdgeInsets.fromLTRB(4.d, 6.d, 4.d, 4.d),
+                  padding: EdgeInsets.fromLTRB(4.d, 4.d, 4.d, 2.d),
                   child: Text(answerWords[i].text.simplify(),
                       style: blankMode &&
                               value != ChoiceState.selected &&
