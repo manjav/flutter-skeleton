@@ -94,7 +94,10 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
                     targetLanguage: _selectedLanguages.value.key,
                     nativeLanguage: _selectedLanguages.value.value,
                   );
-                  setState(() => _slideIndex = 0);
+                  _slideIndex = 0;
+                  Localization.languageCode = _selectedLanguages.value.value;
+                  await serviceLocator<Localization>().initialize();
+                  setState(() {});
                 } on SkeletonException catch (e) {
                   alert(e.message, "error_${e.statusCode}".l());
                 }
