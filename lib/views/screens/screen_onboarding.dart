@@ -15,18 +15,20 @@ class OnboardingScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   @override
   List<Widget> appBarElementsLeft() => [];
+  int _slideIndex = -1;
+  TextValueRun? _slideTitleText;
+  TextValueRun? _slideCaptionText;
+  List<MapEntry> _nativeLanguages = [];
   final _selectedLanguages = ValueNotifier(MapEntry("en", ""));
   final List<MapEntry> _targetLanguages = [MapEntry("en", "English")];
-  List<MapEntry> _nativeLanguages = [];
-  SMIInput<double>? _pageInput;
 
   @override
   void initState() {
-    _getLanguages();
     super.initState();
+    _loadLanguages();
   }
 
-  Future<void> _getLanguages() async {
+  Future<void> _loadLanguages() async {
     Map result =
         await serviceLocator<NetConnector>().rpc("content_languages_get");
     _nativeLanguages = result.entries.where((e) => e.key != "en").toList();
@@ -37,14 +39,14 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   Widget contentFactory(double paddingTop) {
     return Stack(
       children: [
-        _languageSelection(),
         _slideShowAnimation(),
+        _languageSelection(),
       ],
     );
   }
 
   Widget _languageSelection() {
-    if (_nativeLanguages.isEmpty || _pageInput == null) {
+    if (_nativeLanguages.isEmpty || _slideIndex > -1) {
       return SizedBox();
     }
     return Column(
@@ -92,11 +94,9 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
                     targetLanguage: _selectedLanguages.value.key,
                     nativeLanguage: _selectedLanguages.value.value,
                   );
+                  setState(() => _slideIndex = 0);
                 } on SkeletonException catch (e) {
                   alert(e.message, "error_${e.statusCode}".l());
-                }
-                if (mounted) {
-                  Navigator.pop(context);
                 }
               },
             );
@@ -107,28 +107,19 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   }
 
   Widget _slideShowAnimation() {
-    if (_pageInput != null && _pageInput!.value > 5) {
+    if (_slideIndex < 0) {
       return SizedBox();
     }
-    return Widgets.touchable(
-      context,
-      child: LoaderWidget(
+    return LoaderWidget(
         AssetType.animation,
-        "features",
+      "onboarding",
         fit: BoxFit.fitWidth,
         riveAssetLoader: _onRiveAssetLoad,
         onRiveInit: (Artboard artboard) {
           final controller =
               StateMachineController.fromArtboard(artboard, "State Machine 1");
-          _pageInput = controller?.findInput<double>("state");
-          artboard.addController(controller!);
-        },
-      ),
-      onTap: () {
-        _pageInput?.value++;
-        if (_pageInput!.value > 5) {
-          setState(() {});
-        }
+        controller!.addEventListener(_onSlidShowEventChange);
+        artboard.addController(controller);
       },
     );
   }
@@ -142,6 +133,16 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
       return true;
     }
     return false;
+  }
+
+  Future<void> _onSlidShowEventChange(RiveEvent event) async {
+    if (event.name == "step") {
+      await Future.delayed(Duration(milliseconds: 10));
+      _slideIndex = event.properties["step"].floor();
+      if (_slideIndex >= 100 && mounted) {
+        Navigator.pop(context);
+      }
+    }
   }
 }
 
