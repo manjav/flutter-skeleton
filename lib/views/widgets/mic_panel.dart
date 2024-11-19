@@ -76,7 +76,7 @@ class _MicPanelState extends State<MicPanel> {
     var size = DeviceInfo.size.width * 0.85;
     return LoaderWidget(
       AssetType.animation,
-      "mic_panel_button",
+      "mic_state_machine",
       height: size,
       onRiveInit: (artboard) {
         var voiceMode = listener.initialMedia == null ||
@@ -92,7 +92,7 @@ class _MicPanelState extends State<MicPanel> {
         artboard.component<TextValueRun>("messageText")?.text =
             "${widget.talk.type.name}_l".l();
         controller!.addEventListener((s) => _onMicAnimationEvent(s, listener));
-        _stateInput?.value = listener.state.value.index.toDouble() - 1;
+        _stateInput?.value = listener.state.value.index.toDouble();
         artboard.addController(controller);
       },
       riveAssetLoader: _onRiveAssetLoad,
@@ -118,7 +118,7 @@ class _MicPanelState extends State<MicPanel> {
         listener.stop();
       } else {
         widget.talk.lastRecord = null;
-        Timer(const Duration(milliseconds: 500), () => listener.start());
+        Timer(const Duration(milliseconds: 100), () => listener.start());
       }
     } else if (event.name == "play") {
       media.play(listener.initialMedia);
@@ -146,9 +146,9 @@ class _MicPanelState extends State<MicPanel> {
     final listener = serviceLocator<ListenerQuiz>();
     if (listener.talk != widget.talk) return;
     _state.value = listener.state.value;
-    // log(
-    //     "id => ${listener.talk!.id} ${widget.talk.id} ${listener.state.value}");
-    _stateInput?.value = listener.state.value.index.toDouble() - 1;
+    // print(
+    //     "id => ${listener.talk!.id} ${widget.talk.id} ${listener.state.value} ${listener.state.value.index}");
+    _stateInput?.value = listener.state.value.index.toDouble();
   }
 
   void _mediaStateListener(MediaState event) {
