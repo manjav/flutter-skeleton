@@ -114,13 +114,15 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
       return SizedBox();
     }
     return LoaderWidget(
-        AssetType.animation,
+      AssetType.animation,
       "onboarding",
-        fit: BoxFit.fitWidth,
-        riveAssetLoader: _onRiveAssetLoad,
-        onRiveInit: (Artboard artboard) {
-          final controller =
-              StateMachineController.fromArtboard(artboard, "State Machine 1");
+      fit: BoxFit.fitWidth,
+      riveAssetLoader: _onRiveAssetLoad,
+      onRiveInit: (Artboard artboard) {
+        final controller =
+            StateMachineController.fromArtboard(artboard, "State Machine 1");
+        _slideTitleText = artboard.component<TextValueRun>("titleText");
+        _slideCaptionText = artboard.component<TextValueRun>("captionText");
         controller!.addEventListener(_onSlidShowEventChange);
         artboard.addController(controller);
       },
@@ -139,12 +141,16 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   }
 
   Future<void> _onSlidShowEventChange(RiveEvent event) async {
-    if (event.name == "step") {
-      await Future.delayed(Duration(milliseconds: 10));
-      _slideIndex = event.properties["step"].floor();
-      if (_slideIndex >= 100 && mounted) {
-        Navigator.pop(context);
-      }
+    if (event.name != "step") {
+      return;
+    }
+    await Future.delayed(Duration(milliseconds: 10));
+    _slideIndex = event.properties["step"].floor();
+    if (_slideIndex >= 100 && mounted) {
+      Navigator.pop(context);
+    } else {
+      _slideTitleText?.text = "onboarding_title_$_slideIndex".l();
+      _slideCaptionText?.text = "onboarding_caption_$_slideIndex".l();
     }
   }
 }
