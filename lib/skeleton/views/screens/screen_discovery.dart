@@ -169,38 +169,56 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       );
     }
     final category = _categories[index];
+    final padding = 8.d;
+    final height = 240.d;
     return Widgets.button(
       context,
       radius: 24.d,
       margin: margin,
-      padding: EdgeInsets.all(16.d),
+      height: 240.d,
+      padding: EdgeInsets.all(padding),
       color: TColors.primary10,
-      child: Column(
+      child: Stack(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
+          SizedBox(
+            height: height - padding * 2,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(14.d)),
+              child: Image.network(category.iconUrl, fit: BoxFit.cover),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Widgets.rect(
+              padding: EdgeInsets.fromLTRB(
+                  padding * 2, padding * 4, padding * 2, padding * 2),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: FractionalOffset.bottomCenter,
+                    end: FractionalOffset.topCenter,
+                    colors: [TColors.black80, TColors.transparent],
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(14.d))),
                 child: Text(
                   category.title,
-                  maxLines: 3,
+                maxLines: 2,
+                style: TStyles.smallInvert,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Widgets.rect(
+          ),
+          Positioned(
+            top: padding,
+            right: padding,
+            child: Widgets.rect(
                 radius: 12.d,
                 color: TColors.teal,
                 padding: EdgeInsets.symmetric(horizontal: 4.d),
-                child: Text(category.subtitle, style: TStyles.mediumInvert),
+              child: Text(category.subtitle, style: TStyles.tinyInvert),
               ),
-            ],
           ),
-          SizedBox(height: 10.d),
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(14.d)),
-            child: Image.network(category.iconUrl),
-          )
         ],
       ),
       onPressed: () {
