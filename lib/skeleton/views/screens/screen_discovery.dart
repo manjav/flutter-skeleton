@@ -119,11 +119,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                 Text("Life Talk"),
               ],
             ),
-            ListView.builder(
-              padding: EdgeInsets.fromLTRB(10.d, 100.d, 10.d, 30.d),
-              itemCount: _categories.length + 1,
-              itemBuilder: _categoryItemBuilder,
-            ),
+            _discoveryBuilder(),
             Widgets.button(
               context,
               child: account.isTester
@@ -153,6 +149,39 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
+  Widget _discoveryBuilder() {
+    
+    return Column(
+      children: [
+        SizedBox(height: 100.d),
+        SizedBox(
+          height: 170.d,
+          child: ListView.builder(
+            padding: EdgeInsets.all(10.d),
+            itemCount: _categories.length,
+            itemBuilder: (context, index) {
+              return _courseItemBuilder(
+                  height: 170.d,
+                  category: _categories[index],
+                  margin: EdgeInsets.all(5.d),
+                  showFlag: false,
+                  padding: 5.d,
+                  titleStyle: TStyles.tinyInvert);
+            },
+            scrollDirection: Axis.horizontal,
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.fromLTRB(10.d, 10.d, 10.d, 30.d),
+            itemCount: _categories.length + 1,
+            itemBuilder: _categoryItemBuilder,
+          ),
+        )
+      ],
+    );
+  }
+
   Widget _categoryItemBuilder(BuildContext context, int index) {
     final margin = EdgeInsets.all(5.d);
     if (index >= _categories.length) {
@@ -168,14 +197,39 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         ]),
       );
     }
-    final category = _categories[index];
-    final padding = 8.d;
-    final height = 240.d;
+
+    return _courseItemBuilder(
+        category: _categories[index], height: 240.d, margin: margin);
+  }
+
+  Future<void> _loadLesson(ParentContent group, bool locked) async {
+    if (locked) {
+      return;
+    }
+
+    await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
+    // _categoryIndex = _firstIncompleteGroup();
+    setState(() {});
+    // if (s == null || s <= scoreNotifier.value) return;
+    // await serviceLocator<AccountProvider>().saveScore(id, s);
+    // scoreNotifier.value = s;
+  }
+
+  Widget _courseItemBuilder({
+    required ParentContent category,
+    required double height,
+    required EdgeInsets margin,
+    bool showFlag = true,
+    TextStyle? titleStyle,
+    double? padding,
+  }) {
+    padding ??= 8.d;
     return Widgets.button(
       context,
       radius: 24.d,
       margin: margin,
-      height: 240.d,
+      height: height,
+      width: height * 1.5,
       padding: EdgeInsets.all(padding),
       color: TColors.primary10,
       child: Stack(
@@ -201,24 +255,26 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                     colors: [TColors.black80, TColors.transparent],
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(14.d))),
-                child: Text(
-                  category.title,
+              child: Text(
+                category.title,
                 maxLines: 2,
-                style: TStyles.smallInvert,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                style: titleStyle ?? TStyles.smallInvert,
+                overflow: TextOverflow.ellipsis,
               ),
+            ),
           ),
-          Positioned(
-            top: padding,
-            right: padding,
-            child: Widgets.rect(
-                radius: 12.d,
-                color: TColors.teal,
-                padding: EdgeInsets.symmetric(horizontal: 4.d),
-              child: Text(category.subtitle, style: TStyles.tinyInvert),
-              ),
-          ),
+          showFlag
+              ? Positioned(
+                  top: padding,
+                  right: padding,
+                  child: Widgets.rect(
+                    radius: 12.d,
+                    color: TColors.teal,
+                    padding: EdgeInsets.symmetric(horizontal: 4.d),
+                    child: Text(category.subtitle, style: TStyles.tinyInvert),
+                  ),
+                )
+              : SizedBox(),
         ],
       ),
       onPressed: () {
@@ -228,18 +284,5 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         }
       },
     );
-  }
-
-  Future<void> _loadLesson(ParentContent group, bool locked) async {
-    if (locked) {
-      return;
-    }
-
-    await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
-    // _categoryIndex = _firstIncompleteGroup();
-    setState(() {});
-    // if (s == null || s <= scoreNotifier.value) return;
-    // await serviceLocator<AccountProvider>().saveScore(id, s);
-    // scoreNotifier.value = s;
   }
 }
