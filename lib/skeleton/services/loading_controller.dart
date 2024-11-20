@@ -19,6 +19,7 @@ class LoadingController extends GetxController {
 
       var account = serviceLocator<AccountProvider>();
       account.initialize(data);
+      await serviceLocator<Localization>().initialize();
 
       services.changeState(ServiceStatus.initialize);
 
