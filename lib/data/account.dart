@@ -102,9 +102,11 @@ class AccountProvider extends ChangeNotifier {
     required String collectionId,
     required String keyId,
     required Map<String, dynamic> values,
+    bool onlyGreathers = false,
   }) async {
     await serviceLocator<NetConnector>().rpc("account_storage_set", params: {
       "collectionId": collectionId,
+      "onlyGreathers": true,
       "keyId": keyId,
       "values": values,
     });
@@ -126,6 +128,7 @@ class AccountProvider extends ChangeNotifier {
     /// Send to Server
     writeStorage(
       collectionId: "scores_${metadata["targetLanguage"]}",
+      onlyGreathers: true,
       keyId: key,
       values: values,
     );
