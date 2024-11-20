@@ -127,6 +127,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     return PopScope(
       canPop: false,
       child: Widgets.rect(
+        padding: EdgeInsets.fromLTRB(10.d, 10.d, 10.d, 30.d),
         color: TColors.primary0,
         child: Stack(
           alignment: Alignment(0, -0.85),
@@ -171,29 +172,32 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   Widget _discoveryBuilder() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 100.d),
-        _readsCategories.isEmpty ? SizedBox() : Text("Recent videos"),
+        _readsCategories.isEmpty ? SizedBox() : Text("  Recent videos"),
         SizedBox(
           height: _readsCategories.isEmpty ? 0 : 170.d,
           child: ListView.builder(
-            padding: EdgeInsets.all(10.d),
+            padding: EdgeInsets.zero,
             itemCount: _readsCategories.length,
             itemBuilder: (context, index) {
               return _courseItemBuilder(
+                padding: 5.d,
                   height: 170.d,
+                margin: EdgeInsets.all(5.d),
                   category: _readsCategories[index],
-                  margin: EdgeInsets.all(5.d),
                   flag: "${_readsCategories[index].passLevel}%",
-                  padding: 5.d,
-                  titleStyle: TStyles.tinyInvert);
+                titleStyle: TStyles.tinyInvert,
+              );
             },
             scrollDirection: Axis.horizontal,
           ),
         ),
+        SizedBox(height: 10.d),
         Expanded(
           child: ListView.builder(
-            padding: EdgeInsets.fromLTRB(10.d, 10.d, 10.d, 30.d),
+            padding: EdgeInsets.zero,
             itemCount: _newCategories.length + 1,
             itemBuilder: (_, i) => _categoryItemBuilder(_newCategories[i], i),
           ),
