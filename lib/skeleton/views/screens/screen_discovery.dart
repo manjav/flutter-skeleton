@@ -184,10 +184,10 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             itemBuilder: (context, index) {
               return _courseItemBuilder(
                 padding: 5.d,
-                  height: 170.d,
+                height: 170.d,
                 margin: EdgeInsets.all(5.d),
-                  category: _readsCategories[index],
-                  flag: "${_readsCategories[index].passLevel}%",
+                category: _readsCategories[index],
+                flag: "${_readsCategories[index].passLevel}%",
                 titleStyle: TStyles.tinyInvert,
               );
             },
@@ -245,17 +245,20 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget _courseItemBuilder({
-    required ParentContent category,
     required double height,
     required EdgeInsets margin,
+    required ParentContent category,
     String? flag,
-    TextStyle? titleStyle,
     double? padding,
+    double? radius,
+    TextStyle? titleStyle,
   }) {
     padding ??= 8.d;
+    radius ??= 24.d;
+    final innerRadius = Radius.circular(radius * 0.85);
     return Widgets.button(
       context,
-      radius: 24.d,
+      radius: radius,
       margin: margin,
       height: height,
       width: height * 1.5,
@@ -266,7 +269,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           SizedBox(
             height: height - padding * 2,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(14.d)),
+              borderRadius: BorderRadius.all(innerRadius),
               child: Image.network(category.iconUrl, fit: BoxFit.cover),
             ),
           ),
@@ -278,12 +281,16 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               padding: EdgeInsets.fromLTRB(
                   padding * 2, padding * 4, padding * 2, padding * 2),
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                gradient: LinearGradient(
                     begin: FractionalOffset.bottomCenter,
                     end: FractionalOffset.topCenter,
-                    colors: [TColors.black80, TColors.transparent],
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(14.d))),
+                    colors: [TColors.black60, TColors.transparent],
+                    stops: [0.6, 1]),
+                borderRadius: BorderRadius.only(
+                  bottomRight: innerRadius,
+                  bottomLeft: innerRadius,
+                ),
+              ),
               child: Text(
                 category.title,
                 maxLines: 2,

@@ -18,6 +18,7 @@ class TColors {
   static const green = Color(0xFF00C391);
   static const black = Color(0xFF000000);
   static const black80 = Color(0xAA000000);
+  static const black60 = Color(0x88000000);
   static const black40 = Color(0x66000000);
   static const black10 = Color(0x10000000);
   static const blue = Color(0xFF4848FF);
