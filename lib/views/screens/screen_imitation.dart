@@ -108,7 +108,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         height: 52.d,
         padding: EdgeInsets.all(16.d),
         child: Asset.load<SvgPicture>("close"),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          if (controller.serieIndex.value < 1) {
+            Navigator.pop(context);
+            return;
+          }
+          controller.callCompletedMethod();
+        },
       ),
       SizedBox(width: 8.d),
       progressSliderBuilder(DeviceInfo.size.width * 0.72),
