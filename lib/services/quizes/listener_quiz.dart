@@ -171,7 +171,7 @@ class ListenerQuiz extends Quiz {
     final alternates = List<String>.generate(result.alternates.length,
         (i) => result.alternates[i].recognizedWords.patternize());
     for (var alternate in alternates) {
-      // log("match '$alternate' '$_pattern'");
+      log("match '$alternate' '$_pattern'");
       if (alternate.contains(_pattern)) {
         recognizedWords.value = _pattern;
         _finalize(QuizState.success);
