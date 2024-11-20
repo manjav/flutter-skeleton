@@ -199,14 +199,15 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           child: ListView.builder(
             padding: EdgeInsets.zero,
             itemCount: _newCategories.length + 1,
-            itemBuilder: (_, i) => _categoryItemBuilder(_newCategories[i], i),
+            itemBuilder: (_, i) => _categoryItemBuilder(
+                i < _newCategories.length ? _newCategories[i] : null, i),
           ),
         )
       ],
     );
   }
 
-  Widget _categoryItemBuilder(ParentContent category, int index) {
+  Widget _categoryItemBuilder(ParentContent? category, int index) {
     final margin = EdgeInsets.all(5.d);
     if (index >= _newCategories.length) {
       return Widgets.button(
@@ -223,7 +224,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     }
 
     return _courseItemBuilder(
-      category: category,
+      category: category!,
       height: 240.d,
       margin: margin,
       flag: category.subtitle,
