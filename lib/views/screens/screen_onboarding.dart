@@ -52,7 +52,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 100.d),
+        Expanded(child: SizedBox()),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -81,7 +81,6 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
           builder: (_, value, child) {
             return SkinnedButton(
               color: TColors.blue,
-              height: 70.d,
               isEnable: value.value.isNotEmpty,
               margin: EdgeInsets.all(60.d),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -145,7 +144,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
       return;
     }
     await Future.delayed(Duration(milliseconds: 10));
-    _slideIndex = event.properties["step"].floor();
+    _slideIndex = event.properties["step"].round();
     if (_slideIndex >= 100 && mounted) {
       Navigator.pop(context);
     } else {
@@ -196,13 +195,18 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(widget.title),
-          SizedBox(
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(16.d)),
+            child: Widgets.rect(
+              color: TColors.primary20,
             height: (_itemHeight + _itemMargin * 2) *
-                widget.data.length.max(widget.maxtItems),
+                      widget.data.length.max(widget.maxtItems) -
+                  (widget.data.length > widget.maxtItems ? _itemMargin * 5 : 0),
             child: ListView.builder(
                 padding: EdgeInsets.all(0),
                 itemCount: widget.data.length,
                 itemBuilder: (context, index) => _languageItemBuilder(index)),
+            ),
           ),
           SizedBox(height: 10.d),
         ],
