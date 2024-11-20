@@ -112,7 +112,7 @@ class AccountProvider extends ChangeNotifier {
 
   Future<Map<String, Map<String, dynamic>>> loadScores() async {
     scores = await serviceLocator<NetConnector>().readStorage(
-      "scores_${account.user.langTag}_${metadata["targetLanguage"]}",
+      "scores_${metadata["targetLanguage"]}",
       userId: account.user.id,
     );
     notifyListeners();
@@ -125,8 +125,7 @@ class AccountProvider extends ChangeNotifier {
   ) async {
     /// Send to Server
     writeStorage(
-      collectionId:
-          "scores_${account.user.langTag}_${metadata["targetLanguage"]}",
+      collectionId: "scores_${metadata["targetLanguage"]}",
       keyId: key,
       values: values,
     );
