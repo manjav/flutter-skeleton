@@ -48,23 +48,41 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Map<String, Map<String, dynamic>> _scores = {};
-  List<ParentContent> _categories = [];
+  final List<ParentContent> _readsCategories = [];
+  final List<ParentContent> _newCategories = [];
   LoadingController controller = Get.put(LoadingController());
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
-    services.addListener(_initializeLessons);
+    services.addListener(
+      () {
+        if (services.state.status == ServiceStatus.initialize) {
+          _initializeLessons();
+        }
+      },
+    );
   }
 
-  void _initializeLessons() async {
-    if (services.state.status != ServiceStatus.initialize) return;
+  Future<void> _initializeLessons() async {
     try {
       var account = serviceLocator<AccountProvider>();
-      if (!account.metadata.containsKey("targetLanguage")) {
-        await Get.toNamed(Routes.onboarding);
-      }
-      _categories = (await account.loadCategories());
+      // if (!account.metadata.containsKey("targetLanguage")) {
+      await Get.toNamed(Routes.onboarding);
+      // }
+      final categories = (await account.loadCategories());
       _scores = await account.loadScores();
+
+      // Distinguishing read and new contents
+      _readsCategories.clear();
+      _newCategories.clear();
+      for (var category in categories) {
+        if (hasReadCategory(category)) {
+          _readsCategories.add(category);
+        } else {
+          _newCategories.add(category);
+        }
+      }
+
       // _categoryIndex = _firstIncompleteGroup();
       setState(() {});
     } on SkeletonException catch (e) {
@@ -85,17 +103,19 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   //   return 0;
   // }
 
-  bool isCategoryComplete(ParentContent category, [bool changePass = false]) {
+  bool hasReadCategory(ParentContent category) {
+    var score = 0;
+    var lessonCount = 0;
     for (var group in category.children) {
-      if (!_scores.containsKey((group as ParentContent).id)) {
-        if (changePass) {
-          group.passLevel = 1;
-        }
-        return false;
+      if (_scores.containsKey(group.id)) {
+        score += _scores[group.id]!["score"] as int;
+        lessonCount++;
       }
-      group.passLevel = 2;
     }
-    return true;
+    if (lessonCount > 0) {
+      category.passLevel = (score / lessonCount).round();
+    }
+    return lessonCount > 0;
   }
 
   @override
@@ -150,21 +170,21 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   Widget _discoveryBuilder() {
-    
     return Column(
       children: [
         SizedBox(height: 100.d),
+        _readsCategories.isEmpty ? SizedBox() : Text("Recent videos"),
         SizedBox(
-          height: 170.d,
+          height: _readsCategories.isEmpty ? 0 : 170.d,
           child: ListView.builder(
             padding: EdgeInsets.all(10.d),
-            itemCount: _categories.length,
+            itemCount: _readsCategories.length,
             itemBuilder: (context, index) {
               return _courseItemBuilder(
                   height: 170.d,
-                  category: _categories[index],
+                  category: _readsCategories[index],
                   margin: EdgeInsets.all(5.d),
-                  showFlag: false,
+                  flag: "${_readsCategories[index].passLevel}%",
                   padding: 5.d,
                   titleStyle: TStyles.tinyInvert);
             },
@@ -174,17 +194,17 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.fromLTRB(10.d, 10.d, 10.d, 30.d),
-            itemCount: _categories.length + 1,
-            itemBuilder: _categoryItemBuilder,
+            itemCount: _newCategories.length + 1,
+            itemBuilder: (_, i) => _categoryItemBuilder(_newCategories[i], i),
           ),
         )
       ],
     );
   }
 
-  Widget _categoryItemBuilder(BuildContext context, int index) {
+  Widget _categoryItemBuilder(ParentContent category, int index) {
     final margin = EdgeInsets.all(5.d);
-    if (index >= _categories.length) {
+    if (index >= _newCategories.length) {
       return Widgets.button(
         context,
         height: 70.d,
@@ -199,7 +219,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     }
 
     return _courseItemBuilder(
-        category: _categories[index], height: 240.d, margin: margin);
+      category: category,
+      height: 240.d,
+      margin: margin,
+      flag: category.subtitle,
+    );
   }
 
   Future<void> _loadLesson(ParentContent group, bool locked) async {
@@ -209,7 +233,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
     await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
     // _categoryIndex = _firstIncompleteGroup();
-    setState(() {});
+    _initializeLessons();
     // if (s == null || s <= scoreNotifier.value) return;
     // await serviceLocator<AccountProvider>().saveScore(id, s);
     // scoreNotifier.value = s;
@@ -219,7 +243,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     required ParentContent category,
     required double height,
     required EdgeInsets margin,
-    bool showFlag = true,
+    String? flag,
     TextStyle? titleStyle,
     double? padding,
   }) {
@@ -263,18 +287,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               ),
             ),
           ),
-          showFlag
-              ? Positioned(
+          flag == null
+              ? SizedBox()
+              : Positioned(
                   top: padding,
                   right: padding,
                   child: Widgets.rect(
                     radius: 12.d,
                     color: TColors.teal,
                     padding: EdgeInsets.symmetric(horizontal: 4.d),
-                    child: Text(category.subtitle, style: TStyles.tinyInvert),
+                    child: Text(flag, style: TStyles.tinyInvert),
                   ),
-                )
-              : SizedBox(),
+                ),
         ],
       ),
       onPressed: () {
