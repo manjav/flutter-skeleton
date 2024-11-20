@@ -66,9 +66,9 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Future<void> _initializeLessons() async {
     try {
       var account = serviceLocator<AccountProvider>();
-      // if (!account.metadata.containsKey("targetLanguage")) {
-      await Get.toNamed(Routes.onboarding);
-      // }
+      if (!account.metadata.containsKey("targetLanguage")) {
+        await Get.toNamed(Routes.onboarding);
+      }
       final categories = (await account.loadCategories());
       _scores = await account.loadScores();
 
