@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -270,7 +271,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             height: height - padding * 2,
             child: ClipRRect(
               borderRadius: BorderRadius.all(innerRadius),
-              child: Image.network(category.iconUrl, fit: BoxFit.cover),
+              child: CachedNetworkImage(
+                  progressIndicatorBuilder: (context, url, progress) => Center(
+                        child: CircularProgressIndicator(
+                          value: progress.progress,
+                        ),
+                      ),
+                  imageUrl: category.iconUrl,
+                  fit: BoxFit.cover),
             ),
           ),
           Positioned(

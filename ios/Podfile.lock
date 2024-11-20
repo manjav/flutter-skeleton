@@ -164,6 +164,9 @@ PODS:
     - Flutter
     - FlutterMacOS
     - Try
+  - sqflite_darwin (0.0.4):
+    - Flutter
+    - FlutterMacOS
   - Try (2.1.1)
   - url_launcher_ios (0.0.1):
     - Flutter
@@ -193,6 +196,7 @@ DEPENDENCIES:
   - rive_common (from `.symlinks/plugins/rive_common/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - speech_to_text (from `.symlinks/plugins/speech_to_text/darwin`)
+  - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
   - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
@@ -251,6 +255,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   speech_to_text:
     :path: ".symlinks/plugins/speech_to_text/darwin"
+  sqflite_darwin:
+    :path: ".symlinks/plugins/sqflite_darwin/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
@@ -293,6 +299,7 @@ SPEC CHECKSUMS:
   rive_common: cbbac3192af00d7341f19dae2f26298e9e37d99e
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   speech_to_text: 627d3fd2194770b51abb324ba45c2d39398f24a8
+  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
   Try: 5ef669ae832617b3cee58cb2c6f99fb767a4ff96
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
