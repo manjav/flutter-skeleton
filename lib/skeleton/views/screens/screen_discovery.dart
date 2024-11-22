@@ -48,7 +48,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     };
   }
 
-  Map<String, Map<String, dynamic>> _scores = {};
+  List<ParentContent> _categories = [];
   final List<ParentContent> _readsCategories = [];
   final List<ParentContent> _newCategories = [];
   LoadingController controller = Get.put(LoadingController());
@@ -58,26 +58,29 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     services.addListener(
       () {
         if (services.state.status == ServiceStatus.initialize) {
-          _initializeLessons();
+          _initializeLessons(initializeMode: true);
         }
       },
     );
   }
 
-  Future<void> _initializeLessons() async {
+  Future<void> _initializeLessons({bool initializeMode = false}) async {
     try {
       var account = serviceLocator<AccountProvider>();
-      if (!account.metadata.containsKey("targetLanguage")) {
-        await Get.toNamed(Routes.onboarding);
+      if (initializeMode) {
+        if (!account.metadata.containsKey("targetLanguage")) {
+          await Get.toNamed(Routes.onboarding);
+        }
+
+        _categories = (await account.loadCategories());
+        await account.loadScores();
       }
-      final categories = (await account.loadCategories());
-      _scores = await account.loadScores();
 
       // Distinguishing read and new contents
       _readsCategories.clear();
       _newCategories.clear();
-      for (var category in categories) {
-        if (hasReadCategory(category)) {
+      for (var category in _categories) {
+        if (hasReadCategory(account, category)) {
           _readsCategories.add(category);
         } else {
           _newCategories.add(category);
@@ -104,12 +107,12 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   //   return 0;
   // }
 
-  bool hasReadCategory(ParentContent category) {
+  bool hasReadCategory(AccountProvider account, ParentContent category) {
     var score = 0;
     var lessonCount = 0;
     for (var group in category.children) {
-      if (_scores.containsKey(group.id)) {
-        score += _scores[group.id]!["score"] as int;
+      if (account.scores.containsKey(group.id)) {
+        score += account.scores[group.id]!["score"] as int;
         lessonCount++;
       }
     }
