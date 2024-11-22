@@ -180,7 +180,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 100.d),
-        _readsCategories.isEmpty ? SizedBox() : Text("  Recent videos"),
+        _categoryTitle(true),
         SizedBox(
           height: _readsCategories.isEmpty ? 0 : 170.d,
           child: ListView.builder(
@@ -200,6 +200,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
           ),
         ),
         SizedBox(height: 10.d),
+        _categoryTitle(false),
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.zero,
@@ -208,6 +209,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                 i < _newCategories.length ? _newCategories[i] : null, i),
           ),
         )
+      ],
+    );
+  }
+
+  Widget _categoryTitle(bool isRecent) {
+    final title = isRecent ? "video_recent" : "video_new";
+    return Row(
+      children: [
+        SizedBox(width: 20.d),
+        Asset.load<SvgPicture>(title),
+        SizedBox(width: 10.d),
+        Text(title, style: TStyles.large),
       ],
     );
   }
