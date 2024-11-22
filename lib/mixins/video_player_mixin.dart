@@ -83,19 +83,40 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     );
   }
 
-  Widget youtubePlayer({double? borderRadius}) {
+  Widget youtubePlayer({double? borderRadius, bool showProgressbar = false}) {
+    var entry = serviceLocator<MediaService>().mediaEntry!;
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 0)),
-      child: YoutubePlayer(
-        controller: serviceLocator<MediaService>().youtubeController!,
-        controlsTimeOut: Duration(milliseconds: 1),
-        topActions: [Widgets.rect(color: TColors.pink, width: 11, height: 33)],
-        showVideoProgressIndicator: true,
-        progressIndicatorColor: Colors.amber,
-        progressColors: const ProgressBarColors(
-          handleColor: Colors.amberAccent,
-          playedColor: Colors.amber,
-        ),
+      child: Stack(
+        children: [
+          YoutubePlayer(
+            controller: serviceLocator<MediaService>().youtubeController!,
+            controlsTimeOut: Duration(milliseconds: 1),
+          ),
+          showProgressbar
+              ? Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: 5.d,
+                  child: Widgets.rect(color: TColors.black40),
+                )
+              : SizedBox(),
+          showProgressbar
+              ? StreamBuilder(
+                  stream: entry.onPositionChanged,
+                  builder: (context, snapshot) {
+                    print(entry.positionRatio);
+                    return Positioned(
+                        left: 0,
+                        bottom: 0,
+                        height: 5.d,
+                        width: entry.positionRatio * DeviceInfo.size.width,
+                        child: Widgets.rect(color: TColors.orange));
+                  },
+                )
+              : SizedBox(),
+        ],
       ),
     );
   }

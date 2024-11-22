@@ -126,7 +126,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             SizedBox(height: 90.d),
             _videoData.value == null
                 ? SizedBox(height: isFirstStation ? 220.d : 0)
-                : youtubePlayer(),
+                : youtubePlayer(
+                    showProgressbar: controller.currentSlide.majority!.type ==
+                        ContentType.caption),
             ListenableBuilder(
               listenable: _slideUpdater,
               builder: (context, child) {
