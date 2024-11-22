@@ -113,7 +113,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     var lessonCount = 0;
     for (var group in category.children) {
       if (account.scores.containsKey(group.id)) {
-        score += account.scores[group.id]!["score"] as int;
+        score += (account.scores[group.id]!["score"] ?? 0) as int;
         lessonCount++;
       }
     }

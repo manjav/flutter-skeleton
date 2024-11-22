@@ -133,7 +133,7 @@ class AccountProvider extends ChangeNotifier {
       scores[key] = {};
     }
     for (var entry in values.entries) {
-      if (entry.value is num && scores[key]![entry.key] < entry.value) {
+      if (entry.value is num && (scores[key]![entry.key] ?? 0) < entry.value) {
         scores[key]![entry.key] = entry.value;
         needUpdate = true;
       }
