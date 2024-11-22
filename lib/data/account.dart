@@ -11,6 +11,7 @@ class AccountProvider extends ChangeNotifier {
   List<ParentContent> contents = [];
   Map<String, dynamic> metadata = {};
   Map<String, Map<String, dynamic>> scores = {};
+  final Map<String, FlashCard> leitner = {};
   bool get isTester => (account.user.username ?? "").startsWith("test_");
 
   void initialize(dynamic account) {
@@ -137,17 +138,91 @@ class AccountProvider extends ChangeNotifier {
       }
     }
     if (needUpdate) {
-    /// Send to Server
-    writeStorage(
-      collectionId: "scores_${metadata["targetLanguage"]}",
-      onlyGreathers: true,
-      keyId: key,
-      values: values,
-    );
+      /// Send to Server
+      writeStorage(
+        collectionId: "scores_${metadata["targetLanguage"]}",
+        onlyGreathers: true,
+        keyId: key,
+        values: values,
+      );
 
-    notifyListeners();
+      notifyListeners();
     }
-
     return scores;
+  }
+
+  Future<Map<String, FlashCard>> loadLeitner() async {
+    Map<String, Map> result = await serviceLocator<NetConnector>().readStorage(
+      "leitner",
+      userId: account.user.id,
+      addDates: true,
+    );
+    leitner.clear();
+    for (var entry in result.entries) {
+      final card = entry.value;
+      _addToLeitner(
+        card["id"]!,
+        card["expected"],
+        lastStep: card["step"],
+        lastScore: card["score"],
+        lastAnswer: card["answer"],
+        createTime: card["createTime"],
+        updateDate: card["updateDate"],
+      );
+    }
+    notifyListeners();
+    return leitner;
+  }
+
+  FlashCard _addToLeitner(
+    String id,
+    String expectedAnswer, {
+    int lastStep = 0,
+    String? lastAnswer,
+    int lastScore = 0,
+    DateTime? createTime,
+    DateTime? updateDate,
+  }) {
+    if (!leitner.containsKey(id)) {
+      leitner[id] = FlashCard(id, expectedAnswer, createTime ?? DateTime.now());
+    }
+    leitner[id]!.update(
+      lastScore: lastScore,
+      lastAnswer: lastAnswer,
+      lastStep: lastStep,
+      updateDate: updateDate,
+    );
+    return leitner[id]!;
+  }
+}
+
+class FlashCard {
+  final String id;
+  final String expectedAnswer;
+  final DateTime createTime;
+  String? lastAnswer;
+  DateTime? updateDate;
+  int lastScore = 0, lastStep = 0;
+  FlashCard(this.id, this.expectedAnswer, this.createTime);
+  void update({
+    int lastStep = 0,
+    int lastScore = 0,
+    String? lastAnswer,
+    DateTime? updateDate,
+  }) {
+    this.lastStep = lastStep.min(0);
+    this.lastScore = lastScore;
+    this.lastAnswer = lastAnswer;
+    this.updateDate = updateDate ?? DateTime.now();
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "step": lastStep,
+      "score": lastScore,
+      "answer": lastAnswer,
+      "expected": expectedAnswer,
+    };
   }
 }

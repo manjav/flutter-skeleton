@@ -74,6 +74,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
         _categories = (await account.loadCategories());
         await account.loadScores();
+        await account.loadLeitner();
       }
 
       // Distinguishing read and new contents
