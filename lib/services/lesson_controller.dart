@@ -79,6 +79,9 @@ class LessonController {
 
     serieIndex.value += stepLength;
     slideIndex.value = -1;
+
+    serviceLocator<Trackers>().design(currentSerie.id);
+
     changeSlide(1);
   }
 
@@ -93,8 +96,8 @@ class LessonController {
       root!.id,
       score,
       parameters: {
-      "quizCount": quizes.length,
-      "sentenceCount": sentenceCount,
+        "quizCount": quizes.length,
+        "sentenceCount": sentenceCount,
       },
     );
 
