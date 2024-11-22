@@ -12,10 +12,11 @@ class AccountProvider extends ChangeNotifier {
   Map<String, dynamic> metadata = {};
   Map<String, Map<String, dynamic>> scores = {};
   final Map<String, FlashCard> leitner = {};
-  bool get isTester => (account.user.username ?? "").startsWith("test_");
+  bool get isTester => Pref.username.getString().startsWith("test_");
 
   void initialize(dynamic account) {
     this.account = account;
+    Pref.username.setString(this.account.user.username ?? "");
     metadata = jsonDecode(account.user.metadata!);
   }
 
