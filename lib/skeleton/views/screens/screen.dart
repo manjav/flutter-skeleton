@@ -47,6 +47,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     return Scaffold(
       body: PopScope(
         canPop: widget.closable,
+        onPopInvokedWithResult: onPopInvoked,
         child: Stack(
           children: [
             Positioned(
@@ -133,5 +134,9 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
       ),
     );
     return data;
+  }
+
+  void onPopInvoked(bool didPop, dynamic result) {
+    if (!didPop) Navigator.pop(context);
   }
 }
