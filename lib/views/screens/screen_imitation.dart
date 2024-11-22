@@ -108,13 +108,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         height: 52.d,
         padding: EdgeInsets.all(16.d),
         child: Asset.load<SvgPicture>("close"),
-        onPressed: () {
-          if (controller.serieIndex.value < 1) {
-            Navigator.pop(context);
-            return;
-          }
-          controller.callCompletedMethod();
-        },
+        onPressed: () => onPopInvoked(false, null),
       ),
       SizedBox(width: 8.d),
       progressSliderBuilder(DeviceInfo.size.width * 0.72),
@@ -420,6 +414,16 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         },
       ),
     ], barrierColor: TColors.transparent);
+  }
+
+  @override
+  Future<void> onPopInvoked(bool didPop, dynamic data) async {
+    if (didPop) return;
+    if (controller.serieIndex.value < 2) {
+      Navigator.pop(context);
+      return;
+    }
+    controller.callCompletedMethod();
   }
 
   @override
