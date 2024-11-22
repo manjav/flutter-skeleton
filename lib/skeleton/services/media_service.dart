@@ -95,6 +95,10 @@ class MediaService extends IService {
         mimeType: "audio/mpeg",
       );
       player.play(_sounds[name] = source);
+      player.onPlayerStateChanged
+          .listen((state) => mediaEntry!._parseState(state.name));
+      player.onPositionChanged
+          .listen((position) => mediaEntry!._setPosition(position));
       // player.play(_sounds[name] = DeviceFileSource(file!.path));
       // player.play(UrlSource('${LoaderWidget.baseURL}/sounds/$name.$extension'));
     } else {
