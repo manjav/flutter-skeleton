@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -153,6 +154,24 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
                       );
                     },
                   ),
+                );
+              },
+            ),
+            ValueListenableBuilder(
+              valueListenable: controller.slideIndex,
+              builder: (context, value, child) {
+                if (value < 0 || controller.currentSerie.children.length < 2) {
+                  return SizedBox();
+                }
+                return DotsIndicator(
+                  decorator: DotsDecorator(
+                    size: Size.square(6.d),
+                    activeSize: Size.square(8.d),
+                    color: TColors.primary20,
+                    activeColor: TColors.primary40,
+                  ),
+                  dotsCount: controller.currentSerie.children.length,
+                  position: _pageController.page!.round(),
                 );
               },
             ),
