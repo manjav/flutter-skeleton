@@ -246,7 +246,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             ],
           ),
           onPressed: () async {
-            await controller.changeSlide(1);
+            controller.changeSlide(1);
             _pageController.jumpTo(0);
             _onSlideChange();
           },
@@ -272,7 +272,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
                     "cc", value ? TColors.primary90 : TColors.transparent,
                     onPress: () => _captionMode.value = !_captionMode.value),
               ],
-            )
+            ),
           ],
         );
       },
@@ -340,7 +340,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     }
     _captions = captions.toList();
     media.play(_videoData.value!);
-    await Future.delayed(Duration(milliseconds: 100));
     _videoData.value!.onPositionChanged.listen(_findProperCaption);
   }
 
