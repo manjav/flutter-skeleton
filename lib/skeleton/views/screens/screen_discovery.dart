@@ -331,8 +331,8 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
                   right: padding,
                   child: Widgets.rect(
                     radius: 12.d,
-                    color: TColors.teal,
-                    padding: EdgeInsets.symmetric(horizontal: 4.d),
+                    color: TColors.black,
+                    padding: EdgeInsets.fromLTRB(8.d, 4.d, 8.d, 4.d),
                     child: Text(flag, style: TStyles.tinyInvert),
                   ),
                 ),
