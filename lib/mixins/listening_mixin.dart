@@ -9,8 +9,8 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   void listen(
     Talk talk, {
-    MediaIntry? initialMedia,
-    MediaIntry? finalMedia,
+    MediaEntry? initialMedia,
+    MediaEntry? finalMedia,
   }) {
     final account = serviceLocator<AccountProvider>();
 
@@ -27,10 +27,10 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
     final initalVoice = talk.getText(talk.textSide);
     initialMedia ??= (initalVoice.isNotEmpty
-        ? MediaIntry(MediaType.voice, initalVoice)
+        ? MediaEntry(MediaType.voice, initalVoice)
         : null);
     finalMedia ??= talk.type != ContentType.repeat
-        ? MediaIntry(MediaType.voice, talk.targetValue)
+        ? MediaEntry(MediaType.voice, talk.targetValue)
         : null;
 
     serviceLocator<ListenerQuiz>().prepare(

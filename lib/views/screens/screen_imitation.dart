@@ -19,7 +19,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   final ValueNotifier<int> _slideUpdater = ValueNotifier(-1);
   final PageController _pageController = PageController();
   final ValueNotifier<bool> _captionMode = ValueNotifier(true);
-  final ValueNotifier<MediaIntry?> _videoData = ValueNotifier(null);
+  final ValueNotifier<MediaEntry?> _videoData = ValueNotifier(null);
 
   @override
   void initState() {
@@ -307,7 +307,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       return;
     }
     _videoData.value =
-        MediaIntry.parse(MediaType.youtube, controller.currentSerie.iconUrl);
+        MediaEntry.parse(MediaType.youtube, controller.currentSerie.iconUrl);
     media.initYoutube(_videoData.value!);
     _getCaptions();
   }
@@ -332,7 +332,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       return;
     }
     for (var talk in _captions) {
-      MediaIntry caption = (talk as Talk).data;
+      MediaEntry caption = (talk as Talk).data;
       if (caption.start <= seconds && (caption.end ?? 0) > seconds) {
         this.caption.value = talk;
         return;

@@ -84,7 +84,7 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Widget youtubePlayer({double? borderRadius, bool showProgressbar = false}) {
-    var entry = serviceLocator<MediaService>().mediaEntry!;
+    var entry = serviceLocator<MediaService>().entry!;
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 0)),
       child: Stack(

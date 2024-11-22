@@ -13,23 +13,23 @@ class MediaService extends IService {
   final _sounds = <String, Source>{};
   final Map<String, AudioPlayer> _audioPlayers = {};
   YoutubePlayerController? youtubeController;
-  MediaIntry? mediaEntry;
+  MediaEntry? entry;
   bool autoStart = true;
 
   Future<void> play(
-    MediaIntry? intry, {
+    MediaEntry? entry, {
     double playbackRate = 1.0,
   }) async {
-    if (intry == null) {
+    if (entry == null) {
       return;
     }
-    mediaEntry = intry;
-    if (intry.type == MediaType.sound) {
-      await playSound(intry.id, playbackRate: playbackRate);
-    } else if (intry.type == MediaType.voice) {
-      await playVoice(intry.id, playbackRate: playbackRate);
-    } else if (intry.type == MediaType.youtube) {
-      await playYoutube(intry, playbackRate: playbackRate);
+    this.entry = entry;
+    if (entry.type == MediaType.sound) {
+      await playSound(entry.id, playbackRate: playbackRate);
+    } else if (entry.type == MediaType.voice) {
+      await playVoice(entry.id, playbackRate: playbackRate);
+    } else if (entry.type == MediaType.youtube) {
+      await playYoutube(entry, playbackRate: playbackRate);
     }
   }
 
@@ -96,9 +96,9 @@ class MediaService extends IService {
       );
       player.play(_sounds[name] = source);
       player.onPlayerStateChanged
-          .listen((state) => mediaEntry!._parseState(state.name));
+          .listen((state) => entry!._parseState(state.name));
       player.onPositionChanged
-          .listen((position) => mediaEntry!._setPosition(position));
+          .listen((position) => entry!._setPosition(position));
       // player.play(_sounds[name] = DeviceFileSource(file!.path));
       // player.play(UrlSource('${LoaderWidget.baseURL}/sounds/$name.$extension'));
     } else {
@@ -158,7 +158,7 @@ class MediaService extends IService {
   }
 
   void initYoutube(
-    MediaIntry intry, {
+    MediaEntry intry, {
     double playbackRate = 1.0,
   }) {
     if (youtubeController == null) {
@@ -190,7 +190,7 @@ class MediaService extends IService {
   }
 
   Future<void> playYoutube(
-    MediaIntry intry, {
+    MediaEntry intry, {
     double playbackRate = 1.0,
   }) async {
     if (!autoStart) return;
@@ -264,14 +264,14 @@ enum MediaState {
   disposed,
 }
 
-class MediaIntry {
+class MediaEntry {
   double? end;
   double start = 0;
   String id = "";
   // dynamic data;
   MediaType type;
-  MediaIntry(this.type, this.id, {this.start = 0, this.end});
-  MediaIntry.parse(this.type, String url) {
+  MediaEntry(this.type, this.id, {this.start = 0, this.end});
+  MediaEntry.parse(this.type, String url) {
     final uri = Uri.parse(url);
     id = uri.pathSegments.last;
     start = double.parse(uri.queryParameters["start"] ?? "0");

@@ -111,7 +111,7 @@ class Talk extends Content {
         if (args.last.contains('~')) {
           // Time parsing
           List<String> times = args.last.split('~');
-          data = MediaIntry(
+          data = MediaEntry(
             MediaType.youtube,
             "",
             start: double.parse(times.first),

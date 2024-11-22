@@ -25,7 +25,7 @@ class ListenerQuiz extends Quiz {
   bool _hasResultSent = false;
   List<String> exceptions = [];
   int _matchLevel = 0;
-  MediaIntry? initialMedia, finalMedia;
+  MediaEntry? initialMedia, finalMedia;
 
   @override
   initialize({List<Object>? args}) async {
@@ -90,8 +90,8 @@ class ListenerQuiz extends Quiz {
     required Talk talk,
     int minMatchLevel = 95,
     bool autoStart = false,
-    MediaIntry? finalMedia,
-    MediaIntry? initialMedia,
+    MediaEntry? finalMedia,
+    MediaEntry? initialMedia,
     List<String>? exceptions,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) async {
