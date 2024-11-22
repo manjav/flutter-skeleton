@@ -131,13 +131,19 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   }
 
   Future<void> _onSerieComplete(
-      int sentenceCount, int quizCount, int score) async {
-    await Get.toNamed(Routes.popupResult, arguments: {
-      "id": controller.root!.id,
-      "score": score,
-      "quizCount": quizCount,
-      "sentenceCount": sentenceCount
-    });
+    int sentenceCount,
+    int quizCount,
+    int score,
+    bool showFeast,
+  ) async {
+    if (showFeast) {
+      await Get.toNamed(Routes.popupResult, arguments: {
+        "id": controller.root!.id,
+        "score": score,
+        "quizCount": quizCount,
+        "sentenceCount": sentenceCount
+      });
+    }
     if (mounted) {
       Navigator.pop(context);
       // showFeedback();

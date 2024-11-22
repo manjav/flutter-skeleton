@@ -423,7 +423,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       Navigator.pop(context);
       return;
     }
-    controller.callCompletedMethod();
+    controller.callCompletedMethod(showFeast: false);
   }
 
   @override

@@ -11,7 +11,7 @@ class LessonController {
   Timer? _slidePassTimer;
   List<ParentContent> series = [];
   final Map<String, Talk> quizes = {};
-  Function(int, int, int)? onComplete;
+  Function(int, int, int, bool)? onComplete;
   final ValueNotifier<int> serieIndex = ValueNotifier(-1);
   final ValueNotifier<int> slideIndex = ValueNotifier(-1);
   final ValueNotifier<int> contentIndex = ValueNotifier(-1);
@@ -82,7 +82,7 @@ class LessonController {
     changeSlide(1);
   }
 
-  void callCompletedMethod() {
+  void callCompletedMethod({bool showFeast = true}) {
     int score = 0;
     for (var entry in quizes.entries) {
       score += entry.value.score.max(100);
@@ -93,7 +93,7 @@ class LessonController {
       "sentenceCount": sentenceCount,
     });
 
-    onComplete?.call(sentenceCount, quizes.length, score);
+    onComplete?.call(sentenceCount, quizes.length, score, showFeast);
   }
 
   Future<void> changeSlide(int stepLength) async {
