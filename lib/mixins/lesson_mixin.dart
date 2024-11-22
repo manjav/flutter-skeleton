@@ -136,13 +136,30 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     int score,
     bool showFeast,
   ) async {
-    if (showFeast) {
-      await Get.toNamed(Routes.popupResult, arguments: {
-        "id": controller.root!.id,
-        "score": score,
-        "quizCount": quizCount,
-        "sentenceCount": sentenceCount
-      });
+    try {
+      serviceLocator<AccountProvider>().saveScore(
+        controller.root!.id,
+        {
+          "score": score,
+          "quizCount": quizCount,
+          "sentenceCount": sentenceCount,
+        },
+      );
+
+      if (showFeast) {
+        await Get.toNamed(Routes.popupResult, arguments: {
+          "id": controller.root!.id,
+          "score": score,
+          "sentenceCount": sentenceCount
+        });
+      }
+    } on SkeletonException catch (e) {
+      if (context.mounted) {
+        Get.toNamed(Routes.popupMessage, arguments: {
+          "title": e.message,
+          "message": "error_${e.statusCode}".l()
+        });
+      }
     }
     if (mounted) {
       Navigator.pop(context);

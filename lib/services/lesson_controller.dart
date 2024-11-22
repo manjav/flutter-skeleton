@@ -87,11 +87,16 @@ class LessonController {
     for (var entry in quizes.entries) {
       score += entry.value.score.max(100);
     }
+    score = (score / quizes.length).round();
 
-    serviceLocator<Trackers>().endProgress(root!.id, score, parameters: {
+    serviceLocator<Trackers>().endProgress(
+      root!.id,
+      score,
+      parameters: {
       "quizCount": quizes.length,
       "sentenceCount": sentenceCount,
-    });
+      },
+    );
 
     onComplete?.call(sentenceCount, quizes.length, score, showFeast);
   }
