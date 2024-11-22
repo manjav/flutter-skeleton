@@ -18,7 +18,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   List<Content> _captions = [];
   final ValueNotifier<int> _slideUpdater = ValueNotifier(-1);
   final PageController _pageController = PageController();
-  final ValueNotifier<bool> _captionMode = ValueNotifier(false);
+  final ValueNotifier<bool> _captionMode = ValueNotifier(true);
   final ValueNotifier<MediaIntry?> _videoData = ValueNotifier(null);
 
   @override
