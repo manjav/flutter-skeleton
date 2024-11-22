@@ -331,8 +331,10 @@ class MediaIntry {
   }
 
   /// Parse state from various sources
-  void parseState(String name) {
+  void _parseState(String name) {
+    if (_mediaState.name != name) {
       _state = MediaState.values
           .firstWhere((s) => s.name == name, orElse: () => MediaState.unknown);
+    }
   }
 }
