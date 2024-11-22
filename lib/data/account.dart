@@ -125,6 +125,18 @@ class AccountProvider extends ChangeNotifier {
     String key,
     Map<String, dynamic> values,
   ) async {
+    /// Local Update
+    var needUpdate = false;
+    if (!scores.containsKey(key)) {
+      scores[key] = {};
+    }
+    for (var entry in values.entries) {
+      if (entry.value is num && scores[key]![entry.key] < entry.value) {
+        scores[key]![entry.key] = entry.value;
+        needUpdate = true;
+      }
+    }
+    if (needUpdate) {
     /// Send to Server
     writeStorage(
       collectionId: "scores_${metadata["targetLanguage"]}",
@@ -133,14 +145,8 @@ class AccountProvider extends ChangeNotifier {
       values: values,
     );
 
-    /// Local Update
-    if (!scores.containsKey(key)) {
-      scores[key] = {};
-    }
-    for (var entry in values.entries) {
-      scores[key]![entry.key] = entry.value;
-    }
     notifyListeners();
+    }
 
     return scores;
   }
