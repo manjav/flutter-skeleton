@@ -174,6 +174,29 @@ class AccountProvider extends ChangeNotifier {
     return leitner;
   }
 
+  Future<FlashCard> addToLeitner(
+    String id,
+    String expectedAnswer, {
+    int step = 0,
+    int lastScore = 0,
+    String? lastAnswer,
+  }) async {
+    var lastStep = leitner.containsKey(id) ? leitner[id]!.lastStep : 0;
+    final card = _addToLeitner(
+      id,
+      expectedAnswer,
+      lastStep: lastStep + step,
+      lastScore: lastScore,
+      lastAnswer: lastAnswer,
+    );
+    writeStorage(
+      keyId: id,
+      collectionId: "leitner",
+      values: card.toMap(),
+    );
+    return card;
+  }
+
   FlashCard _addToLeitner(
     String id,
     String expectedAnswer, {

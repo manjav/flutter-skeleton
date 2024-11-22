@@ -141,14 +141,12 @@ class LessonController {
     }
     slidePassed.value = true;
 
-    serviceLocator<AccountProvider>().writeStorage(
-      collectionId: "log_${root!.id}",
-      keyId: talk.id,
-      values: {
-        "score": score,
-        "answer": answer,
-        "expected": talk.targetValue,
-      },
+    serviceLocator<AccountProvider>().addToLeitner(
+      talk.id,
+      talk.targetValue,
+      lastAnswer: answer,
+      lastScore: score,
+      step: (state == QuizState.success ? 1 : -1),
     );
   }
 
