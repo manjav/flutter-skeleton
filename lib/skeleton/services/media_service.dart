@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart' as audio;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:lifetalk/app_export.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -13,6 +13,7 @@ class MediaService extends IService {
   final _sounds = <String, Source>{};
   final Map<String, AudioPlayer> _audioPlayers = {};
   YoutubePlayerController? youtubeController;
+  MediaIntry? mediaEntry;
   bool autoStart = true;
 
   Future<void> play(
@@ -22,6 +23,7 @@ class MediaService extends IService {
     if (intry == null) {
       return;
     }
+    mediaEntry = intry;
     if (intry.type == MediaType.sound) {
       await playSound(intry.id, playbackRate: playbackRate);
     } else if (intry.type == MediaType.voice) {
@@ -162,11 +164,14 @@ class MediaService extends IService {
           autoPlay: false,
           enableCaption: false,
           hideControls: true,
-          // hideThumbnail: true,
+          hideThumbnail: true,
         ),
       );
       youtubeController!.addListener(
-        () => intry.parseState(youtubeController!.value.playerState.name),
+        () {
+          intry._setPosition(youtubeController!.value.position);
+          intry._parseState(youtubeController!.value.playerState.name);
+        },
       );
     } else {
       if (intry.id.isNotEmpty &&
@@ -271,12 +276,42 @@ class MediaIntry {
         : null;
   }
 
-  final _stateController = StreamController<MediaState>.broadcast();
+  Duration get duration {
+    var milliseconds = start * 1000;
+    return Duration(
+        milliseconds:
+            (end == null ? milliseconds : (end! * 1000) - milliseconds)
+                .round());
+  }
+
+  /// Stream of changes on position.
+  final _positionController = StreamController<Duration>.broadcast();
+  Stream<Duration> get onPositionChanged => _positionController.stream;
+  Duration _position = Duration();
+  Duration get position => _position;
+
+  double _positionRatio = 0;
+  double get positionRatio => _positionRatio;
+
+  /// The current playback position.
+  /// It is only set, when the corresponding action succeeds.
+  void _setPosition(Duration position) {
+    if (_positionController.isClosed) {
+      return;
+    }
+    int milliseconds = (position.inMilliseconds - start * 1000).round();
+    if (_position.inMilliseconds == milliseconds) {
+      return;
+    }
+    _position = Duration(milliseconds: milliseconds);
+    _positionRatio = milliseconds / duration.inMilliseconds;
+    _positionController.add(_position);
+  }
 
   /// Stream of changes on state.
+  final _stateController = StreamController<MediaState>.broadcast();
   Stream<MediaState> get onStateChanged => _stateController.stream;
   MediaState _mediaState = MediaState.unknown;
-
   MediaState get state => _mediaState;
 
   /// The current playback state.
@@ -293,7 +328,7 @@ class MediaIntry {
 
   /// Parse state from various sources
   void parseState(String name) {
-    _state = MediaState.values
-        .firstWhere((s) => s.name == name, orElse: () => MediaState.unknown);
+      _state = MediaState.values
+          .firstWhere((s) => s.name == name, orElse: () => MediaState.unknown);
   }
 }

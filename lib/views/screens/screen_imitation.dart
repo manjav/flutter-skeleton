@@ -48,7 +48,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   void _onSlideChange() {
     final media = serviceLocator<MediaService>();
-    media.youtubeController?.removeListener(_findProperCaption);
     media.stopAll();
 
     if (controller.slideIndex.value < 0) return;
@@ -321,13 +320,12 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     _captions = captions.toList();
     media.play(_videoData.value!);
     await Future.delayed(Duration(milliseconds: 100));
-    media.youtubeController!.addListener(_findProperCaption);
+    _videoData.value!.onPositionChanged.listen(_findProperCaption);
   }
 
-  void _findProperCaption() {
-    final youtube = serviceLocator<MediaService>().youtubeController!;
-    final seconds = youtube.value.position.inMilliseconds / 1000.0;
-    if (youtube.value.playerState == PlayerState.paused) {
+  void _findProperCaption(Duration position) {
+    final seconds = position.inMilliseconds / 1000.0;
+    if (_videoData.value!.positionRatio >= 1) {
       _gotoSlide(true);
       return;
     }
