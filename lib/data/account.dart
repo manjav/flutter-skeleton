@@ -155,7 +155,6 @@ class AccountProvider extends ChangeNotifier {
     Map<String, Map> result = await serviceLocator<NetConnector>().readStorage(
       "leitner",
       userId: account.user.id,
-      addDates: true,
     );
     leitner.clear();
     for (var entry in result.entries) {

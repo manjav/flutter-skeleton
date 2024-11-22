@@ -106,7 +106,6 @@ mixin VideoPlayerMixin<S extends AbstractScreen> on AbstractScreenState<S> {
               ? StreamBuilder(
                   stream: entry.onPositionChanged,
                   builder: (context, snapshot) {
-                    print(entry.positionRatio);
                     return Positioned(
                         left: 0,
                         bottom: 0,
