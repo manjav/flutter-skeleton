@@ -140,7 +140,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     });
     if (mounted) {
       Navigator.pop(context);
-      showFeedback();
+      // showFeedback();
     }
   }
 
