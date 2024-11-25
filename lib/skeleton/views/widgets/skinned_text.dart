@@ -40,7 +40,7 @@ class SkinnedText extends StatelessWidget {
               ..style = PaintingStyle.stroke,
           )),
       Padding(
-        padding: EdgeInsets.only(top: 3.5.d),
+        padding: EdgeInsets.only(top: 2.d),
         child: Text(text,
             overflow: overflow,
             textAlign: textAlign,
