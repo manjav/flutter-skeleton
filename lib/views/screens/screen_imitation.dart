@@ -27,11 +27,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     final media = serviceLocator<MediaService>();
     _pageController.addListener(
       () {
-        if (media.youtubeController != null &&
+        if (controller.currentSlide.majority!.type == ContentType.repeat &&
+            media.youtubeController != null &&
             media.youtubeController!.value.playerState == PlayerState.playing) {
           media.youtubeController!.pause();
           media.autoStart = false;
-          // print("false ");
         }
         controller.slideIndex.value = (_pageController.page ?? 0).round();
       },
@@ -48,9 +48,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _onSlideChange() {
-    final media = serviceLocator<MediaService>();
-    media.stopAll();
-
     if (controller.slideIndex.value < 0) return;
 
     final slide = controller.currentSlide;
