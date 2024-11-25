@@ -67,12 +67,20 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   Future<void> _initializeLessons({bool initializeMode = false}) async {
     try {
       var account = serviceLocator<AccountProvider>();
+      _categories = (await account.loadCategories());
       if (initializeMode) {
         if (!account.metadata.containsKey("targetLanguage")) {
           await Get.toNamed(Routes.onboarding);
+          var onboard = _categories.where((c) {
+            return c.children[0].id.contains("onboarding");
+          });
+          if (onboard.isNotEmpty) {
+            await _loadLesson(
+                onboard.first.children.first as ParentContent, false);
+            return;
+          }
         }
 
-        _categories = (await account.loadCategories());
         await account.loadScores();
         await account.loadLeitner();
       }
