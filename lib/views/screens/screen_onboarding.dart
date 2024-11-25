@@ -82,6 +82,9 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
             return SkinnedButton(
               color: TColors.blue,
               isEnable: value.value.isNotEmpty,
+              onDisablePressed: () {
+                toast("Select native languages!");
+              },
               margin: EdgeInsets.all(60.d),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 Text("Lets Learn   ", style: TStyles.bigInvert),
