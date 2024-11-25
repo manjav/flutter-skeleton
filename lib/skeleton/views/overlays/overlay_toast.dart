@@ -14,12 +14,11 @@ class ToastOverlay extends AbstractOverlay {
 class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
-  var position = DeviceInfo.size.center(Offset.zero);
-  var duration = const Duration(seconds: 3);
+  final Duration _duration = const Duration(seconds: 3);
 
   @override
   void initState() {
-    animationController = AnimationController(vsync: this, duration: duration);
+    animationController = AnimationController(vsync: this, duration: _duration);
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) {
         close();
@@ -32,7 +31,7 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
   @protected
   void onRender(Duration timeStamp) {
     animationController.animateTo(animationController.upperBound,
-        curve: Curves.easeOutExpo, duration: duration);
+        curve: Curves.easeOutExpo, duration: _duration);
   }
 
   @override
@@ -47,9 +46,8 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
                     double opacity =
                         (1.0 - animationController.value).clamp(0, 1 / 80) * 80;
                     return Positioned(
-                        top: position.dy -
-                            animationController.value * 32.d -
-                            300.d,
+                        top: DeviceInfo.size.height * 0.8 -
+                            animationController.value * 20.d,
                         child: Opacity(
                           opacity: opacity,
                           child: Transform.scale(
@@ -60,10 +58,10 @@ class _ToastOverlayState extends AbstractOverlayState<ToastOverlay>
                               child: Widgets.rect(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 40.d),
-                                  decoration:
-                                      Widgets.imageDecorator("ui_shadow"),
+                                  // decoration:
+                                  //     Widgets.imageDecorator("ui_shadow"),
                                   child: SkinnedText(widget.message,
-                                      style: TStyles.large))),
+                                      style: TStyles.largeInvert))),
                         ));
                   })
             ])));
