@@ -16,6 +16,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   @override
   List<Widget> appBarElementsLeft() => [];
   int _slideIndex = -1;
+  TextStyle? _errorStyle;
   TextValueRun? _slideTitleText;
   TextValueRun? _slideCaptionText;
   List<MapEntry> _nativeLanguages = [];
@@ -71,6 +72,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
         ),
         LanguageSelector(
           "My native language is:",
+          titleStyle: _errorStyle,
           _nativeLanguages,
           onChange: (index, code) => _selectedLanguages.value =
               MapEntry(_selectedLanguages.value.key, code),
@@ -84,6 +86,9 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
               isEnable: value.value.isNotEmpty,
               onDisablePressed: () {
                 toast("Select native languages!");
+                setState(() {
+                  _errorStyle = TStyles.large.copyWith(color: TColors.error);
+                });
               },
               margin: EdgeInsets.all(60.d),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -163,14 +168,16 @@ class LanguageSelector extends StatefulWidget {
   final int maxtItems;
   final int selectedIndex;
   final List<MapEntry> data;
+  final TextStyle? titleStyle;
   final Function(int, String)? onChange;
 
   const LanguageSelector(
     this.title,
     this.data, {
     this.onChange,
-    this.enabled = true,
+    this.titleStyle,
     this.maxtItems = 4,
+    this.enabled = true,
     this.selectedIndex = -1,
     super.key,
   });
@@ -197,18 +204,18 @@ class _LanguageSelectorState extends State<LanguageSelector> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(widget.title),
+          Text(widget.title, style: widget.titleStyle),
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(16.d)),
             child: Widgets.rect(
               color: TColors.primary20,
-            height: (_itemHeight + _itemMargin * 2) *
+              height: (_itemHeight + _itemMargin * 2) *
                       widget.data.length.max(widget.maxtItems) -
                   (widget.data.length > widget.maxtItems ? _itemMargin * 5 : 0),
-            child: ListView.builder(
-                padding: EdgeInsets.all(0),
-                itemCount: widget.data.length,
-                itemBuilder: (context, index) => _languageItemBuilder(index)),
+              child: ListView.builder(
+                  padding: EdgeInsets.all(0),
+                  itemCount: widget.data.length,
+                  itemBuilder: (context, index) => _languageItemBuilder(index)),
             ),
           ),
           SizedBox(height: 10.d),
