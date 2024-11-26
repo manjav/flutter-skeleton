@@ -21,7 +21,6 @@ class LessonAssets with ILogger {
       for (var slide in serie.children) {
         for (var talk in (slide as ParentContent).children) {
           talk = talk as Talk;
-          final side = talk.textSide;
           if (!loadCaptions && talk.type == ContentType.caption) {
             continue; // Load captions only for lessons
           }
@@ -34,15 +33,11 @@ class LessonAssets with ILogger {
           }
 
           if (talk.isQuiz) {
-            _loadFile(AssetType.animation, "mic_panel_button", onComplete, onProgress,
-                onError);
+            _loadFile(AssetType.animation, "mic_panel_button", onComplete,
+                onProgress, onError);
           }
 
-          if (side != TranslationSide.none) {
-            var text = talk.getText(side).simplify();
-            _loadVoice(text, talk.narrator, onComplete, onProgress, onError);
-          }
-          if (talk.type == ContentType.translate) {
+          if (talk.type == ContentType.repeat && talk.data == null) {
             var text = talk.targetValue.simplify();
             _loadVoice(text, Narrator.onyx, onComplete, onProgress, onError);
           }
