@@ -81,6 +81,9 @@ class DictatorQuiz extends Quiz {
     choices.addAll(text2Choice(_extraChoices));
     choices.shuffle();
     state.value = QuizState.ready;
+    if (initialMedia != null && initialMedia.type == MediaType.youtube) {
+      await serviceLocator<MediaService>().play(initialMedia);
+    }
     state.value = QuizState.waiting;
   }
 
@@ -104,7 +107,7 @@ class DictatorQuiz extends Quiz {
     choice.setState(ChoiceState.selected);
     blank.text = choice.text;
     blank.setState(ChoiceState.selected);
-    state.value = blanks.isEmpty ? QuizState.waiting : QuizState.ready;
+    state.value = blanks.isEmpty ? QuizState.running : QuizState.waiting;
   }
 
   void undoChoice(Choice word) {
@@ -113,7 +116,7 @@ class DictatorQuiz extends Quiz {
         .lastWhere(
             (c) => c.text == word.text && c.state != ChoiceState.available)
         .setState(ChoiceState.available);
-    state.value = blanks.isEmpty ? QuizState.waiting : QuizState.ready;
+    state.value = blanks.isEmpty ? QuizState.running : QuizState.waiting;
   }
 
   void chechAnswers() {

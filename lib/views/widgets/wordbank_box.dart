@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../app_export.dart';
 
@@ -47,29 +48,69 @@ class _WordBankBoxState extends State<WordBankBox> {
           padding: EdgeInsets.all(8.d),
           child: IgnorePointer(
             ignoring: value.index < QuizState.waiting.index,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DirText(
-                widget.talk.nativeValue,
-                style: TStyles.small.copyWith(color: TColors.primary70),
-              ),
-              _wrapper(_words.length, (i) => _wordBuilder(context, i)),
-              SizedBox(height: 5.d),
-              _wrapper(_choices.length, (i) => _choiceBuilder(context, i)),
-              SizedBox(height: 5.d),
-              SkinnedButton(
-                color: value == QuizState.waiting
-                    ? TColors.blue
-                    : TColors.primary30,
-                label: "ok_l".l(),
-                onPressed: serviceLocator<DictatorQuiz>().chechAnswers,
-              ),
-            ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DirText(
+                  widget.talk.nativeValue,
+                  style: TStyles.small.copyWith(color: TColors.primary70),
+                ),
+                _wrapper(_words.length, (i) => _wordBuilder(context, i)),
+                SizedBox(height: 5.d),
+                _wrapper(_choices.length, (i) => _choiceBuilder(context, i)),
+                SizedBox(height: 5.d),
+                Row(
+                  children: [
+                    _button(
+                      icon: "play",
+                      onPressed: () => serviceLocator<MediaService>()
+                          .play(dictator.initialMedia),
+                    ),
+                    Expanded(
+                      child: SkinnedButton(
+                        height: 56.d,
+                        cornerRadius: 32.d,
+                        color: value == QuizState.running
+                            ? TColors.blue
+                            : TColors.primary30,
+                        onPressed: dictator.chechAnswers,
+                        child: Text("ok_l".l(), style: TStyles.largeInvert),
+                      ),
+                    ),
+                    _button(
+                      icon: "slow",
+                      onPressed: () => serviceLocator<MediaService>()
+                          .play(dictator.initialMedia, playbackRate: 0.75),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _button({
+    required String icon,
+    required Future<void> Function() onPressed,
+  }) {
+    if (serviceLocator<DictatorQuiz>().initialMedia == null) {
+      return SizedBox();
+    }
+    return Widgets.button(
+      context,
+      height: 44.d,
+      margin: EdgeInsets.symmetric(horizontal: 10.d),
+      padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 5.d),
+      decoration: BoxDecoration(
+        color: TColors.primary0,
+        border: Border.all(color: TColors.primary20, width: 2.d),
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+      ),
+      child: Asset.load<SvgPicture>("quiz_$icon"),
+      onPressed: onPressed,
     );
   }
 
