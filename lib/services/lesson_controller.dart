@@ -79,10 +79,9 @@ class LessonController {
 
     serieIndex.value += stepLength;
     slideIndex.value = -1;
+    changeSlide(1);
 
     serviceLocator<Trackers>().design(currentSerie.id);
-
-    changeSlide(1);
   }
 
   void callCompletedMethod({bool showFeast = true}) {

@@ -173,7 +173,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
                     activeColor: TColors.primary40,
                   ),
                   dotsCount: controller.currentSerie.children.length,
-                  position: _pageController.page!.round(),
+                  position: controller.slideIndex.value,
                 );
               },
             ),
@@ -333,7 +333,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     _getCaptions();
   }
 
-  Future<void> _getCaptions() async {
+  void _getCaptions() {
     final media = serviceLocator<MediaService>();
     final captions = controller.currentSlide.children
         .where((c) => c.type == ContentType.caption);
@@ -364,10 +364,10 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void onQiuzResult(QuizState state, String text, int score, Talk talk,
       bool repeated, dynamic data) {
     if (controller.currentSerie.majority!.type == ContentType.wordBank) {
-    if (talk.type == ContentType.wordBank) {
-      _showWordBankResult(state, data[0], data[1]);
+      if (talk.type == ContentType.wordBank) {
+        _showWordBankResult(state, data[0], data[1]);
       } else {
-      _showListenerResult();
+        _showListenerResult();
       }
     }
     controller.onQuizResult(state, text, score, talk);
