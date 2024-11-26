@@ -31,9 +31,16 @@ class MatchQuiz extends Quiz {
   @override
   void prepare({
     required Talk talk,
+    MediaEntry? finalMedia,
+    MediaEntry? initialMedia,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
-    super.prepare(talk: talk, onResult: onResult);
+    super.prepare(
+      talk: talk,
+      onResult: onResult,
+      finalMedia: finalMedia,
+      initialMedia: initialMedia,
+    );
     this.lefts.clear();
     this.rights.clear();
     final sections = talk.targetValue.split("∆");

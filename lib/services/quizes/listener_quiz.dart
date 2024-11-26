@@ -104,7 +104,12 @@ class ListenerQuiz extends Quiz {
       _speech.cancel();
     }
 
-    super.prepare(talk: talk, onResult: onResult);
+    super.prepare(
+      talk: talk,
+      onResult: onResult,
+      finalMedia: finalMedia,
+      initialMedia: initialMedia,
+    );
     recognizedWords.value = "";
     if (talk.lastRecord != null) {
       await Future.delayed(const Duration(milliseconds: 100));
@@ -118,8 +123,6 @@ class ListenerQuiz extends Quiz {
     if (exceptions != null) this.exceptions = exceptions;
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
-    this.initialMedia = initialMedia;
-    this.finalMedia = finalMedia;
     _hasMediaPlayed = false;
     _hasResultSent = false;
     // log("listen $_pattern");

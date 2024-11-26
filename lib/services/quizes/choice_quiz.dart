@@ -11,12 +11,19 @@ class ChoiceQuiz extends Quiz {
   @override
   void prepare({
     required Talk talk,
+    MediaEntry? finalMedia,
+    MediaEntry? initialMedia,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
     answer = "";
     selectedIndex.value = -1;
 
-    super.prepare(talk: talk, onResult: onResult);
+    super.prepare(
+      talk: talk,
+      onResult: onResult,
+      finalMedia: finalMedia,
+      initialMedia: initialMedia,
+    );
     choices.clear();
     final sections = talk.targetValue.split("∆");
     final index = int.parse(sections.last);

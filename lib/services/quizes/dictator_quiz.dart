@@ -13,11 +13,18 @@ class DictatorQuiz extends Quiz {
       words.where((w) => w.state == ChoiceState.available);
 
   @override
-  void prepare({
+  Future<void> prepare({
     required Talk talk,
+    MediaEntry? finalMedia,
+    MediaEntry? initialMedia,
     Function(QuizState, String, int, bool, dynamic)? onResult,
-  }) {
-    super.prepare(talk: talk, onResult: onResult);
+  }) async {
+    super.prepare(
+      talk: talk,
+      onResult: onResult,
+      finalMedia: finalMedia,
+      initialMedia: initialMedia,
+    );
 
     final sections = talk.targetValue.split("∆");
     var text = sections.first;

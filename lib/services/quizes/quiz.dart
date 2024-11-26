@@ -4,16 +4,21 @@ import '../../app_export.dart';
 
 class Quiz extends IService {
   bool isEnable = false;
+  MediaEntry? initialMedia, finalMedia;
   Function(QuizState, String, int, bool, dynamic)? onResult;
   Talk? talk;
   final ValueNotifier<QuizState> state = ValueNotifier(QuizState.none);
 
   void prepare({
     required Talk talk,
+    MediaEntry? finalMedia,
+    MediaEntry? initialMedia,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) {
     isEnable = true;
     this.talk = talk;
+    this.initialMedia = initialMedia;
+    this.finalMedia = finalMedia;
     state.value = QuizState.initialize;
     if (onResult != null) this.onResult = onResult;
   }
