@@ -25,7 +25,6 @@ class ListenerQuiz extends Quiz {
   bool _hasResultSent = false;
   List<String> exceptions = [];
   int _matchLevel = 0;
-  MediaEntry? initialMedia, finalMedia;
 
   @override
   initialize({List<Object>? args}) async {

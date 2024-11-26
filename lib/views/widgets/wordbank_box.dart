@@ -36,6 +36,7 @@ class _WordBankBoxState extends State<WordBankBox> {
 
   @override
   Widget build(BuildContext context) {
+    final dictator = serviceLocator<DictatorQuiz>();
     return ValueListenableBuilder(
       valueListenable: _state,
       builder: (context, value, child) {
@@ -44,6 +45,8 @@ class _WordBankBoxState extends State<WordBankBox> {
         }
         return Padding(
           padding: EdgeInsets.all(8.d),
+          child: IgnorePointer(
+            ignoring: value.index < QuizState.waiting.index,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -63,6 +66,7 @@ class _WordBankBoxState extends State<WordBankBox> {
                 onPressed: serviceLocator<DictatorQuiz>().chechAnswers,
               ),
             ],
+            ),
           ),
         );
       },

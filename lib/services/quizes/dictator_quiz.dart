@@ -81,6 +81,7 @@ class DictatorQuiz extends Quiz {
     choices.addAll(text2Choice(_extraChoices));
     choices.shuffle();
     state.value = QuizState.ready;
+    state.value = QuizState.waiting;
   }
 
   List<String> _joinArray(List<String> array, int step) {
