@@ -26,7 +26,8 @@ class DictatorQuiz extends Quiz {
       initialMedia: initialMedia,
     );
 
-    final sections = talk.targetValue.split("∆");
+    final sections =
+        talk.targetValue.replaceAll('’', "'").replaceAll('，', ",").split("∆");
     var text = sections.first;
     final myWords = text.split(" ");
     _extraChoices = [];
