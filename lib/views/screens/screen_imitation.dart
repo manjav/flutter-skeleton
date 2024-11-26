@@ -44,7 +44,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   void _onSerieChange() {
     serviceLocator<MediaService>().autoStart = true;
-    _initYoutube();
+    controller.currentSerie.majority = _getSerieType(controller.currentSerie);
+    Future.delayed(Duration(milliseconds: 0), _initYoutube);
   }
 
   void _onSlideChange() {
@@ -58,12 +59,16 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     } else if (slide.majority!.type == ContentType.wordBank) {
       serviceLocator<DictatorQuiz>().prepare(
         talk: talk,
+        initialMedia: talk.data,
         onResult: (state, text, score, repeated, data) =>
             onQiuzResult(state, text, score, talk, repeated, data),
       );
     }
     _slideUpdater.value = controller.slideIndex.value;
   }
+
+  Content? _getSerieType(ParentContent serie) =>
+      (serie.children.first as ParentContent).children.first;
 
   Content? _getSlideType(ParentContent slide) {
     final first = slide.children.first;
@@ -358,10 +363,12 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   @override
   void onQiuzResult(QuizState state, String text, int score, Talk talk,
       bool repeated, dynamic data) {
+    if (controller.currentSerie.majority!.type == ContentType.wordBank) {
     if (talk.type == ContentType.wordBank) {
       _showWordBankResult(state, data[0], data[1]);
-    } else if (talk.data == null) {
+      } else {
       _showListenerResult();
+      }
     }
     controller.onQuizResult(state, text, score, talk);
   }
