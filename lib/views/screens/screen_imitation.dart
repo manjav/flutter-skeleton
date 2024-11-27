@@ -347,7 +347,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   void _findProperCaption(Duration position) {
     final seconds = position.inMilliseconds / 1000.0 + _videoData.value!.start;
-    if (_videoData.value!.positionRatio >= 1) {
+    if (_videoData.value!.positionRatio >= 1 &&
+        controller.slideIndex.value == 0) {
       _gotoSlide(true);
       return;
     }
