@@ -44,10 +44,13 @@ class _WordBankBoxState extends State<WordBankBox> {
         if (value.index < QuizState.ready.index) {
           return SizedBox();
         }
+        final enable = value.index >= QuizState.waiting.index;
         return Padding(
           padding: EdgeInsets.all(8.d),
           child: IgnorePointer(
-            ignoring: value.index < QuizState.waiting.index,
+            ignoring: !enable,
+            child: Opacity(
+              opacity: enable ? 1 : 0.7,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -85,6 +88,7 @@ class _WordBankBoxState extends State<WordBankBox> {
                   ],
                 ),
               ],
+              ),
             ),
           ),
         );
