@@ -115,6 +115,7 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
     var data = await showModalBottomSheet<T>(
       context: context,
       isDismissible: isDismissible,
+      enableDrag: isDismissible,
       barrierColor: barrierColor,
       isScrollControlled: isDismissible,
       constraints: const BoxConstraints.tightFor(),

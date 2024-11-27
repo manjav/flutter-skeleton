@@ -427,7 +427,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _showListenerResult() {
-    modal([
+    modal(
+      [
       SkinnedButton(
         label: "next_l".l(),
         onPressed: () {
@@ -435,7 +436,10 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           _gotoSlide(true);
         },
       ),
-    ], barrierColor: TColors.transparent);
+      ],
+      isDismissible: false,
+      barrierColor: TColors.transparent,
+    );
   }
 
   @override
