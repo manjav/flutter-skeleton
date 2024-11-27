@@ -126,7 +126,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(height: 90.d),
+            SizedBox(height: paddingTop + 44.d),
             _videoData.value == null
                 ? SizedBox(height: isFirstStation ? 220.d : 0)
                 : youtubePlayer(
@@ -135,10 +135,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             ListenableBuilder(
               listenable: _slideUpdater,
               builder: (context, child) {
-                return SizedBox(
-                  height: _videoData.value != null || isFirstStation
-                      ? 450.d
-                      : 650.d,
+                return Expanded(
                   child: ValueListenableBuilder(
                     valueListenable: serviceLocator<ListenerQuiz>().state,
                     builder: (context, value, child) {
@@ -191,8 +188,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   Widget _slideRenderer(ParentContent slide) {
     return Widgets.rect(
-      margin: EdgeInsets.all(30.d),
-      padding: EdgeInsets.all(30.d),
+      margin: EdgeInsets.all(24.d),
+      padding: EdgeInsets.all(20.d),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: slide.majority?.type == ContentType.station
@@ -233,7 +230,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         LoaderWidget(AssetType.vector, label, height: 170.d),
         Text(label.l(),
             style: TStyles.large.copyWith(color: TColors.primary30)),
-        SizedBox(height: 60.d),
+        Expanded(child: SizedBox()),
         SkinnedButton(
           color: color,
           child: Row(
@@ -288,10 +285,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         builder: (context, value, child) {
           if (captionMode) {
             if (value == null) return SizedBox();
-            return Text(
-              value.targetValue.simplify(),
-              // textAlign: TextAlign.center,
-              style: TStyles.big,
+            return Center(
+              child: Text(
+                value.targetValue.simplify(),
+                style: TStyles.big,
+              ),
             );
           } else {
             return LoaderWidget(AssetType.vector, "ear");
@@ -430,13 +428,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   void _showListenerResult() {
     modal(
       [
-      SkinnedButton(
-        label: "next_l".l(),
-        onPressed: () {
-          Navigator.pop(context);
-          _gotoSlide(true);
-        },
-      ),
+        SkinnedButton(
+          label: "next_l".l(),
+          onPressed: () {
+            Navigator.pop(context);
+            _gotoSlide(true);
+          },
+        ),
       ],
       isDismissible: false,
       barrierColor: TColors.transparent,

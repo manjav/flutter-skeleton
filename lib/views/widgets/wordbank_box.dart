@@ -46,48 +46,51 @@ class _WordBankBoxState extends State<WordBankBox> {
         }
         final enable = value.index >= QuizState.waiting.index;
         return Padding(
-          padding: EdgeInsets.all(8.d),
+          padding: EdgeInsets.all(4.d),
           child: IgnorePointer(
             ignoring: !enable,
             child: Opacity(
               opacity: enable ? 1 : 0.7,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DirText(
-                  widget.talk.nativeValue,
-                  style: TStyles.small.copyWith(color: TColors.primary70),
-                ),
-                _wrapper(_words.length, (i) => _wordBuilder(context, i)),
-                SizedBox(height: 5.d),
-                _wrapper(_choices.length, (i) => _choiceBuilder(context, i)),
-                SizedBox(height: 5.d),
-                Row(
-                  children: [
-                    _button(
-                      icon: "play",
-                      onPressed: () => serviceLocator<MediaService>()
-                          .play(dictator.initialMedia),
-                    ),
-                    Expanded(
-                      child: SkinnedButton(
-                        height: 56.d,
-                        cornerRadius: 32.d,
-                        color: value == QuizState.running
-                            ? TColors.blue
-                            : TColors.primary30,
-                        onPressed: dictator.chechAnswers,
-                        child: Text("ok_l".l(), style: TStyles.largeInvert),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DirText(
+                    widget.talk.nativeValue,
+                    style: TStyles.small.copyWith(color: TColors.primary70),
+                  ),
+                  _wrapper(_words.length, (i) => _wordBuilder(context, i)),
+                  SizedBox(height: 5.d),
+                  _wrapper(_choices.length, (i) => _choiceBuilder(context, i)),
+                  SizedBox(height: 5.d),
+                  Row(
+                    children: [
+                      _button(
+                        icon: "play",
+                        onPressed: () => serviceLocator<MediaService>()
+                            .play(dictator.initialMedia),
                       ),
-                    ),
-                    _button(
-                      icon: "slow",
-                      onPressed: () => serviceLocator<MediaService>()
-                          .play(dictator.initialMedia, playbackRate: 0.75),
-                    ),
-                  ],
-                ),
-              ],
+                      SizedBox(width: dictator.initialMedia == null ? 0 : 12.d),
+                      Expanded(
+                        child: SkinnedButton(
+                          height: 56.d,
+                          cornerRadius: 32.d,
+                          padding: EdgeInsets.all(2.d),
+                          color: value == QuizState.running
+                              ? TColors.blue
+                              : TColors.primary30,
+                          onPressed: dictator.chechAnswers,
+                          child: Text("ok_l".l(), style: TStyles.largeInvert),
+                        ),
+                      ),
+                      SizedBox(width: dictator.initialMedia == null ? 0 : 12.d),
+                      _button(
+                        icon: "slow",
+                        onPressed: () => serviceLocator<MediaService>()
+                            .play(dictator.initialMedia, playbackRate: 0.75),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
@@ -106,7 +109,6 @@ class _WordBankBoxState extends State<WordBankBox> {
     return Widgets.button(
       context,
       height: 44.d,
-      margin: EdgeInsets.symmetric(horizontal: 10.d),
       padding: EdgeInsets.symmetric(horizontal: 12.d, vertical: 5.d),
       decoration: BoxDecoration(
         color: TColors.primary0,
@@ -135,7 +137,7 @@ class _WordBankBoxState extends State<WordBankBox> {
         if (value == ChoiceState.fixed) {
           return Padding(
             padding: EdgeInsets.all(paddingValue),
-            child: Text(word.text, style: TStyles.big),
+            child: Text(word.text, style: TStyles.large),
           );
         }
         final filled = value.index >= ChoiceState.selected.index;
