@@ -139,6 +139,7 @@ class ListenerQuiz extends Quiz {
 
   Future<void> start() async {
     state.value = QuizState.waiting;
+    recognizedWords.value = "";
     await Future.delayed(const Duration(milliseconds: 400));
     final options = SpeechListenOptions(
         listenMode: ListenMode.deviceDefault,
