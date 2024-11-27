@@ -231,7 +231,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         SizedBox(width: 20.d),
         Asset.load<SvgPicture>(title),
         SizedBox(width: 10.d),
-        Text(title, style: TStyles.large),
+        Text(title.l(), style: TStyles.large),
       ],
     );
   }
