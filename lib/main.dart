@@ -31,8 +31,11 @@ void _catchErrors(bool fatalError) {
   // Non-async exceptions
   FlutterError.onError = (errorDetails) {
     if (fatalError) {
+      // If you want to record a "fatal" exception
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      // ignore: dead_code
     } else {
+      // If you want to record a "non-fatal" exception
       FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
     }
   };
@@ -44,13 +47,12 @@ void _catchErrors(bool fatalError) {
         ? [serviceLocator<AccountProvider>().account]
         : <Object>[];
     if (fatalError) {
-      FirebaseCrashlytics.instance.recordError(
-        error,
-        stack,
-        fatal: true,
-        information: info,
-      );
+      // If you want to record a "fatal" exception
+      FirebaseCrashlytics.instance
+          .recordError(error, stack, fatal: true, information: info);
+      // ignore: dead_code
     } else {
+      // If you want to record a "non-fatal" exception
       FirebaseCrashlytics.instance.recordError(error, stack, information: info);
     }
     return true;
