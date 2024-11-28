@@ -1,6 +1,12 @@
 PODS:
   - advertising_id (0.0.1):
     - Flutter
+  - Amplitude (8.18.0):
+    - AnalyticsConnector (~> 1.0.0)
+  - amplitude_flutter (0.0.1):
+    - Amplitude (= 8.18.0)
+    - Flutter
+  - AnalyticsConnector (1.0.3)
   - audioplayers_darwin (0.0.1):
     - Flutter
   - device_info_plus (0.0.1):
@@ -181,6 +187,7 @@ PODS:
 
 DEPENDENCIES:
   - advertising_id (from `.symlinks/plugins/advertising_id/ios`)
+  - amplitude_flutter (from `.symlinks/plugins/amplitude_flutter/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -204,6 +211,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Amplitude
+    - AnalyticsConnector
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -225,6 +234,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   advertising_id:
     :path: ".symlinks/plugins/advertising_id/ios"
+  amplitude_flutter:
+    :path: ".symlinks/plugins/amplitude_flutter/ios"
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/ios"
   device_info_plus:
@@ -268,6 +279,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   advertising_id: ea8a9b898196a0673bad1b0fe6c50541d9295d02
+  Amplitude: 184def4f87aa26f94a93a7faa334e06b1cae704d
+  amplitude_flutter: 0f617f89d62b10c40a0ab14849e660a7c12e4e46
+  AnalyticsConnector: a53214d38ae22734c6266106c0492b37832633a9
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   Firebase: cf1b19f21410b029b6786a54e9764a0cacad3c99

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../../export.dart';
 
@@ -14,6 +15,7 @@ class FirebaseTracker extends AbstractTracker {
     for (var property in properties.entries) {
       instance.setUserProperty(name: property.key, value: property.value);
     }
+    FirebaseCrashlytics.instance.setUserIdentifier(properties["userId"]!);
   }
 
   @override
