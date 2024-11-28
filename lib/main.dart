@@ -19,42 +19,25 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  _catchErrors(true);
+  _catchErrors();
   initServices();
   runApp(const MyApp());
 }
 
-void _catchErrors(bool fatalError) {
+void _catchErrors() {
   if (kDebugMode) {
     return;
   }
   // Non-async exceptions
   FlutterError.onError = (errorDetails) {
-    if (fatalError) {
-      // If you want to record a "fatal" exception
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-      // ignore: dead_code
-    } else {
       // If you want to record a "non-fatal" exception
       FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    }
   };
 
   // Async exceptions
   PlatformDispatcher.instance.onError = (error, stack) {
-    final info = serviceLocator<ServicesProvider>().state.status.index >=
-            ServiceStatus.initialize.index
-        ? [serviceLocator<AccountProvider>().account]
-        : <Object>[];
-    if (fatalError) {
-      // If you want to record a "fatal" exception
-      FirebaseCrashlytics.instance
-          .recordError(error, stack, fatal: true, information: info);
-      // ignore: dead_code
-    } else {
       // If you want to record a "non-fatal" exception
-      FirebaseCrashlytics.instance.recordError(error, stack, information: info);
-    }
+    FirebaseCrashlytics.instance.recordError(error, stack);
     return true;
   };
 }
