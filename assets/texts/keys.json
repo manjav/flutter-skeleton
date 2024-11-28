@@ -17,5 +17,7 @@
     "tracker_metrix_rewarded_andriod": "ggghr",
     "tracker_metrix_reached_level_5": "tdmxa",
     "tracker_smartlook_android_key": "1b250f287b33fc015e1b4eb8e7978c72c2935794",
-    "tracker_smartlook_ios_key": "1b250f287b33fc015e1b4eb8e7978c72c2935794"
+    "tracker_smartlook_ios_key": "1b250f287b33fc015e1b4eb8e7978c72c2935794",
+    "tracker_amplitude_android_key": "6115502eee75690c64344d8729d05f51",
+    "tracker_amplitude_ios_key": "6115502eee75690c64344d8729d05f51"
 }

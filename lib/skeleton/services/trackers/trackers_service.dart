@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:lifetalk/skeleton/services/trackers/tracker_amplitude.dart';
 
 import '../../export.dart';
 
-enum TrackerSDK { none, firebase, gameAnalytics, kochava, metrix, smartlook }
+enum TrackerSDK { none, firebase, smartlook, amplitude }
 
 enum BuildType { installed, instant }
 
@@ -18,9 +19,7 @@ class Trackers extends IService {
 
   final _sdks = <TrackerSDK, AbstractTracker>{
     TrackerSDK.firebase: FirebaseTracker(),
-    // TrackerSDK.gameAnalytics: GameAnalyticsTracker(),
-    // TrackerSDK.kochava: KochavaaTracker(),
-    // TrackerSDK.metrix: MetrixTracker(),
+    TrackerSDK.amplitude: AmplitudeTracker(),
     TrackerSDK.smartlook: SmartlookTracker(),
   };
   int variant = 1;
