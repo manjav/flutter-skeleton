@@ -46,6 +46,8 @@ class Trackers extends IService {
   void sendUserData({
     required String id,
     required String name,
+    required DateTime? createTime,
+    required DateTime? updateTime,
   }) {
     if (ghostMode) return;
     for (var sdk in _sdks.values) {

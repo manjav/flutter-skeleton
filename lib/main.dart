@@ -30,13 +30,13 @@ void _catchErrors() {
   }
   // Non-async exceptions
   FlutterError.onError = (errorDetails) {
-      // If you want to record a "non-fatal" exception
-      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    // If you want to record a "non-fatal" exception
+    FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
   };
 
   // Async exceptions
   PlatformDispatcher.instance.onError = (error, stack) {
-      // If you want to record a "non-fatal" exception
+    // If you want to record a "non-fatal" exception
     FirebaseCrashlytics.instance.recordError(error, stack);
     return true;
   };
