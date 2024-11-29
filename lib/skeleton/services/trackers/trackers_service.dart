@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:lifetalk/skeleton/services/trackers/tracker_amplitude.dart';
@@ -92,6 +94,7 @@ class Trackers extends IService {
     String name, {
     Map<String, dynamic>? parameters,
   }) async {
+    log("amp => $name ${jsonEncode(parameters)}");
     if (ghostMode) return;
     for (var sdk in _sdks.values) {
       sdk.design(name, parameters: parameters);
