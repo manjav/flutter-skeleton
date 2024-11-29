@@ -27,13 +27,6 @@ class NetConnector extends IService {
     Pref.username.setString(account.user.id);
     log(jsonEncode(account.user));
 
-    // // Check internal version, public users avoidance
-    // var test = _config["updates"]["test"];
-    // if (test["version"] < version) {
-    //   if (!test["testers"].contains(loadData.account.id)) {
-    //     throw SkeletonException(StatusCode.C702_UPDATE_TEST.value, "");
-    //   }
-    // }
     super.initialize();
     return account;
   }

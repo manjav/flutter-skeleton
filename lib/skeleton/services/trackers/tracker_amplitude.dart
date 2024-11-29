@@ -25,10 +25,19 @@ class AmplitudeTracker extends AbstractTracker {
 
   @override
   void setProperties(Map<String, String> properties) {
-    final Identify identify = Identify()
-      ..set("build_type", properties["build_type"])
-      ..set("test_name", properties["test_name"])
-      ..set("test_variant", properties["test_variant"]);
+    final identify = Identify();
+    if (properties.containsKey("build_type")) {
+      identify.set("build_type", properties["build_type"]);
+    }
+    if (properties.containsKey("test_name")) {
+      identify.set("test_name", properties["test_name"]);
+    }
+    if (properties.containsKey("test_variant")) {
+      identify.set("test_variant", properties["test_variant"]);
+    }
+    if (properties.containsKey("nativeLanguage")) {
+      identify.set("native_language", properties["nativeLanguage"]);
+    }
     instance.identify(identify);
 
     if (properties.containsKey("userId")) {
