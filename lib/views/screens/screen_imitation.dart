@@ -46,9 +46,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     if (index == controller.slideIndex.value) {
       return;
     }
-    controller.slideIndex.value = index;
     _logTrackerEvent(
-        controller.slideIndex.value < index ? "bt_prev" : "bt_next");
+        controller.slideIndex.value < index ? "bt_next" : "bt_prev");
+    controller.slideIndex.value = index;
   }
 
   void _onSerieChange() {
@@ -490,7 +490,12 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     final type = controller.currentSerie.majority!.type;
     if (type == ContentType.caption) {
       params["cc"] = _captionMode.value;
-      params["postion_ratio"] = _videoData.value?.positionRatio;
+      if (_videoData.value?.positionRatio == null) {
+        params["postion_ratio"] = -1;
+      } else {
+        params["postion_ratio"] =
+            (_videoData.value?.positionRatio ?? 0 * 100).round();
+      }
     }
     serviceLocator<Trackers>().design("$name|${type.name}", parameters: params);
   }
