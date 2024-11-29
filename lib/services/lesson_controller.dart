@@ -61,7 +61,7 @@ class LessonController {
     serviceLocator<Trackers>().design(
       "bt_video|home",
       parameters: {
-        "row_index": root.index,
+        "row_index": (root.parent as Content).index,
         "video_id": root.iconUrl,
       },
     );
