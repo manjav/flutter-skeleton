@@ -1,11 +1,11 @@
 PODS:
   - advertising_id (0.0.1):
     - Flutter
-  - Amplitude (8.18.0):
-    - AnalyticsConnector (~> 1.0.0)
   - amplitude_flutter (0.0.1):
-    - Amplitude (= 8.18.0)
+    - AmplitudeSwift (~> 1.6)
     - Flutter
+  - AmplitudeSwift (1.10.6):
+    - AnalyticsConnector (~> 1.0.1)
   - AnalyticsConnector (1.0.3)
   - audioplayers_darwin (0.0.1):
     - Flutter
@@ -211,7 +211,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Amplitude
+    - AmplitudeSwift
     - AnalyticsConnector
     - Firebase
     - FirebaseAnalytics
@@ -279,8 +279,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   advertising_id: ea8a9b898196a0673bad1b0fe6c50541d9295d02
-  Amplitude: 184def4f87aa26f94a93a7faa334e06b1cae704d
-  amplitude_flutter: 0f617f89d62b10c40a0ab14849e660a7c12e4e46
+  amplitude_flutter: aed4ad5d2da06894245fde7e8c56fed39ac6dca8
+  AmplitudeSwift: 421c075d47e24bcf843024c853460f0769aeac2f
   AnalyticsConnector: a53214d38ae22734c6266106c0492b37832633a9
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
