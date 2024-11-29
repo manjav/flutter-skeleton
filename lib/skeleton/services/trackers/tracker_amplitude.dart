@@ -20,11 +20,11 @@ class AmplitudeTracker extends AbstractTracker {
   void setProperties(Map<String, String> properties) {
     instance.setUserProperties(properties);
 
-    instance.setUserId(properties["userId"]!);
+    // instance.setUserId(properties["userId"]!);
     instance.setDeviceId(properties["deviceId"]!);
 
     final Identify identify = Identify();
-    identify.setOnce("userId", properties["userId"]);
+    // identify.setOnce("userId", properties["userId"]);
     identify.setOnce("userName", properties["userName"]);
     identify.setOnce("createTime", properties["createTime"]);
     identify.set("updateTime", properties["updateTime"]);
