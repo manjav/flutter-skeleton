@@ -123,7 +123,6 @@ class ListenerQuiz extends Quiz {
     this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
     _hasMediaPlayed = false;
-    _hasResultSent = false;
     // log("listen $_pattern");
 
     if (initialMedia!.type == MediaType.youtube) {
@@ -139,6 +138,7 @@ class ListenerQuiz extends Quiz {
 
   Future<void> start() async {
     state.value = QuizState.waiting;
+    _hasResultSent = false;
     recognizedWords.value = "";
     await Future.delayed(const Duration(milliseconds: 400));
     final options = SpeechListenOptions(
