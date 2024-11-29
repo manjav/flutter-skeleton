@@ -489,7 +489,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     };
     final type = controller.currentSerie.majority!.type;
     if (type == ContentType.caption) {
-      params["cc"] = _captionMode.value;
+      params["cc"] = _captionMode.value ? "on" : "off";
       if (_videoData.value?.positionRatio == null) {
         params["position_ratio"] = -1;
       } else {
