@@ -108,12 +108,16 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
               ]),
               onPressed: () async {
                 try {
-                  await serviceLocator<AccountProvider>().update(
+                  final account = serviceLocator<AccountProvider>();
+                  await account.update(
                     targetLanguage: _selectedLanguages.value.key,
                     nativeLanguage: _selectedLanguages.value.value,
                   );
                   _slideIndex = 0;
                   Localization.languageCode = _selectedLanguages.value.value;
+                  serviceLocator<Trackers>().sendUserData(
+                    nativeLanguage: Localization.languageCode,
+                  );
                   await serviceLocator<Localization>().initialize();
                   setState(() {});
                 } on SkeletonException catch (e) {
