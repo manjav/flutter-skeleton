@@ -132,92 +132,71 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   }
 
   @override
-  Widget contentFactory(double paddingTop) {
+  Widget build(BuildContext context) {
     if (services.state.status.index < ServiceStatus.initialize.index) {
       return const SizedBox();
     }
-    var account = serviceLocator<AccountProvider>();
     return PopScope(
       canPop: false,
-      child: Widgets.rect(
-        padding: EdgeInsets.fromLTRB(10.d, 10.d, 10.d, 30.d),
-        color: TColors.primary0,
-        child: Stack(
-          alignment: Alignment(0, -0.9),
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Asset.load<SvgPicture>("logo", width: 40.d),
-                SizedBox(width: 10.d),
-                Text("title_l".l()),
-              ],
-            ),
-            _discoveryBuilder(),
-            Widgets.button(
-              context,
-              child: account.isTester
-                  ? Text("Test Mode")
-                  : SizedBox(width: 100.d, height: 32.d),
-              padding: EdgeInsets.all(8.d),
-              color: account.isTester ? TColors.orange : TColors.transparent,
-              onPressed: () => Get.toNamed(Routes.popupMessage, arguments: {
-                "title": "about_us_title".l(),
-                "message": "about_us_message".l()
-              }),
-              onLongPress: () async {
-                if (!account.isTester) {
-                  final username =
-                      "test_${DeviceInfo.model}_${(account.account.user.location ?? "/").split("/")[1]}";
-                  await account.update(username: username);
-                  Pref.username.setString(username);
-                  if (mounted) {
-                    MyApp.restartApp(context);
-                  }
-                }
-              },
-            )
-          ],
+      child: Material(
+        child: Padding(
+          padding: EdgeInsets.all(10.d),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                toolbarHeight: 20.d,
+                expandedHeight: 50.d,
+                collapsedHeight: 20.d,
+                surfaceTintColor: TColors.transparent,
+                pinned: true,
+                shadowColor: TColors.black,
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: EdgeInsets.only(bottom: 4.d),
+                  centerTitle: true,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Asset.load<SvgPicture>("logo", width: 30.d),
+                      SizedBox(width: 10.d),
+                      Text("title_l".l(), style: TStyles.medium),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: _categoryTitle(true, _readsCategories.isNotEmpty),
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: _readsCategories.isEmpty ? 0 : 170.d,
+                  child: ListView.builder(
+                    itemCount: _readsCategories.length,
+                    itemBuilder: (context, index) {
+                      return _courseItemBuilder(
+                        padding: 5.d,
+                        height: 170.d,
+                        margin: EdgeInsets.all(5.d),
+                        category: _readsCategories[index],
+                        flag: "${_readsCategories[index].passLevel}%",
+                        titleStyle: TStyles.tinyInvert,
+                      );
+                    },
+                    scrollDirection: Axis.horizontal,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: _categoryTitle(false, true),
+              ),
+              SliverList.builder(
+                itemCount: _newCategories.length + 1,
+                itemBuilder: (_, i) => _categoryItemBuilder(
+                    i < _newCategories.length ? _newCategories[i] : null, i),
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _discoveryBuilder() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 85.d),
-        _categoryTitle(true, _readsCategories.isNotEmpty),
-        SizedBox(
-          height: _readsCategories.isEmpty ? 0 : 170.d,
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: _readsCategories.length,
-            itemBuilder: (context, index) {
-              return _courseItemBuilder(
-                padding: 5.d,
-                height: 170.d,
-                margin: EdgeInsets.all(5.d),
-                category: _readsCategories[index],
-                flag: "${_readsCategories[index].passLevel}%",
-                titleStyle: TStyles.tinyInvert,
-              );
-            },
-            scrollDirection: Axis.horizontal,
-          ),
-        ),
-        SizedBox(height: 10.d),
-        _categoryTitle(false, true),
-        Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: _newCategories.length + 1,
-            itemBuilder: (_, i) => _categoryItemBuilder(
-                i < _newCategories.length ? _newCategories[i] : null, i),
-          ),
-        )
-      ],
     );
   }
 
@@ -226,13 +205,17 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       return SizedBox();
     }
     final title = isRecent ? "video_recent" : "video_new";
-    return Row(
-      children: [
-        SizedBox(width: 20.d),
-        Asset.load<SvgPicture>(title),
-        SizedBox(width: 10.d),
-        Text(title.l(), style: TStyles.large),
-      ],
+    return Padding(
+      padding: EdgeInsets.only(top: 20.d),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 20.d),
+          Asset.load<SvgPicture>(title),
+          SizedBox(width: 10.d),
+          Text(title.l(), style: TStyles.medium),
+        ],
+      ),
     );
   }
 
