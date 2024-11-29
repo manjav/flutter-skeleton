@@ -8,7 +8,8 @@ class AmplitudeTracker extends AbstractTracker {
   final Amplitude instance = Amplitude.getInstance();
 
   @override
-  void initialize({List? args, Function(dynamic p1)? logCallback}) {
+  Future<void> initialize(
+      {List? args, Function(dynamic p1)? logCallback}) async {
     sdk = TrackerSDK.amplitude;
     // instance.setEventUploadPeriodMillis(1000);
     // instance.setEventUploadThreshold(1);

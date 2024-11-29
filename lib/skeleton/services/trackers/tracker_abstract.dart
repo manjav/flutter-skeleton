@@ -3,7 +3,7 @@ import '../../export.dart';
 abstract class AbstractTracker {
   TrackerSDK sdk = TrackerSDK.none;
   Function(dynamic)? logCallback;
-  void initialize({List? args, Function(dynamic)? logCallback}) {
+  Future<void> initialize({List? args, Function(dynamic)? logCallback}) async {
     this.logCallback = logCallback;
   }
 

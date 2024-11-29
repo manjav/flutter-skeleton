@@ -6,7 +6,7 @@ import '../../../app_export.dart';
 
 class SmartlookTracker extends AbstractTracker {
   @override
-  void initialize({List? args, Function(dynamic)? logCallback}) async {
+  Future<void> initialize({List? args, Function(dynamic)? logCallback}) async {
     super.initialize(args: args, logCallback: logCallback);
     sdk = TrackerSDK.smartlook;
     await Smartlook.instance.start();
