@@ -45,18 +45,17 @@ class Trackers extends IService {
 
   // Set user data
   void sendUserData({
-    required String id,
-    required String name,
-    required DateTime? createTime,
-    required DateTime? updateTime,
+    String? userId,
+    String? userName,
+    String? nativeLanguage,
+    DateTime? createTime,
+    DateTime? updateTime,
   }) {
     if (ghostMode) return;
     for (var sdk in _sdks.values) {
-      sdk.setProperties({
+      final properties = {
         "buildType": _buildType.name,
         "build_type": _buildType.name,
-        "userId": id,
-        "userName": name,
         "deviceId": DeviceInfo.adId,
         "test_name": _testName,
         "test_variant": variant.toString(),
@@ -64,7 +63,11 @@ class Trackers extends IService {
         "version": DeviceInfo.version,
         "buildNumber": DeviceInfo.buildNumber,
         "packageName": DeviceInfo.packageName,
-      });
+      };
+      if (userId != null) properties["userId"] = userId;
+      if (userName != null) properties["userName"] = userName;
+      if (nativeLanguage != null) properties["nativeLanguage"] = nativeLanguage;
+      sdk.setProperties(properties);
     }
   }
 

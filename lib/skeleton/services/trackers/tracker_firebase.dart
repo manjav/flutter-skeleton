@@ -15,7 +15,9 @@ class FirebaseTracker extends AbstractTracker {
     for (var property in properties.entries) {
       instance.setUserProperty(name: property.key, value: property.value);
     }
-    FirebaseCrashlytics.instance.setUserIdentifier(properties["userId"]!);
+    if (properties.containsKey("userId")) {
+      FirebaseCrashlytics.instance.setUserIdentifier(properties["userId"]!);
+    }
   }
 
   @override

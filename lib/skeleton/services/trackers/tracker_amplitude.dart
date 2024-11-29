@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:amplitude_flutter/amplitude.dart';
-import 'package:amplitude_flutter/identify.dart';
 
 import '../../export.dart';
 
@@ -11,27 +10,24 @@ class AmplitudeTracker extends AbstractTracker {
   @override
   void initialize({List? args, Function(dynamic p1)? logCallback}) {
     sdk = TrackerSDK.amplitude;
-    print("tracker_${sdk.name}_${Platform.operatingSystem}_key".l());
+    // instance.setEventUploadPeriodMillis(1000);
+    // instance.setEventUploadThreshold(1);
+
     instance.init("tracker_${sdk.name}_${Platform.operatingSystem}_key".l());
     super.initialize(args: args, logCallback: logCallback);
   }
 
   @override
   void setProperties(Map<String, String> properties) {
-    instance.setUserProperties(properties);
+    instance.setUserProperties({
+      "build_type": properties["build_type"],
+      "test_name": properties["test_name"],
+      "test_variant": properties["test_variant"],
+    });
 
-    // instance.setUserId(properties["userId"]!);
-    instance.setDeviceId(properties["deviceId"]!);
-
-    final Identify identify = Identify();
-    // identify.setOnce("userId", properties["userId"]);
-    identify.setOnce("userName", properties["userName"]);
-    identify.setOnce("createTime", properties["createTime"]);
-    identify.set("updateTime", properties["updateTime"]);
-    Amplitude.getInstance().identify(identify);
-
-    instance.logEvent('MyApp startup',
-        eventProperties: {'friend_num': 10, 'is_heavy_user': true});
+    if (properties.containsKey("userId")) {
+      instance.setUserId(properties["userId"]!);
+    }
   }
 
   @override

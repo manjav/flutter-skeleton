@@ -24,10 +24,11 @@ class LoadingController extends GetxController {
       services.changeState(ServiceStatus.initialize);
 
       serviceLocator<Trackers>().sendUserData(
-        id: account.account.user.id,
-        name: account.account.user.username!,
+        userId: account.account.user.id,
+        userName: account.account.user.username!,
         createTime: account.account.user.createTime,
         updateTime: account.account.user.updateTime,
+        nativeLanguage: account.account.user.langTag,
       );
 
       // var notifications = Notifications();

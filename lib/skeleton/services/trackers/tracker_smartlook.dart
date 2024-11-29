@@ -16,8 +16,12 @@ class SmartlookTracker extends AbstractTracker {
 
   @override
   void setProperties(Map<String, String> properties) {
-    Smartlook.instance.user.setIdentifier(properties["userId"]!);
-    Smartlook.instance.user.setName(properties["userName"]!);
+    if (properties.containsKey("userId")) {
+      Smartlook.instance.user.setIdentifier(properties["userId"]!);
+    }
+    if (properties.containsKey("userName")) {
+      Smartlook.instance.user.setName(properties["userName"]!);
+    }
   }
 
   @override
