@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:rive/rive.dart';
 
 import '../../app_export.dart';

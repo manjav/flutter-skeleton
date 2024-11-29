@@ -69,7 +69,9 @@ class AccountProvider extends ChangeNotifier {
           group.parent!.title = list[i][account.user.langTag!];
         } else {
           if (list[i]["type"] == "youtube") {
-            group.parent!.iconUrl = list[i][Localization.targetLanguage];
+            String video = list[i][Localization.targetLanguage];
+            group.parent!.iconUrl = video;
+            group.parent!.parent!.iconUrl = video.split("embed/")[1];
           } else {
             children.add(Talk.create(group, i, list[i], account.user.langTag!,
                 metadata["targetLanguage"], account.user.displayName!));
