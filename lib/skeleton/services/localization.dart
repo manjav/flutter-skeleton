@@ -62,6 +62,25 @@ class Localization extends IService {
     if (isRTLMode(code)) return RegExp(r'^[\u0621-\u064A0-9 ]+$');
     return RegExp(r'^((?![\u0621-\u064A0-9 ]+).)*$');
   }
+
+  static final Map<String, String> timeZoneToLanguage = {
+    "Asia/Tehran": "fa", // Persian (Farsi)
+    "Europe/Istanbul": "tr", // Turkish
+    "Asia/Tokyo": "ja", // Japanese
+    "Asia/Seoul": "ko", // Korean
+    "Asia/Kolkata": "hi", // Hindi
+    "Asia/Shanghai": "zh", // Chinese (Simplified)
+    "Europe/Paris": "fr", // French
+    "Europe/Berlin": "de", // German
+    "Europe/Madrid": "es", // Spanish
+    "Europe/Moscow": "ru", // Russian
+    "America/New_York": "en", // English
+    "America/Mexico_City": "mx", // Mexican
+    "America/Sao_Paulo": "pt", // Portuguese
+    "Africa/Cairo": "ar", // Arabic
+    "Africa/Johannesburg": "en", // English (South Africa)
+    "Australia/Sydney": "en", // English
+  };
 }
 
 extension LocalizationExtension on String {

@@ -33,6 +33,12 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
     Map result =
         await serviceLocator<NetConnector>().rpc("content_languages_get");
     _nativeLanguages = result.entries.where((e) => e.key != "en").toList();
+    final location = await FlutterTimezone.getLocalTimezone();
+    final languageCode = Localization.timeZoneToLanguage[location] ?? "";
+    if (languageCode.isNotEmpty) {
+      _selectedLanguages.value =
+          MapEntry(_selectedLanguages.value.key, languageCode);
+    }
     setState(() {});
   }
 
@@ -74,6 +80,8 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
           "My native language is:",
           titleStyle: _errorStyle,
           _nativeLanguages,
+          selectedIndex: _nativeLanguages
+              .indexWhere((e) => e.key == _selectedLanguages.value.value),
           onChange: (index, code) => _selectedLanguages.value =
               MapEntry(_selectedLanguages.value.key, code),
         ),
