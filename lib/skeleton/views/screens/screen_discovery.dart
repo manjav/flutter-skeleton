@@ -143,14 +143,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         padding: EdgeInsets.fromLTRB(10.d, 10.d, 10.d, 30.d),
         color: TColors.primary0,
         child: Stack(
-          alignment: Alignment(0, -0.85),
+          alignment: Alignment(0, -0.9),
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Asset.load<SvgPicture>("logo"),
+                Asset.load<SvgPicture>("logo", width: 40.d),
                 SizedBox(width: 10.d),
-                Text("Life Talk"),
+                Text("title_l".l()),
               ],
             ),
             _discoveryBuilder(),
@@ -187,7 +187,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 100.d),
+        SizedBox(height: 85.d),
         _categoryTitle(true, _readsCategories.isNotEmpty),
         SizedBox(
           height: _readsCategories.isEmpty ? 0 : 170.d,

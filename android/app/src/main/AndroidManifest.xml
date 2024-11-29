@@ -8,7 +8,7 @@
         </intent>
     </queries>
     <application
-        android:label="Life Talk"
+        android:label="DuckLingo"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">

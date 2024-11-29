@@ -57,9 +57,9 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Asset.load<SvgPicture>("logo"),
+            Asset.load<SvgPicture>("logo", width: 50.d),
             SizedBox(width: 10.d),
-            Text("Life Talk"),
+            Text("title_l".l(), style: TStyles.large),
           ],
         ),
         SizedBox(height: 50.d),
