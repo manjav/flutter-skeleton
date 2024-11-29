@@ -47,7 +47,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       return;
     }
     controller.slideIndex.value = index;
-    _logTrackerEvent(controller.slideIndex.value < index ? "next" : "prev");
+    _logTrackerEvent(
+        controller.slideIndex.value < index ? "bt_prev" : "bt_next");
   }
 
   void _onSerieChange() {
@@ -258,10 +259,10 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             ],
           ),
           onPressed: () async {
+            _logTrackerEvent("bt_submit");
             controller.changeSlide(1);
             _pageController.jumpTo(0);
             _onSlideChange();
-            _logTrackerEvent("bt_submit");
           },
         ),
       ],
@@ -387,13 +388,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         _showListenerResult();
       }
     }
-    _logTrackerEvent("el", params: {
-      "video_id": controller.root!.iconUrl,
-      "slide_index": controller.currentSlide.index,
-      "slide": controller.currentSlide.majority!.type,
-      "state": state.name,
-      "score": score,
-    });
+
     controller.onQuizResult(state, text, score, talk);
   }
 
@@ -402,6 +397,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     List<Choice> words,
     List<String> patterns,
   ) {
+    _logTrackerEvent("bt_ok");
     final success = quizState == QuizState.success;
     final label = success ? "correct" : "incorrect";
     final color = success ? TColors.green : TColors.red;
@@ -440,7 +436,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           label: "next_l".l(),
           color: color,
           onPressed: () {
-            _logTrackerEvent("bt_ok");
             Navigator.pop(context);
             _gotoSlide(true);
           },
@@ -457,7 +452,6 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         SkinnedButton(
           label: "next_l".l(),
           onPressed: () {
-            _logTrackerEvent("bt_ok");
             Navigator.pop(context);
             _gotoSlide(true);
           },
@@ -491,14 +485,14 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     params ??= <String, dynamic>{
       "video_id": controller.root!.iconUrl,
       "slide_index": controller.currentSlide.index,
-      "slide": controller.currentSlide.majority!.type,
+      "slide": controller.currentSlide.majority!.type.name,
     };
     final type = controller.currentSerie.majority!.type;
     if (type == ContentType.caption) {
-      params["postion_ratio"] = _videoData.value!.positionRatio;
       params["cc"] = _captionMode.value;
+      params["postion_ratio"] = _videoData.value?.positionRatio;
     }
-    serviceLocator<Trackers>().design("$name|$type", parameters: params);
+    serviceLocator<Trackers>().design("$name|${type.name}", parameters: params);
   }
 }
 

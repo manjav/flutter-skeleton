@@ -87,8 +87,6 @@ class LessonController {
     serieIndex.value += stepLength;
     slideIndex.value = -1;
     changeSlide(1);
-
-    serviceLocator<Trackers>().design(currentSerie.id);
   }
 
   void callCompletedMethod({bool showFeast = true}) {
@@ -144,6 +142,17 @@ class LessonController {
   }
 
   void onQuizResult(QuizState state, String answer, int score, Talk talk) {
+    serviceLocator<Trackers>().design(
+      "qr|${currentSerie.majority!.type.name}",
+      parameters: {
+        "video_id": root!.iconUrl,
+        "slide_index": currentSlide.index,
+        "slide": currentSlide.majority!.type.name,
+        "state": state.name,
+        "score": score,
+      },
+    );
+
     final listener = serviceLocator<ListenerQuiz>();
     talk.lastRecord = QuizRecord(state: state, answer: answer);
     quizes[talk.id]!.score = score;

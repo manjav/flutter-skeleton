@@ -169,8 +169,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
     } else {
       _slideTitleText?.text = "onboarding_title_$_slideIndex".l();
       _slideCaptionText?.text = "onboarding_caption_$_slideIndex".l();
-      serviceLocator<Trackers>()
-          .design("pv_onboarding_slideshow_$_slideIndex".l());
+      serviceLocator<Trackers>().design("pv_onboarding_slideshow_$_slideIndex");
     }
   }
 }
