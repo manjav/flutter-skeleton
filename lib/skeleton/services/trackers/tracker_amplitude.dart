@@ -1,30 +1,35 @@
 import 'dart:io';
 
 import 'package:amplitude_flutter/amplitude.dart';
+import 'package:amplitude_flutter/configuration.dart';
+import 'package:amplitude_flutter/events/base_event.dart';
+import 'package:amplitude_flutter/events/identify.dart';
 
 import '../../export.dart';
 
 class AmplitudeTracker extends AbstractTracker {
-  final Amplitude instance = Amplitude.getInstance();
-
+  late final Amplitude instance;
   @override
   Future<void> initialize(
       {List? args, Function(dynamic p1)? logCallback}) async {
     sdk = TrackerSDK.amplitude;
-    // instance.setEventUploadPeriodMillis(1000);
-    // instance.setEventUploadThreshold(1);
+    instance = Amplitude(Configuration(
+      apiKey: "tracker_${sdk.name}_${Platform.operatingSystem}_key".l(),
+      flushIntervalMillis: 1000,
+      flushQueueSize: 1,
+    ));
+    await instance.isBuilt;
 
-    instance.init("tracker_${sdk.name}_${Platform.operatingSystem}_key".l());
     super.initialize(args: args, logCallback: logCallback);
   }
 
   @override
   void setProperties(Map<String, String> properties) {
-    instance.setUserProperties({
-      "build_type": properties["build_type"],
-      "test_name": properties["test_name"],
-      "test_variant": properties["test_variant"],
-    });
+    final Identify identify = Identify()
+      ..set("build_type", properties["build_type"])
+      ..set("test_name", properties["test_name"])
+      ..set("test_variant", properties["test_variant"]);
+    instance.identify(identify);
 
     if (properties.containsKey("userId")) {
       instance.setUserId(properties["userId"]!);
@@ -66,7 +71,7 @@ class AmplitudeTracker extends AbstractTracker {
     String name, {
     Map<String, dynamic>? parameters,
   }) {
-    instance.logEvent(name, eventProperties: parameters);
+    instance.track(BaseEvent(name, eventProperties: parameters));
   }
 
   @override
