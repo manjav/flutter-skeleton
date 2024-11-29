@@ -40,6 +40,8 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
       _selectedLanguages.value =
           MapEntry(_selectedLanguages.value.key, languageCode);
     }
+
+    serviceLocator<Trackers>().design("pv_onboarding_lang");
     setState(() {});
   }
 
@@ -167,6 +169,8 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
     } else {
       _slideTitleText?.text = "onboarding_title_$_slideIndex".l();
       _slideCaptionText?.text = "onboarding_caption_$_slideIndex".l();
+      serviceLocator<Trackers>()
+          .design("pv_onboarding_slideshow_$_slideIndex".l());
     }
   }
 }
@@ -196,6 +200,7 @@ class LanguageSelector extends StatefulWidget {
 }
 
 class _LanguageSelectorState extends State<LanguageSelector> {
+  final ScrollController _scrollController = ScrollController();
   int _selectedIndex = -1;
   final _itemHeight = 64.d;
   final _itemMargin = 5.d;
@@ -203,6 +208,16 @@ class _LanguageSelectorState extends State<LanguageSelector> {
   @override
   void initState() {
     _selectedIndex = widget.selectedIndex;
+    if (_selectedIndex > -1) {
+      Future.delayed(
+        Duration(milliseconds: 400),
+        () => _scrollController.animateTo(
+          _itemHeight * _selectedIndex,
+          curve: Curves.easeOutExpo,
+          duration: Duration(milliseconds: _selectedIndex * 100),
+        ),
+      );
+    }
     super.initState();
   }
 
@@ -223,6 +238,7 @@ class _LanguageSelectorState extends State<LanguageSelector> {
                   (widget.data.length > widget.maxtItems ? _itemMargin * 5 : 0),
               child: ListView.builder(
                   padding: EdgeInsets.all(0),
+                  controller: _scrollController,
                   itemCount: widget.data.length,
                   itemBuilder: (context, index) => _languageItemBuilder(index)),
             ),

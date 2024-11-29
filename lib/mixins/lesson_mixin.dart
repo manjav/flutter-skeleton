@@ -148,9 +148,10 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
       if (showFeast) {
         await Get.toNamed(Routes.popupResult, arguments: {
-          "id": controller.root!.id,
           "score": score,
-          "sentenceCount": sentenceCount
+          "id": controller.root!.id,
+          "sentenceCount": sentenceCount,
+          "videoId": controller.root!.iconUrl,
         });
       }
     } on SkeletonException catch (e) {

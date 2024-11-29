@@ -113,6 +113,16 @@ class _MicPanelState extends State<MicPanel> {
   void _onMicAnimationEvent(RiveEvent event, ListenerQuiz listener) {
     final media = serviceLocator<MediaService>();
     media.autoStart = true;
+
+    // log trecker event
+    serviceLocator<Trackers>().design(
+        "bt_${event.name}|${listener.talk!.parent!.majority!.type.name}",
+        parameters: {
+          "state": _state.value.name,
+          "slide_index": listener.talk!.parent!.index,
+          "video_id": listener.talk!.parent!.parent!.parent!.iconUrl,
+        });
+
     if (event.name == "toggle") {
       if (_state.value == QuizState.running) {
         listener.stop();

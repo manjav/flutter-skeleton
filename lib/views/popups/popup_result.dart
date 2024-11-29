@@ -39,6 +39,14 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
   @override
   void initState() {
     super.initState();
+
+    // Log tracker event
+    serviceLocator<Trackers>().design("pv|feast", parameters: {
+      "score": _score,
+      "video_id": widget.args["videoId"],
+      "setnences": widget.args["sentenceCount"]
+    });
+
     children = [animationBuilder("result")];
     process(() async {
       int findLevel(int score) {

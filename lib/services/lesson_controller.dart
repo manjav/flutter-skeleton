@@ -58,6 +58,13 @@ class LessonController {
     if (root.children.isEmpty) {
       await serviceLocator<AccountProvider>().loadGroup(root);
     }
+    serviceLocator<Trackers>().design(
+      "bt_video|home",
+      parameters: {
+        "row_index": root.index,
+        "video_id": root.iconUrl,
+      },
+    );
     series = List.generate(
         root.children.length, (i) => root.children[i] as ParentContent);
   }

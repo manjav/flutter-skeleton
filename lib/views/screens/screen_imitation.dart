@@ -33,7 +33,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           media.youtubeController!.pause();
           media.autoStart = false;
         }
-        controller.slideIndex.value = (_pageController.page ?? 0).round();
+        _changePage((_pageController.page ?? 0).round());
       },
     );
     controller.serieIndex.addListener(_onSerieChange);
@@ -42,9 +42,19 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     super.initState();
   }
 
+  void _changePage(int index) {
+    if (index == controller.slideIndex.value) {
+      return;
+    }
+    controller.slideIndex.value = index;
+    _logTrackerEvent(controller.slideIndex.value < index ? "next" : "prev");
+  }
+
   void _onSerieChange() {
     serviceLocator<MediaService>().autoStart = true;
     controller.currentSerie.majority = _getSerieType(controller.currentSerie);
+
+    _logTrackerEvent("pv", params: {});
     Future.delayed(Duration(milliseconds: 0), _initYoutube);
   }
 
@@ -110,7 +120,10 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         height: 52.d,
         padding: EdgeInsets.all(16.d),
         child: Asset.load<SvgPicture>("close"),
-        onPressed: () => onPopInvoked(false, null),
+        onPressed: () {
+          _logTrackerEvent("bt_close");
+          onPopInvoked(false, null);
+        },
       ),
       SizedBox(width: 8.d),
       progressSliderBuilder(DeviceInfo.size.width * 0.72),
@@ -248,6 +261,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             controller.changeSlide(1);
             _pageController.jumpTo(0);
             _onSlideChange();
+            _logTrackerEvent("bt_submit");
           },
         ),
       ],
@@ -265,11 +279,15 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _captionButton("reset", TColors.transparent, onPress: () {
+                  _logTrackerEvent("bt_reply");
                   serviceLocator<MediaService>().playYoutube(_videoData.value!);
                 }),
                 _captionButton(
                     "cc", value ? TColors.primary90 : TColors.transparent,
-                    onPress: () => _captionMode.value = !_captionMode.value),
+                    onPress: () {
+                  _logTrackerEvent("bt_cc");
+                  _captionMode.value = !_captionMode.value;
+                }),
               ],
             ),
           ],
@@ -369,6 +387,13 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         _showListenerResult();
       }
     }
+    _logTrackerEvent("el", params: {
+      "video_id": controller.root!.iconUrl,
+      "slide_index": controller.currentSlide.index,
+      "slide": controller.currentSlide.majority!.type,
+      "state": state.name,
+      "score": score,
+    });
     controller.onQuizResult(state, text, score, talk);
   }
 
@@ -415,6 +440,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           label: "next_l".l(),
           color: color,
           onPressed: () {
+            _logTrackerEvent("bt_ok");
             Navigator.pop(context);
             _gotoSlide(true);
           },
@@ -431,6 +457,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         SkinnedButton(
           label: "next_l".l(),
           onPressed: () {
+            _logTrackerEvent("bt_ok");
             Navigator.pop(context);
             _gotoSlide(true);
           },
@@ -458,6 +485,20 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     controller.serieIndex.removeListener(_onSerieChange);
     controller.slideIndex.removeListener(_onSlideChange);
     super.dispose();
+  }
+
+  void _logTrackerEvent(String name, {Map<String, dynamic>? params}) {
+    params ??= <String, dynamic>{
+      "video_id": controller.root!.iconUrl,
+      "slide_index": controller.currentSlide.index,
+      "slide": controller.currentSlide.majority!.type,
+    };
+    final type = controller.currentSerie.majority!.type;
+    if (type == ContentType.caption) {
+      params["postion_ratio"] = _videoData.value!.positionRatio;
+      params["cc"] = _captionMode.value;
+    }
+    serviceLocator<Trackers>().design("$name|$type", parameters: params);
   }
 }
 
