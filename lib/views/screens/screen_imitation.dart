@@ -491,10 +491,10 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     if (type == ContentType.caption) {
       params["cc"] = _captionMode.value;
       if (_videoData.value?.positionRatio == null) {
-        params["postion_ratio"] = -1;
+        params["position_ratio"] = -1;
       } else {
-        params["postion_ratio"] =
-            (_videoData.value?.positionRatio ?? 0 * 100).round();
+        params["position_ratio"] =
+            ((_videoData.value?.positionRatio ?? 0) * 100).round();
       }
     }
     serviceLocator<Trackers>().design("$name|${type.name}", parameters: params);
