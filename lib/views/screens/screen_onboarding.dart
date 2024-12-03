@@ -60,9 +60,9 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
       return SizedBox();
     }
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(child: SizedBox()),
+        SizedBox(height: 10.d),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -71,7 +71,6 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
             Text("title_l".l(), style: TStyles.large),
           ],
         ),
-        SizedBox(height: 50.d),
         LanguageSelector(
           "I want to learn:",
           _targetLanguages,
@@ -88,7 +87,6 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
           onChange: (index, code) => _selectedLanguages.value =
               MapEntry(_selectedLanguages.value.key, code),
         ),
-        Expanded(child: SizedBox()),
         ValueListenableBuilder(
           valueListenable: _selectedLanguages,
           builder: (_, value, child) {
@@ -227,7 +225,7 @@ class _LanguageSelectorState extends State<LanguageSelector> {
   @override
   Widget build(BuildContext context) {
     return Widgets.rect(
-      padding: EdgeInsets.fromLTRB(30.d, 30.d, 30.d, 10.d),
+      padding: EdgeInsets.fromLTRB(30.d, 20.d, 30.d, 10.d),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
