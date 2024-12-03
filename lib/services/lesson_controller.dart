@@ -27,7 +27,7 @@ class LessonController {
   int get uniqueIndex => slideIndex.value * 100 + contentIndex.value;
 
   Future<void> init(ParentContent root, {bool loadCaptions = true}) async {
-    serviceLocator<Trackers>().startProgress(root.id);
+    // serviceLocator<Trackers>().startProgress(root.id);
 
     try {
       await _loadGroup(root);
@@ -96,14 +96,11 @@ class LessonController {
     }
     score = (score / quizes.length).round();
 
-    serviceLocator<Trackers>().endProgress(
+    /* serviceLocator<Trackers>().endProgress(
       root!.id,
       score,
-      parameters: {
-        "quizCount": quizes.length,
-        "sentenceCount": sentenceCount,
-      },
-    );
+      parameters: {"quizCount": quizes.length, "sentenceCount": sentenceCount},
+    ); */
 
     onComplete?.call(sentenceCount, quizes.length, score, showFeast);
   }

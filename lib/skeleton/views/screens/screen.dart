@@ -29,8 +29,8 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
   void initState() {
     // var sfx = widget.sfx ?? "message";
     // if (sfx.isNotEmpty) widget.services.get<Sounds>().play(sfx);
-    serviceLocator<Trackers>()
-        .setScreen(widget.route, parameters: trackerParams);
+    // serviceLocator<Trackers>()
+    //     .setScreen(widget.route, parameters: trackerParams);
     WidgetsBinding.instance.addPostFrameCallback(onRender);
     super.initState();
   }
