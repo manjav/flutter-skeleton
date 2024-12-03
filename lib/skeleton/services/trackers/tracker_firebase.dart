@@ -55,7 +55,10 @@ class FirebaseTracker extends AbstractTracker {
     String name, {
     Map<String, dynamic>? parameters,
   }) {
-    instance.logEvent(name: name, parameters: convertMap(parameters));
+    instance.logEvent(
+      name: name.replaceAll('|', 'I'),
+      parameters: convertMap(parameters),
+    );
   }
 
   @override
