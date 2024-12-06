@@ -458,7 +458,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         ),
       ],
       isDismissible: false,
-      barrierColor: TColors.transparent,
+      barrierColor: TColors.black40,
     );
   }
 
