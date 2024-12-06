@@ -115,19 +115,23 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   @override
   List<Widget> appBarElementsLeft() {
     return [
-      Widgets.button(
-        context,
-        width: 52.d,
-        height: 52.d,
-        padding: EdgeInsets.all(16.d),
-        child: Asset.load<SvgPicture>("close"),
-        onPressed: () {
-          _logTrackerEvent("bt_close");
-          onPopInvoked(false, null);
-        },
-      ),
+      _inOnboarding()
+          ? SizedBox(height: 52.d)
+          : Widgets.button(
+              context,
+              width: 52.d,
+              height: 52.d,
+              padding: EdgeInsets.all(16.d),
+              child: Asset.load<SvgPicture>("close"),
+              onPressed: () {
+                _logTrackerEvent("bt_close");
+                onPopInvoked(true, null);
+              },
+            ),
       SizedBox(width: 8.d),
-      progressSliderBuilder(DeviceInfo.size.width * 0.72),
+      progressSliderBuilder(
+        DeviceInfo.size.width * (_inOnboarding() ? 0.9 : 0.72),
+      ),
     ];
   }
 
@@ -498,6 +502,11 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       }
     }
     serviceLocator<Trackers>().design("$name|${type.name}", parameters: params);
+  }
+
+  bool _inOnboarding() {
+    var acc = serviceLocator<AccountProvider>();
+    return acc.scores.isEmpty && controller.root!.id.contains("onboarding");
   }
 }
 
