@@ -66,7 +66,7 @@ class Trackers extends IService {
       };
       if (userId != null) properties["userId"] = userId;
       if (userName != null) properties["userName"] = userName;
-      if (nativeLanguage != null) properties["nativeLanguage"] = nativeLanguage;
+      if (nativeLanguage != null) properties["native_language"] = nativeLanguage;
       sdk.setProperties(properties);
     }
   }

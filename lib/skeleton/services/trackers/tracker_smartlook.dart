@@ -54,7 +54,7 @@ class SmartlookTracker extends AbstractTracker {
     Map<String, dynamic>? parameters,
   }) {
     Smartlook.instance.trackEvent(
-      "design$name",
+      "design_$name",
       properties: getProperties(parameters),
     );
   }
