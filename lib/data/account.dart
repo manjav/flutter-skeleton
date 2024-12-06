@@ -12,6 +12,8 @@ class AccountProvider extends ChangeNotifier {
   Map<String, dynamic> metadata = {};
   Map<String, Map<String, dynamic>> scores = {};
   final Map<String, FlashCard> leitner = {};
+
+  Map<String, int> wallet = {};
   bool get isTester => Pref.username.getString().startsWith("test_");
 
   void initialize(dynamic account) {
@@ -43,7 +45,9 @@ class AccountProvider extends ChangeNotifier {
 
   Future<void> refresh() async {
     account = await serviceLocator<NetConnector>().getAccount();
-    metadata = jsonDecode(account.user.metadata!);
+    wallet = Map.castFrom<String, dynamic, String, int>(
+        jsonDecode(account.wallet ?? "{}"));
+    metadata = jsonDecode(account.user.metadata ?? "{}");
     notifyListeners();
   }
 
