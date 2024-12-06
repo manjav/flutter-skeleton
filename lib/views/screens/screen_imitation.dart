@@ -464,9 +464,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   @override
   Future<void> onPopInvoked(bool didPop, dynamic data) async {
-    if (didPop) return;
+    if (!didPop) return;
     if (controller.serieIndex.value < 2) {
-      Navigator.pop(context);
+      Navigator.popUntil(context, (route) => route.isFirst);
       return;
     }
     controller.callCompletedMethod(showFeast: false);

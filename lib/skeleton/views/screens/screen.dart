@@ -12,7 +12,7 @@ class AbstractScreen extends StatefulWidget {
     this.route, {
     Key? key,
     this.sfx,
-    this.closable = true,
+    this.closable = false,
   }) : super(key: key ??= Key(route));
 
   Map<String, dynamic> get args => Get.arguments ?? {};
