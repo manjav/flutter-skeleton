@@ -79,11 +79,6 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
 
   Widget progressSliderBuilder(double width) {
     final height = 9.d;
-    final seriesCount = controller.series.length;
-    var slidesCount = 0;
-    for (ParentContent serie in controller.series) {
-      slidesCount += serie.children.length;
-    }
 
     final margin = EdgeInsets.symmetric(horizontal: height * 0.5);
     return SizedBox(
@@ -93,6 +88,11 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         valueListenable: controller.slideIndex,
         builder: (context, value, child) {
           final serieIndex = controller.serieIndex.value;
+          final seriesCount = controller.series.length;
+          var slidesCount = 0;
+          for (ParentContent serie in controller.series) {
+            slidesCount += serie.children.length;
+          }
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: seriesCount,
