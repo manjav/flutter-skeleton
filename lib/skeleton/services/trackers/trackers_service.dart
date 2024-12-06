@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:lifetalk/skeleton/services/trackers/tracker_amplitude.dart';
@@ -63,6 +61,7 @@ class Trackers extends IService {
         "version": DeviceInfo.version,
         "buildNumber": DeviceInfo.buildNumber,
         "packageName": DeviceInfo.packageName,
+        "content_version": "content_version".l(),
       };
       if (userId != null) properties["userId"] = userId;
       if (userName != null) properties["userName"] = userName;
