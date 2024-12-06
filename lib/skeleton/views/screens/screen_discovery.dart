@@ -146,21 +146,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               SliverAppBar(
                 toolbarHeight: 20.d,
                 expandedHeight: 50.d,
-                collapsedHeight: 20.d,
+                collapsedHeight: 28.d,
                 surfaceTintColor: TColors.transparent,
                 pinned: true,
                 shadowColor: TColors.black,
                 flexibleSpace: FlexibleSpaceBar(
                   titlePadding: EdgeInsets.only(bottom: 4.d),
                   centerTitle: true,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Asset.load<SvgPicture>("logo", width: 30.d),
-                      SizedBox(width: 10.d),
-                      Text("title_l".l(), style: TStyles.medium),
-                    ],
-                  ),
+                  title: Asset.load<SvgPicture>("logo_header", height: 48.d),
                 ),
               ),
               SliverToBoxAdapter(

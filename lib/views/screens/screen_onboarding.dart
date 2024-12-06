@@ -62,15 +62,8 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(height: 10.d),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Asset.load<SvgPicture>("logo", width: 50.d),
-            SizedBox(width: 10.d),
-            Text("title_l".l(), style: TStyles.large),
-          ],
-        ),
+        SizedBox(height: 5.d),
+        Asset.load<SvgPicture>("logo_header", height: 80.d),
         LanguageSelector(
           "I want to learn:",
           _targetLanguages,
