@@ -1,121 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 
 import '../../../app_export.dart';
 
-class DiscoveryScreen extends AbstractScreen {
-  DiscoveryScreen({super.key}) : super(Routes.home);
+class DiscoveryPageItem extends StatefulWidget {
+  final List<ParentContent> readsCategories;
+  final List<ParentContent> newCategories;
+
+  const DiscoveryPageItem(
+    this.readsCategories,
+    this.newCategories, {
+    super.key,
+  });
 
   @override
-  createState() => _HomeScreenState();
+  State<DiscoveryPageItem> createState() => _DiscoveryPageItemState();
 }
 
-class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
-  // int _categoryIndex = 0;
-  // final double _titleHeight = 40.d;
-  // final double _categoryHeight = 74.d;
-  // final double _groupHeight = 70.d;
-  // final double _headerHight = 186.d;
-  // final double _roadWidth = 64.d;
-  // final TextStyle _unitStyle = TStyles.small.copyWith(
-  //     color: TColors.primary40, fontWeight: FontWeight.w100, height: 0.9);
-  // final TextStyle _unitStylePassed = TStyles.small
-  //     .copyWith(color: TColors.green, fontWeight: FontWeight.w100, height: 0.9);
-  // final TextStyle _numberStyle = TStyles.big.copyWith(
-  //     color: TColors.primary40, fontWeight: FontWeight.w600, height: 0.9);
-  // final TextStyle _numberStylePassed = TStyles.big
-  //     .copyWith(color: TColors.green, fontWeight: FontWeight.w600, height: 0.9);
-
-  // Color _getColors(String mode) {
-  //   return switch (mode.substring(0, 4)) {
-  //     "less" => TColors.blue,
-  //     "prac" => TColors.orange,
-  //     "gram" => TColors.cyan,
-  //     "voca" => TColors.purpule,
-  //     "chat" => TColors.primary60,
-  //     "imit" => TColors.teal,
-  //     _ => TColors.gray,
-  //   };
-  // }
-
-  String _getRoute(String mode) {
-    return switch (mode.substring(0, 4)) {
-      "less" => Routes.lesson,
-      "imit" => Routes.imitation,
-      _ => Routes.series,
-    };
-  }
-
-  List<ParentContent> _categories = [];
-  final List<ParentContent> _readsCategories = [];
-  final List<ParentContent> _newCategories = [];
-  LoadingController controller = Get.put(LoadingController());
-  @override
-  void onRender(Duration timeStamp) {
-    super.onRender(timeStamp);
-    services.addListener(
-      () {
-        if (services.state.status == ServiceStatus.initialize) {
-          _initializeLessons(initializeMode: true);
-        }
-      },
-    );
-  }
-
-  Future<void> _initializeLessons({bool initializeMode = false}) async {
-    try {
-      var account = serviceLocator<AccountProvider>();
-      _categories = (await account.loadCategories());
-      if (initializeMode) {
-        if (!account.metadata.containsKey("targetLanguage")) {
-          await Get.toNamed(Routes.onboarding);
-          var onboard = _categories.where((c) {
-            return c.children[0].id.contains("onboarding");
-          });
-          if (onboard.isNotEmpty) {
-            await _loadLesson(
-                onboard.first.children.first as ParentContent, false);
-            return;
-          }
-        }
-
-        await account.loadScores();
-        await account.loadLeitner();
-      }
-
-      // Distinguishing read and new contents
-      _readsCategories.clear();
-      _newCategories.clear();
-      for (var category in _categories) {
-        if (hasReadCategory(account, category)) {
-          _readsCategories.add(category);
-        } else {
-          _newCategories.add(category);
-        }
-      }
-
-      // _categoryIndex = _firstIncompleteGroup();
-      setState(() {});
-    } on SkeletonException catch (e) {
-      alert(e.message, "error_${e.statusCode}".l());
-    }
-  }
-
-  @override
-  List<Widget> appBarElementsLeft() => [];
-
-  // Find first incomplete group
-  // int _firstIncompleteGroup() {
-  //   for (var category in _categories) {
-  //     if (!isCategoryComplete(category, true)) {
-  //       return category.index;
-  //     }
-  //   }
-  //   return 0;
-  // }
-
+class _DiscoveryPageItemState extends State<DiscoveryPageItem> {
   bool hasReadCategory(AccountProvider account, ParentContent category) {
     var score = 0;
     var lessonCount = 0;
@@ -133,67 +36,60 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (services.state.status.index < ServiceStatus.initialize.index) {
-      return const SizedBox();
-    }
-    return PopScope(
-      canPop: false,
-      child: Material(
-        child: Padding(
-          padding: EdgeInsets.all(10.d),
-          child: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                toolbarHeight: 20.d,
-                expandedHeight: 50.d,
-                collapsedHeight: 28.d,
-                surfaceTintColor: TColors.transparent,
-                pinned: true,
-                shadowColor: TColors.black,
-                flexibleSpace: FlexibleSpaceBar(
-                  titlePadding: EdgeInsets.only(bottom: 4.d),
-                  centerTitle: true,
-                  title: Asset.load<SvgPicture>("logo_header", height: 48.d),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: _categoryTitle(true, _readsCategories.isNotEmpty),
-              ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: _readsCategories.isEmpty ? 0 : 170.d,
-                  child: ListView.builder(
-                    itemCount: _readsCategories.length,
-                    itemBuilder: (context, index) {
-                      return _courseItemBuilder(
-                        padding: 5.d,
-                        height: 170.d,
-                        margin: EdgeInsets.all(5.d),
-                        category: _readsCategories[index],
-                        flag: "${_readsCategories[index].passLevel}%",
-                        titleStyle: TStyles.tinyInvert,
-                      );
-                    },
-                    scrollDirection: Axis.horizontal,
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: _categoryTitle(false, true),
-              ),
-              SliverList.builder(
-                itemCount: _newCategories.length + 1,
-                itemBuilder: (_, i) => _categoryItemBuilder(
-                    i < _newCategories.length ? _newCategories[i] : null, i),
-              ),
-            ],
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          toolbarHeight: 20.d,
+          expandedHeight: 50.d,
+          collapsedHeight: 28.d,
+          surfaceTintColor: TColors.transparent,
+          backgroundColor: TColors.primary0,
+          pinned: true,
+          shadowColor: TColors.black,
+          flexibleSpace: FlexibleSpaceBar(
+            titlePadding: EdgeInsets.only(bottom: 4.d),
+            centerTitle: true,
+            title: Asset.load<SvgPicture>("logo_header", height: 48.d),
           ),
         ),
-      ),
+        SliverToBoxAdapter(
+          child: categoryTitle(true, widget.readsCategories.isNotEmpty),
+        ),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: widget.readsCategories.isEmpty ? 0 : 170.d,
+            child: ListView.builder(
+              itemCount: widget.readsCategories.length,
+              itemBuilder: (context, index) {
+                return _courseItemBuilder(
+                  padding: 5.d,
+                  height: 170.d,
+                  margin: EdgeInsets.all(5.d),
+                  category: widget.readsCategories[index],
+                  flag: "${widget.readsCategories[index].passLevel}%",
+                  titleStyle: TStyles.tinyInvert,
+                );
+              },
+              scrollDirection: Axis.horizontal,
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: categoryTitle(false, true),
+        ),
+        SliverList.builder(
+          itemCount: widget.newCategories.length + 1,
+          itemBuilder: (_, i) => _categoryItemBuilder(
+            i < widget.newCategories.length ? widget.newCategories[i] : null,
+            i,
+            widget.newCategories.length,
+          ),
+        )
+      ],
     );
   }
 
-  Widget _categoryTitle(bool isRecent, bool visible) {
+  Widget categoryTitle(bool isRecent, bool visible) {
     if (!visible) {
       return SizedBox();
     }
@@ -212,19 +108,26 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  Widget _categoryItemBuilder(ParentContent? category, int index) {
+  Widget _categoryItemBuilder(
+    ParentContent? category,
+    int index,
+    int itemCount,
+  ) {
     final margin = EdgeInsets.all(5.d);
-    if (index >= _newCategories.length) {
+    if (index >= itemCount) {
       return Widgets.button(
         context,
         height: 70.d,
         margin: margin,
         color: TColors.primary20,
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("next_section".l(), style: TStyles.largeInvert),
-          SizedBox(width: 10.d),
-          Asset.load<SvgPicture>("group_lock")
-        ]),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("next_section".l(), style: TStyles.largeInvert),
+            SizedBox(width: 10.d),
+            Asset.load<SvgPicture>("group_lock")
+          ],
+        ),
       );
     }
 
@@ -234,19 +137,6 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       margin: margin,
       flag: category.subtitle,
     );
-  }
-
-  Future<void> _loadLesson(ParentContent group, bool locked) async {
-    if (locked) {
-      return;
-    }
-
-    await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
-    // _categoryIndex = _firstIncompleteGroup();
-    _initializeLessons();
-    // if (s == null || s <= scoreNotifier.value) return;
-    // await serviceLocator<AccountProvider>().saveScore(id, s);
-    // scoreNotifier.value = s;
   }
 
   Widget _courseItemBuilder({
@@ -276,13 +166,14 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.all(innerRadius),
               child: CachedNetworkImage(
-                  progressIndicatorBuilder: (context, url, progress) => Center(
-                        child: CircularProgressIndicator(
-                          value: progress.progress,
-                        ),
-                      ),
-                  imageUrl: category.iconUrl,
-                  fit: BoxFit.cover),
+                progressIndicatorBuilder: (context, url, progress) => Center(
+                  child: CircularProgressIndicator(
+                    value: progress.progress,
+                  ),
+                ),
+                imageUrl: category.iconUrl,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Positioned(
@@ -328,7 +219,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       onPressed: () {
         if (category.children.length > 1) {
         } else {
-          _loadLesson(category.children.first as ParentContent, false);
+          // _loadLesson(category.children.first as ParentContent, false);
         }
       },
     );
