@@ -25,6 +25,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
   final List<ParentContent> _readsCategories = [];
   LoadingController controller = Get.put(LoadingController());
 
+  final ValueNotifier<int> _selectedTabIndex = ValueNotifier(0);
   @override
   void onRender(Duration timeStamp) {
     super.onRender(timeStamp);
@@ -101,12 +102,18 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
     return PopScope(
       canPop: false,
-      child: Material(
-        color: TColors.primary0,
-        child: Padding(
-          padding: EdgeInsets.all(10.d),
-          child: DiscoveryPageItem(_readsCategories, _newCategories),
-        ),
+      child: ValueListenableBuilder(
+        valueListenable: _selectedTabIndex,
+        builder: (context, value, child) {
+          return Scaffold(
+            // backgroundColor: TColors.primary0,
+            body: Padding(
+              padding: EdgeInsets.all(10.d),
+              child: DiscoveryPageItem(_readsCategories, _newCategories),
+            ),
+            bottomNavigationBar: _navigationBar(value),
+          );
+        },
       ),
     );
   }
@@ -118,5 +125,53 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
     await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
     _initializeLessons();
+  }
+
+  Widget _navigationBar(int selectedIndex) {
+    final tabCount = 3;
+    final itemWidth = 80.d;
+    Alignment getAlign(int index) =>
+        Alignment(index / (tabCount - 1) * 2 - 1, -1);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30.d),
+      height: 86.d,
+      child: Stack(
+        children: [
+          AnimatedAlign(
+            curve: Curves.easeOutExpo,
+            alignment: getAlign(selectedIndex),
+            duration: Duration(milliseconds: 300),
+            child: Widgets.rect(
+                color: TColors.primary90,
+                width: itemWidth,
+                height: 50.d,
+                radius: 16.d),
+          ),
+          for (var i = 0; i < tabCount; i++)
+            Align(
+              alignment: getAlign(i),
+              child: Widgets.button(
+                context,
+                height: 50.d,
+                width: itemWidth,
+                padding: EdgeInsets.all(6.d),
+                // color: TColors.teal,
+                child: IgnorePointer(
+                  child: Asset.load<SvgPicture>(
+                    "tab_$i",
+                    svgColorFilter: ColorFilter.mode(
+                        i == _selectedTabIndex.value
+                            ? TColors.primary10
+                            : TColors.primary90,
+                        BlendMode.srcIn),
+                    height: 36.d,
+                  ),
+                ),
+                onPressed: () => _selectedTabIndex.value = i,
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }
