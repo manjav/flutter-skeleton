@@ -109,7 +109,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             // backgroundColor: TColors.primary0,
             body: Padding(
               padding: EdgeInsets.all(10.d),
-              child: DiscoveryPageItem(_readsCategories, _newCategories),
+              child: switch (value) {
+                1 => LeitnerPageItem(),
+                2 => ProfilePageItem(),
+                _ => DiscoveryPageItem(_readsCategories, _newCategories),
+              },
             ),
             bottomNavigationBar: _navigationBar(value),
           );
