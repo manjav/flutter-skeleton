@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../app_export.dart';
+import '../../app_export.dart';
 
-class DiscoveryPageItem extends StatefulWidget {
+class DiscoveryPageItem extends AbstractHomePageItem {
   final List<ParentContent> readsCategories;
   final List<ParentContent> newCategories;
 
@@ -18,7 +18,8 @@ class DiscoveryPageItem extends StatefulWidget {
   State<DiscoveryPageItem> createState() => _DiscoveryPageItemState();
 }
 
-class _DiscoveryPageItemState extends State<DiscoveryPageItem> {
+class _DiscoveryPageItemState
+    extends AbstractHomePageItemState<DiscoveryPageItem> {
   bool hasReadCategory(AccountProvider account, ParentContent category) {
     var score = 0;
     var lessonCount = 0;
@@ -38,22 +39,10 @@ class _DiscoveryPageItemState extends State<DiscoveryPageItem> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          toolbarHeight: 20.d,
-          expandedHeight: 50.d,
-          collapsedHeight: 28.d,
-          surfaceTintColor: TColors.transparent,
-          backgroundColor: TColors.primary0,
-          pinned: true,
-          shadowColor: TColors.black,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: EdgeInsets.only(bottom: 4.d),
-            centerTitle: true,
-            title: Asset.load<SvgPicture>("logo_header", height: 48.d),
-          ),
-        ),
+        sliverAppBar(),
         SliverToBoxAdapter(
-          child: categoryTitle(true, widget.readsCategories.isNotEmpty),
+          child:
+              categoryTitle("video_recent", widget.readsCategories.isNotEmpty),
         ),
         SliverToBoxAdapter(
           child: SizedBox(
@@ -75,7 +64,7 @@ class _DiscoveryPageItemState extends State<DiscoveryPageItem> {
           ),
         ),
         SliverToBoxAdapter(
-          child: categoryTitle(false, true),
+          child: categoryTitle("video_new", true),
         ),
         SliverList.builder(
           itemCount: widget.newCategories.length + 1,
@@ -86,25 +75,6 @@ class _DiscoveryPageItemState extends State<DiscoveryPageItem> {
           ),
         )
       ],
-    );
-  }
-
-  Widget categoryTitle(bool isRecent, bool visible) {
-    if (!visible) {
-      return SizedBox();
-    }
-    final title = isRecent ? "video_recent" : "video_new";
-    return Padding(
-      padding: EdgeInsets.only(top: 20.d),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(width: 20.d),
-          Asset.load<SvgPicture>(title),
-          SizedBox(width: 10.d),
-          Text(title.l(), style: TStyles.medium),
-        ],
-      ),
     );
   }
 
