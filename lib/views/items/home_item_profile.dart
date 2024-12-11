@@ -22,6 +22,9 @@ class _ProfilePageItemState extends AbstractHomePageItemState<ProfilePageItem> {
         _statsBuilder(account),
         header("header_streak", true),
         _streakBuilder(account),
+        header("header_settings", true),
+        _settingsBuilder(account),
+        SliverToBoxAdapter(child: SizedBox(height: 20.d)),
       ],
     );
   }
@@ -128,6 +131,53 @@ class _ProfilePageItemState extends AbstractHomePageItemState<ProfilePageItem> {
               borderRadius: BorderRadius.all(Radius.circular(20.d))),
         )
       ],
+    );
+  }
+
+  Widget _settingsBuilder(AccountProvider account) {
+    return SliverToBoxAdapter(
+      child: Widgets.rect(
+        margin: EdgeInsets.symmetric(horizontal: 16.d, vertical: 8.d),
+        padding: EdgeInsets.all(3.d),
+        radius: 20.d,
+        color: TColors.primary10,
+        child: Column(
+          children: [
+            _settingButton(
+                "native_language", "flags/${account.account.user.langTag}"),
+            _settingButton("sign_in"),
+            _settingButton("delete_account", null, TColors.red),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _settingButton(String label, [String? value, Color? color]) {
+    return Widgets.button(
+      context,
+      radius: 16.d,
+      height: 60.d,
+      color: TColors.primary0,
+      margin: EdgeInsets.all(6.d),
+      padding: EdgeInsets.all(4.d),
+      child: Row(
+        children: [
+          Asset.load<SvgPicture>(value ?? label, width: 70.d),
+          SizedBox(width: 4.d),
+          Text(
+            label.l(),
+            style: TStyles.medium.copyWith(color: color ?? TColors.primary),
+          )
+        ],
+      ),
+      onPressed: () {
+        var _ = switch (label) {
+          "native_language" => _openLanguages(),
+          "delete_account" => _removeAccount(),
+          _ => toast("not_available".l()),
+        };
+      },
     );
   }
 
