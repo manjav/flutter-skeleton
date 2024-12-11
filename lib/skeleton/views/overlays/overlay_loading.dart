@@ -34,7 +34,6 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
     var isUpdateError = _serviceState.exception != null &&
             _serviceState.exception!.statusCode == StatusCode.UPDATE_NOTICE ||
         isForceUpdate;
-    var logStyle = TStyles.tiny.copyWith(color: TColors.gray);
     return Scaffold(
       backgroundColor: TColors.transparent,
       body: Stack(alignment: Alignment.center, children: [
@@ -51,11 +50,12 @@ class _LoadingOverlayState extends AbstractOverlayState<LoadingOverlay> {
         Positioned(
             bottom: 4.d,
             right: 16.d,
-            child: Text("v.${DeviceInfo.buildNumber}", style: logStyle)),
+            child: Text("v.${DeviceInfo.buildNumber}",
+                style: TStyles.tinyDetails)),
         Positioned(
             bottom: 4.d,
             left: 16.d,
-            child: Text(DeviceInfo.adId, style: logStyle)),
+            child: Text(DeviceInfo.adId, style: TStyles.tinyDetails)),
         Positioned(
             top: 4.d,
             right: 4.d,

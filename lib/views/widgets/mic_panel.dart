@@ -58,8 +58,7 @@ class _MicPanelState extends State<MicPanel> {
             SizedBox(height: 20.d),
             widget.talk.type == ContentType.translate
                 ? const SizedBox()
-                : _nativeTextBuilder(
-                    TStyles.small.copyWith(color: TColors.primary30)),
+                : _nativeTextBuilder(TStyles.smallDetails),
             SizedBox(height: 20.d),
             _wrongResultBuilder(listener),
             SizedBox(height: 50.d),

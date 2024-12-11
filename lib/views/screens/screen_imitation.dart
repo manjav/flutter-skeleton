@@ -246,8 +246,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       mainAxisSize: MainAxisSize.min,
       children: [
         LoaderWidget(AssetType.vector, label, height: 170.d),
-        Text(label.l(),
-            style: TStyles.large.copyWith(color: TColors.primary30)),
+        Text(label.l(), style: TStyles.largeDetails),
         Expanded(child: SizedBox()),
         SkinnedButton(
           color: color,

@@ -50,6 +50,10 @@ class TStyles {
   static TextStyle mediumInvert = _style();
   static TextStyle largeInvert = _style();
   static TextStyle bigInvert = _style();
+  static TextStyle tinyDetails = _style();
+  static TextStyle smallDetails = _style();
+  static TextStyle mediumDetails = _style();
+  static TextStyle largeDetails = _style();
 }
 
 extension Autosize on TextStyle {
@@ -84,6 +88,14 @@ class Themes {
         _style(size: 20.d, weight: FontWeight.w600, color: TColors.primary0);
     TStyles.bigInvert =
         _style(size: 24.d, weight: FontWeight.w700, color: TColors.primary0);
+    TStyles.tinyDetails =
+        _style(size: 12.d, weight: FontWeight.w100, color: TColors.primary30);
+    TStyles.smallDetails =
+        _style(size: 14.d, weight: FontWeight.w200, color: TColors.primary30);
+    TStyles.mediumDetails =
+        _style(size: 16.d, weight: FontWeight.w400, color: TColors.primary30);
+    TStyles.largeDetails =
+        _style(size: 20.d, weight: FontWeight.w400, color: TColors.primary30);
   }
 
   static ThemeData? get darkData {
