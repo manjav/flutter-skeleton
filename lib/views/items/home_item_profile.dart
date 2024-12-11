@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_export.dart';
 
@@ -25,6 +26,9 @@ class _ProfilePageItemState extends AbstractHomePageItemState<ProfilePageItem> {
         header("header_settings", true),
         _settingsBuilder(account),
         SliverToBoxAdapter(child: SizedBox(height: 20.d)),
+        // _linkBuilder("terms_conditions"),
+        _linkBuilder("privacy_policy"),
+        _linkBuilder("app_version".l([DeviceInfo.buildNumber]), isLink: false),
       ],
     );
   }
@@ -181,6 +185,67 @@ class _ProfilePageItemState extends AbstractHomePageItemState<ProfilePageItem> {
     );
   }
 
+  Future<void> _openLanguages() async {
+    Map result =
+        await serviceLocator<NetConnector>().rpc("content_languages_get");
+    var nativeLanguages = result.entries.where((e) => e.key != "en").toList();
+    final account = serviceLocator<AccountProvider>();
+    modal(
+      [
+        LanguageSelector(
+          "native_language".l(),
+          titleStyle: TStyles.large,
+          nativeLanguages,
+          selectedIndex: nativeLanguages
+              .indexWhere((e) => e.key == account.account.user.langTag),
+          onChange: (index, code) async {
+            await account.update(nativeLanguage: code);
+            if (mounted) {
+              MyApp.restartApp(context);
+            }
+          },
+        ),
+      ],
+      backgroundColor: TColors.primary0,
+      padding: EdgeInsets.all(10.d),
+    );
+  }
+
+  Future<void> _removeAccount() async {
+    final result = await alert("delete_account_confirm".l(), isConfirm: true);
+    if (result) {
+      try {
+        await serviceLocator<NetConnector>().rpc("account_delete");
+        if (mounted) {
+          MyApp.restartApp(context);
+        }
+      } on SkeletonException catch (e) {
+        if (mounted) {
+          await alert("Error", message: "error_${e.statusCode}".l());
+        }
+      }
+    }
+  }
+
+  Widget _linkBuilder(String label, {bool isLink = true}) {
+    var style = TStyles.smallDetails;
+    if (isLink) {
+      style = style.copyWith(color: TColors.blue);
+    }
+    return SliverToBoxAdapter(
+      child: Widgets.button(
+        context,
+        alignment: Alignment.center,
+        width: DeviceInfo.size.width,
+        padding: EdgeInsets.all(8.d),
+        child: Text(label.l(), style: style),
+        onPressed: () {
+          if (isLink) {
+            launchUrl(Uri.parse("${label}_url".l()));
+            print("${label}_url".l());
+          }
+        },
+      ),
     );
   }
 }
