@@ -223,6 +223,11 @@ class AccountProvider extends ChangeNotifier {
     );
     return leitner[id]!;
   }
+
+extension AccountExtension on Account {
+  DateTime now(Duration diff) => DateTime.now().subtract(diff);
+  Duration gap(Duration diff) => now(diff).difference(user.updateTime!);
+  Duration get age => user.updateTime!.difference(user.createTime!);
 }
 
 class FlashCard {
