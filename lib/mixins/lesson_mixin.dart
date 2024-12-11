@@ -163,7 +163,7 @@ mixin LessonMixin<S extends AbstractScreen> on AbstractScreenState<S> {
       }
     }
     if (mounted) {
-      Navigator.pop(context);
+      Navigator.popUntil(context, (route) => route.isFirst);
       // showFeedback();
     }
   }
