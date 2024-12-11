@@ -41,10 +41,7 @@ class _DiscoveryPageItemState
     return CustomScrollView(
       slivers: [
         sliverAppBar(),
-        SliverToBoxAdapter(
-          child:
-              categoryTitle("video_recent", widget.readsCategories.isNotEmpty),
-        ),
+        header("header_video_recent", widget.readsCategories.isNotEmpty),
         SliverToBoxAdapter(
           child: SizedBox(
             height: widget.readsCategories.isEmpty ? 0 : 170.d,
@@ -64,9 +61,7 @@ class _DiscoveryPageItemState
             ),
           ),
         ),
-        SliverToBoxAdapter(
-          child: categoryTitle("video_new", true),
-        ),
+        header("header_video_new", true),
         SliverList.builder(
           itemCount: widget.newCategories.length + 1,
           itemBuilder: (_, i) => _categoryItemBuilder(
