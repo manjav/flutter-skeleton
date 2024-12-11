@@ -20,6 +20,8 @@ class _ProfilePageItemState extends AbstractHomePageItemState<ProfilePageItem> {
         _idBuilder(account),
         header("header_stats", true),
         _statsBuilder(account),
+        header("header_streak", true),
+        _streakBuilder(account),
       ],
     );
   }
@@ -87,6 +89,45 @@ class _ProfilePageItemState extends AbstractHomePageItemState<ProfilePageItem> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _streakBuilder(AccountProvider account) {
+    final age = account.account.age.inDays;
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40.d, vertical: 10.d),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            for (var i = 0; i < 7; i++) _streakItemBuilder(i, age),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _streakItemBuilder(int order, int age) {
+    double getWidth() {
+      if (age > order) return 12.d;
+      if (age == order) return 3.d;
+      return 2.d;
+    }
+
+    return Column(
+      children: [
+        Text("Day ${order + 1}", style: TStyles.smallDetails),
+        SizedBox(height: 10.d),
+        Widgets.rect(
+          width: 24.d,
+          height: 24.d,
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: age >= order ? TColors.green : TColors.primary10,
+                  width: getWidth()),
+              borderRadius: BorderRadius.all(Radius.circular(20.d))),
+        )
+      ],
     );
   }
 
