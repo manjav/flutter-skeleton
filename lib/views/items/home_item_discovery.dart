@@ -7,10 +7,11 @@ import '../../app_export.dart';
 class DiscoveryPageItem extends AbstractHomePageItem {
   final List<ParentContent> readsCategories;
   final List<ParentContent> newCategories;
-
+  final Function(ParentContent)? onSelectItem;
   const DiscoveryPageItem(
     this.readsCategories,
     this.newCategories, {
+    this.onSelectItem,
     super.key,
   });
 
@@ -189,7 +190,7 @@ class _DiscoveryPageItemState
       onPressed: () {
         if (category.children.length > 1) {
         } else {
-          // _loadLesson(category.children.first as ParentContent, false);
+          widget.onSelectItem?.call(category.children.first as ParentContent);
         }
       },
     );

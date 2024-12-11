@@ -49,8 +49,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
             return c.children[0].id.contains("onboarding");
           });
           if (onboard.isNotEmpty) {
-            await _loadLesson(
-                onboard.first.children.first as ParentContent, false);
+            await _loadLesson(onboard.first.children.first as ParentContent);
             return;
           }
         }
@@ -112,7 +111,11 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
               child: switch (value) {
                 1 => LeitnerPageItem(),
                 2 => ProfilePageItem(),
-                _ => DiscoveryPageItem(_readsCategories, _newCategories),
+                _ => DiscoveryPageItem(
+                    _readsCategories,
+                    _newCategories,
+                    onSelectItem: _loadLesson,
+                  ),
               },
             ),
             bottomNavigationBar: _navigationBar(value),
@@ -122,11 +125,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
     );
   }
 
-  Future<void> _loadLesson(ParentContent group, bool locked) async {
-    if (locked) {
-      return;
-    }
-
+  Future<void> _loadLesson(ParentContent group) async {
     await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
     _initializeLessons();
   }
