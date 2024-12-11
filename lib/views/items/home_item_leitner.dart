@@ -12,7 +12,21 @@ class _LeitnerPageItemState extends AbstractHomePageItemState<LeitnerPageItem> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      slivers: [sliverAppBar()],
+      slivers: [
+        sliverAppBar(),
+        _commingSoon(),
+      ],
     );
+  }
+
+  Widget _commingSoon() {
+    return SliverToBoxAdapter(
+        child: Container(
+            height: 500.d,
+            alignment: Alignment.center,
+            child: Text(
+              "coming_soon".l(),
+              style: TStyles.mediumDetails,
+            )));
   }
 }
