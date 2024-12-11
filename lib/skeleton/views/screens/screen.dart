@@ -22,7 +22,7 @@ class AbstractScreen extends StatefulWidget {
 }
 
 class AbstractScreenState<T extends AbstractScreen> extends State<T>
-    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin {
+    with ILogger, TickerProviderStateMixin, ServiceFinderWidgetMixin, PopupsMixin {
   List<Widget> stepChildren = <Widget>[];
   Map<String, dynamic> trackerParams = {};
   @override
@@ -94,48 +94,6 @@ class AbstractScreenState<T extends AbstractScreen> extends State<T>
 
   Widget contentFactory(double paddingTop) => const SizedBox();
 
-  void toast(String message) => Overlays.insert(context, ToastOverlay(message));
-
-  alert(String title, [String? message]) async {
-    if (!context.mounted) return;
-    final args = {"title": title};
-    if (message != null) {
-      args["message"] = message;
-    }
-    return await Get.toNamed(Routes.popupMessage, arguments: args);
-  }
-
-  // ignore: avoid_shadowing_type_parameters
-  Future<T?> modal<T>(
-    List<Widget> children, {
-    Color? barrierColor,
-    Color? backgroundColor,
-    bool isDismissible = true,
-  }) async {
-    var data = await showModalBottomSheet<T>(
-      context: context,
-      isDismissible: isDismissible,
-      enableDrag: isDismissible,
-      barrierColor: barrierColor,
-      isScrollControlled: isDismissible,
-      constraints: const BoxConstraints.tightFor(),
-      backgroundColor: TColors.transparent,
-      builder: (BuildContext context) => Widgets.rect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(40.d),
-          topRight: Radius.circular(40.d),
-        ),
-        padding: EdgeInsets.fromLTRB(40.d, 25.d, 40.d, 40.d),
-        color: backgroundColor,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: children,
-        ),
-      ),
-    );
-    return data;
-  }
 
   void onPopInvoked(bool didPop, dynamic result) {
     if (!didPop) Navigator.pop(context);
