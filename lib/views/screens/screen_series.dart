@@ -263,7 +263,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
     try {
       controller.onQuizResult(state, text, score, talk);
     } on SkeletonException catch (e) {
-      alert(e.message, "error_${e.statusCode}".l());
+      alert(e.message, message: "error_${e.statusCode}".l());
     }
   }
 

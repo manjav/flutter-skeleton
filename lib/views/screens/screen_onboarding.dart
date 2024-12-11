@@ -112,7 +112,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
                   await serviceLocator<Localization>().initialize();
                   setState(() {});
                 } on SkeletonException catch (e) {
-                  alert(e.message, "error_${e.statusCode}".l());
+                  alert(e.message, message: "error_${e.statusCode}".l());
                 }
               },
             );

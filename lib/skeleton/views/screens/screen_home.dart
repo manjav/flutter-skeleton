@@ -72,7 +72,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
 
       setState(() {});
     } on SkeletonException catch (e) {
-      alert(e.message, "error_${e.statusCode}".l());
+      alert(e.message, message: "error_${e.statusCode}".l());
     }
   }
 
