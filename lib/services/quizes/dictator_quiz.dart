@@ -112,10 +112,13 @@ class DictatorQuiz extends Quiz {
 
   void undoChoice(Choice word) {
     word.setState(ChoiceState.available);
-    choices
-        .lastWhere(
-            (c) => c.text == word.text && c.state != ChoiceState.available)
-        .setState(ChoiceState.available);
+    var foundChoice = choices.lastWhere(
+      (c) => c.text == word.text && c.state != ChoiceState.available,
+      orElse: () => Choice(""),
+    );
+    if (foundChoice.text.isNotEmpty) {
+      foundChoice.setState(ChoiceState.available);
+    }
     state.value = blanks.isEmpty ? QuizState.running : QuizState.waiting;
   }
 
