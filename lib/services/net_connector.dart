@@ -42,13 +42,17 @@ class NetConnector extends IService {
         throw SkeletonException(StatusCode.UNAVAILABLE, error);
       }
     }
-    if (response!.statusCode == 200) {
+    if (response!.statusCode != 200) {
+      throw SkeletonException(
+          StatusCode.UNKNOWN_ERROR, "Failed to load config file!");
+    }
+    int latestVersion = 0;
+    final Map<int, VersionConfigs> versions = {};
+    try {
       configs = json.decode(response.body);
+      final versionsMap = configs["versions"] ?? {};
 
       // Initial versions
-      final versionsMap = configs["versions"] ?? {};
-      final Map<int, VersionConfigs> versions = {};
-      int latestVersion = 0;
       for (var entry in versionsMap.entries) {
         final key = int.parse(entry.key);
         if (latestVersion < key) {
@@ -73,31 +77,31 @@ class NetConnector extends IService {
           configs["targetLanguage"] = versions[key]!.targetLanguage;
         }
       }
-
-      // Update warns
-      final latestConfig = versions[latestVersion]!;
-      if (latestConfig.version > version) {
-        if (latestConfig.priority == VersionPriority.force) {
-          throw SkeletonException(
-              StatusCode.UPDATE_FORCE, latestConfig.changelog);
-        } else if (Pref.updatePassed.getInt(defaultValue: 0) !=
-                latestConfig.version &&
-            latestConfig.priority == VersionPriority.notice) {
-          Pref.updatePassed.setInt(latestConfig.version);
-          throw SkeletonException(
-              StatusCode.UPDATE_NOTICE, latestConfig.changelog);
-        }
-      }
-
-      LoaderWidget.baseURL = configs["assetsUrl"]!;
-      LoaderWidget.hashMap = Map.castFrom(configs["files"]);
-      Localization.languageCode = configs["nativeLanguage"];
-      Localization.targetLanguage = configs["targetLanguage"];
-      log("Config loaded.");
-    } else {
+    } catch (e) {
       throw SkeletonException(
-          StatusCode.UNKNOWN_ERROR, "Failed to load config file");
+          StatusCode.UNAUTHORIZED, "Can not parse configs file!");
     }
+
+    // Update warns
+    final latestConfig = versions[latestVersion];
+    if (latestConfig != null && latestConfig.version > version) {
+      if (latestConfig.priority == VersionPriority.force) {
+        throw SkeletonException(
+            StatusCode.UPDATE_FORCE, latestConfig.changelog);
+      } else if (Pref.updatePassed.getInt(defaultValue: 0) !=
+              latestConfig.version &&
+          latestConfig.priority == VersionPriority.notice) {
+        Pref.updatePassed.setInt(latestConfig.version);
+        throw SkeletonException(
+            StatusCode.UPDATE_NOTICE, latestConfig.changelog);
+      }
+    }
+
+    LoaderWidget.baseURL = configs["assetsUrl"]!;
+    LoaderWidget.hashMap = Map.castFrom(configs["files"]);
+    Localization.languageCode = configs["nativeLanguage"];
+    Localization.targetLanguage = configs["targetLanguage"];
+    log("Config loaded.");
   }
 
   // Connect to nakama server
