@@ -242,7 +242,6 @@ class _ProfilePageItemState extends AbstractHomePageItemState<ProfilePageItem> {
         onPressed: () {
           if (isLink) {
             launchUrl(Uri.parse("${label}_url".l()));
-            print("${label}_url".l());
           }
         },
       ),
