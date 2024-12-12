@@ -485,22 +485,27 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _logTrackerEvent(String name, {Map<String, dynamic>? params}) {
-    params ??= <String, dynamic>{
-      "video_id": controller.root!.iconUrl,
-      "slide_index": controller.currentSlide.index,
-      "slide": controller.currentSlide.majority!.type.name,
-    };
-    final type = controller.currentSerie.majority!.type;
-    if (type == ContentType.caption) {
-      params["cc"] = _captionMode.value ? "on" : "off";
-      if (_videoData.value?.positionRatio == null) {
-        params["position_ratio"] = -1;
-      } else {
-        params["position_ratio"] =
-            ((_videoData.value?.positionRatio ?? 0) * 100).round();
+    try {
+      params ??= <String, dynamic>{
+        "video_id": controller.root!.iconUrl,
+        "slide_index": controller.currentSlide.index,
+        "slide": controller.currentSlide.majority!.type.name,
+      };
+      final type = controller.currentSerie.majority!.type;
+      if (type == ContentType.caption) {
+        params["cc"] = _captionMode.value ? "on" : "off";
+        if (_videoData.value?.positionRatio == null) {
+          params["position_ratio"] = -1;
+        } else {
+          params["position_ratio"] =
+              ((_videoData.value?.positionRatio ?? 0) * 100).round();
+        }
       }
+      serviceLocator<Trackers>()
+          .design("$name|${type.name}", parameters: params);
+    } catch (e) {
+      log(e.toString());
     }
-    serviceLocator<Trackers>().design("$name|${type.name}", parameters: params);
   }
 
   bool _inOnboarding() {
