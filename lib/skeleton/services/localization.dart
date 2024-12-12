@@ -30,10 +30,14 @@ class Localization extends IService {
   initialize({List<Object>? args}) async {
     isRTL = isRTLMode(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
-    var localizations = await serviceLocator<NetConnector>()
-        .rpc("content_locales_get", params: {"nativeLanguage": languageCode});
-
-    await _getData(localizations);
+    try {
+      var localizations = await serviceLocator<NetConnector>()
+          .rpc("content_locales_get", params: {"nativeLanguage": languageCode});
+      await _getData(localizations);
+    } catch (e) {
+      throw SkeletonException(
+          StatusCode.UNKNOWN_ERROR, "Failed to load localization file!");
+    }
     super.initialize();
   }
 
