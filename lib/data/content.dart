@@ -63,6 +63,7 @@ class Content {
 class ParentContent extends Content {
   List<Content> children = [];
   int score = 0;
+  int passedOrder = 100000;
   String title = "", subtitle = "", iconUrl = "", mode = "";
   Content? majority;
   ParentContent.create(

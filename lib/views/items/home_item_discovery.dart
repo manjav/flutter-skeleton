@@ -66,6 +66,7 @@ class _DiscoveryPageItemState
           _newCategories.add(category);
         }
       }
+      _recentCategories.sort((l, r) => r.passedOrder - l.passedOrder);
       setState(() {});
     } on SkeletonException catch (e) {
       alert(e.message, message: "error_${e.statusCode}".l());
@@ -82,6 +83,7 @@ class _DiscoveryPageItemState
     for (var group in category.children) {
       if (scores.containsKey(group.id)) {
         score += (scores[group.id]!["score"] ?? 0) as int;
+        category.passedOrder = scoreKeys.indexOf(group.id);
         lessonCount++;
       }
     }
@@ -252,6 +254,14 @@ class _DiscoveryPageItemState
     var recentsCount = _recentCategories.length;
     await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
     await _initializeLessons();
+    await Future.delayed(Duration(milliseconds: 500));
+    if (_recentCategories.length > recentsCount) {
+      _scrollController.animateTo(
+        0,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   String _getRoute(String mode) {
