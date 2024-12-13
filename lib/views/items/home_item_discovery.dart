@@ -1,19 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 import '../../app_export.dart';
 
 class DiscoveryPageItem extends AbstractHomePageItem {
-  final List<ParentContent> readsCategories;
-  final List<ParentContent> newCategories;
-  final Function(ParentContent)? onSelectItem;
-  const DiscoveryPageItem(
-    this.readsCategories,
-    this.newCategories, {
-    this.onSelectItem,
-    super.key,
-  });
+  const DiscoveryPageItem({super.key});
 
   @override
   State<DiscoveryPageItem> createState() => _DiscoveryPageItemState();
@@ -21,40 +14,104 @@ class DiscoveryPageItem extends AbstractHomePageItem {
 
 class _DiscoveryPageItemState
     extends AbstractHomePageItemState<DiscoveryPageItem> {
-  bool hasReadCategory(AccountProvider account, ParentContent category) {
+  List<ParentContent> _categories = [];
+  final List<ParentContent> _newCategories = [];
+  final List<ParentContent> _recentCategories = [];
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    if (services.state.status.index >= ServiceStatus.initialize.index) {
+      _initializeLessons(initializeMode: true);
+    } else {
+      services.addListener(
+        () {
+          if (services.state.status == ServiceStatus.initialize) {
+            _initializeLessons(initializeMode: true);
+          }
+        },
+      );
+    }
+    super.initState();
+  }
+
+  Future<void> _initializeLessons({bool initializeMode = false}) async {
+    try {
+      var account = serviceLocator<AccountProvider>();
+      _categories = (await account.loadCategories());
+      if (initializeMode) {
+        if (!account.metadata.containsKey("targetLanguage")) {
+          await Get.toNamed(Routes.onboarding);
+          var onboard = _categories.where((c) {
+            return c.children[0].id.contains("onboarding");
+          });
+          if (onboard.isNotEmpty) {
+            await _loadLesson(onboard.first.children.first as ParentContent);
+            return;
+          }
+        }
+
+        await account.loadScores();
+        await account.loadLeitner();
+      }
+
+      // Distinguishing read and new contents
+      _recentCategories.clear();
+      _newCategories.clear();
+      final scoreKeys = account.scores.keys.toList();
+      for (var category in _categories) {
+        if (hasReadCategory(account.scores, scoreKeys, category)) {
+          _recentCategories.add(category);
+        } else {
+          _newCategories.add(category);
+        }
+      }
+      setState(() {});
+    } on SkeletonException catch (e) {
+      alert(e.message, message: "error_${e.statusCode}".l());
+    }
+  }
+
+  bool hasReadCategory(
+    Map<String, Map<String, dynamic>> scores,
+    List<String> scoreKeys,
+    ParentContent category,
+  ) {
     var score = 0;
     var lessonCount = 0;
     for (var group in category.children) {
-      if (account.scores.containsKey(group.id)) {
-        score += (account.scores[group.id]!["score"] ?? 0) as int;
+      if (scores.containsKey(group.id)) {
+        score += (scores[group.id]!["score"] ?? 0) as int;
         lessonCount++;
       }
     }
     if (lessonCount > 0) {
-      category.passLevel = (score / lessonCount).round();
+      category.score = (score / lessonCount).round();
     }
     return lessonCount > 0;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_categories.isEmpty) return SizedBox();
     return CustomScrollView(
+      controller: _scrollController,
       slivers: [
         sliverAppBar(),
-        header("header_video_recent", widget.readsCategories.isNotEmpty),
+        header("header_video_recent", _recentCategories.isNotEmpty),
         SliverToBoxAdapter(
           child: SizedBox(
-            height: widget.readsCategories.isEmpty ? 0 : 170.d,
+            height: _recentCategories.isEmpty ? 0 : 170.d,
             child: ListView.builder(
-              itemCount: widget.readsCategories.length,
+              itemCount: _recentCategories.length,
               itemBuilder: (context, index) {
                 return _courseItemBuilder(
                   padding: 5.d,
                   height: 170.d,
                   margin: EdgeInsets.all(5.d),
-                  category: widget.readsCategories[index],
-                  flag: "${widget.readsCategories[index].passLevel}%",
                   titleStyle: TStyles.tinyInvert,
+                  category: _recentCategories[index],
+                  flag: "${_recentCategories[index].score}%",
                 );
               },
               scrollDirection: Axis.horizontal,
@@ -63,11 +120,11 @@ class _DiscoveryPageItemState
         ),
         header("header_video_new", true),
         SliverList.builder(
-          itemCount: widget.newCategories.length + 1,
+          itemCount: _newCategories.length + 1,
           itemBuilder: (_, i) => _categoryItemBuilder(
-            i < widget.newCategories.length ? widget.newCategories[i] : null,
+            i < _newCategories.length ? _newCategories[i] : null,
             i,
-            widget.newCategories.length,
+            _newCategories.length,
           ),
         )
       ],
@@ -182,12 +239,26 @@ class _DiscoveryPageItemState
                 ),
         ],
       ),
-      onPressed: () {
+      onPressed: () async {
         if (category.children.length > 1) {
         } else {
-          widget.onSelectItem?.call(category.children.first as ParentContent);
+          await _loadLesson(category.children.first as ParentContent);
         }
       },
     );
+  }
+
+  Future<void> _loadLesson(ParentContent group) async {
+    var recentsCount = _recentCategories.length;
+    await Get.toNamed(_getRoute(group.mode), arguments: {"content": group});
+    await _initializeLessons();
+  }
+
+  String _getRoute(String mode) {
+    return switch (mode.substring(0, 4)) {
+      "less" => Routes.lesson,
+      "imit" => Routes.imitation,
+      _ => Routes.series,
+    };
   }
 }

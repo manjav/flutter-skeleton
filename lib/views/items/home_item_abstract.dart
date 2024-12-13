@@ -11,7 +11,7 @@ class AbstractHomePageItem extends StatefulWidget {
 }
 
 class AbstractHomePageItemState<T extends AbstractHomePageItem> extends State<T>
-    with ILogger, PopupsMixin {
+    with ILogger, PopupsMixin, ServiceFinderWidgetMixin {
   @override
   Widget build(BuildContext context) => const Placeholder();
 
