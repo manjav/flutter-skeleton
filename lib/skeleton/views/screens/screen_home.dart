@@ -61,14 +61,16 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
       // Distinguishing read and new contents
       _readsCategories.clear();
       _newCategories.clear();
+      _newCategories.clear();
+      var readsCategories = <ParentContent>[];
       for (var category in _categories) {
         if (hasReadCategory(account, category)) {
-          _readsCategories.add(category);
+          readsCategories.add(category);
         } else {
           _newCategories.add(category);
         }
       }
-
+      _readsCategories.addAll(readsCategories.reversed);
       setState(() {});
     } on SkeletonException catch (e) {
       alert(e.message, message: "error_${e.statusCode}".l());
