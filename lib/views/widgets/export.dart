@@ -1,3 +1,4 @@
+export 'auto_call_button.dart';
 export 'avatar.dart';
 export 'choice_box.dart';
 export 'dictation_box.dart';
