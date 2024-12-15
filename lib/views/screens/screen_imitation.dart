@@ -388,7 +388,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       if (talk.type == ContentType.wordBank) {
         _showWordBankResult(state, data[0], data[1]);
       } else {
-        _showListenerResult();
+        _showListenerResult(state);
       }
     }
 
@@ -432,28 +432,25 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             Text("${label}_l".l(), style: resulStyle),
           ],
         ),
-        SizedBox(height: 12.d),
         hintWidget,
-        SizedBox(height: 12.d),
-        SkinnedButton(
-          label: "next_l".l(),
+        SizedBox(height: 10.d),
+        AutoCallButton(
           color: color,
-          onPressed: () {
-            Navigator.pop(context);
-            _gotoSlide(true);
-          },
-        )
+          label: "next_l".l(),
+          onPressed: () => _gotoSlide(true),
+        ),
       ],
       isDismissible: false,
       backgroundColor: Color.lerp(TColors.primary0, color, 0.15),
     );
   }
 
-  void _showListenerResult() {
+  void _showListenerResult(QuizState state) {
     modal(
       [
-        SkinnedButton(
+        AutoCallButton(
           label: "next_l".l(),
+          color: state == QuizState.success ? TColors.green : TColors.red,
           onPressed: () {
             Navigator.pop(context);
             _gotoSlide(true);
