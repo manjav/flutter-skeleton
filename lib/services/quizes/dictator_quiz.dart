@@ -107,6 +107,7 @@ class DictatorQuiz extends Quiz {
     choice.setState(ChoiceState.selected);
     blank.text = choice.text;
     blank.setState(ChoiceState.selected);
+    chechAnswers(force: false);
     state.value = blanks.isEmpty ? QuizState.running : QuizState.waiting;
   }
 
@@ -122,7 +123,7 @@ class DictatorQuiz extends Quiz {
     state.value = blanks.isEmpty ? QuizState.running : QuizState.waiting;
   }
 
-  void chechAnswers() {
+  void chechAnswers({bool force = true}) {
     if (blanks.isNotEmpty) {
       return;
     }
@@ -131,26 +132,35 @@ class DictatorQuiz extends Quiz {
     var score = 0;
     var numQuizes = 0;
     for (var i = 0; i < words.length; i++) {
-      if (words[i].state == ChoiceState.selected) {
-        words[i].setState(words[i].text == _patterns[i]
-            ? ChoiceState.success
-            : ChoiceState.failure);
-        if (words[i].state == ChoiceState.failure) {
-          state = QuizState.failure;
-        } else {
-          score++;
+      if (words[i].state != ChoiceState.selected) {
+        continue;
+      }
+      words[i].setState(words[i].text == _patterns[i]
+          ? ChoiceState.success
+          : (ChoiceState.failure));
+      if (words[i].state == ChoiceState.failure) {
+        state = QuizState.failure;
+      } else {
+        score++;
+      }
+      numQuizes++;
+    }
+    if (state == QuizState.success || force) {
+      this.state.value = state;
+      onResult?.call(
+        state,
+        "",
+        (score / numQuizes * 100).round(),
+        false,
+        [words, _patterns],
+      );
+    } else {
+      for (var word in words) {
+        if (word.state.index > ChoiceState.selected.index) {
+          word.setState(ChoiceState.selected);
         }
-        numQuizes++;
       }
     }
-    this.state.value = state;
-    onResult?.call(
-      state,
-      "",
-      (score / numQuizes * 100).round(),
-      false,
-      [words, _patterns],
-    );
   }
 
   void popChoice() {
