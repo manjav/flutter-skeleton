@@ -33,15 +33,17 @@ mixin PopupsMixin<S extends StatefulWidget> on State<S> {
         button(TColors.green, "accept_l".l(), true),
       ]);
     }
-    return await modal(items, backgroundColor: TColors.primary0);
+    return await modal(items);
   }
 
   // ignore: avoid_shadowing_type_parameters
-  Future<T?> modal<T>(List<Widget> children,
-      {Color? barrierColor,
-      Color? backgroundColor,
-      bool isDismissible = true,
-      EdgeInsets? padding}) async {
+  Future<T?> modal<T>(
+    List<Widget> children, {
+    Color? barrierColor,
+    Color? backgroundColor,
+    bool isDismissible = true,
+    EdgeInsets? padding,
+  }) async {
     var data = await showModalBottomSheet<T>(
       context: context,
       isDismissible: isDismissible,
@@ -50,20 +52,46 @@ mixin PopupsMixin<S extends StatefulWidget> on State<S> {
       isScrollControlled: isDismissible,
       constraints: const BoxConstraints.tightFor(),
       backgroundColor: TColors.transparent,
-      builder: (BuildContext context) => Widgets.rect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(40.d),
-          topRight: Radius.circular(40.d),
-        ),
-        padding: padding ?? EdgeInsets.fromLTRB(40.d, 25.d, 40.d, 40.d),
-        color: backgroundColor,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: children,
-        ),
+      builder: (BuildContext context) => ModalWidget(
+        backgroundColor: barrierColor,
+        padding: padding,
+        children: children,
       ),
     );
     return data;
+  }
+}
+
+class ModalWidget extends StatefulWidget {
+  final Color? backgroundColor;
+  final List<Widget> children;
+  final EdgeInsets? padding;
+  const ModalWidget({
+    required this.children,
+    this.backgroundColor,
+    this.padding,
+    super.key,
+  });
+
+  @override
+  State<ModalWidget> createState() => _ModalWidgetState();
+}
+
+class _ModalWidgetState extends State<ModalWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Widgets.rect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(40.d),
+        topRight: Radius.circular(40.d),
+      ),
+      padding: widget.padding ?? EdgeInsets.fromLTRB(40.d, 25.d, 40.d, 40.d),
+      color: widget.backgroundColor ?? TColors.primary10,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: widget.children,
+      ),
+    );
   }
 }
