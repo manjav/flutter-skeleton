@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../app_export.dart';
@@ -21,6 +22,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   final PageController _pageController = PageController();
   final ValueNotifier<bool> _captionMode = ValueNotifier(true);
   final ValueNotifier<MediaEntry?> _videoData = ValueNotifier(null);
+  final ItemScrollController _captionScrollController = ItemScrollController();
 
   @override
   void initState() {
@@ -276,7 +278,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     return ValueListenableBuilder(
       valueListenable: _captionMode,
       builder: (context, value, child) {
-        return Column(
+        return Stack(
+          alignment: Alignment.bottomCenter,
           children: [
             _captionBuilder(value),
             Row(
@@ -305,17 +308,56 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       child: ValueListenableBuilder(
         valueListenable: caption,
         builder: (context, value, child) {
-          if (captionMode) {
-            if (value == null) return SizedBox();
-            return Center(
-              child: Text(
-                value.targetValue.simplify(),
-                style: TStyles.big,
-              ),
-            );
-          } else {
-            return LoaderWidget(AssetType.vector, "ear");
+          if (!captionMode) {
+            return Align(child: LoaderWidget(AssetType.vector, "ear"));
           }
+          if (value != null) {
+            var index = _captions.indexOf(value);
+            if (_captionScrollController.isAttached) {
+              _captionScrollController.scrollTo(
+                  index: index,
+                  duration: Duration(milliseconds: 400),
+                  curve: Curves.easeInOutCubic,
+                  alignment: 0.35);
+            }
+          }
+          return ShaderMask(
+            shaderCallback: (Rect rect) {
+              return LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  TColors.white,
+                  TColors.transparent,
+                  TColors.transparent,
+                  TColors.white
+                ],
+                stops: [
+                  0.0,
+                  0.3,
+                  0.7,
+                  1.0
+                ], // 10% purple, 80% transparent, 10% purple
+              ).createShader(rect);
+            },
+            blendMode: BlendMode.dstOut,
+            child: ScrollablePositionedList.builder(
+              padding: EdgeInsets.symmetric(vertical: 170.d),
+              itemScrollController: _captionScrollController,
+              itemBuilder: (context, index) {
+                var data = _captions[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.d),
+                  child: Text(
+                    data.targetValue.simplify(),
+                    textAlign: TextAlign.center,
+                    style: data == value ? TStyles.big : TStyles.largeDetails,
+                  ),
+                );
+              },
+              itemCount: _captions.length,
+            ),
+          );
         },
       ),
     );

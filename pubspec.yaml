@@ -48,6 +48,7 @@ dependencies:
   path_provider: ^2.1.4
   provider: ^6.1.1
   rive: ^0.13.14
+  scrollable_positioned_list: ^0.3.8
   shared_preferences: ^2.3.2
   speech_to_text: ^7.0.0
   # unity_ads_plugin: ^0.3.10
