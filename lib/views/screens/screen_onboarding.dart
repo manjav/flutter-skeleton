@@ -197,7 +197,7 @@ class _LanguageSelectorState extends State<LanguageSelector> {
   final ScrollController _scrollController = ScrollController();
   int _selectedIndex = -1;
   final _itemHeight = 64.d;
-  final _itemMargin = 5.d;
+  final _itemMargin = 3.d;
 
   @override
   void initState() {
@@ -226,8 +226,11 @@ class _LanguageSelectorState extends State<LanguageSelector> {
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(16.d)),
             child: Widgets.rect(
-              color: TColors.primary20,
-              height: (_itemHeight + _itemMargin * 2) *
+              decoration: BoxDecoration(
+                  color: TColors.primary0,
+                  border: Border.all(color: TColors.primary20, width: 2.d),
+                  borderRadius: BorderRadius.all(Radius.circular(16.d))),
+              height: (_itemHeight + _itemMargin * 3) *
                       widget.data.length.max(widget.maxtItems) -
                   (widget.data.length > widget.maxtItems ? _itemMargin * 5 : 0),
               child: ListView.builder(
@@ -254,11 +257,11 @@ class _LanguageSelectorState extends State<LanguageSelector> {
       child: Row(
         children: [
           Asset.load<SvgPicture>("flags/${widget.data[index].key}"),
+          SizedBox(width: 10.d),
           Expanded(
             child: Text(
               widget.data[index].value,
-              textAlign: TextAlign.center,
-              style: selected ? TStyles.mediumInvert : TStyles.medium,
+              style: selected ? TStyles.largeInvert : TStyles.large,
             ),
           )
         ],
