@@ -21,6 +21,9 @@ class FirebaseTracker extends AbstractTracker {
     // ));
 
     var text = remoteConfig.getString(name ?? "dummy");
+    if (text.isEmpty) {
+      return {};
+    }
     return jsonDecode(text);
   }
 
