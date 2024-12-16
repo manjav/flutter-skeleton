@@ -51,7 +51,7 @@ mixin PopupsMixin<S extends StatefulWidget> on State<S> {
       barrierColor: barrierColor,
       isScrollControlled: isDismissible,
       constraints: const BoxConstraints.tightFor(),
-      backgroundColor: TColors.transparent,
+      backgroundColor: backgroundColor ?? TColors.transparent,
       builder: (BuildContext context) => ModalWidget(
         backgroundColor: barrierColor,
         padding: padding,
@@ -86,7 +86,6 @@ class _ModalWidgetState extends State<ModalWidget> {
         topRight: Radius.circular(40.d),
       ),
       padding: widget.padding ?? EdgeInsets.fromLTRB(40.d, 25.d, 40.d, 40.d),
-      color: widget.backgroundColor ?? TColors.primary10,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
