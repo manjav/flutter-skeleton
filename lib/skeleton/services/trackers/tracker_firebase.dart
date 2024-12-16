@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 import '../../export.dart';
 
@@ -9,6 +11,18 @@ class FirebaseTracker extends AbstractTracker {
   static FirebaseAnalytics? _instance;
   static FirebaseAnalytics get instance =>
       _instance ??= FirebaseAnalytics.instance;
+
+  @override
+  Future<Map<String, dynamic>> getRemoteConfigs({String? name}) async {
+    final remoteConfig = FirebaseRemoteConfig.instance;
+    // await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    //   fetchTimeout: const Duration(minutes: 1),
+    //   minimumFetchInterval: const Duration(minutes: 5),
+    // ));
+
+    var text = remoteConfig.getString(name ?? "dummy");
+    return jsonDecode(text);
+  }
 
   @override
   void setProperties(Map<String, String> properties) {

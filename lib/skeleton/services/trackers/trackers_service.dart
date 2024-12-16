@@ -22,7 +22,7 @@ class Trackers extends IService {
     TrackerSDK.amplitude: AmplitudeTracker(),
     TrackerSDK.smartlook: SmartlookTracker(),
   };
-  int variant = 1;
+  Map<String, dynamic> remoteConfigs = {};
   final _testName = "_";
   final _buildType = BuildType.installed;
   bool get ghostMode =>
@@ -32,12 +32,14 @@ class Trackers extends IService {
 
   @override
   initialize({List<Object>? args}) async {
-    if (ghostMode) return;
+    // if (ghostMode) return;
     // Initialize sdk classes
     for (var sdk in _sdks.values) {
       sdk.initialize(logCallback: log);
-      var variant = await sdk.getVariantId(_testName);
-      if (variant != 0) this.variant = variant;
+      var remoteConfigs = await sdk.getRemoteConfigs();
+      if (remoteConfigs.isNotEmpty) {
+        this.remoteConfigs = remoteConfigs;
+      }
     }
   }
 
@@ -56,7 +58,7 @@ class Trackers extends IService {
         "build_type": _buildType.name,
         "deviceId": DeviceInfo.adId,
         "test_name": _testName,
-        "test_variant": variant.toString(),
+        // "test_variant": variant.toString(),
         "appName": DeviceInfo.appName,
         "version": DeviceInfo.version,
         "buildNumber": DeviceInfo.buildNumber,
@@ -65,7 +67,9 @@ class Trackers extends IService {
       };
       if (userId != null) properties["userId"] = userId;
       if (userName != null) properties["userName"] = userName;
-      if (nativeLanguage != null) properties["native_language"] = nativeLanguage;
+      if (nativeLanguage != null) {
+        properties["native_language"] = nativeLanguage;
+      }
       sdk.setProperties(properties);
     }
   }

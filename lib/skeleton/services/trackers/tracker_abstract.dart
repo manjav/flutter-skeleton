@@ -7,8 +7,7 @@ abstract class AbstractTracker {
     this.logCallback = logCallback;
   }
 
-  Future<String?> getDeviceId() async => null;
-  Future<int> getVariantId(String testName) async => 0;
+  Future<Map<String, dynamic>> getRemoteConfigs({String? name}) async => {};
 
   /*  sendDiagnosticData(String version) async {
     var url =
@@ -30,10 +29,7 @@ abstract class AbstractTracker {
 
   void ad(Placement placement, AdState state);
 
-  void design(
-    String name, {
-    Map<String, dynamic>? parameters,
-  });
+  void design(String name, {Map<String, dynamic>? parameters});
 
   void resource(
     ResourceFlowType type,
@@ -43,15 +39,9 @@ abstract class AbstractTracker {
     String itemId,
   );
 
-  void setScreen(
-    String screenName, {
-    Map<String, dynamic>? parameters,
-  });
+  void setScreen(String screenName, {Map<String, dynamic>? parameters});
 
-  void startProgress(
-    String name, {
-    Map<String, dynamic>? parameters,
-  }) {}
+  void startProgress(String name, {Map<String, dynamic>? parameters}) {}
 
   void endProgress(
     String name,
