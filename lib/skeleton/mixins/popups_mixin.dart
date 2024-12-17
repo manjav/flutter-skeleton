@@ -53,7 +53,7 @@ mixin PopupsMixin<S extends StatefulWidget> on State<S> {
       constraints: const BoxConstraints.tightFor(),
       backgroundColor: backgroundColor ?? TColors.primary10,
       builder: (BuildContext context) => ModalWidget(
-        backgroundColor: barrierColor,
+        backgroundColor: backgroundColor,
         padding: padding,
         children: children,
       ),
