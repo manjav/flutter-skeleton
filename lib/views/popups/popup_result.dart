@@ -48,6 +48,8 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
       "setnences": widget.args["sentenceCount"]
     });
 
+    serviceLocator<MediaService>().playSound("feast");
+
     children = [animationBuilder("result")];
     process(() async {
       int findLevel(int score) {
