@@ -26,7 +26,7 @@ class _AutoCallButtonState extends State<AutoCallButton>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1800));
+        vsync: this, duration: Duration(milliseconds: 2500));
     _controller.addStatusListener(
       (status) {
         if (status == AnimationStatus.completed) {
@@ -41,6 +41,7 @@ class _AutoCallButtonState extends State<AutoCallButton>
   @override
   Widget build(BuildContext context) {
     final radius = Radius.circular(16.0);
+    RenderBox? box;
     return Stack(
       children: [
         SkinnedButton(
@@ -55,10 +56,12 @@ class _AutoCallButtonState extends State<AutoCallButton>
         AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
-            final keyContext = stickyKey.currentContext;
-            final box = keyContext?.findRenderObject() as RenderBox;
+            if (box == null) {
+              final keyContext = stickyKey.currentContext;
+              box = keyContext?.findRenderObject() as RenderBox;
+            }
             return Positioned(
-              width: _controller.value * box.size.width,
+              width: _controller.value * box!.size.width,
               left: 0,
               top: 0,
               bottom: 0,
