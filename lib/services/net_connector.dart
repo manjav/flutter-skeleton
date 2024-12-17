@@ -173,7 +173,7 @@ class NetConnector extends IService {
       return null as T;
     }
     params ??= {};
-
+    params["remoteConfigs"] = serviceLocator<Trackers>().remoteConfigs;
     try {
       var data = await _nakamaClient!
           .rpc(session: _session!, id: id, payload: jsonEncode(params));
