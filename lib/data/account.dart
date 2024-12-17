@@ -8,7 +8,7 @@ import '../app_export.dart';
 class AccountProvider extends ChangeNotifier {
   late Account account;
   // Map<String, Word> words = {};
-  List<ParentContent> contents = [];
+  List<ParentContent> categories = [];
   Map<String, dynamic> metadata = {};
   Map<String, Map<String, dynamic>> scores = {};
   final Map<String, FlashCard> leitner = {};
@@ -52,11 +52,13 @@ class AccountProvider extends ChangeNotifier {
   }
 
   Future<List<ParentContent>> loadCategories() async {
-    // Load Contents
-    var data = await serviceLocator<NetConnector>().rpc("content_categories");
-    contents = Content.createAll(data);
+    if (categories.isEmpty) {
+      // Load Categories
+      var data = await serviceLocator<NetConnector>().rpc("content_categories");
+      categories = Content.createAll(data);
+    }
     notifyListeners();
-    return contents;
+    return categories;
   }
 
   Future<void> loadGroup(ParentContent group) async {
@@ -223,7 +225,6 @@ class AccountProvider extends ChangeNotifier {
     );
     return leitner[id]!;
   }
-
 }
 
 extension AccountExtension on Account {
