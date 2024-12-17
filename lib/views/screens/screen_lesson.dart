@@ -251,7 +251,7 @@ class _ScreenState extends AbstractScreenState<LessonScreen>
           width: DeviceInfo.size.width,
           margin: EdgeInsets.symmetric(vertical: 5.d),
           padding: EdgeInsets.all(20.d),
-          child: microphoneBuilder(talk));
+          child: microphoneBuilder(controller, talk));
     }
     return RadioBox(
       talk.targetValue, // main,

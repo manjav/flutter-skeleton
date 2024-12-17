@@ -238,7 +238,7 @@ class _ScreenState extends AbstractScreenState<SeriesScreen>
 
   Widget _contentItem(Talk talk) {
     return switch (talk.type) {
-      ContentType.repeat || ContentType.translate => microphoneBuilder(talk),
+      ContentType.repeat || ContentType.translate => microphoneBuilder(controller, talk),
       ContentType.head => DirText(
           talk.nativeValue.simplify(),
           style: TStyles.big,
