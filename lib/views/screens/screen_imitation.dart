@@ -312,6 +312,18 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           if (!captionMode) {
             return Align(child: LoaderWidget(AssetType.vector, "ear"));
           }
+          if (!(serviceLocator<Trackers>()
+                  .remoteConfigs["scrollableCaptions"] ??
+              false)) {
+            return Center(
+              child: value == null
+                  ? null
+                  : Text(
+                      value.targetValue.simplify(),
+                      style: TStyles.big,
+                    ),
+            );
+          }
           if (value != null) {
             var index = _captions.indexOf(value);
             if (_captionScrollController.isAttached) {
