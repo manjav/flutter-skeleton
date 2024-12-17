@@ -460,7 +460,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     final label = success ? "correct" : "incorrect";
     final color = success ? TColors.green : TColors.red;
     final hints = <TextSpan>[];
-    final resulStyle = TStyles.big.copyWith(color: color);
+    final incorrectStyle = TStyles.big.copyWith(color: TColors.blue);
     Widget hintWidget;
     if (success) {
       hintWidget = SizedBox();
@@ -470,7 +470,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           TextSpan(
             text: "${patterns[i]} ",
             style: words[i].state == ChoiceState.failure
-                ? resulStyle
+                ? incorrectStyle
                 : TStyles.big,
           ),
         );
@@ -484,7 +484,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
           children: [
             Asset.load<SvgPicture>(label, width: 24.d),
             SizedBox(width: 10.d),
-            Text("${label}_l".l(), style: resulStyle),
+            Text("${label}_l".l(), style: TStyles.big.copyWith(color: color)),
           ],
         ),
         hintWidget,
