@@ -56,12 +56,16 @@ class _AutoCallButtonState extends State<AutoCallButton>
         AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
+            double size = 0;
             if (box == null) {
               final keyContext = stickyKey.currentContext;
               box = keyContext?.findRenderObject() as RenderBox;
             }
+            if (box != null && box!.hasSize) {
+              size = box!.size.width;
+            }
             return Positioned(
-              width: _controller.value * box!.size.width,
+              width: _controller.value * size,
               left: 0,
               top: 0,
               bottom: 0,
