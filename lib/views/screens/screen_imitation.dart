@@ -305,24 +305,22 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   Widget _captionBuilder(bool captionMode) {
-    return Expanded(
+    return Center(
       child: ValueListenableBuilder(
         valueListenable: caption,
         builder: (context, value, child) {
           if (!captionMode) {
-            return Align(child: LoaderWidget(AssetType.vector, "ear"));
+            return LoaderWidget(AssetType.vector, "ear");
           }
           if (!(serviceLocator<Trackers>()
                   .remoteConfigs["scrollableCaptions"] ??
               false)) {
-            return Center(
-              child: value == null
-                  ? null
-                  : Text(
-                      value.targetValue.simplify(),
-                      style: TStyles.big,
-                    ),
-            );
+            return value == null
+                ? SizedBox()
+                : Text(
+                    value.targetValue.simplify(),
+                    style: TStyles.big,
+                  );
           }
           if (value != null) {
             var index = _captions.indexOf(value);
