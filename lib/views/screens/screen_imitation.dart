@@ -228,7 +228,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
     }
     return switch (slide.majority!.type) {
       ContentType.wordBank => WordBankBox(slide.majority as Talk),
-      ContentType.repeat => microphoneBuilder(controller, slide.majority as Talk),
+      ContentType.repeat =>
+        microphoneBuilder(controller, slide.majority as Talk),
       ContentType.station => _stationSlideBuilder(slide.majority as Talk),
       ContentType.caption => _captionSlideBuilder(),
       _ => SizedBox(),
@@ -326,10 +327,16 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
               return LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [TColors.white, TColors.transparent, TColors.white],
+                colors: [
+                  TColors.white,
+                  TColors.transparent,
+                  TColors.transparent,
+                  TColors.white
+                ],
                 stops: [
                   0.0,
-                  0.35,
+                  0.4,
+                  0.5,
                   1.0
                 ], // 10% purple, 80% transparent, 10% purple
               ).createShader(rect);
@@ -337,7 +344,8 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             blendMode: BlendMode.dstOut,
             child: ScrollablePositionedList.builder(
               physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(vertical: 170.d),
+              padding:
+                  EdgeInsets.symmetric(vertical: DeviceInfo.size.width * 0.5),
               itemScrollController: _captionScrollController,
               itemBuilder: (context, index) {
                 var data = _captions[index];
