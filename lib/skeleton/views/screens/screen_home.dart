@@ -49,7 +49,7 @@ class _HomeScreenState extends AbstractScreenState<AbstractScreen> {
         Alignment(index / (tabCount - 1) * 2 - 1, -1);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30.d),
-      height: 86.d,
+      height: 70.d,
       child: Stack(
         children: [
           AnimatedAlign(
