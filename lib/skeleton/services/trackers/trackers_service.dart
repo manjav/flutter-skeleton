@@ -23,7 +23,6 @@ class Trackers extends IService {
     TrackerSDK.smartlook: SmartlookTracker(),
   };
   Map<String, dynamic> remoteConfigs = {};
-  final _testName = "_";
   final _buildType = BuildType.installed;
   bool get ghostMode =>
       kDebugMode || Pref.username.getString().startsWith("test_");
@@ -56,19 +55,22 @@ class Trackers extends IService {
       final properties = {
         "buildType": _buildType.name,
         "build_type": _buildType.name,
-        "deviceId": DeviceInfo.adId,
-        "test_name": _testName,
-        // "test_variant": variant.toString(),
-        "appName": DeviceInfo.appName,
-        "version": DeviceInfo.version,
-        "buildNumber": DeviceInfo.buildNumber,
-        "packageName": DeviceInfo.packageName,
+        "device_id": DeviceInfo.adId,
+        "app_name": DeviceInfo.appName,
+        // "version": DeviceInfo.version,
+        "build_Number": DeviceInfo.buildNumber,
+        // "packageName": DeviceInfo.packageName,
         "content_version": "content_version".l(),
       };
       if (userId != null) properties["userId"] = userId;
       if (userName != null) properties["userName"] = userName;
       if (nativeLanguage != null) {
         properties["native_language"] = nativeLanguage;
+      }
+      for (var e in remoteConfigs.entries) {
+        if (e.value is String || e.value is num || e.value is bool) {
+          properties["rc_${e.key}"] = e.value.toString();
+        }
       }
       sdk.setProperties(properties);
     }

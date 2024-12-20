@@ -27,16 +27,15 @@ class AmplitudeTracker extends AbstractTracker {
   void setProperties(Map<String, String> properties) {
     // User properties
     final identify = Identify();
-    final allowedKeys = {
-      "build_type",
-      "test_name",
-      "test_variant",
-      "native_language",
-      "content_version"
-    };
+    final allowedKeys = {"build_type", "native_language", "content_version"};
     for (var key in allowedKeys) {
       if (properties.containsKey(key)) {
         identify.set(key, properties[key]);
+      }
+    }
+    for (var e in properties.entries) {
+      if (e.key.startsWith("rc_")) {
+        identify.set(e.key, e.value);
       }
     }
     instance.identify(identify);
