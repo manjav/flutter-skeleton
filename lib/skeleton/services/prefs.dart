@@ -15,6 +15,7 @@ class Prefs extends IService {
       Pref.sfx.setBool(true);
     }
     tutorStep = Pref.tutorStep.getInt();
+    Pref.session.increase(1);
     super.initialize();
   }
 
@@ -52,6 +53,7 @@ class Prefs extends IService {
 enum Pref {
   sfx,
   music,
+  session,
   tutorStep,
   updatePassed,
   username,

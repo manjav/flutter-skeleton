@@ -5,6 +5,8 @@ abstract class AbstractTracker {
   Function(dynamic)? logCallback;
   Future<void> initialize({List? args, Function(dynamic)? logCallback}) async {
     this.logCallback = logCallback;
+    design("start_session",
+        parameters: {"session_count": Pref.session.getInt()});
   }
 
   Future<Map<String, dynamic>> getRemoteConfigs({String? name}) async => {};
