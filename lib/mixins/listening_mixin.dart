@@ -4,17 +4,17 @@ import 'package:flutter_svg/svg.dart';
 import '../app_export.dart';
 
 mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
-  ValueNotifier<bool> micProblemOccures = ValueNotifier(false);
+  ValueNotifier<bool> micProblemOccures = ValueNotifier(true);
 
   @override
   void initState() {
-    serviceLocator<ListenerQuiz>().state.addListener(
-      () {
-        if (serviceLocator<ListenerQuiz>().state.value == QuizState.error) {
-          micProblemOccures.value = true;
-        }
-      },
-    );
+    // serviceLocator<ListenerQuiz>().state.addListener(
+    //   () {
+    //     if (serviceLocator<ListenerQuiz>().state.value == QuizState.error) {
+    //       micProblemOccures.value = true;
+    //     }
+    //   },
+    // );
     super.initState();
   }
 
@@ -25,27 +25,23 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         ValueListenableBuilder(
           valueListenable: micProblemOccures,
           builder: (context, value, child) {
-            return Widgets.button(
-              context,
-              height: 18.d,
-              child: value
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Asset.load<SvgPicture>("cant_speak"),
-                        SizedBox(width: 8.d),
-                        Text(
-                          "cant_speak".l(),
-                          style:
-                              TStyles.medium.copyWith(color: TColors.primary20),
-                        ),
-                      ],
-                    )
-                  : SizedBox(),
-              onPressed: () {
-                controller.changeSerie(1);
-              },
-            );
+            return Widgets.button(context,
+                height: 18.d,
+                child: value
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Asset.load<SvgPicture>("cant_speak"),
+                          SizedBox(width: 8.d),
+                          Text(
+                            "cant_speak".l(),
+                            style: TStyles.medium
+                                .copyWith(color: TColors.primary20),
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
+                onPressed: () => _skipListening(controller));
           },
         )
       ],
@@ -103,4 +99,24 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
     bool repeated,
     dynamic data,
   );
+
+  Future<void> _skipListening(LessonController controller) async {
+    await modal([
+      _modalButton("stt_skip_technical"),
+      _modalButton("stt_skip_not_now"),
+      _modalButton("stt_skip_ever"),
+    ], isDismissible: false);
+    // controller.changeSerie(1);
+  }
+
+  Widget _modalButton(String text) => Widgets.button(
+        context,
+        height: 56.d,
+        alignment: Alignment.center,
+        child: Text(text.l(), style: TStyles.large),
+        onPressed: () {
+          ListenerQuiz.skipReason = text;
+          Navigator.pop(context);
+        },
+      );
 }

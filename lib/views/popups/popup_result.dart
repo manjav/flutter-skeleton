@@ -45,7 +45,8 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
     serviceLocator<Trackers>().design("pv|feast", parameters: {
       "score": _score,
       "video_id": widget.args["videoId"],
-      "setnences": widget.args["sentenceCount"]
+      "setnences": widget.args["sentenceCount"],
+      "stt_skip_reason": ListenerQuiz.skipReason,
     });
 
     serviceLocator<MediaService>().playSound("feast");

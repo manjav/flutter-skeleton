@@ -10,6 +10,7 @@ import '../../app_export.dart';
 
 class ListenerQuiz extends Quiz {
   static const int levelInterval = 100;
+  static String skipReason = "";
   String? locale;
   String _pattern = "";
   int minMatchLevel = 95;
