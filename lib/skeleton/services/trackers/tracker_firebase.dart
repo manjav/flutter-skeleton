@@ -19,12 +19,16 @@ class FirebaseTracker extends AbstractTracker {
     //   fetchTimeout: const Duration(minutes: 1),
     //   minimumFetchInterval: const Duration(minutes: 5),
     // ));
-    await remoteConfig.fetchAndActivate();
-    var text = remoteConfig.getString(name ?? "configs");
-    if (text.isEmpty) {
+    // await remoteConfig.fetchAndActivate();
+    try {
+      var text = remoteConfig.getString(name ?? "configs");
+      if (text.isEmpty) {
+        return {};
+      }
+      return jsonDecode(text);
+    } catch (e) {
       return {};
     }
-    return jsonDecode(text);
   }
 
   @override
