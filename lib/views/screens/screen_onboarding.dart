@@ -105,11 +105,13 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
                     nativeLanguage: _selectedLanguages.value.value,
                   );
                   _slideIndex = 0;
-                  Localization.languageCode = _selectedLanguages.value.value;
                   serviceLocator<Trackers>().sendUserData(
-                    nativeLanguage: Localization.languageCode,
+                    nativeLanguage: _selectedLanguages.value.value,
                   );
-                  await serviceLocator<Localization>().initialize();
+                  await serviceLocator<Localization>().initialize(args: [
+                    _selectedLanguages.value.value,
+                    _targetLanguages.first.key,
+                  ]);
                   setState(() {});
                 } on SkeletonException catch (e) {
                   alert(e.message, message: "error_${e.statusCode}".l());

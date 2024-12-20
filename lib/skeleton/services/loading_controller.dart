@@ -21,7 +21,7 @@ class LoadingController extends GetxController {
       account.initialize(data);
       await serviceLocator<Localization>().initialize(args: [
         account.account.user.langTag!,
-        account.metadata["targetLanguage"],
+        account.metadata["targetLanguage"] ?? "en",
       ]);
 
       services.changeState(ServiceStatus.initialize);
