@@ -99,8 +99,8 @@ class NetConnector extends IService {
 
     LoaderWidget.baseURL = configs["assetsUrl"]!;
     LoaderWidget.hashMap = Map.castFrom(configs["files"]);
-    Localization.languageCode = configs["nativeLanguage"];
-    Localization.targetLanguage = configs["targetLanguage"];
+    // Localization.languageCode = configs["nativeLanguage"];
+    // Localization.targetLanguage = configs["targetLanguage"];
     log("Config loaded.");
   }
 

@@ -9,8 +9,8 @@ import '../../app_export.dart';
 class Localization extends IService {
   static var locales = const [Locale("en"), Locale("es"), Locale("fa")];
   static Map<String, dynamic>? _sentences;
-  static String languageCode = "en";
-  static String targetLanguage = "es";
+  static String languageCode = "mx";
+  static String targetLanguage = "en";
   static TextDirection dir = TextDirection.ltr;
   static bool isRTLMode(String code) => code == "fa" || code == "ar";
   static bool isRTL = false;
@@ -28,6 +28,8 @@ class Localization extends IService {
 
   @override
   initialize({List<Object>? args}) async {
+    languageCode = args![0] as String;
+    targetLanguage = args[1] as String;
     isRTL = isRTLMode(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     try {
