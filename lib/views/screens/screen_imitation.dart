@@ -18,8 +18,8 @@ class ImitationScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<ImitationScreen>
     with LessonMixin, ListeningMixin, VideoPlayerMixin {
   List<Content> _captions = [];
-  final ValueNotifier<int> _slideUpdater = ValueNotifier(-1);
   final PageController _pageController = PageController();
+  final ValueNotifier<int> _slideUpdater = ValueNotifier(-1);
   final ValueNotifier<bool> _captionMode = ValueNotifier(true);
   final ValueNotifier<MediaEntry?> _videoData = ValueNotifier(null);
   final ItemScrollController _captionScrollController = ItemScrollController();
@@ -542,6 +542,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         "video_id": controller.root!.iconUrl,
         "slide_index": controller.currentSlide.index,
         "slide": controller.currentSlide.majority!.type.name,
+        "in_onboarding": "${_inOnboarding()}",
       };
       final type = controller.currentSerie.majority!.type;
       if (type == ContentType.caption) {

@@ -86,8 +86,8 @@ class DictationBox extends StatelessWidget {
                   width: 80.d,
                   buttonId: dictator.state.value == QuizState.ready ? 30 : -1,
                   color: switch (dictator.state.value) {
-                    QuizState.success => TColors.green.withOpacity(0.2),
-                    QuizState.failure => TColors.error.withOpacity(0.2),
+                    QuizState.success => TColors.green.withAlpha(50),
+                    QuizState.failure => TColors.error.withAlpha(50),
                     _ => TColors.primary20,
                   },
                   child: Container(
