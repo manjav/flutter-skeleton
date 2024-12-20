@@ -42,7 +42,7 @@ class NetConnector extends IService {
         throw SkeletonException(StatusCode.UNAVAILABLE, error);
       }
     }
-    if (response!.statusCode != 200) {
+    if (response == null || response.statusCode != 200) {
       throw SkeletonException(
           StatusCode.UNKNOWN_ERROR, "Failed to load config file!");
     }
