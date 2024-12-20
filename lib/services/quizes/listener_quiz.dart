@@ -14,6 +14,7 @@ class ListenerQuiz extends Quiz {
   String? locale;
   String _pattern = "";
   int minMatchLevel = 95;
+  bool autoStart = false;
   final SpeechToText _speech = SpeechToText();
   final ValueNotifier<double> audioLevel = ValueNotifier(0);
   SpeechRecognitionResult result = SpeechRecognitionResult([], true);
@@ -41,6 +42,14 @@ class ListenerQuiz extends Quiz {
       state.value = QuizState.error;
     }
     super.initialize(args: args);
+  }
+
+  Future<void> _reload(Function onRealod) async {
+    isInitialized = false;
+    await initialize();
+    if (state.value == QuizState.ready) {
+      onRealod();
+    }
   }
 
   /// This callback is invoked each time new recognition results are
@@ -86,20 +95,29 @@ class ListenerQuiz extends Quiz {
 
   @override
   void prepare({
-    String? locale,
     required Talk talk,
+    String? locale,
     int minMatchLevel = 95,
     bool autoStart = false,
     MediaEntry? finalMedia,
     MediaEntry? initialMedia,
-    List<String>? exceptions,
     Function(QuizState, String, int, bool, dynamic)? onResult,
   }) async {
-    this.talk = talk;
-    if (state.value.index < QuizState.initialize.index) {
+    if (!_speech.isAvailable) {
       log("Listener not initialized yet!");
+      _reload(() => prepare(
+            talk: talk,
+            locale: locale,
+            onResult: onResult,
+            autoStart: autoStart,
+            finalMedia: finalMedia,
+            initialMedia: initialMedia,
+          ));
       return;
     }
+    this.talk = talk;
+    this.autoStart = autoStart;
+    this.minMatchLevel = minMatchLevel;
     if (state.value.index <= QuizState.running.index) {
       _speech.cancel();
     }
@@ -120,13 +138,11 @@ class ListenerQuiz extends Quiz {
     }
     _pattern = talk.targetValue.patternize();
     if (locale != null) this.locale = locale;
-    if (exceptions != null) this.exceptions = exceptions;
-    this.minMatchLevel = minMatchLevel;
     recognizedWords.value = "";
     _hasMediaPlayed = false;
     // log("listen $_pattern");
 
-    if (initialMedia!.type == MediaType.youtube) {
+    if (initialMedia != null && initialMedia.type == MediaType.youtube) {
       await serviceLocator<MediaService>().play(initialMedia);
     }
 
@@ -138,6 +154,18 @@ class ListenerQuiz extends Quiz {
   }
 
   Future<void> start() async {
+    if (!_speech.isAvailable) {
+      log("Listener not initialized yet!");
+      _reload(() => prepare(
+            talk: talk!,
+            locale: locale,
+            onResult: onResult,
+            autoStart: autoStart,
+            finalMedia: finalMedia,
+          ));
+      return;
+    }
+
     state.value = QuizState.waiting;
     _hasResultSent = false;
     recognizedWords.value = "";
