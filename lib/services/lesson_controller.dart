@@ -54,6 +54,7 @@ class LessonController {
 
   Future<void> _loadGroup(ParentContent root) async {
     this.root = root;
+    final account = serviceLocator<AccountProvider>();
     // Load group contents
     if (root.children.isEmpty) {
       await serviceLocator<AccountProvider>().loadGroup(root);
@@ -63,6 +64,7 @@ class LessonController {
       parameters: {
         "row_index": (root.parent as Content).index,
         "video_id": root.iconUrl,
+        "in_onboarding": "${account.inOnboarding}"
       },
     );
     series = List.generate(
@@ -139,6 +141,7 @@ class LessonController {
   }
 
   void onQuizResult(QuizState state, String answer, int score, Talk talk) {
+    final account = serviceLocator<AccountProvider>();
     serviceLocator<Trackers>().design(
       "qr|${currentSerie.majority!.type.name}",
       parameters: {
@@ -147,6 +150,7 @@ class LessonController {
         "slide": currentSlide.majority!.type.name,
         "state": state.name,
         "score": score,
+        "in_onboarding": "${account.inOnboarding}"
       },
     );
 
@@ -160,7 +164,7 @@ class LessonController {
     }
     slidePassed.value = true;
 
-    serviceLocator<AccountProvider>().addToLeitner(
+    account.addToLeitner(
       talk.id,
       talk.targetValue,
       lastAnswer: answer,

@@ -47,6 +47,7 @@ class _GroupResultState extends State<GroupResult> with FeastMixin {
       "video_id": widget.args["videoId"],
       "setnences": widget.args["sentenceCount"],
       "stt_skip_reason": ListenerQuiz.skipReason,
+      "in_onboarding": "${serviceLocator<AccountProvider>().inOnboarding}",
     });
 
     serviceLocator<MediaService>().playSound("feast");
