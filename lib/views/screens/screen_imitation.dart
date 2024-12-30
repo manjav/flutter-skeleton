@@ -116,8 +116,9 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
 
   @override
   List<Widget> appBarElementsLeft() {
+    var inOnboarding = serviceLocator<AccountProvider>().inOnboarding;
     return [
-      _inOnboarding()
+      inOnboarding
           ? SizedBox(height: 52.d)
           : Widgets.button(
               context,
@@ -132,7 +133,7 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
             ),
       SizedBox(width: 8.d),
       progressSliderBuilder(
-        DeviceInfo.size.width * (_inOnboarding() ? 0.9 : 0.72),
+        DeviceInfo.size.width * (inOnboarding ? 0.9 : 0.72),
       ),
     ];
   }
@@ -542,8 +543,10 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
         "video_id": controller.root!.iconUrl,
         "slide_index": controller.currentSlide.index,
         "slide": controller.currentSlide.majority!.type.name,
-        "in_onboarding": "${_inOnboarding()}",
       };
+      params["in_onboarding"] =
+          "${serviceLocator<AccountProvider>().inOnboarding}";
+
       final type = controller.currentSerie.majority!.type;
       if (type == ContentType.caption) {
         params["cc"] = _captionMode.value ? "on" : "off";
@@ -560,20 +563,14 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
       log(e.toString());
     }
   }
-
-  bool _inOnboarding() {
-    var acc = serviceLocator<AccountProvider>();
-    return acc.scores.isEmpty && controller.root!.id.contains("onboarding");
-  }
 }
 
 class RapidScrollPhysics extends ScrollPhysics {
   const RapidScrollPhysics({super.parent});
 
   @override
-  RapidScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return RapidScrollPhysics(parent: buildParent(ancestor)!);
-  }
+  RapidScrollPhysics applyTo(ScrollPhysics? ancestor) =>
+      RapidScrollPhysics(parent: buildParent(ancestor)!);
 
   @override
   SpringDescription get spring =>

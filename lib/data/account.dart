@@ -7,7 +7,6 @@ import '../app_export.dart';
 
 class AccountProvider extends ChangeNotifier {
   late Account account;
-  // Map<String, Word> words = {};
   List<ParentContent> categories = [];
   Map<String, dynamic> metadata = {};
   Map<String, Map<String, dynamic>> scores = {};
@@ -15,6 +14,8 @@ class AccountProvider extends ChangeNotifier {
 
   Map<String, int> wallet = {};
   bool get isTester => Pref.username.getString().startsWith("test_");
+
+  bool get inOnboarding => scores.isEmpty;
 
   void initialize(dynamic account) {
     this.account = account;
