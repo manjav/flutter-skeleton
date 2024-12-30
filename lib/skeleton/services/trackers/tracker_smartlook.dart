@@ -53,6 +53,9 @@ class SmartlookTracker extends AbstractTracker {
     String name, {
     Map<String, dynamic>? parameters,
   }) {
+    if (name.contains("onboarding")) {
+      return;
+    }
     Smartlook.instance.trackEvent(
       "design_$name",
       properties: getProperties(parameters),
