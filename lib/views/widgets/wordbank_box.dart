@@ -52,16 +52,20 @@ class _WordBankBoxState extends State<WordBankBox> {
             child: Opacity(
               opacity: enable ? 1 : 0.7,
               child: Column(
+                spacing: 20.d,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Expanded(flex: 5, child: SizedBox()),
+                  _wrapper(_words.length, (i) => _wordBuilder(context, i)),
                   DirText(
                     widget.talk.nativeValue,
-                    style: TStyles.small.copyWith(color: TColors.primary70),
+                    style: TStyles.medium,
+                    textAlign: TextAlign.center,
                   ),
-                  _wrapper(_words.length, (i) => _wordBuilder(context, i)),
-                  SizedBox(height: 5.d),
+                  // SizedBox(height: 40.d),
+                  Expanded(flex: 1, child: SizedBox()),
                   _wrapper(_choices.length, (i) => _choiceBuilder(context, i)),
-                  SizedBox(height: 5.d),
+                  Expanded(flex: 5, child: SizedBox()),
                   Row(
                     children: [
                       _button(
