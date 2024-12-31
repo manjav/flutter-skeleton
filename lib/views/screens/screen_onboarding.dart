@@ -41,7 +41,13 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
           MapEntry(_selectedLanguages.value.key, languageCode);
     }
 
-    serviceLocator<Trackers>().design("pv_onboarding_lang");
+    serviceLocator<Trackers>().design(
+      "pv_onboarding_lang",
+      parameters: {
+        "found_location": location,
+        "suggested_language": languageCode,
+      },
+    );
     setState(() {});
   }
 
