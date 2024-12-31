@@ -101,12 +101,14 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
   );
 
   Future<void> _skipListening(LessonController controller) async {
-    await modal([
+    var result = await modal([
       _modalButton("stt_skip_technical"),
       _modalButton("stt_skip_not_now"),
       _modalButton("stt_skip_ever"),
-    ], isDismissible: false);
-    controller.changeSerie(1);
+    ], isDismissible: true);
+    if (result != null) {
+      controller.changeSerie(1);
+    }
   }
 
   Widget _modalButton(String text) => Widgets.button(
@@ -116,7 +118,7 @@ mixin ListeningMixin<S extends AbstractScreen> on AbstractScreenState<S> {
         child: DirText(text.l(), style: TStyles.large),
         onPressed: () {
           ListenerQuiz.skipReason = text;
-          Navigator.pop(context);
+          Navigator.pop(context, text);
         },
       );
 }
