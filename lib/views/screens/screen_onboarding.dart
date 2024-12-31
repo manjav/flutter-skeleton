@@ -299,5 +299,70 @@ class _ReasonsListState extends State<ReasonsList> {
 
   @override
   Widget build(BuildContext context) {
+    final reasons = serviceLocator<Localization>()
+        .whereKeys((t) => t.startsWith("reasoning_item_"))
+        .toList();
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(12.d, widget.paddingTop, 12.d, 44.d),
+      child: Column(
+        children: [
+          Asset.load<SvgPicture>("logo_header", height: 80.d),
+          Expanded(flex: 4, child: SizedBox()),
+          DirText("reasoning_title".l(), style: TStyles.large),
+          Expanded(flex: 1, child: SizedBox()),
+          Expanded(
+            flex: 30,
+            child: GridView.builder(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              itemCount: reasons.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: 1.2),
+              itemBuilder: (ctx, index) =>
+                  _reasonItemBuilder(ctx, reasons[index]),
+            ),
+          ),
+          Expanded(flex: 4, child: SizedBox()),
+          SkinnedButton(
+            width: DeviceInfo.size.width * 0.7,
+            color: TColors.blue,
+            label: "reasoning_submit".l(),
+            isEnable: _selectedReason.isNotEmpty,
+            onPressed: () {
+              serviceLocator<Trackers>().design(
+                "bt_submit|onboarding_reason",
+                parameters: {"reason": _selectedReason},
+              );
+              widget.onSubmit();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget? _reasonItemBuilder(BuildContext context, String title) {
+    final selected = title == _selectedReason;
+    return Widgets.button(
+      context,
+      margin: EdgeInsets.all(3.d),
+      padding: EdgeInsets.all(14.d),
+      color: selected ? TColors.teal : TColors.primary10,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          LoaderWidget(AssetType.vector, title, height: 80.d),
+          DirText(
+            title.l(),
+            textAlign: TextAlign.center,
+            style: selected ? TStyles.mediumInvert : TStyles.medium,
+          ),
+        ],
+      ),
+      onPressed: () {
+        setState(() => _selectedReason = title);
+      },
+    );
   }
 }
