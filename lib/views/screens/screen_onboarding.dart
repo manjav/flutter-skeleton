@@ -16,7 +16,8 @@ class OnboardingScreen extends AbstractScreen {
 class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   @override
   List<Widget> appBarElementsLeft() => [];
-  int _slideIndex = -1;
+  int _pageIndex = 0;
+  int _slideIndex = 0;
   TextStyle? _errorStyle;
   TextValueRun? _slideTitleText;
   TextValueRun? _slideCaptionText;
@@ -53,16 +54,17 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
 
   @override
   Widget contentFactory(double paddingTop) {
-    return Stack(
-      children: [
-        _slideShowAnimation(),
-        _languageSelection(),
-      ],
-    );
+    return switch (_pageIndex) {
+      1 => ReasonsList(
+          paddingTop: paddingTop,
+          onSubmit: () => setState(() => _pageIndex = 2)),
+      2 => _slideShowAnimation(),
+      _ => _languageSelection(),
+    };
   }
 
   Widget _languageSelection() {
-    if (_nativeLanguages.isEmpty || _slideIndex > -1) {
+    if (_nativeLanguages.isEmpty) {
       return SizedBox();
     }
     return Column(
@@ -110,7 +112,7 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
                     targetLanguage: _selectedLanguages.value.key,
                     nativeLanguage: _selectedLanguages.value.value,
                   );
-                  _slideIndex = 0;
+                  _pageIndex = 1;
                   serviceLocator<Trackers>().sendUserData(
                     nativeLanguage: _selectedLanguages.value.value,
                   );
@@ -131,9 +133,6 @@ class _ScreenState extends AbstractScreenState<OnboardingScreen> {
   }
 
   Widget _slideShowAnimation() {
-    if (_slideIndex < 0) {
-      return SizedBox();
-    }
     return LoaderWidget(
       AssetType.animation,
       "onboarding",
@@ -279,5 +278,26 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         setState(() => _selectedIndex = index);
       },
     );
+  }
+}
+
+class ReasonsList extends StatefulWidget {
+  final double paddingTop;
+  final Function() onSubmit;
+  const ReasonsList({
+    required this.onSubmit,
+    required this.paddingTop,
+    super.key,
+  });
+
+  @override
+  State<ReasonsList> createState() => _ReasonsListState();
+}
+
+class _ReasonsListState extends State<ReasonsList> {
+  String _selectedReason = "";
+
+  @override
+  Widget build(BuildContext context) {
   }
 }
