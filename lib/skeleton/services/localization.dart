@@ -49,6 +49,13 @@ class Localization extends IService {
     }
   }
 
+  Iterable<String> whereKeys(bool Function(String) predictable) {
+    if (_sentences == null) {
+      return [];
+    }
+    return _sentences!.keys.where(predictable);
+  }
+
   static String convert(String input) {
     if (!Localization.isRTL) return input;
     return input
