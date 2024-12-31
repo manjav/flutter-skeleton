@@ -43,6 +43,12 @@ class _DiscoveryPageItemState
       if (initializeMode) {
         if (!account.metadata.containsKey("targetLanguage")) {
           await Get.toNamed(Routes.onboarding);
+        }
+
+        await account.loadScores();
+        serviceLocator<Trackers>().design("ls|scores");
+
+        if (account.scores.isEmpty) {
           var onboard = _categories.where((c) {
             return c.children[0].id.contains("onboarding");
           });
@@ -51,9 +57,7 @@ class _DiscoveryPageItemState
             return;
           }
         }
-
-        await account.loadScores();
-        serviceLocator<Trackers>().design("ls|scores");
+        
         await account.loadLeitner();
         serviceLocator<Trackers>().design("ls|leitner");
       }
