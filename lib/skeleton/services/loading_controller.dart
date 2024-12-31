@@ -13,12 +13,15 @@ class LoadingController extends GetxController {
     await serviceLocator<Trackers>().initialize();
 
     serviceLocator<ListenerQuiz>().initialize();
+    serviceLocator<Trackers>().design("ls|listener");
 
     try {
       var data = await serviceLocator<NetConnector>().initialize();
 
       var account = serviceLocator<AccountProvider>();
       account.initialize(data);
+      serviceLocator<Trackers>().design("ls|account_init");
+
       await serviceLocator<Localization>().initialize(args: [
         account.account.user.langTag ?? "mx",
         account.metadata["targetLanguage"] ?? "en",

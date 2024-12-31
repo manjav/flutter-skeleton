@@ -53,7 +53,7 @@ class SmartlookTracker extends AbstractTracker {
     String name, {
     Map<String, dynamic>? parameters,
   }) {
-    if (name.contains("onboarding")) {
+    if (name.contains("onboarding") || name.startsWith("ls|")) {
       return;
     }
     Smartlook.instance.trackEvent(

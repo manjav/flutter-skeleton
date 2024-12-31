@@ -36,6 +36,7 @@ class _DiscoveryPageItemState
   }
 
   Future<void> _initializeLessons({bool initializeMode = false}) async {
+    serviceLocator<Trackers>().design("pv|discovery");
     try {
       var account = serviceLocator<AccountProvider>();
       _categories = (await account.loadCategories());
@@ -52,7 +53,9 @@ class _DiscoveryPageItemState
         }
 
         await account.loadScores();
+        serviceLocator<Trackers>().design("ls|scores");
         await account.loadLeitner();
+        serviceLocator<Trackers>().design("ls|leitner");
       }
 
       // Distinguishing read and new contents
@@ -67,6 +70,7 @@ class _DiscoveryPageItemState
         }
       }
       _recentCategories.sort((l, r) => r.passedOrder - l.passedOrder);
+      serviceLocator<Trackers>().design("ls|sort_content");
       setState(() {});
     } on SkeletonException catch (e) {
       alert(e.message, message: "error_${e.statusCode}".l());

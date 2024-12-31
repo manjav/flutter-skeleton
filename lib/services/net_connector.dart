@@ -21,11 +21,15 @@ class NetConnector extends IService {
   initialize({List<Object>? args}) async {
     var version = int.parse(DeviceInfo.buildNumber);
     await _loadConfigs(version);
+    serviceLocator<Trackers>().design("ls|configs");
 
     _session = await connect();
+    serviceLocator<Trackers>().design("ls|nakama_connect");
+
     var account = await getAccount();
     Pref.username.setString(account.user.id);
     log(jsonEncode(account.user));
+    serviceLocator<Trackers>().design("ls|account_load");
 
     super.initialize();
     return account;
