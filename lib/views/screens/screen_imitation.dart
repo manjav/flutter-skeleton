@@ -502,11 +502,14 @@ class _ScreenState extends AbstractScreenState<ImitationScreen>
   }
 
   void _showListenerResult(QuizState state) {
+    if (state != QuizState.success) {
+      return;
+    }
     modal(
       [
         AutoCallButton(
           label: "next_l".l(),
-          color: state == QuizState.success ? TColors.green : TColors.red,
+          color: TColors.green,
           onPressed: () {
             Navigator.pop(context);
             _gotoSlide(true);
